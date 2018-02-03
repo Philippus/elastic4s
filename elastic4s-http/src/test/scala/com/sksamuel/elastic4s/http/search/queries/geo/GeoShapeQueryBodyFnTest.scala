@@ -10,7 +10,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape point search query") {
     Given("Some point query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         PointShape(GeoPoint(-77.03653, 38.897676))
@@ -26,7 +26,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape envelope query") {
     Given("Some envelope query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         EnvelopeShape(
@@ -45,7 +45,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape multipoint query") {
     Given("Some multipoint query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         MultiPointShape(Seq(GeoPoint(102.0,2.0),GeoPoint(102.0,3.0)))
@@ -61,7 +61,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape linestring query") {
     Given("Some linestring query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         LineStringShape(GeoPoint(-77.03653, 38.897676),GeoPoint(-77.009051, 38.889939))
@@ -78,7 +78,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape multilinestring query") {
     Given("Some multi linestring query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         MultiLineStringShape(Seq(
@@ -98,7 +98,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape circle search query") {
     Given("Some circle query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         CircleShape(Circle(GeoPoint(23.23,100.23),(100.0,DistanceUnit.Meters)))
@@ -114,7 +114,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape geometry collection search query") {
     Given("Some collection shape query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         GeometryCollectionShape(
@@ -135,7 +135,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape polygon search query") {
     Given("Some polygon shape query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         PolygonShape(Polygon(
@@ -169,7 +169,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
 
   test("Should correctly build geo shape multipolygon search query") {
     Given("Some multipolygon shape query")
-    val query = GeoShapeQueryDefinition(
+    val query = GeoShapeQuery(
       "location",
       InlineShape(
         MultiPolygonShape(

@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.update.{UpdateByQueryDefinition, UpdateDefinition}
+import com.sksamuel.elastic4s.update.{UpdateByQueryRequest, UpdateRequest}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
@@ -30,7 +30,7 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
 }
 
 object UpdateByQueryBodyFn {
-  def apply(request: UpdateByQueryDefinition): XContentBuilder = {
+  def apply(request: UpdateByQueryRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.rawField("query", QueryBuilderFn(request.query))
     request.script.map(ScriptBuilderFn.apply).foreach(builder.rawField("script", _))
@@ -43,15 +43,15 @@ object UpdateImplicits extends UpdateImplicits
 
 trait UpdateImplicits {
 
-  implicit object UpdateShow extends Show[UpdateDefinition] {
-    override def show(f: UpdateDefinition): String = UpdateBuilderFn(f).string()
+  implicit object UpdateShow extends Show[UpdateRequest] {
+    override def show(f: UpdateRequest): String = UpdateBuilderFn(f).string()
   }
 
-  implicit object UpdateByQueryShow extends Show[UpdateByQueryDefinition] {
-    override def show(req: UpdateByQueryDefinition): String = UpdateByQueryBodyFn(req).string()
+  implicit object UpdateByQueryShow extends Show[UpdateByQueryRequest] {
+    override def show(req: UpdateByQueryRequest): String = UpdateByQueryBodyFn(req).string()
   }
 
-  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateDefinition, UpdateResponse] {
+  implicit object UpdateHttpExecutable extends HttpExecutable[UpdateRequest, UpdateResponse] {
 
     override def responseHandler = new ResponseHandler[UpdateResponse] {
       override def handle(response: HttpResponse) = response.statusCode match {
@@ -62,7 +62,7 @@ trait UpdateImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: UpdateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: UpdateRequest): Future[HttpResponse] = {
 
       val endpoint =
         s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}/_update"
@@ -86,8 +86,8 @@ trait UpdateImplicits {
     }
   }
 
-  implicit object UpdateByQueryHttpExecutable extends HttpExecutable[UpdateByQueryDefinition, UpdateByQueryResponse] {
-    override def execute(client: HttpRequestClient, request: UpdateByQueryDefinition): Future[HttpResponse] = {
+  implicit object UpdateByQueryHttpExecutable extends HttpExecutable[UpdateByQueryRequest, UpdateByQueryResponse] {
+    override def execute(client: HttpClient, request: UpdateByQueryRequest): Future[HttpResponse] = {
 
       val endpoint =
         if (request.indexesAndTypes.types.isEmpty)

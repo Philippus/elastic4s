@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.indexes
 
-import com.sksamuel.elastic4s.admin.UpdateIndexLevelSettingsDefinition
+import com.sksamuel.elastic4s.admin.UpdateIndexLevelSettingsRequest
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object UpdateIndexLevelSettingsBuilder {
 
-  def apply(d: UpdateIndexLevelSettingsDefinition): XContentBuilder = {
+  def apply(d: UpdateIndexLevelSettingsRequest): XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startObject("index")
 
     d.numberOfReplicas.foreach(source.field("number_of_replicas", _))

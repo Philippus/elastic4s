@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.compound
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.BoolQuery
 
 object BoolQueryBuilderFn {
 
-  def apply(bool: BoolQueryDefinition): XContentBuilder = {
+  def apply(bool: BoolQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("bool")
 
     if (bool.must.nonEmpty) {

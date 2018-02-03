@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.span.SpanTermQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.span.SpanTermQuery
 
 object SpanTermQueryBodyFn {
-  def apply(q: SpanTermQueryDefinition): XContentBuilder = {
+  def apply(q: SpanTermQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_term")
     builder.autofield(q.field, q.value)

@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.{
   ElasticError,
   HttpEntity,
   HttpExecutable,
-  HttpRequestClient,
+  HttpClient,
   HttpResponse,
   ResponseHandler
 }
@@ -36,11 +36,11 @@ trait IndexTemplateImplicits {
 
   implicit object IndexTemplateExistsHttpExecutable
       extends HttpExecutable[IndexTemplateExistsDefinition, IndexTemplateExists] {
-    override def execute(client: HttpRequestClient, request: IndexTemplateExistsDefinition): Future[HttpResponse] = ???
+    override def execute(client: HttpClient, request: IndexTemplateExistsDefinition): Future[HttpResponse] = ???
   }
 
   implicit object CreateIndexTemplateHttpExecutable
-      extends HttpExecutable[CreateIndexTemplateDefinition, CreateIndexTemplateResponse] {
+      extends HttpExecutable[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
 
     override def responseHandler = new ResponseHandler[CreateIndexTemplateResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] =
@@ -50,7 +50,7 @@ trait IndexTemplateImplicits {
         }
     }
 
-    override def execute(client: HttpRequestClient, request: CreateIndexTemplateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: CreateIndexTemplateRequest): Future[HttpResponse] = {
       val endpoint = s"/_template/" + request.name
       val body     = CreateIndexTemplateBodyFn(request)
       val entity   = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
@@ -59,14 +59,14 @@ trait IndexTemplateImplicits {
   }
 
   implicit object DeleteIndexTemplateHttpExecutable
-      extends HttpExecutable[DeleteIndexTemplateDefinition, DeleteIndexTemplateResponse] {
-    override def execute(client: HttpRequestClient, request: DeleteIndexTemplateDefinition): Future[HttpResponse] = {
+      extends HttpExecutable[DeleteIndexTemplateRequest, DeleteIndexTemplateResponse] {
+    override def execute(client: HttpClient, request: DeleteIndexTemplateRequest): Future[HttpResponse] = {
       val endpoint = s"/_template/" + request.name
       client.async("DELETE", endpoint, Map.empty)
     }
   }
 
-  implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateDefinition, GetIndexTemplates] {
+  implicit object GetIndexTemplateHttpExecutable extends HttpExecutable[GetIndexTemplateRequest, GetIndexTemplates] {
 
     override def responseHandler = new ResponseHandler[GetIndexTemplates] {
       override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplates] = response.statusCode match {
@@ -77,19 +77,19 @@ trait IndexTemplateImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: GetIndexTemplateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: GetIndexTemplateRequest): Future[HttpResponse] = {
       val endpoint = s"/_template/" + request.indexes.string
       client.async("GET", endpoint, Map.empty)
     }
   }
 
-  implicit object CreateIndexTemplateShow extends Show[CreateIndexTemplateDefinition] {
-    override def show(req: CreateIndexTemplateDefinition): String = CreateIndexTemplateBodyFn(req).string()
+  implicit object CreateIndexTemplateShow extends Show[CreateIndexTemplateRequest] {
+    override def show(req: CreateIndexTemplateRequest): String = CreateIndexTemplateBodyFn(req).string()
   }
 }
 
 object CreateIndexTemplateBodyFn {
-  def apply(create: CreateIndexTemplateDefinition): XContentBuilder = {
+  def apply(create: CreateIndexTemplateRequest): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.array("index_patterns", Array(create.pattern))

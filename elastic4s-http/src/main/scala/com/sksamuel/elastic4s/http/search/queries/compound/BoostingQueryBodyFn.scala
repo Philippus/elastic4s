@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.compound
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.BoostingQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.BoostingQuery
 
 object BoostingQueryBodyFn {
-  def apply(q: BoostingQueryDefinition): XContentBuilder = {
+  def apply(q: BoostingQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("boosting")

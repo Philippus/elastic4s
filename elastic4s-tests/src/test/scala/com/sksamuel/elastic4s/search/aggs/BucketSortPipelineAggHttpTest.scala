@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.http.search.Aggregations
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.searches.sort.{FieldSortDefinition, SortOrder}
+import com.sksamuel.elastic4s.searches.sort.{FieldSort, SortOrder}
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
@@ -47,7 +47,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
             .subaggs (
               sumAgg("sales", "value"),
               bucketSortAggregation("sales_bucket_sort",
-                Seq(FieldSortDefinition("sales").order(SortOrder.DESC)))
+                Seq(FieldSort("sales").order(SortOrder.DESC)))
             )
         )
       }.await.right.get.result
@@ -72,7 +72,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
           .subaggs (
             sumAgg("sales", "value"),
             bucketSortAggregation("sales_bucket_sort",
-              Seq(FieldSortDefinition("sales").order(SortOrder.DESC)))
+              Seq(FieldSort("sales").order(SortOrder.DESC)))
               .size(1)
               .from(1)
           )

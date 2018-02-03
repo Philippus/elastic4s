@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.admin.IndicesOptions
+import com.sksamuel.elastic4s.admin.IndicesOptionsRequest
 
 object IndicesOptionsParams {
-  def apply(opts: IndicesOptions): Map[String, String] = {
+  def apply(opts: IndicesOptionsRequest): Map[String, String] = {
 
     val expand =
       if (opts.expandWildcardClosed && opts.expandWildcardsOpen) "all"

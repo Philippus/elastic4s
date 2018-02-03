@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search
 
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.searches.MultiSearchDefinition
+import com.sksamuel.elastic4s.searches.MultiSearchRequest
 
 object MultiSearchBuilderFn {
-  def apply(request: MultiSearchDefinition): String =
+  def apply(request: MultiSearchRequest): String =
     request.searches
       .flatMap { search =>
         val header = XContentFactory.jsonBuilder()

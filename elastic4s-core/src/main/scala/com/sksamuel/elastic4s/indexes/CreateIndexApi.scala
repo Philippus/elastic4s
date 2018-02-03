@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.mappings.MappingDefinition
 
 trait CreateIndexApi {
 
-  def createIndex(name: String): CreateIndexDefinition = CreateIndexDefinition(name)
+  def createIndex(name: String): CreateIndexRequest = CreateIndexRequest(name)
 
   def analyzers(analyzers: AnalyzerDefinition*) = new AnalyzersWrapper(analyzers)
   def tokenizers(tokenizers: Tokenizer*)        = new TokenizersWrapper(tokenizers)

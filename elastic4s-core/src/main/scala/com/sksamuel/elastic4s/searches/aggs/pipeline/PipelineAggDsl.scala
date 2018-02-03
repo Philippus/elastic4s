@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.elastic4s.searches.aggs.AbstractAggregation
-import com.sksamuel.elastic4s.searches.sort.SortDefinition
+import com.sksamuel.elastic4s.searches.sort.Sort
 
 trait PipelineAggregationApi {
 
@@ -11,15 +11,15 @@ trait PipelineAggregationApi {
     AvgBucketDefinition(name, bucketsPath)
 
   def bucketSelectorAggregation(name: String,
-                                script: ScriptDefinition,
+                                script: Script,
                                 bucketsPathMap: Map[String, String]): BucketSelectorDefinition =
     BucketSelectorDefinition(name, script, bucketsPathMap)
 
-  def bucketSortAggregation(name: String, sort: Seq[SortDefinition]): BucketSortDefinition =
+  def bucketSortAggregation(name: String, sort: Seq[Sort]): BucketSortDefinition =
     BucketSortDefinition(name, sort)
 
   def bucketScriptAggregation(name: String,
-                              script: ScriptDefinition,
+                              script: Script,
                               bucketsPath: Map[String, String]): BucketScriptDefinition =
     BucketScriptDefinition(name, script, bucketsPath)
 

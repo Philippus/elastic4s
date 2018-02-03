@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.GeoCentroidAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.GeoCentroidAggregation
 
 object GeoCentroidAggregationBuilder {
-  def apply(agg: GeoCentroidAggregationDefinition): XContentBuilder = {
+  def apply(agg: GeoCentroidAggregation): XContentBuilder = {
 
     val builder = XContentFactory.obj.startObject("geo_centroid")
 

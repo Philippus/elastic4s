@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.span.SpanFirstQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.span.SpanFirstQuery
 
 object SpanFirstQueryBodyFn {
-  def apply(q: SpanFirstQueryDefinition): XContentBuilder = {
+  def apply(q: SpanFirstQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_first")
     builder.rawField("match", QueryBuilderFn(q.query))

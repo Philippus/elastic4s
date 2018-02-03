@@ -7,6 +7,6 @@ import scala.language.implicitConversions
 trait BulkApi {
   this: IndexApi =>
 
-  def bulk(requests: Iterable[BulkCompatibleDefinition]): BulkDefinition = BulkDefinition(requests.toSeq)
-  def bulk(requests: BulkCompatibleDefinition*): BulkDefinition          = bulk(requests)
+  def bulk(requests: Iterable[BulkCompatibleRequest]): BulkRequest = BulkRequest(requests.toSeq)
+  def bulk(requests: BulkCompatibleRequest*): BulkRequest          = bulk(requests)
 }

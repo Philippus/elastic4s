@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.delete
 import java.net.URLEncoder
 
 import cats.Show
-import com.sksamuel.elastic4s.delete.{DeleteByIdDefinition, DeleteByQueryDefinition}
+import com.sksamuel.elastic4s.delete.{DeleteByIdRequest, DeleteByQueryRequest}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -12,7 +12,7 @@ import org.apache.http.entity.ContentType
 import scala.concurrent.Future
 
 object DeleteByQueryBodyFn {
-  def apply(request: DeleteByQueryDefinition): XContentBuilder = {
+  def apply(request: DeleteByQueryRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.rawField("query", QueryBuilderFn(request.query))
     builder.endObject()
@@ -22,11 +22,11 @@ object DeleteByQueryBodyFn {
 
 trait DeleteImplicits {
 
-  implicit object DeleteByQueryShow extends Show[DeleteByQueryDefinition] {
-    override def show(req: DeleteByQueryDefinition): String = DeleteByQueryBodyFn(req).string()
+  implicit object DeleteByQueryShow extends Show[DeleteByQueryRequest] {
+    override def show(req: DeleteByQueryRequest): String = DeleteByQueryBodyFn(req).string()
   }
 
-  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryDefinition, DeleteByQueryResponse] {
+  implicit object DeleteByQueryExecutable extends HttpExecutable[DeleteByQueryRequest, DeleteByQueryResponse] {
 
     override def responseHandler = new ResponseHandler[DeleteByQueryResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] =
@@ -36,7 +36,7 @@ trait DeleteImplicits {
         }
     }
 
-    override def execute(client: HttpRequestClient, request: DeleteByQueryDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: DeleteByQueryRequest): Future[HttpResponse] = {
 
       val endpoint =
         if (request.indexesAndTypes.types.isEmpty)
@@ -62,7 +62,7 @@ trait DeleteImplicits {
     }
   }
 
-  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdDefinition, DeleteResponse] {
+  implicit object DeleteByIdExecutable extends HttpExecutable[DeleteByIdRequest, DeleteResponse] {
 
     override def responseHandler = new ResponseHandler[DeleteResponse] {
 
@@ -82,7 +82,7 @@ trait DeleteImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: DeleteByIdDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: DeleteByIdRequest): Future[HttpResponse] = {
 
       val method = "DELETE"
       val endpoint =

@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.streams
 
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.IndexAndTypes
-import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
@@ -184,7 +184,7 @@ class ShipRequestBuilder(indexName: String = "bulkindexsubint") extends RequestB
   import ElasticDsl._
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-  override def request(ship: Ship): BulkCompatibleDefinition = {
+  override def request(ship: Ship): BulkCompatibleRequest = {
     indexInto(s"$indexName/ships") source ship
   }
 }

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
@@ -11,7 +11,7 @@ class ChildrenAggregationHttpTest extends FlatSpec with Matchers with DockerTest
 
   "child aggs" should "support sub aggs" ignore {
 
-    val http = HttpClient("elasticsearch://localhost:9200")
+    val http = ElasticClient("elasticsearch://localhost:9200")
 
     Try {
       http.execute {

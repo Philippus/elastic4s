@@ -1,19 +1,19 @@
 package com.sksamuel.elastic4s.http.bulk
 
-import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.delete.DeleteByIdDefinition
+import com.sksamuel.elastic4s.bulk.BulkRequest
+import com.sksamuel.elastic4s.delete.DeleteByIdRequest
 import com.sksamuel.elastic4s.http.index.VersionTypeHttpString
 import com.sksamuel.elastic4s.http.update.UpdateBuilderFn
-import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition}
+import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexRequest}
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.update.UpdateDefinition
+import com.sksamuel.elastic4s.update.UpdateRequest
 
 object BulkBuilderFn {
 
-  def apply(bulk: BulkDefinition): Seq[String] = {
+  def apply(bulk: BulkRequest): Seq[String] = {
     val rows = List.newBuilder[String]
     bulk.requests.foreach {
-      case index: IndexDefinition =>
+      case index: IndexRequest =>
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("index")
         builder.field("_index", index.indexAndType.index)
@@ -29,7 +29,7 @@ object BulkBuilderFn {
         rows += builder.string
         rows += IndexContentBuilder(index).string()
 
-      case delete: DeleteByIdDefinition =>
+      case delete: DeleteByIdRequest =>
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("delete")
         builder.field("_index", delete.indexType.index)
@@ -42,7 +42,7 @@ object BulkBuilderFn {
 
         rows += builder.string
 
-      case update: UpdateDefinition =>
+      case update: UpdateRequest =>
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("update")
         builder.field("_index", update.indexAndType.index)

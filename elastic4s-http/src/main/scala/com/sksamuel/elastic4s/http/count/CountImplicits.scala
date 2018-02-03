@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s.http.count
 
 import java.net.URLEncoder
 
-import com.sksamuel.elastic4s.count.CountDefinition
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.count.CountRequest
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -12,9 +12,9 @@ case class CountResponse(count: Long)
 
 trait CountImplicits {
 
-  implicit object CountHttpExecutable extends HttpExecutable[CountDefinition, CountResponse] {
+  implicit object CountHttpExecutable extends HttpExecutable[CountRequest, CountResponse] {
 
-    override def execute(client: HttpRequestClient, request: CountDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: CountRequest): Future[HttpResponse] = {
 
       val endpoint =
         if (request.indexes.isEmpty && request.types.isEmpty)

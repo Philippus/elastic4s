@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.ValueCountAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.ValueCountAggregation
 
 object ValueCountAggregationBuilder {
-  def apply(agg: ValueCountAggregationDefinition): XContentBuilder = {
+  def apply(agg: ValueCountAggregation): XContentBuilder = {
     val builder = XContentFactory.obj()
     builder.startObject("value_count")
     agg.field.foreach(builder.field("field", _))

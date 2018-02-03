@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search.queries
 import com.sksamuel.elastic4s.http.search.queries.nested.InnerHitQueryBodyFn
 import com.sksamuel.elastic4s.searches.HighlightFieldDefinition
 import com.sksamuel.elastic4s.searches.queries.InnerHitDefinition
-import com.sksamuel.elastic4s.searches.sort.FieldSortDefinition
+import com.sksamuel.elastic4s.searches.sort.FieldSort
 import org.scalatest.{FunSuite, Matchers}
 
 class InnerHitQueryBodyFnTest extends FunSuite with Matchers {
@@ -16,7 +16,7 @@ class InnerHitQueryBodyFnTest extends FunSuite with Matchers {
       .version(true)
       .size(2)
       .docValueFields(List("df1", "df2"))
-      .sortBy(FieldSortDefinition("sortField"))
+      .sortBy(FieldSort("sortField"))
       .storedFieldNames(List("field1", "field2"))
       .highlighting(HighlightFieldDefinition("hlField"))
 

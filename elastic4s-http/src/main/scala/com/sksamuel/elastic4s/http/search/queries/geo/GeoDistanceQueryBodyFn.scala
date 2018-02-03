@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.geo
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQuery
 
 object GeoDistanceQueryBodyFn {
 
-  def apply(q: GeoDistanceQueryDefinition): XContentBuilder = {
+  def apply(q: GeoDistanceQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("geo_distance")
     q.distance.foreach {

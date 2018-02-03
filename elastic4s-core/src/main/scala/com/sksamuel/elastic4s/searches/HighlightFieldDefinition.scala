@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 
 case class HighlightFieldDefinition(field: String,
@@ -12,7 +12,7 @@ case class HighlightFieldDefinition(field: String,
                                     fragmentSize: Option[Int] = None,
                                     highlighterType: Option[String] = None,
                                     highlightFilter: Option[Boolean] = None,
-                                    highlightQuery: Option[QueryDefinition] = None,
+                                    highlightQuery: Option[Query] = None,
                                     order: Option[String] = None,
                                     noMatchSize: Option[Int] = None,
                                     numOfFragments: Option[Int] = None,
@@ -48,7 +48,7 @@ case class HighlightFieldDefinition(field: String,
 
   def order(order: String): HighlightFieldDefinition = copy(order = order.some)
 
-  def query(query: QueryDefinition): HighlightFieldDefinition = copy(highlightQuery = query.some)
+  def query(query: Query): HighlightFieldDefinition = copy(highlightQuery = query.some)
 
   def phraseLimit(limit: Int): HighlightFieldDefinition = copy(phraseLimit = limit.some)
 

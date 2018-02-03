@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.TermsAggregation
 
 object TermsAggregationBuilder {
-  def apply(agg: TermsAggregationDefinition): XContentBuilder = {
+  def apply(agg: TermsAggregation): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 

@@ -20,7 +20,7 @@ case class RangeQuery(field: String,
                       format: Option[String] = None,
                       queryName: Option[String] = None,
                       relation: Option[RangeRelation] = None // used by range fields
-) extends MultiTermQueryDefinition {
+) extends MultiTermQuery {
 
   def boost(boost: Double): RangeQuery              = copy(boost = boost.some)
   def relation(relation: RangeRelation): RangeQuery = copy(relation = relation.some)
@@ -51,4 +51,4 @@ case class RangeQuery(field: String,
   def queryName(queryName: String): RangeQuery = copy(queryName = queryName.some)
 }
 
-case class RawQueryDefinition(json: String) extends QueryDefinition
+case class RawQuery(json: String) extends Query

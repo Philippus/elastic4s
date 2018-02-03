@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.QueryStringQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.QueryStringQuery
 
 object QueryStringBodyFn {
-  def apply(s: QueryStringQueryDefinition): XContentBuilder = {
+  def apply(s: QueryStringQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("query_string")
     s.defaultOperator.foreach(builder.field("default_operator", _))
     s.defaultField.foreach(builder.field("default_field", _))

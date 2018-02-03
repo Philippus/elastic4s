@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.get
 
-import com.sksamuel.elastic4s.get.MultiGetDefinition
+import com.sksamuel.elastic4s.get.MultiGetRequest
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object MultiGetBodyBuilder {
-  def apply(request: MultiGetDefinition): XContentBuilder = {
+  def apply(request: MultiGetRequest): XContentBuilder = {
     val builder = XContentFactory.obj()
     builder.startArray("docs")
     request.gets.foreach { get =>

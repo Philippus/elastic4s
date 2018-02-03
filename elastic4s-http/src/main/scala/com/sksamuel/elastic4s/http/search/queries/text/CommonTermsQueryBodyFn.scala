@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.CommonTermsQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.CommonTermsQuery
 
 object CommonTermsQueryBodyFn {
-  def apply(q: CommonTermsQueryDefinition): XContentBuilder = {
+  def apply(q: CommonTermsQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("common")

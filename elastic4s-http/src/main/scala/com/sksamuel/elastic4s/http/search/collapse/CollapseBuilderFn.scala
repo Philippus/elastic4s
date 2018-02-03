@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.collapse
 
 import com.sksamuel.elastic4s.http.search.queries.nested.InnerHitQueryBodyFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.collapse.CollapseDefinition
+import com.sksamuel.elastic4s.searches.collapse.CollapseRequest
 
 object CollapseBuilderFn {
 
-  def apply(collapse: CollapseDefinition): XContentBuilder = {
+  def apply(collapse: CollapseRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("field", collapse.field)
     collapse.maxConcurrentGroupSearches.foreach(max => builder.field("max_concurrent_group_searches", max))

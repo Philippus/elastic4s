@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.mappings.dynamictemplate
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.script.ScriptFieldDefinition
+import com.sksamuel.elastic4s.script.ScriptField
 
 trait DynamicTemplateApi {
   self: ElasticApi =>
@@ -35,7 +35,7 @@ trait DynamicTemplateApi {
   def dynamicNestedField(): NestedFieldDefinition               = NestedFieldDefinition("")
   def dynamicObjectField(): ObjectFieldDefinition               = ObjectFieldDefinition("")
   def dynamicPercolatorField(): BasicFieldDefinition            = BasicFieldDefinition("", "percolator")
-  def dynamicScriptField(script: String): ScriptFieldDefinition = ScriptFieldDefinition("", script)
+  def dynamicScriptField(script: String): ScriptField = ScriptField("", script)
   def dynamicShortField(): BasicFieldDefinition                 = BasicFieldDefinition("", "short")
   def dynamicTextField(): TextFieldDefinition                   = TextFieldDefinition("")
   def dynamicTokenCountField(): BasicFieldDefinition            = BasicFieldDefinition("", "token_count")

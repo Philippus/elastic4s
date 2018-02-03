@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.FiltersAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.FiltersAggregation
 
 object FiltersAggregationBuilder {
-  def apply(agg: FiltersAggregationDefinition): XContentBuilder = {
+  def apply(agg: FiltersAggregation): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 

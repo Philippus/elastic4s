@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.compound
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.DisMaxQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.DisMaxQuery
 
 object DisMaxQueryBodyFn {
-  def apply(q: DisMaxQueryDefinition): XContentBuilder = {
+  def apply(q: DisMaxQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("dis_max")

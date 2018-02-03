@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.bulk
 
 import cats.Show
-import com.sksamuel.elastic4s.bulk.BulkDefinition
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, RefreshPolicyHttpValue}
+import com.sksamuel.elastic4s.bulk.BulkRequest
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse, RefreshPolicyHttpValue}
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
@@ -10,13 +10,13 @@ import scala.concurrent.Future
 
 trait BulkImplicits {
 
-  implicit object BulkShow extends Show[BulkDefinition] {
-    override def show(f: BulkDefinition): String = BulkBuilderFn(f).mkString("\n")
+  implicit object BulkShow extends Show[BulkRequest] {
+    override def show(f: BulkRequest): String = BulkBuilderFn(f).mkString("\n")
   }
 
-  implicit object BulkExecutable extends HttpExecutable[BulkDefinition, BulkResponse] with Logging {
+  implicit object BulkExecutable extends HttpExecutable[BulkRequest, BulkResponse] with Logging {
 
-    override def execute(client: HttpRequestClient, bulk: BulkDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, bulk: BulkRequest): Future[HttpResponse] = {
 
       val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well

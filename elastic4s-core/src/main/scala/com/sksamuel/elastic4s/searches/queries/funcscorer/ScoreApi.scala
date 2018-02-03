@@ -1,22 +1,22 @@
 package com.sksamuel.elastic4s.searches.queries.funcscorer
 
-import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.script.Script
+import com.sksamuel.elastic4s.searches.queries.Query
 
 trait ScoreApi {
 
-  def randomScore(seed: Int) = RandomScoreFunctionDefinition(seed)
+  def randomScore(seed: Int) = RandomScoreFunction(seed)
 
-  def scriptScore(script: ScriptDefinition) = ScriptScoreDefinition(script)
+  def scriptScore(script: Script) = ScriptScore(script)
 
-  def gaussianScore(field: String, origin: String, scale: String) = GaussianDecayScoreDefinition(field, origin, scale)
+  def gaussianScore(field: String, origin: String, scale: String) = GaussianDecayScore(field, origin, scale)
 
-  def linearScore(field: String, origin: String, scale: String) = LinearDecayScoreDefinition(field, origin, scale)
+  def linearScore(field: String, origin: String, scale: String) = LinearDecayScore(field, origin, scale)
 
   def exponentialScore(field: String, origin: String, scale: String) =
-    ExponentialDecayScoreDefinition(field, origin, scale)
+    ExponentialDecayScore(field, origin, scale)
 
-  def fieldFactorScore(field: String) = FieldValueFactorDefinition(field)
+  def fieldFactorScore(field: String) = FieldValueFactor(field)
 
-  def weightScore(boost: Double) = WeightScoreDefinition(boost)
+  def weightScore(boost: Double) = WeightScore(boost)
 }

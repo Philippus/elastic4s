@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.geo
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.geo.GeoBoundingBoxQuery
 
 object GeoBoundingBoxQueryBodyFn {
 
-  def apply(q: GeoBoundingBoxQueryDefinition): XContentBuilder = {
+  def apply(q: GeoBoundingBoxQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("geo_bounding_box")
     builder.startObject(q.field)
 

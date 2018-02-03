@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.funcscorer._
 
 object GaussianDecayScoreBuilderFn {
-  def apply(g: GaussianDecayScoreDefinition): XContentBuilder = {
+  def apply(g: GaussianDecayScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("gauss")
     builder.startObject(g.field)
@@ -26,7 +26,7 @@ object GaussianDecayScoreBuilderFn {
 }
 
 object RandomScoreFunctionBuilderFn {
-  def apply(r: RandomScoreFunctionDefinition): XContentBuilder = {
+  def apply(r: RandomScoreFunction): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("random_score")
     builder.field("seed", r.seed)
@@ -39,7 +39,7 @@ object RandomScoreFunctionBuilderFn {
 }
 
 object ScriptScoreBuilderFn {
-  def apply(s: ScriptScoreDefinition): XContentBuilder = {
+  def apply(s: ScriptScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("script_score")
     builder.rawField("script", ScriptBuilderFn(s.script))
@@ -53,7 +53,7 @@ object ScriptScoreBuilderFn {
 }
 
 object FieldValueFactorBuilderFn {
-  def apply(f: FieldValueFactorDefinition): XContentBuilder = {
+  def apply(f: FieldValueFactor): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("field_value_factor")
     builder.field("field", f.fieldName)
@@ -69,7 +69,7 @@ object FieldValueFactorBuilderFn {
 }
 
 object ExponentialDecayScoreBuilderFn {
-  def apply(g: ExponentialDecayScoreDefinition): XContentBuilder = {
+  def apply(g: ExponentialDecayScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("exp")
     builder.startObject(g.field)
@@ -89,7 +89,7 @@ object ExponentialDecayScoreBuilderFn {
 }
 
 object LinearDecayScoreBuilderFn {
-  def apply(g: LinearDecayScoreDefinition): XContentBuilder = {
+  def apply(g: LinearDecayScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("linear")
     builder.startObject(g.field)
@@ -109,7 +109,7 @@ object LinearDecayScoreBuilderFn {
 }
 
 object WeightBuilderFn {
-  def apply(w: WeightScoreDefinition): XContentBuilder = {
+  def apply(w: WeightScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("weight", w.weight.toFloat)
     w.filter.foreach(filter => {

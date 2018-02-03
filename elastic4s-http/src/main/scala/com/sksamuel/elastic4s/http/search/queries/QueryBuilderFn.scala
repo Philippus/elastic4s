@@ -29,71 +29,71 @@ import com.sksamuel.elastic4s.http.search.queries.specialized.{
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.json.XContentBuilder
-import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDefinition, ScriptScoreDefinition}
+import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQuery, ScriptScore}
 import com.sksamuel.elastic4s.searches.queries.geo.{
-  GeoBoundingBoxQueryDefinition,
-  GeoDistanceQueryDefinition,
-  GeoPolygonQueryDefinition,
-  GeoShapeQueryDefinition
+  GeoBoundingBoxQuery,
+  GeoDistanceQuery,
+  GeoPolygonQuery,
+  GeoShapeQuery
 }
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{
-  TermQueryDefinition,
-  TermsLookupQueryDefinition,
-  TermsQueryDefinition,
+  TermQuery,
+  TermsLookupQuery,
+  TermsQuery,
   TermsSetQuery
 }
 import com.sksamuel.elastic4s.searches.queries.{IdQuery, _}
 
 object QueryBuilderFn {
-  def apply(q: QueryDefinition): XContentBuilder = q match {
-    case b: BoolQueryDefinition           => BoolQueryBuilderFn(b)
-    case b: BoostingQueryDefinition       => BoostingQueryBodyFn(b)
-    case q: CommonTermsQueryDefinition    => CommonTermsQueryBodyFn(q)
-    case q: ConstantScoreDefinition       => ConstantScoreBodyFn(q)
-    case q: DisMaxQueryDefinition         => DisMaxQueryBodyFn(q)
-    case q: ExistsQueryDefinition         => ExistsQueryBodyFn(q)
-    case q: FunctionScoreQueryDefinition  => FunctionScoreQueryBuilderFn(q)
-    case q: FuzzyQueryDefinition          => FuzzyQueryBodyFn(q)
-    case q: GeoBoundingBoxQueryDefinition => GeoBoundingBoxQueryBodyFn(q)
-    case q: GeoDistanceQueryDefinition    => GeoDistanceQueryBodyFn(q)
-    case q: GeoPolygonQueryDefinition     => GeoPolyonQueryBodyFn(q)
-    case q: GeoShapeQueryDefinition       => GeoShapeQueryBodyFn(q)
-    case q: HasChildQueryDefinition       => HasChildBodyFn(q)
-    case q: HasParentQueryDefinition      => HasParentBodyFn(q)
+  def apply(q: Query): XContentBuilder = q match {
+    case b: BoolQuery           => BoolQueryBuilderFn(b)
+    case b: BoostingQuery       => BoostingQueryBodyFn(b)
+    case q: CommonTermsQuery    => CommonTermsQueryBodyFn(q)
+    case q: ConstantScore       => ConstantScoreBodyFn(q)
+    case q: DisMaxQuery         => DisMaxQueryBodyFn(q)
+    case q: ExistsQuery         => ExistsQueryBodyFn(q)
+    case q: FunctionScoreQuery  => FunctionScoreQueryBuilderFn(q)
+    case q: FuzzyQuery          => FuzzyQueryBodyFn(q)
+    case q: GeoBoundingBoxQuery => GeoBoundingBoxQueryBodyFn(q)
+    case q: GeoDistanceQuery    => GeoDistanceQueryBodyFn(q)
+    case q: GeoPolygonQuery     => GeoPolyonQueryBodyFn(q)
+    case q: GeoShapeQuery       => GeoShapeQueryBodyFn(q)
+    case q: HasChildQuery       => HasChildBodyFn(q)
+    case q: HasParentQuery      => HasParentBodyFn(q)
     case q: IdQuery                       => IdQueryBodyFn(q)
-    case q: MatchAllQueryDefinition       => MatchAllBodyFn(q)
-    case q: MatchNoneQueryDefinition      => MatchNoneBodyFn(q)
-    case q: MatchQueryDefinition          => MatchQueryBuilderFn(q)
-    case q: MatchPhraseDefinition         => MatchPhraseQueryBodyFn(q)
-    case q: MatchPhrasePrefixDefinition   => MatchPhrasePrefixBodyFn(q)
-    case q: MoreLikeThisQueryDefinition   => MoreLikeThisBuilderFn(q)
-    case q: MultiMatchQueryDefinition     => MultiMatchBodyFn(q)
-    case q: NestedQueryDefinition         => NestedQueryBodyFn(q)
-    case q: ParentIdQueryDefinition       => ParentIdQueryBodyFn(q)
+    case q: MatchAllQuery       => MatchAllBodyFn(q)
+    case q: MatchNoneQuery      => MatchNoneBodyFn(q)
+    case q: MatchQuery          => MatchQueryBuilderFn(q)
+    case q: MatchPhrase         => MatchPhraseQueryBodyFn(q)
+    case q: MatchPhrasePrefix   => MatchPhrasePrefixBodyFn(q)
+    case q: MoreLikeThisQuery   => MoreLikeThisBuilderFn(q)
+    case q: MultiMatchQuery     => MultiMatchBodyFn(q)
+    case q: NestedQuery         => NestedQueryBodyFn(q)
+    case q: ParentIdQuery       => ParentIdQueryBodyFn(q)
     case q: PrefixQuery                   => PrefixQueryBodyFn(q)
-    case q: QueryStringQueryDefinition    => QueryStringBodyFn(q)
+    case q: QueryStringQuery    => QueryStringBodyFn(q)
     case r: RangeQuery                    => RangeQueryBodyFn(r)
-    case q: RawQueryDefinition            => RawQueryBodyFn(q)
-    case q: RegexQueryDefinition          => RegexQueryBodyFn(q)
-    case q: ScriptQueryDefinition         => ScriptQueryBodyFn(q)
-    case q: ScriptScoreDefinition         => ScriptScoreQueryBodyFn(q)
-    case s: SimpleStringQueryDefinition   => SimpleStringBodyFn(s)
-    case s: SpanContainingQueryDefinition => SpanContainingQueryBodyFn(s)
-    case s: SpanFirstQueryDefinition      => SpanFirstQueryBodyFn(s)
-    case s: SpanNearQueryDefinition       => SpanNearQueryBodyFn(s)
-    case s: SpanMultiTermQueryDefinition  => SpanMultiTermQueryBodyFn(s)
-    case s: SpanNotQueryDefinition        => SpanNotQueryBodyFn(s)
-    case s: SpanOrQueryDefinition         => SpanOrQueryBodyFn(s)
-    case s: SpanTermQueryDefinition       => SpanTermQueryBodyFn(s)
-    case s: SpanWithinQueryDefinition     => SpanWithinQueryBodyFn(s)
-    case t: TermQueryDefinition           => TermQueryBodyFn(t)
-    case t: TermsQueryDefinition[_]       => TermsQueryBodyFn(t)
-    case t: TermsLookupQueryDefinition    => TermsLookupQueryBodyFn(t)
+    case q: RawQuery            => RawQueryBodyFn(q)
+    case q: RegexQuery          => RegexQueryBodyFn(q)
+    case q: ScriptQuery         => ScriptQueryBodyFn(q)
+    case q: ScriptScore         => ScriptScoreQueryBodyFn(q)
+    case s: SimpleStringQuery   => SimpleStringBodyFn(s)
+    case s: SpanContainingQuery => SpanContainingQueryBodyFn(s)
+    case s: SpanFirstQuery      => SpanFirstQueryBodyFn(s)
+    case s: SpanNearQuery       => SpanNearQueryBodyFn(s)
+    case s: SpanMultiTermQuery  => SpanMultiTermQueryBodyFn(s)
+    case s: SpanNotQuery        => SpanNotQueryBodyFn(s)
+    case s: SpanOrQuery         => SpanOrQueryBodyFn(s)
+    case s: SpanTermQuery       => SpanTermQueryBodyFn(s)
+    case s: SpanWithinQuery     => SpanWithinQueryBodyFn(s)
+    case t: TermQuery           => TermQueryBodyFn(t)
+    case t: TermsQuery[_]       => TermsQueryBodyFn(t)
+    case t: TermsLookupQuery    => TermsLookupQueryBodyFn(t)
     case t: TermsSetQuery                 => TermsSetQueryBodyFn(t)
-    case q: TypeQueryDefinition           => TypeQueryBodyFn(q)
-    case q: WildcardQueryDefinition       => WildcardQueryBodyFn(q)
+    case q: TypeQuery           => TypeQueryBodyFn(q)
+    case q: WildcardQuery       => WildcardQueryBodyFn(q)
 
     // Not implemented
     case ni =>

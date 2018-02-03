@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.GeoHashGridAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.GeoHashGridAggregation
 
 object GeoHashGridAggregationBuilder {
-  def apply(agg: GeoHashGridAggregationDefinition): XContentBuilder = {
+  def apply(agg: GeoHashGridAggregation): XContentBuilder = {
 
     val builder = XContentFactory.obj.startObject("geohash_grid")
 

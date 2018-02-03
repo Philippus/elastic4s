@@ -4,7 +4,7 @@ case class IdQuery(ids: Seq[Any],
                    types: Seq[String] = Nil,
                    boost: Option[Double] = None,
                    queryName: Option[String] = None)
-    extends QueryDefinition {
+    extends Query {
 
   def types(types: Iterable[String]): IdQuery      = copy(types = types.toSeq)
   def types(first: String, rest: String*): IdQuery = copy(types = first +: rest)

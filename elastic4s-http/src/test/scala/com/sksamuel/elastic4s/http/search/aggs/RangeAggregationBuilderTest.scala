@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
-import com.sksamuel.elastic4s.script.ScriptDefinition
-import com.sksamuel.elastic4s.searches.aggs.RangeAggregationDefinition
+import com.sksamuel.elastic4s.script.Script
+import com.sksamuel.elastic4s.searches.aggs.RangeAggregation
 import org.scalatest.{FunSuite, Matchers}
 
 class RangeAggregationBuilderTest extends FunSuite with Matchers {
 
   test("range aggregation with 'field' and 'ranges' should generate expected json") {
-    val agg = RangeAggregationDefinition("price_ranges")
+    val agg = RangeAggregation("price_ranges")
       .field("price")
       .range(0, 50)
       .range(50, 100)
@@ -18,7 +18,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("range aggregation with 'unboundedFrom' and 'unboundedTo' should generate expected json") {
-    val agg = RangeAggregationDefinition("price_ranges")
+    val agg = RangeAggregation("price_ranges")
       .field("price")
       .unboundedTo(50)
       .range(50, 100)
@@ -29,7 +29,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("range aggregation with 'named ranges' should generate expected json") {
-    val agg = RangeAggregationDefinition("price_ranges")
+    val agg = RangeAggregation("price_ranges")
       .field("price")
       .unboundedTo("cheap", 50)
       .range("average", 50, 100)
@@ -40,9 +40,9 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("range aggregation with a script parameter should generate expected json") {
-    val agg = RangeAggregationDefinition("price_ranges")
+    val agg = RangeAggregation("price_ranges")
       .field("price")
-      .script(ScriptDefinition("doc['price'].value").lang("painless"))
+      .script(Script("doc['price'].value").lang("painless"))
       .range(0, 50)
       .range(50, 1000)
 
@@ -51,7 +51,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("range aggregation with a keyed parameter setted to true should generate expected json") {
-    val agg = RangeAggregationDefinition("price_ranges")
+    val agg = RangeAggregation("price_ranges")
       .field("price")
       .range(0, 50)
       .range(50, 1000)
@@ -62,7 +62,7 @@ class RangeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("range aggregation with a missing parameter setted should generate expected json") {
-    val agg = RangeAggregationDefinition("price_ranges")
+    val agg = RangeAggregation("price_ranges")
       .field("price")
       .missing(Int.box(0))
       .range(0, 50)

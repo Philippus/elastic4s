@@ -3,50 +3,50 @@ package com.sksamuel.elastic4s.admin
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.OptionImplicits._
 
-case class OpenIndex(indexes: Indexes)
-case class CloseIndex(indexes: Indexes)
-case class GetSegments(indexes: Indexes)
-case class IndicesExists(indexes: Indexes)
-case class TypesExists(indexes: Seq[String], types: Seq[String])
-case class AliasExistsDefinition(alias: String)
-case class IndexStats(indices: Indexes)
+case class OpenIndexRequest(indexes: Indexes)
+case class CloseIndexRequest(indexes: Indexes)
+case class GetSegmentsRequest(indexes: Indexes)
+case class IndicesExistsRequest(indexes: Indexes)
+case class TypesExistsRequest(indexes: Seq[String], types: Seq[String])
+case class AliasExistsRequest(alias: String)
+case class IndexStatsRequest(indices: Indexes)
 
-case class IndicesOptions(allowNoIndices: Boolean = false,
-                          ignoreUnavailable: Boolean = false,
-                          expandWildcardsOpen: Boolean = false,
-                          expandWildcardClosed: Boolean = false)
+case class IndicesOptionsRequest(allowNoIndices: Boolean = false,
+                                 ignoreUnavailable: Boolean = false,
+                                 expandWildcardsOpen: Boolean = false,
+                                 expandWildcardClosed: Boolean = false)
 
-case class ClearCache(indexes: Seq[String],
-                      fieldDataCache: Option[Boolean] = None,
-                      requestCache: Option[Boolean] = None,
-                      indicesOptions: Option[IndicesOptions] = None,
-                      queryCache: Option[Boolean] = None,
-                      fields: Seq[String] = Nil)
+case class ClearCacheRequest(indexes: Seq[String],
+                             fieldDataCache: Option[Boolean] = None,
+                             requestCache: Option[Boolean] = None,
+                             indicesOptions: Option[IndicesOptionsRequest] = None,
+                             queryCache: Option[Boolean] = None,
+                             fields: Seq[String] = Nil)
 
-case class FlushIndex(indexes: Seq[String], waitIfOngoing: Option[Boolean] = None, force: Option[Boolean] = None) {
-  def force(force: Boolean): FlushIndex                 = copy(force = force.some)
-  def waitIfOngoing(waitIfOngoing: Boolean): FlushIndex = copy(waitIfOngoing = waitIfOngoing.some)
+case class FlushIndexRequest(indexes: Seq[String], waitIfOngoing: Option[Boolean] = None, force: Option[Boolean] = None) {
+  def force(force: Boolean): FlushIndexRequest                 = copy(force = force.some)
+  def waitIfOngoing(waitIfOngoing: Boolean): FlushIndexRequest = copy(waitIfOngoing = waitIfOngoing.some)
 }
 
-case class RefreshIndex(indexes: Seq[String])
+case class RefreshIndexRequest(indexes: Seq[String])
 
-case class UpdateIndexLevelSettingsDefinition(indexes: Seq[String],
-                                              numberOfReplicas: Option[Int] = None,
-                                              autoExpandReplicas: Option[String] = None,
-                                              refreshInterval: Option[String] = None,
-                                              maxResultWindow: Option[Int] = None) {
+case class UpdateIndexLevelSettingsRequest(indexes: Seq[String],
+                                           numberOfReplicas: Option[Int] = None,
+                                           autoExpandReplicas: Option[String] = None,
+                                           refreshInterval: Option[String] = None,
+                                           maxResultWindow: Option[Int] = None) {
 
-  def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsDefinition =
+  def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsRequest =
     copy(numberOfReplicas = numberOfReplicas.some)
-  def autoExpandReplicas(autoExpandReplicas: String): UpdateIndexLevelSettingsDefinition =
+  def autoExpandReplicas(autoExpandReplicas: String): UpdateIndexLevelSettingsRequest =
     copy(autoExpandReplicas = autoExpandReplicas.some)
-  def refreshInterval(refreshInterval: String): UpdateIndexLevelSettingsDefinition =
+  def refreshInterval(refreshInterval: String): UpdateIndexLevelSettingsRequest =
     copy(refreshInterval = refreshInterval.some)
-  def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsDefinition =
+  def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsRequest =
     copy(maxResultWindow = maxResultWindow.some)
 
 }
 
-case class IndexShardStoreDefinition(indexes: Indexes, status: Option[String] = None) {
-  def status(status: String): IndexShardStoreDefinition = copy(status = status.some)
+case class IndexShardStoreRequest(indexes: Indexes, status: Option[String] = None) {
+  def status(status: String): IndexShardStoreRequest = copy(status = status.some)
 }

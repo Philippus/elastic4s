@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.GeoBoundsAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.GeoBoundsAggregation
 
 object GeoBoundsAggregationBuilder {
-  def apply(agg: GeoBoundsAggregationDefinition): XContentBuilder = {
+  def apply(agg: GeoBoundsAggregation): XContentBuilder = {
 
     val builder = XContentFactory.obj.startObject("geo_bounds")
 

@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.http.search.queries.nested
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.NestedQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.NestedQuery
 
 object NestedQueryBodyFn {
-  def apply(q: NestedQueryDefinition): XContentBuilder = {
+  def apply(q: NestedQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("nested")
     builder.field("path", q.path)

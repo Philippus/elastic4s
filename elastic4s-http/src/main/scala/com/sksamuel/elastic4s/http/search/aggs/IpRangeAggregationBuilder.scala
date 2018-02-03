@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.IpRangeAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.IpRangeAggregation
 
 object IpRangeAggregationBuilder {
-  def apply(agg: IpRangeAggregationDefinition): XContentBuilder = {
+  def apply(agg: IpRangeAggregation): XContentBuilder = {
 
     val builder = XContentFactory.obj().startObject("ip_range")
 

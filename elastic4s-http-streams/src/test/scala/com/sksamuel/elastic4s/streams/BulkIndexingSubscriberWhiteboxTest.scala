@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
+import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
@@ -27,7 +27,7 @@ class BulkIndexingSubscriberWhiteboxTest
 
     import ElasticJackson.Implicits._
 
-    override def request(t: Item): BulkCompatibleDefinition = indexInto("bulkindexwhitebox" / "castles").doc(t)
+    override def request(t: Item): BulkCompatibleRequest = indexInto("bulkindexwhitebox" / "castles").doc(t)
   }
 
   override def createSubscriber(probe: WhiteboxSubscriberProbe[Item]): Subscriber[Item] = {

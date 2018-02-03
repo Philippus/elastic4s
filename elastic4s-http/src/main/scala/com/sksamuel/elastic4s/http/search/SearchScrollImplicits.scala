@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.{
   ElasticError,
   HttpEntity,
   HttpExecutable,
-  HttpRequestClient,
+  HttpClient,
   HttpResponse,
   ResponseHandler
 }
@@ -36,7 +36,7 @@ trait SearchScrollImplicits {
         }
     }
 
-    override def execute(client: HttpRequestClient, request: ClearScrollDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: ClearScrollDefinition): Future[HttpResponse] = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -57,7 +57,7 @@ trait SearchScrollImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, req: SearchScrollDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, req: SearchScrollDefinition): Future[HttpResponse] = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)

@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 import com.sksamuel.elastic4s.TcpClient
 import com.sksamuel.elastic4s.embedded.{LocalNode, RemoteLocalNode}
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.ElasticClient
 
 import scala.util.{Failure, Random, Success, Try}
 import scala.util.control.NonFatal
@@ -18,7 +18,7 @@ trait LocalNodeProvider {
   def node: LocalNode = getNode
 
   implicit lazy val client: TcpClient = getNode.tcp(false)
-  implicit lazy val http: HttpClient  = getNode.http(false)
+  implicit lazy val http: ElasticClient  = getNode.http(false)
 }
 
 // implementation of LocalNodeProvider that uses a single
@@ -48,7 +48,7 @@ trait DiscoveryLocalNodeProvider extends LocalNodeProvider {
     try {
 
       // assume the local node is running on 9200
-      val client = HttpClient("elasticsearch://localhost:9200")
+      val client = ElasticClient("elasticsearch://localhost:9200")
       import com.sksamuel.elastic4s.http.ElasticDsl._
       val nodeinfo   = client.execute(nodeInfo()).await.right.get.result
       val (id, node) = nodeinfo.nodes.head

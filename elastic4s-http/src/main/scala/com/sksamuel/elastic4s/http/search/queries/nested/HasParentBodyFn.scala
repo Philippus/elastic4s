@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.nested
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.HasParentQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.HasParentQuery
 
 object HasParentBodyFn {
 
-  def apply(q: HasParentQueryDefinition): XContentBuilder = {
+  def apply(q: HasParentQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("has_parent")
     builder.field("parent_type", q.`type`)

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.matches.MatchQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.matches.MatchQuery
 
 object MatchQueryBuilderFn {
 
-  def apply(q: MatchQueryDefinition): XContentBuilder = {
+  def apply(q: MatchQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("match").startObject(q.field)

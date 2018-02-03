@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches
 
 import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 
 trait SearchTemplateApi {
@@ -10,12 +10,12 @@ trait SearchTemplateApi {
     new PutSearchTemplateExpectsQueryOrBody(name)
 
   class PutSearchTemplateExpectsQueryOrBody(name: String) {
-    def query(query: QueryDefinition): PutSearchTemplateDefinition = PutSearchTemplateDefinition(name, query.some, None)
+    def query(query: Query): PutSearchTemplateDefinition = PutSearchTemplateDefinition(name, query.some, None)
     def body(body: String): PutSearchTemplateDefinition            = PutSearchTemplateDefinition(name, None, body.some)
   }
 
   @deprecated("Use the stored scripts api to store templates", "6.0.0")
-  def putSearchTemplate(name: String, query: QueryDefinition): PutSearchTemplateDefinition =
+  def putSearchTemplate(name: String, query: Query): PutSearchTemplateDefinition =
     PutSearchTemplateDefinition(name, query.some, None)
 
   @deprecated("Use the stored scripts api to store templates", "6.0.0")
@@ -43,7 +43,7 @@ trait SearchTemplateApi {
 }
 
 @deprecated("Use the stored scripts api", "6.0.0")
-case class PutSearchTemplateDefinition(name: String, query: Option[QueryDefinition], body: Option[String])
+case class PutSearchTemplateDefinition(name: String, query: Option[Query], body: Option[String])
 case class GetSearchTemplateDefinition(name: String)
 
 @deprecated("Use the stored scripts api", "6.0.0")

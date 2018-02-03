@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.search.template
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http.search.SearchResponse
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.searches.{
   GetSearchTemplateDefinition,
   PutSearchTemplateDefinition,
@@ -19,7 +19,7 @@ trait SearchTemplateImplicits {
 
   implicit object TemplateSearchExecutable extends HttpExecutable[TemplateSearchDefinition, SearchResponse] {
 
-    override def execute(client: HttpRequestClient, req: TemplateSearchDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, req: TemplateSearchDefinition): Future[HttpResponse] = {
       val endpoint = req.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil)     => "/_search/template"
         case IndexesAndTypes(indexes, Nil) => "/" + indexes.mkString(",") + "/_search/template"
@@ -35,7 +35,7 @@ trait SearchTemplateImplicits {
   implicit object RemoveSearchTemplateExecutable
       extends HttpExecutable[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
 
-    override def execute(client: HttpRequestClient, req: RemoveSearchTemplateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, req: RemoveSearchTemplateDefinition): Future[HttpResponse] = {
       val endpoint = "/_scripts/" + req.name
       client.async("DELETE", endpoint, Map.empty)
     }
@@ -44,7 +44,7 @@ trait SearchTemplateImplicits {
   implicit object PutSearchTemplateExecutable
       extends HttpExecutable[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
 
-    override def execute(client: HttpRequestClient, req: PutSearchTemplateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, req: PutSearchTemplateDefinition): Future[HttpResponse] = {
       val endpoint = "/_scripts/" + req.name
       val body     = PutSearchTemplateBuilderFn(req).string()
       val entity   = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
@@ -70,7 +70,7 @@ trait SearchTemplateImplicits {
           }
       }
 
-    override def execute(client: HttpRequestClient, req: GetSearchTemplateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, req: GetSearchTemplateDefinition): Future[HttpResponse] = {
       val endpoint = "/_scripts/" + req.name
       client.async("GET", endpoint, Map.empty)
     }

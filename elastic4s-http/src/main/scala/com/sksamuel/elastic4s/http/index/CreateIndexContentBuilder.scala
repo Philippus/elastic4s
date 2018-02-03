@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.http.index
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.indexes.{AnalysisBuilderFn, CreateIndexDefinition}
+import com.sksamuel.elastic4s.indexes.{AnalysisBuilderFn, CreateIndexRequest}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 
 object CreateIndexContentBuilder {
 
-  def apply(d: CreateIndexDefinition): XContentBuilder =
+  def apply(d: CreateIndexRequest): XContentBuilder =
     if (d.rawSource.isDefined) {
       XContentFactory.parse(d.rawSource.get)
     } else {

@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.span.SpanMultiTermQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.span.SpanMultiTermQuery
 
 object SpanMultiTermQueryBodyFn {
-  def apply(q: SpanMultiTermQueryDefinition): XContentBuilder = {
+  def apply(q: SpanMultiTermQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_multi")
     builder.rawField("match", QueryBuilderFn(q.query))

@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor._
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.bulk.{BulkCompatibleDefinition, BulkDefinition}
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.bulk.{BulkCompatibleRequest, BulkRequest}
+import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem}
 import org.reactivestreams.{Subscriber, Subscription}
 
@@ -24,9 +24,9 @@ import scala.util.{Failure, Success}
   * @tparam T the type of element provided by the publisher this subscriber will subscribe with
   */
 class BulkIndexingSubscriber[T] private[streams] (
-  client: HttpClient,
-  builder: RequestBuilder[T],
-  config: SubscriberConfig[T]
+                                                   client: ElasticClient,
+                                                   builder: RequestBuilder[T],
+                                                   config: SubscriberConfig[T]
 )(implicit actorRefFactory: ActorRefFactory)
     extends Subscriber[T] {
 
@@ -75,11 +75,11 @@ object BulkActor {
 
   case class Request(n: Int)
 
-  case class Send[T](req: BulkDefinition, originals: Seq[T], attempts: Int)
+  case class Send[T](req: BulkRequest, originals: Seq[T], attempts: Int)
 
 }
 
-class BulkActor[T](client: HttpClient,
+class BulkActor[T](client: ElasticClient,
                    subscription: Subscription,
                    builder: RequestBuilder[T],
                    config: SubscriberConfig[T])
@@ -200,7 +200,7 @@ class BulkActor[T](client: HttpClient,
       context.stop(self)
     }
 
-  private def send(req: BulkDefinition, originals: Seq[T], attempts: Int): Unit = {
+  private def send(req: BulkRequest, originals: Seq[T], attempts: Int): Unit = {
     require(req.requests.size == originals.size, "Requests size does not match originals size")
 
     def filterByIndexes[S](sequence: Seq[S], indexes: Set[Int]) =
@@ -210,14 +210,14 @@ class BulkActor[T](client: HttpClient,
     def getOriginalForResponse(response: BulkResponseItem) = originals(response.itemId)
 
     // returns just requests that failed as a new bulk definition (+ originals)
-    def getRetryDef(resp: BulkResponse): (BulkDefinition, Seq[T]) = {
+    def getRetryDef(resp: BulkResponse): (BulkRequest, Seq[T]) = {
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
 
       val failureIds     = resp.failures.map(_.itemId).toSet
       val retryOriginals = filterByIndexes(originals, failureIds)
       val failedReqs     = filterByIndexes(req.requests, failureIds)
 
-      (BulkDefinition(failedReqs).refresh(policy), retryOriginals)
+      (BulkRequest(failedReqs).refresh(policy), retryOriginals)
     }
 
     val f = client.execute(req)
@@ -252,10 +252,10 @@ class BulkActor[T](client: HttpClient,
 
   private def index(): Unit = {
 
-    def bulkDef: BulkDefinition = {
+    def bulkDef: BulkRequest = {
       val defs   = buffer.map(t => builder.request(t))
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
-      BulkDefinition(defs).refresh(policy)
+      BulkRequest(defs).refresh(policy)
     }
 
     sent = sent + buffer.size
@@ -278,7 +278,7 @@ class BulkActor[T](client: HttpClient,
   * @tparam T the type of elements this builder supports
   */
 trait RequestBuilder[T] {
-  def request(t: T): BulkCompatibleDefinition
+  def request(t: T): BulkCompatibleRequest
 }
 
 /**

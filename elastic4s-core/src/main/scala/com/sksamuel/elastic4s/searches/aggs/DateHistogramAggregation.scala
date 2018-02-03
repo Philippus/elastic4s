@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ElasticDate
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
 import com.sksamuel.exts.OptionImplicits._
@@ -25,13 +25,13 @@ case class DateHistogramAggregation(name: String,
                                     offset: Option[String] = None,
                                     format: Option[String] = None,
                                     field: Option[String] = None,
-                                    script: Option[ScriptDefinition] = None,
+                                    script: Option[Script] = None,
                                     missing: Option[Any] = None,
                                     extendedBounds: Option[ExtendedBounds] = None,
                                     pipelines: Seq[PipelineAggregationDefinition] = Nil,
                                     subaggs: Seq[AbstractAggregation] = Nil,
                                     metadata: Map[String, AnyRef] = Map.empty)
-    extends AggregationDefinition {
+    extends Aggregation {
 
   type T = DateHistogramAggregation
 
@@ -52,7 +52,7 @@ case class DateHistogramAggregation(name: String,
 
   def format(format: String): DateHistogramAggregation           = copy(format = format.some)
   def field(field: String): DateHistogramAggregation             = copy(field = field.some)
-  def script(script: ScriptDefinition): DateHistogramAggregation = copy(script = script.some)
+  def script(script: Script): DateHistogramAggregation = copy(script = script.some)
   def missing(missing: Any): DateHistogramAggregation            = copy(missing = missing.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)

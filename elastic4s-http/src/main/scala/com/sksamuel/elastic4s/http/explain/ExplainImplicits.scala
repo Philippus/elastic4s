@@ -1,14 +1,14 @@
 package com.sksamuel.elastic4s.http.explain
 
-import com.sksamuel.elastic4s.explain.ExplainDefinition
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.explain.ExplainRequest
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse, ResponseHandler}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
 trait ExplainImplicits {
 
-  implicit object ExplainHttpExec extends HttpExecutable[ExplainDefinition, ExplainResponse] {
+  implicit object ExplainHttpExec extends HttpExecutable[ExplainRequest, ExplainResponse] {
 
     override def responseHandler: ResponseHandler[ExplainResponse] = new ResponseHandler[ExplainResponse] {
       override def handle(response: HttpResponse) =
@@ -18,7 +18,7 @@ trait ExplainImplicits {
         }
     }
 
-    override def execute(client: HttpRequestClient, request: ExplainDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: ExplainRequest): Future[HttpResponse] = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
 

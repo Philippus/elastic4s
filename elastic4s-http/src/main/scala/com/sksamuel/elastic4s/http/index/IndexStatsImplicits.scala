@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.admin.IndexStats
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.admin.IndexStatsRequest
+import com.sksamuel.elastic4s.http.{HttpExecutable, HttpClient, HttpResponse}
 
 import scala.concurrent.Future
 
@@ -121,9 +121,9 @@ case class IndexStatsResponse(@JsonProperty("_all") all: IndexStatsGroup, indice
 
 trait IndexStatsImplicits {
 
-  implicit object IndicesStatsExecutable extends HttpExecutable[IndexStats, IndexStatsResponse] {
+  implicit object IndicesStatsExecutable extends HttpExecutable[IndexStatsRequest, IndexStatsResponse] {
 
-    override def execute(client: HttpRequestClient, request: IndexStats): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: IndexStatsRequest): Future[HttpResponse] = {
       val endpoint = if (request.indices.isAll) "/_stats" else s"/${request.indices.string}/_stats"
       client.async("GET", endpoint, Map.empty)
     }

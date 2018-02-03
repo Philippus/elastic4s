@@ -4,7 +4,7 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.http.search.SearchHit
-import com.sksamuel.elastic4s.indexes.IndexDefinition
+import com.sksamuel.elastic4s.indexes.IndexRequest
 import com.sksamuel.elastic4s.searches.RichSearchHit
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.elasticsearch.ResourceAlreadyExistsException
@@ -45,7 +45,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matc
   )
 
   implicit object RichSearchHitRequestBuilder extends RequestBuilder[RichSearchHit] {
-    override def request(hit: RichSearchHit): IndexDefinition = {
+    override def request(hit: RichSearchHit): IndexRequest = {
       indexInto(indexName / indexType).doc(hit.sourceAsString)
     }
   }

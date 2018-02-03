@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.WildcardQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.WildcardQuery
 
 object WildcardQueryBodyFn {
-  def apply(q: WildcardQueryDefinition): XContentBuilder = {
+  def apply(q: WildcardQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("wildcard").startObject(q.field)
     builder.autofield("value", q.query)

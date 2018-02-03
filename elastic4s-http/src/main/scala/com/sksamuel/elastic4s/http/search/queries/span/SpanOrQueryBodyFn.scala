@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.span.SpanOrQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.span.SpanOrQuery
 
 object SpanOrQueryBodyFn {
-  def apply(q: SpanOrQueryDefinition): XContentBuilder = {
+  def apply(q: SpanOrQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_or")
     builder.startArray("clauses")

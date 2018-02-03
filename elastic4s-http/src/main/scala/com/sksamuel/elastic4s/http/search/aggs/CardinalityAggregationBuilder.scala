@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.CardinalityAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.CardinalityAggregation
 
 object CardinalityAggregationBuilder {
-  def apply(agg: CardinalityAggregationDefinition): XContentBuilder = {
+  def apply(agg: CardinalityAggregation): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("cardinality")
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.field("missing", _))

@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.http.update
 import com.sksamuel.elastic4s.FieldsMapper
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.update.UpdateDefinition
+import com.sksamuel.elastic4s.update.UpdateRequest
 
 object UpdateBuilderFn {
-  def apply(request: UpdateDefinition): XContentBuilder = {
+  def apply(request: UpdateRequest): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 

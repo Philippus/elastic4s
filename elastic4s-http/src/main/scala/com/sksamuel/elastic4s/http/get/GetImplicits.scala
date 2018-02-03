@@ -5,14 +5,14 @@ import java.net.URLEncoder
 import cats.Show
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.HitReader
-import com.sksamuel.elastic4s.get.{GetDefinition, MultiGetDefinition}
+import com.sksamuel.elastic4s.get.{GetRequest, MultiGetRequest}
 import com.sksamuel.elastic4s.http.{
   ElasticError,
   EnumConversions,
   FetchSourceContextQueryParameterFn,
   HttpEntity,
   HttpExecutable,
-  HttpRequestClient,
+  HttpClient,
   HttpResponse,
   ResponseHandler
 }
@@ -31,11 +31,11 @@ case class MultiGetResponse(docs: Seq[GetResponse]) {
 
 trait GetImplicits {
 
-  implicit object MultiGetShow extends Show[MultiGetDefinition] {
-    override def show(f: MultiGetDefinition): String = MultiGetBodyBuilder(f).string()
+  implicit object MultiGetShow extends Show[MultiGetRequest] {
+    override def show(f: MultiGetRequest): String = MultiGetBodyBuilder(f).string()
   }
 
-  implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetDefinition, MultiGetResponse] with Logging {
+  implicit object MultiGetHttpExecutable extends HttpExecutable[MultiGetRequest, MultiGetResponse] with Logging {
 
     override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
@@ -49,14 +49,14 @@ trait GetImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: MultiGetDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: MultiGetRequest): Future[HttpResponse] = {
       val body   = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       client.async("POST", "/_mget", Map.empty, entity)
     }
   }
 
-  implicit object GetHttpExecutable extends HttpExecutable[GetDefinition, GetResponse] with Logging {
+  implicit object GetHttpExecutable extends HttpExecutable[GetRequest, GetResponse] with Logging {
 
     override def responseHandler = new ResponseHandler[GetResponse] {
 
@@ -83,7 +83,7 @@ trait GetImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: GetDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: GetRequest): Future[HttpResponse] = {
 
       val endpoint =
         s"/${URLEncoder.encode(request.indexAndType.index)}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id)}"

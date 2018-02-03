@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.http.search.queries.specialized
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.funcscorer.FunctionScoreQuery
 
 object FunctionScoreQueryBuilderFn {
 
-  def apply(q: FunctionScoreQueryDefinition): XContentBuilder = {
+  def apply(q: FunctionScoreQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("function_score")
 

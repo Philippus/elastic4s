@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.suggs
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.suggestion.TermSuggestionDefinition
+import com.sksamuel.elastic4s.searches.suggestion.TermSuggestion
 
 object TermSuggestionBuilderFn {
-  def apply(term: TermSuggestionDefinition): XContentBuilder = {
+  def apply(term: TermSuggestion): XContentBuilder = {
 
     val builder = XContentFactory.obj()
 

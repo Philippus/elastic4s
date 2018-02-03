@@ -1,22 +1,22 @@
 package com.sksamuel.elastic4s.http.index.alias
 
 import com.sksamuel.elastic4s.alias.{
-  AddAliasActionDefinition,
-  IndicesAliasesRequestDefinition,
-  RemoveAliasActionDefinition
+  AddAliasActionRequest,
+  IndicesAliasesRequest,
+  RemoveAliasAction
 }
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object AliasActionBuilder {
 
-  def apply(r: IndicesAliasesRequestDefinition): XContentBuilder = {
+  def apply(r: IndicesAliasesRequest): XContentBuilder = {
     val source = XContentFactory.jsonBuilder().startArray("actions")
 
     val actionsArray = r.actions
       .map {
-        case addAction: AddAliasActionDefinition       => buildAddAction(addAction).string()
-        case removeAction: RemoveAliasActionDefinition => buildRemoveAction(removeAction).string()
+        case addAction: AddAliasActionRequest       => buildAddAction(addAction).string()
+        case removeAction: RemoveAliasAction => buildRemoveAction(removeAction).string()
       }
       .mkString(",")
 
@@ -25,7 +25,7 @@ object AliasActionBuilder {
     source.endArray().endObject()
   }
 
-  private def buildAddAction(addAction: AddAliasActionDefinition): XContentBuilder = {
+  private def buildAddAction(addAction: AddAliasActionRequest): XContentBuilder = {
     val jsonBuilder = XContentFactory.jsonBuilder().startObject("add")
 
     jsonBuilder.field("index", addAction.index)
@@ -41,7 +41,7 @@ object AliasActionBuilder {
     jsonBuilder.endObject().endObject()
   }
 
-  private def buildRemoveAction(removeAction: RemoveAliasActionDefinition): XContentBuilder = {
+  private def buildRemoveAction(removeAction: RemoveAliasAction): XContentBuilder = {
     val jsonBuilder = XContentFactory.jsonBuilder().startObject("remove")
 
     jsonBuilder.field("index", removeAction.index)

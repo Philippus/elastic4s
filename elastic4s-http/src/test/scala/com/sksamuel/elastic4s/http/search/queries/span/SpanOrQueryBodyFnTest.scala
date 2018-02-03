@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.span
 
-import com.sksamuel.elastic4s.searches.queries.span.{SpanNearQueryDefinition, SpanOrQueryDefinition, SpanTermQueryDefinition}
+import com.sksamuel.elastic4s.searches.queries.span.{SpanNearQuery, SpanOrQuery, SpanTermQuery}
 import org.scalatest.FunSuite
 
 import scala.util.parsing.json.JSON
@@ -8,10 +8,10 @@ import scala.util.parsing.json.JSON
 class SpanOrQueryBodyFnTest extends FunSuite {
 
   test("SpanOrQueryBodyFn apply should return appropriate XContentBuilder") {
-    val builder = SpanOrQueryBodyFn.apply(SpanOrQueryDefinition(
+    val builder = SpanOrQueryBodyFn.apply(SpanOrQuery(
       Seq(
-        SpanTermQueryDefinition("field1", "value1", Some("name1"), Some(4.0)),
-        SpanTermQueryDefinition("field2", "value2", Some("name2"), Some(7.0))
+        SpanTermQuery("field1", "value1", Some("name1"), Some(4.0)),
+        SpanTermQuery("field2", "value2", Some("name2"), Some(7.0))
       ),
       boost = Some(2.0), queryName = Some("rootName")
     ))

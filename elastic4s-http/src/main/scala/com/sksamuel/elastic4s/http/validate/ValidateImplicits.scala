@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.http.validate
 import cats.Show
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse, Shards}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpClient, HttpResponse, Shards}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.validate.ValidateDefinition
+import com.sksamuel.elastic4s.validate.ValidateRequest
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -17,7 +17,7 @@ case class ValidateResponse(valid: Boolean, @JsonProperty("_shards") shards: Sha
 case class Explanation(index: String, valid: Boolean, error: String)
 
 object ValidateBodyFn {
-  def apply(v: ValidateDefinition): XContentBuilder = {
+  def apply(v: ValidateRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.rawField("query", QueryBuilderFn(v.query))
     builder.endObject()
@@ -26,13 +26,13 @@ object ValidateBodyFn {
 
 trait ValidateImplicits {
 
-  implicit object ValidateShow extends Show[ValidateDefinition] {
-    override def show(v: ValidateDefinition): String = ValidateBodyFn(v).string()
+  implicit object ValidateShow extends Show[ValidateRequest] {
+    override def show(v: ValidateRequest): String = ValidateBodyFn(v).string()
   }
 
-  implicit object ValidateHttpExecutable extends HttpExecutable[ValidateDefinition, ValidateResponse] {
+  implicit object ValidateHttpExecutable extends HttpExecutable[ValidateRequest, ValidateResponse] {
 
-    override def execute(client: HttpRequestClient, request: ValidateDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: ValidateRequest): Future[HttpResponse] = {
 
       val endpoint =
         s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"

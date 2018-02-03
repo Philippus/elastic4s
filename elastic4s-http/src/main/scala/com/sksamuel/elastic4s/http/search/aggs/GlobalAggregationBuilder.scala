@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.GlobalAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.GlobalAggregation
 
 object GlobalAggregationBuilder {
-  def apply(agg: GlobalAggregationDefinition): XContentBuilder = {
+  def apply(agg: GlobalAggregation): XContentBuilder = {
 
     val builder = XContentFactory.obj.startObject("global")
 

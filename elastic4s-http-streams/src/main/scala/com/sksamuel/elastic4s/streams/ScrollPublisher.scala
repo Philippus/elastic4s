@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.http.{HttpClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.http.search.{SearchHit, SearchResponse}
-import com.sksamuel.elastic4s.searches.SearchDefinition
+import com.sksamuel.elastic4s.searches.SearchRequest
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits._
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
   * @param maxItems        the maximum number of elements to return
   * @param actorRefFactory an Actor reference factory required by the publisher
   */
-class ScrollPublisher private[streams] (client: HttpClient, search: SearchDefinition, maxItems: Long)(
+class ScrollPublisher private[streams](client: ElasticClient, search: SearchRequest, maxItems: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
@@ -39,7 +39,7 @@ class ScrollPublisher private[streams] (client: HttpClient, search: SearchDefini
   }
 }
 
-class ScrollSubscription(client: HttpClient, query: SearchDefinition, s: Subscriber[_ >: SearchHit], max: Long)(
+class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Subscription {
 
@@ -67,7 +67,7 @@ object PublishActor {
   case class Request(n: Long)
 }
 
-class PublishActor(client: HttpClient, query: SearchDefinition, s: Subscriber[_ >: SearchHit], max: Long)
+class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
     extends Actor
     with Stash
     with Logging {

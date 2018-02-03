@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.ExistsQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.ExistsQuery
 
 object ExistsQueryBodyFn {
-  def apply(q: ExistsQueryDefinition): XContentBuilder = {
+  def apply(q: ExistsQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("exists")
     builder.field("field", q.field)

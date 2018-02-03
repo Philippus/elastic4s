@@ -10,37 +10,37 @@ object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
     val builder = agg match {
 
-      case agg: AvgAggregationDefinition           => AvgAggregationBuilder(agg)
-      case agg: CardinalityAggregationDefinition   => CardinalityAggregationBuilder(agg)
-      case agg: ChildrenAggregationDefinition      => ChildrenAggregationBuilder(agg)
+      case agg: AvgAggregation           => AvgAggregationBuilder(agg)
+      case agg: CardinalityAggregation   => CardinalityAggregationBuilder(agg)
+      case agg: ChildrenAggregation      => ChildrenAggregationBuilder(agg)
       case agg: DateHistogramAggregation           => DateHistogramAggregationBuilder(agg)
-      case agg: ExtendedStatsAggregationDefinition => ExtendedStatsAggregationBuilder(agg)
-      case agg: FilterAggregationDefinition        => FilterAggregationBuilder(agg)
-      case agg: FiltersAggregationDefinition       => FiltersAggregationBuilder(agg)
-      case agg: KeyedFiltersAggregationDefinition  => KeyedFiltersAggregationBuilder(agg)
-      case agg: GeoCentroidAggregationDefinition   => GeoCentroidAggregationBuilder(agg)
-      case agg: GeoBoundsAggregationDefinition     => GeoBoundsAggregationBuilder(agg)
-      case agg: GeoDistanceAggregationDefinition   => GeoDistanceAggregationBuilder(agg)
-      case agg: GeoHashGridAggregationDefinition   => GeoHashGridAggregationBuilder(agg)
-      case agg: GlobalAggregationDefinition        => GlobalAggregationBuilder(agg)
+      case agg: ExtendedStatsAggregation => ExtendedStatsAggregationBuilder(agg)
+      case agg: FilterAggregation        => FilterAggregationBuilder(agg)
+      case agg: FiltersAggregation       => FiltersAggregationBuilder(agg)
+      case agg: KeyedFiltersAggregation  => KeyedFiltersAggregationBuilder(agg)
+      case agg: GeoCentroidAggregation   => GeoCentroidAggregationBuilder(agg)
+      case agg: GeoBoundsAggregation     => GeoBoundsAggregationBuilder(agg)
+      case agg: GeoDistanceAggregation   => GeoDistanceAggregationBuilder(agg)
+      case agg: GeoHashGridAggregation   => GeoHashGridAggregationBuilder(agg)
+      case agg: GlobalAggregation        => GlobalAggregationBuilder(agg)
       case agg: HistogramAggregation               => HistogramAggregationBuilder(agg)
-      case agg: IpRangeAggregationDefinition       => IpRangeAggregationBuilder(agg)
-      case agg: MaxAggregationDefinition           => MaxAggregationBuilder(agg)
-      case agg: MinAggregationDefinition           => MinAggregationBuilder(agg)
-      case agg: MissingAggregationDefinition       => MissingAggregationBuilder(agg)
-      case agg: NestedAggregationDefinition        => NestedAggregationBuilder(agg)
-      case agg: PercentilesAggregationDefinition   => PercentilesAggregationBuilder(agg)
-      case agg: ReverseNestedAggregationDefinition => ReverseNestedAggregationBuilder(agg)
-      case agg: SamplerAggregationDefinition       => SamplerAggregationBuilder(agg)
-      case agg: SigTermsAggregationDefinition      => SigTermsAggregationBuilder(agg)
-      case agg: SigTextAggregationDefinition       => SigTextAggregationBuilder(agg)
-      case agg: StatsAggregationDefinition         => StatsAggregationBuilder(agg)
-      case agg: SumAggregationDefinition           => SumAggregationBuilder(agg)
-      case agg: TopHitsAggregationDefinition       => TopHitsAggregationBuilder(agg)
-      case agg: TermsAggregationDefinition         => TermsAggregationBuilder(agg)
-      case agg: ValueCountAggregationDefinition    => ValueCountAggregationBuilder(agg)
+      case agg: IpRangeAggregation       => IpRangeAggregationBuilder(agg)
+      case agg: MaxAggregation           => MaxAggregationBuilder(agg)
+      case agg: MinAggregation           => MinAggregationBuilder(agg)
+      case agg: MissingAggregation       => MissingAggregationBuilder(agg)
+      case agg: NestedAggregation        => NestedAggregationBuilder(agg)
+      case agg: PercentilesAggregation   => PercentilesAggregationBuilder(agg)
+      case agg: ReverseNestedAggregation => ReverseNestedAggregationBuilder(agg)
+      case agg: SamplerAggregation       => SamplerAggregationBuilder(agg)
+      case agg: SigTermsAggregation      => SigTermsAggregationBuilder(agg)
+      case agg: SigTextAggregation       => SigTextAggregationBuilder(agg)
+      case agg: StatsAggregation         => StatsAggregationBuilder(agg)
+      case agg: SumAggregation           => SumAggregationBuilder(agg)
+      case agg: TopHitsAggregation       => TopHitsAggregationBuilder(agg)
+      case agg: TermsAggregation         => TermsAggregationBuilder(agg)
+      case agg: ValueCountAggregation    => ValueCountAggregationBuilder(agg)
 
-      case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
+      case agg: RangeAggregation => RangeAggregationBuilder(agg)
       case agg: DateRangeAggregation       => DateRangeAggregationBuilder(agg)
 
       // pipeline aggs
@@ -119,7 +119,7 @@ object AggMetaDataFn {
 }
 
 object SubAggsBuilderFn {
-  def apply(agg: AggregationDefinition, builder: XContentBuilder): Unit =
+  def apply(agg: Aggregation, builder: XContentBuilder): Unit =
     if (agg.subaggs.nonEmpty) {
       builder.startObject("aggs")
       agg.subaggs.foreach { subagg =>

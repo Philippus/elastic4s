@@ -1,16 +1,16 @@
 package com.sksamuel.elastic4s.http.index.alias
 
-import com.sksamuel.elastic4s.alias.{RemoveAliasActionDefinition, AddAliasActionDefinition, IndicesAliasesRequestDefinition}
-import com.sksamuel.elastic4s.searches.queries.matches.MatchAllQueryDefinition
+import com.sksamuel.elastic4s.alias.{RemoveAliasAction, AddAliasActionRequest, IndicesAliasesRequest}
+import com.sksamuel.elastic4s.searches.queries.matches.MatchAllQuery
 import org.scalatest.{FunSuite, Matchers}
 
 class AliasActionBuilderTest extends FunSuite with Matchers {
 
   test("alias action should generate expected json") {
-    val actions = IndicesAliasesRequestDefinition(Seq(
-      AddAliasActionDefinition("alias1", "test"),
-      RemoveAliasActionDefinition("alias1", "test1"),
-      AddAliasActionDefinition("alias2", "test2", filter = Some(MatchAllQueryDefinition()))
+    val actions = IndicesAliasesRequest(Seq(
+      AddAliasActionRequest("alias1", "test"),
+      RemoveAliasAction("alias1", "test1"),
+      AddAliasActionRequest("alias2", "test2", filter = Some(MatchAllQuery()))
     ))
 
     AliasActionBuilder(actions).string() shouldBe

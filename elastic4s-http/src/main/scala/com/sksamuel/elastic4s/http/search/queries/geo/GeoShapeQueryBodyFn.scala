@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.searches.queries.geo._
 
 object GeoShapeQueryBodyFn {
 
-  def apply(q: GeoShapeQueryDefinition): XContentBuilder = {
+  def apply(q: GeoShapeQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 

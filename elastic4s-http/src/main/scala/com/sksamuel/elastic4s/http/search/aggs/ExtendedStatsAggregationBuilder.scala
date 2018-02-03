@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.ExtendedStatsAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.ExtendedStatsAggregation
 
 object ExtendedStatsAggregationBuilder {
-  def apply(agg: ExtendedStatsAggregationDefinition): XContentBuilder = {
+  def apply(agg: ExtendedStatsAggregation): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 

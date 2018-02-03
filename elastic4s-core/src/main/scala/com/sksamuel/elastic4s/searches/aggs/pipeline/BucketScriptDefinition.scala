@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches.aggs.pipeline
 
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.Script
 
 case class BucketScriptDefinition(name: String,
-                                  script: ScriptDefinition,
+                                  script: Script,
                                   bucketsPaths: Map[String, String],
                                   format: Option[String] = None,
                                   gapPolicy: Option[GapPolicy] = None,

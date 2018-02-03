@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.span.SpanNearQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.span.SpanNearQuery
 
 object SpanNearQueryBodyFn {
-  def apply(q: SpanNearQueryDefinition): XContentBuilder = {
+  def apply(q: SpanNearQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
 
     builder.startObject("span_near")

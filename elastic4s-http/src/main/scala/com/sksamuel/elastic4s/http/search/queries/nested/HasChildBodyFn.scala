@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.http.search.queries.nested
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.HasChildQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.HasChildQuery
 
 object HasChildBodyFn {
 
-  def apply(q: HasChildQueryDefinition): XContentBuilder = {
+  def apply(q: HasChildQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("has_child")
     builder.field("type", q.`type`)

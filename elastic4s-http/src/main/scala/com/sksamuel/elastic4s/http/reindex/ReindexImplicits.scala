@@ -5,12 +5,12 @@ import com.sksamuel.elastic4s.http.{
   ElasticError,
   HttpEntity,
   HttpExecutable,
-  HttpRequestClient,
+  HttpClient,
   HttpResponse,
   RefreshPolicyHttpValue,
   ResponseHandler
 }
-import com.sksamuel.elastic4s.reindex.ReindexDefinition
+import com.sksamuel.elastic4s.reindex.ReindexRequest
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
@@ -41,7 +41,7 @@ case class ReindexResponse(took: Long,
 
 trait ReindexImplicits {
 
-  implicit object ReindexHttpExecutable extends HttpExecutable[ReindexDefinition, ReindexResponse] {
+  implicit object ReindexHttpExecutable extends HttpExecutable[ReindexRequest, ReindexResponse] {
 
     override def responseHandler = new ResponseHandler[ReindexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, ReindexResponse] = response.statusCode match {
@@ -50,7 +50,7 @@ trait ReindexImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: ReindexDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: ReindexRequest): Future[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))

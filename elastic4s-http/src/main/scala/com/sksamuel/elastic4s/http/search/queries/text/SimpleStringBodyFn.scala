@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.text
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.SimpleStringQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.SimpleStringQuery
 
 object SimpleStringBodyFn {
-  def apply(s: SimpleStringQueryDefinition): XContentBuilder = {
+  def apply(s: SimpleStringQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("simple_query_string")
     s.operator.map(_.toString).foreach(builder.field("default_operator", _))
     s.analyzer.map(_.toString).foreach(builder.field("analyzer", _))

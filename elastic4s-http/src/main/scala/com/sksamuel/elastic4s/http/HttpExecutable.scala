@@ -26,5 +26,5 @@ abstract class HttpExecutable[T, U: Manifest] extends Logging {
     * @param request
     * @return
     */
-  def execute(client: HttpRequestClient, request: T): Future[HttpResponse]
+  def execute(client: HttpClient, request: T): Future[HttpResponse]
 }

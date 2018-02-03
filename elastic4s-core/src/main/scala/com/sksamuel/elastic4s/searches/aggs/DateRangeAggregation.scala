@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.ElasticDate
-import com.sksamuel.elastic4s.script.ScriptDefinition
+import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.exts.OptionImplicits._
 import org.joda.time.DateTimeZone
 
 case class DateRangeAggregation(name: String,
                                 field: Option[String] = None,
-                                script: Option[ScriptDefinition] = None,
+                                script: Option[Script] = None,
                                 missing: Option[AnyRef] = None,
                                 format: Option[String] = None,
                                 timeZone: Option[DateTimeZone] = None,
@@ -17,14 +17,14 @@ case class DateRangeAggregation(name: String,
                                 unboundedTo: Option[(Option[String], ElasticDate)] = None,
                                 subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty)
-    extends AggregationDefinition {
+    extends Aggregation {
 
   type T = DateRangeAggregation
 
   def timeZone(timeZone: DateTimeZone): DateRangeAggregation = copy(timeZone = timeZone.some)
   def keyed(keyed: Boolean): DateRangeAggregation            = copy(keyed = keyed.some)
   def field(field: String): DateRangeAggregation             = copy(field = field.some)
-  def script(script: ScriptDefinition): DateRangeAggregation = copy(script = script.some)
+  def script(script: Script): DateRangeAggregation = copy(script = script.some)
   def missing(missing: AnyRef): DateRangeAggregation         = copy(missing = missing.some)
 
   def range(from: ElasticDate, to: ElasticDate): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 
 case class HighlightOptionsDefinition(encoder: Option[String] = None,
@@ -15,7 +15,7 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
                                       forceSource: Option[Boolean] = None,
                                       highlighterType: Option[String] = None,
                                       highlightFilter: Option[Boolean] = None,
-                                      highlightQuery: Option[QueryDefinition] = None,
+                                      highlightQuery: Option[Query] = None,
                                       noMatchSize: Option[Int] = None,
                                       numOfFragments: Option[Int] = None,
                                       order: Option[String] = None,
@@ -47,7 +47,7 @@ case class HighlightOptionsDefinition(encoder: Option[String] = None,
   def highlightFilter(highlightFilter: Boolean): HighlightOptionsDefinition =
     copy(highlightFilter = highlightFilter.some)
 
-  def highlightQuery(highlightQuery: QueryDefinition): HighlightOptionsDefinition =
+  def highlightQuery(highlightQuery: Query): HighlightOptionsDefinition =
     copy(highlightQuery = highlightQuery.some)
 
   def noMatchSize(noMatchSize: Int): HighlightOptionsDefinition       = copy(noMatchSize = noMatchSize.some)

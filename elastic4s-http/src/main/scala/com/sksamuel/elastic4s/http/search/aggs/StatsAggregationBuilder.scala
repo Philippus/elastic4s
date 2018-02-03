@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.StatsAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.StatsAggregation
 
 object StatsAggregationBuilder {
-  def apply(agg: StatsAggregationDefinition): XContentBuilder = {
+  def apply(agg: StatsAggregation): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("stats")
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.autofield("missing", _))

@@ -3,24 +3,24 @@ package com.sksamuel.elastic4s.http.search.queries
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.sort.{
-  FieldSortDefinition,
-  GeoDistanceSortDefinition,
-  ScoreSortDefinition,
-  ScriptSortDefinition,
-  SortDefinition
+  FieldSort,
+  GeoDistanceSort,
+  ScoreSort,
+  ScriptSort,
+  Sort
 }
 
 object SortBuilderFn {
-  def apply(sort: SortDefinition): XContentBuilder = sort match {
-    case fs: FieldSortDefinition       => FieldSortBuilderFn(fs)
-    case gs: GeoDistanceSortDefinition => GeoDistanceSortBuilderFn(gs)
-    case ss: ScoreSortDefinition       => ScoreSortBuilderFn(ss)
-    case scrs: ScriptSortDefinition    => ScriptSortBuilderFn(scrs)
+  def apply(sort: Sort): XContentBuilder = sort match {
+    case fs: FieldSort       => FieldSortBuilderFn(fs)
+    case gs: GeoDistanceSort => GeoDistanceSortBuilderFn(gs)
+    case ss: ScoreSort       => ScoreSortBuilderFn(ss)
+    case scrs: ScriptSort    => ScriptSortBuilderFn(scrs)
   }
 }
 
 object FieldSortBuilderFn {
-  def apply(fs: FieldSortDefinition): XContentBuilder = {
+  def apply(fs: FieldSort): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject(fs.field)
 
@@ -36,7 +36,7 @@ object FieldSortBuilderFn {
 }
 
 object ScoreSortBuilderFn {
-  def apply(fs: ScoreSortDefinition): XContentBuilder = {
+  def apply(fs: ScoreSort): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("_score")
     builder.field("order", EnumConversions.order(fs.order))
     builder
@@ -44,7 +44,7 @@ object ScoreSortBuilderFn {
 }
 
 object GeoDistanceSortBuilderFn {
-  def apply(geo: GeoDistanceSortDefinition): XContentBuilder = {
+  def apply(geo: GeoDistanceSort): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("_geo_distance")
 
@@ -75,7 +75,7 @@ object GeoDistanceSortBuilderFn {
 
 object ScriptSortBuilderFn {
 
-  def apply(scriptSort: ScriptSortDefinition): XContentBuilder = {
+  def apply(scriptSort: ScriptSort): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("_script")
 

@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.{Path, Paths}
 
 import com.sksamuel.elastic4s.TcpClient
-import com.sksamuel.elastic4s.http.{HttpClient, HttpRequestClient}
+import com.sksamuel.elastic4s.http.{ElasticClient, HttpClient}
 import com.sksamuel.exts.Logging
 import org.elasticsearch.client.Client
 import org.elasticsearch.common.settings.Settings
@@ -24,7 +24,7 @@ trait LocalNode {
   def host: String
   def port: Int
   def tcp(shutdownNodeOnClose: Boolean = true): TcpClient
-  def http(shutdownNodeOnClose: Boolean): HttpClient
+  def http(shutdownNodeOnClose: Boolean): ElasticClient
   def clusterName: String
   def pathData: Path
   def pathHome: Path
@@ -52,8 +52,8 @@ class RemoteLocalNode(val clusterName: String,
     TcpClient.transport(s"elasticsearch://$host:$port?cluster.name=$clusterName")
   }
 
-  override def http(shutdownNodeOnClose: Boolean): HttpClient =
-    HttpClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
+  override def http(shutdownNodeOnClose: Boolean): ElasticClient =
+    ElasticClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
   override def host: String = httpAddress.split(':').head
   override def port: Int    = httpAddress.split(':').last.toInt
 }
@@ -132,9 +132,9 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * If shutdownNodeOnClose is true, then the local node will be shutdown once this
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
-  override def http(shutdownNodeOnClose: Boolean): HttpClient = new HttpClient {
-    private val delegate                   = HttpClient(s"elasticsearch://$host:$port")
-    override def client: HttpRequestClient = delegate.client
+  override def http(shutdownNodeOnClose: Boolean): ElasticClient = new ElasticClient {
+    private val delegate                   = ElasticClient(s"elasticsearch://$host:$port")
+    override def client: HttpClient = delegate.client
     override def close(): Unit =
       if (shutdownNodeOnClose)
         stop()

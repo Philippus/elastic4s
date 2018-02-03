@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.settings
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.admin.IndicesOptions
+import com.sksamuel.elastic4s.admin.IndicesOptionsRequest
 import com.sksamuel.exts.OptionImplicits._
 
 trait SettingsApi {
@@ -16,14 +16,14 @@ trait SettingsApi {
     UpdateSettingsDefinition(indexes, settings = settings)
 }
 
-case class GetSettingsDefinition(indexes: Indexes, options: Option[IndicesOptions] = None) {
-  def options(options: IndicesOptions): GetSettingsDefinition = copy(options = options.some)
+case class GetSettingsDefinition(indexes: Indexes, options: Option[IndicesOptionsRequest] = None) {
+  def options(options: IndicesOptionsRequest): GetSettingsDefinition = copy(options = options.some)
 }
 
 case class UpdateSettingsDefinition(indices: Indexes,
                                     preserveExisting: Option[Boolean] = None,
                                     settings: Map[String, String] = Map.empty,
-                                    options: Option[IndicesOptions] = None) {
+                                    options: Option[IndicesOptionsRequest] = None) {
 
   // add a new key to the list of settings
   def add(key: String, value: String): UpdateSettingsDefinition = copy(settings = settings + (key -> value))
@@ -46,5 +46,5 @@ case class UpdateSettingsDefinition(indices: Indexes,
   def preserveExisting(preserveExisting: Boolean): UpdateSettingsDefinition =
     copy(preserveExisting = preserveExisting.some)
 
-  def options(options: IndicesOptions): UpdateSettingsDefinition = copy(options = options.some)
+  def options(options: IndicesOptionsRequest): UpdateSettingsDefinition = copy(options = options.some)
 }

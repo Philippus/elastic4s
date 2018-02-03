@@ -5,7 +5,7 @@ import java.nio.file.Files
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.HttpEntity.{FileEntity, InputStreamEntity, StringEntity}
-import com.sksamuel.elastic4s.http.{HttpEntity, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpClient, HttpResponse}
 import com.sksamuel.exts.OptionImplicits._
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend
@@ -13,7 +13,7 @@ import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend
 import scala.concurrent.Future
 import scala.io.Source
 
-class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpRequestClient {
+class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClient {
 
   import scala.concurrent.ExecutionContext.Implicits._
   implicit val sttpBackend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend()

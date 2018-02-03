@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.searches
 
-import com.sksamuel.elastic4s.searches.queries.QueryDefinition
+import com.sksamuel.elastic4s.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 
-case class RescoreDefinition(query: QueryDefinition,
+case class RescoreDefinition(query: Query,
                              windowSize: Option[Int] = None,
                              rescoreQueryWeight: Option[Double] = None,
                              originalQueryWeight: Option[Double] = None,

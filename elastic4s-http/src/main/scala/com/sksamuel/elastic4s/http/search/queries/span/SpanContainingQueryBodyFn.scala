@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.span.SpanContainingQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.span.SpanContainingQuery
 
 object SpanContainingQueryBodyFn {
 
-  def apply(q: SpanContainingQueryDefinition): XContentBuilder = {
+  def apply(q: SpanContainingQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_containing")

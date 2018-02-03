@@ -4,8 +4,8 @@ import com.sksamuel.elastic4s.DistanceUnit
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.http.search.SearchBodyBuilderFn
 import com.sksamuel.elastic4s.searches.GeoPoint
-import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
-import com.sksamuel.elastic4s.searches.sort.{GeoDistanceSortDefinition, SortOrder}
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQuery
+import com.sksamuel.elastic4s.searches.sort.{GeoDistanceSort, SortOrder}
 import org.scalatest.{FunSuite, Matchers}
 import com.sksamuel.exts.OptionImplicits._
 
@@ -37,13 +37,13 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
   }
   test("geo distance query with sort") {
 
-    val geoDistanceQueryDefinition = GeoDistanceQueryDefinition(
+    val geoDistanceQueryDefinition = GeoDistanceQuery(
       field = "location",
       point = Some(43.65435, -79.38871),
       distanceStr = "100km".some
     )
 
-    val req = search("partner-location") limit 100 query geoDistanceQueryDefinition sortBy GeoDistanceSortDefinition(
+    val req = search("partner-location") limit 100 query geoDistanceQueryDefinition sortBy GeoDistanceSort(
       field = "location",
       points = Seq(GeoPoint(43.65435, -79.38871)),
       order = Some(SortOrder.ASC),

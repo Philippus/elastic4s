@@ -10,16 +10,16 @@ import com.sksamuel.elastic4s.http.search.suggs.{
   TermSuggestionBuilderFn
 }
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.SearchDefinition
+import com.sksamuel.elastic4s.searches.SearchRequest
 import com.sksamuel.elastic4s.searches.suggestion.{
-  CompletionSuggestionDefinition,
-  PhraseSuggestionDefinition,
-  TermSuggestionDefinition
+  CompletionSuggestion,
+  PhraseSuggestion,
+  TermSuggestion
 }
 
 object SearchBodyBuilderFn {
 
-  def apply(request: SearchDefinition): XContentBuilder = {
+  def apply(request: SearchRequest): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 
@@ -97,10 +97,10 @@ object SearchBodyBuilderFn {
       builder.startObject("suggest")
       request.suggestions.globalSuggestionText.foreach(builder.field("text", _))
       request.suggestions.suggs.foreach {
-        case term: TermSuggestionDefinition => builder.rawField(term.name, TermSuggestionBuilderFn(term))
-        case completion: CompletionSuggestionDefinition =>
+        case term: TermSuggestion => builder.rawField(term.name, TermSuggestionBuilderFn(term))
+        case completion: CompletionSuggestion =>
           builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
-        case phrase: PhraseSuggestionDefinition => builder.rawField(phrase.name, PhraseSuggestionBuilderFn(phrase))
+        case phrase: PhraseSuggestion => builder.rawField(phrase.name, PhraseSuggestionBuilderFn(phrase))
       }
       builder.endObject()
     }

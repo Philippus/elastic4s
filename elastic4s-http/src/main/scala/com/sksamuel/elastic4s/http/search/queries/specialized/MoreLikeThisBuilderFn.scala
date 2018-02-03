@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.http.search.queries.specialized
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.MoreLikeThisQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.MoreLikeThisQuery
 
 import scala.collection.JavaConverters._
 
 object MoreLikeThisBuilderFn {
-  def apply(q: MoreLikeThisQueryDefinition): XContentBuilder = {
+  def apply(q: MoreLikeThisQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("more_like_this")

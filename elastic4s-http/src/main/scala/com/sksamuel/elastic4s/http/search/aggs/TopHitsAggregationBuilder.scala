@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.http.search.aggs
 import com.sksamuel.elastic4s.http.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.TopHitsAggregation
 
 object TopHitsAggregationBuilder {
 
-  def apply(agg: TopHitsAggregationDefinition): XContentBuilder = {
+  def apply(agg: TopHitsAggregation): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("top_hits")
 

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.FuzzyQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.FuzzyQuery
 
 object FuzzyQueryBodyFn {
 
-  def apply(q: FuzzyQueryDefinition): XContentBuilder = {
+  def apply(q: FuzzyQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("fuzzy")
     builder.startObject(q.field)

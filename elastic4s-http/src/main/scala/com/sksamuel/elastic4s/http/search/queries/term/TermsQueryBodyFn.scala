@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.term.TermsQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.term.TermsQuery
 
 object TermsQueryBodyFn {
-  def apply(t: TermsQueryDefinition[_]): XContentBuilder = {
+  def apply(t: TermsQuery[_]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 

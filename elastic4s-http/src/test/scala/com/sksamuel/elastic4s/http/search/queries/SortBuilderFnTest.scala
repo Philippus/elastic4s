@@ -5,8 +5,8 @@ import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.http.search.SearchBodyBuilderFn
 import com.sksamuel.elastic4s.script.ScriptType
 import com.sksamuel.elastic4s.searches.GeoPoint
-import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQueryDefinition
-import com.sksamuel.elastic4s.searches.sort.{GeoDistanceSortDefinition, SortOrder, ScriptSortType}
+import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQuery
+import com.sksamuel.elastic4s.searches.sort.{GeoDistanceSort, SortOrder, ScriptSortType}
 import org.scalatest.{FunSuite, Matchers}
 import com.sksamuel.exts.OptionImplicits._
 

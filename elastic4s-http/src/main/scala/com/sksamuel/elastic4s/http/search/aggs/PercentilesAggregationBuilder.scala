@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.PercentilesAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.PercentilesAggregation
 
 object PercentilesAggregationBuilder {
-  def apply(agg: PercentilesAggregationDefinition): XContentBuilder = {
+  def apply(agg: PercentilesAggregation): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("percentiles")

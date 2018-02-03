@@ -52,7 +52,6 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "com.sksamuel.exts" %% "exts"       % ExtsVersion,
-      "org.typelevel"     %% "cats-core"  % CatsVersion,
       "org.slf4j"         % "slf4j-api"   % Slf4jVersion,
       "org.mockito"       % "mockito-all" % MockitoVersion % "test",
       "org.scalatest"     %% "scalatest"  % ScalatestVersion % "test"

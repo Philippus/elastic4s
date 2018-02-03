@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.queries.geo
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.geo.GeoPolygonQuery
 
 object GeoPolyonQueryBodyFn {
 
-  def apply(q: GeoPolygonQueryDefinition): XContentBuilder = {
+  def apply(q: GeoPolygonQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("geo_polygon")
     builder.startObject(q.field)

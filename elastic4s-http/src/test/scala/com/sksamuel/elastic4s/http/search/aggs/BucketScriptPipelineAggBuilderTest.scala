@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.JsonSugar
 import com.sksamuel.elastic4s.http.search.SearchBodyBuilderFn
-import com.sksamuel.elastic4s.searches.{DateHistogramInterval, SearchDefinition}
+import com.sksamuel.elastic4s.searches.{DateHistogramInterval, SearchRequest}
 import org.scalatest.FlatSpec
 
 
@@ -17,7 +17,7 @@ class BucketScriptPipelineAggBuilderTest extends FlatSpec with JsonSugar  {
     */
   "AggregationBuilderFn" should "generate correct bucketScript aggregation json" in {
 
-    val search = SearchDefinition("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex" / "mytype").aggs(
       dateHistogramAgg("sales_per_month", "date").interval(DateHistogramInterval.Month).subaggs(
         sumAgg("total_sales", "price"),
         filterAgg("t-shirts", termQuery("type", "t-shirt")).addSubagg(

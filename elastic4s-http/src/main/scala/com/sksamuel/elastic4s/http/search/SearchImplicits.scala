@@ -6,14 +6,14 @@ import cats.Show
 import com.sksamuel.elastic4s.http.{
   HttpEntity,
   HttpExecutable,
-  HttpRequestClient,
+  HttpClient,
   HttpResponse,
   IndicesOptionsParams,
   ResponseHandler
 }
 import com.sksamuel.elastic4s.json.JacksonSupport
-import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
-import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition, SearchType}
+import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQuery}
+import com.sksamuel.elastic4s.searches.{MultiSearchRequest, SearchRequest, SearchType}
 import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
@@ -21,18 +21,18 @@ import scala.concurrent.Future
 trait SearchImplicits {
 
   implicit def BuildableTermsNoOp[T]: BuildableTermsQuery[T] = new BuildableTermsQuery[T] {
-    override def build(q: TermsQueryDefinition[T]): Any = null // not used by the http builders
+    override def build(q: TermsQuery[T]): Any = null // not used by the http builders
   }
 
-  implicit object SearchShow extends Show[SearchDefinition] {
-    override def show(req: SearchDefinition): String = SearchBodyBuilderFn(req).string()
+  implicit object SearchShow extends Show[SearchRequest] {
+    override def show(req: SearchRequest): String = SearchBodyBuilderFn(req).string()
   }
 
-  implicit object MultiSearchShow extends Show[MultiSearchDefinition] {
-    override def show(req: MultiSearchDefinition): String = MultiSearchBuilderFn(req)
+  implicit object MultiSearchShow extends Show[MultiSearchRequest] {
+    override def show(req: MultiSearchRequest): String = MultiSearchBuilderFn(req)
   }
 
-  implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchDefinition, MultiSearchResponse] {
+  implicit object MultiSearchHttpExecutable extends HttpExecutable[MultiSearchRequest, MultiSearchResponse] {
 
     import scala.collection.JavaConverters._
 
@@ -59,7 +59,7 @@ trait SearchImplicits {
       }
     }
 
-    override def execute(client: HttpRequestClient, request: MultiSearchDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: MultiSearchRequest): Future[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -71,9 +71,9 @@ trait SearchImplicits {
     }
   }
 
-  implicit object SearchHttpExecutable extends HttpExecutable[SearchDefinition, SearchResponse] {
+  implicit object SearchHttpExecutable extends HttpExecutable[SearchRequest, SearchResponse] {
 
-    override def execute(client: HttpRequestClient, request: SearchDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: SearchRequest): Future[HttpResponse] = {
 
       val endpoint =
         if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.aws
 
 import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.HttpClient
+import com.sksamuel.elastic4s.http.ElasticClient
 import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials, DefaultAWSCredentialsProviderChain}
 
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback
@@ -18,18 +18,18 @@ object Aws4ElasticClient {
   /**
     * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service).
     */
-  def apply(config: Aws4ElasticConfig): HttpClient = {
+  def apply(config: Aws4ElasticConfig): ElasticClient = {
     val elasticUri = ElasticsearchClientUri(config.endpoint)
-    HttpClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
+    ElasticClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
   }
 
   /**
     * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables.
     * See <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html">amazon environment variables documentation</a>
     */
-  def apply(endpoint: String): HttpClient = {
+  def apply(endpoint: String): ElasticClient = {
     val elasticUri = ElasticsearchClientUri(endpoint)
-    HttpClient(elasticUri, httpClientConfigCallback = new DefaultSignedClientConfig)
+    ElasticClient(elasticUri, httpClientConfigCallback = new DefaultSignedClientConfig)
   }
 
 }

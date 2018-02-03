@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.MinAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.MinAggregation
 
 object MinAggregationBuilder {
-  def apply(agg: MinAggregationDefinition): XContentBuilder = {
+  def apply(agg: MinAggregation): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("min")
     agg.field.foreach(builder.field("field", _))

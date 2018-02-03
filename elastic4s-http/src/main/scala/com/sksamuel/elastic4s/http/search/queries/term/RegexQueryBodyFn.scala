@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.RegexQueryDefinition
+import com.sksamuel.elastic4s.searches.queries.RegexQuery
 
 object RegexQueryBodyFn {
-  def apply(q: RegexQueryDefinition): XContentBuilder = {
+  def apply(q: RegexQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 

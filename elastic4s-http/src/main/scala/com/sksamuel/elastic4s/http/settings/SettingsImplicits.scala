@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.{
   ElasticError,
   HttpEntity,
   HttpExecutable,
-  HttpRequestClient,
+  HttpClient,
   HttpResponse,
   ResponseHandler
 }
@@ -45,7 +45,7 @@ trait SettingsImplicits {
         }
     }
 
-    override def execute(client: HttpRequestClient, request: GetSettingsDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: GetSettingsDefinition): Future[HttpResponse] = {
       val endpoint = "/" + request.indexes.string + "/_settings"
       client.async("GET", endpoint, Map.empty)
     }
@@ -63,7 +63,7 @@ trait SettingsImplicits {
         }
     }
 
-    override def execute(client: HttpRequestClient, request: UpdateSettingsDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: UpdateSettingsDefinition): Future[HttpResponse] = {
       val endpoint = "/" + request.indices.string + "/_settings"
       val body     = JacksonSupport.mapper.writeValueAsString(request.settings)
       client.async("PUT", endpoint, Map.empty, HttpEntity(body))

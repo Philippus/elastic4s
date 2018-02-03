@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.task
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse, ResponseHandler}
-import com.sksamuel.elastic4s.task.{CancelTasksDefinition, ListTasksDefinition}
+import com.sksamuel.elastic4s.http.{HttpExecutable, HttpClient, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.task.{CancelTasksRequest, ListTasksRequest}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -29,9 +29,9 @@ case class Task(node: String,
 
 trait TaskImplicits {
 
-  implicit object ListTaskHttpExecutable extends HttpExecutable[ListTasksDefinition, ListTaskResponse] {
+  implicit object ListTaskHttpExecutable extends HttpExecutable[ListTasksRequest, ListTaskResponse] {
 
-    override def execute(client: HttpRequestClient, request: ListTasksDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: ListTasksRequest): Future[HttpResponse] = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)
@@ -48,13 +48,13 @@ trait TaskImplicits {
     }
   }
 
-  implicit object CancelTaskHttpExecutable extends HttpExecutable[CancelTasksDefinition, Boolean] {
+  implicit object CancelTaskHttpExecutable extends HttpExecutable[CancelTasksRequest, Boolean] {
 
     override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
       override def handle(response: HttpResponse) = Right(response.statusCode >= 200 && response.statusCode < 300)
     }
 
-    override def execute(client: HttpRequestClient, request: CancelTasksDefinition): Future[HttpResponse] = {
+    override def execute(client: HttpClient, request: CancelTasksRequest): Future[HttpResponse] = {
 
       val endpoint =
         if (request.nodeIds.isEmpty) s"/_tasks/cancel"

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.mappings._
-import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptFieldDefinition}
+import com.sksamuel.elastic4s.script.{Script, ScriptField}
 
 trait TypesApi {
 
@@ -52,12 +52,12 @@ trait TypesApi {
   def percolatorField(name: String): BasicFieldDefinition      = BasicFieldDefinition(name, "percolator")
   def joinField(name: String): JoinFieldDefinition             = JoinFieldDefinition(name)
 
-  def scriptField(name: String, script: String): ScriptFieldDefinition           = ScriptFieldDefinition(name, script)
-  def scriptField(name: String, script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
+  def scriptField(name: String, script: String): ScriptField           = ScriptField(name, script)
+  def scriptField(name: String, script: Script): ScriptField = ScriptField(name, script)
   def scriptField(name: String): ExpectsScript                                   = ExpectsScript(name)
   case class ExpectsScript(name: String) {
-    def script(script: String): ScriptFieldDefinition           = ScriptFieldDefinition(name, script)
-    def script(script: ScriptDefinition): ScriptFieldDefinition = ScriptFieldDefinition(name, script)
+    def script(script: String): ScriptField           = ScriptField(name, script)
+    def script(script: Script): ScriptField = ScriptField(name, script)
   }
 
   @deprecated("use binaryField(name)", "5.2.11")

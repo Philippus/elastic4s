@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.reindex
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.reindex.ReindexDefinition
+import com.sksamuel.elastic4s.reindex.ReindexRequest
 
 object ReindexBuilderFn {
 
-  def apply(request: ReindexDefinition): XContentBuilder = {
+  def apply(request: ReindexRequest): XContentBuilder = {
     val builder = XContentFactory.obj()
 
     request.size.foreach(builder.field("size", _))

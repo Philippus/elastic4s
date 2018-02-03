@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.util.UUID
 
-import com.sksamuel.elastic4s.indexes.IndexDefinition
+import com.sksamuel.elastic4s.indexes.IndexRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.exts.OptionImplicits._
 import org.scalatest.mockito.MockitoSugar
@@ -46,7 +46,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     )
   }.await
 
-  def indexRequest(id: String, team: Team): IndexDefinition = indexInto(Index(IndexName), IndexName).source(team).id(id)
+  def indexRequest(id: String, team: Team): IndexRequest = indexInto(Index(IndexName), IndexName).source(team).id(id)
 
   http.execute(
     bulk(

@@ -2,15 +2,15 @@ package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorRefFactory
 import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.http.HttpClient
-import com.sksamuel.elastic4s.searches.SearchDefinition
+import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.searches.SearchRequest
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 object ReactiveElastic {
 
-  implicit class ReactiveElastic(client: HttpClient) {
+  implicit class ReactiveElastic(client: ElasticClient) {
 
     import com.sksamuel.elastic4s.http.ElasticDsl._
 
@@ -51,9 +51,9 @@ object ReactiveElastic {
     ): ScrollPublisher =
       publisher(search(indexesTypes).query("*:*").scroll(keepAlive), elements)
 
-    def publisher(q: SearchDefinition)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
+    def publisher(q: SearchRequest)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
       publisher(q, Long.MaxValue)
-    def publisher(q: SearchDefinition, elements: Long)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
+    def publisher(q: SearchRequest, elements: Long)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
       new ScrollPublisher(client, q, elements)
   }
 }

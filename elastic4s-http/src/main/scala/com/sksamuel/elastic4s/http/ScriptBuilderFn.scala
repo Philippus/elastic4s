@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.script.{ScriptDefinition, ScriptType}
+import com.sksamuel.elastic4s.script.{Script, ScriptType}
 
 object ScriptBuilderFn {
 
-  def apply(script: ScriptDefinition): XContentBuilder = {
+  def apply(script: Script): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 

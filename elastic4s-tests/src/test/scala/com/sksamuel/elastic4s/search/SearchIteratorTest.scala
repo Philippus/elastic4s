@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
 import com.sksamuel.elastic4s.http.search.SearchIterator
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.http.{ElasticDsl, ElasticClient}
 import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests, ElasticMatchers, ElasticSugar}
 import org.scalatest.WordSpec
 
