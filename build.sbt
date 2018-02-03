@@ -61,9 +61,11 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
     name := "elastic4s-embedded",
     libraryDependencies ++= Seq(
       "org.elasticsearch"                % "elasticsearch"            % ElasticsearchVersion,
+      "org.elasticsearch.client"         % "transport"                % ElasticsearchVersion,
+      "com.carrotsearch"                 % "hppc"                     % "0.7.1",
+      "joda-time"                        % "joda-time"                % "2.9.9",
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-smile" % JacksonVersion,
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor"  % JacksonVersion
-//"org.elasticsearch"          % "elasticsearch"           % ElasticsearchVersion,
 //"org.locationtech.spatial4j" % "spatial4j"               % "0.6",
 //"com.vividsolutions"         % "jts"                     % "1.13",
 //"io.netty"                   % "netty-all"               % "4.1.10.Final",
@@ -82,14 +84,11 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
 //"org.apache.lucene"          % "lucene-spatial-extras"   % LuceneVersion,
 //"org.apache.lucene"          % "lucene-spatial3d"        % LuceneVersion,
 //"org.apache.lucene"          % "lucene-suggest"          % LuceneVersion,
-//"org.elasticsearch.client"   % "transport"               % ElasticsearchVersion,
 //"org.apache.lucene"          % "lucene-join"             % LuceneVersion,
 //"org.apache.logging.log4j"   % "log4j-api"               % Log4jVersion,
 //"org.apache.logging.log4j"   % "log4j-core"              % Log4jVersion,
 //"org.apache.logging.log4j"   % "log4j-1.2-api"           % Log4jVersion,
 //"org.apache.logging.log4j"   % "log4j-slf4j-impl"        % Log4jVersion,
-//"com.carrotsearch"           % "hppc"                    % "0.7.1",
-//"joda-time"                  % "joda-time"               % "2.9.9",
 //"com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion,
 //"com.tdunning"               % "t-digest"                % "3.1"
     )
