@@ -14,10 +14,10 @@ case class ExtendedStatsAggregation(name: String,
 
   type T = ExtendedStatsAggregation
 
-  def sigma(sigma: Double): ExtendedStatsAggregation             = copy(sigma = sigma.some)
-  def field(field: String): ExtendedStatsAggregation             = copy(field = field.some)
-  def script(script: Script): ExtendedStatsAggregation = copy(script = script.some)
-  def missing(missing: Double): ExtendedStatsAggregation         = copy(missing = missing.some)
+  def sigma(sigma: Double): ExtendedStatsAggregation     = copy(sigma = sigma.some)
+  def field(field: String): ExtendedStatsAggregation     = copy(field = field.some)
+  def script(script: Script): ExtendedStatsAggregation   = copy(script = script.some)
+  def missing(missing: Double): ExtendedStatsAggregation = copy(missing = missing.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)

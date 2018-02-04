@@ -18,9 +18,7 @@ trait PipelineAggregationApi {
   def bucketSortAggregation(name: String, sort: Seq[Sort]): BucketSortDefinition =
     BucketSortDefinition(name, sort)
 
-  def bucketScriptAggregation(name: String,
-                              script: Script,
-                              bucketsPath: Map[String, String]): BucketScriptDefinition =
+  def bucketScriptAggregation(name: String, script: Script, bucketsPath: Map[String, String]): BucketScriptDefinition =
     BucketScriptDefinition(name, script, bucketsPath)
 
   def cumulativeSumAggregation(name: String, bucketsPath: String): CumulativeSumDefinition =

@@ -11,9 +11,9 @@ import org.apache.http.entity.ContentType
 
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
-  def size: Int = docs.size
+  def size: Int               = docs.size
 
-  def to[T: HitReader]: IndexedSeq[T] = docs.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader]: IndexedSeq[T]                        = docs.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = docs.map(_.safeTo[T]).toIndexedSeq
 }
 
@@ -38,7 +38,7 @@ trait GetImplicits {
     }
 
     override def requestHandler(request: MultiGetRequest): ElasticRequest = {
-      val body = MultiGetBodyBuilder(request).string()
+      val body   = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       ElasticRequest("POST", "/_mget", entity)
     }

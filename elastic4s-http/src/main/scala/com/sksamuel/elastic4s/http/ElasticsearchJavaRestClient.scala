@@ -30,8 +30,8 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
   def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
     val entity = Option(r.getEntity).map { entity =>
       val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
-      implicit val codec = Codec(Charset.forName(contentEncoding))
-      val body = Source.fromInputStream(entity.getContent).mkString
+      implicit val codec  = Codec(Charset.forName(contentEncoding))
+      val body            = Source.fromInputStream(entity.getContent).mkString
       HttpEntity.StringEntity(body, Some(contentEncoding))
     }
     val headers = r.getHeaders.map { header =>
@@ -48,7 +48,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
       override def onSuccess(r: org.elasticsearch.client.Response): Unit = callback(Right(fromResponse(r)))
       override def onFailure(e: Exception): Unit = e match {
         case re: ResponseException => callback(Right(fromResponse(re.getResponse)))
-        case t => callback(Left(JavaClientExceptionWrapper(t)))
+        case t                     => callback(Left(JavaClientExceptionWrapper(t)))
       }
     }
 
@@ -56,7 +56,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
 
     req.entity match {
       case Some(entity) => client.performRequestAsync(req.method, req.endpoint, jparams, apacheEntity(entity), l)
-      case None => client.performRequestAsync(req.method, req.endpoint, jparams, l)
+      case None         => client.performRequestAsync(req.method, req.endpoint, jparams, l)
     }
   }
 

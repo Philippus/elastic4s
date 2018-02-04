@@ -10,5 +10,5 @@ case class CreateRepositoryRequest(name: String,
   require(`type`.nonEmpty, "repository type must not be null or empty")
 
   def settings(settings: Map[String, AnyRef]): CreateRepositoryRequest = copy(settings = settings)
-  def verify(v: Boolean): CreateRepositoryRequest = copy(verify = v.some)
+  def verify(v: Boolean): CreateRepositoryRequest                      = copy(verify = v.some)
 }

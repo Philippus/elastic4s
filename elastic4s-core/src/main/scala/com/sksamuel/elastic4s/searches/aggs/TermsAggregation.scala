@@ -33,11 +33,11 @@ case class TermsAggregation(name: String,
 
   type T = TermsAggregation
 
-  def field(field: String): TermsAggregation             = copy(field = field.some)
-  def script(script: Script): TermsAggregation = copy(script = script.some)
-  def missing(missing: AnyRef): TermsAggregation         = copy(missing = missing.some)
-  def size(size: Int): TermsAggregation                  = copy(size = size.some)
-  def minDocCount(min: Long): TermsAggregation           = copy(minDocCount = min.some)
+  def field(field: String): TermsAggregation     = copy(field = field.some)
+  def script(script: Script): TermsAggregation   = copy(script = script.some)
+  def missing(missing: AnyRef): TermsAggregation = copy(missing = missing.some)
+  def size(size: Int): TermsAggregation          = copy(size = size.some)
+  def minDocCount(min: Long): TermsAggregation   = copy(minDocCount = min.some)
   def showTermDocCountError(showError: Boolean): TermsAggregation =
     copy(showTermDocCountError = showError.some)
   def valueType(valueType: ValueType): TermsAggregation         = copy(valueType = valueType.some)

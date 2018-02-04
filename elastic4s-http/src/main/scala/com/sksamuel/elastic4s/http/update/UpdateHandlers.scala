@@ -21,9 +21,9 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
                           private val get: Option[UpdateGet]) {
-  def ref = DocumentRef(index, `type`, id)
+  def ref                      = DocumentRef(index, `type`, id)
   def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
-  def found: Boolean = get.forall(_.found)
+  def found: Boolean           = get.forall(_.found)
 }
 
 object UpdateByQueryBodyFn {
@@ -76,7 +76,7 @@ trait UpdateHandlers {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = UpdateBuilderFn(request)
+      val body   = UpdateBuilderFn(request)
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       ElasticRequest("POST", endpoint, params.toMap, entity)

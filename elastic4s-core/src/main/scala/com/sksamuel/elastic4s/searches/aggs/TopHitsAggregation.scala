@@ -31,7 +31,7 @@ case class TopHitsAggregation(name: String,
   def size(size: Int): TopHitsAggregation = copy(size = size.some)
 
   def sortBy(first: Sort, rest: Sort*): TopHitsAggregation = sortBy(first +: rest)
-  def sortBy(sorts: Iterable[Sort]): TopHitsAggregation              = copy(sorts = sorts.toSeq)
+  def sortBy(sorts: Iterable[Sort]): TopHitsAggregation    = copy(sorts = sorts.toSeq)
 
   def storedField(field: String): TopHitsAggregation                 = storedFields(field)
   def storedFields(first: String, rest: String*): TopHitsAggregation = storedFields(first +: rest)

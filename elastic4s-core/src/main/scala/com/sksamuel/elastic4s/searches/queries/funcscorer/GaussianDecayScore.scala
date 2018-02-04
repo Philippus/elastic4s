@@ -16,8 +16,8 @@ case class GaussianDecayScore(field: String,
   def multiValueMode(multiValueMode: MultiValueMode): GaussianDecayScore =
     copy(multiValueMode = multiValueMode.some)
 
-  def weight(weight: Double): GaussianDecayScore          = copy(weight = weight.some)
-  def decay(decay: Double): GaussianDecayScore            = copy(decay = decay.some)
-  def offset(offset: Any): GaussianDecayScore             = copy(offset = offset.some)
-  def filter(filter: Query): GaussianDecayScore = copy(filter = filter.some)
+  def weight(weight: Double): GaussianDecayScore = copy(weight = weight.some)
+  def decay(decay: Double): GaussianDecayScore   = copy(decay = decay.some)
+  def offset(offset: Any): GaussianDecayScore    = copy(offset = offset.some)
+  def filter(filter: Query): GaussianDecayScore  = copy(filter = filter.some)
 }

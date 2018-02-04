@@ -92,8 +92,7 @@ trait SnapshotHandlers {
     }
   }
 
-  implicit object RestoreSnapshotHandler
-      extends Handler[RestoreSnapshotRequest, RestoreSnapshotResponse] {
+  implicit object RestoreSnapshotHandler extends Handler[RestoreSnapshotRequest, RestoreSnapshotResponse] {
     override def requestHandler(request: RestoreSnapshotRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 

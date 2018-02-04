@@ -40,19 +40,19 @@ class RemoteLocalNode(val clusterName: String,
                       val pathData: Path,
                       val pathHome: Path,
                       pathRepo: Path)
-  extends LocalNode {
+    extends LocalNode {
   require(httpAddress != null, "httpAddress cannot be null")
   require(transportAddress != null, "transportAddress cannot be null")
 
   override def client(shutdownNodeOnClose: Boolean): ElasticClient =
     ElasticClient(s"elasticsearch://$host:$port?cluster.name=$clusterName")
   override def host: String = httpAddress.split(':').head
-  override def port: Int = httpAddress.split(':').last.toInt
+  override def port: Int    = httpAddress.split(':').last.toInt
 }
 
 // a new locally started internal node
 class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
-  extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
+    extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
     with LocalNode
     with Logging {
   super.start()
@@ -74,16 +74,16 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   logger.info(s"LocalNode started @ $ipAndPort")
   logger.info(s"LocalNode data location ${settings.get("path.data")}")
 
-  override val ip: String = ipAndPort.takeWhile(_ != ':')
+  override val ip: String   = ipAndPort.takeWhile(_ != ':')
   override val host: String = ip
-  override val port: Int = ipAndPort.dropWhile(_ != ':').drop(1).toInt
+  override val port: Int    = ipAndPort.dropWhile(_ != ':').drop(1).toInt
 
   def stop(removeData: Boolean = false): Any = {
     super.close()
 
     def deleteDir(dir: File): Unit = {
       dir.listFiles().foreach {
-        case file if file.isFile => file.delete()
+        case file if file.isFile      => file.delete()
         case file if file.isDirectory => deleteDir(file)
       }
       dir.delete()
@@ -120,7 +120,7 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
     * client is closed. Otherwise you are required to manage the lifecycle of the local node yourself.
     */
   override def client(shutdownNodeOnClose: Boolean): ElasticClient = new ElasticClient {
-    private val delegate = ElasticClient(s"elasticsearch://$host:$port")
+    private val delegate            = ElasticClient(s"elasticsearch://$host:$port")
     override def client: HttpClient = delegate.client
     override def close(): Unit =
       if (shutdownNodeOnClose)
@@ -161,11 +161,11 @@ object LocalNode {
   // returns the minimum required settings to create a local node
   def requiredSettings(clusterName: String, homePath: String): Map[String, String] =
     Map(
-      "cluster.name" -> clusterName,
-      "path.home" -> homePath,
+      "cluster.name"                 -> clusterName,
+      "path.home"                    -> homePath,
       "node.max_local_storage_nodes" -> "10",
-      "path.repo" -> Paths.get(homePath).resolve("repo").toString,
-      "path.data" -> Paths.get(homePath).resolve("data").toString
+      "path.repo"                    -> Paths.get(homePath).resolve("repo").toString,
+      "path.data"                    -> Paths.get(homePath).resolve("data").toString
     )
 
   /**

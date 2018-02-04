@@ -24,7 +24,7 @@ case class DateRangeAggregation(name: String,
   def timeZone(timeZone: DateTimeZone): DateRangeAggregation = copy(timeZone = timeZone.some)
   def keyed(keyed: Boolean): DateRangeAggregation            = copy(keyed = keyed.some)
   def field(field: String): DateRangeAggregation             = copy(field = field.some)
-  def script(script: Script): DateRangeAggregation = copy(script = script.some)
+  def script(script: Script): DateRangeAggregation           = copy(script = script.some)
   def missing(missing: AnyRef): DateRangeAggregation         = copy(missing = missing.some)
 
   def range(from: ElasticDate, to: ElasticDate): DateRangeAggregation = copy(ranges = ranges :+ (None, from, to))

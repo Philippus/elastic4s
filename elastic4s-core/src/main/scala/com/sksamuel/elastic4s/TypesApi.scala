@@ -52,11 +52,11 @@ trait TypesApi {
   def percolatorField(name: String): BasicFieldDefinition      = BasicFieldDefinition(name, "percolator")
   def joinField(name: String): JoinFieldDefinition             = JoinFieldDefinition(name)
 
-  def scriptField(name: String, script: String): ScriptField           = ScriptField(name, script)
+  def scriptField(name: String, script: String): ScriptField = ScriptField(name, script)
   def scriptField(name: String, script: Script): ScriptField = ScriptField(name, script)
-  def scriptField(name: String): ExpectsScript                                   = ExpectsScript(name)
+  def scriptField(name: String): ExpectsScript               = ExpectsScript(name)
   case class ExpectsScript(name: String) {
-    def script(script: String): ScriptField           = ScriptField(name, script)
+    def script(script: String): ScriptField = ScriptField(name, script)
     def script(script: Script): ScriptField = ScriptField(name, script)
   }
 

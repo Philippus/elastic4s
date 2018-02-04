@@ -24,16 +24,14 @@ object SearchIterator {
   /**
     * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits(client: ElasticClient,
-           searchreq: SearchRequest)
-          (implicit timeout: Duration): Iterator[SearchHit] =
+  def hits(client: ElasticClient, searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
     new Iterator[SearchHit] {
       require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
       import com.sksamuel.elastic4s.http.ElasticDsl._
 
       private var iterator: Iterator[SearchHit] = Iterator.empty
-      private var scrollId: Option[String] = None
+      private var scrollId: Option[String]      = None
 
       override def hasNext: Boolean = iterator.hasNext || {
         iterator = fetchNext()
@@ -47,7 +45,7 @@ object SearchIterator {
         // we're either advancing a scroll id or issuing the first query w/ the keep alive set
         val f = scrollId match {
           case Some(id) => client.execute(searchScroll(id, searchreq.keepAlive.get))
-          case None => client.execute(searchreq)
+          case None     => client.execute(searchreq)
         }
 
         val resp = Await.result(f, timeout)
@@ -55,7 +53,7 @@ object SearchIterator {
         // in a search scroll we must always use the last returned scrollId
         val response = resp match {
           case RequestSuccess(_, _, _, result) => result
-          case failure: RequestFailure => sys.error(failure.toString)
+          case failure: RequestFailure         => sys.error(failure.toString)
         }
 
         scrollId = response.scrollId
@@ -68,10 +66,8 @@ object SearchIterator {
     * A typeclass HitReader[T] must be provided for marshalling of the search
     * responses into instances of type T.
     */
-  def iterate[T](client: ElasticClient, searchreq: SearchRequest)
-                (implicit
-                 reader: HitReader[T],
-                 timeout: Duration): Iterator[T] = {
+  def iterate[T](client: ElasticClient, searchreq: SearchRequest)(implicit
+                                                                  reader: HitReader[T],
+                                                                  timeout: Duration): Iterator[T] =
     hits(client, searchreq).map(_.to[T])
-  }
 }

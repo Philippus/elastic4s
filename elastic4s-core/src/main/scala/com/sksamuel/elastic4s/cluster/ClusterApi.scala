@@ -6,7 +6,7 @@ import com.sksamuel.exts.OptionImplicits._
 trait ClusterApi {
 
   def clusterState(): ClusterStateRequest = ClusterStateRequest()
-  def clusterStats()                         = new ClusterStatsRequest
+  def clusterStats()                      = new ClusterStatsRequest
 
   def clusterPersistentSettings(settings: Map[String, String]) = ClusterSettingsRequest(settings, Map.empty)
   def clusterTransientSettings(settings: Map[String, String])  = ClusterSettingsRequest(Map.empty, settings)

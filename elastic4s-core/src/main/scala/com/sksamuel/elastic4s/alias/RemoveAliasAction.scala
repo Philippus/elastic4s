@@ -18,6 +18,6 @@ case class RemoveAliasAction(alias: String,
     copy(searchRouting = Option(searchRouting))
   def withIndexRouting(indexRouting: String): RemoveAliasAction = copy(indexRouting = Option(indexRouting))
 
-  def filter(query: String): RemoveAliasAction          = filter(QueryStringQuery(query))
-  def filter(query: Query): RemoveAliasAction = copy(filter = query.some)
+  def filter(query: String): RemoveAliasAction = filter(QueryStringQuery(query))
+  def filter(query: Query): RemoveAliasAction  = copy(filter = query.some)
 }

@@ -4,7 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.SearchResponse
-import com.sksamuel.elastic4s.searches.{GetSearchTemplateDefinition, PutSearchTemplateDefinition, RemoveSearchTemplateDefinition, TemplateSearchDefinition}
+import com.sksamuel.elastic4s.searches.{
+  GetSearchTemplateDefinition,
+  PutSearchTemplateDefinition,
+  RemoveSearchTemplateDefinition,
+  TemplateSearchDefinition
+}
 import com.sksamuel.exts.OptionImplicits._
 import org.apache.http.entity.ContentType
 
@@ -14,9 +19,9 @@ trait SearchTemplateImplicits {
 
     override def requestHandler(req: TemplateSearchDefinition): ElasticRequest = {
       val endpoint = req.indexesAndTypes match {
-        case IndexesAndTypes(Nil, Nil) => "/_search/template"
+        case IndexesAndTypes(Nil, Nil)     => "/_search/template"
         case IndexesAndTypes(indexes, Nil) => "/" + indexes.mkString(",") + "/_search/template"
-        case IndexesAndTypes(Nil, types) => "/_all/" + types.mkString(",") + "/_search/template"
+        case IndexesAndTypes(Nil, types)   => "/_all/" + types.mkString(",") + "/_search/template"
         case IndexesAndTypes(indexes, types) =>
           "/" + indexes.mkString(",") + "/" + types.mkString(",") + "/_search/template"
       }
@@ -26,7 +31,7 @@ trait SearchTemplateImplicits {
   }
 
   implicit object RemoveSearchTemplateExecutable
-    extends Handler[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
+      extends Handler[RemoveSearchTemplateDefinition, RemoveSearchTemplateResponse] {
 
     override def requestHandler(req: RemoveSearchTemplateDefinition): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name
@@ -34,19 +39,18 @@ trait SearchTemplateImplicits {
     }
   }
 
-  implicit object PutSearchTemplateExecutable
-    extends Handler[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
+  implicit object PutSearchTemplateExecutable extends Handler[PutSearchTemplateDefinition, PutSearchTemplateResponse] {
 
     override def requestHandler(req: PutSearchTemplateDefinition): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name
-      val body = PutSearchTemplateBuilderFn(req).string()
-      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
+      val body     = PutSearchTemplateBuilderFn(req).string()
+      val entity   = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       ElasticRequest("POST", endpoint, entity)
     }
   }
 
   implicit object GetSearchTemplateExecutable
-    extends Handler[GetSearchTemplateDefinition, Option[GetSearchTemplateResponse]] {
+      extends Handler[GetSearchTemplateDefinition, Option[GetSearchTemplateResponse]] {
 
     override def responseHandler: ResponseHandler[Option[GetSearchTemplateResponse]] =
       new ResponseHandler[Option[GetSearchTemplateResponse]] {
@@ -59,7 +63,7 @@ trait SearchTemplateImplicits {
           response.statusCode match {
             case 200 => Right(ResponseHandler.fromResponse[GetSearchTemplateResponse](response).some)
             case 404 => Right(None)
-            case _ => sys.error(response.entity.map(_.content).getOrElse(""))
+            case _   => sys.error(response.entity.map(_.content).getOrElse(""))
           }
       }
 

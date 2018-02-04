@@ -23,7 +23,9 @@ case class ClearCacheRequest(indexes: Seq[String],
                              queryCache: Option[Boolean] = None,
                              fields: Seq[String] = Nil)
 
-case class FlushIndexRequest(indexes: Seq[String], waitIfOngoing: Option[Boolean] = None, force: Option[Boolean] = None) {
+case class FlushIndexRequest(indexes: Seq[String],
+                             waitIfOngoing: Option[Boolean] = None,
+                             force: Option[Boolean] = None) {
   def force(force: Boolean): FlushIndexRequest                 = copy(force = force.some)
   def waitIfOngoing(waitIfOngoing: Boolean): FlushIndexRequest = copy(waitIfOngoing = waitIfOngoing.some)
 }

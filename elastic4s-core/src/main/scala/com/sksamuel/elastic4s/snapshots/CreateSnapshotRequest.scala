@@ -16,9 +16,9 @@ case class CreateSnapshotRequest(snapshotName: String,
   def partial(p: Boolean): CreateSnapshotRequest = copy(partial = p.some)
 
   def includeGlobalState(global: Boolean): CreateSnapshotRequest = copy(includeGlobalState = global.some)
-  def ignoreUnavailable(ignore: Boolean): CreateSnapshotRequest = copy(ignoreUnavailable = ignore.some)
-  def waitForCompletion(w: Boolean): CreateSnapshotRequest = copy(waitForCompletion = w.some)
+  def ignoreUnavailable(ignore: Boolean): CreateSnapshotRequest  = copy(ignoreUnavailable = ignore.some)
+  def waitForCompletion(w: Boolean): CreateSnapshotRequest       = copy(waitForCompletion = w.some)
 
-  def index(index: Index): CreateSnapshotRequest = copy(indices = index.toIndexes)
+  def index(index: Index): CreateSnapshotRequest       = copy(indices = index.toIndexes)
   def indices(indices: Indexes): CreateSnapshotRequest = copy(indices = indices)
 }

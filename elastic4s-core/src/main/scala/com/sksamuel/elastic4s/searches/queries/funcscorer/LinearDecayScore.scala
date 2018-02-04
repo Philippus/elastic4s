@@ -16,8 +16,8 @@ case class LinearDecayScore(field: String,
   def multiValueMode(multiValueMode: MultiValueMode): LinearDecayScore =
     copy(multiValueMode = multiValueMode.some)
 
-  def weight(weight: Double): LinearDecayScore          = copy(weight = weight.some)
-  def decay(decay: Double): LinearDecayScore            = copy(decay = decay.some)
-  def offset(offset: Any): LinearDecayScore             = copy(offset = offset.some)
-  def filter(filter: Query): LinearDecayScore = copy(filter = filter.some)
+  def weight(weight: Double): LinearDecayScore = copy(weight = weight.some)
+  def decay(decay: Double): LinearDecayScore   = copy(decay = decay.some)
+  def offset(offset: Any): LinearDecayScore    = copy(offset = offset.some)
+  def filter(filter: Query): LinearDecayScore  = copy(filter = filter.some)
 }

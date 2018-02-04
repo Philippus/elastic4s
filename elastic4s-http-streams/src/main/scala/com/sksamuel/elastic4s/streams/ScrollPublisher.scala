@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
   * @param maxItems        the maximum number of elements to return
   * @param actorRefFactory an Actor reference factory required by the publisher
   */
-class ScrollPublisher private[streams](client: ElasticClient, search: SearchRequest, maxItems: Long)(
+class ScrollPublisher private[streams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")

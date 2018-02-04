@@ -172,7 +172,7 @@ trait IndexAdminHandlers extends IndexShowImplicits {
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[CreateIndexResponse](response))
           case 400 | 500 => Left(ElasticError.parse(response))
-          case _ => sys.error(response.toString)
+          case _         => sys.error(response.toString)
         }
     }
 
@@ -183,7 +183,7 @@ trait IndexAdminHandlers extends IndexShowImplicits {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = CreateIndexContentBuilder(request).string()
+      val body   = CreateIndexContentBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)
@@ -199,12 +199,12 @@ trait IndexAdminHandlers extends IndexShowImplicits {
   }
 
   implicit object UpdateIndexLevelSettingsExecutable
-    extends Handler[UpdateIndexLevelSettingsRequest, UpdateIndexLevelSettingsResponse] {
+      extends Handler[UpdateIndexLevelSettingsRequest, UpdateIndexLevelSettingsResponse] {
     override def requestHandler(request: UpdateIndexLevelSettingsRequest): ElasticRequest = {
 
       val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
-      val body = UpdateIndexLevelSettingsBuilder(request).string()
-      val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
+      val body     = UpdateIndexLevelSettingsBuilder(request).string()
+      val entity   = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
       ElasticRequest("PUT", endpoint, entity)
     }
@@ -215,7 +215,7 @@ trait IndexAdminHandlers extends IndexShowImplicits {
     override def requestHandler(request: IndexShardStoreRequest): ElasticRequest = {
 
       val endpoint = "/" + request.indexes.values.mkString(",") + "/_shard_stores"
-      val params = scala.collection.mutable.Map.empty[String, String]
+      val params   = scala.collection.mutable.Map.empty[String, String]
       request.status.foreach(params.put("status", _))
 
       ElasticRequest("GET", endpoint, params.toMap)

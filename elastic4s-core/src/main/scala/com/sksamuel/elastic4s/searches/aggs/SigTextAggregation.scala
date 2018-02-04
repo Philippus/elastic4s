@@ -36,8 +36,8 @@ case class SigTextAggregation(name: String,
 
   def significanceHeuristic(heuristic: String): SigTextAggregation = copy(heuristic = heuristic.some)
 
-  def field(field: String): SigTextAggregation                      = copy(field = field.some)
-  def shardMinDocCount(min: Long): SigTextAggregation               = copy(shardMinDocCount = min.some)
+  def field(field: String): SigTextAggregation            = copy(field = field.some)
+  def shardMinDocCount(min: Long): SigTextAggregation     = copy(shardMinDocCount = min.some)
   def backgroundFilter(filter: Query): SigTextAggregation = copy(backgroundFilter = filter.some)
 
   def shardSize(shardSize: Int): SigTextAggregation = copy(shardSize = shardSize.some)

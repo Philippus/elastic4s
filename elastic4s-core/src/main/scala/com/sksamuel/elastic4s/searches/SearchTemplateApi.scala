@@ -11,7 +11,7 @@ trait SearchTemplateApi {
 
   class PutSearchTemplateExpectsQueryOrBody(name: String) {
     def query(query: Query): PutSearchTemplateDefinition = PutSearchTemplateDefinition(name, query.some, None)
-    def body(body: String): PutSearchTemplateDefinition            = PutSearchTemplateDefinition(name, None, body.some)
+    def body(body: String): PutSearchTemplateDefinition  = PutSearchTemplateDefinition(name, None, body.some)
   }
 
   @deprecated("Use the stored scripts api to store templates", "6.0.0")

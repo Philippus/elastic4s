@@ -18,7 +18,7 @@ case class ScriptSort(script: Script,
   def sortMode(mode: String): ScriptSort   = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): ScriptSort = copy(sortMode = mode.some)
 
-  def nestedPath(path: String): ScriptSort             = copy(nestedPath = path.some)
+  def nestedPath(path: String): ScriptSort   = copy(nestedPath = path.some)
   def nestedFilter(query: Query): ScriptSort = copy(nestedFilter = query.some)
 
   def order(order: SortOrder): ScriptSort     = copy(order = order.some)

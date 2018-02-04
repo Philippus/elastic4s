@@ -22,16 +22,16 @@ case class PercentilesAggregation(name: String,
 
   def compression(compression: Double): T = copy(compression = compression.some)
 
-  def format(format: String): T           = copy(format = format.some)
-  def field(field: String): T             = copy(field = field.some)
-  def missing(missing: AnyRef): T         = copy(missing = missing.some)
-  def script(script: Script): T = copy(script = script.some)
+  def format(format: String): T   = copy(format = format.some)
+  def field(field: String): T     = copy(field = field.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
+  def script(script: Script): T   = copy(script = script.some)
   def numberOfSignificantValueDigits(numberOfSignificantValueDigits: Int): T =
     copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
   def hdr(numberOfSignificantValueDigits: Int): T =
     copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
 
-  override def subAggregations(aggs: Iterable[AbstractAggregation]): T              = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T    = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): PercentilesAggregation = copy(metadata = metadata)
 
 }

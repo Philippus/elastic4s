@@ -8,7 +8,7 @@ case class SpanNearQuery(clauses: Seq[SpanQuery],
     extends SpanQuery {
 
   def clause(first: SpanQuery, rest: SpanQuery*): SpanNearQuery = clauses(first +: rest)
-  def clauses(clauses: Iterable[SpanQuery]): SpanNearQuery                = copy(clauses = this.clauses ++ clauses)
+  def clauses(clauses: Iterable[SpanQuery]): SpanNearQuery      = copy(clauses = this.clauses ++ clauses)
 
   def boost(boost: Double): SpanNearQuery      = copy(boost = Option(boost))
   def queryName(name: String): SpanNearQuery   = copy(queryName = Option(name))

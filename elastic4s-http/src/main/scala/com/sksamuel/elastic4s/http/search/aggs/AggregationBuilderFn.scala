@@ -13,7 +13,7 @@ object AggregationBuilderFn {
       case agg: AvgAggregation           => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregation   => CardinalityAggregationBuilder(agg)
       case agg: ChildrenAggregation      => ChildrenAggregationBuilder(agg)
-      case agg: DateHistogramAggregation           => DateHistogramAggregationBuilder(agg)
+      case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
       case agg: ExtendedStatsAggregation => ExtendedStatsAggregationBuilder(agg)
       case agg: FilterAggregation        => FilterAggregationBuilder(agg)
       case agg: FiltersAggregation       => FiltersAggregationBuilder(agg)
@@ -23,7 +23,7 @@ object AggregationBuilderFn {
       case agg: GeoDistanceAggregation   => GeoDistanceAggregationBuilder(agg)
       case agg: GeoHashGridAggregation   => GeoHashGridAggregationBuilder(agg)
       case agg: GlobalAggregation        => GlobalAggregationBuilder(agg)
-      case agg: HistogramAggregation               => HistogramAggregationBuilder(agg)
+      case agg: HistogramAggregation     => HistogramAggregationBuilder(agg)
       case agg: IpRangeAggregation       => IpRangeAggregationBuilder(agg)
       case agg: MaxAggregation           => MaxAggregationBuilder(agg)
       case agg: MinAggregation           => MinAggregationBuilder(agg)
@@ -40,8 +40,8 @@ object AggregationBuilderFn {
       case agg: TermsAggregation         => TermsAggregationBuilder(agg)
       case agg: ValueCountAggregation    => ValueCountAggregationBuilder(agg)
 
-      case agg: RangeAggregation => RangeAggregationBuilder(agg)
-      case agg: DateRangeAggregation       => DateRangeAggregationBuilder(agg)
+      case agg: RangeAggregation     => RangeAggregationBuilder(agg)
+      case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
 
       // pipeline aggs
       case agg: AvgBucketDefinition           => AvgBucketPipelineAggBuilder(agg)

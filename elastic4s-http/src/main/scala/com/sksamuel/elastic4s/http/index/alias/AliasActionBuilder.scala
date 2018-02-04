@@ -1,10 +1,6 @@
 package com.sksamuel.elastic4s.http.index.alias
 
-import com.sksamuel.elastic4s.alias.{
-  AddAliasActionRequest,
-  IndicesAliasesRequest,
-  RemoveAliasAction
-}
+import com.sksamuel.elastic4s.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
@@ -15,8 +11,8 @@ object AliasActionBuilder {
 
     val actionsArray = r.actions
       .map {
-        case addAction: AddAliasActionRequest       => buildAddAction(addAction).string()
-        case removeAction: RemoveAliasAction => buildRemoveAction(removeAction).string()
+        case addAction: AddAliasActionRequest => buildAddAction(addAction).string()
+        case removeAction: RemoveAliasAction  => buildRemoveAction(removeAction).string()
       }
       .mkString(",")
 

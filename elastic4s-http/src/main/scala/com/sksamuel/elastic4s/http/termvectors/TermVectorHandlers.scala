@@ -42,9 +42,9 @@ trait TermVectorHandlers {
       request.realtime.foreach(params.put("realtime", _))
 
       ElasticRequest("GET",
-        endpoint,
-        params.toMap,
-        HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
+                     endpoint,
+                     params.toMap,
+                     HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }

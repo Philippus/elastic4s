@@ -14,28 +14,28 @@ import scala.language.{implicitConversions, reflectiveCalls}
 trait QueryApi {
 
   implicit def string2query(string: String): SimpleStringQuery = SimpleStringQuery(string)
-  implicit def tuple2query(kv: (String, String)): TermQuery = TermQuery(kv._1, kv._2)
+  implicit def tuple2query(kv: (String, String)): TermQuery    = TermQuery(kv._1, kv._2)
 
   def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
     BoostingQuery(positiveQuery, negativeQuery)
 
   @deprecated("use commonTermsQuery", "6.1.2")
-  def commonQuery(field: String) = new CommonQueryExpectsText(field)
+  def commonQuery(field: String)      = new CommonQueryExpectsText(field)
   def commonTermsQuery(field: String) = new CommonQueryExpectsText(field)
 
   class CommonQueryExpectsText(name: String) {
-    def text(q: String): CommonTermsQuery = CommonTermsQuery(name, q)
+    def text(q: String): CommonTermsQuery  = CommonTermsQuery(name, q)
     def query(q: String): CommonTermsQuery = text(q)
   }
 
   @deprecated("use commonTermsQuery", "6.1.2")
-  def commonQuery(field: String, text: String) = CommonTermsQuery(field, text)
+  def commonQuery(field: String, text: String)      = CommonTermsQuery(field, text)
   def commonTermsQuery(field: String, text: String) = CommonTermsQuery(field, text)
 
   def constantScoreQuery(query: Query): ConstantScore = ConstantScore(query)
 
   def dismax(first: Query, rest: Query*): DisMaxQuery = dismax(first +: rest)
-  def dismax(queries: Iterable[Query]): DisMaxQuery = DisMaxQuery(queries.toSeq)
+  def dismax(queries: Iterable[Query]): DisMaxQuery   = DisMaxQuery(queries.toSeq)
 
   def existsQuery(field: String) = ExistsQuery(field)
 
@@ -59,26 +59,26 @@ trait QueryApi {
 
   def fuzzyQuery(field: String, value: String): FuzzyQuery = FuzzyQuery(field, value)
 
-  def functionScoreQuery(): FunctionScoreQuery = FunctionScoreQuery()
+  def functionScoreQuery(): FunctionScoreQuery             = FunctionScoreQuery()
   def functionScoreQuery(query: Query): FunctionScoreQuery = functionScoreQuery().query(query)
 
   def geoBoxQuery(field: String) = GeoBoundingBoxQuery(field)
   def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQuery =
     GeoBoundingBoxQuery(field).withGeohash(topleft, bottomright)
 
-  def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
+  def geoDistanceQuery(field: String): GeoDistanceExpectsPoint           = new GeoDistanceExpectsPoint(field)
   def geoDistanceQuery(field: String, geohash: String): GeoDistanceQuery = GeoDistanceQuery(field).geohash(geohash)
   def geoDistanceQuery(field: String, lat: Double, long: Double): GeoDistanceQuery =
     GeoDistanceQuery(field).point(lat, long)
 
   @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "6.1.2")
   class GeoDistanceExpectsPoint(field: String) {
-    def geohash(geohash: String): GeoDistanceQuery = GeoDistanceQuery(field).geohash(geohash)
+    def geohash(geohash: String): GeoDistanceQuery         = GeoDistanceQuery(field).geohash(geohash)
     def point(lat: Double, long: Double): GeoDistanceQuery = GeoDistanceQuery(field).point(lat, long)
   }
 
   class GeoDistanceExpectsDistance(gdef: GeoDistanceQuery) {
-    def distance(distance: String): GeoDistanceQuery = gdef.distance(distance)
+    def distance(distance: String): GeoDistanceQuery                     = gdef.distance(distance)
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQuery = gdef.distance(distance, unit)
   }
 
@@ -91,7 +91,7 @@ trait QueryApi {
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
     def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQuery = points(first +: rest)
-    def points(points: Iterable[GeoPoint]): GeoPolygonQuery = geoPolygonQuery(field, points)
+    def points(points: Iterable[GeoPoint]): GeoPolygonQuery       = geoPolygonQuery(field, points)
   }
 
   def geoPolygonQuery(field: String, first: GeoPoint, rest: GeoPoint*): GeoPolygonQuery =
@@ -108,10 +108,10 @@ trait QueryApi {
     HasChildQuery(`type`, query, scoreMode)
 
   class HasChildQueryExpectsQuery(`type`: String) {
-    def query(q: Query): ExpectsScoreMode = new ExpectsScoreMode(q)
+    def query(q: Query): ExpectsScoreMode  = new ExpectsScoreMode(q)
     def query(q: String): ExpectsScoreMode = new ExpectsScoreMode(q)
     class ExpectsScoreMode(q: Query) {
-      def scoreMode(mode: String): HasChildQuery = scoreMode(ScoreMode.valueOf(mode))
+      def scoreMode(mode: String): HasChildQuery         = scoreMode(ScoreMode.valueOf(mode))
       def scoreMode(scoreMode: ScoreMode): HasChildQuery = hasChildQuery(`type`, q, scoreMode)
     }
   }
@@ -131,7 +131,7 @@ trait QueryApi {
   def innerHits(name: String): InnerHitDefinition = InnerHitDefinition(name)
 
   @deprecated("use matchQuery(field, value) instead of the tupled version", "5.2.0")
-  def matchQuery(tuple: (String, Any)): MatchQuery = MatchQuery(tuple._1, tuple._2)
+  def matchQuery(tuple: (String, Any)): MatchQuery      = MatchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQuery = MatchQuery(field, value)
 
   def matchPhraseQuery(field: String, value: Any): MatchPhrase = MatchPhrase(field, value)
@@ -141,10 +141,10 @@ trait QueryApi {
   def multiMatchQuery(text: String) = MultiMatchQuery(text)
 
   def matchNoneQuery() = MatchNoneQuery()
-  def matchAllQuery() = MatchAllQuery()
+  def matchAllQuery()  = MatchAllQuery()
 
   def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(first +: rest)
-  def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(fields.toSeq)
+  def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes     = new MoreLikeThisExpectsLikes(fields.toSeq)
 
   class MoreLikeThisExpectsLikes(fields: Seq[String]) {
 
@@ -180,7 +180,7 @@ trait QueryApi {
   }
   def nestedQuery(path: String, query: Query): NestedQuery = NestedQuery(path, query)
 
-  def query(queryString: String): QueryStringQuery = queryStringQuery(queryString)
+  def query(queryString: String): QueryStringQuery            = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQuery = QueryStringQuery(queryString)
 
   def percolateQuery(`type`: String, field: String = "query") = new PercolateExpectsUsing(`type`, field)
@@ -203,18 +203,18 @@ trait QueryApi {
   def rawQuery(json: String): RawQuery = RawQuery(json)
 
   @deprecated("use the non-tupled version regexQuery(field,value)", "6.1.2")
-  def regexQuery(tuple: (String, String)): RegexQuery = regexQuery(tuple._1, tuple._2)
+  def regexQuery(tuple: (String, String)): RegexQuery      = regexQuery(tuple._1, tuple._2)
   def regexQuery(field: String, value: String): RegexQuery = RegexQuery(field, value)
 
   @deprecated("use the non-tupled version prefixQuery(field,value)", "6.1.2")
-  def prefixQuery(tuple: (String, Any)): PrefixQuery = prefixQuery(tuple._1, tuple._2)
+  def prefixQuery(tuple: (String, Any)): PrefixQuery      = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQuery = PrefixQuery(field, value)
 
   def scriptQuery(script: Script): ScriptQuery = ScriptQuery(script)
   def scriptQuery(script: String): ScriptQuery = ScriptQuery(script)
 
   def simpleStringQuery(q: String): SimpleStringQuery = SimpleStringQuery(q)
-  def stringQuery(q: String): QueryStringQuery = QueryStringQuery(q)
+  def stringQuery(q: String): QueryStringQuery        = QueryStringQuery(q)
 
   def spanFirstQuery(query: SpanQuery) = new SpanFirstExpectsEnd(query)
   class SpanFirstExpectsEnd(query: SpanQuery) {
@@ -243,7 +243,7 @@ trait QueryApi {
   def spanMultiTermQuery(query: MultiTermQuery) = SpanMultiTermQuery(query)
 
   @deprecated("use the non-tupled version termQuery(field,value)", "6.1.2")
-  def termQuery(tuple: (String, Any)): TermQuery = termQuery(tuple._1, tuple._2)
+  def termQuery(tuple: (String, Any)): TermQuery      = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQuery = TermQuery(field, value)
 
   def termsQuery[T: BuildableTermsQuery](field: String, first: T, rest: T*): TermsQuery[T] =
@@ -259,21 +259,19 @@ trait QueryApi {
     com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery(field, terms)
 
   @deprecated("use the non-tupled version wildcardQuery(field,value)", "6.1.2")
-  def wildcardQuery(tuple: (String, Any)): WildcardQuery = wildcardQuery(tuple._1, tuple._2)
+  def wildcardQuery(tuple: (String, Any)): WildcardQuery      = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQuery = WildcardQuery(field, value)
 
   def typeQuery(`type`: String) = TypeQuery(`type`)
 
-  def idsQuery(ids: Iterable[Any]): IdQuery = IdQuery(ids.toSeq)
+  def idsQuery(ids: Iterable[Any]): IdQuery  = IdQuery(ids.toSeq)
   def idsQuery(id: Any, rest: Any*): IdQuery = IdQuery(id +: rest)
 
   // -- bool query dsl ---
   @deprecated("this usage leads to subtle bugs, please use boolQuery().must(...).should(...).not(...)", "5.0.0")
   def bool(block: => BoolQuery): BoolQuery = block
 
-  def bool(mustQueries: Seq[Query],
-           shouldQueries: Seq[Query],
-           notQueries: Seq[Query]): BoolQuery =
+  def bool(mustQueries: Seq[Query], shouldQueries: Seq[Query], notQueries: Seq[Query]): BoolQuery =
     must(mustQueries).should(shouldQueries).not(notQueries)
 
   // convenience to make an emtpy bool which can be appended to
@@ -281,13 +279,13 @@ trait QueryApi {
 
   // short cut for a boolean query with musts
   def must(first: Query, rest: Query*): BoolQuery = must(first +: rest)
-  def must(queries: Iterable[Query]): BoolQuery = BoolQuery().must(queries)
+  def must(queries: Iterable[Query]): BoolQuery   = BoolQuery().must(queries)
 
   // short cut for a boolean query with shoulds
-  def should(queries: Query*): BoolQuery = BoolQuery().should(queries: _*)
+  def should(queries: Query*): BoolQuery          = BoolQuery().should(queries: _*)
   def should(queries: Iterable[Query]): BoolQuery = BoolQuery().should(queries)
 
   // short cut for a boolean query with nots
-  def not(queries: Query*): BoolQuery = BoolQuery().not(queries: _*)
+  def not(queries: Query*): BoolQuery          = BoolQuery().not(queries: _*)
   def not(queries: Iterable[Query]): BoolQuery = BoolQuery().not(queries)
 }

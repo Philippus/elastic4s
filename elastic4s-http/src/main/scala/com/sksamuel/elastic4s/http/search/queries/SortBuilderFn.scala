@@ -2,13 +2,7 @@ package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.sort.{
-  FieldSort,
-  GeoDistanceSort,
-  ScoreSort,
-  ScriptSort,
-  Sort
-}
+import com.sksamuel.elastic4s.searches.sort.{FieldSort, GeoDistanceSort, ScoreSort, ScriptSort, Sort}
 
 object SortBuilderFn {
   def apply(sort: Sort): XContentBuilder = sort match {

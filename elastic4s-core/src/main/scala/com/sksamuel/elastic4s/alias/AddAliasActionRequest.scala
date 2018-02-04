@@ -17,6 +17,6 @@ case class AddAliasActionRequest(alias: String,
   def searchRouting(searchRouting: String): AddAliasActionRequest = copy(searchRouting = Option(searchRouting))
   def indexRouting(indexRouting: String): AddAliasActionRequest   = copy(indexRouting = Option(indexRouting))
 
-  def filter(query: String): AddAliasActionRequest          = filter(QueryStringQuery(query))
-  def filter(query: Query): AddAliasActionRequest = copy(filter = query.some)
+  def filter(query: String): AddAliasActionRequest = filter(QueryStringQuery(query))
+  def filter(query: Query): AddAliasActionRequest  = copy(filter = query.some)
 }

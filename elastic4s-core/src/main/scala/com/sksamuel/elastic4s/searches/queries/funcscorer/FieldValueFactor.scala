@@ -12,7 +12,7 @@ case class FieldValueFactor(fieldName: String,
   def factor(factor: Double): FieldValueFactor                               = copy(factor = factor.some)
   def missing(missing: Double): FieldValueFactor                             = copy(missing = missing.some)
   def modifier(modifier: FieldValueFactorFunctionModifier): FieldValueFactor = copy(modifier = modifier.some)
-  def filter(filter: Query): FieldValueFactor                      = copy(filter = filter.some)
+  def filter(filter: Query): FieldValueFactor                                = copy(filter = filter.some)
 
 }
 

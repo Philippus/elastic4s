@@ -34,10 +34,10 @@ sealed trait HttpEntity {
 }
 
 object HttpEntity {
-  def apply(content: String): HttpEntity = HttpEntity(content, "application/json; charset=utf-8")
+  def apply(content: String): HttpEntity                      = HttpEntity(content, "application/json; charset=utf-8")
   def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
 
-  case class StringEntity(content: String, contentType: Option[String]) extends HttpEntity
+  case class StringEntity(content: String, contentType: Option[String])           extends HttpEntity
   case class InputStreamEntity(content: InputStream, contentType: Option[String]) extends HttpEntity
-  case class FileEntity(content: File, contentType: Option[String]) extends HttpEntity
+  case class FileEntity(content: File, contentType: Option[String])               extends HttpEntity
 }

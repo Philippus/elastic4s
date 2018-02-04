@@ -29,7 +29,7 @@ trait AggregationApi {
   def extendedStatsAgg(name: String, field: String) = ExtendedStatsAggregation(name, field = field.some)
 
   def filterAgg(name: String, query: Query) = FilterAggregation(name, query)
-  def filterAggregation(name: String)                 = new FilterAggregationExpectsQuery(name)
+  def filterAggregation(name: String)       = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
     def query(query: Query) = FilterAggregation(name, query)
   }
@@ -55,7 +55,7 @@ trait AggregationApi {
   def geoHashGridAggregation(name: String): GeoHashGridAggregation = GeoHashGridAggregation(name)
   def geoCentroidAggregation(name: String): GeoCentroidAggregation = GeoCentroidAggregation(name)
   def globalAggregation(name: String): GlobalAggregation           = GlobalAggregation(name)
-  def histogramAggregation(name: String): HistogramAggregation               = HistogramAggregation(name)
+  def histogramAggregation(name: String): HistogramAggregation     = HistogramAggregation(name)
   def ipRangeAggregation(name: String): IpRangeAggregation         = IpRangeAggregation(name)
 
   def maxAgg(name: String, field: String): MaxAggregation = MaxAggregation(name).field(field)

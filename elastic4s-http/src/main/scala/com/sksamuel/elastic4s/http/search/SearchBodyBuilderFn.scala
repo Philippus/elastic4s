@@ -11,11 +11,7 @@ import com.sksamuel.elastic4s.http.search.suggs.{
 }
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.SearchRequest
-import com.sksamuel.elastic4s.searches.suggestion.{
-  CompletionSuggestion,
-  PhraseSuggestion,
-  TermSuggestion
-}
+import com.sksamuel.elastic4s.searches.suggestion.{CompletionSuggestion, PhraseSuggestion, TermSuggestion}
 
 object SearchBodyBuilderFn {
 

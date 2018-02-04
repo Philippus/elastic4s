@@ -17,5 +17,5 @@ case class ExponentialDecayScore(field: String,
   def offset(offset: Any): ExponentialDecayScore                  = copy(offset = offset.some)
   def weight(weight: Double): ExponentialDecayScore               = copy(weight = weight.some)
   def multiValueMode(mode: MultiValueMode): ExponentialDecayScore = copy(multiValueMode = mode.some)
-  def filter(filter: Query): ExponentialDecayScore      = copy(filter = filter.some)
+  def filter(filter: Query): ExponentialDecayScore                = copy(filter = filter.some)
 }

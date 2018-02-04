@@ -10,7 +10,8 @@ trait IndexMatchers extends Matchers {
 
   import scala.concurrent.duration._
 
-  def haveCount(expectedCount: Int)(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] =
+  def haveCount(expectedCount: Int)(implicit client: ElasticClient,
+                                    timeout: FiniteDuration = 10.seconds): Matcher[String] =
     new Matcher[String] {
 
       def apply(left: String): MatchResult = {
@@ -23,7 +24,8 @@ trait IndexMatchers extends Matchers {
       }
     }
 
-  def containDoc(expectedId: Any)(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] =
+  def containDoc(expectedId: Any)(implicit client: ElasticClient,
+                                  timeout: FiniteDuration = 10.seconds): Matcher[String] =
     new Matcher[String] {
 
       override def apply(left: String): MatchResult = {
@@ -49,15 +51,16 @@ trait IndexMatchers extends Matchers {
       }
     }
 
-  def beEmpty(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] = new Matcher[String] {
+  def beEmpty(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] =
+    new Matcher[String] {
 
-    override def apply(left: String): MatchResult = {
-      val count = client.execute(search(left).size(0)).await(timeout).result.totalHits
-      MatchResult(
-        count == 0,
-        s"Index $left was not empty",
-        s"Index $left was empty"
-      )
+      override def apply(left: String): MatchResult = {
+        val count = client.execute(search(left).size(0)).await(timeout).result.totalHits
+        MatchResult(
+          count == 0,
+          s"Index $left was not empty",
+          s"Index $left was empty"
+        )
+      }
     }
-  }
 }

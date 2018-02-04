@@ -31,11 +31,11 @@ case class IpRangeAggregation(name: String,
   def unboundedTo(to: String): T              = copy(unboundedTo = (None, to).some)
   def unboundedTo(key: String, to: String): T = copy(unboundedTo = (Some(key), to).some)
 
-  def field(field: String): T             = copy(field = field.some)
-  def format(format: String): T           = copy(format = format.some)
-  def missing(missing: AnyRef): T         = copy(missing = missing.some)
-  def script(script: Script): T = copy(script = script.some)
-  def keyed(keyed: Boolean): T            = copy(keyed = keyed.some)
+  def field(field: String): T     = copy(field = field.some)
+  def format(format: String): T   = copy(format = format.some)
+  def missing(missing: AnyRef): T = copy(missing = missing.some)
+  def script(script: Script): T   = copy(script = script.some)
+  def keyed(keyed: Boolean): T    = copy(keyed = keyed.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)

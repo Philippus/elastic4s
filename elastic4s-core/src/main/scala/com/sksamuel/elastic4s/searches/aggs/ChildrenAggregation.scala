@@ -8,6 +8,6 @@ case class ChildrenAggregation(name: String,
 
   type T = ChildrenAggregation
 
-  override def subAggregations(aggs: Iterable[AbstractAggregation]): T           = copy(subaggs = aggs.toSeq)
+  override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): ChildrenAggregation = copy(metadata = metadata)
 }

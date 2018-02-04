@@ -23,17 +23,17 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClien
   private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
     val url = uri"http://${clientUri.hosts.head._1}:${clientUri.hosts.head._2}/$endpoint?$params"
     method.toLowerCase match {
-      case "GET" => sttp.get(url)
-      case "HEAD" => sttp.head(url)
-      case "POST" => sttp.get(url)
-      case "PUT" => sttp.put(url)
+      case "GET"    => sttp.get(url)
+      case "HEAD"   => sttp.head(url)
+      case "POST"   => sttp.get(url)
+      case "PUT"    => sttp.put(url)
       case "DELETE" => sttp.delete(url)
     }
   }
 
   private def processResponse(resp: Response[String]): HttpResponse = {
     val entity = resp.body match {
-      case Left(e) => None
+      case Left(e)     => None
       case Right(body) => HttpEntity.StringEntity(body, resp.contentType).some
     }
     HttpResponse(resp.code, entity, resp.headers.toMap)
@@ -46,7 +46,7 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClien
             endpoint: String,
             params: Map[String, Any],
             entity: HttpEntity): Request[String, Nothing] = {
-    val r = request(method, endpoint, params)
+    val r  = request(method, endpoint, params)
     val r2 = entity.contentType.fold(r)(r.contentType)
     entity match {
       case StringEntity(content: String, _) => r2.body(content)
@@ -67,15 +67,14 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClien
     * a response, including 4xx and 5xx responses. The callback function should only be invoked
     * with an exception if the client failed.
     */
-  override def send(request: ElasticRequest,
-                    callback: Either[Throwable, HttpResponse] => Unit): Unit = {
+  override def send(request: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
     val f = request.entity match {
       case Some(entity) => async(request.method, request.endpoint, request.params, entity).send()
-      case None => async(request.method, request.endpoint, request.params).send()
+      case None         => async(request.method, request.endpoint, request.params).send()
     }
     f.onComplete {
       case Success(resp) => callback(Right(processResponse(resp)))
-      case Failure(t) => callback(Left(t))
+      case Failure(t)    => callback(Left(t))
     }
   }
 }

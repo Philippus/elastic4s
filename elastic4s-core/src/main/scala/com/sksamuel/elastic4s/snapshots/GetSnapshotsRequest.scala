@@ -7,5 +7,5 @@ case class GetSnapshotsRequest(snapshotNames: Seq[String],
                                ignoreUnavailable: Option[Boolean] = None,
                                verbose: Option[Boolean] = None) {
   def ignoreUnavailable(ignore: Boolean): GetSnapshotsRequest = copy(ignoreUnavailable = ignore.some)
-  def verbose(v: Boolean): GetSnapshotsRequest = copy(verbose = v.some)
+  def verbose(v: Boolean): GetSnapshotsRequest                = copy(verbose = v.some)
 }

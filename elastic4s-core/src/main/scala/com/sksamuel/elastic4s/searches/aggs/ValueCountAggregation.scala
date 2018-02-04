@@ -12,7 +12,7 @@ case class ValueCountAggregation(name: String,
 
   type T = ValueCountAggregation
 
-  def field(field: String): ValueCountAggregation             = copy(field = field.some)
+  def field(field: String): ValueCountAggregation   = copy(field = field.some)
   def script(script: Script): ValueCountAggregation = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)

@@ -14,10 +14,10 @@ case class StatsAggregation(name: String,
 
   type T = StatsAggregation
 
-  def format(format: String): StatsAggregation           = copy(format = format.some)
-  def field(field: String): StatsAggregation             = copy(field = field.some)
-  def missing(missing: AnyRef): StatsAggregation         = copy(missing = missing.some)
-  def script(script: Script): StatsAggregation = copy(script = script.some)
+  def format(format: String): StatsAggregation   = copy(format = format.some)
+  def field(field: String): StatsAggregation     = copy(field = field.some)
+  def missing(missing: AnyRef): StatsAggregation = copy(missing = missing.some)
+  def script(script: Script): StatsAggregation   = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)

@@ -26,9 +26,7 @@ case class Control(pref: Option[String] = None,
 
 case class Windowing(from: Option[Int] = None, size: Option[Int] = None, slice: Option[(Int, Int)] = None)
 
-case class Fields(docValues: Seq[String] = Nil,
-                  scriptFields: Seq[ScriptField] = Nil,
-                  storedFields: Seq[String] = Nil)
+case class Fields(docValues: Seq[String] = Nil, scriptFields: Seq[ScriptField] = Nil, storedFields: Seq[String] = Nil)
 
 case class Suggestions(suggs: Seq[Suggestion] = Nil, globalSuggestionText: Option[String] = None)
 
@@ -212,9 +210,8 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
   def highlighting(fields: Iterable[HighlightField]): SearchRequest =
     highlighting(HighlightOptions(), fields)
 
-  def highlighting(options: HighlightOptions,
-                   first: HighlightField,
-                   rest: HighlightField*): SearchRequest = highlighting(options, first +: rest)
+  def highlighting(options: HighlightOptions, first: HighlightField, rest: HighlightField*): SearchRequest =
+    highlighting(options, first +: rest)
 
   def highlighting(options: HighlightOptions, fields: Iterable[HighlightField]): SearchRequest =
     copy(highlight = Highlight(options, fields).some)

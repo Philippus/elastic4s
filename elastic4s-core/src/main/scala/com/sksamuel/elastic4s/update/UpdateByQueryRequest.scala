@@ -30,7 +30,7 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
     proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = copy(refresh = refresh.some)
-  def refreshImmediately: UpdateByQueryRequest = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): UpdateByQueryRequest = copy(scrollSize = scrollSize.some)
 

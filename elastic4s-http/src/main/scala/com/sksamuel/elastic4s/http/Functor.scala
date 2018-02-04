@@ -9,9 +9,10 @@ trait Functor[F[_]] {
 
 object Functor {
 
-  def apply[F[_] : Functor](): Functor[F] = implicitly[Functor[F]]
+  def apply[F[_]: Functor](): Functor[F] = implicitly[Functor[F]]
 
-  implicit def FutureFunctor(implicit ec: ExecutionContext = ExecutionContext.Implicits.global): Functor[Future] = new Functor[Future] {
-    override def map[A, B](fa: Future[A])(f: A => B): Future[B] = fa.map(f)
-  }
+  implicit def FutureFunctor(implicit ec: ExecutionContext = ExecutionContext.Implicits.global): Functor[Future] =
+    new Functor[Future] {
+      override def map[A, B](fa: Future[A])(f: A => B): Future[B] = fa.map(f)
+    }
 }

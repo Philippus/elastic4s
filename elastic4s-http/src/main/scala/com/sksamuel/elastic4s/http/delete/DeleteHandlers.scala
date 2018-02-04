@@ -30,7 +30,7 @@ trait DeleteHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] =
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
-          case _ => Left(ElasticError.parse(response))
+          case _         => Left(ElasticError.parse(response))
         }
     }
 

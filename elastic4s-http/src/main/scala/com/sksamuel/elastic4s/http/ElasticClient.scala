@@ -24,18 +24,16 @@ abstract class ElasticClient extends Logging {
   // Executes the given request type T, and returns an effect of Response[U]
   // where U is particular to the request type.
   // For example a search request will return a Response[SearchResponse].
-  def execute[T, U, F[_]](t: T)
-                         (implicit
-                          functor: Functor[F],
-                          executor: Executor[F],
-                          handler: Handler[T, U],
-                          manifest: Manifest[U]
-                         ): F[Response[U]] = {
+  def execute[T, U, F[_]](t: T)(implicit
+                                functor: Functor[F],
+                                executor: Executor[F],
+                                handler: Handler[T, U],
+                                manifest: Manifest[U]): F[Response[U]] = {
     val request = handler.requestHandler(t)
-    val f = executor.exec(client, request)
+    val f       = executor.exec(client, request)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {
-        case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
+        case Right(u)    => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
         case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
       }
     }
@@ -53,9 +51,9 @@ object ElasticClient extends Logging {
     * of the HttpClient typeclass wrapping the underlying library and
     * then creating the ElasticClient using this method.
     */
-  def apply[F[_] : Functor : Executor](hc: HttpClient): ElasticClient = new ElasticClient {
+  def apply[F[_]: Functor: Executor](hc: HttpClient): ElasticClient = new ElasticClient {
     override def client: HttpClient = hc
-    override def close(): Unit = hc.close()
+    override def close(): Unit      = hc.close()
   }
 
   /**
@@ -64,7 +62,7 @@ object ElasticClient extends Logging {
     * @param client the Java client to wrap
     * @return newly created Scala client
     */
-  def fromRestClient[F[_] : Functor : Executor](client: RestClient): ElasticClient =
+  def fromRestClient[F[_]: Functor: Executor](client: RestClient): ElasticClient =
     apply(new ElasticsearchJavaRestClient(client))
 
   /**
@@ -73,9 +71,11 @@ object ElasticClient extends Logging {
     *
     * Alternatively, create a RestClient manually and invoke fromRestClient(RestClient).
     */
-  def apply[F[_] : Functor : Executor](uri: ElasticsearchClientUri,
-                                       requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
-                                       httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback): ElasticClient = {
+  def apply[F[_]: Functor: Executor](
+    uri: ElasticsearchClientUri,
+    requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+    httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
+  ): ElasticClient = {
     val hosts = uri.hosts.map {
       case (host, port) =>
         new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")

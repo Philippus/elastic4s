@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-case class ExistsQuery(field: String, boost: Option[Double] = None, queryName: Option[String] = None)
-    extends Query {
+case class ExistsQuery(field: String, boost: Option[Double] = None, queryName: Option[String] = None) extends Query {
 
   def boost(boost: Double): ExistsQuery     = copy(boost = Option(boost))
   def withBoost(boost: Double): ExistsQuery = copy(boost = Option(boost))

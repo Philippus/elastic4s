@@ -38,12 +38,7 @@ import com.sksamuel.elastic4s.searches.queries.geo.{
 }
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
-import com.sksamuel.elastic4s.searches.queries.term.{
-  TermQuery,
-  TermsLookupQuery,
-  TermsQuery,
-  TermsSetQuery
-}
+import com.sksamuel.elastic4s.searches.queries.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery}
 import com.sksamuel.elastic4s.searches.queries.{IdQuery, _}
 
 object QueryBuilderFn {
@@ -62,7 +57,7 @@ object QueryBuilderFn {
     case q: GeoShapeQuery       => GeoShapeQueryBodyFn(q)
     case q: HasChildQuery       => HasChildBodyFn(q)
     case q: HasParentQuery      => HasParentBodyFn(q)
-    case q: IdQuery                       => IdQueryBodyFn(q)
+    case q: IdQuery             => IdQueryBodyFn(q)
     case q: MatchAllQuery       => MatchAllBodyFn(q)
     case q: MatchNoneQuery      => MatchNoneBodyFn(q)
     case q: MatchQuery          => MatchQueryBuilderFn(q)
@@ -72,9 +67,9 @@ object QueryBuilderFn {
     case q: MultiMatchQuery     => MultiMatchBodyFn(q)
     case q: NestedQuery         => NestedQueryBodyFn(q)
     case q: ParentIdQuery       => ParentIdQueryBodyFn(q)
-    case q: PrefixQuery                   => PrefixQueryBodyFn(q)
+    case q: PrefixQuery         => PrefixQueryBodyFn(q)
     case q: QueryStringQuery    => QueryStringBodyFn(q)
-    case r: RangeQuery                    => RangeQueryBodyFn(r)
+    case r: RangeQuery          => RangeQueryBodyFn(r)
     case q: RawQuery            => RawQueryBodyFn(q)
     case q: RegexQuery          => RegexQueryBodyFn(q)
     case q: ScriptQuery         => ScriptQueryBodyFn(q)
@@ -91,7 +86,7 @@ object QueryBuilderFn {
     case t: TermQuery           => TermQueryBodyFn(t)
     case t: TermsQuery[_]       => TermsQueryBodyFn(t)
     case t: TermsLookupQuery    => TermsLookupQueryBodyFn(t)
-    case t: TermsSetQuery                 => TermsSetQueryBodyFn(t)
+    case t: TermsSetQuery       => TermsSetQueryBodyFn(t)
     case q: TypeQuery           => TypeQueryBodyFn(q)
     case q: WildcardQuery       => WildcardQueryBodyFn(q)
 

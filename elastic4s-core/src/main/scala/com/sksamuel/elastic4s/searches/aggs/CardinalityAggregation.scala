@@ -16,7 +16,7 @@ case class CardinalityAggregation(name: String,
 
   def field(field: String): T                = copy(field = field.some)
   def missing(missing: String): T            = copy(missing = missing.some)
-  def script(script: Script): T    = copy(script = script.some)
+  def script(script: Script): T              = copy(script = script.some)
   def precisionThreshold(threshold: Long): T = copy(precisionThreshold = threshold.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)

@@ -21,5 +21,5 @@ trait GetApi {
   }
 
   def multiget(first: GetRequest, rest: GetRequest*): MultiGetRequest = multiget(first +: rest)
-  def multiget(gets: Iterable[GetRequest]): MultiGetRequest              = MultiGetRequest(gets.toSeq)
+  def multiget(gets: Iterable[GetRequest]): MultiGetRequest           = MultiGetRequest(gets.toSeq)
 }

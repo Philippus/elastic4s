@@ -16,7 +16,7 @@ trait SearchMatchers extends Matchers {
                                  timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp = client.execute(left).await(timeout).result
+        val resp   = client.execute(left).await(timeout).result
         val exists = resp.hits.hits.exists(_.id == expectedId.toString)
         MatchResult(
           exists,
@@ -30,7 +30,7 @@ trait SearchMatchers extends Matchers {
                                     timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp = client.execute(left).await(timeout).result
+        val resp   = client.execute(left).await(timeout).result
         val exists = resp.hits.hits.flatMap(_.fields).toMap.contains(value)
         MatchResult(
           exists,
@@ -44,7 +44,7 @@ trait SearchMatchers extends Matchers {
                                      timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp = client.execute(left).await(timeout).result
+        val resp   = client.execute(left).await(timeout).result
         val exists = resp.hits.hits.exists(_.sourceAsMap.contains(value))
         MatchResult(
           exists,
@@ -59,7 +59,7 @@ trait SearchMatchers extends Matchers {
     timeout: FiniteDuration = 10.seconds
   ): Matcher[SearchRequest] = new Matcher[SearchRequest] {
     override def apply(left: SearchRequest): MatchResult = {
-      val resp = client.execute(left).await(timeout).result
+      val resp   = client.execute(left).await(timeout).result
       val exists = resp.hits.hits.flatMap(_.sourceAsMap.get(field)).contains(value)
       MatchResult(
         exists,
@@ -73,7 +73,7 @@ trait SearchMatchers extends Matchers {
                                         timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp = client.execute(left).await(timeout).result
+        val resp  = client.execute(left).await(timeout).result
         val count = resp.totalHits
         MatchResult(
           count == expectedCount,
@@ -87,7 +87,7 @@ trait SearchMatchers extends Matchers {
                                    timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp = client.execute(left).await(timeout).result
+        val resp  = client.execute(left).await(timeout).result
         val count = resp.hits.hits.length
         MatchResult(
           count == expectedCount,
@@ -100,7 +100,7 @@ trait SearchMatchers extends Matchers {
   def haveNoHits(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
-        val resp = client.execute(left).await(timeout).result
+        val resp  = client.execute(left).await(timeout).result
         val count = resp.hits.hits.length
         MatchResult(
           count == 0,

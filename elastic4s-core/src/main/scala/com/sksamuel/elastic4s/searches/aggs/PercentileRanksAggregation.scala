@@ -28,7 +28,7 @@ case class PercentileRanksAggregation(name: String,
   def field(field: String): T                        = copy(field = field.some)
   def format(format: String): T                      = copy(format = format.some)
   def missing(missing: AnyRef): T                    = copy(missing = missing.some)
-  def script(script: Script): T            = copy(script = script.some)
+  def script(script: Script): T                      = copy(script = script.some)
   def keyed(keyed: Boolean): T                       = copy(keyed = keyed.some)
   def numberOfSignificantValueDigits(digits: Int): T = copy(numberOfSignificantValueDigits = digits.some)
 

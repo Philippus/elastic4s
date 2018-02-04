@@ -21,5 +21,5 @@ case class BucketSortDefinition(name: String,
   def size(size: Int): BucketSortDefinition = copy(size = Some(size))
 
   def sort(first: Sort, rest: Sort*): BucketSortDefinition = sort(first +: rest)
-  def sort(sorts: Iterable[Sort]): BucketSortDefinition              = copy(sort = sorts.toSeq)
+  def sort(sorts: Iterable[Sort]): BucketSortDefinition    = copy(sort = sorts.toSeq)
 }

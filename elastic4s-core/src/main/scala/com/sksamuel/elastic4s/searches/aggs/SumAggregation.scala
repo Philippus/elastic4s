@@ -13,9 +13,9 @@ case class SumAggregation(name: String,
 
   type T = SumAggregation
 
-  def field(field: String): SumAggregation             = copy(field = field.some)
-  def missing(missing: AnyRef): SumAggregation         = copy(missing = missing.some)
-  def script(script: Script): SumAggregation = copy(script = script.some)
+  def field(field: String): SumAggregation     = copy(field = field.some)
+  def missing(missing: AnyRef): SumAggregation = copy(missing = missing.some)
+  def script(script: Script): SumAggregation   = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)

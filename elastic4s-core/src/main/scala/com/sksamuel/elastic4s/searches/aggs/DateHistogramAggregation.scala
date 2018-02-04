@@ -50,10 +50,10 @@ case class DateHistogramAggregation(name: String,
 
   def order(order: HistogramOrder): DateHistogramAggregation = copy(order = order.some)
 
-  def format(format: String): DateHistogramAggregation           = copy(format = format.some)
-  def field(field: String): DateHistogramAggregation             = copy(field = field.some)
+  def format(format: String): DateHistogramAggregation = copy(format = format.some)
+  def field(field: String): DateHistogramAggregation   = copy(field = field.some)
   def script(script: Script): DateHistogramAggregation = copy(script = script.some)
-  def missing(missing: Any): DateHistogramAggregation            = copy(missing = missing.some)
+  def missing(missing: Any): DateHistogramAggregation  = copy(missing = missing.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)

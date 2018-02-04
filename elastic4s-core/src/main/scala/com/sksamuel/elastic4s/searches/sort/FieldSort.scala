@@ -54,7 +54,7 @@ case class FieldSort(field: String,
   def sortMode(mode: String): FieldSort   = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): FieldSort = copy(sortMode = mode.some)
 
-  def nestedPath(path: String): FieldSort             = copy(nestedPath = path.some)
+  def nestedPath(path: String): FieldSort   = copy(nestedPath = path.some)
   def nestedFilter(query: Query): FieldSort = copy(nestedFilter = query.some)
 
   def order(order: SortOrder): FieldSort     = copy(order = order)

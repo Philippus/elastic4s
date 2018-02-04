@@ -14,7 +14,7 @@ case class ExplainRequest(indexAndType: IndexAndType,
     extends Serializable {
 
   def query(string: String): ExplainRequest             = query(QueryStringQuery(string))
-  def query(block: => Query): ExplainRequest  = copy(query = Option(block))
+  def query(block: => Query): ExplainRequest            = copy(query = Option(block))
   def fetchSource(fetchSource: Boolean): ExplainRequest = copy(fetchSource = Option(fetchSource))
   def lenient(lenient: Boolean): ExplainRequest         = copy(lenient = Option(lenient))
   def parent(parent: String): ExplainRequest            = copy(parent = Option(parent))

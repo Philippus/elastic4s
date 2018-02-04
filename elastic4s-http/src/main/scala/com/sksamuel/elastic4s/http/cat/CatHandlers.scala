@@ -93,7 +93,7 @@ trait CatHandlers {
 
     override def requestHandler(request: CatCount): ElasticRequest = {
       val endpoint = request.indices match {
-        case Nil => "/_cat/count?v&format=json"
+        case Nil     => "/_cat/count?v&format=json"
         case indexes => "/_cat/count/" + indexes.mkString(",") + "?v&format=json"
       }
       ElasticRequest("GET", endpoint)
@@ -123,7 +123,7 @@ trait CatHandlers {
     override def requestHandler(request: CatIndexes): ElasticRequest = {
       val endpoint = request.health match {
         case Some(health) => BaseEndpoint + "&health=" + health.getClass.getSimpleName.toLowerCase.stripSuffix("$")
-        case _ => BaseEndpoint
+        case _            => BaseEndpoint
       }
       ElasticRequest("GET", endpoint)
     }

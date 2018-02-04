@@ -9,11 +9,11 @@ import com.sksamuel.exts.OptionImplicits._
 import scala.language.implicitConversions
 
 abstract class TimeUnit(val symbol: String)
-case object Years extends TimeUnit("y")
-case object Months extends TimeUnit("M")
-case object Weeks extends TimeUnit("w")
-case object Days extends TimeUnit("d")
-case object Hours extends TimeUnit("h")
+case object Years   extends TimeUnit("y")
+case object Months  extends TimeUnit("M")
+case object Weeks   extends TimeUnit("w")
+case object Days    extends TimeUnit("d")
+case object Hours   extends TimeUnit("h")
 case object Minutes extends TimeUnit("m")
 case object Seconds extends TimeUnit("s")
 
@@ -40,12 +40,12 @@ trait ElasticDate {
 }
 
 case class ElasticDateMath(base: String, adjustments: Seq[Adjustment] = Nil, rounding: Option[TimeUnit] = None)
-  extends ElasticDate {
-  override def show: String = ElasticDateMathShow.show(this)
-  def add(value: Int, unit: TimeUnit): ElasticDateMath = copy(adjustments = adjustments :+ Adjustment(value, unit))
-  def minus(value: Int, unit: TimeUnit): ElasticDateMath = subtract(value, unit)
+    extends ElasticDate {
+  override def show: String                                 = ElasticDateMathShow.show(this)
+  def add(value: Int, unit: TimeUnit): ElasticDateMath      = copy(adjustments = adjustments :+ Adjustment(value, unit))
+  def minus(value: Int, unit: TimeUnit): ElasticDateMath    = subtract(value, unit)
   def subtract(value: Int, unit: TimeUnit): ElasticDateMath = add(-value, unit)
-  def rounding(unit: TimeUnit): ElasticDateMath = copy(rounding = unit.some)
+  def rounding(unit: TimeUnit): ElasticDateMath             = copy(rounding = unit.some)
 }
 
 case class UnparsedElasticDate(value: String) extends ElasticDate {
@@ -55,8 +55,6 @@ case class UnparsedElasticDate(value: String) extends ElasticDate {
 case class TimestampElasticDate(timestamp: Long) extends ElasticDate {
   override def show: String = TimestampElasticDateShow.show(this)
 }
-
-
 
 object ElasticDate {
 
@@ -72,7 +70,7 @@ object ElasticDate {
     override def show(t: ElasticDateMath): String =
       (t.base match {
         case "now" => "now"
-        case date => s"$date||"
+        case date  => s"$date||"
       }) + t.adjustments
         .map { adj =>
           val plus = if (adj.value < 0) "" else "+"
@@ -82,9 +80,9 @@ object ElasticDate {
   }
 
   implicit def fromTimestamp(timestamp: Long): TimestampElasticDate = TimestampElasticDate(timestamp)
-  implicit def stringToDate(str: String): ElasticDate = UnparsedElasticDate(str)
+  implicit def stringToDate(str: String): ElasticDate               = UnparsedElasticDate(str)
 
-  def apply(str: String): ElasticDateMath = ElasticDateMath(str)
-  def now: ElasticDateMath = ElasticDateMath("now")
+  def apply(str: String): ElasticDateMath     = ElasticDateMath(str)
+  def now: ElasticDateMath                    = ElasticDateMath("now")
   def apply(date: LocalDate): ElasticDateMath = ElasticDateMath(date.format(DateTimeFormatter.ISO_LOCAL_DATE))
 }

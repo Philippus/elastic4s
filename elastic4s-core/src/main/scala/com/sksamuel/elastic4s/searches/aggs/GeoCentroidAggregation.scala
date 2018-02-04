@@ -16,11 +16,11 @@ case class GeoCentroidAggregation(name: String,
 
   type T = GeoCentroidAggregation
 
-  def field(field: String): T             = copy(field = field.some)
-  def format(format: String): T           = copy(format = format.some)
-  def missing(missing: AnyRef): T         = copy(missing = missing.some)
-  def valueType(valueType: ValueType): T  = copy(valueType = valueType.some)
-  def script(script: Script): T = copy(script = script.some)
+  def field(field: String): T            = copy(field = field.some)
+  def format(format: String): T          = copy(format = format.some)
+  def missing(missing: AnyRef): T        = copy(missing = missing.some)
+  def valueType(valueType: ValueType): T = copy(valueType = valueType.some)
+  def script(script: Script): T          = copy(script = script.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
   override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)

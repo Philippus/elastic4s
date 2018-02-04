@@ -25,13 +25,11 @@ case class IndexTemplate(order: Int,
 
 trait IndexTemplateHandlers {
 
-  implicit object IndexTemplateExistsHandler
-      extends Handler[IndexTemplateExistsDefinition, IndexTemplateExists] {
+  implicit object IndexTemplateExistsHandler extends Handler[IndexTemplateExistsDefinition, IndexTemplateExists] {
     override def requestHandler(request: IndexTemplateExistsDefinition): ElasticRequest = ???
   }
 
-  implicit object CreateIndexTemplateHandler
-      extends Handler[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
+  implicit object CreateIndexTemplateHandler extends Handler[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
 
     override def responseHandler = new ResponseHandler[CreateIndexTemplateResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] =
@@ -49,8 +47,7 @@ trait IndexTemplateHandlers {
     }
   }
 
-  implicit object DeleteIndexTemplateHandler
-      extends Handler[DeleteIndexTemplateRequest, DeleteIndexTemplateResponse] {
+  implicit object DeleteIndexTemplateHandler extends Handler[DeleteIndexTemplateRequest, DeleteIndexTemplateResponse] {
     override def requestHandler(request: DeleteIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.name
       ElasticRequest("DELETE", endpoint)

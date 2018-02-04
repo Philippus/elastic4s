@@ -10,17 +10,17 @@ case class BulkRequest(requests: Seq[BulkCompatibleRequest],
                        refresh: Option[RefreshPolicy] = None) {
 
   def timeout(timeout: Duration): BulkRequest = copy(timeout = (timeout.toNanos + "n").some)
-  def timeout(timeout: String): BulkRequest = copy(timeout = timeout.some)
+  def timeout(timeout: String): BulkRequest   = copy(timeout = timeout.some)
 
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
-  def refresh(refresh: String): BulkRequest = copy(refresh = RefreshPolicy.valueOf(refresh).some)
+  def refresh(refresh: String): BulkRequest        = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): BulkRequest = copy(refresh = refresh.some)
 
   @deprecated("use refreshImmediately", "6.0.0")
   def immediateRefresh(): BulkRequest = refresh(RefreshPolicy.Immediate)
 
   def refreshImmediately: BulkRequest = refresh(RefreshPolicy.IMMEDIATE)
-  def waitForRefresh(): BulkRequest = refresh(RefreshPolicy.WaitFor)
+  def waitForRefresh(): BulkRequest   = refresh(RefreshPolicy.WaitFor)
 }
 
 trait BulkCompatibleRequest

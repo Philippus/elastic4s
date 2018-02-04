@@ -19,14 +19,16 @@ abstract class Handler[T, U: Manifest] extends Logging {
 case class ElasticRequest(method: String, endpoint: String, params: Map[String, String], entity: Option[HttpEntity])
 
 object ElasticRequestShow extends Show[ElasticRequest] {
-  override def show(t: ElasticRequest): String = s"${t.method}:${t.endpoint}?${t.params.map { case (k, v) => k + "=" + v }.mkString("&")}\n${t.entity.getOrElse("")}"
+  override def show(t: ElasticRequest): String =
+    s"${t.method}:${t.endpoint}?${t.params.map { case (k, v) => k + "=" + v }.mkString("&")}\n${t.entity.getOrElse("")}"
 }
 
 object ElasticRequest {
 
   def apply(method: String, endpoint: String): ElasticRequest = apply(method, endpoint, Map.empty[String, Any])
 
-  def apply(method: String, endpoint: String, body: HttpEntity): ElasticRequest = apply(method, endpoint, Map.empty[String, Any], body)
+  def apply(method: String, endpoint: String, body: HttpEntity): ElasticRequest =
+    apply(method, endpoint, Map.empty[String, Any], body)
 
   def apply(method: String, endpoint: String, params: Map[String, Any]): ElasticRequest =
     apply(method, endpoint, params.mapValues(_.toString), None)

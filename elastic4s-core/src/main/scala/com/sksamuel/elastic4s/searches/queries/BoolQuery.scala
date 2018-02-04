@@ -19,7 +19,7 @@ case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
     copy(boost = boost.some)
 
   def filter(first: Query, rest: Query*): BoolQuery = filter(first +: rest)
-  def filter(queries: Iterable[Query]): BoolQuery             = copy(filters = queries.toSeq)
+  def filter(queries: Iterable[Query]): BoolQuery   = copy(filters = queries.toSeq)
 
   def minimumShouldMatch(min: Int): BoolQuery    = copy(minimumShouldMatch = min.toString.some)
   def minimumShouldMatch(min: String): BoolQuery = copy(minimumShouldMatch = min.some)

@@ -78,7 +78,7 @@ case class UpdateRequest(indexAndType: IndexAndType,
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")
   def refresh(refresh: String): UpdateRequest        = copy(refresh = RefreshPolicy.valueOf(refresh).some)
   def refresh(refresh: RefreshPolicy): UpdateRequest = copy(refresh = refresh.some)
-  def refreshImmediately                                = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately                             = refresh(RefreshPolicy.IMMEDIATE)
 
   def retryOnConflict(retryOnConflict: Int): UpdateRequest = copy(retryOnConflict = retryOnConflict.some)
 
