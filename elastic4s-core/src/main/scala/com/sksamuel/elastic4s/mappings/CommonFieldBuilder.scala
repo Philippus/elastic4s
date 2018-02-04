@@ -17,8 +17,8 @@ object CommonFieldBuilder {
 
     if (field.fields.nonEmpty) {
       field match {
-        case _: NestedFieldDefinition => builder.startObject("properties")
-        case _: ObjectFieldDefinition => builder.startObject("properties")
+        case _: NestedField => builder.startObject("properties")
+        case _: ObjectField => builder.startObject("properties")
         case _                        => builder.startObject("fields")
       }
       field.fields.foreach { subfield =>
@@ -53,7 +53,7 @@ object FieldBuilderFn {
   def apply(field: FieldDefinition): XContentBuilder = {
     val builder = CommonFieldBuilder(field)
     field match {
-      case basic: BasicFieldDefinition =>
+      case basic: BasicField =>
         basic.ignoreAbove.foreach(builder.field("ignore_above", _))
         basic.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
         basic.indexOptions.foreach(builder.field("index_options", _))
@@ -62,7 +62,7 @@ object FieldBuilderFn {
         basic.format.foreach(builder.field("format", _))
         basic.similarity.foreach(builder.field("similarity", _))
 
-      case comp: CompletionFieldDefinition =>
+      case comp: CompletionField =>
         comp.preservePositionIncrements.foreach(builder.field("preserve_position_increments", _))
         comp.preserveSeparators.foreach(builder.field("preserve_separators", _))
         comp.ignores.ignoreAbove.foreach(builder.field("ignore_above", _))
@@ -83,7 +83,7 @@ object FieldBuilderFn {
           builder.endArray()
         }
 
-      case geo: GeoshapeFieldDefinition =>
+      case geo: GeoshapeField =>
         geo.geoFields.tree.foreach(builder.field("tree", _))
         geo.geoFields.precision.foreach(builder.field("precision", _))
         geo.geoFields.treeLevels.foreach(builder.field("tree_levels", _))
@@ -95,7 +95,7 @@ object FieldBuilderFn {
         geo.format.foreach(builder.field("format", _))
         geo.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
 
-      case join: JoinFieldDefinition =>
+      case join: JoinField =>
         builder.startObject("relations")
         join.relations.foreach {
           case (parent, child) =>
@@ -103,13 +103,13 @@ object FieldBuilderFn {
         }
         builder.endObject()
 
-      case obj: ObjectFieldDefinition =>
+      case obj: ObjectField =>
         obj.dynamic.foreach(builder.field("dynamic", _))
 
-      case nested: NestedFieldDefinition =>
+      case nested: NestedField =>
         nested.dynamic.foreach(builder.field("dynamic", _))
 
-      case text: TextFieldDefinition =>
+      case text: TextField =>
         text.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
         text.positionIncrementGap.foreach(builder.field("position_increment_gap", _))
         text.fielddata.foreach(builder.field("fielddata", _))
@@ -117,13 +117,13 @@ object FieldBuilderFn {
         text.ignoreAbove.foreach(builder.field("ignore_above", _))
         text.similarity.foreach(builder.field("similarity", _))
 
-      case keyword: KeywordFieldDefinition =>
+      case keyword: KeywordField =>
         keyword.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
         keyword.ignoreAbove.foreach(builder.field("ignore_above", _))
         keyword.similarity.foreach(builder.field("similarity", _))
         keyword.indexOptions.foreach(builder.field("index_options", _))
 
-      case range: RangeFieldDefinition =>
+      case range: RangeField =>
         range.ignoreAbove.foreach(builder.field("ignore_above", _))
         range.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
         range.indexOptions.foreach(builder.field("index_options", _))

@@ -24,10 +24,6 @@ object ValidateBodyFn {
 
 trait ValidateHandlers {
 
-  implicit object ValidateShow extends Show[ValidateRequest] {
-    override def show(v: ValidateRequest): String = ValidateBodyFn(v).string()
-  }
-
   implicit object ValidateHandler extends Handler[ValidateRequest, ValidateResponse] {
 
     override def requestHandler(request: ValidateRequest): ElasticRequest = {

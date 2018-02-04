@@ -6,45 +6,45 @@ import com.sksamuel.exts.OptionImplicits._
 
 trait SettingsApi {
 
-  def getSettings(index: String, indexes: String*): GetSettingsDefinition = getSettings(index +: indexes)
-  def getSettings(indexes: Indexes): GetSettingsDefinition                = GetSettingsDefinition(indexes)
+  def getSettings(index: String, indexes: String*): GetSettingsRequest = getSettings(index +: indexes)
+  def getSettings(indexes: Indexes): GetSettingsRequest                = GetSettingsRequest(indexes)
 
-  def updateSettings(index: String, indexes: String*): UpdateSettingsDefinition = updateSettings(index +: indexes)
-  def updateSettings(indexes: Indexes): UpdateSettingsDefinition                = UpdateSettingsDefinition(indexes)
+  def updateSettings(index: String, indexes: String*): UpdateSettingsRequest = updateSettings(index +: indexes)
+  def updateSettings(indexes: Indexes): UpdateSettingsRequest                = UpdateSettingsRequest(indexes)
 
   def updateSettings(indexes: Indexes, settings: Map[String, String]) =
-    UpdateSettingsDefinition(indexes, settings = settings)
+    UpdateSettingsRequest(indexes, settings = settings)
 }
 
-case class GetSettingsDefinition(indexes: Indexes, options: Option[IndicesOptionsRequest] = None) {
-  def options(options: IndicesOptionsRequest): GetSettingsDefinition = copy(options = options.some)
+case class GetSettingsRequest(indexes: Indexes, options: Option[IndicesOptionsRequest] = None) {
+  def options(options: IndicesOptionsRequest): GetSettingsRequest = copy(options = options.some)
 }
 
-case class UpdateSettingsDefinition(indices: Indexes,
-                                    preserveExisting: Option[Boolean] = None,
-                                    settings: Map[String, String] = Map.empty,
-                                    options: Option[IndicesOptionsRequest] = None) {
+case class UpdateSettingsRequest(indices: Indexes,
+                                 preserveExisting: Option[Boolean] = None,
+                                 settings: Map[String, String] = Map.empty,
+                                 options: Option[IndicesOptionsRequest] = None) {
 
   // add a new key to the list of settings
-  def add(key: String, value: String): UpdateSettingsDefinition = copy(settings = settings + (key -> value))
+  def add(key: String, value: String): UpdateSettingsRequest = copy(settings = settings + (key -> value))
 
   // add a new key to the list of settings
-  def add(kv: (String, String)): UpdateSettingsDefinition = copy(settings = settings + kv)
+  def add(kv: (String, String)): UpdateSettingsRequest = copy(settings = settings + kv)
 
   // replace the settings with this key,value
-  def set(kv: (String, String)): UpdateSettingsDefinition = copy(settings = Map(kv))
+  def set(kv: (String, String)): UpdateSettingsRequest = copy(settings = Map(kv))
 
   // replace the settings with this key,value
-  def set(key: String, value: String): UpdateSettingsDefinition = copy(settings = Map(key -> value))
+  def set(key: String, value: String): UpdateSettingsRequest = copy(settings = Map(key -> value))
 
   // add the map to the list of settings
-  def add(map: Map[String, String]): UpdateSettingsDefinition = copy(settings = settings ++ map)
+  def add(map: Map[String, String]): UpdateSettingsRequest = copy(settings = settings ++ map)
 
   // replace the settings with this map
-  def set(map: Map[String, String]): UpdateSettingsDefinition = copy(settings = map)
+  def set(map: Map[String, String]): UpdateSettingsRequest = copy(settings = map)
 
-  def preserveExisting(preserveExisting: Boolean): UpdateSettingsDefinition =
+  def preserveExisting(preserveExisting: Boolean): UpdateSettingsRequest =
     copy(preserveExisting = preserveExisting.some)
 
-  def options(options: IndicesOptionsRequest): UpdateSettingsDefinition = copy(options = options.some)
+  def options(options: IndicesOptionsRequest): UpdateSettingsRequest = copy(options = options.some)
 }

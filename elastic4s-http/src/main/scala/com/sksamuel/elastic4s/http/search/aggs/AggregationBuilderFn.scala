@@ -44,20 +44,20 @@ object AggregationBuilderFn {
       case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
 
       // pipeline aggs
-      case agg: AvgBucketDefinition           => AvgBucketPipelineAggBuilder(agg)
-      case agg: BucketScriptDefinition        => BucketScriptPipelineAggBuilder(agg)
-      case agg: BucketSelectorDefinition      => BucketSelectorPipelineBuilder(agg)
-      case agg: BucketSortDefinition          => BucketSortPipelineAggBuilder(agg)
-      case agg: CumulativeSumDefinition       => CumulativeSumPipelineAggBuilder(agg)
-      case agg: DerivativeDefinition          => DerivativePipelineAggBuilder(agg)
-      case agg: DiffDefinition                => SerialDiffPipelineAggBuilder(agg)
-      case agg: ExtendedStatsBucketDefinition => ExtendedStatsBucketPipelineAggBuilder(agg)
-      case agg: MaxBucketDefinition           => MaxBucketPipelineAggBuilder(agg)
-      case agg: MinBucketDefinition           => MinBucketPipelineAggBuilder(agg)
-      case agg: MovAvgDefinition              => MovAvgPipelineAggBuilder(agg)
-      case agg: PercentilesBucketDefinition   => PercentilesBucketPipelineAggBuilder(agg)
-      case agg: SumBucketDefinition           => SumBucketPipelineAggBuilder(agg)
-      case agg: StatsBucketDefinition         => StatsBucketPipelineAggBuilder(agg)
+      case agg: AvgBucketPipelineAgg           => AvgBucketPipelineAggBuilder(agg)
+      case agg: BucketScriptPipelineAgg        => BucketScriptPipelineAggBuilder(agg)
+      case agg: BucketSelectorPipelineAgg      => BucketSelectorPipelineBuilder(agg)
+      case agg: BucketSortPipelineAgg          => BucketSortPipelineAggBuilder(agg)
+      case agg: CumulativeSumPipelineAgg       => CumulativeSumPipelineAggBuilder(agg)
+      case agg: DerivativePipelineAgg          => DerivativePipelineAggBuilder(agg)
+      case agg: DiffPipelineAgg                => SerialDiffPipelineAggBuilder(agg)
+      case agg: ExtendedStatsBucketPipelineAgg => ExtendedStatsBucketPipelineAggBuilder(agg)
+      case agg: MaxBucket           => MaxBucketPipelineAggBuilder(agg)
+      case agg: MinBucketPipelineAgg           => MinBucketPipelineAggBuilder(agg)
+      case agg: MovAvgPipelineAgg              => MovAvgPipelineAggBuilder(agg)
+      case agg: PercentilesBucketPipelineAgg   => PercentilesBucketPipelineAggBuilder(agg)
+      case agg: SumBucketPipelineAgg           => SumBucketPipelineAggBuilder(agg)
+      case agg: StatsBucketPipelineAgg         => StatsBucketPipelineAggBuilder(agg)
 
       // Not implemented
       case ni =>
@@ -70,7 +70,7 @@ object AggregationBuilderFn {
 }
 
 object DerivativePipelineAggBuilder {
-  def apply(agg: DerivativeDefinition): XContentBuilder = {
+  def apply(agg: DerivativePipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("derivative")
     builder.field("buckets_path", agg.bucketsPath)
     agg.unit.map(_.toSeconds).map(DateHistogramInterval.seconds).foreach(i => builder.field("unit", i.interval))
@@ -83,7 +83,7 @@ object DerivativePipelineAggBuilder {
 }
 
 object CumulativeSumPipelineAggBuilder {
-  def apply(agg: CumulativeSumDefinition): XContentBuilder = {
+  def apply(agg: CumulativeSumPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("cumulative_sum")
     builder.field("buckets_path", agg.bucketsPath)
     agg.format.foreach(f => builder.field("format", f))
@@ -94,7 +94,7 @@ object CumulativeSumPipelineAggBuilder {
 }
 
 object MaxBucketPipelineAggBuilder {
-  def apply(agg: MaxBucketDefinition): XContentBuilder = {
+  def apply(agg: MaxBucket): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("max_bucket")
     builder.field("buckets_path", agg.bucketsPath)
     builder.endObject().endObject()
@@ -102,7 +102,7 @@ object MaxBucketPipelineAggBuilder {
 }
 
 object SumBucketPipelineAggBuilder {
-  def apply(agg: SumBucketDefinition): XContentBuilder = {
+  def apply(agg: SumBucketPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("sum_bucket")
     builder.field("buckets_path", agg.bucketsPath)
     builder.endObject().endObject()
@@ -130,7 +130,7 @@ object SubAggsBuilderFn {
 }
 
 object BucketScriptPipelineAggBuilder {
-  def apply(agg: BucketScriptDefinition): XContentBuilder = {
+  def apply(agg: BucketScriptPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("bucket_script")
     builder.startObject("buckets_path")
     agg.bucketsPaths.foreach { case (k, v) => builder.field(k, v) }

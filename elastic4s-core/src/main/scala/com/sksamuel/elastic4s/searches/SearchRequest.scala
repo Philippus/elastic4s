@@ -16,7 +16,7 @@ import scala.concurrent.duration.{Duration, FiniteDuration}
 
 // for 2.10 cross build we need to make some parameters out of the case class so its <= 22 parameters
 case class Scoring(minScore: Option[Double] = None,
-                   rescorers: Seq[RescoreDefinition] = Nil,
+                   rescorers: Seq[Rescore] = Nil,
                    trackScores: Option[Boolean] = None)
 
 case class Control(pref: Option[String] = None,
@@ -40,7 +40,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
                          control: Control = Control(),
                          scoring: Scoring = Scoring(),
                          indicesOptions: Option[IndicesOptionsRequest] = None,
-                         inners: Seq[InnerHitDefinition] = Nil,
+                         inners: Seq[InnerHit] = Nil,
                          indexBoosts: Seq[(String, Double)] = Nil,
                          keepAlive: Option[String] = None,
                          highlight: Option[Highlight] = None,
@@ -79,9 +79,9 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
   @deprecated("Use matchAllQuery()", "5.2.0")
   def matchAll(): SearchRequest = query(new MatchAllQuery)
 
-  def inner(first: InnerHitDefinition, rest: InnerHitDefinition*): SearchRequest = inner(first +: rest)
+  def inner(first: InnerHit, rest: InnerHit*): SearchRequest = inner(first +: rest)
 
-  def inner(inners: Iterable[InnerHitDefinition]): SearchRequest = copy(inners = inners.toSeq)
+  def inner(inners: Iterable[InnerHit]): SearchRequest = copy(inners = inners.toSeq)
 
   def searchAfter(values: Seq[AnyRef]): SearchRequest = copy(searchAfter = values)
 
@@ -232,9 +232,9 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
 
   def indicesOptions(options: IndicesOptionsRequest): SearchRequest = copy(indicesOptions = options.some)
 
-  def rescore(first: RescoreDefinition, rest: RescoreDefinition*): SearchRequest = rescore(first +: rest)
+  def rescore(first: Rescore, rest: Rescore*): SearchRequest = rescore(first +: rest)
 
-  def rescore(rescorers: Iterable[RescoreDefinition]): SearchRequest =
+  def rescore(rescorers: Iterable[Rescore]): SearchRequest =
     copy(scoring = scoring.copy(rescorers = rescorers.toSeq))
 
   // alias for scroll

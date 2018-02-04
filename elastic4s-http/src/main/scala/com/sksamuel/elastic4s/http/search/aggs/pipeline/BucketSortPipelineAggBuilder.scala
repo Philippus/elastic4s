@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.http.search.aggs.pipeline
 import com.sksamuel.elastic4s.http.search.aggs.AggMetaDataFn
 import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.pipeline.BucketSortDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.BucketSortPipelineAgg
 
 object BucketSortPipelineAggBuilder {
-  def apply(agg: BucketSortDefinition): XContentBuilder = {
+  def apply(agg: BucketSortPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("bucket_sort")
     if (agg.sort.nonEmpty) {

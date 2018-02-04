@@ -5,12 +5,12 @@ case class HasParentQuery(`type`: String,
                           score: Boolean,
                           boost: Option[Double] = None,
                           ignoreUnmapped: Option[Boolean] = None,
-                          innerHit: Option[InnerHitDefinition] = None,
+                          innerHit: Option[InnerHit] = None,
                           queryName: Option[String] = None)
     extends Query {
 
   def boost(boost: Double): HasParentQuery                    = copy(boost = Some(boost))
   def ignoreUnmapped(ignoreUnmapped: Boolean): HasParentQuery = copy(ignoreUnmapped = Some(ignoreUnmapped))
-  def innerHit(innerHit: InnerHitDefinition): HasParentQuery  = copy(innerHit = Some(innerHit))
+  def innerHit(innerHit: InnerHit): HasParentQuery  = copy(innerHit = Some(innerHit))
   def queryName(queryName: String): HasParentQuery            = copy(queryName = Some(queryName))
 }

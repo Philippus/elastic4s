@@ -8,10 +8,6 @@ import org.apache.http.entity.ContentType
 
 trait BulkHandlers {
 
-  implicit object BulkShow extends Show[BulkRequest] {
-    override def show(f: BulkRequest): String = BulkBuilderFn(f).mkString("\n")
-  }
-
   implicit object BulkHandler extends Handler[BulkRequest, BulkResponse] with Logging {
 
     override def requestHandler(bulk: BulkRequest): ElasticRequest = {

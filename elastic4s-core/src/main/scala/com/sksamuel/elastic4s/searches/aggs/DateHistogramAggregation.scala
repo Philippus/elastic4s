@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.searches.aggs
 import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAgg
 import com.sksamuel.exts.OptionImplicits._
 import org.joda.time.DateTimeZone
 
@@ -28,7 +28,7 @@ case class DateHistogramAggregation(name: String,
                                     script: Option[Script] = None,
                                     missing: Option[Any] = None,
                                     extendedBounds: Option[ExtendedBounds] = None,
-                                    pipelines: Seq[PipelineAggregationDefinition] = Nil,
+                                    pipelines: Seq[PipelineAgg] = Nil,
                                     subaggs: Seq[AbstractAggregation] = Nil,
                                     metadata: Map[String, AnyRef] = Map.empty)
     extends Aggregation {

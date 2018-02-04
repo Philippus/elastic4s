@@ -27,7 +27,7 @@ trait SearchApi {
   def search(indexesAndTypes: IndexesAndTypes): SearchRequest         = SearchRequest(indexesAndTypes)
   def searchWithType(indexesAndTypes: IndexesAndTypes): SearchRequest = SearchRequest(indexesAndTypes)
 
-  def rescore(query: Query) = RescoreDefinition(query)
+  def rescore(query: Query) = Rescore(query)
 
   def multi(searches: Iterable[SearchRequest]): MultiSearchRequest = MultiSearchRequest(searches)
   def multi(searches: SearchRequest*): MultiSearchRequest          = MultiSearchRequest(searches)

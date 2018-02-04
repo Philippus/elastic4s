@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.settings
 import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.JacksonSupport
-import com.sksamuel.elastic4s.settings.{GetSettingsDefinition, UpdateSettingsDefinition}
+import com.sksamuel.elastic4s.settings.{GetSettingsRequest, UpdateSettingsRequest}
 import com.sksamuel.exts.collection.Maps
 
 import scala.collection.JavaConverters._
@@ -14,7 +14,7 @@ case class IndexSettingsResponse(settings: Map[Index, Map[String, String]]) {
 
 trait SettingsHandlers {
 
-  implicit object GetSettingsHandler extends Handler[GetSettingsDefinition, IndexSettingsResponse] {
+  implicit object GetSettingsHandler extends Handler[GetSettingsRequest, IndexSettingsResponse] {
 
     override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
 
@@ -37,13 +37,13 @@ trait SettingsHandlers {
         }
     }
 
-    override def requestHandler(request: GetSettingsDefinition): ElasticRequest = {
+    override def requestHandler(request: GetSettingsRequest): ElasticRequest = {
       val endpoint = "/" + request.indexes.string + "/_settings"
       ElasticRequest("GET", endpoint)
     }
   }
 
-  implicit object UpdateSettingsHandler extends Handler[UpdateSettingsDefinition, IndexSettingsResponse] {
+  implicit object UpdateSettingsHandler extends Handler[UpdateSettingsRequest, IndexSettingsResponse] {
 
     override def responseHandler = new ResponseHandler[IndexSettingsResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexSettingsResponse] =
@@ -55,7 +55,7 @@ trait SettingsHandlers {
         }
     }
 
-    override def requestHandler(request: UpdateSettingsDefinition): ElasticRequest = {
+    override def requestHandler(request: UpdateSettingsRequest): ElasticRequest = {
       val endpoint = "/" + request.indices.string + "/_settings"
       val body     = JacksonSupport.mapper.writeValueAsString(request.settings)
       ElasticRequest("PUT", endpoint, HttpEntity(body))

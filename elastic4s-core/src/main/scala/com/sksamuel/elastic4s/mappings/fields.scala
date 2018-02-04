@@ -61,30 +61,30 @@ trait FieldDefinition {
   def searchAnalyzer(analyzer: String): T
 }
 
-case class BasicFieldDefinition(name: String,
-                                `type`: String,
-                                analysis: Analysis = Analysis(),
-                                boost: Option[Double] = None,
-                                coerce: Option[Boolean] = None,
-                                copyTo: Seq[String] = Nil,
-                                docValues: Option[Boolean] = None,
-                                enabled: Option[Boolean] = None,
-                                fields: Seq[FieldDefinition] = Nil,
-                                format: Option[String] = None,
-                                includeInAll: Option[Boolean] = None,
-                                ignoreAbove: Option[Int] = None,
-                                ignoreMalformed: Option[Boolean] = None,
-                                index: Option[String] = None,
-                                indexOptions: Option[String] = None,
-                                norms: Option[Boolean] = None,
-                                nulls: Nulls = Nulls(),
-                                scalingFactor: Option[Double] = None,
-                                similarity: Option[String] = None,
-                                store: Option[Boolean] = None,
-                                termVector: Option[String] = None)
+case class BasicField(name: String,
+                      `type`: String,
+                      analysis: Analysis = Analysis(),
+                      boost: Option[Double] = None,
+                      coerce: Option[Boolean] = None,
+                      copyTo: Seq[String] = Nil,
+                      docValues: Option[Boolean] = None,
+                      enabled: Option[Boolean] = None,
+                      fields: Seq[FieldDefinition] = Nil,
+                      format: Option[String] = None,
+                      includeInAll: Option[Boolean] = None,
+                      ignoreAbove: Option[Int] = None,
+                      ignoreMalformed: Option[Boolean] = None,
+                      index: Option[String] = None,
+                      indexOptions: Option[String] = None,
+                      norms: Option[Boolean] = None,
+                      nulls: Nulls = Nulls(),
+                      scalingFactor: Option[Double] = None,
+                      similarity: Option[String] = None,
+                      store: Option[Boolean] = None,
+                      termVector: Option[String] = None)
     extends FieldDefinition {
 
-  type T = BasicFieldDefinition
+  type T = BasicField
 
   override def analyzer(analyzer: String): T       = copy(analysis = analysis.copy(analyzer = analyzer.some))
   override def normalizer(normalizer: String): T   = copy(analysis = analysis.copy(normalizer = normalizer.some))
@@ -112,7 +112,7 @@ case class BasicFieldDefinition(name: String,
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
   override def index(index: Boolean): T = copy(index = index.toString.some)
-  def index(index: String): BasicFieldDefinition = {
+  def index(index: String): BasicField = {
     require(`type` == "string")
     copy(index = index.some)
   }

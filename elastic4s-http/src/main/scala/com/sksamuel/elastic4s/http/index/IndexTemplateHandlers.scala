@@ -25,8 +25,8 @@ case class IndexTemplate(order: Int,
 
 trait IndexTemplateHandlers {
 
-  implicit object IndexTemplateExistsHandler extends Handler[IndexTemplateExistsDefinition, IndexTemplateExists] {
-    override def requestHandler(request: IndexTemplateExistsDefinition): ElasticRequest = ???
+  implicit object IndexTemplateExistsHandler extends Handler[IndexTemplateExistsRequest, IndexTemplateExists] {
+    override def requestHandler(request: IndexTemplateExistsRequest): ElasticRequest = ???
   }
 
   implicit object CreateIndexTemplateHandler extends Handler[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
@@ -69,10 +69,6 @@ trait IndexTemplateHandlers {
       val endpoint = s"/_template/" + request.indexes.string
       ElasticRequest("GET", endpoint)
     }
-  }
-
-  implicit object CreateIndexTemplateShow extends Show[CreateIndexTemplateRequest] {
-    override def show(req: CreateIndexTemplateRequest): String = CreateIndexTemplateBodyFn(req).string()
   }
 }
 

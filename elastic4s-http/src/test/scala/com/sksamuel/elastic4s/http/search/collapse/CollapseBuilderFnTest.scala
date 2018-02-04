@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.collapse
 
 import com.sksamuel.elastic4s.searches.collapse.CollapseRequest
-import com.sksamuel.elastic4s.searches.queries.InnerHitDefinition
+import com.sksamuel.elastic4s.searches.queries.InnerHit
 import org.scalatest.{FunSuite, Matchers}
 
 class CollapseBuilderFnTest extends FunSuite with Matchers {
@@ -13,7 +13,7 @@ class CollapseBuilderFnTest extends FunSuite with Matchers {
 
   test("collapse builder should support inner hits and max searches") {
     val c = CollapseRequest("something")
-      .inner(InnerHitDefinition("name").size(1))
+      .inner(InnerHit("name").size(1))
       .maxConcurrentGroupSearches(8)
     CollapseBuilderFn.apply(c).string shouldBe
       """{"field":"something","max_concurrent_group_searches":8,"inner_hits":{"name":"name","size":1}}"""

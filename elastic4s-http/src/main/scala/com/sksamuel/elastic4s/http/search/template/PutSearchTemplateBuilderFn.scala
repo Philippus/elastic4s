@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http.search.template
 
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.PutSearchTemplateDefinition
+import com.sksamuel.elastic4s.searches.PutSearchTemplateRequest
 
 object PutSearchTemplateBuilderFn {
 
-  def apply(request: PutSearchTemplateDefinition): XContentBuilder = {
+  def apply(request: PutSearchTemplateRequest): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("template")
     request.body.foreach(builder.rawField("query", _))

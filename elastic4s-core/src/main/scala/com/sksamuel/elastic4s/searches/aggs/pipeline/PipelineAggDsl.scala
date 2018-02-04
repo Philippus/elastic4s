@@ -6,50 +6,50 @@ import com.sksamuel.elastic4s.searches.sort.Sort
 
 trait PipelineAggregationApi {
 
-  def avgBucketAgg(name: String, bucketsPath: String): AvgBucketDefinition = avgBucketAggregation(name, bucketsPath)
-  def avgBucketAggregation(name: String, bucketsPath: String): AvgBucketDefinition =
-    AvgBucketDefinition(name, bucketsPath)
+  def avgBucketAgg(name: String, bucketsPath: String): AvgBucketPipelineAgg = avgBucketAggregation(name, bucketsPath)
+  def avgBucketAggregation(name: String, bucketsPath: String): AvgBucketPipelineAgg =
+    AvgBucketPipelineAgg(name, bucketsPath)
 
   def bucketSelectorAggregation(name: String,
                                 script: Script,
-                                bucketsPathMap: Map[String, String]): BucketSelectorDefinition =
-    BucketSelectorDefinition(name, script, bucketsPathMap)
+                                bucketsPathMap: Map[String, String]): BucketSelectorPipelineAgg =
+    BucketSelectorPipelineAgg(name, script, bucketsPathMap)
 
-  def bucketSortAggregation(name: String, sort: Seq[Sort]): BucketSortDefinition =
-    BucketSortDefinition(name, sort)
+  def bucketSortAggregation(name: String, sort: Seq[Sort]): BucketSortPipelineAgg =
+    BucketSortPipelineAgg(name, sort)
 
-  def bucketScriptAggregation(name: String, script: Script, bucketsPath: Map[String, String]): BucketScriptDefinition =
-    BucketScriptDefinition(name, script, bucketsPath)
+  def bucketScriptAggregation(name: String, script: Script, bucketsPath: Map[String, String]): BucketScriptPipelineAgg =
+    BucketScriptPipelineAgg(name, script, bucketsPath)
 
-  def cumulativeSumAggregation(name: String, bucketsPath: String): CumulativeSumDefinition =
-    CumulativeSumDefinition(name, bucketsPath)
+  def cumulativeSumAggregation(name: String, bucketsPath: String): CumulativeSumPipelineAgg =
+    CumulativeSumPipelineAgg(name, bucketsPath)
 
-  def derivativeAggregation(name: String, bucketsPath: String): DerivativeDefinition =
-    DerivativeDefinition(name, bucketsPath)
+  def derivativeAggregation(name: String, bucketsPath: String): DerivativePipelineAgg =
+    DerivativePipelineAgg(name, bucketsPath)
 
-  def diffAggregation(name: String, bucketsPath: String): DiffDefinition = DiffDefinition(name, bucketsPath)
+  def diffAggregation(name: String, bucketsPath: String): DiffPipelineAgg = DiffPipelineAgg(name, bucketsPath)
 
-  def extendedStatsBucketAggregation(name: String, bucketsPath: String): ExtendedStatsBucketDefinition =
-    ExtendedStatsBucketDefinition(name, bucketsPath)
+  def extendedStatsBucketAggregation(name: String, bucketsPath: String): ExtendedStatsBucketPipelineAgg =
+    ExtendedStatsBucketPipelineAgg(name, bucketsPath)
 
-  def maxBucketAgg(name: String, bucketsPath: String): MaxBucketDefinition = maxBucketAggregation(name, bucketsPath)
-  def maxBucketAggregation(name: String, bucketsPath: String): MaxBucketDefinition =
-    MaxBucketDefinition(name, bucketsPath)
+  def maxBucketAgg(name: String, bucketsPath: String): MaxBucket = maxBucketAggregation(name, bucketsPath)
+  def maxBucketAggregation(name: String, bucketsPath: String): MaxBucket =
+    MaxBucket(name, bucketsPath)
 
-  def minBucketAggregation(name: String, bucketsPath: String): MinBucketDefinition =
-    MinBucketDefinition(name, bucketsPath)
+  def minBucketAggregation(name: String, bucketsPath: String): MinBucketPipelineAgg =
+    MinBucketPipelineAgg(name, bucketsPath)
 
-  def movingAverageAggregation(name: String, bucketsPath: String): MovAvgDefinition =
-    MovAvgDefinition(name, bucketsPath)
+  def movingAverageAggregation(name: String, bucketsPath: String): MovAvgPipelineAgg =
+    MovAvgPipelineAgg(name, bucketsPath)
 
-  def percentilesBucketAggregation(name: String, bucketsPath: String): PercentilesBucketDefinition =
-    PercentilesBucketDefinition(name, bucketsPath)
+  def percentilesBucketAggregation(name: String, bucketsPath: String): PercentilesBucketPipelineAgg =
+    PercentilesBucketPipelineAgg(name, bucketsPath)
 
-  def statsBucketAggregation(name: String, bucketsPath: String): StatsBucketDefinition =
-    StatsBucketDefinition(name, bucketsPath)
+  def statsBucketAggregation(name: String, bucketsPath: String): StatsBucketPipelineAgg =
+    StatsBucketPipelineAgg(name, bucketsPath)
 
-  def sumBucketAggregation(name: String, bucketsPath: String): SumBucketDefinition =
-    SumBucketDefinition(name, bucketsPath)
+  def sumBucketAggregation(name: String, bucketsPath: String): SumBucketPipelineAgg =
+    SumBucketPipelineAgg(name, bucketsPath)
 }
 
-trait PipelineAggregationDefinition extends AbstractAggregation
+trait PipelineAgg extends AbstractAggregation

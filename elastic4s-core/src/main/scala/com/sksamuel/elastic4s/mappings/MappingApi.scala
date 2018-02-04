@@ -8,11 +8,11 @@ trait MappingApi {
 
   val NotAnalyzed: String = "not_analyzed"
 
-  def getMapping(str: String): GetMappingDefinition =
+  def getMapping(str: String): GetMappingRequest =
     if (str.contains("/")) getMapping(IndexesAndTypes(str)) else getMapping(Indexes(str))
 
-  def getMapping(indexes: Indexes): GetMappingDefinition                 = getMapping(indexes.toIndexesAndTypes)
-  def getMapping(indexesAndTypes: IndexesAndTypes): GetMappingDefinition = GetMappingDefinition(indexesAndTypes)
+  def getMapping(indexes: Indexes): GetMappingRequest                 = getMapping(indexes.toIndexesAndTypes)
+  def getMapping(indexesAndTypes: IndexesAndTypes): GetMappingRequest = GetMappingRequest(indexesAndTypes)
 
-  def putMapping(indexesAndType: IndexesAndType): PutMappingDefinition = PutMappingDefinition(indexesAndType)
+  def putMapping(indexesAndType: IndexesAndType): PutMappingRequest = PutMappingRequest(indexesAndType)
 }

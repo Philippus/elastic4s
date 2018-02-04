@@ -7,7 +7,7 @@ case class NestedQuery(path: String,
                        scoreMode: Option[ScoreMode] = None,
                        boost: Option[Double] = None,
                        ignoreUnmapped: Option[Boolean] = None,
-                       inner: Option[InnerHitDefinition] = None,
+                       inner: Option[InnerHit] = None,
                        queryName: Option[String] = None)
     extends Query {
   require(query != null, "must specify query for nested score query")
@@ -16,6 +16,6 @@ case class NestedQuery(path: String,
   def scoreMode(mode: String): NestedQuery                 = scoreMode(ScoreMode.valueOf(mode))
   def scoreMode(scoreMode: ScoreMode): NestedQuery         = copy(scoreMode = Option(scoreMode))
   def ignoreUnmapped(ignoreUnmapped: Boolean): NestedQuery = copy(ignoreUnmapped = Option(ignoreUnmapped))
-  def inner(inner: InnerHitDefinition): NestedQuery        = copy(inner = Option(inner))
+  def inner(inner: InnerHit): NestedQuery        = copy(inner = Option(inner))
   def queryName(queryName: String): NestedQuery            = copy(queryName = Option(queryName))
 }

@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs.pipeline
 
 import com.sksamuel.elastic4s.http.search.aggs.AggMetaDataFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.pipeline.MovAvgDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.MovAvgPipelineAgg
 
 object MovAvgPipelineAggBuilder {
-  def apply(agg: MovAvgDefinition): XContentBuilder = {
+  def apply(agg: MovAvgPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("moving_avg")
     builder.field("buckets_path", agg.bucketsPath)

@@ -40,14 +40,6 @@ object UpdateHandlers extends UpdateHandlers
 
 trait UpdateHandlers {
 
-  implicit object UpdateShow extends Show[UpdateRequest] {
-    override def show(f: UpdateRequest): String = UpdateBuilderFn(f).string()
-  }
-
-  implicit object UpdateByQueryShow extends Show[UpdateByQueryRequest] {
-    override def show(req: UpdateByQueryRequest): String = UpdateByQueryBodyFn(req).string()
-  }
-
   implicit object UpdateHandler extends Handler[UpdateRequest, UpdateResponse] {
 
     override def responseHandler: ResponseHandler[UpdateResponse] = new ResponseHandler[UpdateResponse] {

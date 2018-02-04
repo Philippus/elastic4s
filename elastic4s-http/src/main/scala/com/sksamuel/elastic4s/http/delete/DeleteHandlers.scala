@@ -20,10 +20,6 @@ object DeleteByQueryBodyFn {
 
 trait DeleteHandlers {
 
-  implicit object DeleteByQueryShow extends Show[DeleteByQueryRequest] {
-    override def show(req: DeleteByQueryRequest): String = DeleteByQueryBodyFn(req).string()
-  }
-
   implicit object DeleteByQueryHandler extends Handler[DeleteByQueryRequest, DeleteByQueryResponse] {
 
     override def responseHandler = new ResponseHandler[DeleteByQueryResponse] {

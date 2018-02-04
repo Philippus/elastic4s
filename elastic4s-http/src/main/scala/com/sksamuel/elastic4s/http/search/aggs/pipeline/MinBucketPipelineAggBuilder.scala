@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs.pipeline
 
 import com.sksamuel.elastic4s.http.search.aggs.AggMetaDataFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.pipeline.MinBucketDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.MinBucketPipelineAgg
 
 object MinBucketPipelineAggBuilder {
-  def apply(agg: MinBucketDefinition): XContentBuilder = {
+  def apply(agg: MinBucketPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("min_bucket")
     builder.field("buckets_path", agg.bucketsPath)

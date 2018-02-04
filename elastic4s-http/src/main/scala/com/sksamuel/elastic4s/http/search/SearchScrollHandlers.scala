@@ -3,18 +3,14 @@ package com.sksamuel.elastic4s.http.search
 import com.sksamuel.elastic4s.Show
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.{ClearScrollDefinition, SearchScrollDefinition}
+import com.sksamuel.elastic4s.searches.{ClearScrollRequest, SearchScrollRequest}
 import org.apache.http.entity.ContentType
 
 case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 
 trait SearchScrollHandlers {
 
-  implicit object SearchScrollShow extends Show[SearchScrollDefinition] {
-    override def show(req: SearchScrollDefinition): String = SearchScrollBuilderFn(req).string
-  }
-
-  implicit object ClearScrollHandler extends Handler[ClearScrollDefinition, ClearScrollResponse] {
+  implicit object ClearScrollHandler extends Handler[ClearScrollRequest, ClearScrollResponse] {
 
     override def responseHandler = new ResponseHandler[ClearScrollResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, ClearScrollResponse] =
@@ -26,7 +22,7 @@ trait SearchScrollHandlers {
         }
     }
 
-    override def requestHandler(request: ClearScrollDefinition): ElasticRequest = {
+    override def requestHandler(request: ClearScrollRequest): ElasticRequest = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -38,7 +34,7 @@ trait SearchScrollHandlers {
     }
   }
 
-  implicit object SearchScrollHandler extends Handler[SearchScrollDefinition, SearchResponse] {
+  implicit object SearchScrollHandler extends Handler[SearchScrollRequest, SearchResponse] {
 
     override def responseHandler = new ResponseHandler[SearchResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, SearchResponse] = response.statusCode match {
@@ -47,7 +43,7 @@ trait SearchScrollHandlers {
       }
     }
 
-    override def requestHandler(req: SearchScrollDefinition): ElasticRequest = {
+    override def requestHandler(req: SearchScrollRequest): ElasticRequest = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)
@@ -59,7 +55,7 @@ trait SearchScrollHandlers {
 }
 
 object SearchScrollBuilderFn {
-  def apply(req: SearchScrollDefinition): XContentBuilder = {
+  def apply(req: SearchScrollRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     req.keepAlive.foreach(builder.field("scroll", _))
     builder.field("scroll_id", req.id)
@@ -68,7 +64,7 @@ object SearchScrollBuilderFn {
 }
 
 object ClearScrollContentFn {
-  def apply(req: ClearScrollDefinition): XContentBuilder = {
+  def apply(req: ClearScrollRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.array("scroll_id", req.ids.toArray)
     builder.endObject()

@@ -128,7 +128,7 @@ trait QueryApi {
     }
   }
 
-  def innerHits(name: String): InnerHitDefinition = InnerHitDefinition(name)
+  def innerHits(name: String): InnerHit = InnerHit(name)
 
   @deprecated("use matchQuery(field, value) instead of the tupled version", "5.2.0")
   def matchQuery(tuple: (String, Any)): MatchQuery      = MatchQuery(tuple._1, tuple._2)

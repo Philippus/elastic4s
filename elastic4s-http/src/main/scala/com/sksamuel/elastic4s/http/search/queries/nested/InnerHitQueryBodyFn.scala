@@ -4,11 +4,11 @@ import com.sksamuel.elastic4s.http.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.queries.InnerHitDefinition
+import com.sksamuel.elastic4s.searches.queries.InnerHit
 
 object InnerHitQueryBodyFn {
 
-  def apply(d: InnerHitDefinition): XContentBuilder = {
+  def apply(d: InnerHit): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     if (d.name.trim.nonEmpty) {
       builder.field("name", d.name)

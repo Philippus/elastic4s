@@ -34,21 +34,21 @@ trait IndexAliasHandlers {
     }
   }
 
-  implicit object RemoveAliasActionExecutable extends Handler[RemoveAliasAction, AliasActionResponse] {
+  implicit object RemoveAliasActionHandler extends Handler[RemoveAliasAction, AliasActionResponse] {
     override def requestHandler(request: RemoveAliasAction): ElasticRequest = {
       val container = IndicesAliasesRequest(Seq(request))
-      IndexAliasesExecutable.requestHandler(container)
+      IndexAliasesHandler.requestHandler(container)
     }
   }
 
-  implicit object AddAliasActionExecutable extends Handler[AddAliasActionRequest, AliasActionResponse] {
+  implicit object AddAliasActionHandler extends Handler[AddAliasActionRequest, AliasActionResponse] {
     override def requestHandler(request: AddAliasActionRequest): ElasticRequest = {
       val container = IndicesAliasesRequest(Seq(request))
-      IndexAliasesExecutable.requestHandler(container)
+      IndexAliasesHandler.requestHandler(container)
     }
   }
 
-  implicit object IndexAliasesExecutable extends Handler[IndicesAliasesRequest, AliasActionResponse] {
+  implicit object IndexAliasesHandler extends Handler[IndicesAliasesRequest, AliasActionResponse] {
     override def requestHandler(request: IndicesAliasesRequest): ElasticRequest = {
       val body   = AliasActionBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)

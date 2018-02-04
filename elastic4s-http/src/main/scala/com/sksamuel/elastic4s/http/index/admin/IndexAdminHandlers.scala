@@ -5,15 +5,15 @@ import java.net.URLEncoder
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
-import com.sksamuel.elastic4s.http.index.{CreateIndexContentBuilder, CreateIndexResponse, IndexShowImplicits}
+import com.sksamuel.elastic4s.http.index.{CreateIndexContentBuilder, CreateIndexResponse}
 import com.sksamuel.elastic4s.indexes._
-import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
+import com.sksamuel.elastic4s.indexes.admin.{ForceMergeRequest, IndexRecoveryRequest}
 import com.sksamuel.elastic4s.json.XContentFactory
 import org.apache.http.entity.ContentType
 
 case class ShrinkIndexResponse()
 
-trait IndexAdminHandlers extends IndexShowImplicits {
+trait IndexAdminHandlers {
 
   implicit object ShrinkIndexHandler extends Handler[ShrinkIndexRequest, ShrinkIndexResponse] {
 
@@ -37,9 +37,9 @@ trait IndexAdminHandlers extends IndexShowImplicits {
     }
   }
 
-  implicit object IndexRecoveryHandler extends Handler[IndexRecoveryDefinition, IndexRecoveryResponse] {
+  implicit object IndexRecoveryHandler extends Handler[IndexRecoveryRequest, IndexRecoveryResponse] {
 
-    override def requestHandler(request: IndexRecoveryDefinition): ElasticRequest = {
+    override def requestHandler(request: IndexRecoveryRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indices == Seq("_all") || request.indices.isEmpty) "/_recovery"
@@ -53,9 +53,9 @@ trait IndexAdminHandlers extends IndexShowImplicits {
     }
   }
 
-  implicit object ForceMergeHandler extends Handler[ForceMergeDefinition, ForceMergeResponse] {
+  implicit object ForceMergeHandler extends Handler[ForceMergeRequest, ForceMergeResponse] {
 
-    override def requestHandler(request: ForceMergeDefinition): ElasticRequest = {
+    override def requestHandler(request: ForceMergeRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexes == Seq("_all") || request.indexes.isEmpty) "/_forcemerge"
@@ -190,15 +190,15 @@ trait IndexAdminHandlers extends IndexShowImplicits {
     }
   }
 
-  implicit object DeleteIndexHandler extends Handler[DeleteIndex, DeleteIndexResponse] {
+  implicit object DeleteIndexHandler extends Handler[DeleteIndexRequest, DeleteIndexResponse] {
 
-    override def requestHandler(request: DeleteIndex): ElasticRequest = {
+    override def requestHandler(request: DeleteIndexRequest): ElasticRequest = {
       val endpoint = "/" + request.indexes.mkString(",")
       ElasticRequest("DELETE", endpoint)
     }
   }
 
-  implicit object UpdateIndexLevelSettingsExecutable
+  implicit object UpdateIndexLevelSettingsHandler
       extends Handler[UpdateIndexLevelSettingsRequest, UpdateIndexLevelSettingsResponse] {
     override def requestHandler(request: UpdateIndexLevelSettingsRequest): ElasticRequest = {
 
@@ -210,7 +210,7 @@ trait IndexAdminHandlers extends IndexShowImplicits {
     }
   }
 
-  implicit object IndexShardStoreExecutable extends Handler[IndexShardStoreRequest, StoreStatusResponse] {
+  implicit object IndexShardStoreHandler extends Handler[IndexShardStoreRequest, StoreStatusResponse] {
 
     override def requestHandler(request: IndexShardStoreRequest): ElasticRequest = {
 

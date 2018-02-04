@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.mappings.FieldBuilderFn
 
 object DynamicTemplateBodyFn {
 
-  def build(dyn: DynamicTemplateDefinition): XContentBuilder = {
+  def build(dyn: DynamicTemplateRequest): XContentBuilder = {
 
     val builder = XContentFactory.obj()
     builder.startObject(dyn.name)

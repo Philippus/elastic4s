@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.http.search.aggs.pipeline
 
 import com.sksamuel.elastic4s.http.search.aggs.AggMetaDataFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PercentilesBucketDefinition
+import com.sksamuel.elastic4s.searches.aggs.pipeline.PercentilesBucketPipelineAgg
 
 object PercentilesBucketPipelineAggBuilder {
-  def apply(agg: PercentilesBucketDefinition): XContentBuilder = {
+  def apply(agg: PercentilesBucketPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("percentiles_bucket")
     builder.field("buckets_path", agg.bucketsPath)

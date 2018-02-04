@@ -15,14 +15,6 @@ trait SearchHandlers {
     override def build(q: TermsQuery[T]): Any = null // not used by the http builders
   }
 
-  implicit object SearchShow extends Show[SearchRequest] {
-    override def show(req: SearchRequest): String = SearchBodyBuilderFn(req).string()
-  }
-
-  implicit object MultiSearchShow extends Show[MultiSearchRequest] {
-    override def show(req: MultiSearchRequest): String = MultiSearchBuilderFn(req)
-  }
-
   implicit object MultiSearchHandler extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
     import scala.collection.JavaConverters._

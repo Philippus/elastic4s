@@ -10,7 +10,7 @@ case class TemplateAlias(name: String, filter: Option[Query] = None, routing: Op
   def routing(routing: String): TemplateAlias = copy(routing = routing.some)
 }
 
-case class IndexTemplateExistsDefinition()
+case class IndexTemplateExistsRequest()
 
 case class CreateIndexTemplateRequest(name: String,
                                       pattern: String,

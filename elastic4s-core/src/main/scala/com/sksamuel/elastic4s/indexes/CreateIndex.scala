@@ -7,20 +7,20 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration._
 
-case class IndexAliasDefinition(name: String, filter: Option[Query] = None, routing: Option[String] = None)
+case class IndexAliasRequest(name: String, filter: Option[Query] = None, routing: Option[String] = None)
 
 case class CreateIndexRequest(name: String,
                               analysis: Option[AnalysisDefinition] = None,
                               mappings: Seq[MappingDefinition] = Nil,
                               rawSource: Option[String] = None,
                               waitForActiveShards: Option[Int] = None,
-                              aliases: Set[IndexAliasDefinition] = Set.empty,
+                              aliases: Set[IndexAliasRequest] = Set.empty,
                               settings: IndexSettings = new IndexSettings) {
 
-  def alias(name: String): CreateIndexRequest = alias(IndexAliasDefinition(name, None))
+  def alias(name: String): CreateIndexRequest = alias(IndexAliasRequest(name, None))
   def alias(name: String, filter: Query): CreateIndexRequest =
-    alias(IndexAliasDefinition(name, Option(filter)))
-  def alias(definition: IndexAliasDefinition): CreateIndexRequest = copy(aliases = aliases + definition)
+    alias(IndexAliasRequest(name, Option(filter)))
+  def alias(definition: IndexAliasRequest): CreateIndexRequest = copy(aliases = aliases + definition)
 
   def singleShard(): CreateIndexRequest   = shards(1)
   def singleReplica(): CreateIndexRequest = replicas(1)
