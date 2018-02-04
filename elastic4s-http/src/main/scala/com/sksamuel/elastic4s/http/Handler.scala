@@ -19,8 +19,10 @@ abstract class Handler[T, U: Manifest] extends Logging {
 case class ElasticRequest(method: String, endpoint: String, params: Map[String, String], entity: Option[HttpEntity])
 
 object ElasticRequestShow extends Show[ElasticRequest] {
-  override def show(t: ElasticRequest): String =
-    s"${t.method}:${t.endpoint}?${t.params.map { case (k, v) => k + "=" + v }.mkString("&")}\n${t.entity.getOrElse("")}"
+  override def show(t: ElasticRequest): String = {
+    val header = s"${t.method}:${t.endpoint}?${t.params.map { case (k, v) => k + "=" + v }.mkString("&")}"
+    t.entity.fold(header) { body => s"$header\n$body" }
+  }
 }
 
 object ElasticRequest {

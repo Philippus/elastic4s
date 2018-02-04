@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, Show}
+import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
@@ -14,12 +14,10 @@ abstract class ElasticClient extends Logging {
   def client: HttpClient
 
   /**
-    * Returns a json String containing the request body.
-    * Note: This only works for requests which have a cats.Show typeclass implemented, which is most,
-    * but not all. Also, some requests intentionally do not provide a Show implementation as
-    * they are "header only" requests - that is, they have no body - for example, delete by id, or delete index.
+    * Returns a String containing the request details.
+    * The string will have the HTTP method, endpoint, params and if applicable the request body.
     */
-  def show[T](request: T)(implicit show: Show[T]): String = show.show(request)
+  def show[T](t: T)(implicit handler: Handler[T, _]): String = ElasticRequestShow.show(handler.requestHandler(t))
 
   // Executes the given request type T, and returns an effect of Response[U]
   // where U is particular to the request type.
@@ -30,10 +28,10 @@ abstract class ElasticClient extends Logging {
                                 handler: Handler[T, U],
                                 manifest: Manifest[U]): F[Response[U]] = {
     val request = handler.requestHandler(t)
-    val f       = executor.exec(client, request)
+    val f = executor.exec(client, request)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {
-        case Right(u)    => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
+        case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
         case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
       }
     }
@@ -51,9 +49,9 @@ object ElasticClient extends Logging {
     * of the HttpClient typeclass wrapping the underlying library and
     * then creating the ElasticClient using this method.
     */
-  def apply[F[_]: Functor: Executor](hc: HttpClient): ElasticClient = new ElasticClient {
+  def apply[F[_] : Functor : Executor](hc: HttpClient): ElasticClient = new ElasticClient {
     override def client: HttpClient = hc
-    override def close(): Unit      = hc.close()
+    override def close(): Unit = hc.close()
   }
 
   /**
@@ -62,7 +60,7 @@ object ElasticClient extends Logging {
     * @param client the Java client to wrap
     * @return newly created Scala client
     */
-  def fromRestClient[F[_]: Functor: Executor](client: RestClient): ElasticClient =
+  def fromRestClient[F[_] : Functor : Executor](client: RestClient): ElasticClient =
     apply(new ElasticsearchJavaRestClient(client))
 
   /**
@@ -71,11 +69,11 @@ object ElasticClient extends Logging {
     *
     * Alternatively, create a RestClient manually and invoke fromRestClient(RestClient).
     */
-  def apply[F[_]: Functor: Executor](
-    uri: ElasticsearchClientUri,
-    requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
-    httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
-  ): ElasticClient = {
+  def apply[F[_] : Functor : Executor](
+                                        uri: ElasticsearchClientUri,
+                                        requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+                                        httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
+                                      ): ElasticClient = {
     val hosts = uri.hosts.map {
       case (host, port) =>
         new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")
