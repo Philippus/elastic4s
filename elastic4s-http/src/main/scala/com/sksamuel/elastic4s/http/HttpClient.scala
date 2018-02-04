@@ -1,8 +1,12 @@
 package com.sksamuel.elastic4s.http
 
 import java.io.{File, InputStream}
+import java.nio.file.Files
 
 import com.sksamuel.exts.Logging
+import org.apache.http.HttpEntity
+
+import scala.io.Source
 
 /**
   * Adapts an underlying http client so that it can be used by the elastic client.
@@ -31,13 +35,26 @@ case class HttpResponse(statusCode: Int, entity: Option[HttpEntity.StringEntity]
 
 sealed trait HttpEntity {
   def contentType: Option[String]
+  def get: String
 }
 
 object HttpEntity {
-  def apply(content: String): HttpEntity                      = HttpEntity(content, "application/json; charset=utf-8")
+
+  def apply(content: String): HttpEntity = HttpEntity(content, "application/json; charset=utf-8")
   def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
 
-  case class StringEntity(content: String, contentType: Option[String])           extends HttpEntity
-  case class InputStreamEntity(content: InputStream, contentType: Option[String]) extends HttpEntity
-  case class FileEntity(content: File, contentType: Option[String])               extends HttpEntity
+  case class StringEntity(content: String, contentType: Option[String]) extends HttpEntity {
+    def get = content
+  }
+
+  case class InputStreamEntity(content: InputStream, contentType: Option[String]) extends HttpEntity {
+    def get = Source.fromInputStream(content).getLines().mkString("\n")
+  }
+
+  case class FileEntity(content: File, contentType: Option[String]) extends HttpEntity {
+
+    import scala.collection.JavaConverters._
+
+    def get = Files.readAllLines(content.toPath).asScala.mkString("\n")
+  }
 }
