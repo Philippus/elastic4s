@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.TermBucket
 import com.sksamuel.elastic4s.searches.aggs.TermsOrder
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -12,12 +11,12 @@ import scala.util.Try
 class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("termsagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("termsagg") mappings {
       mapping("curry") fields(
         textField("name").fielddata(true),
@@ -27,7 +26,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("termsagg/curry") fields("name" -> "Jalfrezi", "strength" -> "mild", "origin" -> "india"),
       indexInto("termsagg/curry") fields("name" -> "Madras", "strength" -> "hot", "origin" -> "india"),
@@ -39,7 +38,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
   "terms aggregation" - {
     "should group by field" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength")
         }
@@ -51,7 +50,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
 
     "should only include matching documents in the query" in {
-      val resp = http.execute {
+      val resp = client.execute {
         // should match 2 documents
         search("termsagg/curry").matchQuery("name", "masala").aggregations {
           termsAgg("agg1", "strength")
@@ -65,7 +64,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
     "should support missing value" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "origin" missing "unknown"
         }
@@ -78,7 +77,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
     "should support min doc count" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "strength" minDocCount 2
         }
@@ -91,7 +90,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
     "should support size" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").aggregations {
           termsAggregation("agg1") field "strength" size 1
         }
@@ -104,7 +103,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
     "should support sub aggregations" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").addSubagg(
             termsAgg("agg2", "origin")
@@ -118,7 +117,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
 
     "should support _count desc terms order" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", false))
         }
@@ -129,7 +128,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
 
     "should support _count asc terms order" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", true))
         }
@@ -140,7 +139,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
 
     "sould support multi criteria order" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("termsagg/curry").matchAllQuery().aggs {
           termsAgg("agg1", "strength").order(TermsOrder("_count", true), TermsOrder("_key", false))
         }
@@ -153,7 +152,7 @@ class TermsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     "should support partitioning" in {
       val numPartitions = 20
       val responses = (0 until numPartitions).map { i =>
-        http.execute {
+        client.execute {
           search("termsagg/curry").matchAllQuery().aggs {
             termsAgg("agg1", "strength").includePartition(i, numPartitions)
           }

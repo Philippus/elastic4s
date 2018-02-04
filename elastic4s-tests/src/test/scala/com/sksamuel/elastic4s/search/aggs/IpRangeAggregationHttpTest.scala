@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.IpRangeBucket
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,19 +10,19 @@ import scala.util.Try
 class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers with ElasticDsl {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("iprangeagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("iprangeagg") mappings {
       mapping("doc") fields ipField("ip")
     }
   }.await
 
   // based on the examples from IpRange aggregation docs
-  http.execute(
+  client.execute(
     bulk(
       indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.1"),
       indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.2"),
@@ -34,7 +34,7 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
 
   "ip range agg" - {
     "should return expected buckets" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("iprangeagg").matchAllQuery().aggs {
           ipRangeAggregation("ip_ranges")
             .field("ip")
@@ -53,7 +53,7 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
     }
 
     "should return expected buckets with mask ranges" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("iprangeagg").matchAllQuery().aggs {
           ipRangeAggregation("ip_ranges")
             .field("ip")
@@ -74,7 +74,7 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
     }
 
     "should return expected buckets with keyed results" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("iprangeagg").matchAllQuery().aggs {
           ipRangeAggregation("ip_ranges")
             .field("ip")

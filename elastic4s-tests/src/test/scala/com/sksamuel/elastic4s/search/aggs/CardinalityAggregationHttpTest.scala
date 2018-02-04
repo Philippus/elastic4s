@@ -9,12 +9,12 @@ import scala.util.Try
 class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("cardagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("cardagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -24,12 +24,12 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
   }.await
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("cardagg2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("cardagg2") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -38,7 +38,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("cardagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("cardagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -49,7 +49,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
   "cardinality agg" - {
     "should return the count of distinct values" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("cardagg").matchAllQuery().aggs {
           cardinalityAgg("agg1", "name")
         }
@@ -63,7 +63,7 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
     }
     "should support when there are no matching doucments" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("cardagg2").matchAllQuery().aggs {
           cardinalityAgg("agg1", "name")
         }

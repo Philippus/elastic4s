@@ -16,7 +16,7 @@ class BulkIndexingSubscriberWhiteboxTest
   implicit val system: ActorSystem = ActorSystem()
 
   try {
-    http.execute {
+    client.execute {
       createIndex("bulkindexwhitebox")
     }.await
   } catch {
@@ -31,7 +31,7 @@ class BulkIndexingSubscriberWhiteboxTest
   }
 
   override def createSubscriber(probe: WhiteboxSubscriberProbe[Item]): Subscriber[Item] = {
-    new BulkIndexingSubscriber[Item](http, ItemRequestBuilder, SubscriberConfig()) {
+    new BulkIndexingSubscriber[Item](client, ItemRequestBuilder, SubscriberConfig()) {
 
       override def onSubscribe(s: Subscription): Unit = {
         super.onSubscribe(s)

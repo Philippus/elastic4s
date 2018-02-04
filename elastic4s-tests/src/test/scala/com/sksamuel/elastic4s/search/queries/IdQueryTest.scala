@@ -6,11 +6,11 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class IdQueryTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     createIndex("sodas")
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("sodas/zero").fields("name" -> "sprite zero", "style" -> "lemonade") id "5",
       indexInto("sodas/zero").fields("name" -> "coke zero", "style" -> "cola") id "9"
@@ -18,7 +18,7 @@ class IdQueryTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "id query" should "find by id" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("sodas/zero").query {
         idsQuery(5)
       }
@@ -29,7 +29,7 @@ class IdQueryTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "find multiple ids" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("sodas/zero").query {
         idsQuery(5, 9)
       }

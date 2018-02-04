@@ -8,19 +8,19 @@ import scala.util.Try
 class GeoBoundsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("geoboundsagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("geoboundsagg") mappings {
       mapping("doc") fields geopointField("location")
     }
   }.await
 
   // based on the examples from Geo Distance Aggregation docs
-  http.execute(
+  client.execute(
     bulk(
       indexInto("geoboundsagg/doc").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
       indexInto("geoboundsagg/doc").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
@@ -33,7 +33,7 @@ class GeoBoundsAggregationHttpTest extends FreeSpec with DockerTests with Matche
 
   "geobounds agg" - {
     "should return expected region corners" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geoboundsagg").matchAllQuery().aggs {
           geoBoundsAggregation("museums_region")
               .field("location")
@@ -50,7 +50,7 @@ class GeoBoundsAggregationHttpTest extends FreeSpec with DockerTests with Matche
     }
 
     "should return empty aggregation in case of no documents are returned" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geoboundsagg").query(termQuery("name", "Guggenheim")).aggs {
           geoBoundsAggregation("museums_region")
             .field("location")

@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, RefreshPolicy}
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.SearchIterator
-import com.sksamuel.elastic4s.http.{ElasticDsl, ElasticClient}
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests, ElasticMatchers, ElasticSugar}
+import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import org.scalatest.WordSpec
 
 import scala.concurrent.duration._
@@ -17,12 +17,12 @@ class SearchIteratorTest
   implicit val duration: FiniteDuration = 10.seconds
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("searchiterator")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("searchiterator").mappings(
       mapping("pieces").fields(
         keywordField("name")
@@ -30,7 +30,7 @@ class SearchIteratorTest
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("searchiterator/pieces").fields(
         "name" -> "queen",
@@ -67,7 +67,7 @@ class SearchIteratorTest
 
   "a search iterator" should {
     "return all documents in the search request" in {
-      SearchIterator.hits(http, search("searchiterator").matchAllQuery().sortBy(fieldSort("name")).size(2).scroll("1m"))
+      SearchIterator.hits(client, search("searchiterator").matchAllQuery().sortBy(fieldSort("name")).size(2).scroll("1m"))
         .toList.map(_.sourceField("name")) shouldBe List("bishop", "king", "knight", "pawn", "queen", "rook")
     }
   }

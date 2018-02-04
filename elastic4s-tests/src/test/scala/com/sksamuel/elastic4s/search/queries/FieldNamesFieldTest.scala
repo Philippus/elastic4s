@@ -9,16 +9,16 @@ import scala.util.Try
 class FieldNamesFieldTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("space")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("space")
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("space/dwarf").fields(
         "name" -> "Ceres"
@@ -33,19 +33,19 @@ class FieldNamesFieldTest extends FlatSpec with Matchers with DockerTests {
   // seems to be broken in 6.1.0
   "_field_names" should "index the names of every field in a document that contains any value other than null" in {
 
-    http.execute {
+    client.execute {
       search("space").query(existsQuery("name"))
     }.await.result.totalHits shouldBe 2
 
-    http.execute {
+    client.execute {
       search("space").query(existsQuery("location"))
     }.await.result.totalHits shouldBe 1
 
-    http.execute {
+    client.execute {
       search("space").query(fieldNamesQuery("name"))
     }.await.result.totalHits shouldBe 2
 
-    http.execute {
+    client.execute {
       search("space").query(fieldNamesQuery("location"))
     }.await.result.totalHits shouldBe 1
   }

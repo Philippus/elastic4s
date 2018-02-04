@@ -9,12 +9,12 @@ import scala.util.Try
 class AvgAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("avgagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("avgagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -23,7 +23,7 @@ class AvgAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("avgagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("avgagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -34,7 +34,7 @@ class AvgAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
   "avg agg" - {
     "should return the avg for the context" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("avgagg").matchAllQuery().aggs {
           avgAgg("agg1", "height")
         }

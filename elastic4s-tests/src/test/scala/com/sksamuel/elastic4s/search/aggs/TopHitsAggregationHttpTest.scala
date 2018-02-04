@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,12 +9,12 @@ import scala.util.Try
 class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("tophits")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("tophits") mappings {
       mapping("landmarks") fields(
         textField("name").fielddata(true),
@@ -24,7 +23,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("tophits/landmarks") fields("name" -> "tower of london", "location" -> "london"),
       indexInto("tophits/landmarks") fields("name" -> "buckingham palace", "location" -> "london"),
@@ -37,7 +36,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers
   "top hits aggregation" - {
     "should be useable as a sub agg" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("tophits/landmarks").matchAllQuery().aggs {
           termsAgg("agg1", "location").addSubagg(
             topHitsAgg("agg2").sortBy(fieldSort("name"))

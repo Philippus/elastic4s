@@ -16,19 +16,19 @@ class SearchHitReaderTest extends FlatSpec with Matchers with DockerTests {
       models = Map("GTI" -> Seq(Feature("Air Con"), Feature("Power Steering")), "Sport" -> Seq(Feature("Spoiler")))
     )
 
-    http.execute {
+    client.execute {
       createIndex("cars").mappings(
         mapping("models")
       )
     }.await
 
-    http.execute {
+    client.execute {
       indexInto("cars" / "models").doc(focus).refresh(RefreshPolicy.Immediate)
     }.await
 
     Thread.sleep(3000)
 
-    http.execute {
+    client.execute {
       search("cars").matchAllQuery().limit(1)
     }.await.result.safeTo[Car] shouldBe Seq(Right(focus))
   }

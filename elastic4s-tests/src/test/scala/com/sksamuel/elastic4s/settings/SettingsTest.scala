@@ -14,18 +14,18 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
   create("settingsb")
 
   def deleteIdx(name: String) = Try {
-    http.execute {
+    client.execute {
       deleteIndex(name)
     }.await
   }
 
   def create(name: String) = Try {
-    http.execute {
+    client.execute {
       createIndex(name)
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("settings" / "a").fields(Map("foo" -> "bar"))
     ).refresh(RefreshPolicy.Immediate)
@@ -33,7 +33,7 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
 
   "getSettings" should {
     "return settings from one index" in {
-      val response = http.execute {
+      val response = client.execute {
         getSettings("settingsa")
       }.await.result
       val settings = response.settingsForIndex("settingsa")
@@ -44,7 +44,7 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
     }
     "return settings from multiple indexes" in {
 
-      val response = http.execute {
+      val response = client.execute {
         getSettings(Seq("settingsa", "settingsb"))
       }.await.result
 
@@ -61,7 +61,7 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
       settingsb("index.uuid") should not be null
     }
     "return error if index does not exist" in {
-      http.execute {
+      client.execute {
         getSettings("wibble")
       }.await.error.`type` shouldBe "index_not_found_exception"
     }
@@ -70,11 +70,11 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
   "updateSettings" should {
     "override settings" in {
 
-      http.execute {
+      client.execute {
         updateSettings("settingsa", Map("index.refresh_interval" -> "20s"))
       }.await
 
-      val response = http.execute {
+      val response = client.execute {
         getSettings(Seq("settingsa"))
       }.await.result
 

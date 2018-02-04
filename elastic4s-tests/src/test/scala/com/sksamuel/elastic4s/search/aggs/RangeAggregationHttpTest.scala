@@ -9,12 +9,12 @@ import scala.util.Try
 class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("rangeaggs")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("rangeaggs") mappings {
       mapping("tv") fields(
         textField("name").fielddata(true),
@@ -23,7 +23,7 @@ class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("rangeaggs/tv").fields("name" -> "Breaking Bad", "grade" -> 9),
       indexInto("rangeaggs/tv").fields("name" -> "Better Call Saul", "grade" -> 9),
@@ -37,7 +37,7 @@ class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
   "range agg" - {
     "should aggregate ranges" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangeaggs").matchAllQuery().aggs {
           rangeAgg("agg1", "grade")
               .unboundedTo("meh", to = 5.5)

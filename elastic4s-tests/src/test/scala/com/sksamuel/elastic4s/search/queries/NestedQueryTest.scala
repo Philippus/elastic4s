@@ -9,12 +9,12 @@ import scala.util.Try
 class NestedQueryTest extends WordSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("nested")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("nested").mappings(
       mapping("places").fields(
         keywordField("name"),
@@ -23,7 +23,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
     )
   }
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("nested" / "places") fields(
         "name" -> "usa",
@@ -58,7 +58,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
 
   "nested query" should {
     "match against nested objects" in {
-      http.execute {
+      client.execute {
         search("nested") query {
           nestedQuery("states").query {
             boolQuery.must(

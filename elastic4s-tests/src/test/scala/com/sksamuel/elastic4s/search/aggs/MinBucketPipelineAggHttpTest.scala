@@ -10,12 +10,12 @@ import scala.util.Try
 class MinBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("minbucketagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("minbucketagg") mappings {
       mapping("sales") fields(
         dateField("date"),
@@ -24,7 +24,7 @@ class MinBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("minbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
       indexInto("minbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
@@ -38,7 +38,7 @@ class MinBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
   "min bucket pipeline agg" - {
     "should return the expected min value" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("minbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)

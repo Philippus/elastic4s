@@ -13,7 +13,7 @@ class TermVectorTest
 
   override implicit def patienceConfig: PatienceConfig = PatienceConfig(timeout = 10.seconds, interval = 1.seconds)
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("termvectortest/startrek") fields("name" -> "james kirk", "rank" -> "captain") id "1",
       indexInto("termvectortest/startrek") fields("name" -> "jean luc picard", "rank" -> "captain") id "2",
@@ -26,7 +26,7 @@ class TermVectorTest
   "term vector api " should {
     "return number of terms for a field in " in {
 
-      val f = http.execute {
+      val f = client.execute {
         termVectors("termvectortest", "startrek", "5")
           .termStatistics(true)
           .fields("name", "rank")

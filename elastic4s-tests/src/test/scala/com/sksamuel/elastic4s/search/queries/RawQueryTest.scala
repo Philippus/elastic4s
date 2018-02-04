@@ -8,12 +8,12 @@ import scala.util.Try
 class RawQueryTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("rawquerytest")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("rawquerytest/paris").fields("landmark" -> "montmarte", "arrondissement" -> "18"),
       indexInto("rawquerytest/paris").fields("landmark" -> "le tower eiffel", "arrondissement" -> "7")
@@ -22,7 +22,7 @@ class RawQueryTest extends WordSpec with Matchers with DockerTests {
 
   "raw query" should {
     "work!" ignore {
-      http.execute {
+      client.execute {
         search("*").types("paris") limit 5 rawQuery {
           """{ "prefix": { "landmark": { "prefix": "montm" } } }"""
         }

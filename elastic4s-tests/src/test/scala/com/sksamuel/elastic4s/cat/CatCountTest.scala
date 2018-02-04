@@ -9,15 +9,15 @@ import scala.util.Try
 class CatCountTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("catcount1")
     }.await
-    http.execute {
+    client.execute {
       deleteIndex("catcount2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catcount1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catcount1/landmarks").fields("name" -> "tower of london"),
@@ -26,19 +26,19 @@ class CatCountTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "cats count" should "return count for all cluster" in {
-    http.execute {
+    client.execute {
       catCount()
     }.await.result.count >= 3 shouldBe true
   }
 
   it should "support counting for a single index" in {
-    http.execute {
+    client.execute {
       catCount("catcount1")
     }.await.result.count shouldBe 2
   }
 
   it should "support counting for multiple indices" in {
-    http.execute {
+    client.execute {
       catCount("catcount1", "catcount2")
     }.await.result.count shouldBe 3
   }

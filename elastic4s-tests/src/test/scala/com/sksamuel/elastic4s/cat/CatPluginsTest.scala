@@ -7,7 +7,7 @@ class CatPluginsTest extends FlatSpec with Matchers with DockerTests {
 
   "cats plugins" should "return all plugins" in {
 
-    val result = http.execute {
+    val result = client.execute {
       catPlugins()
     }.await.result
 

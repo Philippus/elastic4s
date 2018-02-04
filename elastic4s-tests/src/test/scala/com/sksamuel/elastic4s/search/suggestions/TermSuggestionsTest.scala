@@ -14,7 +14,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
   private val Index = "termsuggest"
   private val indexType = Index / "music"
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto(indexType) doc Song("style", "taylor swift"),
       indexInto(indexType) doc Song("shake it off", "Taylor Swift"),
@@ -36,7 +36,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
   "suggestions" should {
     "support results lookup by name" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search(indexType).suggestions {
           termSuggestion("a").on("artist").text("taylor swuft")
         }
@@ -48,7 +48,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
     "bring back suggestions for matching terms when mode is always" in {
 
       val suggestionA = termSuggestion("a").on("artist") text "Razzle Kacks" mode SuggestMode.ALWAYS
-      val resp = http.execute {
+      val resp = client.execute {
         search(indexType).suggestions(suggestionA)
       }.await.result
 
@@ -57,7 +57,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
     }
     "bring back suggestions that are more popular when popular mode is set" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search(indexType).suggestions {
           termSuggestion("a", "artist", "Quoon") mode SuggestMode.POPULAR
         }
@@ -67,7 +67,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
     }
     "allow us to set the max edits to be counted as a suitable suggestion" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search(indexType).suggestions {
           termSuggestion("a") on "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
         }
@@ -75,7 +75,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
       resp.termSuggestion("a")("quean").optionsText shouldBe Seq("queen")
     }
     "allow us to set min word length to be suggested for" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search(indexType).suggestions {
           termSuggestion("a", "artist", "joan") minWordLength 5
         }

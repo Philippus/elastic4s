@@ -10,12 +10,12 @@ class FlushIndexRequestTest extends WordSpec with Matchers with DockerTests {
   private val indexname = "flushindextest"
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex(indexname)
     }
   }
 
-  http.execute {
+  client.execute {
     createIndex(indexname).mappings(
       mapping("pasta").fields(
         textField("name")
@@ -25,7 +25,7 @@ class FlushIndexRequestTest extends WordSpec with Matchers with DockerTests {
 
   "flush index" should {
     "acknowledge" in {
-      http.execute {
+      client.execute {
         flushIndex(indexname)
       }.await.result.shards.successful > 0 shouldBe true
     }

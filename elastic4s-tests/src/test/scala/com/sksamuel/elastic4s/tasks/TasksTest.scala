@@ -7,7 +7,7 @@ class TasksTest extends FlatSpec with DockerTests with Matchers {
 
   "list tasks" should "include all fields" in {
 
-    val resp = http.execute {
+    val resp = client.execute {
       listTasks()
     }.await.result
 

@@ -9,18 +9,18 @@ import scala.util.Try
 class GlobalAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("globalagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("globalagg") mappings {
       mapping("colors") fields keywordField("name")
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("globalagg/colors") fields("name" -> "cyan"),
       indexInto("globalagg/colors") fields("name" -> "magenta"),
@@ -33,7 +33,7 @@ class GlobalAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
   "global agg" - {
     "should be not influenced by the search query" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("globalagg").termQuery("name", "black").aggs {
           globalAggregation("global")
         }
@@ -45,7 +45,7 @@ class GlobalAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
 
     "should allow to use subaggregations" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("globalagg").termQuery("name", "yellow").aggs {
           globalAggregation("global").subaggs {
             filterAgg("blackAgg", termQuery("name", "black"))

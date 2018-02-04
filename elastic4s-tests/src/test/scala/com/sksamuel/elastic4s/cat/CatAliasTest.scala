@@ -6,11 +6,11 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CatAliasTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     indexInto("catalias/landmarks").fields("name" -> "hampton court palace").refresh(RefreshPolicy.Immediate)
   }.await
 
-  http.execute {
+  client.execute {
     aliases(
       addAlias("ally1").on("catalias"),
       addAlias("ally2").on("catalias")
@@ -18,7 +18,7 @@ class CatAliasTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "cats aliases" should "return all aliases" in {
-    val result = http.execute {
+    val result = client.execute {
       catAliases()
     }.await
     result.result.map(_.alias).toSet.contains("ally1") shouldBe true

@@ -9,12 +9,12 @@ import scala.util.Try
 class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("keyedfiltersagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("keyedfiltersagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -23,7 +23,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("keyedfiltersagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("keyedfiltersagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -35,7 +35,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
   "filters agg" - {
     "should create buckets matching the query" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("keyedfiltersagg").matchAllQuery().aggs {
           filtersAggregation("agg1").queries(Seq("first" -> matchQuery("name", "london"), "second" -> matchQuery("name", "tower"))).subaggs {
             sumAgg("agg2", "height")
@@ -49,7 +49,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
 
     "should create other buckets with the default key" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("keyedfiltersagg").matchAllQuery().aggs {
           filtersAggregation("agg1")
             .queries(Seq("first" -> matchQuery("name", "london"), "second" -> matchQuery("name", "tower")))
@@ -66,7 +66,7 @@ class KeyedFiltersAggregationHttpTest extends FreeSpec with DockerTests with Mat
 
     "should create other buckets with a specified key" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("keyedfiltersagg").matchAllQuery().aggs {
           filtersAggregation("agg1")
             .queries(Seq("first" -> matchQuery("name", "london"), "second" -> matchQuery("name", "tower")))

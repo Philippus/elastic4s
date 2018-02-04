@@ -12,16 +12,16 @@ class MatchQueryTest
     with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("units")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("units")
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("units/base") fields("name" -> "candela", "scientist.name" -> "Jules Violle", "scientist.country" -> "France")
     ).refresh(RefreshPolicy.Immediate)
@@ -29,7 +29,7 @@ class MatchQueryTest
 
   "a match query" should "support selecting nested properties" in {
 
-    val resp = http.execute {
+    val resp = client.execute {
       search("units") query matchQuery("name", "candela") sourceInclude "scientist.name"
     }.await.result
 

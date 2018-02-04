@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,12 +9,12 @@ import scala.util.Try
 class MissingAggregationTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("missingagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("missingagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -25,7 +24,7 @@ class MissingAggregationTest extends FreeSpec with DockerTests with Matchers {
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("missingagg/buildings") fields("name" -> "Willis Tower", "floors" -> 4),
       indexInto("missingagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -37,7 +36,7 @@ class MissingAggregationTest extends FreeSpec with DockerTests with Matchers {
   "missing aggregation" - {
     "should create a bucket for docs missing the value" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("missingagg").matchAllQuery().aggs {
           missingAgg("agg1", "height").subaggs {
             sumAgg("agg2", "floors")

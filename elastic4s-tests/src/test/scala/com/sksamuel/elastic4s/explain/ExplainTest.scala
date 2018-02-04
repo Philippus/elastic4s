@@ -10,12 +10,12 @@ import scala.util.Try
 class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("explain")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("explain/kings") fields ("name" -> "richard") id "4",
       indexInto("explain/kings") fields ("name" -> "edward") id "5"
@@ -23,7 +23,7 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DockerTest
   }.await
 
   "an explain request" should "explain a matching document" in {
-    val resp = http.execute {
+    val resp = client.execute {
       explain("explain", "kings", "4") query termQuery("name", "richard")
     }.await.result
 
@@ -31,7 +31,7 @@ class ExplainTest extends FlatSpec with Matchers with ElasticDsl with DockerTest
   }
 
   it should "not explain a not found document" in {
-    http.execute {
+    client.execute {
       explain("explain", "kings", "24") query termQuery("name", "edward")
     }.await.result.isMatch shouldBe false
   }

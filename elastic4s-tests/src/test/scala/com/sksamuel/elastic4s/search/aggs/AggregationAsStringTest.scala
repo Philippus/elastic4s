@@ -9,12 +9,12 @@ import scala.util.Try
 class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("aggstring")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("aggstring") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -23,7 +23,7 @@ class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("aggstring/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("aggstring/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -32,7 +32,7 @@ class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
   ).await
 
   test("agg as string should return aggregation json") {
-    http.execute {
+    client.execute {
       search("aggstring").matchAllQuery().aggs(
         maxAgg("agg1", "height"),
         sumAgg("agg2", "height"),
@@ -43,14 +43,14 @@ class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
   }
 
   test("agg as string should return empty json when no aggregations are present") {
-    http.execute {
+    client.execute {
       search("aggstring").matchAllQuery()
     }.await.result.aggregationsAsString shouldBe "{}"
   }
 
 
   test("contains for not existent aggregation should return false") {
-    http.execute {
+    client.execute {
       search("aggstring").matchAllQuery()
     }.await.result.aggregations.contains("no_agg") shouldBe false
   }

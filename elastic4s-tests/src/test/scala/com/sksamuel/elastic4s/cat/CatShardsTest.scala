@@ -9,15 +9,15 @@ import scala.util.Try
 class CatShardsTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("catshards1")
     }.await
-    http.execute {
+    client.execute {
       deleteIndex("catshards2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catshards1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catshards1/landmarks").fields("name" -> "stonehenge"),
@@ -29,7 +29,7 @@ class CatShardsTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "cats shards" should "return all shards" ignore {
-    val result = http.execute {
+    val result = client.execute {
       catShards()
     }.await
     result.result.map(_.state).toSet shouldBe Set("STARTED", "UNASSIGNED")

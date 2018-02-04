@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catindex1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catindex2/landmarks").fields("name" -> "hampton court palace"),
@@ -16,7 +16,7 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
 
 
   "catIndices" should "return all indexes" in {
-    val indexes = http.execute {
+    val indexes = client.execute {
       catIndices()
     }.await.result.map(_.index).toSet
     indexes.contains("catindex1") shouldBe true
@@ -25,13 +25,13 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "use health param" in {
-    http.execute {
+    client.execute {
       catIndices(HealthStatus.Red)
     }.await.result.isEmpty shouldBe true
   }
 
   it should "include pri.store.size" in {
-    http.execute {
+    client.execute {
       catIndices()
     }.await.result.head.priStoreSize > 0 shouldBe true
   }

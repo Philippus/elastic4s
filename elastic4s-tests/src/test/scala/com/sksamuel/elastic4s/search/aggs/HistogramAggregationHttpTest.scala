@@ -10,12 +10,12 @@ import scala.util.Try
 class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("histogram")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("histogram") mappings {
       mapping("breakingbad") fields(
         keywordField("job"),
@@ -24,7 +24,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("histogram/breakingbad") fields("name" -> "walter white", "job" -> "meth kingpin", "age" -> 50, "actor" -> "bryan"),
       indexInto("histogram/breakingbad") fields("name" -> "hank schrader", "job" -> "dea agent", "age" -> 55, "actor" -> "dean"),
@@ -41,7 +41,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
 
   "histogram aggregation" - {
     "should create histogram by field" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("histogram") aggregations {
           histogramAggregation("h") field "age" interval 10
         }
@@ -60,7 +60,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
     }
     "should respect min_doc_count" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("histogram") aggregations {
           histogramAggregation("agg1") field "age" interval 10 minDocCount 2
         }
@@ -77,7 +77,7 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
 
     "should respect ordering" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("histogram") aggregations {
           histogramAggregation("agg1") field "age" interval 10 order HistogramOrder.COUNT_ASC
         }

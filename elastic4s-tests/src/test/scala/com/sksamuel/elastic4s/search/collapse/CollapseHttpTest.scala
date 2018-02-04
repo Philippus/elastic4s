@@ -11,12 +11,12 @@ class CollapseHttpTest extends FreeSpec with Matchers with DockerTests with Befo
   override protected def beforeAll(): Unit = {
 
     Try {
-      http.execute {
+      client.execute {
         deleteIndex("collapse")
       }.await
     }
 
-    http.execute {
+    client.execute {
       createIndex("collapse") mappings {
         mapping("hotels") fields(
           keywordField("name"),
@@ -25,7 +25,7 @@ class CollapseHttpTest extends FreeSpec with Matchers with DockerTests with Befo
       }
     }.await
 
-    http.execute {
+    client.execute {
       bulk(
         indexInto("collapse" / "hotels") id "1" fields("name" -> "Ibiza Playa", "board" -> "AI"),
         indexInto("collapse" / "hotels") id "2" fields("name" -> "Ibiza Playa", "board" -> "BB"),
@@ -37,7 +37,7 @@ class CollapseHttpTest extends FreeSpec with Matchers with DockerTests with Befo
 
   "collapse" - {
     "should be supported in http client" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("collapse" / "hotels") collapse {
           collapseField("board")
         }

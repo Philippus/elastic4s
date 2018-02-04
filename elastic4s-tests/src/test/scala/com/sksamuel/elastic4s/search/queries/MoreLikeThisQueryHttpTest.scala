@@ -12,7 +12,7 @@ class MoreLikeThisQueryHttpTest
     with DockerTests
     with ElasticMatchers {
 
-  http.execute {
+  client.execute {
     createIndex("mltq").mappings {
       mapping("alcohol") source true as (
         textField("name") store true analyzer StandardAnalyzer
@@ -20,7 +20,7 @@ class MoreLikeThisQueryHttpTest
     } shards 1
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("mltq/alcohol") fields ("text" -> "coors light is a coors beer by molson") id "4",
       indexInto("mltq/alcohol") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6",
@@ -33,7 +33,7 @@ class MoreLikeThisQueryHttpTest
   "a more like this query" should {
 
     "find matches based on input text" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("mltq") query {
           moreLikeThisQuery("text")
             .likeTexts("coors") minTermFreq 1 minDocFreq 1
@@ -43,7 +43,7 @@ class MoreLikeThisQueryHttpTest
     }
 
     "find matches based on doc refs" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("mltq").query {
           moreLikeThisQuery("text")
             .likeDocs(DocumentRef("mltq", "alcohol", "4")) minTermFreq 1 minDocFreq 1
@@ -53,7 +53,7 @@ class MoreLikeThisQueryHttpTest
     }
 
     "support artifical docs" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("mltq").query {
           moreLikeThisQuery("text")
             .artificialDocs(ArtificialDocument("mltq", "alcohol", """{ "text" : "gin" }""")) minTermFreq 1 minDocFreq 1

@@ -9,12 +9,12 @@ import scala.util.Try
 class SearchTemplateTest extends FlatSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("searchtemplate")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("searchtemplate/landmarks").fields("name" -> "hampton court palace"),
       indexInto("searchtemplate/landmarks").fields("name" -> "tower of london"),
@@ -25,17 +25,17 @@ class SearchTemplateTest extends FlatSpec with DockerTests with Matchers {
 
   "a search template" should "be puttable and gettable" in {
 
-    http.execute {
+    client.execute {
       putSearchTemplate("testy", matchQuery("{{field}}", "{{text}}"))
     }.await.result.acknowledged shouldBe true
 
-    http.execute {
+    client.execute {
       getSearchTemplate("testy")
     }.await.result.get.id shouldBe "testy"
   }
 
   it should "be usable in a search" in {
-    val result = http.execute {
+    val result = client.execute {
       templateSearch("searchtemplate").name("testy").params(Map("field" -> "name", "text" -> "tower"))
     }.await.result
     result.totalHits shouldBe 2
@@ -47,11 +47,11 @@ class SearchTemplateTest extends FlatSpec with DockerTests with Matchers {
 
   it should "be deletable" in {
 
-    http.execute {
+    client.execute {
       removeSearchTemplate("testy")
     }.await.result.acknowledged shouldBe true
 
-    http.execute {
+    client.execute {
       getSearchTemplate("testy")
     }.await.result shouldBe None
   }

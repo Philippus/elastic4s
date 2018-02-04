@@ -10,12 +10,12 @@ import scala.util.Try
 class AvgBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("avgbucketagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("avgbucketagg") mappings {
       mapping("sales") fields(
         dateField("date"),
@@ -24,7 +24,7 @@ class AvgBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("avgbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
       indexInto("avgbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
@@ -38,7 +38,7 @@ class AvgBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
   "avg bucket pipeline agg" - {
     "should return the expected avg value" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("avgbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)

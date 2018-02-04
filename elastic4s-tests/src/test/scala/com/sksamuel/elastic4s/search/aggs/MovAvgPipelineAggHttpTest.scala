@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.Aggregations
 import com.sksamuel.elastic4s.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -12,12 +11,12 @@ import scala.util.Try
 class MovAvgPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("movavgbucketagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("movavgbucketagg") mappings {
       mapping("sales") fields(
         dateField("date"),
@@ -26,7 +25,7 @@ class MovAvgPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers 
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("movavgbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
       indexInto("movavgbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
@@ -40,7 +39,7 @@ class MovAvgPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers 
   "moving avg pipeline agg" - {
     "should return the expected moving avg value" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("movavgbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)

@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CatNodesTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catnodes1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catnodes2/landmarks").fields("name" -> "hampton court palace")
@@ -14,7 +14,7 @@ class CatNodesTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "cats nodes" should "return all nodes" in {
-    val result = http.execute {
+    val result = client.execute {
       catNodes()
     }.await.result.head
     result.load_1m > 0 shouldBe true

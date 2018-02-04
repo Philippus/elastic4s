@@ -11,12 +11,12 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
   private val indexname = "bulkytest"
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex(indexname)
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex(indexname).mappings {
       mapping("elements").fields(
         intField("atomicweight").stored(true),
@@ -27,24 +27,24 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
   "bulk request" should "handle multiple index operations" in {
 
-    http.execute {
+    client.execute {
       bulk(
         indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id "2",
         indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id "4"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
-    http.execute {
+    client.execute {
       get("2").from(indexname)
     }.await.result.found shouldBe true
 
-    http.execute {
+    client.execute {
       get("4").from(indexname)
     }.await.result.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
-    val result = http.execute {
+    val result = client.execute {
       bulk(
         update("2").in(indexname / "elements").doc("atomicweight" -> 2, "name" -> "helium"),
         indexInto(indexname / "elements").fields("atomicweight" -> 8, "name" -> "oxygen") id "8",
@@ -63,36 +63,36 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
   it should "handle multiple update operations" in {
 
-    http.execute {
+    client.execute {
       bulk(
         update("2").in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
         update("4").in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
-    http.execute {
+    client.execute {
       get("2").from(indexname).storedFields("name")
     }.await.result.storedField("name").value shouldBe "carbon"
 
-    http.execute {
+    client.execute {
       get("4").from(indexname).storedFields("name")
     }.await.result.storedField("name").value shouldBe "oxygen"
   }
 
   it should "handle multiple delete operations" in {
 
-    http.execute {
+    client.execute {
       bulk(
         deleteById(indexname, "elements", "2"),
         deleteById(indexname, "elements", "4")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
-    http.execute {
+    client.execute {
       get(indexname, "elements", "2")
     }.await.result.found shouldBe false
 
-    http.execute {
+    client.execute {
       get(indexname, "elements", "4")
       get("4").from(indexname)
     }.await.result.found shouldBe false

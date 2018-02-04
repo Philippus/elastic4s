@@ -6,10 +6,10 @@ import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.indexes.IndexRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.elasticsearch.ResourceAlreadyExistsException
-import org.elasticsearch.transport.RemoteTransportException
 import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.util.Try
 
 class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matchers  {
 
@@ -49,23 +49,20 @@ class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matc
     }
   }
 
-  try {
-    http.execute {
+  Try {
+    client.execute {
       createIndex(indexName)
     }.await
-  } catch {
-    case _: ResourceAlreadyExistsException => // Ok, ignore.
-    case _: RemoteTransportException => // Ok, ignore.
   }
 
-  http.execute {
+  client.execute {
     bulk(emperors.map(indexInto(indexName / indexType).source(_))).refreshImmediately
   }.await
 
   "elastic-streams" should {
     "publish all data from the index" in {
 
-      val publisher = http.publisher(search(indexName) query "*:*" scroll "1m")
+      val publisher = client.publisher(search(indexName) query "*:*" scroll "1m")
 
       val completionLatch = new CountDownLatch(1)
       val documentLatch = new CountDownLatch(emperors.length)

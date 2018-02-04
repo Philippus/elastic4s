@@ -13,7 +13,7 @@ class IndexTemplateHttpTest
 
   "create template" should {
     "be stored" in {
-      http.execute {
+      client.execute {
         createIndexTemplate("brewery_template", "brew*").mappings(
           mapping("brands").fields(
             textField("name"),
@@ -23,14 +23,14 @@ class IndexTemplateHttpTest
       }.await.result.acknowledged shouldBe true
     }
     "be retrievable" in {
-      val resp = http.execute {
+      val resp = client.execute {
         getIndexTemplate("brewery_template")
       }.await
       resp.result.templateFor("brewery_template").indexPatterns shouldBe Seq("brew*")
       resp.result.templateFor("brewery_template").order shouldBe 0
     }
     "return error if the template has invalid parameters" in {
-      http.execute {
+      client.execute {
         createIndexTemplate("brewery_template", "brew*").mappings(
           mapping("brands").fields(
             textField("name"),
@@ -42,11 +42,11 @@ class IndexTemplateHttpTest
     "apply template to new indexes that match the pattern" ignore {
 
       // this should match the earlier template of brew*
-      http.execute {
+      client.execute {
         createIndex("brewers")
       }.await
 
-      http.execute {
+      client.execute {
         indexInto("brewers" / "brands") fields(
           "name" -> "fullers",
           "year_founded" -> 1829
@@ -54,7 +54,7 @@ class IndexTemplateHttpTest
       }.await
 
       // check that the document was indexed
-      http.execute {
+      client.execute {
         search("brewers") query termQuery("year_founded", 1829)
       }.await.result.totalHits shouldBe 1
 

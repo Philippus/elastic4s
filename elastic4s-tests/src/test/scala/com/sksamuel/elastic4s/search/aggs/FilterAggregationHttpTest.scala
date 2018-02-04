@@ -9,12 +9,12 @@ import scala.util.Try
 class FilterAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("filteragg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("filteragg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -23,7 +23,7 @@ class FilterAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("filteragg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("filteragg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -35,7 +35,7 @@ class FilterAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
   "filter agg" - {
     "should create a bucket matching the query" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("filteragg").matchAllQuery().aggs {
           filterAgg("agg1", matchQuery("name", "london")).subaggs {
             sumAgg("agg2", "height")

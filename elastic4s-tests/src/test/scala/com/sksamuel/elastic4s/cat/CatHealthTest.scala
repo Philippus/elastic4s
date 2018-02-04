@@ -6,14 +6,14 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CatHealthTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("cathealth/landmarks").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "cat health" should "return cluster health" in {
-    http.execute {
+    client.execute {
       catHealth()
     }.await.result.cluster shouldBe "docker-cluster"
   }

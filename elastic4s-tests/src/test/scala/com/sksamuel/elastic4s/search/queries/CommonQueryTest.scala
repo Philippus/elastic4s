@@ -23,12 +23,12 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
     "Ranch dressing is a type of salad dressing made of some combination of buttermilk, salt, garlic, onion, herbs")
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("condiments")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("condiments" / "test") source ranch,
       indexInto("condiments" / "test") source ketchup,
@@ -38,7 +38,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
 
   "common query" should {
     "perform query" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("condiments") query {
           commonTermsQuery("desc") text "catsup"
         }
@@ -46,7 +46,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
       resp.totalHits shouldBe 1
     }
     "use operators" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("condiments") query {
           commonTermsQuery("desc") text "buttermilk somethingnotindexed" lowFreqOperator "AND" highFreqOperator "AND"
         }
@@ -54,7 +54,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
       resp.totalHits shouldBe 0
     }
     "use lowFreqMinimumShouldMatch" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("condiments") query {
           commonTermsQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
         }

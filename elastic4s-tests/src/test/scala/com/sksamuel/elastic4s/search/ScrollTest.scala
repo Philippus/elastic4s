@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
@@ -11,12 +10,12 @@ import scala.util.Try
 class ScrollTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("katebush")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("katebush").mappings(
       mapping("songs").fields(
         intField("year"),
@@ -25,7 +24,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("katebush/songs").fields("name" -> "hounds of love", "year" -> "1985").id("1"),
       indexInto("katebush/songs").fields("name" -> "top of the city", "year" -> "1985").id("2"),
@@ -43,7 +42,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
   "a scroll" should {
     "return all results" in {
 
-      val resp1 = http.execute {
+      val resp1 = client.execute {
         search("katebush")
           .query("1985")
           .scroll("1m")
@@ -53,34 +52,34 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
       }.await.result
       resp1.hits.hits.map(_.storedField("name").value).toList shouldBe List("top of the city", "cloudbusting")
 
-      val resp2 = http.execute {
+      val resp2 = client.execute {
         searchScroll(resp1.scrollId.get).keepAlive("1m")
       }.await
       resp2.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
 
-      val resp3 = http.execute {
+      val resp3 = client.execute {
         searchScroll(resp2.result.scrollId.get).keepAlive("1m")
       }.await
       resp3.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("hounds of love", "under ice")
 
-      val resp4 = http.execute {
+      val resp4 = client.execute {
         searchScroll(resp3.result.scrollId.get).keepAlive("1m")
       }.await
       resp4.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("jig of life", "watching you watching me")
 
-      val resp5 = http.execute {
+      val resp5 = client.execute {
         searchScroll(resp4.result.scrollId.get)
       }.await
       resp5.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("waking the watch")
     }
     "return an error if the scroll id doesn't parse" in {
-      val resp = http.execute {
+      val resp = client.execute {
         searchScroll("wibble").keepAlive("1m")
       }.await
       resp.error.`type` shouldBe "illegal_argument_exception"
     }
     "return an error if the scroll doesn't exist" in {
-      val resp = http.execute {
+      val resp = client.execute {
         searchScroll("DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ==").keepAlive("1m")
       }.await
       resp.error.`type` shouldBe "search_phase_execution_exception"
@@ -89,7 +88,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
 
   "a 'searchScroll.keepAlive'" should {
     "not interpret FiniteDuration as 'id'" in {
-      val resp1 = http.execute {
+      val resp1 = client.execute {
         search("katebush")
           .query("1985")
           .scroll("1m")
@@ -98,7 +97,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
           .storedFields("name")
       }.await.result
 
-      val resp2 = http.execute {
+      val resp2 = client.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
       resp2.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("dream of sheep", "hello earth")
@@ -107,7 +106,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
 
   "a 'searchScroll.slice'" should {
     "return sliced results" in {
-      val resp1 = http.execute {
+      val resp1 = client.execute {
         search("katebush")
           .slice(0, 2)
           .query("1985")
@@ -116,11 +115,11 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
           .storedFields("name")
       }.await.result
 
-      val resp2 = http.execute {
+      val resp2 = client.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
       }.await
 
-      val resp3 = http.execute {
+      val resp3 = client.execute {
         search("katebush")
           .slice(1, 2)
           .query("1985")
@@ -129,7 +128,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
           .storedFields("name")
       }.await.result
 
-      val resp4 = http.execute {
+      val resp4 = client.execute {
         searchScroll(resp3.scrollId.get).keepAlive(1.minute)
       }.await
 
@@ -152,15 +151,15 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
         .sortBy(fieldSort("name"))
         .storedFields("name")
 
-      val resp1 = http.execute {
+      val resp1 = client.execute {
         searchDefinition
       }.await.result
 
-      val resp2 = http.execute {
+      val resp2 = client.execute {
         searchDefinition
       }.await.result
 
-      val resp = http.execute {
+      val resp = client.execute {
         clearScroll(resp1.scrollId.get, resp2.scrollId.get)
       }.await
 
@@ -168,7 +167,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
       resp.result.num_freed should be > 0
     }
     "return an error if the scroll id doesn't parse" in {
-      val resp = http.execute {
+      val resp = client.execute {
         clearScroll("wibble")
       }.await.error.`type` shouldBe "illegal_argument_exception"
     }

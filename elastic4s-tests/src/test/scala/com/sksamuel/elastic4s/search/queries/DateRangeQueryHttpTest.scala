@@ -13,12 +13,12 @@ class DateRangeQueryHttpTest
     with ElasticMatchers {
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("daterange")
     }.await
   }
 
-  http.execute {
+  client.execute {
     ElasticDsl.createIndex("daterange") mappings {
       mapping("tv") fields(
         textField("name").fielddata(true),
@@ -27,7 +27,7 @@ class DateRangeQueryHttpTest
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("daterange/tv").fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
       indexInto("daterange/tv").fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2014"),
@@ -40,7 +40,7 @@ class DateRangeQueryHttpTest
 
   "a range query" should {
     "support date math for gte" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("daterange") query {
           rangeQuery("premiere_date").gte(ElasticDateMath("now").minus(5, Years))
         }
@@ -48,7 +48,7 @@ class DateRangeQueryHttpTest
       resp.totalHits shouldBe 3
     }
     "support date math for lte" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("daterange") query {
           rangeQuery("premiere_date").lte(ElasticDateMath("now"))
         }

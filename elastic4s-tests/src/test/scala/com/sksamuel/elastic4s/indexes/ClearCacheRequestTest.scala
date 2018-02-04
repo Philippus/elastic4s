@@ -8,18 +8,18 @@ import scala.util.Try
 class ClearCacheRequestTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("clearcache1")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("clearcache2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("clearcache1").mappings(
       mapping("flowers").fields(
         textField("name")
@@ -27,7 +27,7 @@ class ClearCacheRequestTest extends WordSpec with Matchers with DockerTests {
     )
   }.await
 
-  http.execute {
+  client.execute {
     createIndex("clearcache2").mappings(
       mapping("plants").fields(
         textField("name")
@@ -37,14 +37,14 @@ class ClearCacheRequestTest extends WordSpec with Matchers with DockerTests {
 
   "ClearCache" should {
     "support single index" in {
-      val resp = http.execute {
+      val resp = client.execute {
         clearCache("clearcache1")
       }.await
       resp.result.shards.successful should be > 0
     }
 
     "support multiple types" in {
-      val resp = http.execute {
+      val resp = client.execute {
         clearCache("clearcache1", "clearcache2")
       }.await
       resp.result.shards.successful should be > 0

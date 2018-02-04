@@ -7,7 +7,7 @@ class NodesStatsHttpTest extends WordSpec with Matchers with DockerTests {
 
   "node stats request" should {
     "return os information" in {
-      val stats = http.execute {
+      val stats = client.execute {
         nodeStats()
       }.await
 

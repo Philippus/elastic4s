@@ -9,7 +9,7 @@ class TermsLookupQueryTest
     with DockerTests
     with Matchers {
 
-  http.execute {
+  client.execute {
     createIndex("lords").mappings(
       mapping("people").fields(
         keywordField("name")
@@ -17,7 +17,7 @@ class TermsLookupQueryTest
     )
   }.await
 
-  http.execute {
+  client.execute {
     createIndex("lordsfanclub").mappings(
       mapping("fans").fields(
         keywordField("lordswelike")
@@ -25,7 +25,7 @@ class TermsLookupQueryTest
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("lords/people") fields ("name" -> "nelson"),
       indexInto("lords/people") fields ("name" -> "edmure"),
@@ -36,7 +36,7 @@ class TermsLookupQueryTest
   }.await
 
   "a terms lookup query" should "lookup terms to search from a document in another index" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("lords") query termsLookupQuery("name", "lordswelike",
         DocumentRef("lordsfanclub", "fans", "lordsAppreciationFanClub"))
     }.await.result

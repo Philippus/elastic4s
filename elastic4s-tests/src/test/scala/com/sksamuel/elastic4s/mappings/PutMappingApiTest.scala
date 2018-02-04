@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.mappings
 
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
@@ -10,17 +9,17 @@ import scala.util.Try
 class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("index")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("index")
   }.await
 
   "a put mapping dsl" should "be accepted by the client" in {
-    http.execute {
+    client.execute {
       putMapping("index" / "type").as(
         geopointField("name"),
         dateField("content") nullValue "no content"
@@ -29,7 +28,7 @@ class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "accept same fields as mapping api" in {
-    http.execute {
+    client.execute {
       putMapping("index" / "type").as(
         dateField("content") nullValue "no content"
       ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2
@@ -37,7 +36,7 @@ class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "accept same several new fields with different types as mapping api and return the right mapping in get" in {
-    http.execute {
+    client.execute {
       putMapping("index" / "type").as(
         dateField("content") nullValue "no content",
         textField("description") boost 1.5,

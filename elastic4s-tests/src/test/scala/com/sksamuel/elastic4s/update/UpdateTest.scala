@@ -29,21 +29,21 @@ class UpdateTest
   ) id "5" refresh RefreshPolicy.Immediate
 
   private val idxRequests = for {
-    _ <- http.execute(ElasticApi.deleteIndex("hans"))
-    _ <- http.execute(createMapping)
-    _ <- http.execute(simpleIndex)
-    _ <- http.execute(nestedIndex)
+    _ <- client.execute(ElasticApi.deleteIndex("hans"))
+    _ <- client.execute(createMapping)
+    _ <- client.execute(simpleIndex)
+    _ <- client.execute(nestedIndex)
   } yield ()
   idxRequests.await
 
   "an update request" should "support field based update" in {
-    http.execute {
+    client.execute {
       update("5").in("hans" / "albums").doc(
         "name" -> "man of steel"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
-    http.execute {
+    client.execute {
       get("5").from("hans/albums").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("man of steel"))
   }
@@ -58,62 +58,62 @@ class UpdateTest
           "position" -> List(-0.110146, 51.513176)
         )
     )
-    http.execute {
+    client.execute {
       update("5").in("hans" / "albums").doc(document).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
-    http.execute {
+    client.execute {
       get("5").from("hans/albums")
     }.await.result.sourceAsMap.get(fieldName).value shouldBe document.get(fieldName).value
   }
 
   it should "support string based update" in {
-    http.execute {
+    client.execute {
       update("5").in("hans" / "albums").doc(""" { "name" : "inception" } """).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
-    http.execute {
+    client.execute {
       get("5").from("hans/albums").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("inception"))
   }
 
   it should "support field based upsert" in {
-    http.execute {
+    client.execute {
       update("5").in("hans/albums").docAsUpsert(
         "name" -> "batman"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
-    http.execute {
+    client.execute {
       get("5").from("hans" / "albums").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
   it should "support string based upsert" in {
-    http.execute {
+    client.execute {
       update("44").in("hans" / "albums").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "created"
 
-    http.execute {
+    client.execute {
       get("44").from("hans/albums").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("pirates of the caribbean"))
   }
 
   it should "keep existing fields with partial update" in {
 
-    http.execute {
+    client.execute {
       update("5").in("hans/albums").docAsUpsert(
         "length" -> 12.34
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
-    http.execute {
+    client.execute {
       get("5").from("hans/albums").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
   it should "insert non existent doc when using docAsUpsert" in {
-    http.execute {
+    client.execute {
       update("14").in("hans/albums").docAsUpsert(
         "name" -> "hunt for the red october"
       )
@@ -121,7 +121,7 @@ class UpdateTest
   }
 
   it should "return errors when the index does not exist" in {
-    val resp = http.execute {
+    val resp = client.execute {
       update("5").in("wowooasdsad" / "qweqwe").doc(
         "name" -> "gladiator"
       )
@@ -131,7 +131,7 @@ class UpdateTest
   }
 
   it should "return errors when the id does not exist" in {
-    val resp = http.execute {
+    val resp = client.execute {
       update("234234").in("hans/albums").doc(
         "name" -> "gladiator"
       )
@@ -141,7 +141,7 @@ class UpdateTest
   }
 
   it should "not return source by default" in {
-    val resp = http.execute {
+    val resp = client.execute {
       update("666").in("hans/albums").docAsUpsert(
         "name" -> "dunkirk"
       ).refresh(RefreshPolicy.Immediate)
@@ -150,7 +150,7 @@ class UpdateTest
   }
 
   it should "return source when specified" in {
-    val resp = http.execute {
+    val resp = client.execute {
       update("667").in("hans/albums").docAsUpsert(
         "name" -> "thin red line"
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
@@ -159,7 +159,7 @@ class UpdateTest
   }
 
   it should "include the original json" in {
-    val resp = http.execute {
+    val resp = client.execute {
       update("555").in("hans/albums").docAsUpsert(
         "name" -> "spider man"
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)

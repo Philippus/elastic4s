@@ -7,7 +7,7 @@ class NodesInfoHttpTest extends WordSpec with Matchers with DockerTests {
 
   "node info request" should {
     "return node information" in {
-      val nodes = http.execute {
+      val nodes = client.execute {
         nodeInfo()
       }.await.result
 

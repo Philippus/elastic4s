@@ -15,7 +15,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
   "ElasticJackson implicits" should {
     "index a case class" in {
 
-      http.execute {
+      client.execute {
         bulk(
           indexInto("jacksontest" / "characters").source(Character("tyrion", "game of thrones")).withId("1"),
           indexInto("jacksontest" / "characters").source(Character("hank", "breaking bad")).withId("2"),
@@ -25,7 +25,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
     }
     "read a case class" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("jacksontest").query("breaking")
       }.await.result
       resp.to[Character] shouldBe List(Character("hank", "breaking bad"))
@@ -33,7 +33,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
     }
     "populate special fields" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("jacksontest").query("breaking")
       }.await.result
 
@@ -51,7 +51,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
       })
       custom.registerModule(module)
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("jacksontest").query("breaking")
       }.await.result
 

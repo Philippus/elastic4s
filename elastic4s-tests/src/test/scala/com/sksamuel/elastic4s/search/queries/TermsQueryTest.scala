@@ -9,7 +9,7 @@ class TermsQueryTest
     with DockerTests
     with Matchers {
 
-  http.execute {
+  client.execute {
     createIndex("lords").mappings(
       mapping("people").fields(
         keywordField("name")
@@ -17,7 +17,7 @@ class TermsQueryTest
     )
   }.await
 
-  http.execute {
+  client.execute {
     createIndex("lordsfanclub").mappings(
       mapping("fans").fields(
         keywordField("lordswelike")
@@ -25,7 +25,7 @@ class TermsQueryTest
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("lords/people") fields ("name" -> "nelson"),
       indexInto("lords/people") fields ("name" -> "edmure"),
@@ -37,7 +37,7 @@ class TermsQueryTest
 
   "a terms query" should "find multiple terms using 'or'" in {
 
-    val resp = http.execute {
+    val resp = client.execute {
       search("lords") query termsQuery("name", "nelson", "byron")
     }.await.result
 
@@ -45,7 +45,7 @@ class TermsQueryTest
   }
 
   it should "lookup terms to search from a document in another index" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("lords") query termsQuery("name", List.empty[String])
         .ref("lordsfanclub", "fans", "lordsAppreciationFanClub")
         .path("lordswelike")

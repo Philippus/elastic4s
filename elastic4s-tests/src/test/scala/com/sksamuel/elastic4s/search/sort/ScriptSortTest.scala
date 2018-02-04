@@ -9,12 +9,12 @@ import scala.util.Try
 class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("scriptsort")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("scriptsort").mappings(
       mapping("tubestops").fields(
         textField("name").fielddata(true),
@@ -23,7 +23,7 @@ class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("scriptsort/tubestops") fields("name" -> "south kensington", "line" -> "district"),
       indexInto("scriptsort/tubestops") fields("name" -> "earls court", "line" -> "district"),
@@ -33,7 +33,7 @@ class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
 
   "script sort" - {
     "sort by name length" in {
-      val sorted = http.execute {
+      val sorted = client.execute {
         search("scriptsort") query matchAllQuery sortBy {
           scriptSort(
             script(""" doc['name'].value.length() """)

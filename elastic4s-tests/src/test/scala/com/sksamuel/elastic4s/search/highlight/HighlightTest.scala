@@ -9,12 +9,12 @@ import scala.util.Try
 class HighlightTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("intros")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("intros").mappings(
       mapping("tv").fields(
         textField("name").stored(true),
@@ -23,7 +23,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
     )
   }.await
 
-  http.execute {
+  client.execute {
     indexInto("intros/tv")
       .fields(
         "name" -> "star trek",
@@ -34,7 +34,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
   "highlighting" should {
     "highlight selected words" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros").matchQuery("text", "frontier").highlighting(
           highlight("text")
         )
@@ -48,7 +48,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
         "Space, the final <em>frontier</em>."
     }
     "use fragment size" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros") query "new" highlighting (
           highlight("text").requireFieldMatch(false) fragmentSize 15
           )
@@ -60,7 +60,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
       fragments(2) shouldBe "life and <em>new</em> civilisations"
     }
     "use number of fragments size" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros") query "text:new" highlighting (
           highlight("text") fragmentSize 5 numberOfFragments 2
           )
@@ -69,7 +69,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
       fragments.size shouldBe 2
     }
     "use no match size" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros") query "trek" highlighting (
           highlight("text") noMatchSize 50
           )
@@ -79,7 +79,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
       fragments.head shouldBe "Space, the final frontier. These are the voyages of"
     }
     "use pre tags" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 preTag "<picard>"
           )
@@ -89,7 +89,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
       fragments.head.trim shouldBe "Space, the final <picard>frontier</em>"
     }
     "use post tags" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 postTag "<riker>"
           )
@@ -99,7 +99,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
       fragments.head.trim shouldBe "Space, the final <em>frontier<riker>"
     }
     "use highlight query" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 query matchQuery("text", "life")
           )

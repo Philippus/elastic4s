@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,12 +9,12 @@ import scala.util.Try
 class PercentilesAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("percentilesagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("percentilesagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -24,7 +23,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DockerTests with Matc
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("percentilesagg/buildings") fields("name" -> "Willis Tower", "height" -> 1450),
       indexInto("percentilesagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2717),
@@ -39,7 +38,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DockerTests with Matc
 
   "percentiles agg" - {
     "should return the percentiles the matching results" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("percentilesagg").matchAllQuery().aggs {
           percentilesAgg("agg1", "height")
         }
@@ -49,7 +48,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DockerTests with Matc
       agg.values shouldBe Map("99.0" -> 2671.9199999999996, "25.0" -> 955.5, "95.0" -> 2491.5999999999995, "50.0" -> 1707.5, "75.0" -> 1996.5, "1.0" -> 211.14, "5.0" -> 379.7)
     }
     "should allow setting which percentiles to return" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("percentilesagg").matchAllQuery().aggs {
           percentilesAgg("agg1", "height").percents(50, 80)
         }

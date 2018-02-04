@@ -12,13 +12,8 @@ trait SearchMatchers extends Matchers {
 
   import com.sksamuel.elastic4s.http.ElasticDsl._
 
-  @deprecated("use containId(id)", "5.0.0")
-  def containResult(expectedId: Any)(implicit client: ElasticClient,
-                                     timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
-    containId(expectedId)
-
-  def containId[F[_]](expectedId: Any)(implicit client: ElasticClient,
-                                       timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
+  def containId(expectedId: Any)(implicit client: ElasticClient,
+                                 timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
         val resp = client.execute(left).await(timeout).result
@@ -31,8 +26,8 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveFieldValue[F[_]](value: String)(implicit client: ElasticClient,
-                                          timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
+  def haveFieldValue(value: String)(implicit client: ElasticClient,
+                                    timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
         val resp = client.execute(left).await(timeout).result

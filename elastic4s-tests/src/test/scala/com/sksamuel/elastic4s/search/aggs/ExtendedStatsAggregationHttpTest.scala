@@ -9,12 +9,12 @@ import scala.util.Try
 class ExtendedStatsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("extendedstatsagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("extendedstatsagg") mappings {
       mapping("sales_per_month") fields(
         dateField("month"),
@@ -24,7 +24,7 @@ class ExtendedStatsAggregationHttpTest extends FreeSpec with DockerTests with Ma
   }.await
 
   // based on the example from extended stats agg documentation
-  http.execute(
+  client.execute(
     bulk(
       indexInto("extendedstatsagg/sales_per_month") fields("month" -> "2017-01-01", "sales" -> 550.0),
       indexInto("extendedstatsagg/sales_per_month") fields("month" -> "2017-02-01", "sales" -> 60.0),
@@ -35,7 +35,7 @@ class ExtendedStatsAggregationHttpTest extends FreeSpec with DockerTests with Ma
   "extended stats agg" - {
     "should return the expected stats" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("extendedstatsagg").matchAllQuery().aggs {
           extendedStatsAgg("agg1", "sales")
         }

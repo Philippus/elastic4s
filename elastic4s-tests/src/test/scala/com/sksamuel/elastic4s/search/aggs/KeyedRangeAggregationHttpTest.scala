@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.RangeBucket
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,12 +9,12 @@ import scala.util.Try
 class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("keyedrangeaggs")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("keyedrangeaggs") mappings {
       mapping("tv") fields(
         textField("name").fielddata(true),
@@ -24,7 +23,7 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("keyedrangeaggs/tv").fields("name" -> "Breaking Bad", "grade" -> 9),
       indexInto("keyedrangeaggs/tv").fields("name" -> "Better Call Saul", "grade" -> 9),
@@ -38,7 +37,7 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
   "range agg" - {
     "should aggregate ranges" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("keyedrangeaggs").matchAllQuery().aggs {
           rangeAgg("agg1", "grade")
               .unboundedTo("meh", to = 5.5)

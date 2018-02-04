@@ -9,24 +9,24 @@ import scala.util.Try
 class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("foo")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("cuisine")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("landscape")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("foo").mappings(
       mapping("bar").fields(
         textField("baz").fields(
@@ -39,7 +39,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
   "CreateIndex Http Request" should {
     "return ack" in {
-      val resp = http.execute {
+      val resp = client.execute {
         createIndex("cuisine").mappings(
           mapping("food").fields(
             textField("name"),
@@ -53,7 +53,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
     "return error object when index already exists" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         createIndex("foo").mappings(
           mapping("a").fields(
             textField("b")
@@ -67,7 +67,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
     "create from raw source" in {
 
-      http.execute {
+      client.execute {
         createIndex("landscape").source(s"""
              {
               "mappings": {

@@ -8,19 +8,19 @@ import scala.util.Try
 class GeoCentroidAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("geocentroidagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("geocentroidagg") mappings {
       mapping("doc") fields geopointField("location")
     }
   }.await
 
   // based on the examples from Geo Distance Aggregation docs
-  http.execute(
+  client.execute(
     bulk(
       indexInto("geocentroidagg/doc").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
       indexInto("geocentroidagg/doc").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
@@ -33,7 +33,7 @@ class GeoCentroidAggregationHttpTest extends FreeSpec with DockerTests with Matc
 
   "geocentroid agg" - {
     "should return expected region center" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geocentroidagg").matchAllQuery().aggs {
           geoCentroidAggregation("museums_center")
               .field("location")
@@ -49,7 +49,7 @@ class GeoCentroidAggregationHttpTest extends FreeSpec with DockerTests with Matc
     }
 
     "should return empty aggregation in case of no documents are returned" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geocentroidagg").query(termQuery("name", "Guggenheim")).aggs {
           geoCentroidAggregation("museums_center")
             .field("location")

@@ -11,12 +11,12 @@ import scala.util.Try
 class SerialDiffPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("serialdiffagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("serialdiffagg") mappings {
       mapping("sales") fields(
         dateField("date"),
@@ -25,7 +25,7 @@ class SerialDiffPipelineAggHttpTest extends FreeSpec with DockerTests with Match
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("serialdiffagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
       indexInto("serialdiffagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
@@ -39,7 +39,7 @@ class SerialDiffPipelineAggHttpTest extends FreeSpec with DockerTests with Match
   "serial diff pipeline agg" - {
     "should return the expected diff values" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("serialdiffagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)

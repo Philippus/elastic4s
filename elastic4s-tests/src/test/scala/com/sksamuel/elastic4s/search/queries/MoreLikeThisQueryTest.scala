@@ -12,12 +12,12 @@ import scala.util.Try
 class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute(
+    client.execute(
       ElasticDsl.deleteIndex("drinks")
     ).await
   }
 
-  http.execute {
+  client.execute {
     createIndex("drinks").mappings (
       mapping("drink") as (
         textField("text") store true analyzer StandardAnalyzer
@@ -25,7 +25,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
     ) shards 3
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id "4" parent "1",
       indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" parent "1",
@@ -38,7 +38,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
   "a more like this query" should {
 
     "find matches based on input text" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("drinks") query {
           moreLikeThisQuery("text")
             .likeTexts("coors") minTermFreq 1 minDocFreq 1
@@ -49,7 +49,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
 
     "find matches based on doc refs" in {
       val ref = DocumentRef("drinks", "drink", "4")
-      val resp1 = http.execute {
+      val resp1 = client.execute {
         search("drinks").query {
           moreLikeThisQuery("text")
             .likeItems(MoreLikeThisItem(ref, Some("2"))) minTermFreq 1 minDocFreq 1
@@ -57,7 +57,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
       }.await.result
       resp1.hits.hits.map(_.id).toSet shouldBe Set()
 
-      val resp2 = http.execute {
+      val resp2 = client.execute {
         search("drinks").query {
           moreLikeThisQuery("text")
             .likeItems(MoreLikeThisItem(ref, Some("1"))) minTermFreq 1 minDocFreq 1
@@ -67,7 +67,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
     }
 
     "support artifical docs" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("drinks").query {
           moreLikeThisQuery("text")
             .artificialDocs(

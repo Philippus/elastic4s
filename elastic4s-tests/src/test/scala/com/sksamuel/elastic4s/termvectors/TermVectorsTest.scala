@@ -7,7 +7,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     createIndex("hansz").mappings(
       mapping("albums").fields(
         textField("name").stored(true).termVector("with_positions_offsets_payloads"),
@@ -16,7 +16,7 @@ class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
     )
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("hansz/albums").fields("name" -> "interstellar", "rating" -> 10) id "1",
       indexInto("hansz/albums").fields("name" -> "lion king", "rating" -> 8) id "2"
@@ -24,7 +24,7 @@ class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
   ).await
 
   "term vectors" should "return full stats" in {
-    val response = http.execute {
+    val response = client.execute {
       termVectors("hansz", "albums", "1")
     }.await.result
 

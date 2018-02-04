@@ -9,16 +9,16 @@ import scala.util.Try
 class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("fonts")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("fonts")
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("fonts/family").fields("name" -> "helvetica", "style" -> "sans"),
       indexInto("fonts/family").fields("name" -> "helvetica modern", "style" -> "serif"),
@@ -31,7 +31,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "bool query" should "support must and not" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("fonts/family").query {
         boolQuery().must("helvetica").not("serif")
       }
@@ -42,7 +42,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "support multiple must queries" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("fonts/family").query {
         boolQuery().must("times", "new")
       }
@@ -53,7 +53,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "support not" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("fonts/family").query {
         boolQuery().not("sans")
       }
@@ -64,7 +64,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "support must" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("fonts/family").query {
         boolQuery().must("roman")
       }
@@ -75,7 +75,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
   }
 
   it should "support or using should" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("fonts/family").query {
         boolQuery().should(
           matchPhraseQuery("name", "times new roman"),

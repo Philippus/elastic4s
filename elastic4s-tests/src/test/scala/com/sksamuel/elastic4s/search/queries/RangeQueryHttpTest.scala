@@ -13,12 +13,12 @@ class RangeQueryHttpTest
     with ElasticMatchers {
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("rangequeryhttptest")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("rangequeryhttptest").mappings(
       mapping("pieces").fields(
         textField("name").fielddata(true)
@@ -26,7 +26,7 @@ class RangeQueryHttpTest
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("rangequeryhttptest/pieces").fields(
         "name" -> "queen",
@@ -63,7 +63,7 @@ class RangeQueryHttpTest
 
   "a range query" should {
     "support using gte" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangequeryhttptest") query {
           // bishop, rook, castle, queen
           rangeQuery("value").gte("3")
@@ -72,7 +72,7 @@ class RangeQueryHttpTest
       resp.totalHits shouldBe 4
     }
     "support lte" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangequeryhttptest") query {
           // pawns, king, bisho
           rangeQuery("value").lte("3")
@@ -81,7 +81,7 @@ class RangeQueryHttpTest
       resp.totalHits shouldBe 4
     }
     "support using both lte & gte" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangequeryhttptest") query {
           rangeQuery("value").gte("5").lte("7")
         }
@@ -89,7 +89,7 @@ class RangeQueryHttpTest
       resp.totalHits shouldBe 1
     }
     "support integers" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangequeryhttptest") query {
           rangeQuery("value").gte(5).lte(7)
         }
@@ -97,7 +97,7 @@ class RangeQueryHttpTest
       resp.totalHits shouldBe 1
     }
     "support doubles" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangequeryhttptest") query {
           rangeQuery("value").gte(5.0).lte(7.0)
         }
@@ -105,7 +105,7 @@ class RangeQueryHttpTest
       resp.totalHits shouldBe 1
     }
     "support boost" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("rangequeryhttptest") query {
           rangeQuery("value").lte("3").boost(14.5)
         }

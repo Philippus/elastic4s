@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class GetSegmentTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("segments_1" / "a") fields ("show" -> "star trek"),
       indexInto("segments_2" / "b") fields ("show" -> "mindhunter"),
@@ -15,7 +15,7 @@ class GetSegmentTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "getSegments" should "return segment list" in {
-    val resp = http.execute {
+    val resp = client.execute {
       getSegments("segments_1", "segments_2", "segments_3")
     }.await
     val shards = resp.result.indices("segments_1")

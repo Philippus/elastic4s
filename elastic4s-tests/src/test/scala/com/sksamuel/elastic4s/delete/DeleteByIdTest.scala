@@ -9,12 +9,12 @@ import scala.util.Try
 class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("lecarre")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("lecarre").mappings(
       mapping("characters").fields(
         textField("name")
@@ -25,31 +25,31 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
   "delete by id request" should {
     "delete matched docs" in {
 
-      http.execute {
+      client.execute {
         indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id("2").refresh(RefreshPolicy.Immediate)
       }.await
 
-      http.execute {
+      client.execute {
         indexInto("lecarre" / "characters").fields("name" -> "george smiley").id("4").refresh(RefreshPolicy.Immediate)
       }.await
 
-      http.execute {
+      client.execute {
         search("lecarre" / "characters").matchAllQuery()
       }.await.result.totalHits shouldBe 2
 
-      http.execute {
+      client.execute {
         delete("2").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
       }.await
 
-      http.execute {
+      client.execute {
         search("lecarre" / "characters").matchAllQuery()
       }.await.result.totalHits shouldBe 1
 
-      http.execute {
+      client.execute {
         delete("4").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
       }.await
 
-      http.execute {
+      client.execute {
         search("lecarre" / "characters").matchAllQuery()
       }.await.result.totalHits shouldBe 0
     }

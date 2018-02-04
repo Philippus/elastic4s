@@ -12,16 +12,16 @@ class MultiSearchHttpTest
     with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("jtull")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("jtull")
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("jtull" / "albums") fields ("name" -> "aqualung") id "14",
       indexInto("jtull" / "albums") fields ("name" -> "passion play") id "51"
@@ -30,7 +30,7 @@ class MultiSearchHttpTest
 
   "a multi search request" should "perform search for all queries" in {
 
-    val resp = http.execute {
+    val resp = client.execute {
       multi(
         search("jtull") query matchQuery("name", "aqualung"),
         search("jtull") query "passion",
@@ -50,7 +50,7 @@ class MultiSearchHttpTest
   }
 
   it should "correctly set errored and successful items" in {
-    val resp = http.execute {
+    val resp = client.execute {
       multi(
         search("jtull") query matchQuery("name", "aqualung"),
         search("unknown") query matchAllQuery()

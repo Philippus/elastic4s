@@ -8,12 +8,12 @@ import scala.util.Try
 class CountTest extends FlatSpec with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("london")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("london/landmarks").fields("name" -> "hampton court palace"),
       indexInto("london/landmarks").fields("name" -> "tower of london")
@@ -21,21 +21,21 @@ class CountTest extends FlatSpec with DockerTests {
   }.await
 
   "a search request of size 0" should "return total count when no query is specified" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("london").size(0)
     }.await.result
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count for the correct type" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("london").size(0)
     }.await.result
     assert(2 === resp.totalHits)
   }
 
   it should "return the document count based on the specified query" in {
-    val resp = http.execute {
+    val resp = client.execute {
       search("london").size(0).query("tower")
     }.await.result
     assert(1 === resp.totalHits)

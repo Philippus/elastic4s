@@ -8,12 +8,12 @@ import scala.util.Try
 class ExistsQueryTest extends WordSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("person")
     }.await
   }
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("person" / "interest") fields(
         "name" -> "reese",
@@ -28,14 +28,14 @@ class ExistsQueryTest extends WordSpec with DockerTests with Matchers {
 
   "exists query" should {
     "match non-null fields" in {
-      http.execute {
+      client.execute {
         search("person" / "interest") postFilter {
           existsQuery("name")
         }
       }.await.result.totalHits shouldBe 2
     }
     "not match null fields" in {
-      http.execute {
+      client.execute {
         search("person" / "interest") postFilter {
           existsQuery("place")
         }

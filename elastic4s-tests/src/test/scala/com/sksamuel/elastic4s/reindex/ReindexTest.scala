@@ -17,18 +17,18 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
   create("reindextarget")
 
   def deleteIdx(name: String) = Try {
-    http.execute {
+    client.execute {
       deleteIndex(name)
     }.await
   }
 
   def create(name: String) = Try {
-    http.execute {
+    client.execute {
       createIndex(name)
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("reindex" / "a").fields(Map("foo" -> "far")),
       indexInto("reindex" / "a").fields(Map("moo" -> "mar")),
@@ -39,11 +39,11 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
 
   "a reindex request" should {
     "copy from one index to another" in {
-      http.execute {
+      client.execute {
         reindex("reindex", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.result.created shouldBe 3
 
-      http.execute {
+      client.execute {
         search("reindextarget")
       }.await.result.size shouldBe 3
     }
@@ -52,11 +52,11 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
       deleteIdx("reindextarget")
       create("reindextarget")
 
-      http.execute {
+      client.execute {
         reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
       }.await.result.created shouldBe 2
 
-      http.execute {
+      client.execute {
         search("reindextarget")
       }.await.result.size shouldBe 2
     }
@@ -65,16 +65,16 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
       deleteIdx("reindextarget")
       create("reindextarget")
 
-      http.execute {
+      client.execute {
         reindex(Seq("reindex", "reindex2"), "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.result.created shouldBe 4
 
-      http.execute {
+      client.execute {
         search("reindextarget")
       }.await.result.size shouldBe 4
     }
     "return failure for index not found" in {
-      http.execute {
+      client.execute {
         reindex("wibble", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.error.`type` shouldBe "index_not_found_exception"
     }

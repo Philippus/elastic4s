@@ -3,8 +3,6 @@ package com.sksamuel.elastic4s.testkit
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.index.admin.RefreshIndexResponse
 import com.sksamuel.elastic4s.{IndexAndTypes, Indexes}
-import org.elasticsearch.ResourceAlreadyExistsException
-import org.elasticsearch.transport.RemoteTransportException
 import org.scalatest.Suite
 
 import scala.util.Try
@@ -15,7 +13,7 @@ import scala.util.Try
   * tests to allow for blocking, iterative coding
   */
 trait ElasticSugar extends ElasticDsl {
-  this: Suite with LocalNodeProvider =>
+  this: Suite with ClientProvider =>
 
   // refresh all indexes
   def refreshAll(): RefreshIndexResponse = refresh(Indexes.All)
@@ -39,7 +37,7 @@ trait ElasticSugar extends ElasticDsl {
   def blockUntil(explain: String)(predicate: () => Boolean): Unit = {
 
     var backoff = 0
-    var done    = false
+    var done = false
 
     while (backoff <= 16 && !done) {
       if (backoff > 0) Thread.sleep(200 * backoff)
@@ -56,14 +54,10 @@ trait ElasticSugar extends ElasticDsl {
   }
 
   def ensureIndexExists(index: String): Unit =
-    try {
+    if (!doesIndexExists(index))
       client.execute {
         createIndex(index)
       }.await
-    } catch {
-      case _: ResourceAlreadyExistsException => // Ok, ignore.
-      case _: RemoteTransportException       => // Ok, ignore.
-    }
 
   def doesIndexExists(name: String): Boolean =
     client

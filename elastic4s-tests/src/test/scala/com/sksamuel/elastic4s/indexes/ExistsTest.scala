@@ -8,29 +8,29 @@ import scala.util.Try
 class ExistsTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("exists")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("exists").mappings {
       mapping("flowers") fields textField("name")
     }
   }.await
 
-  http.execute {
+  client.execute {
     indexInto("exists/flowers").withId("a").fields("name" -> "Narcissus")
   }.await
 
   "an exists request" should {
     "return true for an existing doc" in {
-      http.execute {
+      client.execute {
         exists("a", "exists", "flowers")
       }.await.result shouldBe true
     }
     "return false for non existing doc" in {
-      http.execute {
+      client.execute {
         exists("b", "exists", "flowers")
       }.await.result shouldBe false
     }

@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CatAllocationTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catalloc1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catalloc2/landmarks").fields("name" -> "hampton court palace"),
@@ -16,7 +16,7 @@ class CatAllocationTest extends FlatSpec with Matchers with DockerTests {
 
 
   "cats alloc" should "return all shards" in {
-    http.execute {
+    client.execute {
       catAllocation()
     }.await
   }

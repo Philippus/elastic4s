@@ -21,18 +21,18 @@ class ScrollPublisherVerificationTest
   implicit val system: ActorSystem = ActorSystem()
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("scrollpubver")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       createIndex("scrollpubver")
     }.await
   }
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("scrollpubver" / "empires") source Empire("Parthian", "Persia", "Ctesiphon"),
       indexInto("scrollpubver" / "empires") source Empire("Ptolemaic", "Egypt", "Alexandria"),
@@ -57,7 +57,7 @@ class ScrollPublisherVerificationTest
   override def createFailedPublisher(): Publisher[SearchHit] = null
 
   override def createPublisher(elements: Long): Publisher[SearchHit] = {
-    new ScrollPublisher(http, query, elements)
+    new ScrollPublisher(client, query, elements)
   }
 }
 

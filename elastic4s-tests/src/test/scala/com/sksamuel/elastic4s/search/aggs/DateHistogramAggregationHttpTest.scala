@@ -12,12 +12,12 @@ import scala.util.Try
 class DateHistogramAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("datehistaggs")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("datehistaggs") mappings {
       mapping("tv") fields(
         textField("name").fielddata(true),
@@ -26,7 +26,7 @@ class DateHistogramAggregationHttpTest extends FreeSpec with DockerTests with Ma
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("datehistaggs/tv") fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
       indexInto("datehistaggs/tv") fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2008"),
@@ -40,7 +40,7 @@ class DateHistogramAggregationHttpTest extends FreeSpec with DockerTests with Ma
   "date histogram agg" - {
     "should return docs grouped by histogram interval" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("datehistaggs").matchAllQuery().aggs {
           dateHistogramAgg("agg1", "premiere_date").interval(DateHistogramInterval.Month)
             .extendedBounds(ExtendedBounds("01/12/2007", "01/07/2008"))

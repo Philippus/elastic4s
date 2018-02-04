@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.DateRangeBucket
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
 import org.scalatest.{FreeSpec, Matchers}
 
@@ -11,12 +10,12 @@ import scala.util.Try
 class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("daterangeaggs")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("daterangeaggs") mappings {
       mapping("tv") fields(
         textField("name").fielddata(true),
@@ -25,7 +24,7 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("daterangeaggs/tv").fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
       indexInto("daterangeaggs/tv").fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2014"),
@@ -39,7 +38,7 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
   "date range agg" - {
     "should support elastic dates" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("daterangeaggs").matchAllQuery().aggs {
           dateRangeAgg("agg1", "premiere_date")
             .range(ElasticDateMath("15/12/2017").minus(10, Years), ElasticDate("15/12/2017").minus(5, Years))
@@ -57,7 +56,7 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
     }
     "should support string dates" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("daterangeaggs").matchAllQuery().aggs {
           dateRangeAgg("agg1", "premiere_date")
             .range("15/12/2017||-10y", "15/12/2017||-5y")

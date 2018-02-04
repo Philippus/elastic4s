@@ -13,7 +13,7 @@ class CreateIndexTemplateRequestTest
 
   before {
     Try {
-      http.execute {
+      client.execute {
         deleteIndex("matchme.template")
       }.await
     }
@@ -21,7 +21,7 @@ class CreateIndexTemplateRequestTest
 
   "Create Index Template HTTP request" should {
     "create and use the template for an index" in {
-      http.execute {
+      client.execute {
         createIndexTemplate("matchme", "matchme.*").mappings(
           mapping("sometype1").fields(
             keywordField("field1"),
@@ -32,11 +32,11 @@ class CreateIndexTemplateRequestTest
         )
       }.await
 
-      http.execute {
+      client.execute {
         createIndex("matchme.template").shards(1).waitForActiveShards(1)
       }.await
 
-      val resp = http.execute {
+      val resp = client.execute {
         getMapping("matchme.template")
       }.await.result
 

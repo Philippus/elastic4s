@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,18 +9,18 @@ import scala.util.Try
 class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("minmaxagg")
     }.await
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("minmaxagg2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("minmaxagg") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -30,7 +29,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
     }
   }.await
 
-  http.execute {
+  client.execute {
     createIndex("minmaxagg2") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -39,7 +38,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
     }
   }.await
 
-  http.execute {
+  client.execute {
     createIndex("minmaxagg3") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -48,7 +47,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("minmaxagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("minmaxagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -59,7 +58,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
 
   "max agg" - {
     "should return the max for the context" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("minmaxagg").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
@@ -69,7 +68,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
       agg.value shouldBe Some(2456)
     }
     "should support results when matching docs do not define the field" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("minmaxagg2").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
@@ -79,7 +78,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
       agg.value shouldBe None
     }
     "should support results when no documents match" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("minmaxagg3").matchAllQuery().aggs {
           maxAgg("agg1", "height")
         }
@@ -92,7 +91,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
 
   "min agg" - {
     "should return the max for the context" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("minmaxagg").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }
@@ -102,7 +101,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
       agg.value shouldBe Some(169)
     }
     "should support results matching docs do not define the field" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("minmaxagg2").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }
@@ -112,7 +111,7 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
       agg.value shouldBe None
     }
     "should support results when no documents match" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("minmaxagg3").matchAllQuery().aggs {
           minAgg("agg1", "height")
         }

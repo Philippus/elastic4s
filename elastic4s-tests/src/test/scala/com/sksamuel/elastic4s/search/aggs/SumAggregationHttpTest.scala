@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,12 +9,12 @@ import scala.util.Try
 class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("sumagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("sumagg") mappings {
       mapping("actors") fields(
         textField("name").fielddata(true),
@@ -26,12 +25,12 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("sumagg2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("sumagg2") mappings {
       mapping("actors") fields(
         textField("name").fielddata(true),
@@ -40,7 +39,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
     }
   }.await.result.acknowledged shouldBe true
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("sumagg/actors") fields("name" -> "clint eastwood", "age" -> "52"),
       indexInto("sumagg/actors") fields("name" -> "eli wallach", "age" -> "72"),
@@ -54,7 +53,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
   "sum aggregation" - {
     "should group by field" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("sumagg").matchAllQuery().aggs {
           sumAgg("agg1", "age")
         }
@@ -65,7 +64,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
       agg.value shouldBe 260.0
     }
     "should support missing" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("sumagg").matchAllQuery().aggs {
           sumAgg("agg1", "age").missing("100")
         }
@@ -76,7 +75,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
       agg.value shouldBe 360
     }
     "should support when no documents match" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("sumagg2").matchAllQuery().aggs {
           sumAgg("agg1", "age").missing("100")
         }

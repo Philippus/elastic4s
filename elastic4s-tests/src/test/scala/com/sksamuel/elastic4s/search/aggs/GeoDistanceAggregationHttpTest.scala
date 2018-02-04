@@ -11,19 +11,19 @@ import scala.util.Try
 class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("geodistanceagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("geodistanceagg") mappings {
       mapping("doc") fields geopointField("location")
     }
   }.await
 
   // based on the examples from Geo Distance Aggregation docs
-  http.execute(
+  client.execute(
     bulk(
       indexInto("geodistanceagg/doc").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
       indexInto("geodistanceagg/doc").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
@@ -36,7 +36,7 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
 
   "geodistance agg" - {
     "should return expected buckets" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geodistanceagg").matchAllQuery().aggs {
           geoDistanceAggregation("rings_around_amsterdam")
               .origin(GeoPoint(52.3760, 4.894))
@@ -58,7 +58,7 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
     }
 
     "should return expected buckets with specified unit" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geodistanceagg").matchAllQuery().aggs {
           geoDistanceAggregation("rings_around_amsterdam")
               .origin(GeoPoint(52.3760, 4.894))
@@ -81,7 +81,7 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
     }
 
     "should return expected keyed buckets" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("geodistanceagg").matchAllQuery().aggs {
           geoDistanceAggregation("rings_around_amsterdam")
               .origin(GeoPoint(52.3760, 4.894))

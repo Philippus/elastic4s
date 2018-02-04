@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.validate
 
 import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -10,12 +9,12 @@ import scala.util.Try
 class ValidateTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("food")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("food").mappings(
       mapping("pasta").fields(
         textField("name"),
@@ -25,7 +24,7 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
     )
   }.await
 
-  http.execute {
+  client.execute {
     indexInto("food/pasta") fields(
       "name" -> "maccaroni",
       "color" -> "yellow",
@@ -35,13 +34,13 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
 
   "a validate query" should {
     "return valid when the query is valid for a string query" in {
-      val resp = http.execute {
+      val resp = client.execute {
         validateIn("food/pasta") query "maccaroni"
       }.await.result
       resp.valid shouldBe true
     }
     "return valid when the query is valid for a dsl query" in {
-      val resp = http.execute {
+      val resp = client.execute {
         validateIn("food/pasta") query {
           matchQuery("name", "maccaroni")
         }
@@ -49,7 +48,7 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
       resp.isValid shouldBe true
     }
     "return invalid when the query is nonsense" in {
-      val resp = http.execute {
+      val resp = client.execute {
         validateIn("food/pasta") query {
           matchQuery("sellbydate", "qweqwe")
         }

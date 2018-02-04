@@ -8,12 +8,12 @@ import scala.util.Try
 class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("script")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("script").mappings(
       mapping("tubestops").fields(
         textField("name").fielddata(true),
@@ -22,7 +22,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
     )
   }.await
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("script/tubestops") fields("name" -> "south kensington", "line" -> "district"),
       indexInto("script/tubestops") fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
@@ -33,7 +33,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
 
   "script fields" - {
     "can access doc fields" in {
-      val result = http.execute {
+      val result = client.execute {
         search("script").matchQuery("name", "cockfosters").scriptfields(
           scriptField("a", "doc['line'].value")
         )
@@ -41,7 +41,7 @@ class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
       result.hits.hits.head.storedField("a").value shouldBe "picadilly"
     }
     "can use params" in {
-      val result = http.execute {
+      val result = client.execute {
         search("script") query "earls" scriptfields (
           scriptField("a") script (
             script("doc['zone'].value * params.fare") params Map("fare" -> 4.50)

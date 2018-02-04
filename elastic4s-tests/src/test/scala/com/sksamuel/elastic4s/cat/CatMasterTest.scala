@@ -6,7 +6,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class CatMasterTest extends FlatSpec with Matchers with DockerTests {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catmaster/landmarks").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
@@ -14,7 +14,7 @@ class CatMasterTest extends FlatSpec with Matchers with DockerTests {
 
 
   "cat master" should "return master node info" in {
-    val result = http.execute {
+    val result = client.execute {
       catMaster()
     }.await.result
 

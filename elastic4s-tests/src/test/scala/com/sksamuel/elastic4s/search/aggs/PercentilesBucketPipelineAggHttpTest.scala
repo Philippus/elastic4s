@@ -10,12 +10,12 @@ import scala.util.Try
 class PercentilesBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("percentilesbucketagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("percentilesbucketagg") mappings {
       mapping("sales") fields(
         dateField("date"),
@@ -24,7 +24,7 @@ class PercentilesBucketPipelineAggHttpTest extends FreeSpec with DockerTests wit
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("percentilesbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
       indexInto("percentilesbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
@@ -40,7 +40,7 @@ class PercentilesBucketPipelineAggHttpTest extends FreeSpec with DockerTests wit
   "percentiles bucket pipeline agg" - {
     "should return the expected percentile values" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("percentilesbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)

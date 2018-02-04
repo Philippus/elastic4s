@@ -10,7 +10,7 @@ class CatSegmentsTest
     with DockerTests
     with Inspectors {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("catseg/landmarks").fields("name" -> "hampton court palace"),
       indexInto("catseg/landmarks").fields("name" -> "tower of london"),
@@ -19,7 +19,7 @@ class CatSegmentsTest
   }.await
 
   "cats segments" should "return all segments" in {
-    val segments = http.execute {
+    val segments = client.execute {
       catSegments()
     }.await.result
 

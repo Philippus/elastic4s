@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.search.aggs
 
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.testkit.{DiscoveryLocalNodeProvider, DockerTests}
+import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -10,12 +10,12 @@ import scala.util.Try
 class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("valuecount")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("valuecount") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -25,12 +25,12 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
   }.await
 
   Try {
-    http.execute {
+    client.execute {
       ElasticDsl.deleteIndex("valuecount2")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("valuecount2") mappings {
       mapping("buildings") fields(
         textField("name").fielddata(true),
@@ -39,7 +39,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("valuecount/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
       indexInto("valuecount/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
@@ -49,7 +49,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
 
   "cardinality agg" - {
     "should return the count of distinct values" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("valuecount").matchAllQuery().aggs {
           valueCountAgg("agg1", "name")
         }
@@ -59,7 +59,7 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
       agg.value shouldBe 7
     }
     "should support when no documents match" in {
-      val resp = http.execute {
+      val resp = client.execute {
         search("valuecount2").matchAllQuery().aggs {
           valueCountAgg("agg1", "name")
         }

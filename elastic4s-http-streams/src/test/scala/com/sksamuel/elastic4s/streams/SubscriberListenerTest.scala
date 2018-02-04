@@ -17,7 +17,7 @@ class SubscriberListenerTest extends WordSpec with Matchers with DockerTests {
   implicit val builder: ShipRequestBuilder = new ShipRequestBuilder()
 
   Try {
-    http.execute {
+    client.execute {
       createIndex("subscriberlistenertest")
     }.await
   }
@@ -30,7 +30,7 @@ class SubscriberListenerTest extends WordSpec with Matchers with DockerTests {
       val config = SubscriberConfig(listener = new ResponseListener[Ship] {
         def onAck(resp: BulkResponseItem, original: Ship): Unit = latch.countDown()
       })
-      val subscriber = http.subscriber[Ship](config)
+      val subscriber = client.subscriber[Ship](config)
       ShipPublisher.subscribe(subscriber)
 
       latch.await(1, TimeUnit.MINUTES) shouldBe true

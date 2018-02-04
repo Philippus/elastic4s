@@ -31,12 +31,12 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex(IndexName)
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex(IndexName).mappings(
       mapping(IndexName).fields(
         textField("name"),
@@ -48,7 +48,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
 
   def indexRequest(id: String, team: Team): IndexRequest = indexInto(Index(IndexName), IndexName).source(team).id(id)
 
-  http.execute(
+  client.execute(
     bulk(
       indexRequest("1", Team("Middlesbrough", "Fortress Riverside", 1876)),
       indexRequest("2", Team("Arsenal", "The Library", 1886))
@@ -56,7 +56,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   ).await
 
   "hit reader" should "unmarshall search results" in {
-    val teams = http.execute {
+    val teams = client.execute {
       search("football").matchAllQuery()
     }.await.result.to[Team]
 
@@ -67,7 +67,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   it should "unmarshall safely search results" in {
-    val teams = http.execute {
+    val teams = client.execute {
       search("football").matchAllQuery()
     }.await.result.safeTo[Team]
 
@@ -78,7 +78,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   it should "unmarshall safely a get response" in {
-    val team = http.execute {
+    val team = client.execute {
       get("1").from(IndexName)
     }.await.result.safeTo[Team]
 
@@ -86,7 +86,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   it should "unmarshall a get response" in {
-    val team = http.execute {
+    val team = client.execute {
       get("1").from(IndexName)
     }.await.result.to[Team]
 
@@ -94,7 +94,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   it should "unmarshall safely multi get results" in {
-    val teams = http.execute {
+    val teams = client.execute {
       multiget(
         get("1").from(IndexName),
         get("2").from(IndexName)
@@ -108,7 +108,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   it should "unmarshall multi get results" in {
-    val teams = http.execute {
+    val teams = client.execute {
       multiget(
         get("1").from(IndexName),
         get("2").from(IndexName)
@@ -139,18 +139,18 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     )
 
     Try {
-      http.execute {
+      client.execute {
         deleteIndex("galaxies")
       }.await
     }
 
     import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
-    http.execute {
+    client.execute {
       indexInto("galaxies/g").doc(milkyway).refresh(RefreshPolicy.IMMEDIATE)
     }.await
 
-    http.execute {
+    client.execute {
       search("galaxies").matchAllQuery()
     }.await.result.to[Galaxy].head shouldBe milkyway
   }

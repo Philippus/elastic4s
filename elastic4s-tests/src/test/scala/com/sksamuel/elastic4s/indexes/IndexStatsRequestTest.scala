@@ -11,7 +11,7 @@ class IndexStatsRequestTest
     with DockerTests
     with Inspectors {
 
-  http.execute {
+  client.execute {
     bulk(
       indexInto("indexstats1/landmarks").fields("name" -> "hampton court palace"),
       indexInto("indexstats2/landmarks").fields("name" -> "tower of london"),
@@ -20,7 +20,7 @@ class IndexStatsRequestTest
   }.await
 
   "index stats" should "return all indexes" in {
-    val stats = http.execute {
+    val stats = client.execute {
       indexStats()
     }.await.result
 

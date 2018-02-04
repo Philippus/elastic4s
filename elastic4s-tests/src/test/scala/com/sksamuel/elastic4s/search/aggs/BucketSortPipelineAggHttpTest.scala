@@ -12,12 +12,12 @@ import scala.util.Try
 class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("bucketsortagg")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("bucketsortagg") mappings {
       mapping("sales") fields(
         dateField("date"),
@@ -26,7 +26,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
     }
   }.await
 
-  http.execute(
+  client.execute(
     bulk(
       indexInto("bucketsortagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
       indexInto("bucketsortagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
@@ -40,7 +40,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
   "bucket sort pipeline agg" - {
     "should return sorted buckets" in {
 
-      val resp = http.execute {
+      val resp = client.execute {
         search("bucketsortagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)
@@ -65,7 +65,7 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
 
   "should limit sorted buckets" in {
 
-    val resp = http.execute {
+    val resp = client.execute {
       search("bucketsortagg").matchAllQuery().aggs(
         dateHistogramAgg("sales_per_month", "date")
           .interval(DateHistogramInterval.Month)

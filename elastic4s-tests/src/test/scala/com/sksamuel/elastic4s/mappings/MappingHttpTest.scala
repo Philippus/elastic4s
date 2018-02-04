@@ -10,16 +10,16 @@ import scala.util.Try
 class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("index")
     }.await
 
-    http.execute {
+    client.execute {
       deleteIndex("indexnoprops")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("index").mappings(
       mapping("mapping1") as Seq(
         textField("a") stored true analyzer WhitespaceAnalyzer,
@@ -33,7 +33,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
   }.await
 
 
-  http.execute {
+  client.execute {
     createIndex("indexnoprops").mappings(
       mapping("mapping2").dynamic(DynamicMapping.Strict)
     )
@@ -42,7 +42,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
   "mapping get" should {
     "return specified mapping" in {
 
-      val mappings = http.execute {
+      val mappings = client.execute {
         getMapping("index" / "mapping1")
       }.await.result
 
@@ -59,7 +59,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
     "handle properly mapping without properties" in {
 
-      val mappings = http.execute {
+      val mappings = client.execute {
         getMapping("indexnoprops" / "mapping2")
       }.await.result
 

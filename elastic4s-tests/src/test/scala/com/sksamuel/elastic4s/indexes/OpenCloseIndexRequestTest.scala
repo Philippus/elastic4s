@@ -8,12 +8,12 @@ import scala.util.Try
 class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests {
 
   Try {
-    http.execute {
+    client.execute {
       deleteIndex("pasta")
     }.await
   }
 
-  http.execute {
+  client.execute {
     createIndex("pasta").mappings(
       mapping("types").fields(
         textField("name"),
@@ -24,7 +24,7 @@ class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests 
 
   "close index" should {
     "acknowledge" in {
-      http.execute {
+      client.execute {
         closeIndex("pasta")
       }.await.result.acknowledged shouldBe true
     }
@@ -32,7 +32,7 @@ class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests 
 
   "open index" should {
     "acknowledge" in {
-      http.execute {
+      client.execute {
         openIndex("pasta")
       }.await.result.acknowledged shouldBe true
     }
