@@ -57,6 +57,7 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
   def size(size: Int): UpdateByQueryRequest = copy(size = size.some)
 
   def script(script: Script): UpdateByQueryRequest = copy(script = script.some)
+  def script(source: String): UpdateByQueryRequest = script(Script(source))
 
   def shouldStoreResult(shouldStoreResult: Boolean): UpdateByQueryRequest =
     copy(shouldStoreResult = shouldStoreResult.some)
