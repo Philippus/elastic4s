@@ -33,7 +33,7 @@ trait GetHandlers {
       }
     }
 
-    override def requestHandler(request: MultiGetRequest): ElasticRequest = {
+    override def build(request: MultiGetRequest): ElasticRequest = {
       val body   = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       ElasticRequest("POST", "/_mget", entity)
@@ -67,7 +67,7 @@ trait GetHandlers {
       }
     }
 
-    override def requestHandler(request: GetRequest): ElasticRequest = {
+    override def build(request: GetRequest): ElasticRequest = {
 
       val endpoint =
         s"/${URLEncoder.encode(request.indexAndType.index, "UTF-8")}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id, "UTF-8")}"

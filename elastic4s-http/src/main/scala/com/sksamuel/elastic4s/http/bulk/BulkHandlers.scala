@@ -10,7 +10,7 @@ trait BulkHandlers {
 
   implicit object BulkHandler extends Handler[BulkRequest, BulkResponse] with Logging {
 
-    override def requestHandler(bulk: BulkRequest): ElasticRequest = {
+    override def build(bulk: BulkRequest): ElasticRequest = {
 
       val rows = BulkBuilderFn(bulk)
       // es seems to require a trailing new line as well

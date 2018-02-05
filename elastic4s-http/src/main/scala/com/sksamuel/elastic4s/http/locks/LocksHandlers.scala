@@ -13,7 +13,7 @@ trait LocksHandlers {
       override def handle(response: HttpResponse) = Right(response.statusCode == 201)
     }
 
-    override def requestHandler(request: AcquireGlobalLock): ElasticRequest =
+    override def build(request: AcquireGlobalLock): ElasticRequest =
       ElasticRequest("PUT", endpoint)
   }
 
@@ -23,7 +23,7 @@ trait LocksHandlers {
       override def handle(response: HttpResponse) = Right(response.statusCode == 200)
     }
 
-    override def requestHandler(request: ReleaseGlobalLock): ElasticRequest =
+    override def build(request: ReleaseGlobalLock): ElasticRequest =
       ElasticRequest("DELETE", "/fs/lock/global")
   }
 }

@@ -30,7 +30,7 @@ trait TaskHandlers {
 
   implicit object ListTaskHandler extends Handler[ListTasksRequest, ListTaskResponse] {
 
-    override def requestHandler(request: ListTasksRequest): ElasticRequest = {
+    override def build(request: ListTasksRequest): ElasticRequest = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)
@@ -53,7 +53,7 @@ trait TaskHandlers {
       override def handle(response: HttpResponse) = Right(response.statusCode >= 200 && response.statusCode < 300)
     }
 
-    override def requestHandler(request: CancelTasksRequest): ElasticRequest = {
+    override def build(request: CancelTasksRequest): ElasticRequest = {
 
       val endpoint =
         if (request.nodeIds.isEmpty) s"/_tasks/cancel"

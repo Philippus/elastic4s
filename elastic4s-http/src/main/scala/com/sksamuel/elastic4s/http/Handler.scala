@@ -10,7 +10,7 @@ import com.sksamuel.exts.OptionImplicits._
   */
 abstract class Handler[T, U: Manifest] extends Logging {
   def responseHandler: ResponseHandler[U] = ResponseHandler.default[U]
-  def requestHandler(request: T): ElasticRequest
+  def build(t: T): ElasticRequest
 }
 
 // models everything needed to send the request to elasticsearch

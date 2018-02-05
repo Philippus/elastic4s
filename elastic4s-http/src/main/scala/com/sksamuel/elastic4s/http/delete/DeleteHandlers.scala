@@ -30,7 +30,7 @@ trait DeleteHandlers {
         }
     }
 
-    override def requestHandler(request: DeleteByQueryRequest): ElasticRequest = {
+    override def build(request: DeleteByQueryRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexesAndTypes.types.isEmpty)
@@ -77,7 +77,7 @@ trait DeleteHandlers {
       }
     }
 
-    override def requestHandler(request: DeleteByIdRequest): ElasticRequest = {
+    override def build(request: DeleteByIdRequest): ElasticRequest = {
 
       val endpoint =
         s"/${URLEncoder.encode(request.indexType.index, "UTF-8")}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString, "UTF-8")}"

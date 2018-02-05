@@ -25,7 +25,7 @@ trait IndexAliasHandlers {
       }
     }
 
-    override def requestHandler(request: GetAliasesRequest): ElasticRequest = {
+    override def build(request: GetAliasesRequest): ElasticRequest = {
       val endpoint = s"/${request.indices.string}/_alias/${request.aliases.mkString(",")}"
       val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore =>
         Map("ignore_unavailable" -> ignore)
@@ -35,21 +35,21 @@ trait IndexAliasHandlers {
   }
 
   implicit object RemoveAliasActionHandler extends Handler[RemoveAliasAction, AliasActionResponse] {
-    override def requestHandler(request: RemoveAliasAction): ElasticRequest = {
+    override def build(request: RemoveAliasAction): ElasticRequest = {
       val container = IndicesAliasesRequest(Seq(request))
-      IndexAliasesHandler.requestHandler(container)
+      IndexAliasesHandler.build(container)
     }
   }
 
   implicit object AddAliasActionHandler extends Handler[AddAliasActionRequest, AliasActionResponse] {
-    override def requestHandler(request: AddAliasActionRequest): ElasticRequest = {
+    override def build(request: AddAliasActionRequest): ElasticRequest = {
       val container = IndicesAliasesRequest(Seq(request))
-      IndexAliasesHandler.requestHandler(container)
+      IndexAliasesHandler.build(container)
     }
   }
 
   implicit object IndexAliasesHandler extends Handler[IndicesAliasesRequest, AliasActionResponse] {
-    override def requestHandler(request: IndicesAliasesRequest): ElasticRequest = {
+    override def build(request: IndicesAliasesRequest): ElasticRequest = {
       val body   = AliasActionBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
       ElasticRequest("POST", "/_aliases", entity)

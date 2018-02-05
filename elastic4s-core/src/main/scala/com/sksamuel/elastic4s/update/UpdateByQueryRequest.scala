@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.update
 
 import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.elastic4s.searches.queries.Query
-import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes, RefreshPolicy}
+import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes, RefreshPolicy, Slice}
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
@@ -16,8 +16,11 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
                                 refresh: Option[RefreshPolicy] = None,
                                 script: Option[Script] = None,
                                 waitForActiveShards: Option[Int] = None,
+                                waitForCompletion: Option[Boolean] = None,
                                 retryBackoffInitialTime: Option[FiniteDuration] = None,
                                 scrollSize: Option[Int] = None,
+                                slices: Option[Int] = None,
+                                slice: Option[Slice] = None,
                                 timeout: Option[FiniteDuration] = None,
                                 shouldStoreResult: Option[Boolean] = None,
                                 size: Option[Int] = None) {
@@ -30,9 +33,11 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
     proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = copy(refresh = refresh.some)
-  def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: UpdateByQueryRequest = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): UpdateByQueryRequest = copy(scrollSize = scrollSize.some)
+  def slice(slice: Slice): UpdateByQueryRequest = copy(slice = slice.some)
+  def slices(slices: Int): UpdateByQueryRequest = copy(slices = slices.some)
 
   def requestsPerSecond(requestsPerSecond: Float): UpdateByQueryRequest =
     copy(requestsPerSecond = requestsPerSecond.some)
@@ -41,6 +46,8 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
 
   def waitForActiveShards(waitForActiveShards: Int): UpdateByQueryRequest =
     copy(waitForActiveShards = waitForActiveShards.some)
+
+  def waitForCompletion(w: Boolean): UpdateByQueryRequest = copy(waitForCompletion = w.some)
 
   def retryBackoffInitialTime(retryBackoffInitialTime: FiniteDuration): UpdateByQueryRequest =
     copy(retryBackoffInitialTime = retryBackoffInitialTime.some)

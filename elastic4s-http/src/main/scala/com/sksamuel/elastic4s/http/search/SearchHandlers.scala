@@ -42,7 +42,7 @@ trait SearchHandlers {
       }
     }
 
-    override def requestHandler(request: MultiSearchRequest): ElasticRequest = {
+    override def build(request: MultiSearchRequest): ElasticRequest = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
@@ -56,7 +56,7 @@ trait SearchHandlers {
 
   implicit object SearchHandler extends Handler[SearchRequest, SearchResponse] {
 
-    override def requestHandler(request: SearchRequest): ElasticRequest = {
+    override def build(request: SearchRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)

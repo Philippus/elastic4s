@@ -22,7 +22,7 @@ trait SearchScrollHandlers {
         }
     }
 
-    override def requestHandler(request: ClearScrollRequest): ElasticRequest = {
+    override def build(request: ClearScrollRequest): ElasticRequest = {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
@@ -43,7 +43,7 @@ trait SearchScrollHandlers {
       }
     }
 
-    override def requestHandler(req: SearchScrollRequest): ElasticRequest = {
+    override def build(req: SearchScrollRequest): ElasticRequest = {
 
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)

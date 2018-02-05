@@ -17,7 +17,7 @@ trait SearchTemplateHandlers {
 
   implicit object TemplateSearchHandler extends Handler[TemplateSearchRequest, SearchResponse] {
 
-    override def requestHandler(req: TemplateSearchRequest): ElasticRequest = {
+    override def build(req: TemplateSearchRequest): ElasticRequest = {
       val endpoint = req.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil)     => "/_search/template"
         case IndexesAndTypes(indexes, Nil) => "/" + indexes.mkString(",") + "/_search/template"
@@ -33,7 +33,7 @@ trait SearchTemplateHandlers {
   implicit object RemoveSearchTemplateHandler
       extends Handler[RemoveSearchTemplateRequest, RemoveSearchTemplateResponse] {
 
-    override def requestHandler(req: RemoveSearchTemplateRequest): ElasticRequest = {
+    override def build(req: RemoveSearchTemplateRequest): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name
       ElasticRequest("DELETE", endpoint)
     }
@@ -41,7 +41,7 @@ trait SearchTemplateHandlers {
 
   implicit object PutSearchTemplateHandler extends Handler[PutSearchTemplateRequest, PutSearchTemplateResponse] {
 
-    override def requestHandler(req: PutSearchTemplateRequest): ElasticRequest = {
+    override def build(req: PutSearchTemplateRequest): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name
       val body     = PutSearchTemplateBuilderFn(req).string()
       val entity   = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
@@ -67,7 +67,7 @@ trait SearchTemplateHandlers {
           }
       }
 
-    override def requestHandler(req: GetSearchTemplateRequest): ElasticRequest = {
+    override def build(req: GetSearchTemplateRequest): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name
       ElasticRequest("GET", endpoint)
     }

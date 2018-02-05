@@ -57,8 +57,8 @@ trait ElasticDsl
     with ValidateHandlers {
 
   implicit class RichRequest[T](t: T) {
-    def request(implicit handler: Handler[T, _]): ElasticRequest = handler.requestHandler(t)
-    def show(implicit handler: Handler[T, _]): String = ElasticRequestShow.show(handler.requestHandler(t))
+    def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
+    def show(implicit handler: Handler[T, _]): String = ElasticRequestShow.show(handler.build(t))
   }
 }
 

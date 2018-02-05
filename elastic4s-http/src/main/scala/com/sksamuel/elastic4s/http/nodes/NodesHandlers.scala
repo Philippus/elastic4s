@@ -81,7 +81,7 @@ case class OsInfo(@JsonProperty("refresh_interval_in_millis") refreshIntervalInM
 trait NodesHandlers {
 
   implicit object NodeInfoHandler extends Handler[NodeInfoRequest, NodeInfoResponse] {
-    override def requestHandler(request: NodeInfoRequest): ElasticRequest = {
+    override def build(request: NodeInfoRequest): ElasticRequest = {
       val endpoint = if (request.nodes.isEmpty) {
         "/_nodes/"
       } else {
@@ -92,7 +92,7 @@ trait NodesHandlers {
   }
 
   implicit object NodeStatsHandler extends Handler[NodeStatsRequest, NodesStatsResponse] {
-    override def requestHandler(request: NodeStatsRequest): ElasticRequest = {
+    override def build(request: NodeStatsRequest): ElasticRequest = {
       val endpoint = if (request.nodes.nonEmpty) {
         "/_nodes/" + request.nodes.mkString(",") + "/stats/" + request.stats.mkString(",")
       } else {

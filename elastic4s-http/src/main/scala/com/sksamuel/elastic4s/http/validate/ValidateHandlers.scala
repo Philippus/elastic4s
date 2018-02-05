@@ -26,7 +26,7 @@ trait ValidateHandlers {
 
   implicit object ValidateHandler extends Handler[ValidateRequest, ValidateResponse] {
 
-    override def requestHandler(request: ValidateRequest): ElasticRequest = {
+    override def build(request: ValidateRequest): ElasticRequest = {
 
       val endpoint =
         s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"

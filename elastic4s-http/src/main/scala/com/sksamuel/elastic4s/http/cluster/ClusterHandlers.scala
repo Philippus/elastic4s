@@ -8,7 +8,7 @@ trait ClusterHandlers {
 
   implicit object ClusterStateHandler extends Handler[ClusterStateRequest, ClusterStateResponse] {
 
-    override def requestHandler(request: ClusterStateRequest): ElasticRequest = {
+    override def build(request: ClusterStateRequest): ElasticRequest = {
       val endpoint = "/_cluster/state" + buildMetricsString(request.metrics) + buildIndexString(request.indices)
       ElasticRequest("GET", endpoint)
     }
@@ -30,7 +30,7 @@ trait ClusterHandlers {
 
   implicit object ClusterHealthHandler extends Handler[ClusterHealthRequest, ClusterHealthResponse] {
 
-    override def requestHandler(request: ClusterHealthRequest): ElasticRequest = {
+    override def build(request: ClusterHealthRequest): ElasticRequest = {
       val endpoint = "/_cluster/health" + indicesUrl(request.indices)
 
       val params = scala.collection.mutable.Map.empty[String, String]

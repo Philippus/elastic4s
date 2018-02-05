@@ -121,7 +121,7 @@ trait IndexStatsHandlers {
 
   implicit object IndicesStatsHandler extends Handler[IndexStatsRequest, IndexStatsResponse] {
 
-    override def requestHandler(request: IndexStatsRequest): ElasticRequest = {
+    override def build(request: IndexStatsRequest): ElasticRequest = {
       val endpoint = if (request.indices.isAll) "/_stats" else s"/${request.indices.string}/_stats"
       ElasticRequest("GET", endpoint)
     }

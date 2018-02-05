@@ -37,7 +37,7 @@ trait SettingsHandlers {
         }
     }
 
-    override def requestHandler(request: GetSettingsRequest): ElasticRequest = {
+    override def build(request: GetSettingsRequest): ElasticRequest = {
       val endpoint = "/" + request.indexes.string + "/_settings"
       ElasticRequest("GET", endpoint)
     }
@@ -55,7 +55,7 @@ trait SettingsHandlers {
         }
     }
 
-    override def requestHandler(request: UpdateSettingsRequest): ElasticRequest = {
+    override def build(request: UpdateSettingsRequest): ElasticRequest = {
       val endpoint = "/" + request.indices.string + "/_settings"
       val body     = JacksonSupport.mapper.writeValueAsString(request.settings)
       ElasticRequest("PUT", endpoint, HttpEntity(body))

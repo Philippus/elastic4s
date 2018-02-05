@@ -11,7 +11,7 @@ trait ExistsHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, Boolean] = Right(response.statusCode == 200)
     }
 
-    override def requestHandler(request: ExistsRequest): ElasticRequest = {
+    override def build(request: ExistsRequest): ElasticRequest = {
       val endpoint = "/" + request.index.name + "/" + request.`type` + "/" + request.id
       val method   = "HEAD"
       ElasticRequest(method, endpoint)

@@ -26,7 +26,7 @@ case class IndexTemplate(order: Int,
 trait IndexTemplateHandlers {
 
   implicit object IndexTemplateExistsHandler extends Handler[IndexTemplateExistsRequest, IndexTemplateExists] {
-    override def requestHandler(request: IndexTemplateExistsRequest): ElasticRequest = ???
+    override def build(request: IndexTemplateExistsRequest): ElasticRequest = ???
   }
 
   implicit object CreateIndexTemplateHandler extends Handler[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
@@ -39,7 +39,7 @@ trait IndexTemplateHandlers {
         }
     }
 
-    override def requestHandler(request: CreateIndexTemplateRequest): ElasticRequest = {
+    override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.name
       val body     = CreateIndexTemplateBodyFn(request)
       val entity   = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
@@ -48,7 +48,7 @@ trait IndexTemplateHandlers {
   }
 
   implicit object DeleteIndexTemplateHandler extends Handler[DeleteIndexTemplateRequest, DeleteIndexTemplateResponse] {
-    override def requestHandler(request: DeleteIndexTemplateRequest): ElasticRequest = {
+    override def build(request: DeleteIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.name
       ElasticRequest("DELETE", endpoint)
     }
@@ -65,7 +65,7 @@ trait IndexTemplateHandlers {
       }
     }
 
-    override def requestHandler(request: GetIndexTemplateRequest): ElasticRequest = {
+    override def build(request: GetIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.indexes.string
       ElasticRequest("GET", endpoint)
     }

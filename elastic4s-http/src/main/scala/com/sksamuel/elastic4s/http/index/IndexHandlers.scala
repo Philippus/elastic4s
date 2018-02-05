@@ -21,7 +21,7 @@ trait IndexHandlers {
       }
     }
 
-    override def requestHandler(request: IndexRequest): ElasticRequest = {
+    override def build(request: IndexRequest): ElasticRequest = {
 
       val (method, endpoint) = request.id match {
         case Some(id) =>
@@ -55,7 +55,7 @@ trait IndexHandlers {
 
   implicit object GetIndexHandler extends Handler[GetIndexRequest, Map[String, GetIndexResponse]] {
 
-    override def requestHandler(request: GetIndexRequest): ElasticRequest = {
+    override def build(request: GetIndexRequest): ElasticRequest = {
       val endpoint = "/" + request.index
       val method   = "GET"
       ElasticRequest(method, endpoint)

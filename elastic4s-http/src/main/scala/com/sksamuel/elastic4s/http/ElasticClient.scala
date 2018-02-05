@@ -17,7 +17,7 @@ abstract class ElasticClient extends Logging {
     * Returns a String containing the request details.
     * The string will have the HTTP method, endpoint, params and if applicable the request body.
     */
-  def show[T](t: T)(implicit handler: Handler[T, _]): String = ElasticRequestShow.show(handler.requestHandler(t))
+  def show[T](t: T)(implicit handler: Handler[T, _]): String = ElasticRequestShow.show(handler.build(t))
 
   // Executes the given request type T, and returns an effect of Response[U]
   // where U is particular to the request type.
@@ -27,7 +27,7 @@ abstract class ElasticClient extends Logging {
                                 executor: Executor[F],
                                 handler: Handler[T, U],
                                 manifest: Manifest[U]): F[Response[U]] = {
-    val request = handler.requestHandler(t)
+    val request = handler.build(t)
     val f = executor.exec(client, request)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {

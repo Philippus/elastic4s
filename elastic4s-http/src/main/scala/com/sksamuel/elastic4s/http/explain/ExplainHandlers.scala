@@ -16,7 +16,7 @@ trait ExplainHandlers {
         }
     }
 
-    override def requestHandler(request: ExplainRequest): ElasticRequest = {
+    override def build(request: ExplainRequest): ElasticRequest = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
 

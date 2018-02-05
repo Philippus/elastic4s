@@ -17,7 +17,7 @@ trait IndexAdminHandlers {
 
   implicit object ShrinkIndexHandler extends Handler[ShrinkIndexRequest, ShrinkIndexResponse] {
 
-    override def requestHandler(request: ShrinkIndexRequest): ElasticRequest = {
+    override def build(request: ShrinkIndexRequest): ElasticRequest = {
 
       val endpoint = s"/${request.source}/_shrink/${request.target}"
 
@@ -39,7 +39,7 @@ trait IndexAdminHandlers {
 
   implicit object IndexRecoveryHandler extends Handler[IndexRecoveryRequest, IndexRecoveryResponse] {
 
-    override def requestHandler(request: IndexRecoveryRequest): ElasticRequest = {
+    override def build(request: IndexRecoveryRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indices == Seq("_all") || request.indices.isEmpty) "/_recovery"
@@ -55,7 +55,7 @@ trait IndexAdminHandlers {
 
   implicit object ForceMergeHandler extends Handler[ForceMergeRequest, ForceMergeResponse] {
 
-    override def requestHandler(request: ForceMergeRequest): ElasticRequest = {
+    override def build(request: ForceMergeRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexes == Seq("_all") || request.indexes.isEmpty) "/_forcemerge"
@@ -72,7 +72,7 @@ trait IndexAdminHandlers {
 
   implicit object FlushIndexHandler extends Handler[FlushIndexRequest, FlushIndexResponse] {
 
-    override def requestHandler(request: FlushIndexRequest): ElasticRequest = {
+    override def build(request: FlushIndexRequest): ElasticRequest = {
 
       val endpoint = s"/${request.indexes.mkString(",")}/_flush"
 
@@ -86,7 +86,7 @@ trait IndexAdminHandlers {
 
   implicit object ClearCacheHandler extends Handler[ClearCacheRequest, ClearCacheResponse] {
 
-    override def requestHandler(request: ClearCacheRequest): ElasticRequest = {
+    override def build(request: ClearCacheRequest): ElasticRequest = {
 
       val endpoint = s"/${request.indexes.mkString(",")}/_cache/clear"
 
@@ -106,14 +106,14 @@ trait IndexAdminHandlers {
         Right(IndexExistsResponse(resp.statusCode == 200))
     }
 
-    override def requestHandler(request: IndicesExistsRequest): ElasticRequest = {
+    override def build(request: IndicesExistsRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.string}"
       ElasticRequest("HEAD", endpoint)
     }
   }
 
   implicit object GetSegmentHandler extends Handler[GetSegmentsRequest, GetSegmentsResponse] {
-    override def requestHandler(request: GetSegmentsRequest): ElasticRequest = {
+    override def build(request: GetSegmentsRequest): ElasticRequest = {
       val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string}/_segments"
       ElasticRequest("GET", endpoint, Map("verbose" -> "true"))
     }
@@ -125,7 +125,7 @@ trait IndexAdminHandlers {
       override def handle(response: HttpResponse) = Right(TypeExistsResponse(response.statusCode == 200))
     }
 
-    override def requestHandler(request: TypesExistsRequest): ElasticRequest = {
+    override def build(request: TypesExistsRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.mkString(",")}/_mapping/${request.types.mkString(",")}"
       ElasticRequest("HEAD", endpoint)
     }
@@ -133,7 +133,7 @@ trait IndexAdminHandlers {
 
   implicit object AliasExistsHandler extends Handler[AliasExistsRequest, AliasExistsResponse] {
 
-    override def requestHandler(request: AliasExistsRequest): ElasticRequest = {
+    override def build(request: AliasExistsRequest): ElasticRequest = {
       val endpoint = s"/_alias/${request.alias}"
       ElasticRequest("HEAD", endpoint)
     }
@@ -145,21 +145,21 @@ trait IndexAdminHandlers {
   }
 
   implicit object OpenIndexHandler extends Handler[OpenIndexRequest, OpenIndexResponse] {
-    override def requestHandler(request: OpenIndexRequest): ElasticRequest = {
+    override def build(request: OpenIndexRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_open"
       ElasticRequest("POST", endpoint)
     }
   }
 
   implicit object CloseIndexHandler extends Handler[CloseIndexRequest, CloseIndexResponse] {
-    override def requestHandler(request: CloseIndexRequest): ElasticRequest = {
+    override def build(request: CloseIndexRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.values.mkString(",")}/_close"
       ElasticRequest("POST", endpoint)
     }
   }
 
   implicit object RefreshIndexHandler extends Handler[RefreshIndexRequest, RefreshIndexResponse] {
-    override def requestHandler(request: RefreshIndexRequest): ElasticRequest = {
+    override def build(request: RefreshIndexRequest): ElasticRequest = {
       val endpoint = "/" + request.indexes.mkString(",") + "/_refresh"
       ElasticRequest("POST", endpoint)
     }
@@ -176,7 +176,7 @@ trait IndexAdminHandlers {
         }
     }
 
-    override def requestHandler(request: CreateIndexRequest): ElasticRequest = {
+    override def build(request: CreateIndexRequest): ElasticRequest = {
 
       val endpoint = "/" + URLEncoder.encode(request.name, "UTF-8")
 
@@ -192,7 +192,7 @@ trait IndexAdminHandlers {
 
   implicit object DeleteIndexHandler extends Handler[DeleteIndexRequest, DeleteIndexResponse] {
 
-    override def requestHandler(request: DeleteIndexRequest): ElasticRequest = {
+    override def build(request: DeleteIndexRequest): ElasticRequest = {
       val endpoint = "/" + request.indexes.mkString(",")
       ElasticRequest("DELETE", endpoint)
     }
@@ -200,7 +200,7 @@ trait IndexAdminHandlers {
 
   implicit object UpdateIndexLevelSettingsHandler
       extends Handler[UpdateIndexLevelSettingsRequest, UpdateIndexLevelSettingsResponse] {
-    override def requestHandler(request: UpdateIndexLevelSettingsRequest): ElasticRequest = {
+    override def build(request: UpdateIndexLevelSettingsRequest): ElasticRequest = {
 
       val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
       val body     = UpdateIndexLevelSettingsBuilder(request).string()
@@ -212,7 +212,7 @@ trait IndexAdminHandlers {
 
   implicit object IndexShardStoreHandler extends Handler[IndexShardStoreRequest, StoreStatusResponse] {
 
-    override def requestHandler(request: IndexShardStoreRequest): ElasticRequest = {
+    override def build(request: IndexShardStoreRequest): ElasticRequest = {
 
       val endpoint = "/" + request.indexes.values.mkString(",") + "/_shard_stores"
       val params   = scala.collection.mutable.Map.empty[String, String]

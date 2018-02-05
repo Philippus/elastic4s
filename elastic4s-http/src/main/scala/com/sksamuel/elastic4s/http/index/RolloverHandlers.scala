@@ -18,7 +18,7 @@ trait RolloverHandlers {
 
   implicit object RolloverHandler extends Handler[RolloverIndexRequest, RolloverResponse] {
 
-    override def requestHandler(request: RolloverIndexRequest): ElasticRequest = {
+    override def build(request: RolloverIndexRequest): ElasticRequest = {
 
       val endpoint  = s"/${request.sourceAlias}/_rollover"
       val endpoint2 = request.newIndexName.fold(endpoint)(endpoint + "/" + _)

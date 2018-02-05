@@ -12,7 +12,7 @@ trait CountHandlers {
 
   implicit object CountHandler extends Handler[CountRequest, CountResponse] {
 
-    override def requestHandler(request: CountRequest): ElasticRequest = {
+    override def build(request: CountRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexes.isEmpty && request.types.isEmpty)

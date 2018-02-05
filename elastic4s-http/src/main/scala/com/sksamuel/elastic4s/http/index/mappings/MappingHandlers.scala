@@ -27,7 +27,7 @@ trait MappingHandlers {
       }
     }
 
-    override def requestHandler(request: GetMappingRequest): ElasticRequest = {
+    override def build(request: GetMappingRequest): ElasticRequest = {
       val endpoint = request.indexesAndTypes match {
         case IndexesAndTypes(Nil, Nil)       => "/_mapping"
         case IndexesAndTypes(indexes, Nil)   => s"/${indexes.mkString(",")}/_mapping"
@@ -39,7 +39,7 @@ trait MappingHandlers {
 
   implicit object PutMappingHandler extends Handler[PutMappingRequest, PutMappingResponse] {
 
-    override def requestHandler(request: PutMappingRequest): ElasticRequest = {
+    override def build(request: PutMappingRequest): ElasticRequest = {
 
       val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping/${request.indexesAndType.`type`}"
 

@@ -40,7 +40,7 @@ trait ReindexHandlers {
       }
     }
 
-    override def requestHandler(request: ReindexRequest): ElasticRequest = {
+    override def build(request: ReindexRequest): ElasticRequest = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))

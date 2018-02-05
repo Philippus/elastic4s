@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.http.update
 import java.net.URLEncoder
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.{DocumentRef, Show}
+import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -21,9 +21,9 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
                           private val get: Option[UpdateGet]) {
-  def ref                      = DocumentRef(index, `type`, id)
+  def ref = DocumentRef(index, `type`, id)
   def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
-  def found: Boolean           = get.forall(_.found)
+  def found: Boolean = get.forall(_.found)
 }
 
 object UpdateByQueryBodyFn {
@@ -31,8 +31,15 @@ object UpdateByQueryBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.rawField("query", QueryBuilderFn(request.query))
     request.script.map(ScriptBuilderFn.apply).foreach(builder.rawField("script", _))
+
+    request.slice.foreach { slice =>
+      builder.startObject("slice")
+      builder.field("id", slice.id)
+      builder.field("max", slice.max)
+      builder.endObject()
+    }
+
     builder.endObject()
-    builder
   }
 }
 
@@ -51,7 +58,7 @@ trait UpdateHandlers {
       }
     }
 
-    override def requestHandler(request: UpdateRequest): ElasticRequest = {
+    override def build(request: UpdateRequest): ElasticRequest = {
 
       val endpoint =
         s"/${URLEncoder.encode(request.indexAndType.index, "UTF-8")}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id, "UTF-8")}/_update"
@@ -68,7 +75,7 @@ trait UpdateHandlers {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body   = UpdateBuilderFn(request)
+      val body = UpdateBuilderFn(request)
       val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
@@ -76,7 +83,7 @@ trait UpdateHandlers {
   }
 
   implicit object UpdateByQueryHandler extends Handler[UpdateByQueryRequest, UpdateByQueryResponse] {
-    override def requestHandler(request: UpdateByQueryRequest): ElasticRequest = {
+    override def build(request: UpdateByQueryRequest): ElasticRequest = {
 
       val endpoint =
         if (request.indexesAndTypes.types.isEmpty)
@@ -84,15 +91,17 @@ trait UpdateHandlers {
         else
           s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
 
-      val params = scala.collection.mutable.Map.empty[String, String]
+      val params = scala.collection.mutable.Map.empty[String, Any]
       if (request.proceedOnConflicts.getOrElse(false)) {
         params.put("conflicts", "proceed")
       }
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
-      request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
+      request.requestsPerSecond.foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
-      request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
-      request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
+      request.scrollSize.foreach(params.put("scroll_size", _))
+      request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
+      request.waitForCompletion.foreach(params.put("wait_for_completion", _))
+      request.slices.foreach(params.put("slices", _))
 
       val body = UpdateByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")

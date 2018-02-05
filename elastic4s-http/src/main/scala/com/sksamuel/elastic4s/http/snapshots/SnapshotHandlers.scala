@@ -32,7 +32,7 @@ trait SnapshotHandlers {
 
   implicit object CreateRepositoryHandler extends Handler[CreateRepositoryRequest, CreateRepositoryResponse] {
 
-    override def requestHandler(request: CreateRepositoryRequest): ElasticRequest = {
+    override def build(request: CreateRepositoryRequest): ElasticRequest = {
 
       val endpoint = s"/_snapshot/" + request.name
 
@@ -55,7 +55,7 @@ trait SnapshotHandlers {
 
   implicit object CreateSnapshotHandler extends Handler[CreateSnapshotRequest, CreateSnapshotResponse] {
 
-    override def requestHandler(request: CreateSnapshotRequest): ElasticRequest = {
+    override def build(request: CreateSnapshotRequest): ElasticRequest = {
 
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
 
@@ -76,14 +76,14 @@ trait SnapshotHandlers {
   }
 
   implicit object DeleteSnapshotHandler extends Handler[DeleteSnapshotRequest, DeleteSnapshotResponse] {
-    override def requestHandler(request: DeleteSnapshotRequest): ElasticRequest = {
+    override def build(request: DeleteSnapshotRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
       ElasticRequest("DELETE", endpoint)
     }
   }
 
   implicit object GetSnapshotHandler extends Handler[GetSnapshotsRequest, GetSnapshotResponse] {
-    override def requestHandler(request: GetSnapshotsRequest): ElasticRequest = {
+    override def build(request: GetSnapshotsRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotNames.mkString(",")
       val params   = scala.collection.mutable.Map.empty[String, String]
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
@@ -93,7 +93,7 @@ trait SnapshotHandlers {
   }
 
   implicit object RestoreSnapshotHandler extends Handler[RestoreSnapshotRequest, RestoreSnapshotResponse] {
-    override def requestHandler(request: RestoreSnapshotRequest): ElasticRequest = {
+    override def build(request: RestoreSnapshotRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 
       val body = XContentFactory.jsonBuilder()

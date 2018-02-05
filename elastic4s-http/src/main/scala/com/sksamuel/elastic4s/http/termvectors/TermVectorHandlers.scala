@@ -11,7 +11,7 @@ trait TermVectorHandlers {
 
   implicit object TermVectorHandler extends Handler[TermVectorsRequest, TermVectorsResponse] {
 
-    override def requestHandler(request: TermVectorsRequest): ElasticRequest = {
+    override def build(request: TermVectorsRequest): ElasticRequest = {
 
       val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_termvectors"
 
