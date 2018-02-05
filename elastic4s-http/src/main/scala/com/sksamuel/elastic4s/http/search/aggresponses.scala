@@ -58,7 +58,7 @@ object HistogramAggResult {
   )
 }
 
-case class HistogramBucket(date: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
+case class HistogramBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
     extends AggBucket
 
 case class DateHistogramAggResult(name: String, buckets: Seq[DateHistogramBucket]) extends BucketAggregation
