@@ -53,7 +53,7 @@ trait ReindexHandlers {
 
       val body = ReindexBuilderFn(request).string()
 
-      ElasticRequest("POST", "_reindex", params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      ElasticRequest("POST", "/_reindex", params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }
