@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.aws
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials, DefaultAWSCredentialsProviderChain}
-
+import com.amazonaws.regions.DefaultAwsRegionProviderChain
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.apache.http.protocol.HttpContext
@@ -55,12 +55,12 @@ private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfig) extends Http
 /**
   * Default Request Interceptor for convenience. Uses the default environment variable names.
   * See <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html">amazon environment variable documentation</a>
-  *
+  * See <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-region-selection.html"> default region selection</a>
   */
 private class DefaultAws4HttpRequestInterceptor extends HttpRequestInterceptor {
   private val defaultChainProvider = new DefaultAWSCredentialsProviderChain
-  private val region               = sys.env("AWS_DEFAULT_REGION")
-  private val signer               = new Aws4RequestSigner(defaultChainProvider, region)
+  private val regionProvider       = new DefaultAwsRegionProviderChain
+  private val signer               = new Aws4RequestSigner(defaultChainProvider, regionProvider.getRegion)
 
   override def process(request: HttpRequest, context: HttpContext): Unit = signer.withAws4Headers(request)
 
