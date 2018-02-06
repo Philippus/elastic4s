@@ -63,7 +63,7 @@ trait ReindexImplicits {
 
       val body = ReindexBuilderFn(request).string()
 
-      client.async("POST", "_reindex", params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      client.async("POST", "/_reindex", params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
     }
   }
 }
