@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.http.search
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
+import com.sksamuel.elastic4s.http.explain.Explanation
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
 case class SearchHit(@JsonProperty("_id") id: String,
@@ -10,6 +11,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_type") `type`: String,
                      @JsonProperty("_score") score: Float,
                      @JsonProperty("_parent") parent: Option[String],
+                     @JsonProperty("_explanation") explanation: Option[Explanation],
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      highlight: Map[String, Seq[String]],

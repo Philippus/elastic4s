@@ -106,6 +106,11 @@ class SearchHttpTest
         search("chess" / "openings") query matchAllQuery() sortBy fieldSort("name")
       }.await.hits.hits.map(_.sourceField("name")) shouldBe Array("modern defence", "queen gambit")
     }
+    "support explain" in {
+      http.execute {
+        search("chess").explain(true).matchAllQuery().limit(2)
+      }.await.hits.hits.head.explanation.isDefined shouldBe true
+    }
     "support limits" in {
       http.execute {
         search("chess").matchAllQuery().limit(2)
