@@ -15,7 +15,7 @@ object Build extends AutoPlugin {
     val CatsVersion            = "1.0.1"
     val CirceVersion           = "0.9.0"
     val CommonsIoVersion       = "2.4"
-    val ElasticsearchVersion   = "6.1.2"
+    val ElasticsearchVersion   = "6.2.0"
     val ExtsVersion            = "1.60.0"
     val JacksonVersion         = "2.9.2"
     val Json4sVersion          = "3.5.3"
