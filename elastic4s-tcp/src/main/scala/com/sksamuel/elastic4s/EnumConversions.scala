@@ -147,9 +147,9 @@ object EnumConversions {
       case StringDistanceImpl.INTERNAL =>
         org.elasticsearch.search.suggest.term.TermSuggestionBuilder.StringDistanceImpl.INTERNAL
       case StringDistanceImpl.JAROWINKLER =>
-        org.elasticsearch.search.suggest.term.TermSuggestionBuilder.StringDistanceImpl.JAROWINKLER
+        org.elasticsearch.search.suggest.term.TermSuggestionBuilder.StringDistanceImpl.JARO_WINKLER
       case StringDistanceImpl.LEVENSTEIN =>
-        org.elasticsearch.search.suggest.term.TermSuggestionBuilder.StringDistanceImpl.LEVENSTEIN
+        org.elasticsearch.search.suggest.term.TermSuggestionBuilder.StringDistanceImpl.LEVENSHTEIN
       case StringDistanceImpl.NGRAM =>
         org.elasticsearch.search.suggest.term.TermSuggestionBuilder.StringDistanceImpl.NGRAM
     }
