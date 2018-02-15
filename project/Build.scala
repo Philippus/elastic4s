@@ -63,12 +63,26 @@ object Build extends AutoPlugin {
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    scmInfo := Option(
-      ScmInfo(url("https://github.com/sksamuel/elastic4s"), "https://github.com/sksamuel/elastic4s.git")
-    ),
-    licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-    developers := List(
-      Developer(id = "sksamuel", name = "Stephen Samuel", email = "", url = url("http://github.com/sksamuel"))
-    )
+    pomExtra := {
+      <url>https://github.com/sksamuel/elastic4s</url>
+        <licenses>
+          <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+          </license>
+        </licenses>
+        <scm>
+          <url>git@github.com:sksamuel/elastic4s.git</url>
+          <connection>scm:git@github.com:sksamuel/elastic4s.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>sksamuel</id>
+            <name>sksamuel</name>
+            <url>http://github.com/sksamuel</url>
+          </developer>
+        </developers>
+    }
   )
 }
