@@ -8,9 +8,14 @@ sealed trait Response[+U] {
   def error: ElasticError          // returns the error or throw an exception
   def isError: Boolean             // returns true if this is an error response
   final def isSuccess: Boolean                   = !isError // returns true if this is a success
-  final def map[V](f: U => V): Option[V]         = if (isError) None else Some(f(result))
+
+  def map[V](f: U => V): Response[V]
+  def flatMap[V](f: U => Response[V]): Response[V]
+
   final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(result)
   final def foreach[V](f: U => V): Unit          = if (!isError) f(result)
+
+  final def toOption: Option[U] = if (isError) None else Some(result)
 }
 
 case class RequestSuccess[U](override val status: Int, // the http status code of the response
@@ -20,6 +25,9 @@ case class RequestSuccess[U](override val status: Int, // the http status code o
     extends Response[U] {
   override def isError = false
   override def error   = throw new NoSuchElementException(s"Request success $result")
+
+  final def map[V](f: U => V): Response[V] = RequestSuccess(status, body, headers, f(result))
+  final def flatMap[V](f: U => Response[V]): Response[V] = f(result)
 }
 
 case class RequestFailure(override val status: Int, // the http status code of the response
@@ -29,4 +37,7 @@ case class RequestFailure(override val status: Int, // the http status code of t
     extends Response[Nothing] {
   override def result  = throw new NoSuchElementException(s"Request Failure $error")
   override def isError = true
+
+  final def map[V](f: Nothing => V): Response[V] = this
+  final def flatMap[V](f: Nothing => Response[V]): Response[V] = this
 }
