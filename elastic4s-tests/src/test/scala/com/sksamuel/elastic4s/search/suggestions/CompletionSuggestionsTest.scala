@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search.suggestions
 
 import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.searches.suggestion.Fuzziness
 import com.sksamuel.elastic4s.testkit.ElasticSugar
-import org.elasticsearch.common.unit.Fuzziness
 import org.scalatest.{Matchers, WordSpec}
 
 class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar {
@@ -86,7 +86,7 @@ class CompletionSuggestionsTest extends WordSpec with Matchers with ElasticSugar
 
       val resp = client.execute {
         search(indexType).suggestions {
-          completionSuggestion("a").on("name").prefix("Rabber", Fuzziness.ONE)
+          completionSuggestion("a").on("name").prefix("Rabber", Fuzziness.One)
         }
       }.await
 
