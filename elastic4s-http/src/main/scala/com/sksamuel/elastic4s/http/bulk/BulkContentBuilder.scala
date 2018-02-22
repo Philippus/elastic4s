@@ -16,8 +16,9 @@ object BulkContentBuilder {
       case index: IndexDefinition =>
 
         val builder = XContentFactory.jsonBuilder()
+        val createOrIndex = if(index.createOnly.getOrElse(false)) "create" else "index"
         builder.startObject()
-        builder.startObject("index")
+        builder.startObject(createOrIndex)
         builder.field("_index", index.indexAndType.index)
         builder.field("_type", index.indexAndType.`type`)
         index.id.foreach(id => builder.field("_id", id))
