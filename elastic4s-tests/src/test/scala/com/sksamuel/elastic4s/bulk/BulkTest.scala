@@ -86,6 +86,35 @@ class BulkTest extends FlatSpec with Matchers with ElasticDsl with DualElasticSu
     }.await.storedField("name").value shouldBe "CO"
   }
 
+  it should "handle createOnly in IndexRequest" in {
+
+    execute {
+      bulk(
+        indexInto("chemistry/elements") fields("atomicweight" -> 6, "name" -> "carbon") id 10,
+        indexInto("chemistry/elements") fields("atomicweight" -> 8, "name" -> "oxygen") id 11
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await.hasFailures shouldBe false
+
+    execute {
+      get(10).from("chemistry/elements").storedFields("name")
+    }.await.storedField("name").value shouldBe "carbon"
+
+    execute {
+      get(11).from("chemistry/elements").storedFields("name")
+    }.await.storedField("name").value shouldBe "oxygen"
+
+    val result = execute {
+      bulk(
+        indexInto("chemistry/elements") fields("atomicweight" -> 6, "name" -> "carbon") id 10 createOnly false,
+        indexInto("chemistry/elements") fields("atomicweight" -> 8, "name" -> "oxygen") id 11 createOnly true
+      ).refresh(RefreshPolicy.IMMEDIATE)
+    }.await
+
+    result.hasFailures shouldBe true
+    result.failures.map(_.itemId).toSet shouldBe Set(1)
+    result.successes.map(_.itemId).toSet shouldBe Set(0)
+  }
+
   it should "handle multiple delete operations" in {
 
     execute {
