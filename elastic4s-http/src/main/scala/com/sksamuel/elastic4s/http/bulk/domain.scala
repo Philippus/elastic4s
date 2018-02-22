@@ -20,7 +20,8 @@ case class BulkError(`type`: String, reason: String, index_uuid: String, shard: 
 
 case class BulkResponseItems(index: Option[BulkResponseItem],
                              delete: Option[BulkResponseItem],
-                             update: Option[BulkResponseItem])
+                             update: Option[BulkResponseItem],
+                             create: Option[BulkResponseItem])
 
 case class BulkResponse(took: Long,
                         errors: Boolean,
@@ -29,7 +30,7 @@ case class BulkResponse(took: Long,
   def items: Seq[BulkResponseItem] =
     _items
       .flatMap { item =>
-        item.index.orElse(item.update).orElse(item.delete)
+        item.index.orElse(item.update).orElse(item.delete).orElse(item.create)
       }
       .zipWithIndex
       .map {
