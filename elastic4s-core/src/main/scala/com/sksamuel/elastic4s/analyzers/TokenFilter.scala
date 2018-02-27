@@ -287,7 +287,7 @@ case class EdgeNGramTokenFilter(name: String,
                                 side: Option[String] = None)
     extends TokenFilterDefinition {
 
-  val filterType = "edgeNGram"
+  val filterType = "edge_ngram"
 
   override def build(source: XContentBuilder): Unit = {
     minGram.foreach(source.field("min_gram", _))
