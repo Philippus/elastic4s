@@ -3,6 +3,7 @@ import microsites.ExtraMdFileConfig
 lazy val root = Project("elastic4s", file("."))
   .settings(
     publish := {},
+    publishLocal := {},
     publishArtifact := false,
     name := "elastic4s",
     mappings in (Compile, packageSrc) ++= {

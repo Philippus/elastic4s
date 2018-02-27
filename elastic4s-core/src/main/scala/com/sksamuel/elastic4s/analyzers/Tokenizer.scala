@@ -100,7 +100,7 @@ case class EdgeNGramTokenizer(override val name: String,
                               tokenChars: Iterable[String] = Nil)
     extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
-    source.field("type", "edgeNGram")
+    source.field("type", "edge_ngram")
     source.field("min_gram", minGram)
     source.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
