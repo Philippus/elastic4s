@@ -51,11 +51,11 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
 
       val agg = resp.aggs.histogram("h")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        HistogramBucket("20.0", 1, Map.empty),
-        HistogramBucket("30.0", 1, Map.empty),
-        HistogramBucket("40.0", 3, Map.empty),
-        HistogramBucket("50.0", 4, Map.empty),
-        HistogramBucket("60.0", 1, Map.empty)
+        HistogramBucket(20.0, 1, Map.empty),
+        HistogramBucket(30.0, 1, Map.empty),
+        HistogramBucket(40.0, 3, Map.empty),
+        HistogramBucket(50.0, 4, Map.empty),
+        HistogramBucket(60.0, 1, Map.empty)
       )
     }
     "should respect min_doc_count" in {
@@ -70,8 +70,8 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
 
       val agg = resp.aggs.histogram("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        HistogramBucket("40.0", 3, Map.empty),
-        HistogramBucket("50.0", 4, Map.empty)
+        HistogramBucket(40.0, 3, Map.empty),
+        HistogramBucket(50.0, 4, Map.empty)
       )
     }
 
@@ -87,11 +87,11 @@ class HistogramAggregationHttpTest extends FreeSpec with Matchers with DockerTes
 
       val agg = resp.aggs.histogram("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        HistogramBucket("20.0", 1, Map.empty),
-        HistogramBucket("30.0", 1, Map.empty),
-        HistogramBucket("60.0", 1, Map.empty),
-        HistogramBucket("40.0", 3, Map.empty),
-        HistogramBucket("50.0", 4, Map.empty)
+        HistogramBucket(20.0, 1, Map.empty),
+        HistogramBucket(30.0, 1, Map.empty),
+        HistogramBucket(60.0, 1, Map.empty),
+        HistogramBucket(40.0, 3, Map.empty),
+        HistogramBucket(50.0, 4, Map.empty)
       )
     }
   }
