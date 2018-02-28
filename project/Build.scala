@@ -15,7 +15,7 @@ object Build extends AutoPlugin {
     val CatsVersion            = "1.0.1"
     val CirceVersion           = "0.9.0"
     val CommonsIoVersion       = "2.4"
-    val ElasticsearchVersion   = "6.2.1"
+    val ElasticsearchVersion   = "6.2.2"
     val ExtsVersion            = "1.60.0"
     val JacksonVersion         = "2.9.2"
     val Json4sVersion          = "3.5.3"
@@ -49,7 +49,7 @@ object Build extends AutoPlugin {
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
-    javacOptions := Seq("-source", "1.7", "-target", "1.7"),
+    javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
       "com.sksamuel.exts" %% "exts"       % ExtsVersion,
       "org.typelevel"     %% "cats-core"  % CatsVersion,
