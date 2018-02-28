@@ -10,7 +10,7 @@ case class NestedFieldDefinition(name: String,
                                  dynamic: Option[String] = None,
                                  enabled: Option[Boolean] = None,
                                  includeInAll: Option[Boolean] = None,
-                                 index: Option[String] = None,
+                                 index: Option[Boolean] = None,
                                  indexOptions: Option[String] = None,
                                  fields: Seq[FieldDefinition] = Nil,
                                  norms: Option[Boolean] = None,
@@ -44,7 +44,7 @@ case class NestedFieldDefinition(name: String,
 
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
-  override def index(index: Boolean): T = copy(index = index.toString.some)
+  override def index(index: Boolean): T = copy(index = index.some)
 
   override def norms(norms: Boolean): T = copy(norms = norms.some)
 

@@ -21,7 +21,7 @@ case class CompletionFieldDefinition(name: String,
                                      fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
                                      includeInAll: Option[Boolean] = None,
                                      ignores: Ignores = Ignores(),
-                                     index: Option[String] = None,
+                                     index: Option[Boolean] = None,
                                      indexOptions: Option[String] = None,
                                      maxInputLength: Option[Int] = None,
                                      norms: Option[Boolean] = None,
@@ -58,7 +58,7 @@ case class CompletionFieldDefinition(name: String,
   def ignoreMalformed(ignoreMalformed: Boolean): T =
     copy(ignores = ignores.copy(ignoreMalformed = ignoreMalformed.some))
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
-  override def index(index: Boolean): T               = copy(index = index.toString.some)
+  override def index(index: Boolean): T               = copy(index = index.some)
 
   override def norms(norms: Boolean): T       = copy(norms = norms.some)
   override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))

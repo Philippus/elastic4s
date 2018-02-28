@@ -12,7 +12,7 @@ case class KeywordFieldDefinition(name: String,
                                   fields: Seq[FieldDefinition] = Nil,
                                   includeInAll: Option[Boolean] = None,
                                   ignoreAbove: Option[Int] = None,
-                                  index: Option[String] = None,
+                                  index: Option[Boolean] = None,
                                   indexOptions: Option[String] = None,
                                   norms: Option[Boolean] = None,
                                   nulls: Nulls = Nulls(),
@@ -48,7 +48,7 @@ case class KeywordFieldDefinition(name: String,
   def ignoreAbove(ignoreAbove: Int): T                = copy(ignoreAbove = ignoreAbove.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
-  override def index(index: Boolean): T = copy(index = index.toString.some)
+  override def index(index: Boolean): T = copy(index = index.some)
 
   override def norms(norms: Boolean): T = copy(norms = norms.some)
 

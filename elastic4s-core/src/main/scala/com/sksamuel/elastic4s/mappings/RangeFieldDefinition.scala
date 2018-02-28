@@ -15,7 +15,7 @@ case class RangeFieldDefinition(name: String,
                                 includeInAll: Option[Boolean] = None,
                                 ignoreAbove: Option[Int] = None,
                                 ignoreMalformed: Option[Boolean] = None,
-                                index: Option[String] = None,
+                                index: Option[Boolean] = None,
                                 indexOptions: Option[String] = None,
                                 norms: Option[Boolean] = None,
                                 nulls: Nulls = Nulls(),
@@ -52,11 +52,7 @@ case class RangeFieldDefinition(name: String,
   def ignoreMalformed(ignoreMalformed: Boolean): T    = copy(ignoreMalformed = ignoreMalformed.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
-  override def index(index: Boolean): T = copy(index = index.toString.some)
-  def index(index: String): T = {
-    require(`type` == "string")
-    copy(index = index.some)
-  }
+  override def index(index: Boolean): T = copy(index = index.some)
 
   override def norms(norms: Boolean): T       = copy(norms = norms.some)
   override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))

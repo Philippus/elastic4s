@@ -21,7 +21,7 @@ case class GeoshapeFieldDefinition(name: String,
                                    format: Option[String] = None,
                                    ignoreMalformed: Option[Boolean] = None,
                                    includeInAll: Option[Boolean] = None,
-                                   index: Option[String] = None,
+                                   index: Option[Boolean] = None,
                                    norms: Option[Boolean] = None,
                                    nulls: Nulls = Nulls(),
                                    similarity: Option[String] = None,
@@ -49,7 +49,7 @@ case class GeoshapeFieldDefinition(name: String,
 
   def format(format: String): T = copy(format = format.some)
 
-  override def index(index: Boolean): T               = copy(index = index.toString.some)
+  override def index(index: Boolean): T               = copy(index = index.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
   override def norms(norms: Boolean): T       = copy(norms = norms.some)

@@ -14,7 +14,7 @@ case class TextFieldDefinition(name: String,
                                fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
                                includeInAll: Option[Boolean] = None,
                                ignoreAbove: Option[Int] = None,
-                               index: Option[String] = None,
+                               index: Option[Boolean] = None,
                                indexOptions: Option[String] = None,
                                maxInputLength: Option[Int] = None,
                                norms: Option[Boolean] = None,
@@ -54,7 +54,7 @@ case class TextFieldDefinition(name: String,
   def ignoreAbove(ignoreAbove: Int): T                = copy(ignoreAbove = ignoreAbove.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
-  override def index(index: Boolean): T = copy(index = index.toString.some)
+  override def index(index: Boolean): T = copy(index = index.some)
 
   def positionIncrementGap(positionIncrementGap: Int): T = copy(positionIncrementGap = positionIncrementGap.some)
   def maxInputLength(maxInputLength: Int): T             = copy(maxInputLength = maxInputLength.some)

@@ -16,7 +16,7 @@ trait FieldDefinition {
   def docValues: Option[Boolean]
   def enabled: Option[Boolean]
   def fields: Seq[FieldDefinition]
-  def index: Option[String]
+  def index: Option[Boolean]
   def norms: Option[Boolean]
   def normalizer: Option[String] = analysis.normalizer
 
@@ -74,7 +74,7 @@ case class BasicFieldDefinition(name: String,
                                 includeInAll: Option[Boolean] = None,
                                 ignoreAbove: Option[Int] = None,
                                 ignoreMalformed: Option[Boolean] = None,
-                                index: Option[String] = None,
+                                index: Option[Boolean] = None,
                                 indexOptions: Option[String] = None,
                                 norms: Option[Boolean] = None,
                                 nulls: Nulls = Nulls(),
@@ -111,11 +111,7 @@ case class BasicFieldDefinition(name: String,
   def ignoreMalformed(ignoreMalformed: Boolean): T    = copy(ignoreMalformed = ignoreMalformed.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
-  override def index(index: Boolean): T = copy(index = index.toString.some)
-  def index(index: String): BasicFieldDefinition = {
-    require(`type` == "string")
-    copy(index = index.some)
-  }
+  override def index(index: Boolean): T = copy(index = index.some)
 
   override def norms(norms: Boolean): T       = copy(norms = norms.some)
   override def nullable(nullable: Boolean): T = copy(nulls = nulls.copy(nullable = nullable.some))
