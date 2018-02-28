@@ -3,11 +3,12 @@ import com.typesafe.sbt.pgp.PgpKeys
 import sbt._
 import sbt.plugins.JvmPlugin
 import sbt.Keys._
+import sbtrelease.ReleasePlugin
 
 object Build extends AutoPlugin {
 
   override def trigger  = AllRequirements
-  override def requires = JvmPlugin
+  override def requires = ReleasePlugin
 
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
@@ -32,37 +33,20 @@ object Build extends AutoPlugin {
 
   import autoImport._
 
-  override def projectSettings = Seq(
-    organization := org,
-    scalaVersion := "2.11.12",
-    crossScalaVersions := Seq("2.11.12", "2.12.4"),
+  val publishingSettings = Seq(
     publishMavenStyle := true,
-    resolvers += Resolver.mavenLocal,
-    resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
-    javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
-    Test / publishArtifact := false,
-    fork := false,
-    ThisBuild / parallelExecution in ThisBuild := false,
+    publishArtifact in Test := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
-    Global / concurrentRestrictions += Tags.limit(Tags.Test, 1),
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
-    scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
-    javacOptions := Seq("-source", "1.8", "-target", "1.8"),
-    libraryDependencies ++= Seq(
-      "com.sksamuel.exts" %% "exts"       % ExtsVersion,
-      "org.typelevel"     %% "cats-core"  % CatsVersion,
-      "org.slf4j"         % "slf4j-api"   % Slf4jVersion,
-      "org.mockito"       % "mockito-all" % MockitoVersion % "test",
-      "org.scalatest"     %% "scalatest"  % ScalatestVersion % "test"
-    ),
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
-      if (version.value.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      if (isSnapshot.value) {
+        Some("snapshots" at s"${nexus}content/repositories/snapshots")
+      } else {
+        Some("releases" at s"${nexus}service/local/staging/deploy/maven2")
+      }
     },
     pomExtra := {
       <url>https://github.com/sksamuel/elastic4s</url>
@@ -85,5 +69,26 @@ object Build extends AutoPlugin {
           </developer>
         </developers>
     }
+  )
+
+  override def projectSettings = publishingSettings ++ Seq(
+    organization := org,
+    scalaVersion := "2.11.12",
+    crossScalaVersions := Seq("2.11.12", "2.12.4"),
+    resolvers += Resolver.mavenLocal,
+    resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
+    javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
+    fork := false,
+    ThisBuild / parallelExecution in ThisBuild := false,
+    Global / concurrentRestrictions += Tags.limit(Tags.Test, 1),
+    scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
+    javacOptions := Seq("-source", "1.8", "-target", "1.8"),
+    libraryDependencies ++= Seq(
+      "com.sksamuel.exts" %% "exts"       % ExtsVersion,
+      "org.typelevel"     %% "cats-core"  % CatsVersion,
+      "org.slf4j"         % "slf4j-api"   % Slf4jVersion,
+      "org.mockito"       % "mockito-all" % MockitoVersion % "test",
+      "org.scalatest"     %% "scalatest"  % ScalatestVersion % "test"
+    )
   )
 }
