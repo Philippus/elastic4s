@@ -73,10 +73,6 @@ object Build extends AutoPlugin {
             <distribution>repo</distribution>
           </license>
         </licenses>
-        <scm>
-          <url>git@github.com:sksamuel/elastic4s.git</url>
-          <connection>scm:git@github.com:sksamuel/elastic4s.git</connection>
-        </scm>
         <developers>
           <developer>
             <id>sksamuel</id>
