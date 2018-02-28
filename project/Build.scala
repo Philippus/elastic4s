@@ -3,11 +3,12 @@ import com.typesafe.sbt.pgp.PgpKeys
 import sbt._
 import sbt.plugins.JvmPlugin
 import sbt.Keys._
+import sbtrelease.ReleasePlugin
 
 object Build extends AutoPlugin {
 
   override def trigger  = AllRequirements
-  override def requires = JvmPlugin
+  override def requires = ReleasePlugin
 
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
@@ -15,7 +16,7 @@ object Build extends AutoPlugin {
     val CatsVersion            = "1.0.1"
     val CirceVersion           = "0.9.0"
     val CommonsIoVersion       = "2.4"
-    val ElasticsearchVersion   = "6.1.2"
+    val ElasticsearchVersion   = "6.1.3"
     val ExtsVersion            = "1.60.0"
     val JacksonVersion         = "2.9.2"
     val Json4sVersion          = "3.5.3"
