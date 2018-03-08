@@ -87,7 +87,7 @@ trait DeleteHandlers {
       request.routing.foreach(params.put("routing", _))
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.version.map(_.toString).foreach(params.put("version", _))
-      request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
+      request.versionType.map(EnumConversions.versionType).foreach(params.put("version_type", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
       ElasticRequest("DELETE", endpoint, params.toMap)
