@@ -12,9 +12,9 @@ object ScriptedMetricAggregationBuilder {
     val builder = AggregationBuilders.scriptedMetric(agg.name)
 
     agg.initScript.map(ScriptBuilder.apply).foreach(builder.initScript)
-    agg.combineScript.map(ScriptBuilder.apply).foreach(builder.initScript)
-    agg.mapScript.map(ScriptBuilder.apply).foreach(builder.initScript)
-    agg.reduceScript.map(ScriptBuilder.apply).foreach(builder.initScript)
+    agg.combineScript.map(ScriptBuilder.apply).foreach(builder.combineScript)
+    agg.mapScript.map(ScriptBuilder.apply).foreach(builder.mapScript)
+    agg.reduceScript.map(ScriptBuilder.apply).foreach(builder.reduceScript)
 
     if (agg.params.nonEmpty) builder.params(agg.params.asJava)
 
