@@ -85,7 +85,7 @@ trait GetHandlers {
       request.refresh.map(_.toString).foreach(params.put("refresh", _))
       request.realtime.map(_.toString).foreach(params.put("realtime", _))
       request.version.map(_.toString).foreach(params.put("version", _))
-      request.versionType.map(EnumConversions.versionType).foreach(params.put("versionType", _))
+      request.versionType.map(EnumConversions.versionType).foreach(params.put("version_type", _))
 
       ElasticRequest("GET", endpoint, params.toMap)
     }
