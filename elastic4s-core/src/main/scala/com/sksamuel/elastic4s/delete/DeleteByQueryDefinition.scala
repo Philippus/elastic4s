@@ -12,6 +12,7 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
                                    maxRetries: Option[Int] = None,
                                    proceedOnConflicts: Option[Boolean] = None,
                                    refresh: Option[RefreshPolicy] = None,
+                                   routing: Option[String] = None,
                                    waitForActiveShards: Option[Int] = None,
                                    retryBackoffInitialTime: Option[FiniteDuration] = None,
                                    timeout: Option[FiniteDuration] = None,
@@ -26,8 +27,10 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryDefinition =
     proceedOnConflicts(abortOnVersionConflict)
 
+  def routing(routing: String): DeleteByQueryDefinition = copy(routing = routing.some)
+
   def refresh(refresh: RefreshPolicy): DeleteByQueryDefinition = copy(refresh = refresh.some)
-  def refreshImmediately: DeleteByQueryDefinition              = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: DeleteByQueryDefinition = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): DeleteByQueryDefinition = copy(scrollSize = scrollSize.some)
 
