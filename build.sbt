@@ -47,7 +47,7 @@ lazy val tcp = Project("elastic4s-tcp", file("elastic4s-tcp"))
       "org.elasticsearch"          % "elasticsearch"           % ElasticsearchVersion,
       "org.locationtech.spatial4j" % "spatial4j"               % "0.6",
       "com.vividsolutions"         % "jts"                     % "1.13",
-      "io.netty"                   % "netty-all"               % "4.1.10.Final",
+      "io.netty"                   % "netty-all"               % "4.1.16.Final",
       "org.apache.lucene"          % "lucene-core"             % LuceneVersion,
       "org.apache.lucene"          % "lucene-analyzers-common" % LuceneVersion,
       "org.apache.lucene"          % "lucene-backward-codecs"  % LuceneVersion,
