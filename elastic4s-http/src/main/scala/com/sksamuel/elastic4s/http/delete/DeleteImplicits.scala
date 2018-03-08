@@ -42,7 +42,7 @@ trait DeleteImplicits {
         if (request.indexesAndTypes.types.isEmpty)
           s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/_all/_delete_by_query"
         else
-          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
+          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode).mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false)) {
