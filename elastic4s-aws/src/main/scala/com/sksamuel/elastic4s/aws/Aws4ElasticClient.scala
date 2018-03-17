@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials, DefaultAWSCredentialsProviderChain}
 import com.amazonaws.regions.DefaultAwsRegionProviderChain
+import com.amazonaws.auth._
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.apache.http.protocol.HttpContext
@@ -13,15 +14,41 @@ case class Aws4ElasticConfig(endpoint: String, key: String, secret: String, regi
   require(key.length > 16 && key.length < 128 && key.matches("[\\w]+"), "Key id must be between 16 and 128 characters.")
 }
 
+/**
+  * Variant of Aws4ElasticConfig which allows an AWSCredentialsProvider to be passed in directly
+  */
+case class Aws4ElasticConfigWithProvider(
+  endpoint: String,
+  credentialsProvider: AWSCredentialsProvider,
+  region: String,
+  service: String
+)
+
+object Aws4ElasticConfigWithProvider {
+  /**
+    * Convenience method to convert an Aws4ElasticConfig to an Aws4ElasticConfigWithProvider
+    */
+  def fromStandardConfig(config: Aws4ElasticConfig): Aws4ElasticConfigWithProvider = {
+    val credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.key, config.secret))
+    Aws4ElasticConfigWithProvider(config.endpoint, credentialsProvider, config.region, config.service)
+  }
+}
+
 object Aws4ElasticClient {
 
   /**
-    * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service).
+    * Creates ES HttpClient with aws4 request signer interceptor using custom config (credential provider, region and service).
     */
-  def apply(config: Aws4ElasticConfig): ElasticClient = {
+  def apply(config: Aws4ElasticConfigWithProvider): ElasticClient = {
     val elasticUri = ElasticsearchClientUri(config.endpoint)
     ElasticClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
   }
+
+  /**
+    * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service)
+    */
+  def apply(config: Aws4ElasticConfig): ElasticClient =
+    Aws4ElasticClient(Aws4ElasticConfigWithProvider.fromStandardConfig(config))
 
   /**
     * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables.
@@ -34,7 +61,7 @@ object Aws4ElasticClient {
 
 }
 
-private class SignedClientConfig(config: Aws4ElasticConfig) extends HttpClientConfigCallback {
+private class SignedClientConfig(config: Aws4ElasticConfigWithProvider) extends HttpClientConfigCallback {
   override def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder =
     httpClientBuilder.addInterceptorLast(new Aws4HttpRequestInterceptor(config))
 }
@@ -44,9 +71,8 @@ private class DefaultSignedClientConfig extends HttpClientConfigCallback {
     httpClientBuilder.addInterceptorLast(new DefaultAws4HttpRequestInterceptor)
 }
 
-private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfig) extends HttpRequestInterceptor {
-  private val chainProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.key, config.secret))
-  private val signer        = new Aws4RequestSigner(chainProvider, config.region, config.service)
+private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfigWithProvider) extends HttpRequestInterceptor {
+  private val signer        = new Aws4RequestSigner(config.credentialsProvider, config.region, config.service)
 
   override def process(request: HttpRequest, context: HttpContext): Unit = signer.withAws4Headers(request)
 
