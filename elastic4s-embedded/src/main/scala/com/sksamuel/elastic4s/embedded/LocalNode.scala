@@ -122,9 +122,13 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
   override def client(shutdownNodeOnClose: Boolean): ElasticClient = new ElasticClient {
     private val delegate            = ElasticClient(s"elasticsearch://$host:$port")
     override def client: HttpClient = delegate.client
-    override def close(): Unit =
+    override def close(): Unit = {
+      Try {
+        delegate.client.close()
+      }
       if (shutdownNodeOnClose)
         stop()
+    }
   }
 }
 
