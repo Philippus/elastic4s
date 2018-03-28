@@ -34,6 +34,6 @@ case class GetResponse(@JsonProperty("_id") id: String,
 
   def storedFieldsAsMap: Map[String, AnyRef]    = Option(fields).getOrElse(Map.empty)
   override def sourceAsMap: Map[String, AnyRef] = Option(_source).getOrElse(Map.empty)
-  override def sourceAsString: String           = SourceAsContentBuilder(_source).string()
+  override def sourceAsString: String           = SourceAsContentBuilder(Option(_source).getOrElse(Map.empty)).string()
 
 }
