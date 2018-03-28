@@ -36,6 +36,14 @@ trait SharedTestData {
     request
   }
 
+  def httpGetRequestWithUnorderedQueryParams = {
+    val request = new HttpGet("https://es.amazonaws.com/path/to/resource?Version=2010-05-08&Action=ListUsers")
+    request.addHeader("x-amz-date", dateTime)
+    request.addHeader("Host", host)
+    request.addHeader("content-type", "application/x-www-form-urlencoded; charset=utf-8")
+    request
+  }
+
   def httpPostRequest = {
     val entity = new BasicHttpEntity()
     entity.setContent(new ByteArrayInputStream("This is the content".getBytes(StandardCharsets.UTF_8.name())))
