@@ -36,7 +36,7 @@ trait GetHandlers {
     override def build(request: MultiGetRequest): ElasticRequest = {
       val body   = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
-      ElasticRequest("POST", "/_mget", entity)
+      ElasticRequest("GET", "/_mget", entity)
     }
   }
 
