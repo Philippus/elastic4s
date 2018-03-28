@@ -22,7 +22,7 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClien
 
   private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
     val url = uri"http://${clientUri.hosts.head._1}:${clientUri.hosts.head._2}/$endpoint?$params"
-    method.toLowerCase match {
+    method.toUpperCase match {
       case "GET"    => sttp.get(url)
       case "HEAD"   => sttp.head(url)
       case "POST"   => sttp.get(url)
