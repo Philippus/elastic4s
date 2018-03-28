@@ -3,11 +3,19 @@ package com.sksamuel.elastic4s.searches.aggs
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
 
+sealed trait PercentilesMethod
+
+object PercentilesMethod {
+  case object TDigest extends PercentilesMethod
+  case object HDR extends PercentilesMethod
+}
+
 case class PercentilesAggregationDefinition(name: String,
                                             field: Option[String] = None,
                                             missing: Option[AnyRef] = None,
                                             format: Option[String] = None,
                                             script: Option[ScriptDefinition] = None,
+                                            method: Option[PercentilesMethod] = None,
                                             numberOfSignificantValueDigits: Option[Int] = None,
                                             percents: Seq[Double] = Nil,
                                             compression: Option[Double] = None,
@@ -26,6 +34,7 @@ case class PercentilesAggregationDefinition(name: String,
   def field(field: String): T = copy(field = field.some)
   def missing(missing: AnyRef): T = copy(missing = missing.some)
   def script(script: ScriptDefinition): T = copy(script = script.some)
+  def method(method: PercentilesMethod): T = copy(method = method.some)
   def numberOfSignificantValueDigits(numberOfSignificantValueDigits: Int): T = copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
   def hdr(numberOfSignificantValueDigits: Int): T = copy(numberOfSignificantValueDigits = numberOfSignificantValueDigits.some)
 
