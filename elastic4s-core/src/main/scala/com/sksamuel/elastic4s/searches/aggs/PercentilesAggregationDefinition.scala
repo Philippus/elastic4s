@@ -2,13 +2,7 @@ package com.sksamuel.elastic4s.searches.aggs
 
 import com.sksamuel.elastic4s.script.ScriptDefinition
 import com.sksamuel.exts.OptionImplicits._
-
-sealed trait PercentilesMethod
-
-object PercentilesMethod {
-  case object TDigest extends PercentilesMethod
-  case object HDR extends PercentilesMethod
-}
+import org.elasticsearch.search.aggregations.metrics.percentiles.PercentilesMethod
 
 case class PercentilesAggregationDefinition(name: String,
                                             field: Option[String] = None,
