@@ -44,6 +44,11 @@ class CanonicalRequestTest extends WordSpec with Matchers with SharedTestData{
       canonicalRequest.toString shouldBe(resultWithoutPayload)
     }
 
+    "be able to build a canonical request string from request with unordered query params" in {
+      val canonicalRequest = CanonicalRequest(httpGetRequestWithUnorderedQueryParams)
+      canonicalRequest.toString shouldBe(resultWithoutPayload)
+    }
+
     "be able to build a canonical request string from request with payload" in {
       val canonicalRequest = CanonicalRequest(httpPostRequest)
       canonicalRequest.toString shouldBe(resultWithPayload)
