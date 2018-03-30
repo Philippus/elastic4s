@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.reindex
 
+import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.reindex.ReindexRequest
@@ -10,6 +11,10 @@ object ReindexBuilderFn {
     val builder = XContentFactory.obj()
 
     request.size.foreach(builder.field("size", _))
+
+    request.script.foreach { script =>
+      builder.rawField("script", ScriptBuilderFn(script))
+    }
 
     builder.startObject("source")
 
