@@ -57,7 +57,7 @@ object CanonicalRequest {
   private def canonicalQueryString(httpRequest: HttpRequest): String = {
     val uri        = new URI(httpRequest.getRequestLine.getUri)
     val parameters = URLEncodedUtils.parse(uri, "utf-8")
-    parameters.asScala.map(h ⇒ s"${h.getName}=${h.getValue}").mkString("&")
+    parameters.asScala.sortBy(_.getName).map(h ⇒ s"${h.getName}=${h.getValue}").mkString("&")
   }
 
   private def canonicalHeaders(httpRequest: HttpRequest): String =
