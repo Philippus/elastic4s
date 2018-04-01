@@ -30,7 +30,7 @@ case class DeleteByQueryDefinition(indexesAndTypes: IndexesAndTypes,
   def routing(routing: String): DeleteByQueryDefinition = copy(routing = routing.some)
 
   def refresh(refresh: RefreshPolicy): DeleteByQueryDefinition = copy(refresh = refresh.some)
-  def refreshImmediately: DeleteByQueryDefinition = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: DeleteByQueryDefinition              = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): DeleteByQueryDefinition = copy(scrollSize = scrollSize.some)
 
