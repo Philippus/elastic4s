@@ -21,7 +21,9 @@ case class ElasticRequest(method: String, endpoint: String, params: Map[String, 
 object ElasticRequestShow extends Show[ElasticRequest] {
   override def show(t: ElasticRequest): String = {
     val header = s"${t.method}:${t.endpoint}?${t.params.map { case (k, v) => k + "=" + v }.mkString("&")}"
-    t.entity.fold(header) { body => s"$header\n$body" }
+    t.entity.fold(header) { body =>
+      s"$header\n$body"
+    }
   }
 }
 

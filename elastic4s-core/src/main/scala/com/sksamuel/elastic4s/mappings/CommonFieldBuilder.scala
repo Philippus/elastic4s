@@ -19,7 +19,7 @@ object CommonFieldBuilder {
       field match {
         case _: NestedField => builder.startObject("properties")
         case _: ObjectField => builder.startObject("properties")
-        case _                        => builder.startObject("fields")
+        case _              => builder.startObject("fields")
       }
       field.fields.foreach { subfield =>
         builder.rawField(subfield.name, FieldBuilderFn(subfield))

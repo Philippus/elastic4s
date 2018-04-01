@@ -25,9 +25,11 @@ trait IndexHandlers {
 
       val (method, endpoint) = request.id match {
         case Some(id) =>
-          "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder.encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}/${URLEncoder.encode(id.toString, StandardCharsets.UTF_8.name())}"
+          "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder
+            .encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}/${URLEncoder.encode(id.toString, StandardCharsets.UTF_8.name())}"
         case None =>
-          "POST" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder.encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}"
+          "POST" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder
+            .encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]

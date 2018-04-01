@@ -1,16 +1,41 @@
 package com.sksamuel.elastic4s.http.search.queries
 
 import com.sksamuel.elastic4s.http.search.RawQueryBodyFn
-import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
-import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn, GeoShapeQueryBodyFn}
-import com.sksamuel.elastic4s.http.search.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.compound.{
+  BoolQueryBuilderFn,
+  BoostingQueryBodyFn,
+  ConstantScoreBodyFn,
+  DisMaxQueryBodyFn
+}
+import com.sksamuel.elastic4s.http.search.queries.geo.{
+  GeoBoundingBoxQueryBodyFn,
+  GeoDistanceQueryBodyFn,
+  GeoPolyonQueryBodyFn,
+  GeoShapeQueryBodyFn
+}
+import com.sksamuel.elastic4s.http.search.queries.nested.{
+  HasChildBodyFn,
+  HasParentBodyFn,
+  NestedQueryBodyFn,
+  ParentIdQueryBodyFn
+}
 import com.sksamuel.elastic4s.http.search.queries.span._
-import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQueryBuilderFn, MoreLikeThisBuilderFn, ScriptQueryBodyFn, ScriptScoreQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.specialized.{
+  FunctionScoreQueryBuilderFn,
+  MoreLikeThisBuilderFn,
+  ScriptQueryBodyFn,
+  ScriptScoreQueryBodyFn
+}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQuery, ScriptScore}
-import com.sksamuel.elastic4s.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery}
+import com.sksamuel.elastic4s.searches.queries.geo.{
+  GeoBoundingBoxQuery,
+  GeoDistanceQuery,
+  GeoPolygonQuery,
+  GeoShapeQuery
+}
 import com.sksamuel.elastic4s.searches.queries.matches._
 import com.sksamuel.elastic4s.searches.queries.span._
 import com.sksamuel.elastic4s.searches.queries.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery}
@@ -41,7 +66,7 @@ object QueryBuilderFn {
     case q: MoreLikeThisQuery   => MoreLikeThisBuilderFn(q)
     case q: MultiMatchQuery     => MultiMatchBodyFn(q)
     case q: NestedQuery         => NestedQueryBodyFn(q)
-    case NoopQuery => XContentFactory.jsonBuilder()
+    case NoopQuery              => XContentFactory.jsonBuilder()
     case q: ParentIdQuery       => ParentIdQueryBodyFn(q)
     case q: PrefixQuery         => PrefixQueryBodyFn(q)
     case q: QueryStringQuery    => QueryStringBodyFn(q)

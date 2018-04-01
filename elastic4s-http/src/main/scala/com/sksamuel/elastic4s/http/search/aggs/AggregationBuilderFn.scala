@@ -52,7 +52,7 @@ object AggregationBuilderFn {
       case agg: DerivativePipelineAgg          => DerivativePipelineAggBuilder(agg)
       case agg: DiffPipelineAgg                => SerialDiffPipelineAggBuilder(agg)
       case agg: ExtendedStatsBucketPipelineAgg => ExtendedStatsBucketPipelineAggBuilder(agg)
-      case agg: MaxBucket           => MaxBucketPipelineAggBuilder(agg)
+      case agg: MaxBucket                      => MaxBucketPipelineAggBuilder(agg)
       case agg: MinBucketPipelineAgg           => MinBucketPipelineAggBuilder(agg)
       case agg: MovAvgPipelineAgg              => MovAvgPipelineAggBuilder(agg)
       case agg: PercentilesBucketPipelineAgg   => PercentilesBucketPipelineAggBuilder(agg)

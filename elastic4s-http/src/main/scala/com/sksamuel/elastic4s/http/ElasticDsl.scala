@@ -26,7 +26,7 @@ import com.sksamuel.elastic4s.http.validate.ValidateHandlers
 import com.sksamuel.exts.Logging
 
 trait ElasticDsl
-  extends ElasticApi
+    extends ElasticApi
     with Logging
     with BulkHandlers
     with CatHandlers
@@ -58,7 +58,7 @@ trait ElasticDsl
 
   implicit class RichRequest[T](t: T) {
     def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
-    def show(implicit handler: Handler[T, _]): String = ElasticRequestShow.show(handler.build(t))
+    def show(implicit handler: Handler[T, _]): String            = ElasticRequestShow.show(handler.build(t))
   }
 }
 
