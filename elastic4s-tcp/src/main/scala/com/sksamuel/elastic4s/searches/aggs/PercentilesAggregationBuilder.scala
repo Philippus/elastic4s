@@ -14,6 +14,7 @@ object PercentilesAggregationBuilder {
     agg.missing.foreach(builder.missing)
     if (agg.percents.nonEmpty)
       builder.percentiles(agg.percents: _*)
+    agg.method.foreach(builder.method)
     agg.numberOfSignificantValueDigits.foreach(builder.numberOfSignificantValueDigits)
     agg.format.foreach(builder.format)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
