@@ -11,6 +11,6 @@ case class HasParentQuery(`type`: String,
 
   def boost(boost: Double): HasParentQuery                    = copy(boost = Some(boost))
   def ignoreUnmapped(ignoreUnmapped: Boolean): HasParentQuery = copy(ignoreUnmapped = Some(ignoreUnmapped))
-  def innerHit(innerHit: InnerHit): HasParentQuery  = copy(innerHit = Some(innerHit))
+  def innerHit(innerHit: InnerHit): HasParentQuery            = copy(innerHit = Some(innerHit))
   def queryName(queryName: String): HasParentQuery            = copy(queryName = Some(queryName))
 }

@@ -15,9 +15,7 @@ import com.sksamuel.exts.OptionImplicits._
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
 // for 2.10 cross build we need to make some parameters out of the case class so its <= 22 parameters
-case class Scoring(minScore: Option[Double] = None,
-                   rescorers: Seq[Rescore] = Nil,
-                   trackScores: Option[Boolean] = None)
+case class Scoring(minScore: Option[Double] = None, rescorers: Seq[Rescore] = Nil, trackScores: Option[Boolean] = None)
 
 case class Control(pref: Option[String] = None,
                    routing: Option[String] = None,
@@ -52,7 +50,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
                          windowing: Windowing = Windowing(),
                          meta: Meta = Meta(),
                          searchType: Option[SearchType] = None,
-                         searchAfter: Seq[AnyRef] = Nil,
+                         searchAfter: Seq[Any] = Nil,
                          version: Option[Boolean] = None,
                          profile: Option[Boolean] = None,
                          source: Option[String] = None,
@@ -83,7 +81,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
 
   def inner(inners: Iterable[InnerHit]): SearchRequest = copy(inners = inners.toSeq)
 
-  def searchAfter(values: Seq[AnyRef]): SearchRequest = copy(searchAfter = values)
+  def searchAfter(values: Seq[Any]): SearchRequest = copy(searchAfter = values)
 
   def postFilter(block: => Query): SearchRequest = copy(postFilter = block.some)
 

@@ -33,11 +33,11 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
     proceedOnConflicts(abortOnVersionConflict)
 
   def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = copy(refresh = refresh.some)
-  def refreshImmediately: UpdateByQueryRequest = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): UpdateByQueryRequest = copy(scrollSize = scrollSize.some)
-  def slice(slice: Slice): UpdateByQueryRequest = copy(slice = slice.some)
-  def slices(slices: Int): UpdateByQueryRequest = copy(slices = slices.some)
+  def slice(slice: Slice): UpdateByQueryRequest         = copy(slice = slice.some)
+  def slices(slices: Int): UpdateByQueryRequest         = copy(slices = slices.some)
 
   def requestsPerSecond(requestsPerSecond: Float): UpdateByQueryRequest =
     copy(requestsPerSecond = requestsPerSecond.some)

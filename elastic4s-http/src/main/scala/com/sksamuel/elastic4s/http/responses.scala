@@ -7,7 +7,7 @@ sealed trait Response[+U] {
   def result: U                    // returns the marshalled response U or throws an exception
   def error: ElasticError          // returns the error or throw an exception
   def isError: Boolean             // returns true if this is an error response
-  final def isSuccess: Boolean                   = !isError // returns true if this is a success
+  final def isSuccess: Boolean = !isError // returns true if this is a success
 
   def map[V](f: U => V): Response[V]
   def flatMap[V](f: U => Response[V]): Response[V]
@@ -26,7 +26,7 @@ case class RequestSuccess[U](override val status: Int, // the http status code o
   override def isError = false
   override def error   = throw new NoSuchElementException(s"Request success $result")
 
-  final def map[V](f: U => V): Response[V] = RequestSuccess(status, body, headers, f(result))
+  final def map[V](f: U => V): Response[V]               = RequestSuccess(status, body, headers, f(result))
   final def flatMap[V](f: U => Response[V]): Response[V] = f(result)
 }
 
@@ -38,6 +38,6 @@ case class RequestFailure(override val status: Int, // the http status code of t
   override def result  = throw new NoSuchElementException(s"Request Failure $error")
   override def isError = true
 
-  final def map[V](f: Nothing => V): Response[V] = this
+  final def map[V](f: Nothing => V): Response[V]               = this
   final def flatMap[V](f: Nothing => Response[V]): Response[V] = this
 }

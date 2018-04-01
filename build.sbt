@@ -97,24 +97,30 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
 
 lazy val cats_effect = Project("elastic4s-cats-effect", file("elastic4s-cats-effect"))
   .settings(name := "elastic4s-cats-effect")
-  .settings(libraryDependencies ++= Seq(
-    "org.typelevel" %% "cats-effect" % "0.8"
-  ))
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-effect" % "0.8"
+    )
+  )
   .dependsOn(http)
 
 lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   .settings(name := "elastic4s-scalaz")
-  .settings(libraryDependencies ++= Seq(
-    "org.scalaz" %% "scalaz-core" % "7.2.18",
-    "org.scalaz" %% "scalaz-concurrent" % "7.2.18"
-  ))
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.scalaz" %% "scalaz-core"       % "7.2.18",
+      "org.scalaz" %% "scalaz-concurrent" % "7.2.18"
+    )
+  )
   .dependsOn(http)
 
 lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
   .settings(name := "elastic4s-monix")
-  .settings(libraryDependencies ++= Seq(
-    "io.monix" %% "monix" % "2.3.2"
-  ))
+  .settings(
+    libraryDependencies ++= Seq(
+      "io.monix" %% "monix" % "2.3.2"
+    )
+  )
   .dependsOn(http)
 
 lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
