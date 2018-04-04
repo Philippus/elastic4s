@@ -168,6 +168,7 @@ class XContentBuilder(root: JsonNode) {
       case v: Byte       => array.add(v)
       case v: BigDecimal => array.add(v.bigDecimal)
       case null          => array.addNull()
+      case v: Option[_]  => autovalue(v.orNull)
       case values: Seq[_] =>
         startArray()
         values.foreach(autovalue)
