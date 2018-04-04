@@ -54,7 +54,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
                             windowing: Windowing = Windowing(),
                             meta: Meta = Meta(),
                             searchType: Option[SearchType] = None,
-                            searchAfter: Seq[AnyRef] = Nil,
+                            searchAfter: Seq[Any] = Nil,
                             version: Option[Boolean] = None,
                             profile: Option[Boolean] = None,
                             source: Option[String] = None,
@@ -85,7 +85,7 @@ case class SearchDefinition(indexesTypes: IndexesAndTypes,
 
   def inner(inners: Iterable[InnerHitDefinition]): SearchDefinition = copy(inners = inners.toSeq)
 
-  def searchAfter(values: Seq[AnyRef]): SearchDefinition = copy(searchAfter = values)
+  def searchAfter(values: Seq[Any]): SearchDefinition = copy(searchAfter = values)
 
   def postFilter(block: => QueryDefinition): SearchDefinition = copy(postFilter = block.some)
 
