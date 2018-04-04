@@ -8,11 +8,7 @@ object TermsQueryBodyFn {
 
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 
-    if (t.values.nonEmpty) {
-      builder.startArray(t.field)
-      t.values.foreach(builder.autovalue)
-      builder.endArray()
-    } else {
+    if (t.ref.nonEmpty) {
       builder.startObject(t.field)
       t.ref.foreach { ref =>
         builder.field("index", ref.index)
@@ -22,6 +18,10 @@ object TermsQueryBodyFn {
       t.path.foreach(builder.field("path", _))
       t.routing.foreach(builder.field("routing", _))
       builder.endObject()
+    } else {
+      builder.startArray(t.field)
+      t.values.foreach(builder.autovalue)
+      builder.endArray()
     }
 
     t.boost.foreach(builder.field("boost", _))

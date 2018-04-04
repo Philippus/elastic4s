@@ -54,5 +54,12 @@ class TermsQueryTest
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"edmure"}""")
   }
 
+  it should "return no results when an empty array is passed" in {
+    val resp = client.execute {
+      search("lords") query termsQuery("name", Seq.empty[String])
+    }.await.result
+
+    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set.empty[String]
+  }
 
 }
