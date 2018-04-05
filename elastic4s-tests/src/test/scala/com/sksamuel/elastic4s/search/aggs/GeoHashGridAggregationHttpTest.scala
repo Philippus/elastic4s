@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.http.search.GeoHashGridBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
 
-class GeoHashGridAggregationHttpTest extends FreeSpec with DockerTests with Matchers with ElasticDsl {
+class GeoHashGridAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
     client.execute {
