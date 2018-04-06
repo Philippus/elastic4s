@@ -17,7 +17,7 @@ case class JoinField(name: String,
                      nulls: Nulls = Nulls(),
                      store: Option[Boolean] = None,
                      termVector: Option[String] = None,
-                     relations: Map[String, String] = Map.empty)
+                     relations: Map[String, Any] = Map.empty)
     extends FieldDefinition {
 
   type T = JoinField
@@ -28,7 +28,7 @@ case class JoinField(name: String,
   def dynamic(dynamic: String): T               = copy(dynamic = dynamic.some)
   def dynamic(dynamic: Boolean): T              = copy(dynamic = dynamic.toString.some)
 
-  def relations(map: Map[String, String]): T = copy(relations = map)
+  def relations(map: Map[String, Any]): T = copy(relations = map)
 
   override def analyzer(analyzer: String): T       = copy(analysis = analysis.copy(analyzer = analyzer.some))
   override def normalizer(normalizer: String): T   = copy(analysis = analysis.copy(normalizer = normalizer.some))
