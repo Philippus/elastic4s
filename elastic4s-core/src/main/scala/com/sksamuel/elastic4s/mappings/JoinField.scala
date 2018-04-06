@@ -28,6 +28,8 @@ case class JoinField(name: String,
   def dynamic(dynamic: String): T               = copy(dynamic = dynamic.some)
   def dynamic(dynamic: Boolean): T              = copy(dynamic = dynamic.toString.some)
 
+  def relation(parent: String, child: String): T = copy(relations = relations + (parent -> child))
+  def relation(parent: String, children: Seq[String]): T = copy(relations = relations + (parent -> children))
   def relations(map: Map[String, Any]): T = copy(relations = map)
 
   override def analyzer(analyzer: String): T       = copy(analysis = analysis.copy(analyzer = analyzer.some))
