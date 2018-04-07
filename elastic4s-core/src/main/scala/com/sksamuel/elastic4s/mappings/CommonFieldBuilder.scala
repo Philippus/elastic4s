@@ -99,7 +99,7 @@ object FieldBuilderFn {
         builder.startObject("relations")
         join.relations.foreach {
           case (parent, child) =>
-            builder.field(parent, child)
+            builder.autofield(parent, child)
         }
         builder.endObject()
 

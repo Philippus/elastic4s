@@ -17,18 +17,20 @@ case class JoinField(name: String,
                      nulls: Nulls = Nulls(),
                      store: Option[Boolean] = None,
                      termVector: Option[String] = None,
-                     relations: Map[String, String] = Map.empty)
+                     relations: Map[String, Any] = Map.empty)
     extends FieldDefinition {
 
   type T = JoinField
-  override def `type` = "object"
+  override def `type` = "join"
 
   override def boost(boost: Double): T          = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
   def dynamic(dynamic: String): T               = copy(dynamic = dynamic.some)
   def dynamic(dynamic: Boolean): T              = copy(dynamic = dynamic.toString.some)
 
-  def relations(map: Map[String, String]): T = copy(relations = map)
+  def relation(parent: String, child: String): T = copy(relations = relations + (parent -> child))
+  def relation(parent: String, children: Seq[String]): T = copy(relations = relations + (parent -> children))
+  def relations(map: Map[String, Any]): T = copy(relations = map)
 
   override def analyzer(analyzer: String): T       = copy(analysis = analysis.copy(analyzer = analyzer.some))
   override def normalizer(normalizer: String): T   = copy(analysis = analysis.copy(normalizer = normalizer.some))
