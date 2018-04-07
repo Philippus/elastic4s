@@ -23,7 +23,9 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
     createIndex("index").mappings(
       mapping("mapping1") as Seq(
         textField("a") stored true analyzer WhitespaceAnalyzer,
-        keywordField("b") normalizer "my_normalizer"
+        keywordField("b") normalizer "my_normalizer",
+        joinField("c") relation ("parent", Seq("bar", "foo"))
+
       )
     ) analysis {
       CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
@@ -55,6 +57,10 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
       val b = properties("b").asInstanceOf[Map[String, Any]]
       b("type") shouldBe "keyword"
       b("normalizer") shouldBe "my_normalizer"
+
+      val c = properties("c").asInstanceOf[Map[String, Any]]
+      c("type") shouldBe "join"
+      c("relations") shouldEqual Map("parent" -> Seq("bar", "foo"))
     }
 
     "handle properly mapping without properties" in {
