@@ -25,6 +25,6 @@ class TextFieldDefinitionTest extends FlatSpec with Matchers with ElasticApi {
       .nullable(false)
       .nullValue("nully")
     FieldBuilderFn(field).string() shouldBe
-      """{"type":"text","analyzer":"armenian","boost":1.2,"copy_to":["copy1","copy2"],"doc_values":true,"index":"true","normalizer":"mynorm","norms":true,"null_value":"nully","search_analyzer":"english","store":true,"fielddata":true,"max_input_length":12,"ignore_above":30,"similarity":"classic"}"""
+      """{"type":"text","analyzer":"armenian","boost":1.2,"copy_to":["copy1","copy2"],"doc_values":true,"index":true,"normalizer":"mynorm","norms":true,"null_value":"nully","search_analyzer":"english","store":true,"fielddata":true,"max_input_length":12,"ignore_above":30,"similarity":"classic"}"""
   }
 }
