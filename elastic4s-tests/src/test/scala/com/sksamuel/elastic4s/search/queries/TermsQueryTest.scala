@@ -55,9 +55,9 @@ class TermsQueryTest
   }
 
   it should "return no results when an empty array is passed" in {
-    val resp = client.execute {
+    val resp = http.execute {
       search("lords") query termsQuery("name", Seq.empty[String])
-    }.await.result
+    }.await.right.get.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set.empty[String]
   }
