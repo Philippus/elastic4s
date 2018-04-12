@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.http.ScriptBuilderFn
-import com.sksamuel.elastic4s.searches.aggs.TermsAggregationDefinition
-import com.sksamuel.elastic4s.searches.aggs.TermsOrder
+import com.sksamuel.elastic4s.searches.aggs.{TermsAggregationDefinition, TermsOrder}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object TermsAggregationBuilder {
@@ -37,4 +36,3 @@ object TermsAggregationBuilder {
     builder.endObject()
   }
 }
-
