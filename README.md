@@ -739,7 +739,7 @@ stream data from some publisher into elasticsearch. Or you can create an elastic
 
 ### Integrate
 
-First you have to add an additional dependeny to your `build.sbt`
+First you have to add an additional dependency to your `build.sbt`
 
 ```scala
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "x.x.x"
