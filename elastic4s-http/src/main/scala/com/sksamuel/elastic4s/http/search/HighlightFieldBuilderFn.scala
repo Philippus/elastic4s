@@ -27,6 +27,8 @@ object HighlightFieldBuilderFn {
     field.order.foreach(builder.field("order", _))
     field.phraseLimit.foreach(builder.field("phrase_limit", _))
     field.requireFieldMatch.foreach(builder.field("require_field_match", _))
+    field.boundaryScanner.foreach(builder.field("boundary_scanner", _))
+    field.boundaryScannerLocale.foreach(builder.field("boundary_scanner_locale", _))
 
     if (field.postTags.nonEmpty || field.preTags.nonEmpty) {
       if (field.postTags.isEmpty) builder.array("post_tags", Array("</em>"))
