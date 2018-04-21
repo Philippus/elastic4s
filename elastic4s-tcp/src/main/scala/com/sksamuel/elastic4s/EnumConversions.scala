@@ -53,6 +53,7 @@ object EnumConversions {
       case SimpleQueryStringFlag.PREFIX     => org.elasticsearch.index.query.SimpleQueryStringFlag.PREFIX
       case SimpleQueryStringFlag.SLOP       => org.elasticsearch.index.query.SimpleQueryStringFlag.SLOP
       case SimpleQueryStringFlag.WHITESPACE => org.elasticsearch.index.query.SimpleQueryStringFlag.WHITESPACE
+      case SimpleQueryStringFlag.NOT        => org.elasticsearch.index.query.SimpleQueryStringFlag.NOT
     }
 
   implicit def execType(execType: GeoExecType): org.elasticsearch.index.query.GeoExecType =
