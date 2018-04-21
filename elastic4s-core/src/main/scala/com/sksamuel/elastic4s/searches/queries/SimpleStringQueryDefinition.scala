@@ -27,7 +27,7 @@ case class SimpleStringQueryDefinition(query: String,
                                        queryName: Option[String] = None,
                                        quote_field_suffix: Option[String] = None,
                                        lenient: Option[Boolean] = None,
-                                       fields: Seq[(String, Double)] = Nil,
+                                       fields: Seq[(String, Option[Double])] = Nil,
                                        flags: Seq[SimpleQueryStringFlag] = Nil,
                                        minimumShouldMatch: Option[Int] = None)
     extends QueryDefinition {
@@ -47,7 +47,7 @@ case class SimpleStringQueryDefinition(query: String,
   def analyzeWildcard(analyzeWildcard: Boolean): SimpleStringQueryDefinition =
     copy(analyzeWildcard = analyzeWildcard.some)
 
-  def asfields(fields: String*): SimpleStringQueryDefinition          = copy(fields = this.fields ++ fields.map(f => (f, -1D)))
-  def field(name: String): SimpleStringQueryDefinition                = copy(fields = fields :+ (name, -1D))
-  def field(name: String, boost: Double): SimpleStringQueryDefinition = copy(fields = fields :+ (name, boost))
+  def asfields(fields: String*): SimpleStringQueryDefinition          = copy(fields = this.fields ++ fields.map(f => (f, None)))
+  def field(name: String): SimpleStringQueryDefinition                = copy(fields = fields :+ (name, None))
+  def field(name: String, boost: Double): SimpleStringQueryDefinition = copy(fields = fields :+ (name, Some(boost)))
 }

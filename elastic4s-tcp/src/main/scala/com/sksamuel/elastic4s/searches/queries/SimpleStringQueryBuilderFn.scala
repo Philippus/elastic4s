@@ -14,8 +14,8 @@ object SimpleStringQueryBuilderFn {
       builder.flags(q.flags.map(EnumConversions.simpleQueryStringFlag): _*)
 
     q.fields.foreach {
-      case (name, -1D)   => builder.field(name)
-      case (name, boost) => builder.field(name, boost.toFloat)
+      case (name, None)   => builder.field(name)
+      case (name, Some(boost)) => builder.field(name, boost.toFloat)
     }
     q.lenient.foreach(builder.lenient)
     q.minimumShouldMatch.map(_.toString).foreach(builder.minimumShouldMatch)
