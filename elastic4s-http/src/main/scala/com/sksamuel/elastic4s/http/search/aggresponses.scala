@@ -11,7 +11,7 @@ trait AggBucket extends HasAggregations {
 }
 
 case class TermBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
-    extends AggBucket
+    extends AggBucket with Transformable
 
 case class TermsAggResult(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Int, otherDocCount: Int)
     extends BucketAggregation {
@@ -299,8 +299,9 @@ case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_id") id: String,
                   @JsonProperty("_score") score: Option[Double],
                   sort: Seq[String],
-                  @JsonProperty("_source") source: Map[String, Any]) {
+                  @JsonProperty("_source") source: Map[String, Any]) extends Transformable {
   def ref = DocumentRef(index, `type`, id)
+  override private[elastic4s] val data = source
 }
 
 case class TopHitsResult(name: String,
@@ -354,16 +355,11 @@ case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
 // in the search result, and any buckets that contain sub aggregations
-trait HasAggregations {
+trait HasAggregations extends Transformable {
 
-  private[elastic4s] def data: Map[String, Any]
+  override private[elastic4s] def data: Map[String, Any]
   private def agg(name: String): Map[String, Any] = data(name).asInstanceOf[Map[String, Any]]
 
-  def to[T: AggReader]: T = safeTo[T].fold(e => throw e, t => t)
-  def safeTo[T: AggReader]: Either[Throwable, T] = {
-    val json = SourceAsContentBuilder(data).string()
-    implicitly[AggReader[T]].read(json)
-  }
 
   def contains(name: String): Boolean = data.contains(name)
   def names: Iterable[String]         = data.keys
@@ -501,6 +497,16 @@ trait BucketAggregation {
 
 trait PipelineAggregation {
   def name: String
+}
+
+trait Transformable {
+  private[elastic4s] def data: Map[String, Any]
+  def to[T: AggReader]: T = safeTo[T].fold(e => throw e, t => t)
+
+  def safeTo[T: AggReader]: Either[Throwable, T] = {
+    val json = SourceAsContentBuilder(data).string()
+    implicitly[AggReader[T]].read(json)
+  }
 }
 
 case class GlobalAggregationResult(name: String, docCount: Int, private[elastic4s] val data: Map[String, Any])

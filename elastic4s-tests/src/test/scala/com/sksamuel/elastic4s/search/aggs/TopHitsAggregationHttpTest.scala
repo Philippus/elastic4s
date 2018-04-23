@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.aggs
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.{AggReader, RefreshPolicy}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
@@ -53,6 +53,25 @@ class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers
       tophits.hits.head.index shouldBe "tophits"
       tophits.hits.head.source shouldBe Map("name" -> "buckingham palace", "location" -> "london")
       tophits.hits.head.sort shouldBe Seq("buckingham")
+
+    }
+    "should convert TopHit to given type" in {
+
+      implicit val stringReader: AggReader[String] = new AggReader[String] {
+        override def read(json: String): Either[Throwable, String] = Right(json)
+      }
+      val resp = client.execute {
+        search("tophits/landmarks").matchAllQuery().aggs {
+          termsAgg("agg1", "location").addSubagg(
+            topHitsAgg("agg2").sortBy(fieldSort("name"))
+          )
+        }
+      }.await.result
+      resp.totalHits shouldBe 5
+
+      val agg = resp.aggs.terms("agg1")
+      val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
+      tophits.hits.head.safeTo[String].right.get shouldBe "{\"name\":\"buckingham palace\",\"location\":\"london\"}"
 
     }
   }
