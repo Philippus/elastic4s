@@ -16,14 +16,17 @@ case class SigTermsAggregationDefinition(name: String,
                                          backgroundFilter: Option[QueryDefinition] = None,
                                          subaggs: Seq[AbstractAggregation] = Nil,
                                          metadata: Map[String, AnyRef] = Map.empty,
-                                         heuristic: Option[String] = None)
-    extends AggregationDefinition {
+                                         heuristic: Option[String] = None,
+                                         filterDuplicateText: Option[Boolean] = None)
+  extends AggregationDefinition {
 
   type T = SigTermsAggregationDefinition
 
   def minDocCount(min: Long): SigTermsAggregationDefinition      = copy(minDocCount = min.some)
   def executionHint(hint: String): SigTermsAggregationDefinition = copy(executionHint = hint.some)
   def size(size: Int): SigTermsAggregationDefinition             = copy(size = size.some)
+
+  def filterDuplicateText(b: Boolean): T = copy(filterDuplicateText = b.some)
 
   def includeExclude(include: String, exclude: String): T =
     copy(includeExclude = IncludeExclude(Option(include).toSeq, Option(exclude).toSeq).some)
