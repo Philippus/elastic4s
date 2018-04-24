@@ -217,7 +217,7 @@ object GeoHashGridAggResult {
     name,
     data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
       GeoHashGridBucket(
-        map.get("key").toString,
+        map("key").toString,
         map("doc_count").toString.toLong,
         map
       )
