@@ -27,7 +27,7 @@ case class SimpleStringQuery(query: String,
                              queryName: Option[String] = None,
                              quote_field_suffix: Option[String] = None,
                              lenient: Option[Boolean] = None,
-                             fields: Seq[(String, Double)] = Nil,
+                             fields: Seq[(String, Option[Double])] = Nil,
                              flags: Seq[SimpleQueryStringFlag] = Nil,
                              minimumShouldMatch: Option[Int] = None)
     extends Query {
@@ -47,7 +47,7 @@ case class SimpleStringQuery(query: String,
   def analyzeWildcard(analyzeWildcard: Boolean): SimpleStringQuery =
     copy(analyzeWildcard = analyzeWildcard.some)
 
-  def asfields(fields: String*): SimpleStringQuery          = copy(fields = this.fields ++ fields.map(f => (f, -1D)))
-  def field(name: String): SimpleStringQuery                = copy(fields = fields :+ (name, -1D))
-  def field(name: String, boost: Double): SimpleStringQuery = copy(fields = fields :+ (name, boost))
+  def asfields(fields: String*): SimpleStringQuery          = copy(fields = this.fields ++ fields.map(f => (f, None)))
+  def field(name: String): SimpleStringQuery                = copy(fields = fields :+ (name, None))
+  def field(name: String, boost: Double): SimpleStringQuery = copy(fields = fields :+ (name, boost.some))
 }
