@@ -21,11 +21,16 @@ case class HighlightField(field: String,
                           requireFieldMatch: Option[Boolean] = None,
                           matchedFields: Seq[String] = Nil,
                           phraseLimit: Option[Int] = None,
+                          boundaryScanner: Option[String] = None,
+                          boundaryScannerLocale: Option[String] = None,
                           options: Option[Map[String, AnyRef]] = None) {
 
   def boundaryChars(chars: Array[Char]): HighlightField     = copy(boundaryChars = chars.some)
   def boundaryChars(chars: String): HighlightField          = copy(boundaryChars = chars.toCharArray.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightField = copy(boundaryMaxScan = boundaryMaxScan.some)
+
+  def boundaryScanner(scanner: String): HighlightField = copy(boundaryScanner = scanner.some)
+  def boundaryScannerLocale(locale: String): HighlightField = copy(boundaryScannerLocale = locale.some)
 
   def fragmenter(fragmenter: String): HighlightField      = copy(fragmenter = fragmenter.some)
   def fragmentOffset(fragmentOffset: Int): HighlightField = copy(fragmentOffset = fragmentOffset.some)
