@@ -26,6 +26,8 @@ case class SigTermsAggregation(name: String,
   def executionHint(hint: String): SigTermsAggregation = copy(executionHint = hint.some)
   def size(size: Int): SigTermsAggregation             = copy(size = size.some)
 
+  def filterDuplicateText(b: Boolean): T = copy(filterDuplicateText = b.some)
+
   def includeExclude(include: String, exclude: String): T =
     copy(includeExclude = IncludeExclude(Option(include).toSeq, Option(exclude).toSeq).some)
 
