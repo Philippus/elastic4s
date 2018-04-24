@@ -5,7 +5,7 @@
             "default_operator": "AND",
             "analyzer": "whitespace",
             "fields": [
-                "name^-1.0"
+                "name"
             ],
             "flags": "PRECEDENCE|OR|SLOP",
             "query": "coldplay"
