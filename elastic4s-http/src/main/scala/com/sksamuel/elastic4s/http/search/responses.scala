@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.get.HitField
 import com.sksamuel.elastic4s.http.explain.Explanation
 import com.sksamuel.elastic4s.http.get.MetaDataFields
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
-import com.sksamuel.elastic4s.{AggReader, Hit, HitReader}
+import com.sksamuel.elastic4s.{Hit, HitReader}
 
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
@@ -54,7 +54,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
           InnerHit(
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             score = hits("_score").asInstanceOf[Double],
-            source = hits("_source").asInstanceOf[Map[String, AnyRef]],
+            source = hits.get("_source").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             innerHits = buildInnerHits(hits.getOrElse("inner_hits", null).asInstanceOf[Map[String, Map[String, Any]]]),
             highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty),
             sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty)
