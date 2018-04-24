@@ -16,8 +16,9 @@ case class SigTermsAggregation(name: String,
                                backgroundFilter: Option[Query] = None,
                                subaggs: Seq[AbstractAggregation] = Nil,
                                metadata: Map[String, AnyRef] = Map.empty,
-                               heuristic: Option[String] = None)
-    extends Aggregation {
+                               heuristic: Option[String] = None,
+                               filterDuplicateText: Option[Boolean] = None)
+  extends Aggregation {
 
   type T = SigTermsAggregation
 
