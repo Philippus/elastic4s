@@ -35,6 +35,7 @@ object SigTextAggregationBuilder {
       builder.rawField("background_filter", x)
     }
     agg.size.foreach(builder.field("size", _))
+    agg.filterDuplicateText.foreach(builder.field("filer_duplicate_text", _))
     builder.endObject()
 
     SubAggsBuilderFn(agg, builder)
