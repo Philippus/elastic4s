@@ -21,7 +21,7 @@ case class JoinFieldDefinition(name: String,
     extends FieldDefinition {
 
   type T = JoinFieldDefinition
-  override def `type` = "object"
+  override def `type` = "join"
 
   override def boost(boost: Double): T          = copy(boost = boost.some)
   override def docValues(docValues: Boolean): T = copy(docValues = docValues.some)
