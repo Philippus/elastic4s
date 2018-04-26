@@ -8,9 +8,9 @@ import com.sksamuel.elastic4s.mappings.MappingBuilderFn
 object CreateIndexContentBuilder {
 
   def apply(d: CreateIndexRequest): XContentBuilder =
-    if (d.rawSource.isDefined) {
+    if (d.rawSource.isDefined)
       XContentFactory.parse(d.rawSource.get)
-    } else {
+    else {
       val builder = XContentFactory.jsonBuilder()
 
       if (d.settings.settings.nonEmpty || d.analysis.nonEmpty) {
@@ -34,9 +34,8 @@ object CreateIndexContentBuilder {
 
       if (d.mappings.nonEmpty) {
         builder.startObject("mappings")
-        for (mapping <- d.mappings) {
+        for (mapping <- d.mappings)
           builder.rawField(mapping.`type`, MappingBuilderFn.build(mapping))
-        }
         builder.endObject()
       }
 

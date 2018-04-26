@@ -46,13 +46,14 @@ object MappingBuilderFn {
     for (dd <- d.dateDetection) builder.field("date_detection", dd)
     for (nd <- d.numericDetection) builder.field("numeric_detection", nd)
 
-    d.dynamic.foreach(dynamic => {
-      builder.field("dynamic", dynamic match {
-        case DynamicMapping.Strict => "strict"
-        case DynamicMapping.False  => "false"
-        case _                     => "dynamic"
-      })
-    })
+    d.dynamic.foreach(
+      dynamic =>
+        builder.field("dynamic", dynamic match {
+          case DynamicMapping.Strict => "strict"
+          case DynamicMapping.False  => "false"
+          case _                     => "dynamic"
+        })
+    )
 
     d.boostName.foreach(
       x =>
@@ -64,15 +65,14 @@ object MappingBuilderFn {
 
     if (d.fields.nonEmpty) {
       builder.startObject("properties")
-      for (field <- d.fields) {
+      for (field <- d.fields)
         builder.rawField(field.name, FieldBuilderFn(field))
-      }
       builder.endObject() // end properties
     }
 
     if (d.meta.nonEmpty) {
       builder.startObject("_meta")
-      for (meta <- d.meta) {
+      for (meta <- d.meta)
         meta match {
           case (name, s: String)  => builder.field(name, s)
           case (name, s: Double)  => builder.field(name, s)
@@ -81,7 +81,6 @@ object MappingBuilderFn {
           case (name, s: Float)   => builder.field(name, s)
           case (name, s: Int)     => builder.field(name, s)
         }
-      }
       builder.endObject()
     }
 

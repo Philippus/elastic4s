@@ -14,18 +14,16 @@ trait ClusterHandlers {
     }
 
     private def buildMetricsString(metrics: Seq[String]): String =
-      if (metrics.isEmpty) {
+      if (metrics.isEmpty)
         "/_all"
-      } else {
+      else
         "/" + metrics.mkString(",")
-      }
 
     private def buildIndexString(indices: Seq[String]): String =
-      if (indices.isEmpty) {
+      if (indices.isEmpty)
         ""
-      } else {
+      else
         "/" + indices.mkString(",")
-      }
   }
 
   implicit object ClusterHealthHandler extends Handler[ClusterHealthRequest, ClusterHealthResponse] {
@@ -44,11 +42,10 @@ trait ClusterHandlers {
     }
 
     private def indicesUrl(indices: Seq[String]): String =
-      if (indices.isEmpty) {
+      if (indices.isEmpty)
         ""
-      } else {
+      else
         "/" + indices.mkString(",")
-      }
   }
 }
 

@@ -12,9 +12,8 @@ object ElasticJson4s {
     implicit def Json4sHitReader[T](implicit json4s: Serialization, formats: Formats, mf: Manifest[T]): HitReader[T] =
       new HitReader[T] {
         override def read(hit: Hit): Either[Throwable, T] =
-          try {
-            Right(json4s.read[T](hit.sourceAsString))
-          } catch {
+          try Right(json4s.read[T](hit.sourceAsString))
+          catch {
             case NonFatal(e) => Left(e)
           }
       }

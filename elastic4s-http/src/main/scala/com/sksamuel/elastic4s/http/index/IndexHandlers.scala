@@ -35,9 +35,8 @@ trait IndexHandlers {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.createOnly.foreach(
         createOnly =>
-          if (createOnly) {
+          if (createOnly)
             params.put("op_type", "create")
-        }
       )
       request.routing.foreach(params.put("routing", _))
       request.parent.foreach(params.put("parent", _))

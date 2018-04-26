@@ -63,7 +63,7 @@ object Build extends AutoPlugin {
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    pomExtra := {
+    pomExtra :=
       <url>https://github.com/sksamuel/elastic4s</url>
         <licenses>
           <license>
@@ -83,6 +83,5 @@ object Build extends AutoPlugin {
             <url>http://github.com/sksamuel</url>
           </developer>
         </developers>
-    }
   )
 }

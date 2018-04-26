@@ -39,9 +39,8 @@ trait DeleteHandlers {
           s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      if (request.proceedOnConflicts.getOrElse(false)) {
+      if (request.proceedOnConflicts.getOrElse(false))
         params.put("conflicts", "proceed")
-      }
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))

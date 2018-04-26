@@ -10,9 +10,8 @@ object PercentilesAggregationBuilder {
     builder.startObject("percentiles")
 
     agg.field.foreach(builder.field("field", _))
-    if (agg.percents.nonEmpty) {
+    if (agg.percents.nonEmpty)
       builder.array("percents", agg.percents.toArray)
-    }
 
     agg.compression.foreach { compression =>
       builder.startObject("tdigest")

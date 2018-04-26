@@ -20,13 +20,11 @@ object MultiGetBodyBuilder {
           if (context.excludes.nonEmpty)
             builder.array("exclude", context.excludes)
           builder.endObject()
-        } else {
+        } else
           builder.field("_source", false)
-        }
       }
-      if (get.storedFields.nonEmpty) {
+      if (get.storedFields.nonEmpty)
         builder.array("stored_fields", get.storedFields.toArray)
-      }
       builder.endObject()
     }
     builder.endArray()

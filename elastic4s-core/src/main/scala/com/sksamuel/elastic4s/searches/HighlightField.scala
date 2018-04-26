@@ -29,7 +29,7 @@ case class HighlightField(field: String,
   def boundaryChars(chars: String): HighlightField          = copy(boundaryChars = chars.toCharArray.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightField = copy(boundaryMaxScan = boundaryMaxScan.some)
 
-  def boundaryScanner(scanner: String): HighlightField = copy(boundaryScanner = scanner.some)
+  def boundaryScanner(scanner: String): HighlightField      = copy(boundaryScanner = scanner.some)
   def boundaryScannerLocale(locale: String): HighlightField = copy(boundaryScannerLocale = locale.some)
 
   def fragmenter(fragmenter: String): HighlightField      = copy(fragmenter = fragmenter.some)

@@ -41,14 +41,12 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    if (request.meta.explain.getOrElse(false)) {
+    if (request.meta.explain.getOrElse(false))
       builder.field("explain", true)
-    }
 
     request.scoring.minScore.foreach(builder.field("min_score", _))
-    if (request.searchAfter.nonEmpty) {
+    if (request.searchAfter.nonEmpty)
       builder.autoarray("search_after", request.searchAfter)
-    }
 
     if (request.fields.scriptFields.nonEmpty) {
       builder.startObject("script_fields")
@@ -101,9 +99,8 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    if (request.fields.storedFields.nonEmpty) {
+    if (request.fields.storedFields.nonEmpty)
       builder.array("stored_fields", request.fields.storedFields.toArray)
-    }
 
     if (request.indexBoosts.nonEmpty) {
       builder.startArray("indices_boost")

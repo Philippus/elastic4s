@@ -47,21 +47,19 @@ object EnumConversions {
 
   def order(order: TermsOrder): XContentBuilder = {
     val builder = XContentFactory.obj()
-    if (order.asc) {
+    if (order.asc)
       builder.field(order.name, "asc")
-    } else {
+    else
       builder.field(order.name, "desc")
-    }
     builder.endObject()
   }
 
   def order(order: HistogramOrder): XContentBuilder = {
     val builder = XContentFactory.obj()
-    if (order.asc) {
+    if (order.asc)
       builder.field(order.name, "asc")
-    } else {
+    else
       builder.field(order.name, "desc")
-    }
     builder.endObject()
   }
 

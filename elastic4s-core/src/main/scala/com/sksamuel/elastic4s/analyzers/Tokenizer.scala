@@ -57,9 +57,8 @@ case class PatternTokenizer(override val name: String, pattern: String = "\\W+",
     if (flags.nonEmpty)
       source.field("flags", flags)
     source.field("pattern", pattern)
-    if (group > 0) {
+    if (group > 0)
       source.field("group", group)
-    }
   }
 
   def pattern(pattern: String): PatternTokenizer = copy(pattern = pattern)

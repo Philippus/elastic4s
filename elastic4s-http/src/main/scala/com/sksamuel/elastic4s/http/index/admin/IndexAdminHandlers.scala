@@ -26,9 +26,8 @@ trait IndexAdminHandlers {
       val builder = XContentFactory.jsonBuilder()
       if (request.settings.nonEmpty) {
         builder.startObject("settings")
-        for ((key, value) <- request.settings) {
+        for ((key, value) <- request.settings)
           builder.field(key, value)
-        }
         builder.endObject()
       }
 

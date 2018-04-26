@@ -18,9 +18,8 @@ object HighlightFieldBuilderFn {
     field.highlightQuery.map(QueryBuilderFn.apply).foreach { highlight =>
       builder.rawField("highlight_query", highlight)
     }
-    if (field.matchedFields.nonEmpty) {
+    if (field.matchedFields.nonEmpty)
       builder.array("matched_fields", field.matchedFields.toArray)
-    }
     field.highlighterType.foreach(builder.field("type", _))
     field.noMatchSize.foreach(builder.field("no_match_size", _))
     field.numOfFragments.foreach(builder.field("number_of_fragments", _))

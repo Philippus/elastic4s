@@ -27,9 +27,8 @@ object CompletionSuggestionBuilderFn {
     completion.regex.foreach { regex =>
       builder.startObject("regex")
       completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
-      if (completion.regexFlags.nonEmpty) {
+      if (completion.regexFlags.nonEmpty)
         builder.field("flags", completion.regexFlags.map(EnumConversions.regexpFlag).mkString("|"))
-      }
       builder.endObject()
     }
 

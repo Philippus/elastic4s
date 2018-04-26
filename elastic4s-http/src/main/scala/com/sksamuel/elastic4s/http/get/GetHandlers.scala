@@ -76,9 +76,8 @@ trait GetHandlers {
       request.fetchSource.foreach { context =>
         FetchSourceContextQueryParameterFn(context).foreach { case (key, value) => params.put(key, value) }
       }
-      if (request.storedFields.nonEmpty) {
+      if (request.storedFields.nonEmpty)
         params.put("stored_fields", request.storedFields.mkString(","))
-      }
       request.parent.foreach(params.put("parent", _))
       request.routing.foreach(params.put("routing", _))
       request.preference.foreach(params.put("preference", _))

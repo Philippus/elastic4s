@@ -8,9 +8,8 @@ object IdQueryBodyFn {
   def apply(q: IdQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("ids")
-    if (q.types.nonEmpty) {
+    if (q.types.nonEmpty)
       builder.array("type", q.types.toArray)
-    }
     builder.autoarray("values", q.ids)
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))

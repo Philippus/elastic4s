@@ -63,9 +63,8 @@ trait SnapshotHandlers {
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
 
       val body = XContentFactory.jsonBuilder()
-      if (request.indices.isNonEmpty) {
+      if (request.indices.isNonEmpty)
         body.field("indices", request.indices.string)
-      }
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))
       request.includeGlobalState.foreach(body.field("include_global_state", _))
       request.partial.foreach(body.field("partial", _))
@@ -97,9 +96,8 @@ trait SnapshotHandlers {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 
       val body = XContentFactory.jsonBuilder()
-      if (request.indices.isNonEmpty) {
+      if (request.indices.isNonEmpty)
         body.field("indices", request.indices.string)
-      }
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))
       request.includeGlobalState.foreach(body.field("include_global_state", _))
       request.partial.foreach(body.field("partial", _))

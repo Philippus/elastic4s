@@ -17,9 +17,8 @@ object ScriptBuilderFn {
       case ScriptType.Stored => builder.field("id", script.script)
     }
 
-    if (script.params.nonEmpty) {
+    if (script.params.nonEmpty)
       builder.autofield("params", script.params)
-    }
 
     if (script.options.nonEmpty) {
       builder.startObject("options")

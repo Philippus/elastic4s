@@ -39,12 +39,10 @@ case class CustomNormalizerDefinition(override val name: String, filters: Seq[An
     source.field("type", "custom")
     val tokenFilters = filters.collect { case token: TokenFilter => token }
     val charFilters  = filters.collect { case char: CharFilter   => char }
-    if (tokenFilters.nonEmpty) {
+    if (tokenFilters.nonEmpty)
       source.array("filter", tokenFilters.map(_.name).toArray)
-    }
-    if (charFilters.nonEmpty) {
+    if (charFilters.nonEmpty)
       source.array("char_filter", charFilters.map(_.name).toArray)
-    }
   }
 
   def filters(filters: Seq[AnalyzerFilter]): CustomNormalizerDefinition = copy(filters = filters)

@@ -15,7 +15,7 @@ object SimpleStringBodyFn {
     s.quote_field_suffix.foreach(builder.field("quote_field_suffix", _))
     if (s.fields.nonEmpty) {
       val fields = s.fields.map {
-        case (name, None)  => name
+        case (name, None)        => name
         case (name, Some(0.0D))  => name // for backwards compatibility with the erroneous code that was here
         case (name, Some(boost)) => s"$name^$boost"
       }.toArray

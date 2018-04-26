@@ -92,9 +92,8 @@ trait UpdateHandlers {
           s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
-      if (request.proceedOnConflicts.getOrElse(false)) {
+      if (request.proceedOnConflicts.getOrElse(false))
         params.put("conflicts", "proceed")
-      }
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))

@@ -442,9 +442,8 @@ case class CompoundWordTokenFilter(name: String,
   val filterType = `type`.name
 
   override def build(source: XContentBuilder): Unit = {
-    if (wordList.nonEmpty) {
+    if (wordList.nonEmpty)
       source.array("word_list", wordList.toArray)
-    }
     wordListPath.foreach(source.field("word_list_path", _))
     hyphenationPatternsPath.foreach(source.field("hyphenation_patterns_path", _))
     minWordSize.foreach(source.field("min_word_size", _))
