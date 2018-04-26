@@ -14,9 +14,7 @@ object KeyedFiltersAggregationBuilder {
     agg.otherBucketKey.foreach(builder.field("other_bucket_key", _))
 
     builder.startObject("filters")
-    agg.filters.map(map => {
-      builder.rawField(map._1, QueryBuilderFn(map._2))
-    })
+    agg.filters.map(map => builder.rawField(map._1, QueryBuilderFn(map._2)))
     builder.endObject()
 
     builder.endObject()

@@ -17,9 +17,7 @@ object GaussianDecayScoreBuilderFn {
     builder.endObject()
     g.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.field("multi_value_mode", _))
     builder.endObject()
-    g.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    g.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     g.weight.foreach(builder.field("weight", _))
     builder
   }
@@ -31,9 +29,7 @@ object RandomScoreFunctionBuilderFn {
     builder.startObject("random_score")
     builder.field("seed", r.seed)
     builder.endObject()
-    r.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    r.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -45,9 +41,7 @@ object ScriptScoreBuilderFn {
     builder.rawField("script", ScriptBuilderFn(s.script))
     builder.endObject()
     s.weight.foreach(builder.field("weight", _))
-    s.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    s.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -61,9 +55,7 @@ object FieldValueFactorBuilderFn {
     f.modifier.map(_.toString.toLowerCase).foreach(builder.field("modifier", _))
     f.missing.foreach(builder.field("missing", _))
     builder.endObject()
-    f.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    f.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -81,9 +73,7 @@ object ExponentialDecayScoreBuilderFn {
     g.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.field("multi_value_mode", _))
     builder.endObject()
     g.weight.foreach(builder.field("weight", _))
-    g.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    g.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -101,9 +91,7 @@ object LinearDecayScoreBuilderFn {
     g.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.field("multi_value_mode", _))
     builder.endObject()
     g.weight.foreach(builder.field("weight", _))
-    g.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    g.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -112,9 +100,7 @@ object WeightBuilderFn {
   def apply(w: WeightScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("weight", w.weight.toFloat)
-    w.filter.foreach(filter => {
-      builder.rawField("filter", QueryBuilderFn.apply(filter))
-    })
+    w.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }

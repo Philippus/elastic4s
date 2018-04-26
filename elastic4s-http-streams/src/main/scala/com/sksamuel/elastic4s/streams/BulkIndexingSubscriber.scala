@@ -37,13 +37,12 @@ class BulkIndexingSubscriber[T] private[streams] (
     // rule 1.9 https://github.com/reactive-streams/reactive-streams-jvm#2.5
     // when the provided Subscriber is null in which case it MUST throw a java.lang.NullPointerException to the caller
     if (sub == null) throw new NullPointerException()
-    if (actor == null) {
+    if (actor == null)
       actor = actorRefFactory.actorOf(Props(new BulkActor(client, sub, builder, config)))
-    } else {
+    else
       // rule 2.5, must cancel subscription if onSubscribe has been invoked twice
       // https://github.com/reactive-streams/reactive-streams-jvm#2.5
       sub.cancel()
-    }
   }
 
   override def onNext(t: T): Unit = {
@@ -174,11 +173,10 @@ class BulkActor[T](client: ElasticClient,
 
     case t: T =>
       buffer.append(t)
-      if (buffer.size == config.batchSize) {
+      if (buffer.size == config.batchSize)
         index()
-      } else {
+      else
         resetFlushAfterScheduler()
-      }
   }
 
   // need to check if we're completed, because if we are then this might be the last pending conf
@@ -197,9 +195,8 @@ class BulkActor[T](client: ElasticClient,
   }
 
   private def shutdownIfAllConfirmed(): Unit =
-    if (confirmed + failed == sent) {
+    if (confirmed + failed == sent)
       context.stop(self)
-    }
 
   private def send(req: BulkRequest, originals: Seq[T], attempts: Int): Unit = {
     require(req.requests.size == originals.size, "Requests size does not match originals size")
@@ -227,16 +224,14 @@ class BulkActor[T](client: ElasticClient,
       case Failure(e)                       => self ! e
       case Success(failure: RequestFailure) => self ! new RuntimeException(failure.toString)
       case Success(RequestSuccess(_, _, _, result)) =>
-        if (result.errors) {
+        if (result.errors)
           // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
           // avoid flooding the cluster
           if (attempts > 0) {
             val (retryDef, originals) = getRetryDef(result)
             system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef, originals, attempts - 1))
-          } else {
+          } else
             self ! BulkActor.FailedResult(result.failures, result.failures.map(getOriginalForResponse))
-          }
-        }
 
         if (result.hasSuccesses)
           self ! BulkActor.Result(result.successes, result.successes.map(getOriginalForResponse))

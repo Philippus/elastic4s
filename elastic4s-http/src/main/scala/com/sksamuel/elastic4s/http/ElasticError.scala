@@ -22,9 +22,8 @@ object ElasticError {
         if (node != null && node.has("error")) {
           val errorNode = node.get("error")
           JacksonSupport.mapper.readValue[ElasticError](JacksonSupport.mapper.writeValueAsBytes(errorNode))
-        } else {
+        } else
           ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil)
-        }
       case _ =>
         ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil)
     }

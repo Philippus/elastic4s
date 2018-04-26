@@ -11,7 +11,8 @@ trait AggBucket extends HasAggregations {
 }
 
 case class TermBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
-    extends AggBucket with Transformable
+    extends AggBucket
+    with Transformable
 
 case class TermsAggResult(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Int, otherDocCount: Int)
     extends BucketAggregation {
@@ -299,8 +300,9 @@ case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_id") id: String,
                   @JsonProperty("_score") score: Option[Double],
                   sort: Seq[String],
-                  @JsonProperty("_source") source: Map[String, Any]) extends Transformable {
-  def ref = DocumentRef(index, `type`, id)
+                  @JsonProperty("_source") source: Map[String, Any])
+    extends Transformable {
+  def ref                              = DocumentRef(index, `type`, id)
   override private[elastic4s] val data = source
 }
 
@@ -359,7 +361,6 @@ trait HasAggregations extends Transformable {
 
   override private[elastic4s] def data: Map[String, Any]
   private def agg(name: String): Map[String, Any] = data(name).asInstanceOf[Map[String, Any]]
-
 
   def contains(name: String): Boolean = data.contains(name)
   def names: Iterable[String]         = data.keys

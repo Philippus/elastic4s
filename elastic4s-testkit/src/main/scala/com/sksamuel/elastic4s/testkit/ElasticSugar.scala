@@ -47,9 +47,8 @@ trait ElasticSugar extends ElasticDsl {
     while (backoff <= 16 && !done) {
       if (backoff > 0) Thread.sleep(200 * backoff)
       backoff = backoff + 1
-      try {
-        done = predicate()
-      } catch {
+      try done = predicate()
+      catch {
         case e: Throwable =>
           logger.warn("problem while testing predicate", e)
       }

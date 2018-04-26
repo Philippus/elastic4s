@@ -93,12 +93,10 @@ case class CustomAnalyzerDefinition(override val name: String, tokenizer: Tokeni
     source.field("tokenizer", tokenizer.name)
     val tokenFilters = filters.collect { case token: TokenFilter => token }
     val charFilters  = filters.collect { case char: CharFilter   => char }
-    if (tokenFilters.nonEmpty) {
+    if (tokenFilters.nonEmpty)
       source.array("filter", tokenFilters.map(_.name).toArray)
-    }
-    if (charFilters.nonEmpty) {
+    if (charFilters.nonEmpty)
       source.array("char_filter", charFilters.map(_.name).toArray)
-    }
   }
 
   def filters(filters: Seq[AnalyzerFilter]): CustomAnalyzerDefinition = copy(filters = filters)

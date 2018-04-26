@@ -53,9 +53,8 @@ object GeoDistanceSortBuilderFn {
         builder.endArray()
       }
       builder.endArray()
-    } else if (geo.geohashes.nonEmpty) {
+    } else if (geo.geohashes.nonEmpty)
       builder.array(geo.field, geo.geohashes.toArray[String])
-    }
 
     geo.geoDistance.map(EnumConversions.geoDistance).foreach(builder.field("distance_type", _))
     geo.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))

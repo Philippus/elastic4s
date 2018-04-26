@@ -10,9 +10,8 @@ object InnerHitQueryBodyFn {
 
   def apply(d: InnerHit): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    if (d.name.trim.nonEmpty) {
+    if (d.name.trim.nonEmpty)
       builder.field("name", d.name)
-    }
     d.from.foreach(builder.field("from", _))
     d.explain.foreach(builder.field("explain", _))
 
@@ -22,9 +21,8 @@ object InnerHitQueryBodyFn {
     d.trackScores.foreach(builder.field("track_scores", _))
     d.version.foreach(builder.field("version", _))
     d.size.foreach(builder.field("size", _))
-    if (d.docValueFields.nonEmpty) {
+    if (d.docValueFields.nonEmpty)
       builder.array("docvalue_fields", d.docValueFields.toArray)
-    }
     if (d.sorts.nonEmpty) {
       builder.startArray("sort")
       d.sorts.foreach { sort =>
@@ -32,9 +30,8 @@ object InnerHitQueryBodyFn {
       }
       builder.endArray()
     }
-    if (d.storedFieldNames.nonEmpty) {
+    if (d.storedFieldNames.nonEmpty)
       builder.array("stored_fields", d.storedFieldNames.toArray)
-    }
     if (d.highlights.nonEmpty) {
       builder.startObject("highlight")
       builder.startObject("fields")

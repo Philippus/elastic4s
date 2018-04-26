@@ -14,9 +14,8 @@ object ScriptedMetricAggregationBuilder {
     builder.field("combine_script", agg.combineScript.map(_.script).getOrElse(""))
     builder.field("reduce_script", agg.reduceScript.map(_.script).getOrElse(""))
 
-    if (!agg.params.isEmpty) {
+    if (!agg.params.isEmpty)
       builder.autofield("params", agg.params)
-    }
 
     SubAggsBuilderFn(agg, builder)
     AggMetaDataFn(agg, builder)

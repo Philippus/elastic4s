@@ -15,9 +15,8 @@ package object playjson {
   @implicitNotFound("No Reads for type ${T} found. Bring an implicit Reads[T] instance in scope")
   implicit def playJsonHitReader[T](implicit r: Reads[T]) = new HitReader[T] {
     override def read(hit: Hit): Either[Throwable, T] =
-      try {
-        Right(Json.parse(hit.sourceAsString).as[T])
-      } catch {
+      try Right(Json.parse(hit.sourceAsString).as[T])
+      catch {
         case NonFatal(e) => Left(e)
       }
   }
