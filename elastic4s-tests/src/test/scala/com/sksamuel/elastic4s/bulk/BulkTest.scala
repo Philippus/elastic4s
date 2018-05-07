@@ -97,4 +97,69 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
       get("4").from(indexname)
     }.await.right.get.result.found shouldBe false
   }
+
+  it should "handle version in delete operation" in {
+
+    http.execute {
+      bulk(
+        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "20",
+        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "21"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result.errors shouldBe false
+
+    val result = http.execute {
+      bulk(
+        deleteById(indexname, "elements", "20") version(1),
+        deleteById(indexname, "elements", "21") version(2)
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result
+
+    result.errors shouldBe true
+    result.failures.map(_.itemId).toSet shouldBe Set(1)
+    result.successes.map(_.itemId).toSet shouldBe Set(0)
+
+    http.execute {
+      get(indexname, "elements", "20")
+    }.await.right.get.result.found shouldBe false
+
+    http.execute {
+      get(indexname, "elements", "21")
+    }.await.right.get.result.found shouldBe true
+
+  }
+
+  it should "handle version in updateById operation" in {
+
+    http.execute {
+      bulk(
+        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "22",
+        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "23"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result.errors shouldBe false
+
+    val result = http.execute {
+      bulk(
+        updateById(indexname, "elements", "22") doc("atomicweight" -> 9) version(1),
+        updateById(indexname, "elements", "23") doc("atomicweight" -> 10) version(2)
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result
+
+    result.errors shouldBe true
+    result.failures.map(_.itemId).toSet shouldBe Set(1)
+    result.successes.map(_.itemId).toSet shouldBe Set(0)
+
+    val carbon = http.execute {
+      get(indexname, "elements", "22")
+    }.await.right.get.result
+    carbon.found shouldBe true
+    carbon.sourceAsMap("atomicweight") shouldBe 9
+
+    val oxygen = http.execute {
+      get(indexname, "elements", "23")
+    }.await.right.get.result
+    oxygen.found shouldBe true
+    oxygen.sourceAsMap("atomicweight") shouldBe 8
+
+  }
+
 }
