@@ -79,6 +79,35 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
     }.await.right.get.result.storedField("name").value shouldBe "oxygen"
   }
 
+  it should "handle createOnly in IndexRequest" in {
+
+    http.execute {
+      bulk(
+        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "10",
+        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "11"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result.errors shouldBe false
+
+    http.execute {
+      get("10").from(indexname).storedFields("name")
+    }.await.right.get.result.storedField("name").value shouldBe "carbon"
+
+    http.execute {
+      get("11").from(indexname).storedFields("name")
+    }.await.right.get.result.storedField("name").value shouldBe "oxygen"
+
+    val result = http.execute {
+      bulk(
+        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "10" createOnly false,
+        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "11" createOnly true
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.right.get.result
+
+    result.errors shouldBe true
+    result.failures.map(_.itemId).toSet shouldBe Set(1)
+    result.successes.map(_.itemId).toSet shouldBe Set(0)
+  }
+
   it should "handle multiple delete operations" in {
 
     http.execute {
