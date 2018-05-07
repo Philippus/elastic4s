@@ -126,4 +126,69 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
       get("4").from(indexname)
     }.await.result.found shouldBe false
   }
+
+  it should "handle version in delete operation" in {
+
+    client.execute {
+      bulk(
+        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "20",
+        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "21"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result.errors shouldBe false
+
+    val result = client.execute {
+      bulk(
+        deleteById(indexname, "elements", "20") version(1),
+        deleteById(indexname, "elements", "21") version(2)
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result
+
+    result.errors shouldBe true
+    result.failures.map(_.itemId).toSet shouldBe Set(1)
+    result.successes.map(_.itemId).toSet shouldBe Set(0)
+
+    client.execute {
+      get(indexname, "elements", "20")
+    }.await.result.found shouldBe false
+
+    client.execute {
+      get(indexname, "elements", "21")
+    }.await.result.found shouldBe true
+
+  }
+
+  it should "handle version in updateById operation" in {
+
+    client.execute {
+      bulk(
+        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "22",
+        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "23"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result.errors shouldBe false
+
+    val result = client.execute {
+      bulk(
+        updateById(indexname, "elements", "22") doc("atomicweight" -> 9) version(1),
+        updateById(indexname, "elements", "23") doc("atomicweight" -> 10) version(2)
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result
+
+    result.errors shouldBe true
+    result.failures.map(_.itemId).toSet shouldBe Set(1)
+    result.successes.map(_.itemId).toSet shouldBe Set(0)
+
+    val carbon = client.execute {
+      get(indexname, "elements", "22")
+    }.await.result
+    carbon.found shouldBe true
+    carbon.sourceAsMap("atomicweight") shouldBe 9
+
+    val oxygen = client.execute {
+      get(indexname, "elements", "23")
+    }.await.result
+    oxygen.found shouldBe true
+    oxygen.sourceAsMap("atomicweight") shouldBe 8
+
+  }
+
 }
