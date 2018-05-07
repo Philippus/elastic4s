@@ -37,6 +37,8 @@ object BulkBuilderFn {
         builder.field("_id", delete.id.toString)
         delete.parent.foreach(builder.field("_parent", _))
         delete.routing.foreach(builder.field("_routing", _))
+        delete.version.foreach(builder.field("version", _))
+        delete.versionType.foreach(versionType ⇒ builder.field("version_type", VersionTypeHttpString(versionType)))
         builder.endObject()
         builder.endObject()
 
