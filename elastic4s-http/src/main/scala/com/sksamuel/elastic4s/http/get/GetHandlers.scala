@@ -9,12 +9,14 @@ import com.sksamuel.elastic4s.http._
 import com.sksamuel.exts.Logging
 import org.apache.http.entity.ContentType
 
+import scala.util.Try
+
 case class MultiGetResponse(docs: Seq[GetResponse]) {
   def items: Seq[GetResponse] = docs
   def size: Int               = docs.size
 
   def to[T: HitReader]: IndexedSeq[T]                        = docs.map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = docs.map(_.safeTo[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Try[T]] = docs.map(_.safeTo[T]).toIndexedSeq
 }
 
 trait GetHandlers {
@@ -42,7 +44,7 @@ trait GetHandlers {
 
   implicit object GetHandler extends Handler[GetRequest, GetResponse] with Logging {
 
-    override def responseHandler = new ResponseHandler[GetResponse] {
+    override def responseHandler: ResponseHandler[GetResponse] = new ResponseHandler[GetResponse] {
 
       override def handle(response: HttpResponse): Either[ElasticError, GetResponse] = {
 

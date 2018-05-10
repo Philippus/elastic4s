@@ -58,7 +58,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers
     "should convert TopHit to given type" in {
 
       implicit val stringReader: AggReader[String] = new AggReader[String] {
-        override def read(json: String): Either[Throwable, String] = Right(json)
+        override def read(json: String): Try[String] = Try(json)
       }
       val resp = client.execute {
         search("tophits/landmarks").matchAllQuery().aggs {
@@ -71,7 +71,7 @@ class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers
 
       val agg = resp.aggs.terms("agg1")
       val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
-      tophits.hits.head.safeTo[String].right.get shouldBe "{\"name\":\"buckingham palace\",\"location\":\"london\"}"
+      tophits.hits.head.safeTo[String].get shouldBe "{\"name\":\"buckingham palace\",\"location\":\"london\"}"
 
     }
   }

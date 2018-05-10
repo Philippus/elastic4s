@@ -4,18 +4,16 @@ import com.sksamuel.elastic4s.{Hit, HitReader, Indexable}
 import org.json4s._
 
 import scala.reflect.Manifest
-import scala.util.control.NonFatal
+import scala.util.Try
 
 object ElasticJson4s {
   object Implicits {
 
     implicit def Json4sHitReader[T](implicit json4s: Serialization, formats: Formats, mf: Manifest[T]): HitReader[T] =
       new HitReader[T] {
-        override def read(hit: Hit): Either[Throwable, T] =
-          try Right(json4s.read[T](hit.sourceAsString))
-          catch {
-            case NonFatal(e) => Left(e)
-          }
+        override def read(hit: Hit): Try[T] = Try {
+          json4s.read[T](hit.sourceAsString)
+        }
       }
 
     implicit def Json4sIndexable[T <: AnyRef](implicit json4s: Serialization, formats: Formats): Indexable[T] =

@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.http.search
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.HitReader
 
+import scala.util.Try
+
 case class SearchError(`type`: String,
                        `reason`: String,
                        @JsonProperty("resource.type") resourceType: String,
@@ -25,6 +27,5 @@ case class MultiSearchResponse(items: Seq[MultisearchResponseItem]) {
   }
 
   def to[T: HitReader]: IndexedSeq[T] = successes.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] =
-    successes.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Try[T]] = successes.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
 }

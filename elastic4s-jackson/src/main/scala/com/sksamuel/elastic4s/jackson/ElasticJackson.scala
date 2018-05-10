@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.Logging
 
-import scala.util.control.NonFatal
+import scala.util.Try
 
 object ElasticJackson {
 
@@ -19,7 +19,7 @@ object ElasticJackson {
 
     implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper with ScalaObjectMapper = JacksonSupport.mapper,
                                          manifest: Manifest[T]): HitReader[T] = new HitReader[T] {
-      override def read(hit: Hit): Either[Throwable, T] = {
+      override def read(hit: Hit): Try[T] = Try {
         require(hit.sourceAsString != null)
         try {
           val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]
@@ -35,9 +35,7 @@ object ElasticJackson {
                 case f => f.toString
               }
               .foreach(node.put("_timestamp", _))
-          Right(mapper.readValue[T](mapper.writeValueAsBytes(node)))
-        } catch {
-          case NonFatal(e) => Left(e)
+          mapper.readValue[T](mapper.writeValueAsBytes(node))
         }
       }
     }

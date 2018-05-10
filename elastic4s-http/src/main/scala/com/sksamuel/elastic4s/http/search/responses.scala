@@ -7,6 +7,8 @@ import com.sksamuel.elastic4s.http.get.MetaDataFields
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
+import scala.util.Try
+
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
                      @JsonProperty("_type") `type`: String,
@@ -118,5 +120,5 @@ case class SearchResponse(took: Long,
   def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
 
   def to[T: HitReader]: IndexedSeq[T]                        = hits.hits.map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Try[T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }

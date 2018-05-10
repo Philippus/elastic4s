@@ -22,8 +22,8 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   implicit val HitReader: HitReader[Team] = new HitReader[Team] {
-    override def read(hit: Hit): Either[Throwable, Team] =
-      Right(Team(
+    override def read(hit: Hit): Try[Team] =
+      Try(Team(
         hit.sourceField("name").toString,
         hit.sourceField("stadium").toString,
         hit.sourceField("founded").toString.toInt
