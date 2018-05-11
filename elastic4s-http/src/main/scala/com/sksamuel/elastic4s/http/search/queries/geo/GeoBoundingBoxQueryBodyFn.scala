@@ -8,6 +8,12 @@ object GeoBoundingBoxQueryBodyFn {
 
   def apply(q: GeoBoundingBoxQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("geo_bounding_box")
+
+    q.geoExecType.map(EnumConversions.geoExecType).foreach(builder.field("type", _))
+    q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
+    q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
+    q.queryName.foreach(builder.field("_name", _))
+
     builder.startObject(q.field)
 
     q.corners.foreach { corners =>
@@ -27,11 +33,6 @@ object GeoBoundingBoxQueryBodyFn {
         builder.field("bottom_right", bottomright)
         builder.endObject()
     }
-
-    q.geoExecType.map(EnumConversions.geoExecType).foreach(builder.field("type", _))
-    q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
-    q.validationMethod.map(EnumConversions.geoValidationMethod).foreach(builder.field("validation_method", _))
-    q.queryName.foreach(builder.field("_name", _))
 
     builder.endObject().endObject().endObject()
   }

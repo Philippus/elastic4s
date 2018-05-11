@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.geo
 
 import com.sksamuel.elastic4s.searches.GeoPoint
-import com.sksamuel.elastic4s.searches.queries.geo.{Corners, GeoBoundingBoxQuery}
+import com.sksamuel.elastic4s.searches.queries.geo.{Corners, GeoBoundingBoxQuery, GeoExecType}
 import org.scalatest.{FunSuite, GivenWhenThen, Matchers}
 
 class GeoBoundingBoxQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen {
@@ -54,6 +54,39 @@ class GeoBoundingBoxQueryBodyFnTest extends FunSuite with Matchers with GivenWhe
 
     Then("Should have right field and all corners specified")
     queryBody.string() shouldEqual buildBasicGeoBoxQuery()
+  }
+
+  test("Should correctly handle `type`") {
+    Given("some geo bouding box query with type specified")
+    val geoQuery = GeoBoundingBoxQuery("locationField")
+      .withCorners(
+        top = 1.1,
+        bottom = 3.3,
+        left = 2.2,
+        right = 4.4
+      ).withType(GeoExecType.Memory)
+
+    When("Geo bounding box query is built")
+    val queryBody = GeoBoundingBoxQueryBodyFn(geoQuery)
+
+    Then("Should have right field and all corners specified")
+    queryBody.string() shouldEqual """
+                                     |{
+                                     |  "geo_bounding_box": {
+                                     |    "type": "memory",
+                                     |    "locationField": {
+                                     |      "top_left": {
+                                     |        "lat": 1.1,
+                                     |        "lon": 2.2
+                                     |      },
+                                     |      "bottom_right": {
+                                     |        "lat": 3.3,
+                                     |        "lon": 4.4
+                                     |      }
+                                     |    }
+                                     |  }
+                                     |}
+                                   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
   }
 
   def buildBasicGeoBoxQuery() =
