@@ -8,6 +8,8 @@ import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Success
+
 class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTests {
 
   import ElasticJackson.Implicits._
@@ -39,7 +41,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       // should populate _id, _index and _type for us from the search result
       resp.safeTo[CharacterWithIdTypeAndIndex] shouldBe
-        List(Right(CharacterWithIdTypeAndIndex("2", "jacksontest", "characters", "hank", "breaking bad")))
+        List(Success(CharacterWithIdTypeAndIndex("2", "jacksontest", "characters", "hank", "breaking bad")))
     }
     "support custom mapper" in {
 

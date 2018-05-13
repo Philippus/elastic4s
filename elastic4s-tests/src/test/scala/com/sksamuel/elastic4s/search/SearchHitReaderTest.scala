@@ -4,6 +4,8 @@ import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Success
+
 class SearchHitReaderTest extends FlatSpec with Matchers with DockerTests {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
@@ -30,7 +32,7 @@ class SearchHitReaderTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       search("cars").matchAllQuery().limit(1)
-    }.await.result.safeTo[Car] shouldBe Seq(Right(focus))
+    }.await.result.safeTo[Car] shouldBe Seq(Success(focus))
   }
 }
 
