@@ -8,7 +8,8 @@ import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
 import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{RestClient, Response}
+import org.elasticsearch.ElasticsearchException
 
 import scala.concurrent.Future
 
@@ -74,6 +75,14 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
+  private def toExistsFuture[T](resp: Response, buildResp: Boolean => T): Future[T] = {
+    resp.getStatusLine.getStatusCode match {
+      case 200 => Future.successful(buildResp(true))
+      case 404 => Future.successful(buildResp(false))
+      case code => Future.failed(new ElasticsearchException(s"Bad response code: $code"))
+    }
+  }
+
   implicit object IndexExistsHttpExecutable extends HttpExecutable[IndexExistsDefinition, IndexExistsResponse] {
 
     override def execute(client: RestClient,
@@ -82,7 +91,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val endpoint = s"/${request.index}"
       logger.debug(s"Connecting to $endpoint for indexes exists check")
       val resp = client.performRequest("HEAD", endpoint)
-      Future.successful(IndexExistsResponse(resp.getStatusLine.getStatusCode == 200))
+      toExistsFuture(resp, IndexExistsResponse.apply)
     }
   }
 
@@ -92,7 +101,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val endpoint = s"/${request.indexes.mkString(",")}/${request.types.mkString(",")}"
       logger.debug(s"Connecting to $endpoint for type exists check")
       val resp = client.performRequest("HEAD", endpoint)
-      Future.successful(TypeExistsResponse(resp.getStatusLine.getStatusCode == 200))
+      toExistsFuture(resp, TypeExistsResponse.apply)
     }
   }
 
@@ -102,7 +111,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       val endpoint = s"/_alias/${request.alias}"
       logger.debug(s"Connecting to $endpoint for alias exists check")
       val resp = client.performRequest("HEAD", endpoint)
-      Future.successful(AliasExistsResponse(resp.getStatusLine.getStatusCode == 200))
+      toExistsFuture(resp, AliasExistsResponse.apply)
     }
   }
 
