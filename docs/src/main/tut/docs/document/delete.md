@@ -10,7 +10,7 @@ A delete request allows us to delete a document from an index based on an id. We
 
 ```scala
   client.execute {
-    delete id 3 from "places" / "cities"
+    delete(id = 3) from "places" / "cities"
   }
 ```
 
@@ -18,9 +18,9 @@ Delete is bulk compatible so we can issue multiple requests at once:
 
 ```scala
   client.bulk {
-    delete id 3 from "places" / "cities",
-    delete id 8 from "places" / "cities",
-    delete id 3 from "music" / "bands"
+    delete(id = 3) from "places" / "cities",
+    delete(id = 8) from "places" / "cities",
+    delete(id = 3) from "music" / "bands"
   }
 ```
 
