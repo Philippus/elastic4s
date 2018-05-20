@@ -53,7 +53,7 @@ trait GetHandlers {
           if (node.get("error").isObject)
             Left(ElasticError.parse(response))
           else
-            Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil))
+            Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil, None))
         }
 
         def good = Right(ResponseHandler.fromResponse[GetResponse](response))
