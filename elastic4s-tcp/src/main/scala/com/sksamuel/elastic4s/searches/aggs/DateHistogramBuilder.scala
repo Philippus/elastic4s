@@ -25,6 +25,7 @@ object DateHistogramBuilder {
     agg.minDocCount.foreach(builder.minDocCount)
     agg.missing.foreach(builder.missing)
     agg.offset.foreach(builder.offset)
+    agg.keyed.foreach(builder.keyed)
     agg.order.map(EnumConversions.histogramOrder).foreach(builder.order)
     agg.script.map(ScriptBuilder.apply).foreach(builder.script)
     agg.timeZone.foreach(builder.timeZone)
