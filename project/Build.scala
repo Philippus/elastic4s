@@ -19,10 +19,12 @@ object Build extends AutoPlugin {
   val ScalaLoggingVersion =   "3.9.0"
   val ElasticsearchVersion =  "1.5.2"
 
-  val rootSettings = Seq(
+  override val projectSettings = Seq(
     organization := org,
     scalaVersion := ScalaVersion,
     crossScalaVersions := Seq("2.12.6", "2.11.12"),
+    resolvers += Resolver.mavenLocal,
+    resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
@@ -74,7 +76,6 @@ object Build extends AutoPlugin {
   )
 
   lazy val root = Project("elastic4s", file("."))
-    .settings(rootSettings: _*)
     .settings(publish := {})
     .settings(name := "elastic4s")
     .aggregate(
@@ -84,7 +85,6 @@ object Build extends AutoPlugin {
     )
 
   lazy val core = Project("elastic4s-core", file("elastic4s-core"))
-    .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-core",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion % "test",
@@ -93,12 +93,10 @@ object Build extends AutoPlugin {
     )
 
   lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
-    .settings(rootSettings: _*)
     .settings(name := "elastic4s-testkit")
     .dependsOn(core)
 
   lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
-    .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-jackson",
       libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion,
