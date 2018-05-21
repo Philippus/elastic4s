@@ -1,19 +1,32 @@
 package com.sksamuel.elastic4s.http
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.{JsonAnySetter, JsonProperty}
 import com.sksamuel.elastic4s.json.JacksonSupport
+
+import scala.collection.mutable
 
 case class ElasticError(`type`: String,
                         reason: String,
                         @JsonProperty("index_uuid") indexUuid: Option[String],
                         index: Option[String],
                         shard: Option[String],
-                        @JsonProperty("root_cause") rootCause: Seq[ElasticError])
+                        @JsonProperty("root_cause") rootCause: Seq[ElasticError],
+                        @JsonProperty("caused_by") causedBy: Option[ElasticError.CausedBy])
 
 object ElasticError {
 
+   class CausedBy(`type`: String, reason: String){
+      private val _other = mutable.HashMap[String, String]()
+
+      @JsonAnySetter private def setOther(k: String, v: String): Unit = _other.put(k, v)
+
+      def other(key: String): Option[String] = _other.get(key)
+
+      override def toString: String = s"CausedBy(${`type`},$reason,${_other})"
+    }
+
   def fromThrowable(t: Throwable) =
-    ElasticError(t.getClass.getCanonicalName, t.getLocalizedMessage, None, None, None, Nil)
+    ElasticError(t.getClass.getCanonicalName, t.getLocalizedMessage, None, None, None, Nil, None)
 
   def parse(r: HttpResponse): ElasticError =
     r.entity match {
@@ -23,9 +36,9 @@ object ElasticError {
           val errorNode = node.get("error")
           JacksonSupport.mapper.readValue[ElasticError](JacksonSupport.mapper.writeValueAsBytes(errorNode))
         } else {
-          ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil)
+          ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil, None)
         }
       case _ =>
-        ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil)
+        ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil, None)
     }
 }
