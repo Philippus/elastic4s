@@ -11,7 +11,7 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org = "com.sksamuel.elastic4s"
-    val ScalaVersion = "2.12.6"
+    val ScalaVersion = "2.11.12"
     val ScalatestVersion = "3.0.0"
     val MockitoVersion = "1.9.5"
     val JacksonVersion = "2.9.4"
