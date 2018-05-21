@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.cluster
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterStateDefinition}
-import com.sksamuel.elastic4s.http.{HttpExecutable, HttpRequestClient, HttpResponse}
+import com.sksamuel.elastic4s.cluster.{ClusterHealthDefinition, ClusterSettingsDefinition, ClusterStateDefinition}
+import com.sksamuel.elastic4s.http.{HttpEntity, HttpExecutable, HttpRequestClient, HttpResponse}
+import org.apache.http.entity.ContentType
 
 import scala.concurrent.Future
 
@@ -52,6 +53,15 @@ trait ClusterImplicits {
         "/" + indices.mkString(",")
       }
   }
+
+  implicit object ClusterSettingsHttpExecutable extends HttpExecutable[ClusterSettingsDefinition, ClusterSettingsResponse] {
+    override def execute(client: HttpRequestClient, request: ClusterSettingsDefinition): Future[HttpResponse] = {
+
+      val builder = ClusterBodyBuilderFn(request)
+      val entity = HttpEntity(builder.string, ContentType.APPLICATION_JSON.getMimeType)
+      client.async("PUT", "/_cluster/settings", Map("flat_settings" → true), entity)
+    }
+  }
 }
 
 object ClusterStateResponse {
@@ -82,3 +92,5 @@ case class ClusterHealthResponse(@JsonProperty("cluster_name") clusterName: Stri
                                  @JsonProperty("number_of_in_flight_fetch") numberOfInFlightFetch: Int,
                                  @JsonProperty("task_max_waiting_in_queue_millis") taskMaxWaitingInQueueMillis: Int,
                                  @JsonProperty("active_shards_percent_as_number") activeShardsPercentAsNumber: Double)
+
+case class ClusterSettingsResponse(persistent: Map[String, String], transient: Map[String, String])
