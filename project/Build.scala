@@ -9,15 +9,18 @@ object Build extends AutoPlugin {
   override def trigger  = AllRequirements
   override def requires = JvmPlugin
 
-  val org = "com.sksamuel.elastic4s"
+  object autoImport {
+    val org = "com.sksamuel.elastic4s"
+    val ScalaVersion = "2.12.6"
+    val ScalatestVersion = "3.0.0"
+    val MockitoVersion = "1.9.5"
+    val JacksonVersion = "2.9.4"
+    val Slf4jVersion = "1.7.7"
+    val ScalaLoggingVersion = "3.9.0"
+    val ElasticsearchVersion = "1.5.2"
+  }
 
-  val ScalaVersion =          "2.12.6"
-  val ScalatestVersion =      "3.0.0"
-  val MockitoVersion =        "1.9.5"
-  val JacksonVersion =        "2.9.4"
-  val Slf4jVersion =          "1.7.7"
-  val ScalaLoggingVersion =   "3.9.0"
-  val ElasticsearchVersion =  "1.5.2"
+  import autoImport._
 
   override val projectSettings = Seq(
     organization := org,
@@ -74,33 +77,4 @@ object Build extends AutoPlugin {
         </developers>
     }
   )
-
-  lazy val root = Project("elastic4s", file("."))
-    .settings(publish := {})
-    .settings(name := "elastic4s")
-    .aggregate(
-      core,
-      testkit,
-      jackson
-    )
-
-  lazy val core = Project("elastic4s-core", file("elastic4s-core"))
-    .settings(
-      name := "elastic4s-core",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion % "test",
-      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library")
-    )
-
-  lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
-    .settings(name := "elastic4s-testkit")
-    .dependsOn(core)
-
-  lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
-    .settings(
-      name := "elastic4s-jackson",
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind"        % JacksonVersion,
-      libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
-    ).dependsOn(core, testkit % "test")
 }
