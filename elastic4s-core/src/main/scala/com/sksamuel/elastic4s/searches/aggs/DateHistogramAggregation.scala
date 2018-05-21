@@ -22,6 +22,7 @@ case class DateHistogramAggregation(name: String,
                                     minDocCount: Option[Long] = None,
                                     timeZone: Option[DateTimeZone] = None,
                                     order: Option[HistogramOrder] = None,
+                                    keyed: Option[Boolean] = None,
                                     offset: Option[String] = None,
                                     format: Option[String] = None,
                                     field: Option[String] = None,
@@ -47,6 +48,7 @@ case class DateHistogramAggregation(name: String,
 
   def timeZone(timeZone: DateTimeZone): DateHistogramAggregation = copy(timeZone = timeZone.some)
   def offset(offset: String): DateHistogramAggregation           = copy(offset = offset.some)
+  def keyed(keyed: Boolean): T                                   = copy(keyed = keyed.some)
 
   def order(order: HistogramOrder): DateHistogramAggregation = copy(order = order.some)
 
