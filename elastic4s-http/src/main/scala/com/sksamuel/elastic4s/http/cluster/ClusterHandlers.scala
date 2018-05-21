@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.http.cluster
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.cluster.{ClusterHealthRequest, ClusterStateRequest}
-import com.sksamuel.elastic4s.http.{ElasticRequest, Handler}
+import com.sksamuel.elastic4s.cluster.{ClusterHealthRequest, ClusterSettingsRequest, ClusterStateRequest}
+import com.sksamuel.elastic4s.http.{ElasticRequest, Handler, HttpEntity}
+import org.apache.http.entity.ContentType
 
 trait ClusterHandlers {
 
@@ -47,6 +48,14 @@ trait ClusterHandlers {
       else
         "/" + indices.mkString(",")
   }
+
+  implicit object ClusterSettingsHandler extends Handler[ClusterSettingsRequest, ClusterSettingsResponse] {
+    override def build(request: ClusterSettingsRequest): ElasticRequest = {
+      val builder = ClusterBodyBuilderFn(request)
+      val entity = HttpEntity(builder.string, ContentType.APPLICATION_JSON.getMimeType)
+      ElasticRequest("PUT", "/_cluster/settings", Map("flat_settings" → true), entity)
+    }
+  }
 }
 
 object ClusterStateResponse {
@@ -77,3 +86,5 @@ case class ClusterHealthResponse(@JsonProperty("cluster_name") clusterName: Stri
                                  @JsonProperty("number_of_in_flight_fetch") numberOfInFlightFetch: Int,
                                  @JsonProperty("task_max_waiting_in_queue_millis") taskMaxWaitingInQueueMillis: Int,
                                  @JsonProperty("active_shards_percent_as_number") activeShardsPercentAsNumber: Double)
+
+case class ClusterSettingsResponse(persistent: Map[String, String], transient: Map[String, String])
