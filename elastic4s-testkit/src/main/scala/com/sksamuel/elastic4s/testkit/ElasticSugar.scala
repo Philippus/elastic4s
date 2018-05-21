@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.testkit
 import java.io.File
 import java.util.UUID
 
-import com.sksamuel.elastic4s.{ElasticDsl, ElasticClient}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl}
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.typesafe.scalalogging.slf4j.StrictLogging
+import com.typesafe.scalalogging.StrictLogging
 import org.elasticsearch.common.settings.ImmutableSettings
 
 /** @author Stephen Samuel */

@@ -242,11 +242,12 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
   with DefinitionAttributeMaxBoost
   with DefinitionAttributeScoreMode {
 
-  val builder = queryOrFilter match {
+  val builder: FunctionScoreQueryBuilder = queryOrFilter match {
     case Left(query) => new FunctionScoreQueryBuilder(query.builder)
     case Right(filter) => new FunctionScoreQueryBuilder(filter.builder)
   }
-  val _builder = builder
+
+  val _builder: FunctionScoreQueryBuilder = builder
 
   def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
     scorers.foreach(scorer => scorer._filter match {
@@ -520,11 +521,11 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   with DefinitionAttributePrefixLength
   with DefinitionAttributeBoost {
 
-  val builder = fields.size match {
+  val builder: FuzzyLikeThisQueryBuilder = fields.size match {
     case 0 => QueryBuilders.fuzzyLikeThisQuery().likeText(text)
     case _ => QueryBuilders.fuzzyLikeThisQuery(fields.toSeq: _*).likeText(text)
   }
-  val _builder = builder
+  val _builder: FuzzyLikeThisQueryBuilder = builder
 
   def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
     builder.analyzer(a.name)
