@@ -1,10 +1,15 @@
+import com.typesafe.sbt.SbtPgp
+import com.typesafe.sbt.pgp.PgpKeys
 import sbt._
 import sbt.Keys._
+import sbt.plugins.JvmPlugin
 
-object Build extends Build {
+object Build extends AutoPlugin {
+
+  override def trigger  = AllRequirements
+  override def requires = JvmPlugin
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "1.5.17"
 
   val ScalaVersion =          "2.12.6"
   val ScalatestVersion =      "3.0.0"
@@ -15,13 +20,16 @@ object Build extends Build {
   val ElasticsearchVersion =  "1.5.2"
 
   val rootSettings = Seq(
-    version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.12.6", "2.11.6"),
+    crossScalaVersions := Seq("2.12.6", "2.11.12"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
+    SbtPgp.autoImport.useGpg := true,
+    SbtPgp.autoImport.useGpgAgent := true,
+    sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
@@ -35,13 +43,12 @@ object Build extends Build {
       "org.codehaus.groovy"           %  "groovy"               % "2.3.7"               % "test"
 
     ),
-    publishTo <<= version {
-      (v: String) =>
-        val nexus = "https://oss.sonatype.org/"
-        if (v.trim.endsWith("SNAPSHOT"))
-          Some("snapshots" at nexus + "content/repositories/snapshots")
-        else
-          Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (version.value.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
     pomExtra := {
       <url>https://github.com/sksamuel/elastic4s</url>
