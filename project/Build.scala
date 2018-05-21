@@ -23,7 +23,7 @@ object Build extends Build {
     publishArtifact in Test := false,
     parallelExecution in Test := false,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
-    javacOptions := Seq("-source", "1.7", "-target", "1.7"),
+    javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
       "org.elasticsearch"             %  "elasticsearch"        % ElasticsearchVersion,
       "com.typesafe.scala-logging"    %% "scala-logging-slf4j"  % ScalaLoggingVersion,
