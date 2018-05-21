@@ -16,6 +16,7 @@ object DateHistogramAggregationBuilder {
     agg.order.map(EnumConversions.order).foreach(builder.rawField("order", _))
     agg.offset.foreach(builder.field("offset", _))
     agg.format.foreach(builder.field("format", _))
+    agg.keyed.foreach(builder.field("keyed", _))
     agg.field.foreach(builder.field("field", _))
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))
