@@ -8,7 +8,7 @@ import com.sksamuel.exts.OptionImplicits._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Matchers {
 
@@ -72,8 +72,8 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     }.await.result.safeTo[Team]
 
     teams.toSet shouldBe Set(
-      Right(Team("Arsenal", "The Library", 1886)),
-      Right(Team("Middlesbrough", "Fortress Riverside", 1876))
+      Success(Team("Arsenal", "The Library", 1886)),
+      Success(Team("Middlesbrough", "Fortress Riverside", 1876))
     )
   }
 
@@ -82,7 +82,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
       get("1").from(IndexName)
     }.await.result.safeTo[Team]
 
-    team shouldBe Right(Team("Middlesbrough", "Fortress Riverside", 1876))
+    team shouldBe Success(Team("Middlesbrough", "Fortress Riverside", 1876))
   }
 
   it should "unmarshall a get response" in {
@@ -102,8 +102,8 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     }.await.result.safeTo[Team]
 
     teams.toSet shouldBe Set(
-      Right(Team("Arsenal", "The Library", 1886)),
-      Right(Team("Middlesbrough", "Fortress Riverside", 1876))
+      Success(Team("Arsenal", "The Library", 1886)),
+      Success(Team("Middlesbrough", "Fortress Riverside", 1876))
     )
   }
 
