@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
 import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{RestClient, Response}
+import org.elasticsearch.client.{Response, RestClient}
 import org.elasticsearch.ElasticsearchException
 
 import scala.concurrent.Future
@@ -112,6 +112,16 @@ trait IndexAdminImplicits extends IndexShowImplicits {
       logger.debug(s"Connecting to $endpoint for alias exists check")
       val resp = client.performRequest("HEAD", endpoint)
       toExistsFuture(resp, AliasExistsResponse.apply)
+    }
+  }
+
+  implicit object DocumentExistsHttpExecutable extends HttpExecutable[DocumentExistsDefinition, DocumentExistsResponse] {
+    override def execute(client: RestClient, request: DocumentExistsDefinition): Future[DocumentExistsResponse] = {
+      val DocumentExistsDefinition(index, typ, id) = request
+      val endpoint = s"$index/$typ/$id"
+      logger.debug(s"Connecting to $endpoint for indexes exists check")
+      val resp = client.performRequest("HEAD", endpoint)
+      toExistsFuture(resp, DocumentExistsResponse.apply)
     }
   }
 
