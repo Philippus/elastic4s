@@ -328,7 +328,7 @@ If you are using SBT then you might need to add a resolver to the elasticsearch 
 
 scala
 ```
-resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven
+resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven"
 ```
 
 ## Embedded Node
