@@ -105,8 +105,8 @@ case class SearchResponse(took: Long,
   def aggregations: Aggregations        = Aggregations(aggregationsAsMap)
 
   private def suggestion(name: String): Map[String, SuggestionResult] =
-    suggest
-      .getOrElse(name, Nil)
+    Option(suggest(name))
+      .getOrElse(Nil)
       .map { result =>
         result.text -> result
       }
