@@ -10,6 +10,7 @@ case class GetSegmentsDefinition(indexes: Indexes)
 case class IndexExistsDefinition(index: String)
 case class TypesExistsDefinition(indexes: Seq[String], types: Seq[String])
 case class AliasExistsDefinition(alias: String)
+case class DocumentExistsDefinition(index: String, typ: String, id: String)
 case class IndicesStatsDefinition(indexes: Indexes)
 
 case class ClearCacheDefinition(indexes: Seq[String],

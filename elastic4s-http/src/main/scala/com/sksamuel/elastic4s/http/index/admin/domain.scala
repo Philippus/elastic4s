@@ -26,6 +26,10 @@ case class AliasExistsResponse(exists: Boolean) {
   def isExists: Boolean = exists
 }
 
+case class DocumentExistsResponse(exists: Boolean){
+  def isExists: Boolean = exists
+}
+
 case class ClearCacheResponse(_shards: Shards) {
   def shards: Shards = _shards
 }
