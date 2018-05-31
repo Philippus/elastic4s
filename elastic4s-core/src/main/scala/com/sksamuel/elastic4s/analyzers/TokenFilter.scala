@@ -331,7 +331,7 @@ case class StemmerTokenFilter(name: String, lang: String) extends TokenFilterDef
   val filterType = "stemmer"
 
   override def build(source: XContentBuilder): Unit =
-    source.field("name", lang)
+    source.field("language", lang)
 
   def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
