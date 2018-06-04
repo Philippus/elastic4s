@@ -9,6 +9,7 @@ case class TopHitsAggregationDefinition(name: String,
                                         explain: Option[Boolean] = None,
                                         fetchSource: Option[FetchSourceContext] = None,
                                         size: Option[Int] = None,
+                                        from: Option[Int] = None,
                                         sorts: Seq[SortDefinition] = Nil,
                                         trackScores: Option[Boolean] = None,
                                         version: Option[Boolean] = None,
@@ -29,6 +30,8 @@ case class TopHitsAggregationDefinition(name: String,
     copy(fetchSource = FetchSourceContext(fetchSource).some)
 
   def size(size: Int): TopHitsAggregationDefinition = copy(size = size.some)
+
+  def from(from: Int): TopHitsAggregationDefinition = copy(from = from.some)
 
   def sortBy(first: SortDefinition, rest: SortDefinition*): TopHitsAggregationDefinition = sortBy(first +: rest)
   def sortBy(sorts: Iterable[SortDefinition]): TopHitsAggregationDefinition              = copy(sorts = sorts.toSeq)

@@ -18,6 +18,7 @@ object TopHitsAggregationBuilder {
     agg.trackScores.foreach(builder.trackScores)
     agg.version.foreach(builder.version)
     agg.size.foreach(builder.size)
+    agg.from.foreach(builder.from)
     agg.storedFields.foreach(builder.storedField)
 
     agg.scripts.foreach {
