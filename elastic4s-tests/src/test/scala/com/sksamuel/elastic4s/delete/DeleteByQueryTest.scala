@@ -36,8 +36,6 @@ class DeleteByQueryTest extends WordSpec with Matchers with ElasticDsl with Dual
         deleteIn("charlesd").by(matchQuery("name", "bumbles")).refresh(RefreshPolicy.IMMEDIATE)
       }.await.deleted shouldBe 2
 
-      Thread.sleep(5000)
-
       execute {
         search("charlesd" / "characters").matchAllQuery()
       }.await.totalHits shouldBe 2
