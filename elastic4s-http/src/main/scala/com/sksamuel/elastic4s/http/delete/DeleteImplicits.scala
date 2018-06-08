@@ -42,6 +42,7 @@ trait DeleteImplicits {
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
+      request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
       val body = DeleteByQueryBodyFn(request)
