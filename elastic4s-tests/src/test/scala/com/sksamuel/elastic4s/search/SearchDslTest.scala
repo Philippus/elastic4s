@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderTy
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.searches.suggestion.SuggestMode
-import com.sksamuel.elastic4s.searches.{DateHistogramInterval, GeoPoint, QueryRescoreMode, ScoreMode, SearchType}
+import com.sksamuel.elastic4s.searches._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 
@@ -56,6 +56,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "use preference when specified" in {
     val req = search("*") types("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
     req.show should matchJsonResource("/json/search/search_preference_primary_first.json")
+    req.parameters shouldBe Map("preference" -> "_primary_first")
   }
 
   it should "generate wrapped query for a raw query" in {
