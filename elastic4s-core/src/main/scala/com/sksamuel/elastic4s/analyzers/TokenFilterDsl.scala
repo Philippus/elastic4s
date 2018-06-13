@@ -42,6 +42,8 @@ trait TokenFilterDsl {
 
   def wordDelimiterTokenFilter(name: String): WordDelimiterTokenFilter = WordDelimiterTokenFilter(name)
 
+  def wordDelimiterGraphTokenFilter(name: String): WordDelimiterGraphTokenFilter = WordDelimiterGraphTokenFilter(name)
+
   def compoundWordTokenFilter(name: String, `type`: CompoundWordTokenFilterType) =
     CompoundWordTokenFilter(name, `type`)
 }

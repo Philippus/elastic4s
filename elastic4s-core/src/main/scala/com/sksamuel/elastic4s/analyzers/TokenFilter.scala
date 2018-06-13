@@ -389,6 +389,44 @@ case class WordDelimiterTokenFilter(name: String,
   def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
 }
 
+
+case class WordDelimiterGraphTokenFilter(name: String,
+                                    generateWordParts: Option[Boolean] = None,
+                                    generateNumberParts: Option[Boolean] = None,
+                                    catenateWords: Option[Boolean] = None,
+                                    catenateNumbers: Option[Boolean] = None,
+                                    catenateAll: Option[Boolean] = None,
+                                    splitOnCaseChange: Option[Boolean] = None,
+                                    preserveOriginal: Option[Boolean] = None,
+                                    splitOnNumerics: Option[Boolean] = None,
+                                    stemEnglishPossesive: Option[Boolean] = None)
+  extends TokenFilterDefinition {
+
+  val filterType = "word_delimiter_graph"
+
+  override def build(source: XContentBuilder): Unit = {
+    generateWordParts.foreach(source.field("generate_word_parts", _))
+    generateNumberParts.foreach(source.field("generate_number_parts", _))
+    catenateWords.foreach(source.field("catenate_words", _))
+    catenateNumbers.foreach(source.field("catenate_numbers", _))
+    catenateAll.foreach(source.field("catenate_all", _))
+    splitOnCaseChange.foreach(source.field("split_on_case_change", _))
+    preserveOriginal.foreach(source.field("preserve_original", _))
+    splitOnNumerics.foreach(source.field("split_on_numerics", _))
+    stemEnglishPossesive.foreach(source.field("stem_english_possessive", _))
+  }
+
+  def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter    = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter  = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter        = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter          = copy(catenateAll = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter    = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter     = copy(preserveOriginal = bool.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(splitOnNumerics = bool.some)
+  def stemEnglishPossesive(bool: Boolean): WordDelimiterGraphTokenFilter = copy(stemEnglishPossesive = bool.some)
+}
+
 case class ShingleTokenFilter(name: String,
                               maxShingleSize: Option[Int] = None,
                               minShingleSize: Option[Int] = None,
