@@ -89,6 +89,14 @@ trait SearchImplicits {
             .map(URLEncoder.encode(_, "UTF-8"))
             .mkString(",") + "/_search"
 
+
+      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
+      client.async("POST", endpoint, request.parameters, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+    }
+  }
+
+  implicit class RichSearchDefinition(request: SearchDefinition) {
+    def parameters:Map[String,Any] = {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.searchType
@@ -96,14 +104,13 @@ trait SearchImplicits {
         .map(SearchTypeHttpParameters.convert)
         .foreach(params.put("search_type", _))
       request.control.routing.map(_.toString).foreach(params.put("routing", _))
+      request.control.pref.foreach(params.put("preference", _))
       request.keepAlive.foreach(params.put("scroll", _))
 
       request.indicesOptions.foreach { opts =>
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
       }
-
-      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
-      client.async("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
+      params.toMap
     }
   }
 }
