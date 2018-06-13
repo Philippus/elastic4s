@@ -24,6 +24,22 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     queryBody.string() shouldEqual pointQuery
   }
 
+  test("Should correctly build geo shape point with relation search query") {
+    Given("Some point query")
+    val query = GeoShapeQueryDefinition(
+      "location",
+      InlineShape(
+        PointShape(GeoPoint(-77.03653, 38.897676))
+      )
+    ).relation(ShapeRelation.within)
+
+    When("Geo shape query is built")
+    val queryBody = GeoShapeQueryBodyFn(query)
+
+    Then("query should have right field and coordinate")
+    queryBody.string() shouldEqual pointQuery
+  }
+
   test("Should correctly build geo shape envelope query") {
     Given("Some envelope query")
     val query = GeoShapeQueryDefinition(
@@ -249,7 +265,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def pointQuery =
+  def pointQueryWithRelation =
   """
     |{
     |   "geo_shape":{
@@ -257,11 +273,26 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |         "shape":{
     |            "type":"point",
     |            "coordinates":[-77.03653, 38.897676]
-    |         }
+    |         },
+    |         "relation": "within"
     |      }
     |   }
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+
+  def pointQuery =
+    """
+      |{
+      |   "geo_shape":{
+      |      "location":{
+      |         "shape":{
+      |            "type":"point",
+      |            "coordinates":[-77.03653, 38.897676]
+      |         }
+      |      }
+      |   }
+      |}
+    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def envelopeQuery =
   """
