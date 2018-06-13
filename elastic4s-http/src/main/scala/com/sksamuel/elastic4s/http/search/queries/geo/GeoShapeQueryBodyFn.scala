@@ -34,7 +34,7 @@ object GeoShapeQueryBodyFn {
         builder.endObject()
     }
 
-    q.relation.map(_.getClass.getSimpleName.toLowerCase).foreach(builder.field("relation", _))
+    q.relation.map(_.getClass.getSimpleName.toLowerCase.stripSuffix("$")).foreach(builder.field("relation", _))
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
