@@ -24,6 +24,7 @@ object BulkBuilderFn {
         index.routing.foreach(builder.field("_routing", _))
         index.version.foreach(builder.field("version", _))
         index.versionType.foreach(versionType ⇒ builder.field("version_type", VersionTypeHttpString(versionType)))
+        index.pipeline.foreach(builder.field("pipeline", _))
         builder.endObject()
         builder.endObject()
 
