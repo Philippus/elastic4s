@@ -12,7 +12,8 @@ class BulkBuilderFnTest extends FunSuite with Matchers {
       update("2").in("chemistry/elements").doc("atomicweight" -> 2, "name" -> "helium"),
       indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen").withId("8"),
       update("6").in("chemistry/elements").doc("atomicweight" -> 4, "name" -> "lithium"),
-      delete("10").from("chemistry/elements")
+      delete("10").from("chemistry/elements"),
+      indexInto("chemistry/elements").fields("atomicweight" -> 81, "name" -> "thallium").withId("14").pipeline("periodic-table")
     ).refresh(RefreshPolicy.Immediate)
 
     BulkBuilderFn(req).mkString("\n") shouldBe
@@ -22,7 +23,9 @@ class BulkBuilderFnTest extends FunSuite with Matchers {
         |{"atomicweight":8,"name":"oxygen"}
         |{"update":{"_index":"chemistry","_type":"elements","_id":"6"}}
         |{"doc":{"atomicweight":4,"name":"lithium"}}
-        |{"delete":{"_index":"chemistry","_type":"elements","_id":"10"}}""".stripMargin
+        |{"delete":{"_index":"chemistry","_type":"elements","_id":"10"}}
+        |{"index":{"_index":"chemistry","_type":"elements","_id":"14","pipeline":"periodic-table"}}
+        |{"atomicweight":81,"name":"thallium"}""".stripMargin
 
   }
 
