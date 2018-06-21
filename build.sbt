@@ -1,5 +1,3 @@
-import microsites.ExtraMdFileConfig
-
 lazy val root = Project("elastic4s", file("."))
   .settings(
     publish := {},
@@ -108,8 +106,8 @@ lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   .settings(name := "elastic4s-scalaz")
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core"       % "7.2.18",
-      "org.scalaz" %% "scalaz-concurrent" % "7.2.18"
+      "org.scalaz" %% "scalaz-core"       % "7.2.24",
+      "org.scalaz" %% "scalaz-concurrent" % "7.2.24"
     )
   )
   .dependsOn(http)
@@ -118,7 +116,7 @@ lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
   .settings(name := "elastic4s-monix")
   .settings(
     libraryDependencies ++= Seq(
-      "io.monix" %% "monix" % "2.3.2"
+      "io.monix" %% "monix" % "2.3.3"
     )
   )
   .dependsOn(http)
@@ -185,8 +183,8 @@ lazy val sprayjson = Project("elastic4s-spray-json", file("elastic4s-spray-json"
 lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
   .settings(
     name := "elastic4s-sttp",
-    libraryDependencies += "com.softwaremill.sttp" %% "core"                             % "1.1.3",
-    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.1.3"
+    libraryDependencies += "com.softwaremill.sttp" %% "core"                             % "1.2.0",
+    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.2.0"
   )
   .dependsOn(core, http)
 
@@ -215,47 +213,6 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
     Test / testForkedParallel := false
   )
   .dependsOn(http, jackson, circe, aws, testkit % "test")
-
-lazy val docsMappingsAPIDir = settingKey[String]("Name of subdirectory in site target directory for api docs")
-
-lazy val docs = project
-  .in(file("docs"))
-  .enablePlugins(MicrositesPlugin, ScalaUnidocPlugin)
-  .settings(noPublishSettings)
-  .settings(
-    micrositeName := "Elastic4s",
-    micrositeDescription := "Elasticsearch Scala Client",
-    micrositeAuthor := "Stephen Samuel",
-    micrositeHomepage := "https://sksamuel.github.io/elastic4s",
-    micrositeGithubOwner := "sksamuel",
-    micrositeGithubRepo := "elastic4s",
-    micrositeBaseUrl := "/elastic4s",
-    micrositeDocumentationUrl := "docs",
-    micrositeTwitter := "",
-    micrositeHighlightTheme := "atom-one-light",
-    micrositeExtraMdFiles := Map(file("README.md") -> ExtraMdFileConfig("index.md", "home")),
-    micrositePalette := Map(
-      "brand-primary"   -> "#729B79",
-      "brand-secondary" -> "#2E2C2F",
-      "brand-tertiary"  -> "#2B2D42",
-      "gray-dark"       -> "#646767",
-      "gray"            -> "#475B63",
-      "gray-light"      -> "#8D99AE",
-      "gray-lighter"    -> "#EAF2E6",
-      "white-color"     -> "#FFFFFF"
-    ),
-    git.remoteRepo := "git@github.com:sksamuel/elastic4s.git",
-    autoAPIMappings := true,
-    docsMappingsAPIDir := "api",
-    addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, docsMappingsAPIDir),
-    ghpagesNoJekyll := false,
-    tut / fork := false,
-    ScalaUnidoc / unidoc / fork := false,
-    makeSite / includeFilter := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.js" | "*.swf" | "*.yml" | "*.md",
-    // push microsite on release
-    releaseProcess += releaseStepTask(publishMicrosite)
-  )
-  .dependsOn(core, embedded, http, circe, aws)
 
 lazy val noPublishSettings = Seq(
   publish := {},
