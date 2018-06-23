@@ -13,19 +13,27 @@ trait MappingHandlers {
   implicit object GetMappingHandler extends Handler[GetMappingRequest, Seq[IndexMappings]] {
 
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
-      override def handle(response: HttpResponse) = {
-        val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Map[String, Any]]]]](response)
-        val raw2 = raw.map {
-          case (index, types) =>
-            val mappings = types("mappings").map {
-              case (tpe, properties) =>
-                tpe -> properties.get("properties").map(_.asInstanceOf[Map[String, Any]]).getOrElse(Map.empty)
-            }
-            IndexMappings(index, mappings)
-        }.toSeq
-        Right(raw2)
+      override def handle(response: HttpResponse) : Either[ElasticError, Seq[IndexMappings]] = response.statusCode match {
+        case 201 | 200       =>
+          val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Map[String, Any]]]]](response)
+          val raw2 = raw.map {
+            case (index, types) =>
+              val mappings = types("mappings").map {
+                case (tpe, properties) =>
+                  tpe ->properties.get("properties").map(_.asInstanceOf[Map[String, Any]]).getOrElse(Map.empty)
+                }
+                IndexMappings(index, mappings)
+          }.toSeq
+          Right(raw2)
+        case _              =>
+          try {
+            Left(ElasticError.parse(response))
+          }catch{
+            case _ : Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
+          }
       }
     }
+
 
     override def build(request: GetMappingRequest): ElasticRequest = {
       val endpoint = request.indexesAndTypes match {
