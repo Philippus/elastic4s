@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.ElasticApi
+import com.sksamuel.elastic4s.{ElasticApi, Show}
 import com.sksamuel.elastic4s.http.bulk.BulkHandlers
 import com.sksamuel.elastic4s.http.cat.CatHandlers
 import com.sksamuel.elastic4s.http.cluster.ClusterHandlers
@@ -58,7 +58,7 @@ trait ElasticDsl
 
   implicit class RichRequest[T](t: T) {
     def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
-    def show(implicit handler: Handler[T, _]): String            = ElasticRequestShow.show(handler.build(t))
+    def show(implicit handler: Handler[T, _]): String            = Show[ElasticRequest].show(handler.build(t))
   }
 }
 

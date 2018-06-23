@@ -270,7 +270,7 @@ class BulkActor[T](client: ElasticClient,
   * An implementation of this typeclass must provide a bulk compatible request for the given instance of T.
   * The bulk compatible request will then be sent to elastic.
   *
-  * A bulk compatibl request can be either an index, update, or delete.
+  * A bulk compatible request can be either an index, update, or delete.
   *
   * @tparam T the type of elements this builder supports
   */

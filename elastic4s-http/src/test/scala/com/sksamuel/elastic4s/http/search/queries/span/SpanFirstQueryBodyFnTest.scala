@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.http.search.queries.span
 
 import com.sksamuel.elastic4s.searches.queries.span.{SpanFirstQuery, SpanTermQuery}
-import org.scalatest.FunSuite
+import org.scalatest.{FunSuite, Matchers}
 
-import scala.util.parsing.json.JSON
-
-class SpanFirstQueryBodyFnTest extends FunSuite {
+class SpanFirstQueryBodyFnTest extends FunSuite with Matchers {
 
   test("SpanFirstQueryBodyFn apply should return appropriate XContentBuilder") {
     val builder = SpanFirstQueryBodyFn.apply(SpanFirstQuery(
@@ -14,21 +12,6 @@ class SpanFirstQueryBodyFnTest extends FunSuite {
       boost = Some(2.0),
       queryName = Some("rootName")
     ))
-
-    val actual = JSON.parseRaw(builder.string())
-    val expected = JSON.parseRaw(
-      """
-        |{
-        |   "span_first":{
-        |     "match":{
-        |       "span_term":{"field1":"value1"}
-        |     },
-        |     "end":5,
-        |     "boost":2.0,
-        |     "_name":"rootName"
-        |   }
-        |}""".stripMargin)
-
-    assert(actual === expected)
+    builder.string() shouldBe """"""
   }
 }

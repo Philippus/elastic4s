@@ -2,11 +2,13 @@ package com.sksamuel.elastic4s.http
 
 import java.nio.charset.Charset
 
+import com.sksamuel.elastic4s.Show
 import org.apache.http.client.config.RequestConfig
-import org.apache.http.entity.{ContentType, FileEntity, InputStreamEntity, StringEntity}
+import org.apache.http.entity.{AbstractHttpEntity, ContentType, FileEntity, InputStreamEntity, StringEntity}
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.{ResponseException, ResponseListener, RestClient}
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
+
 import scala.collection.JavaConverters._
 import scala.io.{Codec, Source}
 
@@ -15,7 +17,7 @@ case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
 // an implementation of the elastic4s HttpRequestClient that wraps the elasticsearch java client
 class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
 
-  def apacheEntity(entity: HttpEntity) = entity match {
+  def apacheEntity(entity: HttpEntity): AbstractHttpEntity = entity match {
     case e: HttpEntity.StringEntity =>
       logger.debug(e.content)
       new StringEntity(e.content, ContentType.APPLICATION_JSON)
@@ -30,7 +32,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
   def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
     val entity = Option(r.getEntity).map { entity =>
       val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
-      implicit val codec  = Codec(Charset.forName(contentEncoding))
+      implicit val codec: Codec = Codec(Charset.forName(contentEncoding))
       val body            = Source.fromInputStream(entity.getContent).mkString
       HttpEntity.StringEntity(body, Some(contentEncoding))
     }
@@ -42,7 +44,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
   }
 
   override def send(req: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
-    logger.debug(s"Executing elastic request ${ElasticRequestShow.show(req)}")
+    logger.debug(s"Executing elastic request ${Show[ElasticRequest].show(req)}")
 
     val l = new ResponseListener {
       override def onSuccess(r: org.elasticsearch.client.Response): Unit = callback(Right(fromResponse(r)))
