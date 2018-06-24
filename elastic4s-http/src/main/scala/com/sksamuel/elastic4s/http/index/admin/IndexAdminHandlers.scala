@@ -101,8 +101,11 @@ trait IndexAdminHandlers {
   implicit object IndexExistsHandler extends Handler[IndicesExistsRequest, IndexExistsResponse] {
 
     override def responseHandler: ResponseHandler[IndexExistsResponse] = new ResponseHandler[IndexExistsResponse] {
-      override def handle(resp: HttpResponse) =
-        Right(IndexExistsResponse(resp.statusCode == 200))
+      override def handle(resp: HttpResponse): Either[ElasticError, IndexExistsResponse] = resp.statusCode match {
+        case 200 => Right(IndexExistsResponse(true))
+        case 404 => Right(IndexExistsResponse(false))
+        case code => Left(ElasticError.fromThrowable(new RuntimeException(s"Error with index exists request (http code $code")))
+      }
     }
 
     override def build(request: IndicesExistsRequest): ElasticRequest = {
@@ -166,7 +169,7 @@ trait IndexAdminHandlers {
 
   implicit object CreateIndexHandler extends Handler[CreateIndexRequest, CreateIndexResponse] {
 
-    override def responseHandler = new ResponseHandler[CreateIndexResponse] {
+    override def responseHandler: ResponseHandler[CreateIndexResponse] = new ResponseHandler[CreateIndexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexResponse] =
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[CreateIndexResponse](response))
