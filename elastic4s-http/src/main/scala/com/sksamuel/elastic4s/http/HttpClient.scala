@@ -4,7 +4,6 @@ import java.io.{File, InputStream}
 import java.nio.file.Files
 
 import com.sksamuel.exts.Logging
-import org.apache.http.HttpEntity
 
 import scala.io.Source
 
@@ -44,17 +43,17 @@ object HttpEntity {
   def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
 
   case class StringEntity(content: String, contentType: Option[String]) extends HttpEntity {
-    def get = content
+    def get: String = content
   }
 
   case class InputStreamEntity(content: InputStream, contentType: Option[String]) extends HttpEntity {
-    def get = Source.fromInputStream(content).getLines().mkString("\n")
+    def get: String = Source.fromInputStream(content).getLines().mkString("\n")
   }
 
   case class FileEntity(content: File, contentType: Option[String]) extends HttpEntity {
 
     import scala.collection.JavaConverters._
 
-    def get = Files.readAllLines(content.toPath).asScala.mkString("\n")
+    def get: String = Files.readAllLines(content.toPath).asScala.mkString("\n")
   }
 }

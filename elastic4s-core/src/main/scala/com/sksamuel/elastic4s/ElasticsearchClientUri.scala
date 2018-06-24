@@ -13,7 +13,7 @@ object ElasticsearchClientUri {
   /**
     * Creates an ElasticsearchClientUri from a single host and port with no options.
     */
-  def apply(host: String, port: Int): ElasticsearchClientUri = apply(s"elasticsearch://$host:$port")
+  def apply(host: String, port: Int): ElasticsearchClientUri = apply(s"http://$host:$port")
 
   def apply(str: String): ElasticsearchClientUri =
     str match {
@@ -37,7 +37,7 @@ object ElasticsearchClientUri {
         ElasticsearchClientUri(str, hosts.toList, options.toMap)
       case _ =>
         sys.error(
-          s"Invalid uri $str, must be in format elasticsearch://host:port,host:port?querystr, http://host:port,host:port?querystr or https://host:port,host:port?querystr"
+          s"Invalid uri $str, must be in format http://host:port,host:port?querystr or https://host:port,host:port?querystr"
         )
     }
 }

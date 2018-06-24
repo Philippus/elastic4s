@@ -11,7 +11,7 @@ object Executor {
 
   def apply[F[_]: Executor](): Executor[F] = implicitly[Executor[F]]
 
-  implicit def FutureExecutor(implicit ec: ExecutionContext = ExecutionContext.Implicits.global) =
+  implicit def FutureExecutor(implicit ec: ExecutionContext = ExecutionContext.Implicits.global): Executor[Future] =
     new Executor[Future] {
       override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
         val promise = Promise[HttpResponse]()
