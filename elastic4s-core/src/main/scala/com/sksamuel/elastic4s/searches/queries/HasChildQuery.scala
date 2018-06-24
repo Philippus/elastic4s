@@ -20,5 +20,8 @@ case class HasChildQuery(`type`: String,
   def minChildren(min: Int): HasChildQuery                   = copy(minChildren = min.some)
   def maxChildren(max: Int): HasChildQuery                   = copy(maxChildren = max.some)
   def innerHit(innerHit: InnerHit): HasChildQuery            = copy(innerHit = Some(innerHit))
+
+  // create an inner hit with the default options
+  def innerHit(name:String): HasChildQuery                   = copy(innerHit = Some(InnerHit(name)))
   def queryName(queryName: String): HasChildQuery            = copy(queryName = Some(queryName))
 }

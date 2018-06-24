@@ -13,12 +13,6 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
   create("settingsa")
   create("settingsb")
 
-  def deleteIdx(name: String) = Try {
-    client.execute {
-      deleteIndex(name)
-    }.await
-  }
-
   def create(name: String) = Try {
     client.execute {
       createIndex(name)

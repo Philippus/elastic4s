@@ -102,10 +102,11 @@ trait QueryApi {
 
   def geoShapeQuery(field: String, shape: Shape): GeoShapeQuery = GeoShapeQuery(field, shape)
 
+  @deprecated("use hasChildQuery(`type`: String, query: Query, score: Boolean)", "6.3.0")
   def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
 
-  def hasChildQuery(`type`: String, query: Query, scoreMode: ScoreMode): HasChildQuery =
-    HasChildQuery(`type`, query, scoreMode)
+  def hasChildQuery(childType: String, query: Query, scoreMode: ScoreMode = ScoreMode.None): HasChildQuery =
+    HasChildQuery(childType, query, scoreMode)
 
   class HasChildQueryExpectsQuery(`type`: String) {
     def query(q: Query): ExpectsScoreMode  = new ExpectsScoreMode(q)
@@ -116,10 +117,11 @@ trait QueryApi {
     }
   }
 
+  @deprecated("use hasParentQuery(`type`: String, query: Query, score: Boolean)", "6.3.0")
   def hasParentQuery(`type`: String) = new HasParentQueryExpectsQuery(`type`)
 
-  def hasParentQuery(`type`: String, query: Query, score: Boolean) =
-    HasParentQuery(`type`, query, score)
+  def hasParentQuery(parentType: String, query: Query, score: Boolean) =
+    HasParentQuery(parentType, query, score)
 
   class HasParentQueryExpectsQuery(`type`: String) {
     def query(q: Query) = new ExpectsScoreMode(q)

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.searches.queries
 
-case class HasParentQuery(`type`: String,
+case class HasParentQuery(parentType: String,
                           query: Query,
                           score: Boolean,
                           boost: Option[Double] = None,

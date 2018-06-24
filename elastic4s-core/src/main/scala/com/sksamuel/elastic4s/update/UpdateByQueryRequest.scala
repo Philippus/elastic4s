@@ -28,7 +28,7 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
 
-  @deprecated("use proceedOnConflicts")
+  @deprecated("use proceedOnConflicts", "6.2.0")
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): UpdateByQueryRequest =
     proceedOnConflicts(abortOnVersionConflict)
 

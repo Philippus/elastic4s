@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.mappings.Child
+
 /**
   * Converts between scala types and types that Elasticsearch understands.
   */
@@ -20,15 +22,19 @@ object FieldsMapper {
     a match {
       case map: Map[_, _]    => map.map { case (key, value) => key -> mapper(value) }.asJava
       case iter: Iterable[_] => iter.map(mapper).toArray
+      case null              => null
       case a: AnyRef         => a
       case a: Any            => a.toString
-      case null              => null
     }
 
   def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
     fields map {
 
-      case (name: String, null) => NullFieldValue(name)
+      case (name: String, null) =>
+        NullFieldValue(name)
+
+      case (name: String, Child(childType, parentId)) =>
+        NestedFieldValue(name, Seq(SimpleFieldValue("name", childType), SimpleFieldValue("parent", parentId)))
 
       case (name: String, nest: Map[_, _]) =>
         val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])

@@ -22,7 +22,7 @@ case class DeleteByQueryRequest(indexesAndTypes: IndexesAndTypes,
   def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
 
-  @deprecated("use proceedOnConflicts")
+  @deprecated("use proceedOnConflicts", "6.2.0")
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryRequest =
     proceedOnConflicts(abortOnVersionConflict)
 

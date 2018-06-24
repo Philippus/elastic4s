@@ -16,12 +16,6 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
   create("reindex2")
   create("reindextarget")
 
-  def deleteIdx(name: String) = Try {
-    client.execute {
-      deleteIndex(name)
-    }.await
-  }
-
   def create(name: String) = Try {
     client.execute {
       createIndex(name)

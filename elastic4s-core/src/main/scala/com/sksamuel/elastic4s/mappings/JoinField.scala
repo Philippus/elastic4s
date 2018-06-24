@@ -56,3 +56,7 @@ case class JoinField(name: String,
 
   override def termVector(t: String): T = copy(termVector = t.some)
 }
+
+case class Parent(parentType: String)
+
+case class Child(childType: String, parentId: String)

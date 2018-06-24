@@ -26,12 +26,7 @@ trait GetHandlers {
     override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
         case 404 | 500 => sys.error(response.toString)
-        case _ =>
-          val r = ResponseHandler.fromResponse[MultiGetResponse](response)
-          val r2 = r.copy(docs = r.docs.map { doc =>
-            doc.copy(fields = Option(doc.fields).getOrElse(Map.empty))
-          })
-          Right(r2)
+        case _ => Right(ResponseHandler.fromResponse[MultiGetResponse](response))
       }
     }
 

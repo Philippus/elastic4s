@@ -1,0 +1,60 @@
+package com.sksamuel.elastic4s.search
+
+import com.sksamuel.elastic4s.http.search.InnerHits
+import com.sksamuel.elastic4s.mappings.Child
+import com.sksamuel.elastic4s.searches.queries.InnerHit
+import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.{Matchers, WordSpec}
+
+class InnerHitTest extends WordSpec with Matchers with DockerTests {
+
+  val indexName = "inner_hit_test"
+  deleteIdx(indexName)
+
+  client.execute {
+    createIndex(indexName).mappings {
+      mapping("football").fields(
+        textField("name"),
+        joinField("affiliation").relation("club", "player")
+      )
+    }
+  }.await
+
+  client.execute {
+    bulk(
+      indexInto(indexName / "football").fields(Map("name" -> "boro", "affiliation" -> "club")).id("1").routing("1"),
+      indexInto(indexName / "football").fields(Map("name" -> "traore", "affiliation" -> Child("player", "1"))).id("2").routing("1")
+    ).refreshImmediately
+  }.await
+
+  "InnerHits" should {
+    "we" in {
+      val result = client.execute {
+        search(indexName).query {
+          hasChildQuery("player", matchAllQuery()).innerHit(InnerHit("myinner"))
+        }
+      }.await.result
+      result.totalHits shouldBe 1
+      result.hits.hits.head.innerHits shouldBe Map(
+        "myinner" -> InnerHits(
+          1,
+          1.0,
+          List(
+            com.sksamuel.elastic4s.http.search.InnerHit(
+              indexName,
+              "football",
+              "2",
+              Map.empty,
+              1.0,
+              "1",
+              Map("name" -> "traore", "affiliation" -> Map("name" -> "player", "parent" -> "1")),
+              Map.empty,
+              Map.empty,
+              Nil
+            )
+          )
+        )
+      )
+    }
+  }
+}
