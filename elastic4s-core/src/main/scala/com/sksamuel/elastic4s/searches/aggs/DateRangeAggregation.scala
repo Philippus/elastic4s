@@ -13,8 +13,8 @@ case class DateRangeAggregation(name: String,
                                 timeZone: Option[DateTimeZone] = None,
                                 keyed: Option[Boolean] = None,
                                 ranges: Seq[(Option[String], ElasticDate, ElasticDate)] = Nil,
-                                unboundedFrom: Option[(Option[String], ElasticDate)] = None,
-                                unboundedTo: Option[(Option[String], ElasticDate)] = None,
+                                unboundedFrom: List[(Option[String], ElasticDate)] = Nil,
+                                unboundedTo: List[(Option[String], ElasticDate)] = Nil,
                                 subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty)
     extends Aggregation {
@@ -31,11 +31,11 @@ case class DateRangeAggregation(name: String,
   def range(key: String, from: ElasticDate, to: ElasticDate): DateRangeAggregation =
     copy(ranges = ranges :+ (key.some, from, to))
 
-  def unboundedFrom(from: ElasticDate): DateRangeAggregation              = copy(unboundedFrom = Some(None, from))
-  def unboundedFrom(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedFrom = Some(key.some, from))
+  def unboundedFrom(from: ElasticDate): DateRangeAggregation              = copy(unboundedFrom = unboundedFrom :+ (None, from))
+  def unboundedFrom(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedFrom = unboundedFrom :+(key.some, from))
 
-  def unboundedTo(from: ElasticDate): DateRangeAggregation              = copy(unboundedTo = Some(None, from))
-  def unboundedTo(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedTo = Some(key.some, from))
+  def unboundedTo(from: ElasticDate): DateRangeAggregation              = copy(unboundedTo = unboundedFrom :+ (None, from))
+  def unboundedTo(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedTo = unboundedFrom :+ (key.some, from))
 
   def format(fmt: String): DateRangeAggregation = copy(format = fmt.some)
 
