@@ -28,6 +28,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
 
   def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
 
+  def innerHitsAsMap: Map[String, Map[String, Any]] = Option(inner_hits).getOrElse(Map.empty)
+
   def storedField(fieldName: String): HitField = storedFieldOpt(fieldName).get
   def storedFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
     new HitField {
@@ -51,7 +53,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
       val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
         total = v("total").toString.toLong,
-        max_score = v("max_score").asInstanceOf[Double],
+        maxScore = v("max_score").asInstanceOf[Double],
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
@@ -68,13 +70,21 @@ case class SearchHit(@JsonProperty("_id") id: String,
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
 
-case class SearchHits(total: Long, @JsonProperty("max_score") maxScore: Double, hits: Array[SearchHit]) {
+case class SearchHits(total: Long,
+                      @JsonProperty("max_score") maxScore: Double,
+                      hits: Array[SearchHit]) {
   def size: Long        = hits.length
   def isEmpty: Boolean  = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 }
 
-case class InnerHits(total: Long, max_score: Double, hits: Seq[InnerHit])
+case class InnerHits(total: Long,
+                     @JsonProperty("max_score") maxScore: Double,
+                     hits: Seq[InnerHit]) {
+  def size: Long        = hits.length
+  def isEmpty: Boolean  = hits.isEmpty
+  def nonEmpty: Boolean = hits.nonEmpty
+}
 
 case class InnerHit(nested: Map[String, AnyRef],
                     score: Double,
