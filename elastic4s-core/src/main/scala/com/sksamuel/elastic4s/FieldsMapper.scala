@@ -27,6 +27,9 @@ object FieldsMapper {
 
   def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
     fields map {
+
+      case (name: String, null) => NullFieldValue(name)
+
       case (name: String, nest: Map[_, _]) =>
         val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
         NestedFieldValue(Some(name), nestedFields)
@@ -59,9 +62,6 @@ object FieldsMapper {
 
       case (name: String, a: Any) =>
         SimpleFieldValue(Some(name), a)
-
-      case (name: String, _) =>
-        NullFieldValue(name)
     }
   }.toSeq
 }
