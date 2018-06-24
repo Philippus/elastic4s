@@ -22,6 +22,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           remoteHost: Option[String] = None,
                           remoteUser: Option[String] = None,
                           remotePass: Option[String] = None,
+                          // It’s also possible to limit the number of processed documents by setting size.
                           size: Option[Int] = None,
                           script: Option[Script] = None) {
 

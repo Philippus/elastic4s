@@ -41,7 +41,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
     "copy from one index to another" in {
       client.execute {
         reindex("reindex", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.created shouldBe 3
+      }.await.result.left.get.created shouldBe 3
 
       client.execute {
         search("reindextarget")
@@ -54,7 +54,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.created shouldBe 2
+      }.await.result.left.get.created shouldBe 2
 
       client.execute {
         search("reindextarget")
@@ -66,7 +66,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").script("ctx._source.scripted=42").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.created shouldBe 3
+      }.await.result.left.get.created shouldBe 3
       client.execute {
         search("reindextarget")
       }.await.result.hits.hits.flatMap(_.sourceAsMap.get("scripted")) shouldBe Array(42, 42, 42)
@@ -78,7 +78,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex(Seq("reindex", "reindex2"), "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.created shouldBe 4
+      }.await.result.left.get.created shouldBe 4
 
       client.execute {
         search("reindextarget")
@@ -88,6 +88,11 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
       client.execute {
         reindex("wibble", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
       }.await.error.`type` shouldBe "index_not_found_exception"
+    }
+    "return a task when setting wait_for_completion to false" in {
+      client.execute {
+        reindex("reindex", "reindextarget").size(2).waitForCompletion(false)
+      }.await.result.right.get.task should not be null
     }
   }
 }

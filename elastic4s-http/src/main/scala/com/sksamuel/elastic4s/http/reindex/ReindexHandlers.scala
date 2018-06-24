@@ -2,8 +2,10 @@ package com.sksamuel.elastic4s.http.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http._
+import com.sksamuel.elastic4s.http.task.CreateTaskResponse
 import com.sksamuel.elastic4s.reindex.ReindexRequest
 import org.apache.http.entity.ContentType
+import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration._
 
@@ -31,11 +33,17 @@ case class ReindexResponse(took: Long,
 
 trait ReindexHandlers {
 
-  implicit object ReindexHandler extends Handler[ReindexRequest, ReindexResponse] {
+  implicit object ReindexHandler extends Handler[ReindexRequest, Either[ReindexResponse, CreateTaskResponse]] {
 
-    override def responseHandler = new ResponseHandler[ReindexResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, ReindexResponse] = response.statusCode match {
-        case 200 => Right(ResponseHandler.fromResponse[ReindexResponse](response))
+    override def responseHandler: ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] = new ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] {
+      override def handle(response: HttpResponse): Either[ElasticError, Either[ReindexResponse, CreateTaskResponse]] = response.statusCode match {
+        case 200 =>
+          val entity = response.entity.getOrError("No entity defined but was expected")
+          if (entity.get.matches("""\{"task":".*"\}""")) {
+            Right(Right(ResponseHandler.fromResponse[CreateTaskResponse](response)))
+          } else {
+            Right(Left(ResponseHandler.fromResponse[ReindexResponse](response)))
+          }
         case _   => Left(ElasticError.parse(response))
       }
     }
@@ -44,8 +52,7 @@ trait ReindexHandlers {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
-      if (request.waitForCompletion.getOrElse(false))
-        params.put("wait_for_completion", "true")
+      request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
       if (request.waitForActiveShards.getOrElse(-1) > 0)
         params.put("wait_for_active_shards", request.waitForActiveShards.getOrElse(0).toString)
       if (request.requestsPerSecond.getOrElse(-1F) > 0)

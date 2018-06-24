@@ -6,6 +6,8 @@ import com.sksamuel.elastic4s.task.{CancelTasksRequest, ListTasksRequest}
 
 import scala.concurrent.duration._
 
+case class CreateTaskResponse(task: String)
+
 case class ListTaskResponse(nodes: Map[String, Node])
 
 case class Node(name: String,
