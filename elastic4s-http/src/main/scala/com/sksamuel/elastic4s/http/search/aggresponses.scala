@@ -16,7 +16,7 @@ case class TermBucket(key: String, override val docCount: Long, private[elastic4
   extends AggBucket
     with Transformable
 
-case class TermsAggResult(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Int, otherDocCount: Int)
+case class TermsAggResult(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Long, otherDocCount: Long)
   extends BucketAggregation {
 
   @deprecated("use buckets", "5.2.9")
