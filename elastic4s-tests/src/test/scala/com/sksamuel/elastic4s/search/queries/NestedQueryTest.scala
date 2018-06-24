@@ -21,7 +21,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
         nestedField("states")
       )
     )
-  }
+  }.await
 
   client.execute(
     bulk(
