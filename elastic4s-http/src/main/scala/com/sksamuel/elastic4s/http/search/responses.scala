@@ -87,7 +87,7 @@ case class SearchResponse(took: Long,
                           @JsonProperty("timed_out") isTimedOut: Boolean,
                           @JsonProperty("terminated_early") isTerminatedEarly: Boolean,
                           private val suggest: Map[String, Seq[SuggestionResult]],
-                          @JsonProperty("_shards") shards: Shards,
+                          @JsonProperty("_shards") private val _shards: Shards,
                           @JsonProperty("_scroll_id") scrollId: Option[String],
                           @JsonProperty("aggregations") private val _aggregationsAsMap: Map[String, Any],
                           hits: SearchHits) {
@@ -97,6 +97,8 @@ case class SearchResponse(took: Long,
   def size: Long                          = hits.size
   def ids: Seq[String]                    = hits.hits.map(_.id)
   def maxScore: Double                    = hits.maxScore
+
+  def shards: Shards = Option(_shards).getOrElse(Shards(-1, -1, -1))
 
   def isEmpty: Boolean  = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty

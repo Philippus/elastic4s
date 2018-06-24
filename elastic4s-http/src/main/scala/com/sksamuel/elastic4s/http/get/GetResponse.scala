@@ -10,13 +10,14 @@ case class GetResponse(@JsonProperty("_id") id: String,
                        @JsonProperty("_type") `type`: String,
                        @JsonProperty("_version") version: Long,
                        found: Boolean,
-                       fields: Map[String, AnyRef],
+                       @JsonProperty("fields") private val _fields: Map[String, AnyRef],
                        private val _source: Map[String, AnyRef])
     extends Hit {
 
   override def exists: Boolean = found
   override def score: Float    = 0
 
+  def fields: Map[String, AnyRef] = Option(_fields).getOrElse(Map.empty)
   def source: Map[String, Any] = sourceAsMap
 
   def storedField(fieldName: String): HitField = storedFieldOpt(fieldName).get
