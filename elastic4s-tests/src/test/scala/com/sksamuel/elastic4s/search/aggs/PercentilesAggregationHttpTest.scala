@@ -45,7 +45,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DockerTests with Matc
       }.await.result
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
-      agg.values shouldBe Map("99.0" -> 2671.9199999999996, "25.0" -> 955.5, "95.0" -> 2491.5999999999995, "50.0" -> 1707.5, "75.0" -> 1996.5, "1.0" -> 211.14, "5.0" -> 379.7)
+      agg.values shouldBe Map("99.0" -> 2717.0, "25.0" -> 894.0, "95.0" -> 2717.0, "50.0" -> 1707.5, "75.0" -> 2022.0, "1.0" -> 169.0, "5.0" -> 169.0)
     }
     "should allow setting which percentiles to return" in {
       val resp = client.execute {
@@ -55,7 +55,7 @@ class PercentilesAggregationHttpTest extends FreeSpec with DockerTests with Matc
       }.await.result
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
-      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2032.2)
+      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2062.8)
     }
   }
 }

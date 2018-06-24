@@ -12,6 +12,6 @@ class SpanFirstQueryBodyFnTest extends FunSuite with Matchers {
       boost = Some(2.0),
       queryName = Some("rootName")
     ))
-    builder.string() shouldBe """"""
+    builder.string() shouldBe """{"span_first":{"match":{"span_term":{"field1":"value1"}},"end":5,"boost":2.0,"_name":"rootName"}}"""
   }
 }

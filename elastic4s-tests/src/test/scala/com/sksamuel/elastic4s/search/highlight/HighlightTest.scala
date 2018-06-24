@@ -45,7 +45,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head shouldBe
-        "Space, the final <em>frontier</em>."
+        "Space, the final <em>frontier</em>. These are the voyages of the starship Enterprise."
     }
     "use fragment size" in {
       val resp = client.execute {

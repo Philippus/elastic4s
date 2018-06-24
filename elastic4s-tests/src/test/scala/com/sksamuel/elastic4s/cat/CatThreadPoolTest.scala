@@ -14,10 +14,12 @@ class CatThreadPoolTest extends FlatSpec with Matchers with DockerTests {
   }.await
 
   "cat thread pool" should "return all pools" in {
+
     val pools = client.execute {
       catThreadPool()
     }.await.result.map(_.name).toSet
-    Set("refresh", "bulk", "listener", "warmer", "generic", "fetch_shard_store", "snapshot", "force_merge", "management", "flush", "get", "fetch_shard_started", "index", "search").foreach { pool =>
+
+    Set("refresh", "listener", "warmer", "generic", "fetch_shard_store", "snapshot", "force_merge", "management", "flush", "get", "fetch_shard_started", "index", "search").foreach { pool =>
       pools.contains(pool) shouldBe true
     }
   }
