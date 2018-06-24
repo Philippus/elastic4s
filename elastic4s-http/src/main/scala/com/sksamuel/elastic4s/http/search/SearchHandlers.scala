@@ -78,6 +78,7 @@ trait SearchHandlers {
         .map(SearchTypeHttpParameters.convert)
         .foreach(params.put("search_type", _))
       request.control.routing.map(_.toString).foreach(params.put("routing", _))
+      request.control.pref.foreach(params.put("preference", _))
       request.keepAlive.foreach(params.put("scroll", _))
 
       request.indicesOptions.foreach { opts =>

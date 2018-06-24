@@ -1,13 +1,14 @@
 {
-  "aggregations": {
-    "grades_stats": {
-      "stats": {
-        "field": "grade",
-        "script": {
-          "inline": "doc['grade'].value",
-          "lang": "lua"
+    "version": true,
+    "aggs": {
+        "grades_stats": {
+            "stats": {
+                "field": "grade",
+                "script": {
+                    "lang": "lua",
+                    "source": "doc['grade'].value"
+                }
+            }
         }
-      }
     }
-  }
 }

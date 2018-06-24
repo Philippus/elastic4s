@@ -1,12 +1,10 @@
 {
-    "aggregations": {
+    "version": true,
+    "aggs": {
         "geo_agg": {
-            "date_range": {
-                "field": "geo_point",
-                "ranges": [],
-                "keyed": false
+            "geo_bounds": {
+                "field": "geo_point"
             }
         }
-    },
-    "ext": {}
+    }
 }

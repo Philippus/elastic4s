@@ -81,7 +81,10 @@ object EnumConversions {
     case GeoValidationMethod.Strict          => "STRICT"
   }
 
-  def collectMode(mode: SubAggCollectionMode): String = ???
+  def collectMode(mode: SubAggCollectionMode): String = mode match {
+    case SubAggCollectionMode.BreadthFirst => "breadth_first"
+    case SubAggCollectionMode.DepthFirst => "depth_first"
+  }
 
   def versionType(versionType: VersionType): String = versionType match {
     case VersionType.External    => "external"

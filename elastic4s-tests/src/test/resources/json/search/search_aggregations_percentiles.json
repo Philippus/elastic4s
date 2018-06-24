@@ -1,18 +1,18 @@
 {
-  "aggregations": {
-    "grades_percentiles": {
-      "percentiles": {
-        "field": "grade",
-        "percents": [
-          95.0,
-          99.0,
-          99.9
-        ],
-        "keyed": true,
-        "tdigest": {
-          "compression": 200.0
+    "version": true,
+    "aggs": {
+        "grades_percentiles": {
+            "percentiles": {
+                "field": "grade",
+                "percents": [
+                    95.0,
+                    99.0,
+                    99.9
+                ],
+                "tdigest": {
+                    "compression": 200.0
+                }
+            }
         }
-      }
     }
-  }
 }

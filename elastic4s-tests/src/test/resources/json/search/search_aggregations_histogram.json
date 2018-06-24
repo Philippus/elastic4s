@@ -1,16 +1,11 @@
 {
-  "aggregations": {
-    "score_histogram": {
-      "histogram": {
-        "field": "score",
-        "interval": 2.0,
-        "offset": 0.0,
-        "order": {
-          "_key": "asc"
-        },
-        "keyed": false,
-        "min_doc_count": 0
-      }
+    "version": true,
+    "aggs": {
+        "score_histogram": {
+            "histogram": {
+                "interval": 2.0,
+                "field": "score"
+            }
+        }
     }
-  }
 }

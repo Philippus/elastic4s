@@ -1,0 +1,22 @@
+{
+    "version": true,
+    "query": {
+        "query_string": {
+            "query": "coldplay"
+        }
+    },
+    "suggest": {
+        "my-suggestion-1": {
+            "text": "wildcats by ratatat",
+            "completion": {
+                "field": "artist",
+                "skip_duplicates": true,
+                "fuzzy": {
+                    "fuzziness": "2",
+                    "prefix_length": 12,
+                    "transpositions": true
+                }
+            }
+        }
+    }
+}

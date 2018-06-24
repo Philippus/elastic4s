@@ -1,25 +1,18 @@
 {
-    "aggregations": {
+    "version": true,
+    "aggs": {
         "nested_agg": {
             "nested": {
                 "path": "nested_obj"
             },
-            "aggregations": {
+            "aggs": {
                 "my_nested_terms_agg": {
                     "terms": {
                         "field": "keyword",
-                        "size": 10,
-                        "min_doc_count": 1,
-                        "shard_min_doc_count": 0,
-                        "show_term_doc_count_error": false,
-                        "order": [
-                            {
-                                "_count": "desc"
-                            },
-                            {
-                                "_term": "asc"
-                            }
-                        ]
+                        "execution_hint": "hinty",
+                        "collect_mode": "breadth_first",
+                        "min_doc_count": 12,
+                        "shard_min_doc_count": 4
                     }
                 }
             }

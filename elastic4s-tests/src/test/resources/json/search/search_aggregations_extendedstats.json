@@ -1,14 +1,10 @@
 {
-  "aggregations": {
-    "grades_extendedstats": {
-      "extended_stats": {
-        "field": "grade",
-        "script": {
-          "inline": "doc['grade'].value",
-          "lang": "lua"
-        },
-        "sigma": 2.0
-      }
+    "version": true,
+    "aggs": {
+        "grades_extendedstats": {
+            "extended_stats": {
+                "field": "grade"
+            }
+        }
     }
-  }
 }

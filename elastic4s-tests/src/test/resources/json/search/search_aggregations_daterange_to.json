@@ -1,6 +1,6 @@
-
 {
-    "aggregations": {
+    "version": true,
+    "aggs": {
         "daterange_agg": {
             "date_range": {
                 "field": "date",
@@ -9,10 +9,8 @@
                         "key": "key",
                         "to": "now"
                     }
-                ],
-                "keyed": false
+                ]
             }
         }
-    },
-    "ext": {}
+    }
 }

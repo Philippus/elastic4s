@@ -1,20 +1,17 @@
 {
-  "post_filter": {
-    "geo_bounding_box": {
-      "box": {
-        "top_left": [
-          56.5,
-          40.6
-        ],
-        "bottom_right": [
-          112.55,
-          33.5
-        ]
-      },
-      "validation_method": "STRICT",
-      "type": "MEMORY",
-      "ignore_unmapped": false,
-      "boost": 1.0
+    "version": true,
+    "post_filter": {
+        "geo_bounding_box": {
+            "box": {
+                "top_left": {
+                    "lat": 40.6,
+                    "lon": 56.5
+                },
+                "bottom_right": {
+                    "lat": 33.5,
+                    "lon": 112.55
+                }
+            }
+        }
     }
-  }
 }

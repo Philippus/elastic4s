@@ -1,56 +1,24 @@
-
 {
-    "aggregations": {
+    "version": true,
+    "aggs": {
         "days": {
             "date_histogram": {
-                "field": "date",
                 "interval": "1d",
-                "offset": 0,
-                "order": {
-                    "_key": "asc"
-                },
-                "keyed": false,
-                "min_doc_count": 0
+                "field": "date"
             },
-            "aggregations": {
+            "aggs": {
                 "keywords": {
                     "terms": {
                         "field": "keyword",
-                        "size": 5,
-                        "shard_size": -1,
-                        "min_doc_count": 1,
-                        "shard_min_doc_count": 0,
-                        "show_term_doc_count_error": false,
-                        "order": [
-                            {
-                                "_count": "desc"
-                            },
-                            {
-                                "_term": "asc"
-                            }
-                        ]
+                        "size": 5
                     }
                 },
                 "countries": {
                     "terms": {
-                        "field": "country",
-                        "size": 10,
-                        "shard_size": -1,
-                        "min_doc_count": 1,
-                        "shard_min_doc_count": 0,
-                        "show_term_doc_count_error": false,
-                        "order": [
-                            {
-                                "_count": "desc"
-                            },
-                            {
-                                "_term": "asc"
-                            }
-                        ]
+                        "field": "country"
                     }
                 }
             }
         }
-    },
-    "ext": {}
+    }
 }

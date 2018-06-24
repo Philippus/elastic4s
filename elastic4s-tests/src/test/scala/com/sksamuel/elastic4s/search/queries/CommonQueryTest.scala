@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.Indexable
+import com.sksamuel.elastic4s.{Indexable, Preference}
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
@@ -58,6 +58,14 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
         search("condiments") query {
           commonTermsQuery("desc") text "buttermilk dressing salt garlic" lowFreqMinimumShouldMatch 2
         }
+      }.await.result
+      resp.totalHits shouldBe 1
+    }
+    "use preference" in {
+      val resp = client.execute {
+        search("condiments") query {
+          commonTermsQuery("desc") text "catsup"
+        } preference Preference.PrimaryFirst
       }.await.result
       resp.totalHits shouldBe 1
     }
