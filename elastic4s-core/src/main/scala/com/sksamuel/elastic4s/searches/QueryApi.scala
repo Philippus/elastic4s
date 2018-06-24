@@ -146,7 +146,8 @@ trait QueryApi {
   def matchAllQuery()  = MatchAllQuery()
 
   def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(first +: rest)
-  def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes     = new MoreLikeThisExpectsLikes(fields.toSeq)
+  def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(fields.toSeq)
+  def moreLikeThisQuery(): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(Nil)
 
   class MoreLikeThisExpectsLikes(fields: Seq[String]) {
 
