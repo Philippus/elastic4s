@@ -9,12 +9,18 @@ trait DockerTests extends com.sksamuel.elastic4s.http.ElasticDsl with ClientProv
 
   val client = ElasticClient(ElasticsearchClientUri("http://localhost:9200"))
 
-  def deleteIdx(indexName: String): Unit = {
+  protected def deleteIdx(indexName: String): Unit = {
     Try {
       client.execute {
         ElasticDsl.deleteIndex(indexName)
       }.await
     }
+  }
+
+  protected def createIdx(name: String) = Try {
+    client.execute {
+      createIndex(name)
+    }.await
   }
 
   protected def cleanIndex(indexName: String): Unit = {

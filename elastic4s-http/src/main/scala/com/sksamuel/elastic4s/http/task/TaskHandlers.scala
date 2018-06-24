@@ -2,13 +2,15 @@ package com.sksamuel.elastic4s.http.task
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.http._
-import com.sksamuel.elastic4s.task.{CancelTasksRequest, ListTasksRequest}
+import com.sksamuel.elastic4s.task.{CancelTasksRequest, GetTask, ListTasks}
 
 import scala.concurrent.duration._
 
-case class CreateTaskResponse(task: String)
+case class CreateTaskResponse(nodeId: String, taskId: String)
 
 case class ListTaskResponse(nodes: Map[String, Node])
+
+case class GetTaskResponse(completed: Boolean, task: Task)
 
 case class Node(name: String,
                 @JsonProperty("transport_address") transportAddress: String,
@@ -21,18 +23,28 @@ case class Task(node: String,
                 id: String,
                 `type`: String,
                 action: String,
-                private val start_time_in_millis: Long,
-                private val running_time_in_nanos: Long,
+                status: TaskStatus,
+                description: String,
+                @JsonProperty("start_time_in_millis") private val start_time_in_millis: Long,
+                @JsonProperty("running_time_in_nanos") private val running_time_in_nanos: Long,
                 cancellable: Boolean) {
-  def startTime: FiniteDuration   = start_time_in_millis.millis
+  def startTimeInMillis: Long = start_time_in_millis
   def runningTime: FiniteDuration = running_time_in_nanos.nanos
 }
 
+case class TaskStatus(total: Long, updated: Long, Created: Long, deleted: Long, batches: Long)
+
 trait TaskHandlers {
 
-  implicit object ListTaskHandler extends Handler[ListTasksRequest, ListTaskResponse] {
+  implicit object GetTaskHandler extends Handler[GetTask, GetTaskResponse] {
+    override def build(request: GetTask): ElasticRequest = {
+      ElasticRequest("GET", s"/_tasks/${request.nodeId}:${request.taskId}")
+    }
+  }
 
-    override def build(request: ListTasksRequest): ElasticRequest = {
+  implicit object ListTaskHandler extends Handler[ListTasks, ListTaskResponse] {
+
+    override def build(request: ListTasks): ElasticRequest = {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.nodeIds.nonEmpty)

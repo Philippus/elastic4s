@@ -11,9 +11,11 @@ trait TaskApi {
 
   def pendingClusterTasks(local: Boolean): PendingClusterTasksRequest = PendingClusterTasksRequest(local)
 
-  def listTasks(): ListTasksRequest                             = listTasks(Nil)
-  def listTasks(first: String, rest: String*): ListTasksRequest = listTasks(first +: rest)
-  def listTasks(nodeIds: Seq[String]): ListTasksRequest         = ListTasksRequest(nodeIds)
+  def getTask(nodeId: String, taskId: String): GetTask = GetTask(nodeId, taskId)
+
+  def listTasks(): ListTasks                             = listTasks(Nil)
+  def listTasks(first: String, rest: String*): ListTasks = listTasks(first +: rest)
+  def listTasks(nodeIds: Seq[String]): ListTasks         = ListTasks(nodeIds)
 }
 
 case class CancelTasksRequest(nodeIds: Seq[String],
@@ -25,14 +27,16 @@ case class CancelTasksRequest(nodeIds: Seq[String],
 
 case class PendingClusterTasksRequest(local: Boolean, masterNodeTimeout: Option[FiniteDuration] = None)
 
-case class ListTasksRequest(nodeIds: Seq[String],
-                            detailed: Option[Boolean] = None,
-                            actions: Seq[String] = Nil,
-                            groupBy: Option[String] = None,
-                            waitForCompletion: Option[Boolean] = None) {
-  def actions(first: String, rest: String*): ListTasksRequest = actions(first +: rest)
-  def actions(actions: Iterable[String]): ListTasksRequest    = copy(actions = actions.toSeq)
-  def groupBy(group: String): ListTasksRequest                = copy(groupBy = group.some)
-  def groupByParents(): ListTasksRequest                      = groupBy("parents")
-  def waitForCompletion(w: Boolean): ListTasksRequest         = copy(waitForCompletion = w.some)
+case class GetTask(nodeId: String, taskId: String)
+
+case class ListTasks(nodeIds: Seq[String],
+                     detailed: Option[Boolean] = None,
+                     actions: Seq[String] = Nil,
+                     groupBy: Option[String] = None,
+                     waitForCompletion: Option[Boolean] = None) {
+  def actions(first: String, rest: String*): ListTasks = actions(first +: rest)
+  def actions(actions: Iterable[String]): ListTasks    = copy(actions = actions.toSeq)
+  def groupBy(group: String): ListTasks                = copy(groupBy = group.some)
+  def groupByParents(): ListTasks                      = groupBy("parents")
+  def waitForCompletion(w: Boolean): ListTasks         = copy(waitForCompletion = w.some)
 }

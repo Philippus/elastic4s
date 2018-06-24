@@ -27,7 +27,7 @@ case class ReindexResponse(took: Long,
                            @JsonProperty("requests_per_second") requestsPerSecond: Long,
                            @JsonProperty("throttled_until_millis") throttledUntilMillis: Long,
                            failures: Seq[ReindexFailure]) {
-  def throttled: Duration      = throttledMillis.millis
+  def throttled: Duration = throttledMillis.millis
   def throttledUntil: Duration = throttledUntilMillis.millis
 }
 
@@ -35,16 +35,17 @@ trait ReindexHandlers {
 
   implicit object ReindexHandler extends Handler[ReindexRequest, Either[ReindexResponse, CreateTaskResponse]] {
 
+    private val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
+
     override def responseHandler: ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] = new ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] {
       override def handle(response: HttpResponse): Either[ElasticError, Either[ReindexResponse, CreateTaskResponse]] = response.statusCode match {
         case 200 =>
           val entity = response.entity.getOrError("No entity defined but was expected")
-          if (entity.get.matches("""\{"task":".*"\}""")) {
-            Right(Right(ResponseHandler.fromResponse[CreateTaskResponse](response)))
-          } else {
-            Right(Left(ResponseHandler.fromResponse[ReindexResponse](response)))
+          entity.get match {
+            case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
+            case _ => Right(Left(ResponseHandler.fromResponse[ReindexResponse](response)))
           }
-        case _   => Left(ElasticError.parse(response))
+        case _ => Left(ElasticError.parse(response))
       }
     }
 

@@ -4,23 +4,15 @@ import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.util.Try
-
 class ReindexTest extends WordSpec with Matchers with DockerTests {
 
   deleteIdx("reindex")
   deleteIdx("reindex2")
   deleteIdx("reindextarget")
 
-  create("reindex")
-  create("reindex2")
-  create("reindextarget")
-
-  def create(name: String) = Try {
-    client.execute {
-      createIndex(name)
-    }.await
-  }
+  createIdx("reindex")
+  createIdx("reindex2")
+  createIdx("reindextarget")
 
   client.execute {
     bulk(
@@ -44,7 +36,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
     "support size parameter" in {
 
       deleteIdx("reindextarget")
-      create("reindextarget")
+      createIdx("reindextarget")
 
       client.execute {
         reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
@@ -56,7 +48,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
     }
     "support script parameter" in {
       deleteIdx("reindextarget")
-      create("reindextarget")
+      createIdx("reindextarget")
 
       client.execute {
         reindex("reindex", "reindextarget").script("ctx._source.scripted=42").refresh(RefreshPolicy.IMMEDIATE)
@@ -68,7 +60,7 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
     "support multiple sources" in {
 
       deleteIdx("reindextarget")
-      create("reindextarget")
+      createIdx("reindextarget")
 
       client.execute {
         reindex(Seq("reindex", "reindex2"), "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
@@ -84,9 +76,11 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
       }.await.error.`type` shouldBe "index_not_found_exception"
     }
     "return a task when setting wait_for_completion to false" in {
-      client.execute {
+      val result = client.execute {
         reindex("reindex", "reindextarget").size(2).waitForCompletion(false)
-      }.await.result.right.get.task should not be null
+      }.await.result.right.get
+      result.nodeId should not be null
+      result.taskId should not be null
     }
   }
 }

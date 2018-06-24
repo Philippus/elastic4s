@@ -12,7 +12,7 @@ class TasksTest extends FlatSpec with DockerTests with Matchers {
     }.await.result
 
     resp.nodes.head._2.roles shouldBe Seq("master", "data", "ingest")
-    resp.nodes.head._2.tasks.values.forall(_.startTime.toMillis > 0) shouldBe true
+    resp.nodes.head._2.tasks.values.forall(_.startTimeInMillis > 0) shouldBe true
   }
 
 }
