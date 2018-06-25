@@ -9,7 +9,7 @@ class CatNodesTest extends FlatSpec with Matchers with DockerTests {
   client.execute {
     bulk(
       indexInto("catnodes1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catnodes2/landmarks").fields("name" -> "hampton court palace")
+      indexInto("catnodes2/landmarks").fields("name" -> "westminster abbey")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
