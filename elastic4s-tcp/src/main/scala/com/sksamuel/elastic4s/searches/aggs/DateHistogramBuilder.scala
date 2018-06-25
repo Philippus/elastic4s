@@ -14,10 +14,10 @@ object DateHistogramBuilder {
   def apply(agg: DateHistogramAggregation): DateHistogramAggregationBuilder = {
     val builder = AggregationBuilders.dateHistogram(agg.name)
     agg.extendedBounds.foreach {
-      case LongExtendedBounds(min, max)   => new ESExtendedBounds(min, max)
-      case DoubleExtendedBounds(min, max) => new ESExtendedBounds(min.toLong, max.toLong)
-      case StringExtendedBounds(min, max) => new ESExtendedBounds(min, max)
-      case DateExtendedBounds(min, max)   => new ESExtendedBounds(min.show, max.show)
+      case LongExtendedBounds(min, max)   => builder.extendedBounds(new ESExtendedBounds(min, max))
+      case DoubleExtendedBounds(min, max) => builder.extendedBounds(new ESExtendedBounds(min.toLong, max.toLong))
+      case StringExtendedBounds(min, max) => builder.extendedBounds(new ESExtendedBounds(min, max))
+      case DateExtendedBounds(min, max)   => builder.extendedBounds(new ESExtendedBounds(min.show, max.show))
     }
     agg.field.foreach(builder.field)
     agg.format.foreach(builder.format)
