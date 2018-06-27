@@ -52,7 +52,7 @@ case class MultiPolygonShape(coordinate: Seq[Polygon]) extends SingleShape {
 }
 
 sealed trait CollectionShape extends ShapeDefinition
-case class GeometryCollectionShape(shapes: Seq[SingleShape]) extends CollectionShape {
+case class GeometryCollectionShape(shapes: Seq[ShapeDefinition]) extends CollectionShape {
   def geoShapeType: GeoShapeType = GeoShapeType.GEOMETRYCOLLECTION
 }
 

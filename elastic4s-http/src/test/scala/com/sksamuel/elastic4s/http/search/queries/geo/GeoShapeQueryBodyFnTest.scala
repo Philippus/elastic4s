@@ -128,7 +128,25 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     queryBody.string() shouldEqual circleQuery
   }
 
-  test("Should correctly build geo shape geometry collection search query") {
+  test("Should correctly build empty geo shape geometry collection search query") {
+    Given("Some collection shape query")
+    val query = GeoShapeQuery(
+      "location",
+      InlineShape(
+        GeometryCollectionShape(
+          Seq()
+        )
+      )
+    )
+
+    When("Geo shape query is built")
+    val queryBody = GeoShapeQueryBodyFn(query)
+
+    Then("query should have all shapes in collection specified")
+    queryBody.string() shouldEqual emptyGeometryCollectionQuery
+  }
+
+  test("Should correctly build single level geo shape geometry collection search query") {
     Given("Some collection shape query")
     val query = GeoShapeQuery(
       "location",
@@ -146,7 +164,40 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     val queryBody = GeoShapeQueryBodyFn(query)
 
     Then("query should have all shapes in collection specified")
-    queryBody.string() shouldEqual geometryCollectionQuery
+    queryBody.string() shouldEqual singleLevelGeometryCollectionQuery
+  }
+
+  test("Should correctly build multi level geo shape geometry collection search query") {
+    Given("Some collection shape query")
+    val query = GeoShapeQuery(
+      "location",
+      InlineShape(
+        GeometryCollectionShape(
+          Seq(
+            CircleShape(Circle(GeoPoint(23.23,100.23),(100.0,DistanceUnit.Meters))),
+            PointShape(GeoPoint(23.23,100.23)),
+            GeometryCollectionShape(
+              Seq(
+                CircleShape(Circle(GeoPoint(23.23,200.23),(200.0,DistanceUnit.Meters))),
+                PointShape(GeoPoint(23.23,200.23)),
+                GeometryCollectionShape(
+                  Seq(
+                    CircleShape(Circle(GeoPoint(23.23,300.23),(300.0,DistanceUnit.Meters))),
+                    PointShape(GeoPoint(23.23,300.23))
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+
+    When("Geo shape query is built")
+    val queryBody = GeoShapeQueryBodyFn(query)
+
+    Then("query should have all shapes in collection specified")
+    queryBody.string() shouldEqual multiLevelGeometryCollectionQuery
   }
 
   test("Should correctly build geo shape polygon search query") {
@@ -183,7 +234,6 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
         )
       )
     )
-
 
     When("Geo shape query is built")
     val queryBody = GeoShapeQueryBodyFn(query)
@@ -389,7 +439,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def geometryCollectionQuery =
+  def singleLevelGeometryCollectionQuery =
   """
     |{
     |   "geo_shape":{
@@ -412,6 +462,72 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |   }
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+
+  def multiLevelGeometryCollectionQuery =
+    """
+      |{
+      |   "geo_shape":{
+      |      "location":{
+      |         "shape":{
+      |            "type":"geometrycollection",
+      |            "geometries":[
+      |               {
+      |                  "type":"circle",
+      |                  "coordinates":[23.23,100.23],
+      |                  "radius":"100.0m"
+      |               },
+      |               {
+      |                  "type":"point",
+      |                  "coordinates":[23.23,100.23]
+      |               },
+      |               {
+      |                  "type":"geometrycollection",
+      |                  "geometries":[
+      |                     {
+      |                        "type":"circle",
+      |                        "coordinates":[23.23,200.23],
+      |                        "radius":"200.0m"
+      |                     },
+      |                     {
+      |                        "type":"point",
+      |                        "coordinates":[23.23,200.23]
+      |                     },
+      |                     {
+      |                        "type":"geometrycollection",
+      |                        "geometries":[
+      |                           {
+      |                              "type":"circle",
+      |                              "coordinates":[23.23,300.23],
+      |                              "radius":"300.0m"
+      |                           },
+      |                           {
+      |                              "type":"point",
+      |                              "coordinates":[23.23,300.23]
+      |                           }
+      |                        ]
+      |                     }
+      |                  ]
+      |               }
+      |            ]
+      |         }
+      |      }
+      |   }
+      |}
+    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+
+  def emptyGeometryCollectionQuery =
+    """
+      |{
+      |   "geo_shape":{
+      |      "location":{
+      |         "shape":{
+      |            "type":"geometrycollection",
+      |            "geometries":[]
+      |         }
+      |      }
+      |   }
+      |}
+    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 }
 
 
