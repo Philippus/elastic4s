@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.searches.GeoPoint
 
 object Shapes {
 
-  case class Polygon(points: Seq[GeoPoint], holes: Option[Seq[GeoPoint]])
+  case class Polygon(points: Seq[GeoPoint], holes: Option[Seq[Seq[GeoPoint]]])
 
   case class Circle(point: GeoPoint, distance: (Double, DistanceUnit))
 }
