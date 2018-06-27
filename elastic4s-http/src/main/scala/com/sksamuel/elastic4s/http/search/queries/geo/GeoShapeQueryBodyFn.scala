@@ -85,7 +85,7 @@ object GeoShapeQueryBodyFn {
       case s @ PolygonShape(p) =>
         val builder = XContentFactory.jsonBuilder()
         builder.field("type", s.geoShapeType.toString.toLowerCase)
-        val coords = p.holes.fold(Seq(p.points))(h => Seq(p.points, h))
+        val coords = p.holes.fold(Seq(p.points))(h => Seq(p.points) ++ h)
         builder.array("coordinates", coords.map(_.map { case GeoPoint(a, b) => Array(a, b) }.toArray).toArray)
         builder
 
@@ -95,7 +95,7 @@ object GeoShapeQueryBodyFn {
         val coords = polygons.map {
           case Polygon(points, holes) =>
             holes
-              .fold(Seq(points))(h => Seq(points, h))
+              .fold(Seq(points))(h => Seq(points) ++ h)
               .map(_.map { case GeoPoint(a, b) => Array(a, b) }.toArray)
               .toArray
         }
