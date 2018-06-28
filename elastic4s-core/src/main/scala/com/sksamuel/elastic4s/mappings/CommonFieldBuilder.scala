@@ -116,6 +116,7 @@ object FieldBuilderFn {
         text.maxInputLength.foreach(builder.field("max_input_length", _))
         text.ignoreAbove.foreach(builder.field("ignore_above", _))
         text.similarity.foreach(builder.field("similarity", _))
+        text.indexOptions.foreach(builder.field("index_options", _))
 
       case keyword: KeywordFieldDefinition =>
         keyword.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
