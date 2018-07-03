@@ -818,7 +818,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for suggestions of multiple suggesters" in {
     val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
       termSuggestion("suggestion-term") on "name" text "culdpaly" maxEdits 2,
-      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll",
+      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll" maxErrors 1.0f,
       completionSuggestion("suggestion-completion") on "ac" text "cold"
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
