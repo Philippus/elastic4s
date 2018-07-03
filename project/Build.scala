@@ -40,7 +40,7 @@ object Build extends AutoPlugin {
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
-    fork := false,
+    fork in Test:= false,
     parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
