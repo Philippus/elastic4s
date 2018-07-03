@@ -2,14 +2,7 @@ lazy val root = Project("elastic4s", file("."))
   .settings(
     publish := {},
     publishArtifact := false,
-    name := "elastic4s",
-    mappings in (Compile, packageSrc) ++= {
-      val base  = (Compile / sourceManaged).value
-      val files = (Compile / managedSources).value
-      files.map { f =>
-        (f, f.relativeTo(base).get.getPath)
-      }
-    }
+    name := "elastic4s"
   )
   .aggregate(
     core,
