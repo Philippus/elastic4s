@@ -3,8 +3,6 @@ import com.typesafe.sbt.pgp.PgpKeys
 import sbt._
 import sbt.plugins.JvmPlugin
 import sbt.Keys._
-import sbtrelease.ReleasePlugin.autoImport.ReleaseStep
-import sbtrelease.ReleaseStateTransformations._
 
 object Build extends AutoPlugin {
 
@@ -46,11 +44,11 @@ object Build extends AutoPlugin {
     ThisBuild / parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
-    Global / concurrentRestrictions += Tags.limit(Tags.Test, 1),
-    scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
-    javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
+    credentials += Credentials(Path.userHome / ".sbt" / "pgp.credentials"),
+    scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
+    javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
       "com.sksamuel.exts" %% "exts"       % ExtsVersion,
       "org.slf4j"         % "slf4j-api"   % Slf4jVersion,
