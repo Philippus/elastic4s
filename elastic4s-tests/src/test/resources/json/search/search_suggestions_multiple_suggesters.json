@@ -16,9 +16,10 @@
             }
         },
         "suggestion-phrase": {
+            "text": "aqualuck by jethro toll",
             "phrase": {
-                "text": "aqualuck by jethro toll",
                 "field": "name",
+                "max_errors": 1.0,
                 "collate": {
                     "query": {},
                     "params": {}
