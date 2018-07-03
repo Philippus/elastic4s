@@ -126,8 +126,10 @@ case class SearchResponse(took: Long,
   def aggs: Aggregations = aggregations
   def aggregations: Aggregations = Aggregations(aggregationsAsMap)
 
+  def suggestions: Map[String, Seq[SuggestionResult]] = Option(suggest).getOrElse(Map.empty)
+
   private def suggestion(name: String): Map[String, SuggestionResult] =
-    suggest
+    suggestions
       .getOrElse(name, Nil)
       .map { result =>
         result.text -> result
@@ -135,8 +137,7 @@ case class SearchResponse(took: Long,
       .toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] =
-    suggestion(name).mapValues(_.toCompletion)
+  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
   def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
 
   def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
