@@ -29,4 +29,3 @@ script:
 
 jdk:
 - oraclejdk8
-- oraclejdk9
