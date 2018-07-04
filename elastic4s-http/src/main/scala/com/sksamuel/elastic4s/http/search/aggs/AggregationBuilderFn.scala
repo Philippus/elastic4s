@@ -13,6 +13,7 @@ object AggregationBuilderFn {
       case agg: AvgAggregation            => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregation    => CardinalityAggregationBuilder(agg)
       case agg: ChildrenAggregation       => ChildrenAggregationBuilder(agg)
+      case agg: CompositeAggregation      => CompositeAggregationBuilder(agg)
       case agg: DateHistogramAggregation  => DateHistogramAggregationBuilder(agg)
       case agg: ExtendedStatsAggregation  => ExtendedStatsAggregationBuilder(agg)
       case agg: FilterAggregation         => FilterAggregationBuilder(agg)
