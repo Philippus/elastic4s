@@ -14,7 +14,7 @@ case class PhraseSuggestionResult(text: String, offset: Int, length: Int, option
 
 case class PhraseSuggestionOption(private val options: Map[String, Any]) {
   val text: String        = options("text").asInstanceOf[String]
-  val highlighted: String = options("highlighted").asInstanceOf[String]
+  val highlighted: Option[String] = options.get("highlighted").map(_.asInstanceOf[String])
   val score: Double       = options("score").asInstanceOf[Double]
 }
 
