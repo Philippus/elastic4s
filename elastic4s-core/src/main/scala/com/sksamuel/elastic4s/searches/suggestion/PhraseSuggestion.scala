@@ -4,12 +4,15 @@ import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.exts.OptionImplicits._
 
+case class DirectGenerator(field: String, minWordLength: Int, prefixLength: Int)
+
 case class PhraseSuggestion(name: String,
                             fieldname: String,
                             analyzer: Option[String] = None,
                             collateParams: Map[String, AnyRef] = Map.empty,
                             collatePrune: Option[Boolean] = None,
                             collateQuery: Option[Script] = None,
+                            directGenerators: Seq[DirectGenerator] = Seq.empty,
                             confidence: Option[Float] = None,
                             forceUnigrams: Option[Boolean] = None,
                             gramSize: Option[Int] = None,
@@ -29,8 +32,8 @@ case class PhraseSuggestion(name: String,
   override def size(size: Int): PhraseSuggestion            = copy(size = size.some)
   override def shardSize(shardSize: Int): PhraseSuggestion  = copy(shardSize = shardSize.some)
 
-  //  def addCandidateGenerator(generator: CandidateGenerator): PhraseSuggestionDefinition =
-  //    copy(candidateGenerator = generator.some)
+  def addDirectGenerator(generator: DirectGenerator): PhraseSuggestion =
+    copy(directGenerators = directGenerators ++ Seq(generator))
 
   def collateParams(collateParams: Map[String, AnyRef]): PhraseSuggestion =
     copy(collateParams = collateParams)
