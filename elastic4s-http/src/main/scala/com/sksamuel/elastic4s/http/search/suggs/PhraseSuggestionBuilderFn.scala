@@ -25,6 +25,18 @@ object PhraseSuggestionBuilderFn {
     phrase.size.foreach(builder.field("size", _))
     phrase.shardSize.foreach(builder.field("shard_size", _))
 
+    // DIRECT GENERATOR
+    builder.startArray("direct_generator")
+    phrase.directGenerators.foreach { generator =>
+      builder.startObject()
+      builder.field("field", generator.field)
+      builder.field("min_word_length", generator.minWordLength)
+      builder.field("prefix_length", generator.prefixLength)
+      builder.endObject()
+    }
+    builder.endArray()
+    // END DIRECT GENERATOR
+
     //COLLATE
     builder.startObject("collate")
 

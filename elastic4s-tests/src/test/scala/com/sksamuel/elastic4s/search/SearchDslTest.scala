@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
-import com.sksamuel.elastic4s.searches.suggestion.{Fuzziness, SuggestMode}
+import com.sksamuel.elastic4s.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
 import com.sksamuel.elastic4s.searches.{DateHistogramInterval, GeoPoint, QueryRescoreMode, ScoreMode, SearchType}
 import org.joda.time.DateTimeZone
 import org.scalatest.mockito.MockitoSugar
@@ -818,7 +818,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for suggestions of multiple suggesters" in {
     val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
       termSuggestion("suggestion-term") on "name" text "culdpaly" maxEdits 2,
-      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll" maxErrors 1.0f,
+      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll" maxErrors 1.0f addDirectGenerator DirectGenerator("fieldName", 3, 0),
       completionSuggestion("suggestion-completion") on "ac" text "cold"
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
