@@ -19,7 +19,7 @@ case class GetIndexTemplates(templates: Map[String, IndexTemplate]) {
 
 case class IndexTemplate(order: Int,
                          @JsonProperty("index_patterns") indexPatterns: Seq[String],
-                         settings: Map[String, String],
+                         settings: Map[String, Any],
                          mappings: Map[String, Any],
                          aliases: Map[String, Any])
 
