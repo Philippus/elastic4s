@@ -32,6 +32,11 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
   }.await
 
   "highlighting" should {
+    "ignore missing highlight" in {
+      client.execute {
+        search("intros").matchAllQuery().limit(1)
+      }.await.result.hits.hits.map(_.highlight) shouldBe Array(Map.empty)
+    }
     "highlight selected words" in {
 
       val resp = client.execute {
