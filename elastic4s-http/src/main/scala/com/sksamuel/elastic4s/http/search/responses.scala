@@ -22,11 +22,12 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("sort") sort: Option[Seq[AnyRef]],
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
-                     highlight: Map[String, Seq[String]],
+                     @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
                      private val inner_hits: Map[String, Map[String, Any]])
   extends Hit {
 
-  def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
+  def highlight: Map[String, Seq[String]] = _highlight.getOrElse(Map.empty)
+  def highlightFragments(name: String): Seq[String] = highlight.getOrElse(name, Nil)
 
   def innerHitsAsMap: Map[String, Map[String, Any]] = Option(inner_hits).getOrElse(Map.empty)
 
