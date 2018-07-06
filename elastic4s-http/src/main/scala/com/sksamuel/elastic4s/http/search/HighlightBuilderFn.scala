@@ -18,8 +18,7 @@ object HighlightBuilderFn {
     highlight.options.fragmenter.foreach(builder.field("fragmenter", _))
     highlight.options.fragmentSize.foreach(builder.field("fragment_size", _))
     highlight.options.numOfFragments.foreach(builder.field("number_of_fragments", _))
-    highlight.options.encoder.foreach(builder.field("boundary_chars", _))
-    highlight.options.encoder.foreach(builder.field("boundary_chars", _))
+    highlight.options.encoder.foreach(builder.field("encoder", _))
     highlight.options.forceSource.foreach(builder.field("force_source", _))
     highlight.options.highlighterType.foreach(builder.field("type", _))
     highlight.options.highlightQuery.map(QueryBuilderFn.apply).foreach { highlight =>

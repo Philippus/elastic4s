@@ -1,8 +1,9 @@
 {
     "version": true,
     "highlight": {
-        "boundary_chars": "html",
+        "boundary_chars": "\\b",
         "boundary_max_scan": 4,
+        "encoder": "html",
         "order": "score",
         "post_tags": [
             "</b>"
