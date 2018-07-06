@@ -54,7 +54,8 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
                          version: Option[Boolean] = None,
                          profile: Option[Boolean] = None,
                          source: Option[String] = None,
-                         trackHits: Option[Boolean] = None) {
+                         trackHits: Option[Boolean] = None,
+                         typedKeys: Option[Boolean] = None) {
 
   /** Adds a single string query to this search
     *
@@ -297,4 +298,6 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
     copy(fetchContext = FetchSourceContext(true, includes.toArray, excludes.toArray).some)
 
   def collapse(collapse: CollapseRequest): SearchRequest = copy(collapse = collapse.some)
+
+  def typedKeys(enabled: Boolean): SearchRequest = copy(typedKeys = enabled.some)
 }
