@@ -31,7 +31,7 @@ trait SearchHandlers {
               val status = element.get("status").intValue()
               val either =
                 if (element.has("error"))
-                  Left(JacksonSupport.mapper.treeToValue[SearchError](element))
+                  Left(JacksonSupport.mapper.treeToValue[SearchError](element.get("error")))
                 else
                   Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
               MultisearchResponseItem(index, status, either)
