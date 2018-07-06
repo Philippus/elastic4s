@@ -41,7 +41,7 @@ object PhraseSuggestionBuilderFn {
     builder.startObject("collate")
 
     builder.startObject("query")
-    phrase.collateQuery.foreach(t => builder.rawField("inline", t.script))
+    phrase.collateQuery.foreach(t => builder.rawField(t.scriptType.toString.toLowerCase, t.script))
     builder.endObject()
 
     phrase.collatePrune.foreach(builder.field("prune", _))
