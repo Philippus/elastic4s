@@ -1370,6 +1370,7 @@ Major upgrade to Elasticsearch 2.0.0 including breaking changes. _Please raise a
 * HMRC
 * Canal+
 * AOE
+* Starmind
 
 _Raise a PR to add your company here_
 
