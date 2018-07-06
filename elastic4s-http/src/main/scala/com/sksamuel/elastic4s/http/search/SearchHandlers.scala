@@ -45,6 +45,7 @@ trait SearchHandlers {
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
+      request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
       val body = MultiSearchBuilderFn(request)
       logger.debug("Executing msearch: " + body)
@@ -84,6 +85,8 @@ trait SearchHandlers {
       request.indicesOptions.foreach { opts =>
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
       }
+
+      request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
       val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
       ElasticRequest("POST", endpoint, params.toMap, HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType))
