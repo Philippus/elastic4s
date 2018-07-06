@@ -138,39 +138,39 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
         resp.totalHits shouldBe 1
         resp.maxScore shouldBe 14.5
       }
-      "not throw npe on empty hits for safeTo" in {
-        client.execute {
-          search("chess") query {
-            matchQuery("name", "werwerewrewrewr")
-          }
-        }.await.result.safeTo[Piece].size shouldBe 0
-      }
-      "support search hits without null on no hits" in {
-        client.execute {
-          search("chess") query {
-            matchQuery("name", "werwerewrewrewr")
-          }
-        }.await.result.hits.hits.isEmpty shouldBe true
-      }
-      "return Left[RequestFailure] when searching an unknown index" in {
-        client.execute {
-          search("qweqweqwe") query {
-            matchQuery("name", "werwerewrewrewr")
-          }
-        }.await.error.`type` shouldBe "index_not_found_exception"
-      }
-      "return Left[RequestFailure] when the search is invalid" in {
-        client.execute {
-          search("qweqweqwe").rawQuery("""{"unknown" : "unk" } """)
-        }.await.error.`type` shouldBe "parsing_exception"
-      }
-      "not throw npe for max score on empty hits" in {
-        client.execute {
-          search("chess") query {
-            matchQuery("name", "werwerewrewrewr")
-          }
-        }.await.result.maxScore shouldBe 0
-      }
+    }
+    "not throw npe on empty hits for safeTo" in {
+      client.execute {
+        search("chess") query {
+          matchQuery("name", "werwerewrewrewr")
+        }
+      }.await.result.safeTo[Piece].size shouldBe 0
+    }
+    "support search hits without null on no hits" in {
+      client.execute {
+        search("chess") query {
+          matchQuery("name", "werwerewrewrewr")
+        }
+      }.await.result.hits.hits.isEmpty shouldBe true
+    }
+    "return Left[RequestFailure] when searching an unknown index" in {
+      client.execute {
+        search("qweqweqwe") query {
+          matchQuery("name", "werwerewrewrewr")
+        }
+      }.await.error.`type` shouldBe "index_not_found_exception"
+    }
+    "return Left[RequestFailure] when the search is invalid" in {
+      client.execute {
+        search("qweqweqwe").rawQuery("""{"unknown" : "unk" } """)
+      }.await.error.`type` shouldBe "parsing_exception"
+    }
+    "not throw npe for max score on empty hits" in {
+      client.execute {
+        search("chess") query {
+          matchQuery("name", "werwerewrewrewr")
+        }
+      }.await.result.maxScore shouldBe 0
     }
     "include _routing in response" in {
       val resp = client.execute {
