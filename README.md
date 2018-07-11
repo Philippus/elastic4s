@@ -75,8 +75,8 @@ https://github.com/sksamuel/elastic4s/tree/master/samples
 
 To get started you will need to add a dependency to either
 
-* [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http)
-* [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp)
+* [elastic4s-http](https://mvnrepository.com/artifact/com.sksamuel.elastic4s/elastic4s-http)
+* [elastic4s-tcp](https://mvnrepository.com/artifact/com.sksamuel.elastic4s/elastic4s-tcp)
 
 depending on which client you intend you use (or both).
 
@@ -93,12 +93,12 @@ client classes.
 Requests are created using the elastic4s DSL. For example to create a search request, you would do:
 
 ```scala
-search("index" / "type").query("findthistext")`
+search("index" / "type").query("findthistext")
 ```
 
 The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is
 identical whether you use the HTTP or TCP client, you must import the appropriate trait
-(`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which
+(`com.sksamuel.elastic4s.ElasticDsl` for TCP or `com.sksamuel.elastic4s.http.ElasticDsl` for HTTP) depending on which
 client you are using.
 
 ### Example SBT Setup
@@ -123,18 +123,23 @@ libraryDependencies ++= Seq(
 
 ### Example Application
 
-An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create and
+An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create an
 index and index a one field document. Then we will search for that document using a simple text query.
 
 ```scala
+import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.embedded.LocalNode
+import com.sksamuel.elastic4s.http.{RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.http.search.SearchResponse
+
 object ArtistIndex extends App {
 
   // spawn an embedded node for testing
   val localNode = LocalNode("mycluster", "/tmp/datapath")
 
   // in this example we create a client attached to the embedded node, but
-  // in a real application you would provide the HTTP address to the HttpClient constructor.
-  val client = localNode.http(true)
+  // in a real application you would provide the HTTP address to the ElasticClient constructor.
+  val client = localNode.client(shutdownNodeOnClose = true)
 
   // we must import the dsl
   import com.sksamuel.elastic4s.http.ElasticDsl._
@@ -152,10 +157,10 @@ object ArtistIndex extends App {
   }.await
 
   // Next we index a single document which is just the name of an Artist.
-  // The RefreshPolicy.IMMEDIATE means that we want this document to flush to the disk immmediately.
+  // The RefreshPolicy.Immediate means that we want this document to flush to the disk immmediately.
   // see the section on Eventual Consistency.
   client.execute {
-    indexInto("artists" / "modern").doc("name" -> "L.S. Lowry").refresh(RefreshPolicy.IMMEDIATE)
+    indexInto("artists" / "modern").fields("name" -> "L.S. Lowry").refresh(RefreshPolicy.Immediate)
   }.await
 
   // now we can search for the document we just indexed
@@ -163,15 +168,18 @@ object ArtistIndex extends App {
     search("artists") query "lowry"
   }.await
 
-  // resp is an Either of a RequestFailure instance containing the elasticsearch error details,
-  // or a RequestSuccess instance that depends on the type of request.
+  // resp is a Response[+U] ADT consisting of either a RequestFailure containing the
+  // Elasticsearch error details, or a RequestSuccess[U] that depends on the type of request.
   // In this case it is a RequestSuccess[SearchResponse]
 
   println("---- Search Results ----")
   resp match {
-    case Left(failure) => println("We failed " + failure.error)
-    case Right(results) => println(results.result.hits)
+    case failure: RequestFailure => println("We failed " + failure.error)
+    case results: RequestSuccess[_] => println(results.result.hits)
   }
+
+  // Response also supports familiar combinators like map / flatMap / foreach:
+  resp foreach (search => println(s"There were ${search.totalHits} total hits"))
 
   client.close()
 }
@@ -334,12 +342,12 @@ resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven"
 
 ## Embedded Node
 
-A locally configured node and client can be created by including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `elastic4sclient` function.
+A locally configured node and client can be created by including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `client` function.
 
 ```scala
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.embedded.LocalNode
 val node = LocalNode(clusterName, pathHome)
-val client = node.elastic4sclient()
+val client = node.client(shutdownNodeOnClose = true)
 ```
 
 To specify settings for the local node you can pass in a settings object like this:
@@ -350,7 +358,7 @@ val settings = Settings.builder()
       .put("http.enabled", false)
       .build()
 val node = LocalNode(settings)
-val client = node.elastic4sclient(<shutdownNodeOnClose>)
+val client = node.client(<shutdownNodeOnClose>)
 ```
 
 If `shutdownNodeOnClose` is true, then once close is called on the client, the local node will be stopped. Otherwise you will manage the lifecycle of the local node yourself (stopping it before exiting the process).
@@ -380,16 +388,16 @@ To do this we add mappings:
 
 ```scala
 import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.StopAnalyzer
+import com.sksamuel.elastic4s.analyzers.StopAnalyzer
 
 client.execute {
-    createIndex("places") mappings (
-        mapping("cities") as (
-            keywordField("id"),
-            textField("name") boost 4,
-            textField("content") analyzer StopAnalyzer
-        )
+  createIndex("places") mappings (
+    mapping("cities") as (
+      keywordField("id"),
+      textField("name") boost 4,
+      textField("content") analyzer StopAnalyzer
     )
+  )
 }
 ```
 
@@ -464,7 +472,7 @@ Simply add the import for your chosen library below and then with those implicit
 ## Searching
 
 Searching is naturally the most involved operation.
-There are many ways to do [searching in elastic search](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
+There are many ways to do [searching in Elasticsearch](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
 in the higher complexity of the query DSL.
 
 To do a simple text search, where the query is parsed from a single string
@@ -538,8 +546,7 @@ val resp = client.execute {
 
 // .to[Character] will look for an implicit HitReader[Character] in scope
 // and then convert all the hits into Characters for us.
-val characters :Seq[Character] = resp.to[Character]
-
+val characters: Seq[Character] = resp.to[Character]
 ```
 
 This is basically the inverse of the `Indexable` typeclass. And just like Indexable, the json modules provide implementations
@@ -616,7 +623,7 @@ We can update existing documents without having to do a full index, by updating 
 
 ```scala
 client.execute {
-  update(25).in("scifi" / "starwars"). docAsUpsert (
+  update("25").in("scifi" / "starwars").docAsUpsert (
     "character" -> "chewie",
     "race" -> "wookie"
   )
@@ -648,9 +655,9 @@ wrap index, delete and update requests using the `bulk` keyword and pass to the 
 ```scala
 client.execute {
   bulk (
-    index into "bands/rock" fields "name"->"coldplay",
-    index into "bands/rock" fields "name"->"kings of leon",
-    index into "bands/pop" fields (
+    indexInto("bands" / "rock") fields "name"->"coldplay",
+    indexInto("bands" / "rock") fields "name"->"kings of leon",
+    indexInto("bands" / "pop") fields (
       "name" -> "elton john",
       "best_album" -> "tumbleweed connection"
     )
