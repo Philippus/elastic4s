@@ -7,8 +7,8 @@
     <version>1.0.1</version>
 
     <properties>
-        <scalaVersion>2.12.2</scalaVersion>
-        <elastic4sVersion>5.4.2</elastic4sVersion>
+        <scalaVersion>2.12.6</scalaVersion>
+        <elastic4sVersion>6.3.3</elastic4sVersion>
     </properties>
 
     <dependencies>
