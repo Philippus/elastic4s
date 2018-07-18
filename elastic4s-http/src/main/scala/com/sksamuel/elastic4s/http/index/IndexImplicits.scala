@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.http.index
 
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 import com.sksamuel.elastic4s.http.{HttpExecutable, RefreshPolicyHttpValue, ResponseHandler}
 import com.sksamuel.elastic4s.indexes.{IndexContentBuilder, IndexDefinition, IndexShowImplicits}
 import org.apache.http.entity.{ContentType, StringEntity}
@@ -15,8 +18,12 @@ trait IndexImplicits extends IndexShowImplicits {
                          request: IndexDefinition): Future[IndexResponse] = {
 
       val (method, endpoint) = request.id match {
-        case Some(id) => "PUT" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}/$id"
-        case None => "POST" -> s"/${request.indexAndType.index}/${request.indexAndType.`type`}"
+        case Some(id) =>
+          "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder
+            .encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}/${URLEncoder.encode(id.toString, StandardCharsets.UTF_8.name())}"
+        case None =>
+          "POST" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder
+            .encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
