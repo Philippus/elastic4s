@@ -4,7 +4,7 @@ import com.sksamuel.exts.StringOption
 
 import scala.language.implicitConversions
 
-@deprecated("Use ElasticNodeUri", "6.3.3")
+@deprecated("Use ElasticNodeEndpoint", "6.3.3")
 object ElasticsearchClientUri {
 
   private val Regex = "(?:elasticsearch|http|https)://(.*?)/?(\\?.*?)?".r
@@ -54,5 +54,5 @@ object ElasticsearchClientUri {
   * To use HTTPS when using the HTTP client, add ssl=true to the query parameters.
   *
   */
-@deprecated("Use ElasticNodeUri", "6.3.3")
+@deprecated("Use ElasticNodeEndpoint", "6.3.3")
 case class ElasticsearchClientUri(uri: String, hosts: List[(String, Int)], options: Map[String, String] = Map.empty)
