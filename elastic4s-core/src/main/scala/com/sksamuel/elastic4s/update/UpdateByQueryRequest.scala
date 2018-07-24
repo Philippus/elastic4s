@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.update
 
 import com.sksamuel.elastic4s.script.Script
-import com.sksamuel.elastic4s.searches.SearchRequest
 import com.sksamuel.elastic4s.searches.queries.Query
 import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes, RefreshPolicy, Slice}
 import com.sksamuel.exts.OptionImplicits._
