@@ -18,6 +18,7 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
                                 waitForActiveShards: Option[Int] = None,
                                 waitForCompletion: Option[Boolean] = None,
                                 retryBackoffInitialTime: Option[FiniteDuration] = None,
+                                scroll: Option[String] = None,
                                 scrollSize: Option[Int] = None,
                                 slices: Option[Int] = None,
                                 slice: Option[Slice] = None,
@@ -34,6 +35,9 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
 
   def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = copy(refresh = refresh.some)
   def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
+
+  def scroll(scroll: String): UpdateByQueryRequest = copy(scroll = scroll.some)
+  def scroll(duration: FiniteDuration): UpdateByQueryRequest = copy(scroll = Some(duration.toSeconds + "s"))
 
   def scrollSize(scrollSize: Int): UpdateByQueryRequest = copy(scrollSize = scrollSize.some)
   def slice(slice: Slice): UpdateByQueryRequest         = copy(slice = slice.some)
