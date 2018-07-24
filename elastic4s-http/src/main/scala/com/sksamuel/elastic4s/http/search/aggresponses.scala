@@ -380,6 +380,8 @@ trait HasAggregations extends Transformable {
   override private[elastic4s] def data: Map[String, Any]
   private def agg(name: String): Map[String, Any] = data(name).asInstanceOf[Map[String, Any]]
 
+  def dataAsMap: Map[String, Any] = if(data != null) data else Map.empty
+
   def contains(name: String): Boolean = data.contains(name)
   def names: Iterable[String] = data.keys
 
