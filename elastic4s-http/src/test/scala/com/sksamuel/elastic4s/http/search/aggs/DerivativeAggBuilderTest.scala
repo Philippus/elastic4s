@@ -25,7 +25,7 @@ class DerivativeAggBuilderTest extends FunSuite with Matchers{
       )
     )
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"sales_deriv":{"derivative":{"buckets_path":"sales","unit":"86400s","gap_policy":"insert_zeros","format":"$"},"meta":{"color":"blue"}}}}}}"""
+      """{"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"sales_deriv":{"derivative":{"buckets_path":"sales","unit":"86400s","gap_policy":"insert_zeros","format":"$"},"meta":{"color":"blue"}}}}}}"""
   }
 
 }

@@ -16,6 +16,6 @@ class SumBucketAggBuilderTest extends FunSuite with Matchers {
       sumBucketAggregation("sum_monthly_sales", "sales_per_month>sales")
     )
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}}}},"sum_monthly_sales":{"sum_bucket":{"buckets_path":"sales_per_month>sales"}}}}"""
+      """{"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}}}},"sum_monthly_sales":{"sum_bucket":{"buckets_path":"sales_per_month>sales"}}}}"""
   }
 }
