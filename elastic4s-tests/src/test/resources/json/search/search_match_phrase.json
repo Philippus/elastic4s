@@ -1,5 +1,4 @@
 {
-    "version": true,
     "size": 5,
     "query": {
         "match_phrase": {

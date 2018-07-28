@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "multi_match": {
             "query": "this is my query",

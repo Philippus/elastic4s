@@ -1,5 +1,4 @@
 {
-    "version": true,
     "aggs": {
         "global_agg": {
             "global": {}

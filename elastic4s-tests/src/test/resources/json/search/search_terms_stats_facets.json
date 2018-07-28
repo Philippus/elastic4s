@@ -1,5 +1,4 @@
 {
-    "version": true,
     "facets": {
         "grades-by-teacher": {
             "terms_stats": {

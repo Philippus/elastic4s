@@ -1,5 +1,4 @@
 {
-    "version": true,
     "facets": {
         "query-facet": {
             "query": {

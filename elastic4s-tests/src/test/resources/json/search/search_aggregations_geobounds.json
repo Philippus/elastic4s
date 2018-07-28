@@ -1,5 +1,4 @@
 {
-    "version": true,
     "aggs": {
         "geo_agg": {
             "geo_bounds": {

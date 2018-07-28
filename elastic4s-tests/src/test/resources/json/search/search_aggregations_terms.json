@@ -1,5 +1,4 @@
 {
-    "version": true,
     "aggs": {
         "my_terms_agg": {
             "terms": {

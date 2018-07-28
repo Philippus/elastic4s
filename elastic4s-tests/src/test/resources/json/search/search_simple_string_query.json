@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "simple_query_string": {
             "default_operator": "AND",

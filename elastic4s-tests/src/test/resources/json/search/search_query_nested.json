@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "nested": {
             "path": "obj1",

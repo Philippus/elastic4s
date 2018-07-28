@@ -1,5 +1,4 @@
 {
-    "version": true,
     "aggs": {
         "daterange_agg": {
             "date_range": {

@@ -1,5 +1,4 @@
 {
-    "version": true,
     "from": 5,
     "query": {
         "query_string": {
