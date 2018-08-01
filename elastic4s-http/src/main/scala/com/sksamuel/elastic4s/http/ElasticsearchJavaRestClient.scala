@@ -73,7 +73,7 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
   override def close(): Unit = client.close()
 
   private def isEntityGziped(entity: org.apache.http.HttpEntity): Boolean = {
-    entity.getContentEncoding.getValue == "gzip"
+    Option(entity.getContentEncoding).flatMap(x => Option(x.getValue)).contains("gzip")
   }
 }
 
