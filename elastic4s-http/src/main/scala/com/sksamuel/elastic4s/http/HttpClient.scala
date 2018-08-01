@@ -33,7 +33,7 @@ trait HttpClient extends Logging {
 case class HttpResponse(statusCode: Int, entity: Option[HttpEntity.StringEntity], headers: Map[String, String])
 
 sealed trait HttpEntity {
-  def contentType: Option[String]
+  def contentCharset: Option[String]
   def get: String
 }
 
@@ -42,15 +42,15 @@ object HttpEntity {
   def apply(content: String): HttpEntity                      = HttpEntity(content, "application/json; charset=utf-8")
   def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
 
-  case class StringEntity(content: String, contentType: Option[String]) extends HttpEntity {
+  case class StringEntity(content: String, contentCharset: Option[String]) extends HttpEntity {
     def get: String = content
   }
 
-  case class InputStreamEntity(content: InputStream, contentType: Option[String]) extends HttpEntity {
+  case class InputStreamEntity(content: InputStream, contentCharset: Option[String]) extends HttpEntity {
     def get: String = Source.fromInputStream(content).getLines().mkString("\n")
   }
 
-  case class FileEntity(content: File, contentType: Option[String]) extends HttpEntity {
+  case class FileEntity(content: File, contentCharset: Option[String]) extends HttpEntity {
 
     import scala.collection.JavaConverters._
 

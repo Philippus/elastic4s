@@ -47,7 +47,7 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClien
             params: Map[String, Any],
             entity: HttpEntity): Request[String, Nothing] = {
     val r  = request(method, endpoint, params)
-    val r2 = entity.contentType.fold(r)(r.contentType)
+    val r2 = entity.contentCharset.fold(r)(r.contentType)
     entity match {
       case StringEntity(content: String, _) => r2.body(content)
       case InputStreamEntity(in: InputStream, _) =>

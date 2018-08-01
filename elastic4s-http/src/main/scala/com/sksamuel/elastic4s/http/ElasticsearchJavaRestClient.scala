@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.http
 
+import java.io.InputStream
 import java.nio.charset.Charset
+import java.util.zip.GZIPInputStream
 
 import com.sksamuel.elastic4s.Show
 import org.apache.http.client.config.RequestConfig
@@ -31,10 +33,16 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
 
   def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
     val entity = Option(r.getEntity).map { entity =>
-      val contentEncoding = Option(entity.getContentEncoding).map(_.getValue).getOrElse("UTF-8")
-      implicit val codec: Codec = Codec(Charset.forName(contentEncoding))
-      val body            = Source.fromInputStream(entity.getContent).mkString
-      HttpEntity.StringEntity(body, Some(contentEncoding))
+      val contentCharset = Option(ContentType.get(entity)).fold(Charset.forName("UTF-8"))(_.getCharset)
+      implicit val codec: Codec = Codec(contentCharset)
+
+      val contentStream: InputStream = {
+        if (isEntityGziped(entity)) new GZIPInputStream(entity.getContent)
+        else entity.getContent
+      }
+
+      val body = Source.fromInputStream(contentStream).mkString
+      HttpEntity.StringEntity(body, Some(contentCharset.name()))
     }
     val headers = r.getHeaders.map { header =>
       header.getName -> header.getValue
@@ -63,6 +71,10 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
   }
 
   override def close(): Unit = client.close()
+
+  private def isEntityGziped(entity: org.apache.http.HttpEntity): Boolean = {
+    entity.getContentEncoding.getValue == "gzip"
+  }
 }
 
 /**
