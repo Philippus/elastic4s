@@ -1,5 +1,4 @@
 {
-    "version": true,
     "post_filter": {
         "terms": {
             "singer": [

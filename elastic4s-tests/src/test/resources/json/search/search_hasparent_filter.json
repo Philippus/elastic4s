@@ -1,5 +1,4 @@
 {
-    "version": true,
     "post_filter": {
         "has_parent": {
             "parent_type": "singer",

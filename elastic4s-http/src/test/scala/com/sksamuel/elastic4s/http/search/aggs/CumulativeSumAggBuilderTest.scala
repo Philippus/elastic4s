@@ -24,7 +24,7 @@ class CumulativeSumAggBuilderTest extends FunSuite with Matchers{
         )
     )
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"cumulative_sales":{"cumulative_sum":{"buckets_path":"sales","format":"$"},"meta":{"color":"blue"}}}}}}"""
+      """{"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"cumulative_sales":{"cumulative_sum":{"buckets_path":"sales","format":"$"},"meta":{"color":"blue"}}}}}}"""
   }
 
 }

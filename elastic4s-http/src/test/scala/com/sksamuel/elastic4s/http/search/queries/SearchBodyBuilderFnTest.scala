@@ -17,7 +17,7 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
       .matchedFields("text", "text.ngram", "text.japanese")
     }
     SearchBodyBuilderFn(request).string() shouldBe
-      """{"version":true,"highlight":{"fields":{"text":{"matched_fields":["text","text.ngram","text.japanese"]}}}}"""
+      """{"highlight":{"fields":{"text":{"matched_fields":["text","text.ngram","text.japanese"]}}}}"""
   }
   test("highlight with 'highlighterType' generates 'type' field.") {
     val request = search("example" / "1") highlighting {
@@ -25,7 +25,7 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
         .highlighterType("fvh")
     }
     SearchBodyBuilderFn(request).string() shouldBe
-      """{"version":true,"highlight":{"fields":{"text":{"type":"fvh"}}}}"""
+      """{"highlight":{"fields":{"text":{"type":"fvh"}}}}"""
   }
   test("highlight with 'boundaryChars' generates 'boundary_chars' field.") {
     val request = search("example" / "1") highlighting {
@@ -33,7 +33,7 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
         .boundaryChars("test")
     }
     SearchBodyBuilderFn(request).string() shouldBe
-      """{"version":true,"highlight":{"fields":{"text":{"boundary_chars":"test"}}}}"""
+      """{"highlight":{"fields":{"text":{"boundary_chars":"test"}}}}"""
   }
   test("geo distance query with sort") {
 
@@ -51,6 +51,6 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
     )
 
     SearchBodyBuilderFn(req).string shouldBe
-      """{"version":true,"query":{"geo_distance":{"distance":"100km","location":[-79.38871,43.65435]}},"size":100,"sort":[{"_geo_distance":{"location":[[-79.38871,43.65435]],"order":"asc"}}]}"""
+      """{"query":{"geo_distance":{"distance":"100km","location":[-79.38871,43.65435]}},"size":100,"sort":[{"_geo_distance":{"location":[[-79.38871,43.65435]],"order":"asc"}}]}"""
   }
 }

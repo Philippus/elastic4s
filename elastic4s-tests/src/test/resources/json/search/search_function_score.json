@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "function_score": {
             "query": {

@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "custom_boost_factor": {
             "query": {

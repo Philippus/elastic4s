@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "span_term": {
             "name": "coldplay",

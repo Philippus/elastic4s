@@ -1,5 +1,4 @@
 {
-    "version": true,
     "highlight": {
         "boundary_chars": "\\b",
         "boundary_max_scan": 4,

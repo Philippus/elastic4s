@@ -72,7 +72,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
     }
     "support external versions" in {
       val found = client.execute {
-        search("electronics").query(matchQuery("name", "galaxy"))
+        search("electronics").query(matchQuery("name", "galaxy")).version(true)
       }.await.result.hits.hits(0)
       found.id shouldBe "55A"
       found.version shouldBe 42l

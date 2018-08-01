@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "filtered": {
             "query": {

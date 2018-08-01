@@ -1,5 +1,4 @@
 {
-    "version": true,
     "query": {
         "query_string": {
             "default_operator": "OR",

@@ -18,7 +18,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
     )
 
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}}]}}}}"""
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}}]}}}}"""
   }
 
   test("CompositeAggregationBuilder should terms-valued composites with multiple terms") {
@@ -30,7 +30,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
     )
 
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}},{"s2":{"terms":{"field":"f2"}}}]}}}}"""
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}},{"s2":{"terms":{"field":"f2"}}}]}}}}"""
   }
 
   test("CompositeAggregationBuilder should build script-valued composites") {
@@ -41,7 +41,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
     )
 
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"script":{"source":"doc['product'].value"}}}}]}}}}"""
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"script":{"source":"doc['product'].value"}}}}]}}}}"""
   }
 
   test("CompositeAggregationBuilder should respect all possible value types and attributes") {
@@ -54,7 +54,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
     )
 
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"version":true,"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1","order":"desc"}}},{"s2":{"histogram":{"field":"f2","order":"desc","interval":5}}},{"s3":{"date_histogram":{"field":"f3","order":"desc","interval":"5d","time_zone":"+01:00"}}}]}}}}"""
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1","order":"desc"}}},{"s2":{"histogram":{"field":"f2","order":"desc","interval":5}}},{"s3":{"date_histogram":{"field":"f3","order":"desc","interval":"5d","time_zone":"+01:00"}}}]}}}}"""
 
   }
 

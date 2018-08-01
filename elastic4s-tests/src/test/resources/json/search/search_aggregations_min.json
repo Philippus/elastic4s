@@ -1,5 +1,4 @@
 {
-    "version": true,
     "aggs": {
         "grades_min": {
             "min": {

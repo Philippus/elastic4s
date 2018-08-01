@@ -1,5 +1,4 @@
 {
-    "version": true,
     "aggs": {
         "years": {
             "date_histogram": {
