@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.http.search.queries.compound.{BoolQueryBuilderFn, 
 import com.sksamuel.elastic4s.http.search.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.span._
-import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQueryBodyFn, MoreLikeThisBuilderFn, ScriptQueryBodyFn, ScriptScoreQueryBodyFn}
+import com.sksamuel.elastic4s.http.search.queries.specialized.{FunctionScoreQueryBodyFn, MoreLikeThisBuilderFn, PercolateQueryBodyFn, ScriptQueryBodyFn, ScriptScoreQueryBodyFn}
 import com.sksamuel.elastic4s.http.search.queries.term._
 import com.sksamuel.elastic4s.http.search.queries.text._
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{FunctionScoreQueryDefinition, ScriptScoreDefinition}
@@ -40,6 +40,7 @@ object QueryBuilderFn {
     case q: MultiMatchQueryDefinition => MultiMatchBodyFn(q)
     case q: NestedQueryDefinition => NestedQueryBodyFn(q)
     case q: ParentIdQueryDefinition => ParentIdQueryBodyFn(q)
+    case q: PercolateQueryDefinition => PercolateQueryBodyFn(q)
     case q: PrefixQueryDefinition => PrefixQueryBodyFn(q)
     case q: QueryStringQueryDefinition => QueryStringBodyFn(q)
     case r: RangeQueryDefinition => RangeQueryBodyFn(r)
