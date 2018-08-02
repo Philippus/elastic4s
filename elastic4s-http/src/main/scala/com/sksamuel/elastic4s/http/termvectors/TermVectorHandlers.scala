@@ -59,9 +59,9 @@ case class TermVectorsResponse(@JsonProperty("_index") index: String,
   def ref = DocumentRef(index, `type`, id)
 }
 
-case class FieldStatistics(@JsonProperty("sum_doc_freq") sumDocFreq: Int,
-                           @JsonProperty("doc_count") docCount: Int,
-                           @JsonProperty("sum_ttf") sumTtf: Int)
+case class FieldStatistics(@JsonProperty("sum_doc_freq") sumDocFreq: Long,
+                           @JsonProperty("doc_count") docCount: Long,
+                           @JsonProperty("sum_ttf") sumTtf: Long)
 
 case class Terms(@JsonProperty("doc_freq") docFreq: Int,
                  @JsonProperty("ttf") ttf: Int,
