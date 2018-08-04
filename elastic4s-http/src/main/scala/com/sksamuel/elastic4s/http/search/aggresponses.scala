@@ -371,6 +371,8 @@ case class StatsBucketAggResult(name: String, count: Long, min: Double, max: Dou
 
 case class NestedAggResult(name: String, private[elastic4s] val data: Map[String, Any]) extends HasAggregations
 
+case class ReverseNestedAggResult(name: String, private[elastic4s] val data: Map[String, Any]) extends HasAggregations
+
 case class Aggregations(data: Map[String, Any]) extends HasAggregations
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
@@ -423,6 +425,7 @@ trait HasAggregations extends Transformable {
   def range(name: String): RangeAggResult = RangeAggResult(name, agg(name))
   def keyedRange(name: String): KeyedRangeAggResult = KeyedRangeAggResult(name, agg(name))
   def nested(name: String): NestedAggResult = NestedAggResult(name, agg(name))
+  def reverseNested(name: String): ReverseNestedAggResult = ReverseNestedAggResult(name, agg(name))
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
