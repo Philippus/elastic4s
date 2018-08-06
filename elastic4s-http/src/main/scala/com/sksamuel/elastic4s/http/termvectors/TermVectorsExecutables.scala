@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.http.termvectors
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
-import com.sksamuel.elastic4s.termvectors.TermVectorsDefinition
+import com.sksamuel.elastic4s.termvectors.{MultiTermVectorsDefinition, TermVectorsDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
 import org.elasticsearch.client.RestClient
-import org.elasticsearch.common.xcontent.XContentFactory
+import org.elasticsearch.common.bytes.BytesArray
+import org.elasticsearch.common.xcontent.{XContentFactory, XContentType}
 
 import scala.concurrent.Future
 
@@ -46,6 +47,58 @@ trait TermVectorsExecutables {
       client.async("GET", endpoint, params.toMap, new StringEntity(builder.string(), ContentType.APPLICATION_JSON), ResponseHandler.default)
     }
   }
+
+  implicit object MultiTermVectorsHttpExecutable extends HttpExecutable[MultiTermVectorsDefinition, MultiTermVectorsResponse] {
+    override def execute(client: RestClient, request: MultiTermVectorsDefinition): Future[MultiTermVectorsResponse] = {
+      val endpoint = s"/_mtermvectors"
+
+      val builder = XContentFactory.jsonBuilder()
+      builder.startObject()
+      builder.startArray("docs")
+
+      // Workaround for bug where separator is not added with rawValues
+      val arrayBody = new BytesArray(request.termVectorsDefinitions.map { r =>
+        val builder = XContentFactory.jsonBuilder()
+        builder.startObject()
+
+        builder.field("_index", r.indexAndType.index)
+        builder.field("_type", r.indexAndType.`type`)
+        builder.field("_id", r.id)
+
+        if (r.fields.nonEmpty)
+          builder.array("fields", r.fields: _*)
+
+        r.termStatistics.foreach(builder.field("term_statistics", _))
+        r.fieldStatistics.foreach(builder.field("field_statistics", _))
+        r.payloads.foreach(builder.field("payloads", _))
+        r.positions.foreach(builder.field("positions", _))
+        r.offsets.foreach(builder.field("offsets", _))
+
+        builder.startObject("filter")
+        r.maxNumTerms.foreach(builder.field("max_num_terms", _))
+        r.minTermFreq.foreach(builder.field("min_term_freq", _))
+        r.maxTermFreq.foreach(builder.field("max_term_freq", _))
+        r.minDocFreq.foreach(builder.field("min_doc_freq", _))
+        r.maxDocFreq.foreach(builder.field("max_doc_freq", _))
+        r.minWordLength.foreach(builder.field("min_word_length", _))
+        r.maxWordLength.foreach(builder.field("max_word_length", _))
+        builder.endObject()
+
+        builder.endObject()
+
+        builder.string()
+      }.mkString(","))
+      builder.rawValue(arrayBody, XContentType.JSON)
+
+      builder.endArray()
+      builder.endObject()
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.realtime.foreach(params.put("realtime", _))
+
+      client.async("POST", endpoint, params.toMap, new StringEntity(builder.string(), ContentType.APPLICATION_JSON), ResponseHandler.default)
+    }
+  }
 }
 
 case class TermVectorsResponse(@JsonProperty("_index") index: String,
@@ -74,3 +127,5 @@ case class Token(@JsonProperty("position") position: Int,
 
 case class TermVectors(@JsonProperty("field_statistics") fieldStatistics: FieldStatistics,
                        terms: Map[String, Terms])
+
+case class MultiTermVectorsResponse(@JsonProperty("docs") docs: List[TermVectorsResponse])
