@@ -128,7 +128,9 @@ object ResponseConverterImplicits {
             x.fields.mapValues(_.value),
             x.highlightFields.mapValues(_.fragments.map(_.string)),
             inner_hits = Map.empty,// TODO: Set properly
-            x.version
+            x.version,
+            if (Option(x.java.getMatchedQueries).isDefined) Some(x.matchedQueries)
+            else None
           )
         }
       )
