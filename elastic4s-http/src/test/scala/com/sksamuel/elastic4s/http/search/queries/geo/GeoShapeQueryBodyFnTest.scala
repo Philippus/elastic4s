@@ -298,7 +298,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     queryBody.string() shouldEqual multiPolygonQuery
   }
 
-  def polygonQuery =
+  def polygonQuery: String =
   """
     |{
     |   "geo_shape":{
@@ -306,9 +306,9 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |         "shape":{
     |            "type":"polygon",
     |            "coordinates":[
-    |               [[100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0],[100.0,0.0]],
-    |               [[100.2,0.2],[100.4,0.2],[100.4,0.4],[100.2,0.4],[100.2,0.2]],
-    |               [[100.6,0.6],[100.8,0.6],[100.8,0.8],[100.6,0.8],[100.6,0.6]]
+    |               [[0.0,100.0],[0.0,101.0],[1.0,101.0],[1.0,100.0],[0.0,100.0]],
+    |               [[0.2,100.2],[0.2,100.4],[0.4,100.4],[0.4,100.2],[0.2,100.2]],
+    |               [[0.6,100.6],[0.6,100.8],[0.8,100.8],[0.8,100.6],[0.6,100.6]]
     |            ]
     |         }
     |      }
@@ -316,7 +316,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def multiPolygonQuery =
+  def multiPolygonQuery: String =
   """
     |{
     |   "geo_shape":{
@@ -324,10 +324,10 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |         "shape":{
     |            "type":"multipolygon",
     |            "coordinates":[
-    |               [ [[102.0,2.0],[103.0,2.0],[103.0,3.0],[102.0,3.0],[102.0,2.0]] ],
-    |               [ [[100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0],[100.0,0.0]],
-    |                 [[100.2,0.2],[100.4,0.2],[100.4,0.4],[100.2,0.4],[100.2,0.2]],
-    |                 [[100.6,0.6],[100.8,0.6],[100.8,0.8],[100.6,0.8],[100.6,0.6]] ]
+    |               [ [[2.0,102.0],[2.0,103.0],[3.0,103.0],[3.0,102.0],[2.0,102.0]] ],
+    |               [ [[0.0,100.0],[0.0,101.0],[1.0,101.0],[1.0,100.0],[0.0,100.0]],
+    |                 [[0.2,100.2],[0.2,100.4],[0.4,100.4],[0.4,100.2],[0.2,100.2]],
+    |                 [[0.6,100.6],[0.6,100.8],[0.8,100.8],[0.8,100.6],[0.6,100.6]] ]
     |            ]
     |         }
     |      }
@@ -335,28 +335,28 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def pointQuery =
+  def pointQuery: String =
   """
     |{
     |   "geo_shape":{
     |      "location":{
     |         "shape":{
     |            "type":"point",
-    |            "coordinates":[-77.03653, 38.897676]
+    |            "coordinates":[38.897676,-77.03653]
     |         }
     |      }
     |   }
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def pointQueryWithRelation =
+  def pointQueryWithRelation: String =
     """
       |{
       |   "geo_shape":{
       |      "location":{
       |         "shape":{
       |            "type":"point",
-      |            "coordinates":[-77.03653, 38.897676]
+      |            "coordinates":[38.897676,-77.03653]
       |         },
       |         "relation": "within"
       |      }
@@ -364,49 +364,49 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
       |}
     """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def envelopeQuery =
+  def envelopeQuery: String =
   """
     |{
     |   "geo_shape":{
     |      "location":{
     |         "shape":{
     |            "type":"envelope",
-    |            "coordinates":[ [-45.0,45.0],[45.0,-45.0] ]
+    |            "coordinates":[ [45.0,-45.0],[-45.0,45.0] ]
     |         }
     |      }
     |   }
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def multiPointQuery =
+  def multiPointQuery: String =
   """
     |{
     |   "geo_shape":{
     |      "location":{
     |         "shape":{
     |            "type":"multipoint",
-    |            "coordinates":[ [102.0,2.0],[102.0,3.0] ]
+    |            "coordinates":[ [2.0,102.0],[3.0,102.0] ]
     |         }
     |      }
     |   }
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def lineStringQuery =
+  def lineStringQuery: String =
   """
     |{
     |   "geo_shape":{
     |      "location":{
     |         "shape":{
     |            "type":"linestring",
-    |            "coordinates":[ [-77.03653,38.897676],[-77.009051,38.889939] ]
+    |            "coordinates":[ [38.897676,-77.03653],[38.889939,-77.009051] ]
     |         }
     |      }
     |   }
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def multiLineStringQuery =
+  def multiLineStringQuery: String =
   """
     |{
     |   "geo_shape":{
@@ -414,9 +414,9 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |         "shape":{
     |            "type":"multilinestring",
     |            "coordinates":[
-    |               [ [102.0,2.0],[103.0,2.0],[103.0,3.0],[102.0,3.0] ],
-    |               [ [100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0] ],
-    |               [ [100.2,0.2],[100.8,0.2],[100.8,0.8],[100.2,0.8] ]
+    |               [ [2.0,102.0],[2.0,103.0],[3.0,103.0],[3.0,102.0] ],
+    |               [ [0.0,100.0],[0.0,101.0],[1.0,101.0],[1.0,100.0] ],
+    |               [ [0.2,100.2],[0.2,100.8],[0.8,100.8],[0.8,100.2] ]
     |            ]
     |         }
     |      }
@@ -424,14 +424,14 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def circleQuery =
+  def circleQuery: String =
   """|
     |{
     |   "geo_shape":{
     |      "location":{
     |         "shape":{
     |            "type":"circle",
-    |            "coordinates":[23.23,100.23],
+    |            "coordinates":[100.23,23.23],
     |            "radius":"100.0m"
     |         }
     |      }
@@ -439,7 +439,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def singleLevelGeometryCollectionQuery =
+  def singleLevelGeometryCollectionQuery: String =
   """
     |{
     |   "geo_shape":{
@@ -449,12 +449,12 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |            "geometries":[
     |               {
     |                  "type":"circle",
-    |                  "coordinates":[23.23,100.23],
+    |                  "coordinates":[100.23,23.23],
     |                  "radius":"100.0m"
     |               },
     |               {
     |                  "type":"point",
-    |                  "coordinates":[23.23,100.23]
+    |                  "coordinates":[100.23,23.23]
     |               }
     |            ]
     |         }
@@ -463,7 +463,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     |}
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def multiLevelGeometryCollectionQuery =
+  def multiLevelGeometryCollectionQuery: String =
     """
       |{
       |   "geo_shape":{
@@ -473,36 +473,36 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
       |            "geometries":[
       |               {
       |                  "type":"circle",
-      |                  "coordinates":[23.23,100.23],
+      |                  "coordinates":[100.23,23.23],
       |                  "radius":"100.0m"
       |               },
       |               {
       |                  "type":"point",
-      |                  "coordinates":[23.23,100.23]
+      |                  "coordinates":[100.23,23.23]
       |               },
       |               {
       |                  "type":"geometrycollection",
       |                  "geometries":[
       |                     {
       |                        "type":"circle",
-      |                        "coordinates":[23.23,200.23],
+      |                        "coordinates":[200.23,23.23],
       |                        "radius":"200.0m"
       |                     },
       |                     {
       |                        "type":"point",
-      |                        "coordinates":[23.23,200.23]
+      |                        "coordinates":[200.23,23.23]
       |                     },
       |                     {
       |                        "type":"geometrycollection",
       |                        "geometries":[
       |                           {
       |                              "type":"circle",
-      |                              "coordinates":[23.23,300.23],
+      |                              "coordinates":[300.23,23.23],
       |                              "radius":"300.0m"
       |                           },
       |                           {
       |                              "type":"point",
-      |                              "coordinates":[23.23,300.23]
+      |                              "coordinates":[300.23,23.23]
       |                           }
       |                        ]
       |                     }
@@ -515,7 +515,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
       |}
     """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
-  def emptyGeometryCollectionQuery =
+  def emptyGeometryCollectionQuery: String =
     """
       |{
       |   "geo_shape":{

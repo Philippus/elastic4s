@@ -7,6 +7,9 @@ import com.sksamuel.elastic4s.searches.queries.geo._
 
 object GeoShapeQueryBodyFn {
 
+  private type Coordinates = Array[Double]
+  private implicit def coordinates(point: GeoPoint): Coordinates = Array(point.long, point.lat)
+
   def apply(q: GeoShapeQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
@@ -59,39 +62,40 @@ object GeoShapeQueryBodyFn {
   private def buildSingleShape(shape: SingleShape, builder: XContentBuilder): XContentBuilder = {
     builder.field("type", shape.geoShapeType.toString.toLowerCase)
     shape match {
-      case s@PointShape(GeoPoint(x, y)) =>
-        builder.array("coordinates", Array(x, y))
+      case PointShape(point) =>
+        builder.array("coordinates", point)
 
-      case s@EnvelopeShape(GeoPoint(ulX, ulY), GeoPoint(lrX, lrY)) =>
-        builder.array("coordinates", Array(Array(ulX, ulY), Array(lrX, lrY)))
+      case EnvelopeShape(upperLeft, lowerRight) =>
+        builder.array("coordinates", Array(upperLeft: Coordinates, lowerRight: Coordinates))
 
-      case s@MultiPointShape(points) =>
-        builder.array("coordinates", points.map { case GeoPoint(a, b) => Array(a, b) }.toArray)
+      case MultiPointShape(points) =>
+        builder.array("coordinates", points.map(identity[Coordinates](_)).toArray)
 
-      case s@LineStringShape(first, second, remaining@_*) =>
+      case LineStringShape(first, second, remaining@_*) =>
         val points = first :: second :: remaining.toList
-        builder.array("coordinates", points.map { case GeoPoint(a, b) => Array(a, b) }.toArray)
+        builder.array("coordinates", points.map(identity[Coordinates](_)).toArray)
 
-      case s@MultiLineStringShape(points) =>
-        builder.array("coordinates", points.map(_.map { case GeoPoint(a, b) => Array(a, b) }.toArray).toArray)
+      case MultiLineStringShape(points) =>
+        builder.array("coordinates", points.map(_.map(identity[Coordinates](_)).toArray).toArray)
 
-      case s@CircleShape(Circle(GeoPoint(x, y), (radius, unit))) =>
-        builder.array("coordinates", Array(x, y))
+      case CircleShape(Circle(point, (radius, unit))) =>
+        builder.array("coordinates", point)
         builder.field("radius", unit.toMeters(radius) + "m")
 
-      case s@PolygonShape(p) =>
+      case PolygonShape(p) =>
         val coords = p.holes.fold(Seq(p.points))(h => Seq(p.points) ++ h)
-        builder.array("coordinates", coords.map(_.map { case GeoPoint(a, b) => Array(a, b) }.toArray).toArray)
+        builder.array("coordinates", coords.map(_.map(identity[Coordinates](_)).toArray).toArray)
 
-      case s@MultiPolygonShape(polygons) =>
+      case MultiPolygonShape(polygons) =>
         val coords = polygons.map {
           case Polygon(points, holes) =>
             holes
               .fold(Seq(points))(h => Seq(points) ++ h)
-              .map(_.map { case GeoPoint(a, b) => Array(a, b) }.toArray)
+              .map(_.map(identity[Coordinates](_)).toArray)
               .toArray
         }
         builder.array("coordinates", coords.toArray)
     }
   }
+
 }
