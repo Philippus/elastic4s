@@ -284,6 +284,27 @@ object IpRangeAggResult {
     )
 }
 
+case class SignificantTermBucket(key: String, docCount: Long, bgCount: Long, score: Double, private[elastic4s] val data: Map[String, Any]) extends AggBucket with Transformable
+
+case class SignificantTermsAggResult(name: String, buckets: Seq[SignificantTermBucket], docCount: Long, bgCount: Long) extends BucketAggregation
+
+object SignificantTermsAggResult {
+  def apply(name: String, data: Map[String, Any]): SignificantTermsAggResult = SignificantTermsAggResult(
+    name,
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
+      SignificantTermBucket(
+        map("key").toString,
+        map("doc_count").toString.toLong,
+        map("bg_count").toString.toLong,
+        map("score").toString.toDouble,
+        map
+      )
+    },
+    data("doc_count").toString.toLong,
+    data("bg_count").toString.toLong
+  )
+}
+
 case class AvgAggResult(name: String, valueOpt: Option[Double]) extends MetricAggregation {
   def value: Double = valueOpt.get
 }
@@ -426,6 +447,7 @@ trait HasAggregations extends Transformable {
   def keyedRange(name: String): KeyedRangeAggResult = KeyedRangeAggResult(name, agg(name))
   def nested(name: String): NestedAggResult = NestedAggResult(name, agg(name))
   def reverseNested(name: String): ReverseNestedAggResult = ReverseNestedAggResult(name, agg(name))
+  def significantTerms(name: String): SignificantTermsAggResult = SignificantTermsAggResult(name, agg(name))
 
   // metric aggs
   def avg(name: String): AvgAggResult = AvgAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
