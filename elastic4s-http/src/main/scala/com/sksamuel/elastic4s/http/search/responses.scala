@@ -16,7 +16,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      fields: Map[String, AnyRef],
                      highlight: Map[String, Seq[String]],
                      private val inner_hits: Map[String, Map[String, Any]],
-                     @JsonProperty("_version") version: Long) extends Hit {
+                     @JsonProperty("_version") version: Long,
+                     @JsonProperty("matched_queries") private val _matchedQueries: Option[Seq[String]]) extends Hit {
 
   def highlightFragments(name: String): Seq[String] = Option(highlight).getOrElse(Map.empty).getOrElse(name, Nil)
 
@@ -53,6 +54,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
         }
       )
   }
+
+  def matchedQueries: Seq[String] = _matchedQueries.getOrElse(Nil)
 }
 
 case class SearchHits(total: Int,
