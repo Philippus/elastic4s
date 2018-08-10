@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.DocumentRef
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.termvectors.TermVectorsRequest
+import com.sksamuel.elastic4s.termvectors.{MultiTermVectorsRequest, TermVectorsRequest}
 import org.apache.http.entity.ContentType
 
 trait TermVectorHandlers {
@@ -47,6 +47,61 @@ trait TermVectorHandlers {
                      HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
     }
   }
+
+  implicit object MultiTermVectorsHttpExecutable extends Handler[MultiTermVectorsRequest, MultiTermVectorsResponse] {
+
+    override def build(request: MultiTermVectorsRequest): ElasticRequest = {
+
+      val endpoint = s"/_mtermvectors"
+
+      val builder = XContentFactory.jsonBuilder()
+      builder.startArray("docs")
+
+      // Workaround for bug where separator is not added with rawValues
+      val arrayBody = request.termVectorsRequests.map { r =>
+        val builder = XContentFactory.jsonBuilder()
+
+        builder.field("_index", r.indexAndType.index)
+        builder.field("_type", r.indexAndType.`type`)
+        builder.field("_id", r.id)
+
+        if (r.fields.nonEmpty)
+          builder.array("fields", r.fields.toArray)
+
+        r.termStatistics.foreach(builder.field("term_statistics", _))
+        r.fieldStatistics.foreach(builder.field("field_statistics", _))
+        r.payloads.foreach(builder.field("payloads", _))
+        r.positions.foreach(builder.field("positions", _))
+        r.offsets.foreach(builder.field("offsets", _))
+
+        builder.startObject("filter")
+        r.maxNumTerms.foreach(builder.field("max_num_terms", _))
+        r.minTermFreq.foreach(builder.field("min_term_freq", _))
+        r.maxTermFreq.foreach(builder.field("max_term_freq", _))
+        r.minDocFreq.foreach(builder.field("min_doc_freq", _))
+        r.maxDocFreq.foreach(builder.field("max_doc_freq", _))
+        r.minWordLength.foreach(builder.field("min_word_length", _))
+        r.maxWordLength.foreach(builder.field("max_word_length", _))
+        builder.endObject()
+
+        builder.endObject()
+
+        builder.string()
+      }.mkString(",")
+      builder.rawValue(arrayBody)
+
+      builder.endArray()
+      builder.endObject()
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.realtime.foreach(params.put("realtime", _))
+
+      ElasticRequest("POST",
+                     endpoint,
+                     params.toMap,
+                     HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType))
+    }
+  }
 }
 
 case class TermVectorsResponse(@JsonProperty("_index") index: String,
@@ -74,3 +129,5 @@ case class Token(@JsonProperty("position") position: Int,
                  @JsonProperty("end_offset") endOffset: Int)
 
 case class TermVectors(@JsonProperty("field_statistics") fieldStatistics: FieldStatistics, terms: Map[String, Terms])
+
+case class MultiTermVectorsResponse(@JsonProperty("docs") docs: Seq[TermVectorsResponse])
