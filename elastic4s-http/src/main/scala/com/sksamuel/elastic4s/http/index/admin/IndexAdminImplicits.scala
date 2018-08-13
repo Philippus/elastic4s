@@ -1,17 +1,20 @@
 package com.sksamuel.elastic4s.http.index.admin
 
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 import com.sksamuel.elastic4s.admin._
 import com.sksamuel.elastic4s.http.index.CreateIndexResponse
 import com.sksamuel.elastic4s.http.index.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.http.{HttpExecutable, ResponseHandler}
 import com.sksamuel.elastic4s.indexes._
 import com.sksamuel.elastic4s.indexes.admin.{ForceMergeDefinition, IndexRecoveryDefinition}
-import com.sksamuel.elastic4s.mappings.PutMappingDefinition
 import org.apache.http.entity.{ContentType, StringEntity}
-import org.elasticsearch.client.{Response, RestClient}
 import org.elasticsearch.ElasticsearchException
+import org.elasticsearch.client.{Response, RestClient}
 
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 trait IndexAdminImplicits extends IndexShowImplicits {
 
@@ -75,11 +78,11 @@ trait IndexAdminImplicits extends IndexShowImplicits {
     }
   }
 
-  private def toExistsFuture[T](resp: Response, buildResp: Boolean => T): Future[T] = {
-    resp.getStatusLine.getStatusCode match {
-      case 200 => Future.successful(buildResp(true))
-      case 404 => Future.successful(buildResp(false))
-      case code => Future.failed(new ElasticsearchException(s"Bad response code: $code"))
+  private def existsResponseHandler[T](buildResp: Boolean => T): ResponseHandler[T] = { response: Response =>
+    response.getStatusLine.getStatusCode match {
+      case 200 => Success(buildResp(true))
+      case 404 => Success(buildResp(false))
+      case code => Failure(new ElasticsearchException(s"Bad response code: $code"))
     }
   }
 
@@ -90,8 +93,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
 
       val endpoint = s"/${request.index}"
       logger.debug(s"Connecting to $endpoint for indexes exists check")
-      val resp = client.performRequest("HEAD", endpoint)
-      toExistsFuture(resp, IndexExistsResponse.apply)
+      client.async("HEAD", endpoint, Map(), existsResponseHandler(IndexExistsResponse.apply))
     }
   }
 
@@ -100,8 +102,7 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: TypesExistsDefinition): Future[TypeExistsResponse] = {
       val endpoint = s"/${request.indexes.mkString(",")}/${request.types.mkString(",")}"
       logger.debug(s"Connecting to $endpoint for type exists check")
-      val resp = client.performRequest("HEAD", endpoint)
-      toExistsFuture(resp, TypeExistsResponse.apply)
+      client.async("HEAD", endpoint, Map(), existsResponseHandler(TypeExistsResponse.apply))
     }
   }
 
@@ -110,18 +111,18 @@ trait IndexAdminImplicits extends IndexShowImplicits {
                          request: AliasExistsDefinition): Future[AliasExistsResponse] = {
       val endpoint = s"/_alias/${request.alias}"
       logger.debug(s"Connecting to $endpoint for alias exists check")
-      val resp = client.performRequest("HEAD", endpoint)
-      toExistsFuture(resp, AliasExistsResponse.apply)
+      client.async("HEAD", endpoint, Map(), existsResponseHandler(AliasExistsResponse.apply))
     }
   }
 
   implicit object DocumentExistsHttpExecutable extends HttpExecutable[DocumentExistsDefinition, DocumentExistsResponse] {
     override def execute(client: RestClient, request: DocumentExistsDefinition): Future[DocumentExistsResponse] = {
       val DocumentExistsDefinition(index, typ, id) = request
-      val endpoint = s"$index/$typ/$id"
+      // ES id can contain any special character, so it should be encoded
+      val idEncoded = URLEncoder.encode(id, StandardCharsets.UTF_8.name())
+      val endpoint = s"$index/$typ/$idEncoded"
       logger.debug(s"Connecting to $endpoint for indexes exists check")
-      val resp = client.performRequest("HEAD", endpoint)
-      toExistsFuture(resp, DocumentExistsResponse.apply)
+      client.async("HEAD", endpoint, Map(), existsResponseHandler(DocumentExistsResponse.apply))
     }
   }
 
