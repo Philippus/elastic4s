@@ -13,7 +13,7 @@ case class TermsSetQuery(field: String,
                          terms: Set[Any],
                          minimumShouldMatchField: Option[Int] = None,
                          minimumShouldMatchScript: Option[Script] = None,
-                         queryName: Option[String] = None) {
+                         queryName: Option[String] = None) extends Query {
   require(terms.nonEmpty)
   def queryName(name: String): TermsSetQuery                  = copy(queryName = name.some)
   def minimumShouldMatchField(field: Int): TermsSetQuery      = copy(minimumShouldMatchField = field.some)
