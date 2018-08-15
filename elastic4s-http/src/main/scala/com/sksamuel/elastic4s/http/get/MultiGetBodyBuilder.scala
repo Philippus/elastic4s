@@ -12,6 +12,7 @@ object MultiGetBodyBuilder {
       builder.field("_index", get.indexAndType.index)
       builder.field("_type", get.indexAndType.`type`)
       builder.field("_id", get.id)
+      get.routing.foreach(builder.field("routing", _))
       get.fetchSource.foreach { context =>
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
