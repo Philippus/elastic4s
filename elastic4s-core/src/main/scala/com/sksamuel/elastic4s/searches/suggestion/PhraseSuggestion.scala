@@ -4,7 +4,17 @@ import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.script.Script
 import com.sksamuel.exts.OptionImplicits._
 
-case class DirectGenerator(field: String, minWordLength: Int, prefixLength: Int)
+case class DirectGenerator(field: String,
+                           size: Option[Int] = None,
+                           suggestMode: Option[String] = None,
+                           maxEdits: Option[Integer] = None,
+                           prefixLength: Option[Int] = None,
+                           minWordLength: Option[Int] = None,
+                           maxInspections: Option[Int] = None,
+                           minDocFreq: Option[Float] = None,
+                           maxTermFreq: Option[Float] = None,
+                           preFilter: Option[String] = None,
+                           postFilter: Option[String] = None)
 
 case class PhraseSuggestion(name: String,
                             fieldname: String,
