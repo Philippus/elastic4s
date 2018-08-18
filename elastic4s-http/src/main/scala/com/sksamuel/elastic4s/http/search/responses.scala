@@ -23,7 +23,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
-                     private val inner_hits: Map[String, Map[String, Any]])
+                     private val inner_hits: Map[String, Map[String, Any]],
+                     @JsonProperty("matched_queries") matchedQueries: Option[Set[String]])
   extends Hit {
 
   def highlight: Map[String, Seq[String]] = _highlight.getOrElse(Map.empty)
