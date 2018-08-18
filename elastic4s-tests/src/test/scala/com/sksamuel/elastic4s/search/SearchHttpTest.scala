@@ -178,6 +178,14 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
       }.await
       resp.result.hits.hits.forall(_.routing.contains("wibble")) shouldBe true
     }
+    "include matched_queries in response" in {
+      val resp = client.execute {
+        search("chess")
+          .query(boolQuery().filter(termQuery("name", "queen").queryName("wibble")))
+          .limit(1)
+      }.await
+      resp.result.hits.hits.forall(_.matchedQueries.contains(Set("wibble"))) shouldBe true
+    }
   }
 }
 
