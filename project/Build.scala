@@ -6,13 +6,13 @@ object Build extends Build {
   val org = "com.sksamuel.elastic4s"
   val appVersion = "1.7.5"
 
-  val ScalaVersion = "2.11.7"
-  val ScalatestVersion = "2.2.5"
+  val ScalaVersion = "2.12.6"
+  val ScalatestVersion = "3.0.5"
   val MockitoVersion = "1.9.5"
-  val JacksonVersion = "2.6.1"
-  val Slf4jVersion = "1.7.12"
-  val ScalaLoggingVersion = "2.1.2"
-  val ElasticsearchVersion = "1.7.2"
+  val JacksonVersion = "2.9.6"
+  val Slf4jVersion = "1.8.0-beta2"
+  val ScalaLoggingVersion = "3.9.0"
+  val ElasticsearchVersion = "1.7.5"
   val Log4jVersion = "1.2.17"
   val CommonsIoVersion = "2.4"
   val GroovyVersion = "2.3.7"
@@ -21,12 +21,12 @@ object Build extends Build {
     version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.7", "2.10.5"),
+    crossScalaVersions := Seq("2.12.6", "2.11.7", "2.10.5"),
     publishMavenStyle := true,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
-    javacOptions := Seq("-source", "1.7", "-target", "1.7"),
+    javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
       "org.elasticsearch" % "elasticsearch" % ElasticsearchVersion,
       "org.slf4j" % "slf4j-api" % Slf4jVersion,
@@ -102,9 +102,9 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-streams",
-      libraryDependencies += "com.typesafe.akka"    %% "akka-actor" % "2.3.12",
-      libraryDependencies += "org.reactivestreams"   % "reactive-streams" % "1.0.0",
-      libraryDependencies += "org.reactivestreams"   % "reactive-streams-tck" % "1.0.0" % "test"
+      libraryDependencies += "com.typesafe.akka"    %% "akka-actor" % "2.5.14",
+      libraryDependencies += "org.reactivestreams"   % "reactive-streams" % "1.0.2",
+      libraryDependencies += "org.reactivestreams"   % "reactive-streams-tck" % "1.0.2" % "test"
     ).dependsOn(core, testkit % "test", jackson % "test")
 
   lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
@@ -121,8 +121,8 @@ object Build extends Build {
     .settings(rootSettings: _*)
     .settings(
       name := "elastic4s-json4s",
-      libraryDependencies += "org.json4s" %% "json4s-core"    % "3.2.11",
-      libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.11"
+      libraryDependencies += "org.json4s" %% "json4s-core"    % "3.6.0",
+      libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.6.0"
     ).dependsOn(core, testkit % "test")
 
   lazy val examples = Project("elastic4s-examples", file("elastic4s-examples"))

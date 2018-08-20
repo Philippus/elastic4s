@@ -273,11 +273,16 @@ class FunctionScoreQueryDefinition(queryOrFilter: Either[QueryDefinition, Filter
   with DefinitionAttributeMaxBoost
   with DefinitionAttributeScoreMode {
 
-  val builder = queryOrFilter match {
+  override val builder: FunctionScoreQueryBuilder = queryOrFilter match {
     case Left(query) => new FunctionScoreQueryBuilder(query.builder)
     case Right(filter) => new FunctionScoreQueryBuilder(filter.builder)
   }
-  val _builder = builder
+  override val _builder: {
+    def scoreMode(scoreMode: String): Any
+    def maxBoost(maxBoost: Float): Any
+    def boostMode(mode: String): Any
+    def boost(boost: Float): Any
+  } = builder
 
   def scorers(scorers: ScoreDefinition[_]*): FunctionScoreQueryDefinition = {
     scorers.foreach(scorer => scorer._filter match {
@@ -553,11 +558,14 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
   with DefinitionAttributePrefixLength
   with DefinitionAttributeBoost {
 
-  val builder = fields.size match {
+  val builder: FuzzyLikeThisQueryBuilder = fields.size match {
     case 0 => QueryBuilders.fuzzyLikeThisQuery().likeText(text)
     case _ => QueryBuilders.fuzzyLikeThisQuery(fields.toSeq: _*).likeText(text)
   }
-  val _builder = builder
+  override val _builder: {
+    def boost(boost: Float): Any
+    def prefixLength(f: Int): Any
+  } = builder
 
   @deprecated("deprecated by elasticsearch", "1.6.5")
   def analyzer(a: Analyzer): FuzzyLikeThisDefinition = {
@@ -579,7 +587,7 @@ class FuzzyLikeThisDefinition(text: String, fields: Iterable[String])
 
   @deprecated("deprecated by elasticsearch", "1.6.5")
   def fuzziness(f: Fuzziness): this.type = {
-    _builder.fuzziness(f)
+    builder.fuzziness(f)
     this
   }
 
@@ -745,9 +753,9 @@ class RegexQueryDefinition(field: String, regex: Any)
 
 class TermQueryDefinition(field: String, value: Any) extends QueryDefinition {
 
-  val builder = value match {
-    case str : String => QueryBuilders.termQuery(field, str)
-    case iter:Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
+  override val builder: TermQueryBuilder = value match {
+    case str: String => QueryBuilders.termQuery(field, str)
+    case iter: Iterable[Any] => QueryBuilders.termQuery(field, iter.toArray)
     case other => QueryBuilders.termQuery(field, other)
   }
 
