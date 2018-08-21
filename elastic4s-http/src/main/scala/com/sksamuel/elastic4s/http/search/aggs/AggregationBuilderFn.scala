@@ -13,6 +13,7 @@ object AggregationBuilderFn {
       case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
       case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
       case agg: FilterAggregationDefinition => FilterAggregationBuilder(agg)
+      case agg: KeyedFiltersAggregationDefinition => KeyedFiltersAggregationBuilder(agg)
       case agg: MaxAggregationDefinition => MaxAggregationBuilder(agg)
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
