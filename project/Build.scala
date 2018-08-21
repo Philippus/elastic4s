@@ -1,5 +1,7 @@
 import sbt._
 import sbt.Keys._
+import com.typesafe.sbt.pgp.PgpKeys
+import com.typesafe.sbt.SbtPgp
 
 object Build extends Build {
 
@@ -25,6 +27,11 @@ object Build extends Build {
     publishMavenStyle := true,
     publishArtifact in Test := false,
     parallelExecution in Test := false,
+    SbtPgp.autoImport.useGpg := true,
+    SbtPgp.autoImport.useGpgAgent := true,
+    sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
+    credentials += Credentials(Path.userHome / ".sbt" / "pgp.credentials"),
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
@@ -39,13 +46,12 @@ object Build extends Build {
       "org.codehaus.groovy" % "groovy" % GroovyVersion % "test",
       "com.vividsolutions" % "jts" % "1.13" % "test"
     ),
-    publishTo <<= version {
-      (v: String) =>
-        val nexus = "https://oss.sonatype.org/"
-        if (v.trim.endsWith("SNAPSHOT"))
-          Some("snapshots" at nexus + "content/repositories/snapshots")
-        else
-          Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    publishTo := {
+      val nexus = "https://oss.sonatype.org/"
+      if (version.value.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "content/repositories/snapshots")
+      else
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
     pomExtra := {
       <url>https://github.com/sksamuel/elastic4s</url>
