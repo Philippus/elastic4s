@@ -67,7 +67,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
             source = hits.get("_source").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             innerHits = buildInnerHits(hits.getOrElse("inner_hits", null).asInstanceOf[Map[String, Map[String, Any]]]),
             highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty),
-            sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty)
+            sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty),
+            fields = hits.get("fields").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty)
           )
         }
       )
@@ -101,7 +102,23 @@ case class InnerHit(index: String,
                     source: Map[String, AnyRef],
                     innerHits: Map[String, InnerHits],
                     highlight: Map[String, Seq[String]],
-                    sort: Seq[AnyRef])
+                    sort: Seq[AnyRef],
+                    fields: Map[String, AnyRef]) {
+
+  def docValueField(fieldName: String): HitField = docValueFieldOpt(fieldName).get
+  def docValueFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
+    new HitField {
+      override def values: Seq[AnyRef] = v match {
+        case values: Seq[AnyRef] => values
+        case value: AnyRef => Seq(value)
+      }
+      override def value: AnyRef = values.head
+      override def name: String = fieldName
+      override def isMetadataField: Boolean = MetaDataFields.fields.contains(name)
+    }
+  }
+
+}
 
 case class SearchResponse(took: Long,
                           @JsonProperty("timed_out") isTimedOut: Boolean,
