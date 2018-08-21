@@ -6,7 +6,6 @@ import com.typesafe.sbt.SbtPgp
 object Build extends Build {
 
   val org = "com.sksamuel.elastic4s"
-  val appVersion = "1.7.5"
 
   val ScalaVersion = "2.12.6"
   val ScalatestVersion = "3.0.5"
@@ -20,7 +19,6 @@ object Build extends Build {
   val GroovyVersion = "2.3.7"
 
   val rootSettings = Seq(
-    version := appVersion,
     organization := org,
     scalaVersion := ScalaVersion,
     crossScalaVersions := Seq("2.12.6", "2.11.7", "2.10.5"),
