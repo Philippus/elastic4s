@@ -10,13 +10,14 @@ case class TermsLookupQuery(field: String, termsLookup: TermsLookup, queryName: 
 }
 
 case class TermsSetQuery(field: String,
-                         terms: Set[Any],
-                         minimumShouldMatchField: Option[Int] = None,
+                         terms: Set[String],
+                         minimumShouldMatchField: Option[String] = None,
                          minimumShouldMatchScript: Option[Script] = None,
                          queryName: Option[String] = None) extends Query {
-  require(terms.nonEmpty)
+  require(terms.nonEmpty, "The list of terms cannot be empty")
+  // ElasticSearch needs one of the two 'minimumShouldMatch' parameters to be specified
+  require((minimumShouldMatchField != None && minimumShouldMatchScript == None) || (minimumShouldMatchScript != None && minimumShouldMatchField == None), "Either only minimumShouldMatchField or only minimumShouldMatchScript must be specified")
   def queryName(name: String): TermsSetQuery                  = copy(queryName = name.some)
-  def minimumShouldMatchField(field: Int): TermsSetQuery      = copy(minimumShouldMatchField = field.some)
+  def minimumShouldMatchField(field: String): TermsSetQuery      = copy(minimumShouldMatchField = field.some)
   def minimumShouldMatchScript(script: Script): TermsSetQuery = copy(minimumShouldMatchScript = script.some)
-
 }
