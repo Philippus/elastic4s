@@ -14,7 +14,7 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
   client.execute {
     createIndex(indexName).mappings {
       mapping("football").fields(
-        textField("name"),
+        keywordField("name"),
         joinField("affiliation").relation("club", "player")
       )
     }
@@ -50,11 +50,31 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
               Map("name" -> "traore", "affiliation" -> Map("name" -> "player", "parent" -> "1")),
               Map.empty,
               Map.empty,
-              Nil
+              Nil,
+              Map.empty
             )
           )
         )
       )
     }
   }
+
+  "InnerHit" should {
+    "include requested doc value fields" in {
+      val result = client.execute {
+        search(indexName).query {
+          hasChildQuery("player", matchAllQuery())
+            .innerHit(InnerHit("myinner").docValueFields(Set("name")))
+        }
+      }.await.result
+
+      val innerHit = result.hits.hits.head.innerHits("myinner").hits.head
+      innerHit.fields shouldBe Map("name" -> List("traore"))
+      innerHit.docValueField("name").value shouldBe "traore"
+      innerHit.docValueField("name").values shouldBe List("traore")
+      innerHit.docValueFieldOpt("name") shouldBe defined
+      innerHit.docValueFieldOpt("affiliation") shouldBe empty
+    }
+  }
+
 }
