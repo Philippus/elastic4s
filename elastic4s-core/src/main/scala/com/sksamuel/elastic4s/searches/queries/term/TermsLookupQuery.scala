@@ -10,7 +10,7 @@ case class TermsLookupQuery(field: String, termsLookup: TermsLookup, queryName: 
 }
 
 case class TermsSetQuery(field: String,
-                         terms: Set[Any],
+                         terms: Set[String],
                          minimumShouldMatchField: Option[String] = None,
                          minimumShouldMatchScript: Option[Script] = None,
                          queryName: Option[String] = None) extends Query {
