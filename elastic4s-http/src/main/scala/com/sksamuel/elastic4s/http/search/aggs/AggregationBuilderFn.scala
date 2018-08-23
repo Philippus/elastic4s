@@ -19,13 +19,14 @@ object AggregationBuilderFn {
       case agg: MinAggregationDefinition => MinAggregationBuilder(agg)
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
       case agg: NestedAggregationDefinition => NestedAggregationBuilder(agg)
+      case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
+      case agg: ScriptedMetricAggregationDefinition => ScriptedMetricAggregationBuilder(agg)
+      case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg)
       case agg: StatsAggregationDefinition => StatsAggregationBuilder(agg)
       case agg: SumAggregationDefinition => SumAggregationBuilder(agg)
       case agg: TopHitsAggregationDefinition => TopHitsAggregationBuilder(agg)
       case agg: TermsAggregationDefinition => TermsAggregationBuilder(agg)
       case agg: ValueCountAggregationDefinition => ValueCountAggregationBuilder(agg)
-      case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
-      case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg)
 
       // pipeline aggs
       case agg: MaxBucketDefinition => MaxBucketPipelineAggBuilder(agg)
