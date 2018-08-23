@@ -853,7 +853,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
           termQuery("name", "sammy")
         }
       } scoreMode "avg" inner
-        innerHits("obj1").size(6).highlighting(highlight("name").fragmentSize(20))
+        innerHits("obj1").size(6).highlighting(
+          highlightOptions().preTags("<b>").postTags("</b>"),
+          highlight("name").fragmentSize(20)
+        )
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_query_nested_inner_highlight.json")
   }
