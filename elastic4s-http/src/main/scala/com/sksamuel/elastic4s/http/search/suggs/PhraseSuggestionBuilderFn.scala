@@ -45,18 +45,23 @@ object PhraseSuggestionBuilderFn {
     builder.endArray()
     // END DIRECT GENERATOR
 
-    //COLLATE
-    builder.startObject("collate")
+    phrase.collateQuery match {
+      case None =>
+      case Some(query) => {
+        //COLLATE
+        builder.startObject("collate")
 
-    builder.startObject("query")
-    phrase.collateQuery.foreach(t => builder.rawField(t.scriptType.toString.toLowerCase, t.script))
-    builder.endObject()
+        builder.startObject("query")
+        phrase.collateQuery.foreach(t => builder.rawField(t.scriptType.toString.toLowerCase, t.script))
+        builder.endObject()
 
-    phrase.collatePrune.foreach(builder.field("prune", _))
-    builder.rawField("params", SourceAsContentBuilder(phrase.collateParams))
+        phrase.collatePrune.foreach(builder.field("prune", _))
+        builder.rawField("params", SourceAsContentBuilder(phrase.collateParams))
 
-    builder.endObject()
-    //END COLLATE
+        builder.endObject()
+        //END COLLATE
+      }
+    }
 
     //highlight
     builder.startObject("highlight")
