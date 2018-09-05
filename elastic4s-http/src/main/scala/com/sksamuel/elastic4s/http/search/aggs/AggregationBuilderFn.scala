@@ -9,6 +9,7 @@ object AggregationBuilderFn {
     val builder = agg match {
       case agg: AvgAggregationDefinition => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregationDefinition => CardinalityAggregationBuilder(agg)
+      case agg: ChildrenAggregationDefinition => ChildrenAggregationBuilder(agg)
       case agg: CumulativeSumDefinition => CumulativeSumAggregationBuilder(agg)
       case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
       case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
