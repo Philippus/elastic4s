@@ -28,6 +28,7 @@ object RandomScoreFunctionBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("random_score")
     builder.field("seed", r.seed)
+    builder.field("field", r.fieldName)
     builder.endObject()
     r.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
