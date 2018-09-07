@@ -20,6 +20,7 @@ object AggregationBuilderFn {
       case agg: MissingAggregationDefinition => MissingAggregationBuilder(agg)
       case agg: NestedAggregationDefinition => NestedAggregationBuilder(agg)
       case agg: RangeAggregationDefinition => RangeAggregationBuilder(agg)
+      case agg: ReverseNestedAggregationDefinition => ReverseNestedAggregationBuilder(agg)
       case agg: ScriptedMetricAggregationDefinition => ScriptedMetricAggregationBuilder(agg)
       case agg: SigTermsAggregationDefinition => SigTermsAggregationBuilder(agg)
       case agg: StatsAggregationDefinition => StatsAggregationBuilder(agg)
