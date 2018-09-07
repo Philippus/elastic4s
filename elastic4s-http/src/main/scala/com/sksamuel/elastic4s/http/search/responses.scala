@@ -146,6 +146,12 @@ trait AggregationResponse {
       agg(name)("buckets").asInstanceOf[Map[String, Map[String, AnyRef]]].map(bucket => Bucket(bucket._1, bucket._2("doc_count").toString.toLong, bucket._2)).toSeq
     )
   }
+  def histogramAgg(name: String): HistogramAggregationResult = {
+    HistogramAggregationResult(
+      name,
+      agg(name)("buckets").asInstanceOf[Map[String, Map[String, AnyRef]]].map(bucket => Bucket(bucket._1, bucket._2("doc_count").toString.toLong, bucket._2)).toSeq
+    )
+  }
 }
 
 case class SearchResponse(took: Int,
@@ -190,6 +196,7 @@ case class FilterAggregationResult(name: String,
                                    docCount: Long,
                                    aggdata: Map[String, AnyRef]) extends AggregationResponse
 
+case class HistogramAggregationResult(name: String, buckets: Seq[Bucket])
 case class FiltersAggregationResult(name: String, buckets: Seq[Bucket])
 
 case class TermsAggregationResult(name: String,
