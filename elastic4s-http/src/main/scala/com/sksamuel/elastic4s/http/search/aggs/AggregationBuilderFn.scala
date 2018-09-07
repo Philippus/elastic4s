@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
 import com.sksamuel.elastic4s.searches.aggs._
-import com.sksamuel.elastic4s.searches.aggs.pipeline.{CumulativeSumDefinition, MaxBucketDefinition}
+import com.sksamuel.elastic4s.searches.aggs.pipeline.{BucketScriptDefinition, CumulativeSumDefinition, MaxBucketDefinition}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
     val builder = agg match {
       case agg: AvgAggregationDefinition => AvgAggregationBuilder(agg)
+      case agg: BucketScriptDefinition => BucketScriptBuilder(agg)
       case agg: CardinalityAggregationDefinition => CardinalityAggregationBuilder(agg)
       case agg: CumulativeSumDefinition => CumulativeSumAggregationBuilder(agg)
       case agg: DateHistogramAggregation => DateHistogramAggregationBuilder(agg)
@@ -44,7 +45,7 @@ object MaxBucketPipelineAggBuilder {
 }
 
 object AggMetaDataFn {
-  def apply(agg: AggregationDefinition, builder: XContentBuilder): Unit = {
+  def apply(agg: AbstractAggregation, builder: XContentBuilder): Unit = {
     if (agg.metadata.nonEmpty) {
       builder.startObject("meta")
       agg.metadata.foreach { case (key, value) => builder.field(key, value) }
