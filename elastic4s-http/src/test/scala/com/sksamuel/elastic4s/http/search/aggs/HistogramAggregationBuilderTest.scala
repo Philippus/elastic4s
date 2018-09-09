@@ -18,7 +18,7 @@ class HistogramAggregationBuilderTest extends FunSuite with Matchers {
       """
       | {
       |   "histogram": {
-      |     "field": "pr ice",
+      |     "field": "price",
       |     "missing": 0,
       |     "min_doc_count": 1,
       |     "interval": 50.0,
