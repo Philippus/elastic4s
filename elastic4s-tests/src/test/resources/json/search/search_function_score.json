@@ -14,7 +14,8 @@
             "functions": [
                 {
                     "random_score": {
-                        "seed": 1234
+                        "seed": 1234,
+                        "field": "_seq_no"
                     }
                 },
                 {
