@@ -134,15 +134,23 @@ trait AggregationResponse {
 
   def avgAgg(name: String): AvgAggregationResult = AvgAggregationResult(name, agg(name)("value").toString.toDouble)
   def bucketScriptAgg(name: String): BucketScriptAggregationResult = BucketScriptAggregationResult(name, agg(name)("value"))
+  def childrenAgg(name: String): ChildrenAggregationResult = ChildrenAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
   def cardinalityAgg(name: String): CardinalityAggregationResult = CardinalityAggregationResult(name, agg(name)("value").toString.toLong)
   def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, agg(name)("value").toString.toDouble)
   def scriptedMetricAgg(name: String): ScriptedMetricAggregationResult = ScriptedMetricAggregationResult(name, agg(name)("value"))
   def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
   def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
   def filterAgg(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
+  def reverseNestedAgg(name: String): ReverseNestedAggregationResult = ReverseNestedAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
 
   def filtersAgg(name: String): FiltersAggregationResult = {
     FiltersAggregationResult(
+      name,
+      agg(name)("buckets").asInstanceOf[Map[String, Map[String, AnyRef]]].map(bucket => Bucket(bucket._1, bucket._2("doc_count").toString.toLong, bucket._2)).toSeq
+    )
+  }
+  def histogramAgg(name: String): HistogramAggregationResult = {
+    HistogramAggregationResult(
       name,
       agg(name)("buckets").asInstanceOf[Map[String, Map[String, AnyRef]]].map(bucket => Bucket(bucket._1, bucket._2("doc_count").toString.toLong, bucket._2)).toSeq
     )
@@ -188,10 +196,18 @@ case class MaxAggregationResult(name: String, value: Double)
 case class ScriptedMetricAggregationResult(name: String, value: AnyRef)
 case class SumAggregationResult(name: String, value: Double)
 
+case class ChildrenAggregationResult(name: String,
+                                     docCount: Long,
+                                     aggdata: Map[String, AnyRef]) extends AggregationResponse
+
 case class FilterAggregationResult(name: String,
                                    docCount: Long,
                                    aggdata: Map[String, AnyRef]) extends AggregationResponse
 
+case class ReverseNestedAggregationResult(name: String,
+  docCount: Long,
+  aggdata: Map[String, AnyRef]) extends AggregationResponse
+case class HistogramAggregationResult(name: String, buckets: Seq[Bucket])
 case class FiltersAggregationResult(name: String, buckets: Seq[Bucket])
 
 case class TermsAggregationResult(name: String,
