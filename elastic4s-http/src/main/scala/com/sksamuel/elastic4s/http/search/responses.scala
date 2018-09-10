@@ -133,6 +133,7 @@ trait AggregationResponse {
   }
 
   def avgAgg(name: String): AvgAggregationResult = AvgAggregationResult(name, agg(name)("value").toString.toDouble)
+  def bucketScriptAgg(name: String): BucketScriptAggregationResult = BucketScriptAggregationResult(name, agg(name)("value"))
   def childrenAgg(name: String): ChildrenAggregationResult = ChildrenAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
   def cardinalityAgg(name: String): CardinalityAggregationResult = CardinalityAggregationResult(name, agg(name)("value").toString.toLong)
   def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, agg(name)("value").toString.toDouble)
@@ -188,6 +189,7 @@ case class SearchResponse(took: Int,
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
 case class AvgAggregationResult(name: String, value: Double)
+case class BucketScriptAggregationResult(name: String, value: AnyRef)
 case class CardinalityAggregationResult(name: String, value: Long)
 case class MinAggregationResult(name: String, value: Double)
 case class MaxAggregationResult(name: String, value: Double)
