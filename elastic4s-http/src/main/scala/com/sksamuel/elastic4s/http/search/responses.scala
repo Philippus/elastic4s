@@ -140,6 +140,7 @@ trait AggregationResponse {
   def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
   def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
   def filterAgg(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
+  def reverseNestedAgg(name: String): ReverseNestedAggregationResult = ReverseNestedAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
 
   def filtersAgg(name: String): FiltersAggregationResult = {
     FiltersAggregationResult(
@@ -201,6 +202,9 @@ case class FilterAggregationResult(name: String,
                                    docCount: Long,
                                    aggdata: Map[String, AnyRef]) extends AggregationResponse
 
+case class ReverseNestedAggregationResult(name: String,
+  docCount: Long,
+  aggdata: Map[String, AnyRef]) extends AggregationResponse
 case class HistogramAggregationResult(name: String, buckets: Seq[Bucket])
 case class FiltersAggregationResult(name: String, buckets: Seq[Bucket])
 
