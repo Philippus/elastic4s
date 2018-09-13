@@ -135,7 +135,7 @@ object SearchBodyBuilderFn {
           phrase.confidence.foreach(builder.field("confidence", _))
           phrase.forceUnigrams.foreach(builder.field("force_unigrams", _))
           phrase.gramSize.foreach(builder.field("gram_size", _))
-          phrase.maxErrors.foreach(builder.field("max_error", _))
+          phrase.maxErrors.foreach(builder.field("max_errors", _))
           phrase.realWordErrorLikelihood.foreach(builder.field("real_word_error_likelihood", _))
           phrase.separator.foreach(builder.field("separator", _))
           phrase.tokenLimit.foreach(builder.field("token_limit", _))
