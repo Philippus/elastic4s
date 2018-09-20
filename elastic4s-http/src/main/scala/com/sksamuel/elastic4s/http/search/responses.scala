@@ -42,11 +42,11 @@ case class SearchHit(@JsonProperty("_id") id: String,
       val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
         total = v("total").asInstanceOf[Long],
-        max_score = v("max_score").asInstanceOf[Double],
+        max_score = Option(v("max_score")).map(_.toString.toDouble),
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
-            score = hits("_score").asInstanceOf[Double],
+            score = Option(hits("_score")).map(_.toString.toDouble),
             source = hits("_source").asInstanceOf[Map[String, AnyRef]],
             highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty)
           )
@@ -64,11 +64,11 @@ case class SearchHits(total: Long,
 }
 
 case class InnerHits(total: Long,
-                     max_score: Double,
+                     max_score: Option[Double],
                      hits: Seq[InnerHit])
 
 case class InnerHit(nested: Map[String, AnyRef],
-                    score: Double,
+                    score: Option[Double],
                     source: Map[String, AnyRef],
                     highlight: Map[String, Seq[String]])
 
@@ -136,12 +136,26 @@ trait AggregationResponse {
   def bucketScriptAgg(name: String): BucketScriptAggregationResult = BucketScriptAggregationResult(name, agg(name)("value"))
   def childrenAgg(name: String): ChildrenAggregationResult = ChildrenAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
   def cardinalityAgg(name: String): CardinalityAggregationResult = CardinalityAggregationResult(name, agg(name)("value").toString.toLong)
-  def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, agg(name)("value").toString.toDouble)
-  def scriptedMetricAgg(name: String): ScriptedMetricAggregationResult = ScriptedMetricAggregationResult(name, agg(name)("value"))
-  def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
-  def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
   def filterAgg(name: String): FilterAggregationResult = FilterAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
+  def maxAgg(name: String): MaxAggregationResult = MaxAggregationResult(name, agg(name)("value").toString.toDouble)
+  def minAgg(name: String): MinAggregationResult = MinAggregationResult(name, agg(name)("value").toString.toDouble)
   def reverseNestedAgg(name: String): ReverseNestedAggregationResult = ReverseNestedAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
+  def scriptedMetricAgg(name: String): ScriptedMetricAggregationResult = ScriptedMetricAggregationResult(name, agg(name)("value"))
+  def sumAgg(name: String): SumAggregationResult = SumAggregationResult(name, agg(name)("value").toString.toDouble)
+
+  def topHitsAgg(name: String): InnerHits = {
+    val v = agg(name)("hits").asInstanceOf[Map[String, AnyRef]]
+    InnerHits(
+      total = v("total").toString.toLong,
+      max_score = Option(v("max_score")).map(_.toString.toDouble),
+      hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
+        InnerHit(
+          nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
+          score = Option(hits("_score")).map(_.toString.toDouble),
+          source = hits("_source").asInstanceOf[Map[String, AnyRef]],
+          highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty))
+      })
+  }
 
   def filtersAgg(name: String): FiltersAggregationResult = {
     FiltersAggregationResult(
@@ -152,7 +166,7 @@ trait AggregationResponse {
   def histogramAgg(name: String): HistogramAggregationResult = {
     HistogramAggregationResult(
       name,
-      agg(name)("buckets").asInstanceOf[Map[String, Map[String, AnyRef]]].map(bucket => Bucket(bucket._1, bucket._2("doc_count").toString.toLong, bucket._2)).toSeq
+      agg(name)("buckets").asInstanceOf[Seq[Map[String, AnyRef]]].map(map => Bucket(map("key").toString, map("doc_count").toString.toLong, map)).toSeq
     )
   }
 }
