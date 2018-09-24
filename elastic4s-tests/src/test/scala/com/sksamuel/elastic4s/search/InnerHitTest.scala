@@ -38,14 +38,14 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
       result.hits.hits.head.innerHits shouldBe Map(
         "myinner" -> InnerHits(
           1,
-          1.0,
+          Some(1.0),
           List(
             com.sksamuel.elastic4s.http.search.InnerHit(
               indexName,
               "football",
               "2",
               Map.empty,
-              1.0,
+              Some(1.0),
               "1",
               Map("name" -> "traore", "affiliation" -> Map("name" -> "player", "parent" -> "1")),
               Map.empty,
