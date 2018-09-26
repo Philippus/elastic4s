@@ -10,7 +10,6 @@ object HighlightBuilderFn {
 
     val builder = XContentFactory.obj()
 
-    highlight.options.encoder.foreach(builder.field("boundary_chars", _))
     highlight.options.boundaryScanner.foreach(builder.field("boundary_scanner", _))
     highlight.options.boundaryScannerLocale.foreach(builder.field("boundary_scanner_locale", _))
     highlight.options.boundaryChars.foreach(chars => builder.field("boundary_chars", String.valueOf(chars)))
