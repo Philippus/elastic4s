@@ -55,14 +55,14 @@ case class SearchHit(@JsonProperty("_id") id: String,
       val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
         total = v("total").toString.toLong,
-        maxScore = v("max_score").asInstanceOf[Double],
+        maxScore = Option(v("max_score")).map(_.toString.toDouble),
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
             index = hits("_index").toString,
             `type` = hits("_type").toString,
             id = hits("_id").toString,
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
-            score = hits("_score").asInstanceOf[Double],
+            score = Option(hits("_score")).map(_.toString.toDouble),
             routing = hits.get("_routing").map(_.toString).getOrElse(""),
             source = hits.get("_source").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             innerHits = buildInnerHits(hits.getOrElse("inner_hits", null).asInstanceOf[Map[String, Map[String, Any]]]),
@@ -86,7 +86,7 @@ case class SearchHits(total: Long,
 }
 
 case class InnerHits(total: Long,
-                     @JsonProperty("max_score") maxScore: Double,
+                     @JsonProperty("max_score") maxScore: Option[Double],
                      hits: Seq[InnerHit]) {
   def size: Long = hits.length
   def isEmpty: Boolean = hits.isEmpty
@@ -97,7 +97,7 @@ case class InnerHit(index: String,
                     `type`: String,
                     id: String,
                     nested: Map[String, AnyRef],
-                    score: Double,
+                    score: Option[Double],
                     routing: String,
                     source: Map[String, AnyRef],
                     innerHits: Map[String, InnerHits],
