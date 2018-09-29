@@ -114,7 +114,7 @@ libraryDependencies ++= Seq(
   "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
 
   // if you want to use reactive streams
-  "com.sksamuel.elastic4s" %% "elastic4s-streams" % elastic4sVersion,
+  "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % elastic4sVersion,
 
   // testing
   "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
