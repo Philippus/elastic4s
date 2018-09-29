@@ -130,8 +130,8 @@ index and index a one field document. Then we will search for that document usin
 ```scala
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.embedded.LocalNode
-import com.sksamuel.elastic4s.http.{RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.http.search.SearchResponse
+import com.sksamuel.elastic4s.http.{RequestFailure, RequestSuccess}
 
 object ArtistIndex extends App {
 
@@ -158,7 +158,7 @@ object ArtistIndex extends App {
   }.await
 
   // Next we index a single document which is just the name of an Artist.
-  // The RefreshPolicy.Immediate means that we want this document to flush to the disk immmediately.
+  // The RefreshPolicy.Immediate means that we want this document to flush to the disk immediately.
   // see the section on Eventual Consistency.
   client.execute {
     indexInto("artists" / "modern").fields("name" -> "L.S. Lowry").refresh(RefreshPolicy.Immediate)
@@ -176,7 +176,8 @@ object ArtistIndex extends App {
   println("---- Search Results ----")
   resp match {
     case failure: RequestFailure => println("We failed " + failure.error)
-    case results: RequestSuccess[_] => println(results.result.hits)
+    case results: RequestSuccess[SearchResponse] => println(results.result.hits.hits.toList)
+    case results: RequestSuccess[_] => println(results.result)
   }
 
   // Response also supports familiar combinators like map / flatMap / foreach:
