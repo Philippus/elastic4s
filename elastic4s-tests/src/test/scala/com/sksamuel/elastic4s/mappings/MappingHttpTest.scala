@@ -67,5 +67,14 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
       properties shouldBe Map.empty
     }
+
+    "handle error response" in {
+      val result = http.execute {
+        getMapping("nonexistent" / "mapping2")
+      }.await
+
+      result.isLeft shouldBe true
+      result.left.get.error.`type` shouldBe "index_not_found_exception"
+    }
   }
 }
