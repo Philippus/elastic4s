@@ -21,7 +21,7 @@ Read [the full documentation](https://sksamuel.github.io/elastic4s/docs/) to lea
 * Uses Scala collections library over Java collections
 * Returns `Option` where the java methods would return null
 * Uses Scala `Duration`s instead of strings/longs for time values
-* Supports typeclasses for indexing, updating, and search backed by Jackson, Circe, Json4s and PlayJson implementations
+* Supports typeclasses for indexing, updating, and search backed by Jackson, Circe, Json4s, PlayJson and Spray Json implementations
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
 * Provides embedded node and testkit subprojects, ideal for your tests
@@ -470,6 +470,8 @@ Simply add the import for your chosen library below and then with those implicit
 |[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson)|import ElasticJackson.Implicits._|
 |[Json4s](http://json4s.org/)|[elastic4s-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4s)|import ElasticJson4s.Implicits._|
 |[Circe](https://github.com/travisbrown/circe)|[elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
+|[PlayJson](https://github.com/playframework/play-json)|[elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json)|import com.sksamuel.elastic4s.playjson._|
+|[Spray Json](https://github.com/spray/spray-json)|[elastic4s-spray-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-spray-json)|import com.sksamuel.elastic4s.sprayjson._|
 
 ## Searching
 
