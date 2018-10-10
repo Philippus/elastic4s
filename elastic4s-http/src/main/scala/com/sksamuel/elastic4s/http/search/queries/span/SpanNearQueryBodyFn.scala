@@ -11,9 +11,7 @@ object SpanNearQueryBodyFn {
 
     builder.startObject()
     builder.startObject("span_near")
-    builder.startArray("clauses")
-    builder.rawArrayValue(q.clauses.map(QueryBuilderFn.apply))
-    builder.endArray()
+    builder.addArray("clauses", q.clauses.map(QueryBuilderFn.apply))
 
     builder.field("slop", q.slop)
     q.inOrder.foreach(builder.field("in_order", _))
