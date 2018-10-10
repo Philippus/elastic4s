@@ -48,7 +48,8 @@ implementations are
 - [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson)
 - [elastic4s-json4](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4)
 - [elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json)
- 
+- [elastic4s-spray-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-spray-json)
+
 For example, to use the jackson implementation, add the module to your build and then add this import:
 
 
@@ -71,6 +72,7 @@ libraryDependencies ++= Seq(
   // a json library
   "com.sksamuel.elastic4s" %% "elastic4s-jackson" % elastic4sVersion,
   "com.sksamuel.elastic4s" %% "elastic4s-play-json" % elastic4sVersion,
+  "com.sksamuel.elastic4s" %% "elastic4s-spray-json" % elastic4sVersion,
   "com.sksamuel.elastic4s" %% "elastic4s-circe" % elastic4sVersion,
   "com.sksamuel.elastic4s" %% "elastic4s-json4s" % elastic4sVersion,
   
