@@ -20,3 +20,5 @@ credentials.sbt
 # Sublime Text specific
 *.sublime-project
 *.sublime-workspace
+
+test-output/
