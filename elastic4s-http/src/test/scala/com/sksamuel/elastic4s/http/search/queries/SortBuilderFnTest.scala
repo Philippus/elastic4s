@@ -27,5 +27,26 @@ class SortBuilderFnTest extends FunSuite with Matchers {
     SortBuilderFn(request).string() shouldBe
       """{"_script":{"script":{"source":"dummy script","lang":"painless","params":{"nump":10.2,"stringp":"ciao","boolp":true}},"type":"number","order":"desc"}}"""
   }
+
+  test("geo distance sort does not generate unit field by default") {
+    val sort = GeoDistanceSort(
+      field = "location",
+      points = Seq(GeoPoint(43.65435, -79.38871))
+    )
+
+    SortBuilderFn(sort).string() shouldBe
+      """{"_geo_distance":{"location":[[-79.38871,43.65435]]}}"""
+  }
+
+  test("geo distance sort generates unit field when informed") {
+    val sort = GeoDistanceSort(
+      field = "location",
+      points = Seq(GeoPoint(43.65435, -79.38871)),
+      unit = Some(DistanceUnit.Kilometers)
+    )
+
+    SortBuilderFn(sort).string() shouldBe
+      """{"_geo_distance":{"location":[[-79.38871,43.65435]],"unit":"km"}}"""
+  }
 }
 
