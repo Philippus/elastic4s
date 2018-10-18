@@ -19,6 +19,7 @@ lazy val root = Project("elastic4s", file("."))
     sprayjson,
     aws,
     sttp,
+    akka,
     httpstreams,
     embedded
   )
@@ -180,6 +181,14 @@ lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
     libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.2.0"
   )
   .dependsOn(core, http)
+
+lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
+  .settings(
+    name := "elastic4s-akka",
+    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5",
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17"
+  )
+  .dependsOn(core, http, testkit % "test")
 
 lazy val aws = Project("elastic4s-aws", file("elastic4s-aws"))
   .settings(
