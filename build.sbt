@@ -52,12 +52,13 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
     name := "elastic4s-embedded",
     libraryDependencies ++= Seq(
-      "org.elasticsearch"                % "elasticsearch"            % ElasticsearchVersion,
-      "org.elasticsearch.client"         % "transport"                % ElasticsearchVersion,
-      "com.carrotsearch"                 % "hppc"                     % "0.7.1",
-      "joda-time"                        % "joda-time"                % "2.9.9",
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-smile" % JacksonVersion,
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor"  % JacksonVersion
+      "org.elasticsearch"                 % "elasticsearch"            % ElasticsearchVersion,
+      "org.elasticsearch.client"          % "transport"                % ElasticsearchVersion,
+      "org.codelibs.elasticsearch.module" % "analysis-common"          % ElasticsearchVersion,
+      "com.carrotsearch"                  % "hppc"                     % "0.7.1",
+      "joda-time"                         % "joda-time"                % "2.9.9",
+      "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-smile" % JacksonVersion,
+      "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-cbor"  % JacksonVersion
 //"org.locationtech.spatial4j" % "spatial4j"               % "0.6",
 //"com.vividsolutions"         % "jts"                     % "1.13",
 //"io.netty"                   % "netty-all"               % "4.1.10.Final",
