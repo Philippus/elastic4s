@@ -110,16 +110,16 @@ class AkkaHttpClient(settings: AkkaHttpClientSettings)(implicit system: ActorSys
     entity match {
       case ElasticHttpEntity.StringEntity(content, contentType) =>
         val ct =
-          contentType.flatMap(value => ContentType.parse(value).toOption).getOrElse(ContentTypes.`text/plain(UTF-8)`)
+          contentType.flatMap(value => ContentType.parse(value).right.toOption).getOrElse(ContentTypes.`text/plain(UTF-8)`)
         HttpEntity(ct, ByteString(content))
       case ElasticHttpEntity.FileEntity(file, contentType) =>
         val ct = contentType
-          .flatMap(value => ContentType.parse(value).toOption)
+          .flatMap(value => ContentType.parse(value).right.toOption)
           .getOrElse(ContentTypes.`application/octet-stream`)
         HttpEntity(ct, file.length, FileIO.fromPath(file.toPath))
       case ElasticHttpEntity.InputStreamEntity(stream, contentType) =>
         val ct = contentType
-          .flatMap(value => ContentType.parse(value).toOption)
+          .flatMap(value => ContentType.parse(value).right.toOption)
           .getOrElse(ContentTypes.`application/octet-stream`)
         HttpEntity(ct, StreamConverters.fromInputStream(() => stream))
     }
