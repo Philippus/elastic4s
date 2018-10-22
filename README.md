@@ -817,7 +817,7 @@ In addition there should be a further implicit in scope of type `RequestBuilder[
 implicit val builder = new RequestBuilder[SomeType] {
   import ElasticDsl._
   // the request returned doesn't have to be an index - it can be anything supported by the bulk api
-  def request(t: T): BulkCompatibleDefinition =  index into "index" / "type" fields ....
+  def request(t: T): BulkCompatibleRequest =  index into "index" / "type" fields ....
 }
 ```
 Then the subscriber can be created, and attached to a publisher:
