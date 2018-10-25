@@ -82,12 +82,6 @@ trait QueryApi {
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQuery = gdef.distance(distance, unit)
   }
 
-  def geoHashCell(field: String, geohash: String): GeoHashCellQuery =
-    GeoHashCellQuery(field).geohash(geohash)
-
-  def geoHashCell(field: String, point: GeoPoint): GeoHashCellQuery =
-    GeoHashCellQuery(field).point(point)
-
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
     def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQuery = points(first +: rest)
