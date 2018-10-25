@@ -22,16 +22,25 @@ trait BulkImplicits {
 
       val endpoint = "/_bulk"
 
-      val rows = BulkContentBuilder(bulk)
-      logger.debug(s"Bulk entity: ${rows.mkString("\n")}")
-      // es seems to require a trailing new line as well
-      val entity = new StringEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON)
+      val bulkHttpBody: String = buildBulkHttpBody(bulk)
+      if (logger.isDebugEnabled()) {
+        logger.debug(s"Bulk entity: {}", bulkHttpBody)
+      }
+      val entity = new StringEntity(bulkHttpBody, ContentType.APPLICATION_JSON)
 
       val params = scala.collection.mutable.Map.empty[String, String]
       bulk.timeout.foreach(params.put("timeout", _))
       bulk.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
 
-      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default)
+      client.async("POST", endpoint, params.toMap, entity, ResponseHandler.default, skipBodyLogging = true)
+    }
+
+    private[bulk] def buildBulkHttpBody(bulk: BulkDefinition): String = {
+      val builder = StringBuilder.newBuilder
+      val rows: Seq[String] = BulkContentBuilder(bulk)
+      rows.addString(builder, "", "\n", "")
+      builder.append("\n") // es seems to require a trailing new line as well
+      builder.mkString
     }
   }
 }

@@ -43,9 +43,16 @@ trait HttpExecutable[T, U] extends Logging {
               endpoint: String,
               params: Map[String, Any],
               entity: HttpEntity,
-              handler: ResponseHandler[U]): Future[U] = {
-      logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
-      logger.debug(Source.fromInputStream(entity.getContent)(Codec.UTF8).getLines().mkString("\n"))
+              handler: ResponseHandler[U],
+              skipBodyLogging: Boolean = false): Future[U] = {
+      if (logger.isDebugEnabled()) {
+        logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
+        val bodyLogged =
+          if (skipBodyLogging) "[body log skipped]"
+          else Source.fromInputStream(entity.getContent)(Codec.UTF8).mkString
+        logger.debug(bodyLogged)
+      }
+
       val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _: ResponseListener)
       future(callback, handler)
     }
