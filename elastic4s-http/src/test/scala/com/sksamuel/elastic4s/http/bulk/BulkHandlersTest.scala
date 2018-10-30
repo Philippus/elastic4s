@@ -2,9 +2,11 @@ package com.sksamuel.elastic4s.http.bulk
 
 import com.sksamuel.elastic4s.IndexAndType
 import com.sksamuel.elastic4s.bulk.BulkRequest
+import com.sksamuel.elastic4s.http.ElasticRequest
+import com.sksamuel.elastic4s.http.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.http.testutils.StringExtensions.StringOps
 import com.sksamuel.elastic4s.indexes.IndexRequest
-import org.scalatest.Matchers.convertToAnyShouldWrapper
+import org.scalatest.Matchers._
 import org.scalatest.{FlatSpec, FunSuite}
 
 class BulkHandlersTest extends FlatSpec with BulkHandlers {
@@ -21,6 +23,9 @@ class BulkHandlersTest extends FlatSpec with BulkHandlers {
         |{"field2":"value2"}
         |""".stripMargin.withUnixLineEndings
 
-    BulkHandler.build(request) shouldBe  expected
+    val esRequest: ElasticRequest = BulkHandler.build(request)
+    esRequest.entity should not be empty
+    esRequest.entity.get shouldBe a[StringEntity]
+    esRequest.entity.get.get shouldBe expected
   }
 }
