@@ -34,7 +34,7 @@ trait TokenFilterApi {
   def synonymTokenFilter(name: String): SynonymTokenFilter = SynonymTokenFilter(name)
 
   def synonymTokenFilter(name: String, synonyms: Iterable[String]): SynonymTokenFilter =
-    SynonymTokenFilter(name).synonyms(synonyms)
+    SynonymTokenFilter(name, synonyms = synonyms.toSet)
 
   def truncateTokenFilter(name: String): TruncateTokenFilter = TruncateTokenFilter(name)
 
