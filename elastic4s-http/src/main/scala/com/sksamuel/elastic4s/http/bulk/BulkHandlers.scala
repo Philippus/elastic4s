@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.http.bulk
 
-import com.sksamuel.elastic4s.Show
 import com.sksamuel.elastic4s.bulk.BulkRequest
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.exts.Logging
@@ -11,12 +10,12 @@ trait BulkHandlers {
   implicit object BulkHandler extends Handler[BulkRequest, BulkResponse] with Logging {
 
     override def build(bulk: BulkRequest): ElasticRequest = {
-
-      val rows = BulkBuilderFn(bulk)
-      // es seems to require a trailing new line as well
-      val entity = HttpEntity(rows.mkString("\n") + "\n", ContentType.APPLICATION_JSON.getMimeType)
-      logger.debug("Sending bulk request")
-      logger.debug(rows.mkString("\n"))
+      val httpBody: String = buildBulkHttpBody(bulk)
+      val entity = HttpEntity(httpBody, ContentType.APPLICATION_JSON.getMimeType)
+      if (logger.isDebugEnabled()) {
+        logger.debug("Sending bulk request")
+        logger.debug(httpBody)
+      }
 
       val params = scala.collection.mutable.Map.empty[String, String]
       bulk.timeout.foreach(params.put("timeout", _))
@@ -24,5 +23,13 @@ trait BulkHandlers {
 
       ElasticRequest("POST", "/_bulk", params.toMap, entity)
     }
+  }
+
+  private[bulk] def buildBulkHttpBody(bulk: BulkRequest): String = {
+    val builder = StringBuilder.newBuilder
+    val rows: Seq[String] = BulkBuilderFn(bulk)
+    rows.addString(builder, "", "\n", "")
+    builder.append("\n") // es seems to require a trailing new line as well
+    builder.mkString
   }
 }
