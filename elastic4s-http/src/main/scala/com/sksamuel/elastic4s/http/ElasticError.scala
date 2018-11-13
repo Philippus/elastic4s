@@ -15,7 +15,10 @@ case class ElasticError(`type`: String,
 
 object ElasticError {
 
-  class CausedBy(`type`: String, reason: String){
+  class CausedBy(val `type`: String,
+                 val reason: String,
+                 @JsonProperty("script_stack") val scriptStack: Seq[String],
+                 @JsonProperty("caused_by") val causedBy: Option[ElasticError.CausedBy]){
     private val _other = mutable.HashMap[String, String]()
 
     @JsonAnySetter private def setOther(k: String, v: String): Unit = _other.put(k, v)
