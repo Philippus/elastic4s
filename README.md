@@ -83,7 +83,8 @@ To get started you will need to add a dependency to either
 depending on which client you intend you use (or both).
 
 The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you
-want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response
+want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]`
+(or use one of the [Alternative executors](#alternative-executors)) where T is the response
 type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse`
 which contains the results of the search.
 
@@ -102,6 +103,20 @@ The DSL methods are located in the `ElasticDsl` trait which needs to be imported
 identical whether you use the HTTP or TCP client, you must import the appropriate trait
 (`com.sksamuel.elastic4s.ElasticDsl` for TCP or `com.sksamuel.elastic4s.http.ElasticDsl` for HTTP) depending on which
 client you are using.
+
+### Alternative Executors
+The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
+adding appropriate imports. The imports will create an implicit `Executor[F]` and a `Functor[F]`,
+where `F` is some effect type.
+
+#### Cats-Effect IO
+`import com.sksamuel.elastic4s.cats.effect.instances._` will provide implicit instances for `cats.effect.IO`
+
+#### Monix Task
+`import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
+
+#### Scalaz Task
+`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task` 
 
 ### Example SBT Setup
 
