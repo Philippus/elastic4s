@@ -96,4 +96,15 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
     resp.items.head.source shouldBe Map("year" -> 2005, "name" -> "x&y")
     resp.items.last.source shouldBe Map("name" -> "mylo xyloto")
   }
+  it should "retrieve documents by id with routing spec" in {
+
+    val resp = client.execute(
+      multiget(get("3") from "coldplay/albums" routing "3")
+    ).await.result
+
+    resp.size shouldBe 1
+
+    resp.items.head.id shouldBe "3"
+    resp.items.head.exists shouldBe true
+  }
 }

@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.http.search.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.term.{TermsLookupQuery, TermsSetQuery}
+import com.sksamuel.elastic4s.http.ScriptBuilderFn
 
 object TermsLookupQueryBodyFn {
   def apply(t: TermsLookupQuery): XContentBuilder = {
@@ -29,6 +30,7 @@ object TermsSetQueryBodyFn {
     builder.startObject(t.field)
     builder.array("terms", t.terms.map(_.toString).toArray[String])
     t.minimumShouldMatchField.foreach(builder.field("minimum_should_match_field", _))
+    t.minimumShouldMatchScript.foreach(script => builder.rawField("minimum_should_match_script", ScriptBuilderFn(script)))
     builder.endObject().endObject()
   }
 }

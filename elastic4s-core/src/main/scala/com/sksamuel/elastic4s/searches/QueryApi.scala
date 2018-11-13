@@ -82,12 +82,6 @@ trait QueryApi {
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQuery = gdef.distance(distance, unit)
   }
 
-  def geoHashCell(field: String, geohash: String): GeoHashCellQuery =
-    GeoHashCellQuery(field).geohash(geohash)
-
-  def geoHashCell(field: String, point: GeoPoint): GeoHashCellQuery =
-    GeoHashCellQuery(field).point(point)
-
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
     def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQuery = points(first +: rest)
@@ -258,8 +252,16 @@ trait QueryApi {
   def termsLookupQuery(field: String, path: String, ref: DocumentRef) =
     TermsLookupQuery(field, TermsLookup(ref, path))
 
-  def termsSetQuery(field: String, terms: Set[Any]): com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery =
-    com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery(field, terms)
+  // Either minimumShouldMatchField or minimumShouldMatchScript should be specified, that's why they appear as mandatory parameters
+  def termsSetQuery(field: String, 
+      terms: Set[String], 
+      minimumShouldMatchField: String): com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery =
+    com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery(field, terms, minimumShouldMatchField=Some(minimumShouldMatchField))
+    
+  def termsSetQuery(field: String, 
+      terms: Set[String], 
+      minimumShouldMatchScript: Script): com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery =
+    com.sksamuel.elastic4s.searches.queries.term.TermsSetQuery(field, terms, minimumShouldMatchScript=Some(minimumShouldMatchScript))
 
   @deprecated("use the non-tupled version wildcardQuery(field,value)", "6.1.2")
   def wildcardQuery(tuple: (String, Any)): WildcardQuery      = wildcardQuery(tuple._1, tuple._2)

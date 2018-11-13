@@ -47,12 +47,14 @@ class ElasticsearchJavaRestClient(client: RestClient) extends HttpClient {
     val headers = r.getHeaders.map { header =>
       header.getName -> header.getValue
     }.toMap
-    logger.debug(s"Http Response $r")
+    logger.debug("Http Response {}", r)
     HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
   }
 
   override def send(req: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
-    logger.debug(s"Executing elastic request ${Show[ElasticRequest].show(req)}")
+    if(logger.isDebugEnabled) {
+      logger.debug("Executing elastic request {}", Show[ElasticRequest].show(req))
+    }
 
     val l = new ResponseListener {
       override def onSuccess(r: org.elasticsearch.client.Response): Unit = callback(Right(fromResponse(r)))

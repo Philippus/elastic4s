@@ -22,14 +22,10 @@
                 "direct_generator": [
                     {
                         "field": "fieldName",
-                        "min_word_length": 3,
-                        "prefix_length": 0
+                        "prefix_length": 0,
+                        "min_word_length": 3
                     }
                 ],
-                "collate": {
-                    "query": {},
-                    "params": {}
-                },
                 "highlight": {}
             }
         },

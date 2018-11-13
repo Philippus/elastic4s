@@ -818,7 +818,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   it should "generate correct json for suggestions of multiple suggesters" in {
     val req = search("music") types "bands" query termQuery("name", "coldplay") suggestions(
       termSuggestion("suggestion-term") on "name" text "culdpaly" maxEdits 2,
-      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll" maxErrors 1.0f addDirectGenerator DirectGenerator("fieldName", 3, 0),
+      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll" maxErrors 1.0f addDirectGenerator DirectGenerator(field = "fieldName", minWordLength = Some(3), prefixLength = Some(0)),
       completionSuggestion("suggestion-completion") on "ac" text "cold"
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
@@ -853,7 +853,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
           termQuery("name", "sammy")
         }
       } scoreMode "avg" inner
-        innerHits("obj1").size(6).highlighting(highlight("name").fragmentSize(20))
+        innerHits("obj1").size(6).highlighting(
+          highlightOptions().preTags("<b>").postTags("</b>"),
+          highlight("name").fragmentSize(20)
+        )
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_query_nested_inner_highlight.json")
   }

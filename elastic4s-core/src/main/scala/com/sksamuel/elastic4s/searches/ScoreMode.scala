@@ -14,7 +14,9 @@ object ScoreMode {
 
   case object Avg   extends ScoreMode
   case object Max   extends ScoreMode
-  case object Total extends ScoreMode
+  case object Total extends ScoreMode {
+    override def toString: String = "sum"
+  }
   case object Min   extends ScoreMode
   case object None  extends ScoreMode
   case object Sum   extends ScoreMode

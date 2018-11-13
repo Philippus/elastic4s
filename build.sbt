@@ -19,6 +19,7 @@ lazy val root = Project("elastic4s", file("."))
     sprayjson,
     aws,
     sttp,
+    akka,
     httpstreams,
     embedded
   )
@@ -51,12 +52,13 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
   .settings(
     name := "elastic4s-embedded",
     libraryDependencies ++= Seq(
-      "org.elasticsearch"                % "elasticsearch"            % ElasticsearchVersion,
-      "org.elasticsearch.client"         % "transport"                % ElasticsearchVersion,
-      "com.carrotsearch"                 % "hppc"                     % "0.7.1",
-      "joda-time"                        % "joda-time"                % "2.9.9",
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-smile" % JacksonVersion,
-      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor"  % JacksonVersion
+      "org.elasticsearch"                 % "elasticsearch"            % ElasticsearchVersion,
+      "org.elasticsearch.client"          % "transport"                % ElasticsearchVersion,
+      "org.codelibs.elasticsearch.module" % "analysis-common"          % ElasticsearchVersion,
+      "com.carrotsearch"                  % "hppc"                     % "0.7.1",
+      "joda-time"                         % "joda-time"                % "2.9.9",
+      "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-smile" % JacksonVersion,
+      "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-cbor"  % JacksonVersion
 //"org.locationtech.spatial4j" % "spatial4j"               % "0.6",
 //"com.vividsolutions"         % "jts"                     % "1.13",
 //"io.netty"                   % "netty-all"               % "4.1.10.Final",
@@ -180,6 +182,14 @@ lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
     libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.2.0"
   )
   .dependsOn(core, http)
+
+lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
+  .settings(
+    name := "elastic4s-akka",
+    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5",
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17"
+  )
+  .dependsOn(core, http, testkit % "test")
 
 lazy val aws = Project("elastic4s-aws", file("elastic4s-aws"))
   .settings(

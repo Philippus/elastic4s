@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
 import com.sksamuel.elastic4s.http.FetchSourceContextBuilderFn
-import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
+import com.sksamuel.elastic4s.http.search.HighlightBuilderFn
 import com.sksamuel.elastic4s.http.search.queries.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.InnerHit
@@ -32,14 +32,9 @@ object InnerHitQueryBodyFn {
     }
     if (d.storedFieldNames.nonEmpty)
       builder.array("stored_fields", d.storedFieldNames.toArray)
-    if (d.highlights.nonEmpty) {
-      builder.startObject("highlight")
-      builder.startObject("fields")
-      d.highlights.foreach { field =>
-        builder.rawField(field.field, HighlightFieldBuilderFn(field))
-      }
-      builder.endObject()
-      builder.endObject()
+
+    d.highlight.foreach { highlight =>
+      builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
     builder.endObject()
   }

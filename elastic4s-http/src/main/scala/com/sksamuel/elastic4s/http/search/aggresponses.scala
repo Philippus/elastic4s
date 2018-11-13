@@ -39,8 +39,8 @@ object TermsAggResult {
         map
       )
     },
-    data("doc_count_error_upper_bound").toString.toInt,
-    data("sum_other_doc_count").toString.toInt
+    data("doc_count_error_upper_bound").toString.toLong,
+    data("sum_other_doc_count").toString.toLong
   )
 }
 

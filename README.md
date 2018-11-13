@@ -21,7 +21,7 @@ Read [the full documentation](https://sksamuel.github.io/elastic4s/docs/) to lea
 * Uses Scala collections library over Java collections
 * Returns `Option` where the java methods would return null
 * Uses Scala `Duration`s instead of strings/longs for time values
-* Supports typeclasses for indexing, updating, and search backed by Jackson, Circe, Json4s and PlayJson implementations
+* Supports typeclasses for indexing, updating, and search backed by Jackson, Circe, Json4s, PlayJson and Spray Json implementations
 * Leverages the built-in Java client
 * Provides [reactive-streams](#elastic-reactive-streams) implementation
 * Provides embedded node and testkit subprojects, ideal for your tests
@@ -46,6 +46,7 @@ The second issue is that it uses Netty 4.1. However some popular projects such a
 
 | Elasticsearch Version | Scala 2.10 | Scala 2.11 | Scala 2.12 |
 |-------|---------|---------|-----------|
+|6.4.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.4.svg?label=latest%206.4%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.4.svg?label=latest%206.4%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
 |6.3.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.3.svg?label=latest%206.3%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.3.svg?label=latest%206.3%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
 |6.2.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.2.svg?label=latest%206.2%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.2.svg?label=latest%206.2%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
 |6.1.x||[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.1.svg?label=latest%206.1%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.1.svg?label=latest%206.1%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
@@ -62,6 +63,7 @@ The second issue is that it uses Netty 4.1. However some popular projects such a
 |2.2.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.2.svg?label=latest%202.2%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.2.svg?label=latest%202.2%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
 |2.1.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.1.svg?label=latest%202.1%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.1.svg?label=latest%202.1%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
 |2.0.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/2.0.svg?label=latest%202.0%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/2.0.svg?label=latest%202.0%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)||
+|1.7.x|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.10/1.7.svg?label=latest%201.7%20release%20for%202.10"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.10%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/1.7.svg?label=latest%201.7%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)|[<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/1.7.svg?label=latest%201.7%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)|
 
 For release prior to 2.0 search maven central.
 
@@ -81,7 +83,8 @@ To get started you will need to add a dependency to either
 depending on which client you intend you use (or both).
 
 The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you
-want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response
+want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]`
+(or use one of the [Alternative executors](#alternative-executors)) where T is the response
 type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse`
 which contains the results of the search.
 
@@ -101,6 +104,20 @@ identical whether you use the HTTP or TCP client, you must import the appropriat
 (`com.sksamuel.elastic4s.ElasticDsl` for TCP or `com.sksamuel.elastic4s.http.ElasticDsl` for HTTP) depending on which
 client you are using.
 
+### Alternative Executors
+The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
+adding appropriate imports. The imports will create an implicit `Executor[F]` and a `Functor[F]`,
+where `F` is some effect type.
+
+#### Cats-Effect IO
+`import com.sksamuel.elastic4s.cats.effect.instances._` will provide implicit instances for `cats.effect.IO`
+
+#### Monix Task
+`import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
+
+#### Scalaz Task
+`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task` 
+
 ### Example SBT Setup
 
 ```scala
@@ -113,7 +130,7 @@ libraryDependencies ++= Seq(
   "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
 
   // if you want to use reactive streams
-  "com.sksamuel.elastic4s" %% "elastic4s-streams" % elastic4sVersion,
+  "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % elastic4sVersion,
 
   // testing
   "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
@@ -129,8 +146,8 @@ index and index a one field document. Then we will search for that document usin
 ```scala
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.embedded.LocalNode
-import com.sksamuel.elastic4s.http.{RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.http.search.SearchResponse
+import com.sksamuel.elastic4s.http.{RequestFailure, RequestSuccess}
 
 object ArtistIndex extends App {
 
@@ -157,7 +174,7 @@ object ArtistIndex extends App {
   }.await
 
   // Next we index a single document which is just the name of an Artist.
-  // The RefreshPolicy.Immediate means that we want this document to flush to the disk immmediately.
+  // The RefreshPolicy.Immediate means that we want this document to flush to the disk immediately.
   // see the section on Eventual Consistency.
   client.execute {
     indexInto("artists" / "modern").fields("name" -> "L.S. Lowry").refresh(RefreshPolicy.Immediate)
@@ -175,7 +192,8 @@ object ArtistIndex extends App {
   println("---- Search Results ----")
   resp match {
     case failure: RequestFailure => println("We failed " + failure.error)
-    case results: RequestSuccess[_] => println(results.result.hits)
+    case results: RequestSuccess[SearchResponse] => println(results.result.hits.hits.toList)
+    case results: RequestSuccess[_] => println(results.result)
   }
 
   // Response also supports familiar combinators like map / flatMap / foreach:
@@ -468,6 +486,8 @@ Simply add the import for your chosen library below and then with those implicit
 |[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson)|import ElasticJackson.Implicits._|
 |[Json4s](http://json4s.org/)|[elastic4s-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4s)|import ElasticJson4s.Implicits._|
 |[Circe](https://github.com/travisbrown/circe)|[elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
+|[PlayJson](https://github.com/playframework/play-json)|[elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json)|import com.sksamuel.elastic4s.playjson._|
+|[Spray Json](https://github.com/spray/spray-json)|[elastic4s-spray-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-spray-json)|import com.sksamuel.elastic4s.sprayjson._|
 
 ## Searching
 
@@ -813,7 +833,7 @@ In addition there should be a further implicit in scope of type `RequestBuilder[
 implicit val builder = new RequestBuilder[SomeType] {
   import ElasticDsl._
   // the request returned doesn't have to be an index - it can be anything supported by the bulk api
-  def request(t: T): BulkCompatibleDefinition =  index into "index" / "type" fields ....
+  def request(t: T): BulkCompatibleRequest =  index into "index" / "type" fields ....
 }
 ```
 Then the subscriber can be created, and attached to a publisher:

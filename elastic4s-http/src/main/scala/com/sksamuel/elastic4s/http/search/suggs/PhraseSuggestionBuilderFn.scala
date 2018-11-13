@@ -30,25 +30,38 @@ object PhraseSuggestionBuilderFn {
     phrase.directGenerators.foreach { generator =>
       builder.startObject()
       builder.field("field", generator.field)
-      builder.field("min_word_length", generator.minWordLength)
-      builder.field("prefix_length", generator.prefixLength)
+      generator.size.foreach(builder.field("size", _))
+      generator.suggestMode.foreach(builder.field("suggest_mode", _))
+      generator.maxEdits.foreach(builder.field("max_edits", _))
+      generator.prefixLength.foreach(builder.field("prefix_length", _))
+      generator.minWordLength.foreach(builder.field("min_word_length", _))
+      generator.maxInspections.foreach(builder.field("max_inspections", _))
+      generator.minDocFreq.foreach(builder.field("min_doc_freq", _))
+      generator.maxTermFreq.foreach(builder.field("max_term_freq", _))
+      generator.preFilter.foreach(builder.field("pre_filter", _))
+      generator.postFilter.foreach(builder.field("post_filter", _))
       builder.endObject()
     }
     builder.endArray()
     // END DIRECT GENERATOR
 
-    //COLLATE
-    builder.startObject("collate")
+    phrase.collateQuery match {
+      case None =>
+      case Some(query) => {
+        //COLLATE
+        builder.startObject("collate")
 
-    builder.startObject("query")
-    phrase.collateQuery.foreach(t => builder.rawField(t.scriptType.toString.toLowerCase, t.script))
-    builder.endObject()
+        builder.startObject("query")
+        phrase.collateQuery.foreach(t => builder.rawField(t.scriptType.toString.toLowerCase, t.script))
+        builder.endObject()
 
-    phrase.collatePrune.foreach(builder.field("prune", _))
-    builder.rawField("params", SourceAsContentBuilder(phrase.collateParams))
+        phrase.collatePrune.foreach(builder.field("prune", _))
+        builder.rawField("params", SourceAsContentBuilder(phrase.collateParams))
 
-    builder.endObject()
-    //END COLLATE
+        builder.endObject()
+        //END COLLATE
+      }
+    }
 
     //highlight
     builder.startObject("highlight")

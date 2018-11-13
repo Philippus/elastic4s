@@ -5,6 +5,7 @@ import java.nio.file.{Path, Paths}
 
 import com.sksamuel.elastic4s.http.{ElasticClient, HttpClient}
 import com.sksamuel.exts.Logging
+import org.elasticsearch.analysis.common.CommonAnalysisPlugin
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.index.reindex.ReindexPlugin
 import org.elasticsearch.node.{InternalSettingsPreparer, Node}
@@ -14,7 +15,6 @@ import org.elasticsearch.script.mustache.MustachePlugin
 import org.elasticsearch.transport.Netty4Plugin
 
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
 import scala.util.Try
 
 trait LocalNode {
@@ -143,7 +143,7 @@ object LocalNode {
     require(settings.get("path.repo") != null)
 
     val plugins =
-      List(classOf[Netty4Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin])
+      List(classOf[Netty4Plugin], classOf[MustachePlugin], classOf[PercolatorPlugin], classOf[ReindexPlugin], classOf[CommonAnalysisPlugin])
 
     val mergedSettings = Settings
       .builder()

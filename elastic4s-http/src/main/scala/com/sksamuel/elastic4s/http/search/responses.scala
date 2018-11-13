@@ -23,7 +23,8 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      private val _source: Map[String, AnyRef],
                      fields: Map[String, AnyRef],
                      @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
-                     private val inner_hits: Map[String, Map[String, Any]])
+                     private val inner_hits: Map[String, Map[String, Any]],
+                     @JsonProperty("matched_queries") matchedQueries: Option[Set[String]])
   extends Hit {
 
   def highlight: Map[String, Seq[String]] = _highlight.getOrElse(Map.empty)
@@ -54,19 +55,20 @@ case class SearchHit(@JsonProperty("_id") id: String,
       val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
         total = v("total").toString.toLong,
-        maxScore = v("max_score").asInstanceOf[Double],
+        maxScore = Option(v("max_score")).map(_.toString.toDouble),
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
             index = hits("_index").toString,
             `type` = hits("_type").toString,
             id = hits("_id").toString,
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
-            score = hits("_score").asInstanceOf[Double],
+            score = Option(hits("_score")).map(_.toString.toDouble),
             routing = hits.get("_routing").map(_.toString).getOrElse(""),
             source = hits.get("_source").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             innerHits = buildInnerHits(hits.getOrElse("inner_hits", null).asInstanceOf[Map[String, Map[String, Any]]]),
             highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty),
-            sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty)
+            sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty),
+            fields = hits.get("fields").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty)
           )
         }
       )
@@ -84,7 +86,7 @@ case class SearchHits(total: Long,
 }
 
 case class InnerHits(total: Long,
-                     @JsonProperty("max_score") maxScore: Double,
+                     @JsonProperty("max_score") maxScore: Option[Double],
                      hits: Seq[InnerHit]) {
   def size: Long = hits.length
   def isEmpty: Boolean = hits.isEmpty
@@ -95,12 +97,28 @@ case class InnerHit(index: String,
                     `type`: String,
                     id: String,
                     nested: Map[String, AnyRef],
-                    score: Double,
+                    score: Option[Double],
                     routing: String,
                     source: Map[String, AnyRef],
                     innerHits: Map[String, InnerHits],
                     highlight: Map[String, Seq[String]],
-                    sort: Seq[AnyRef])
+                    sort: Seq[AnyRef],
+                    fields: Map[String, AnyRef]) {
+
+  def docValueField(fieldName: String): HitField = docValueFieldOpt(fieldName).get
+  def docValueFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
+    new HitField {
+      override def values: Seq[AnyRef] = v match {
+        case values: Seq[AnyRef] => values
+        case value: AnyRef => Seq(value)
+      }
+      override def value: AnyRef = values.head
+      override def name: String = fieldName
+      override def isMetadataField: Boolean = MetaDataFields.fields.contains(name)
+    }
+  }
+
+}
 
 case class SearchResponse(took: Long,
                           @JsonProperty("timed_out") isTimedOut: Boolean,
