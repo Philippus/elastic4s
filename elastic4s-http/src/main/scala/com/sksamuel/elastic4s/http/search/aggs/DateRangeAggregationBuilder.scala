@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
-import com.sksamuel.elastic4s.http.ScriptBuilderFn
+import com.sksamuel.elastic4s.http.{EnumConversions, ScriptBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.DateRangeAggregation
 
@@ -13,6 +13,7 @@ object DateRangeAggregationBuilder {
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.autofield("missing", _))
     agg.format.foreach(builder.field("format", _))
+    agg.timeZone.map(EnumConversions.timeZone).foreach(builder.field("time_zone", _))
     agg.keyed.foreach(builder.field("keyed", _))
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))
