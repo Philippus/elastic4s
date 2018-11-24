@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.searches.queries
 
 import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQuery, MultiMatchQueryBuilderType}
 import com.sksamuel.exts.OptionImplicits._
 
 case class QueryStringQuery(query: String,
@@ -24,7 +25,8 @@ case class QueryStringQuery(query: String,
                             queryName: Option[String] = None,
                             rewrite: Option[String] = None,
                             splitOnWhitespace: Option[Boolean] = None,
-                            tieBreaker: Option[Double] = None)
+                            tieBreaker: Option[Double] = None,
+                            `type`: Option[MultiMatchQueryBuilderType] = None)
     extends Query {
 
   def rewrite(rewrite: String): QueryStringQuery = copy(rewrite = rewrite.some)
@@ -90,4 +92,7 @@ case class QueryStringQuery(query: String,
     copy(autoGeneratePhraseQueries = autoGeneratePhraseQueries.some)
 
   def phraseSlop(phraseSlop: Int): QueryStringQuery = copy(phraseSlop = phraseSlop.some)
+
+  def matchType(t: String): QueryStringQuery = matchType(MultiMatchQueryBuilderType.valueOf(t))
+  def matchType(t: MultiMatchQueryBuilderType): QueryStringQuery = copy(`type` = t.some)
 }
