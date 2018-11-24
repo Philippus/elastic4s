@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.RefreshPolicy
 import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.jackson.ElasticJackson
+import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryBuilderType.CROSS_FIELDS
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
@@ -45,11 +46,13 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
       ),
       indexInto("chess/pieces").fields(
         "name" -> "knight",
+        "aka" -> "horse",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("chess/pieces").fields(
         "name" -> "rook",
+        "aka" -> "castle",
         "value" -> 5,
         "count" -> 2
       ),
@@ -106,7 +109,7 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
     "support source excludes" in {
       client.execute {
         search("chess") query matchAllQuery() sourceExclude "count"
-      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"aka\":\"horse\",\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"aka\":\"castle\",\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
     }
     "support constantScoreQuery" should {
       "work with termQuery" in {
@@ -185,6 +188,18 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
           .limit(1)
       }.await
       resp.result.hits.hits.forall(_.matchedQueries.contains(Set("wibble"))) shouldBe true
+    }
+    "support multi-field match types in a query string query" in {
+      val resp = client.execute {
+        search("chess")
+          .query(
+            queryStringQuery("knight horse")
+              .field("name").field("aka")
+              .defaultOperator("AND")
+              .matchType(CROSS_FIELDS)
+          )
+      }.await
+      resp.result.totalHits shouldBe 1
     }
   }
 }

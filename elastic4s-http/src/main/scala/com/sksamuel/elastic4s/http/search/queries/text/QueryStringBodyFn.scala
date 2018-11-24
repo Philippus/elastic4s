@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.text
 
+import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.queries.QueryStringQuery
 
@@ -23,6 +24,7 @@ object QueryStringBodyFn {
     s.quoteFieldSuffix.map(_.toString).foreach(builder.field("quote_field_suffix", _))
     s.splitOnWhitespace.map(_.toString).foreach(builder.field("split_on_whitespace", _))
     s.tieBreaker.foreach(builder.field("tie_breaker", _))
+    s.`type`.map(EnumConversions.multiMatchQueryBuilderType).foreach(builder.field("type", _))
     s.rewrite.map(_.toString).foreach(builder.field("rewrite", _))
 
     if (s.fields.nonEmpty) {
