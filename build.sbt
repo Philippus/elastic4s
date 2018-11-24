@@ -138,7 +138,8 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
 lazy val fs2streams = Project("elastic4s-fs2-streams", file("elastic4s-fs2-streams"))
   .settings(
     name := "elastic4s-fs2-streams",
-    libraryDependencies += "co.fs2" %% "fs2-core" % Fs2Version
+    libraryDependencies += "co.fs2" %% "fs2-core" % Fs2Version,
+    libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
   )
   .dependsOn(http, cats_effect % "test", testkit % "test", jackson % "test")
 

@@ -24,8 +24,9 @@ class Fs2Subscriber[F[_]: Applicative: Executor: Functor: RaiseThrowable](client
 
     def getNextResponse(response: Response[SearchResponse]) : Stream[F, SearchHit] = response match {
       case response: RequestFailure =>
-        logger.warn("Request errored, will terminate the subscription", response.error.toString)
-        Stream.raiseError[F](new RuntimeException(response.error.toString))
+        val errorMessage = response.error.toString
+        logger.warn("Request errored, will terminate the subscription", errorMessage)
+        Stream.raiseError[F](new RuntimeException(errorMessage))
 
       // handle when the es request times out
       case response: RequestSuccess[SearchResponse] if response.result.isTimedOut =>

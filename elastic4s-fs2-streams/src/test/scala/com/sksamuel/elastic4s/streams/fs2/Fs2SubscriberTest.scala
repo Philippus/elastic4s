@@ -6,7 +6,9 @@ import cats.instances.try_._
 import cats.syntax.either._
 import cats.syntax.traverse._
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalacheck._
 import org.scalatest._
+import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import scala.util.Try
 import scala.concurrent.duration._
 
@@ -16,11 +18,12 @@ class Fs2SubscriberTest
     extends WordSpec
     with DockerTests
     with Matchers
+    with GeneratorDrivenPropertyChecks
     with BeforeAndAfterAll {
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   private val indexName = getClass.getSimpleName.toLowerCase
-  private val indexType = "emperor"
+  private val indexType = "emperor-fs2"
 
   val emperors = Array(
     Item("Augustus"),
@@ -61,29 +64,40 @@ class Fs2SubscriberTest
   val subscriber = new Fs2Subscriber[IO](client)
 
   "Fs2Subscriber" should {
-
-//    "reject a request if it doesn't have keep-alive set" in {
-//      val searchRequest = search(indexName) query "*:*"
-//      subscriber.stream[IO](searchRequest).compile.toList.unsafeRunSync() should have size emperors.length
-//    }
-
     "get all the results" in {
-      val searchRequest = search(indexName) query "*:*" scroll 20.seconds limit 2
+      val keepAliveGen: Gen[Option[FiniteDuration]] =
+        Gen.oneOf(List(
+          None,
+          Some(5.seconds),
+          Some(1.minute))
+        )
+      val limitPerPageGen: Gen[Int] =
+        Gen.oneOf(
+          (1 to emperors.length + 1).toList ++
+            List(50, 100)
+        )
 
-      val items = subscriber
-        .stream(searchRequest)
-        .take(emperors.length)
-        .compile
-        .toList
-        .unsafeRunSync()
+      forAll((keepAliveGen, "keepAlive[Option]"), (limitPerPageGen, "limitPerPage")) {
+        (keepAliveMaybe: Option[FiniteDuration], limitPerPage: Int) =>
+          val searchRequest = keepAliveMaybe.foldLeft {
+            search(indexName).query("*:*").limit(limitPerPage)
+          }(_ scroll _)
 
-      val resultsAsItems = items
-        .traverse(_.safeTo[Item])
-        .toEither
-        .valueOr(ex => fail("Error decoding items", ex))
+          val results = subscriber
+            .stream(searchRequest)
+            .take(emperors.length)
+            .compile
+            .toList
+            .unsafeRunSync()
 
-      items should have size emperors.length
-      resultsAsItems should contain theSameElementsAs emperors
+          val resultsAsItems = results
+            .traverse(_.safeTo[Item])
+            .toEither
+            .valueOr(fail("Error decoding items", _))
+
+          resultsAsItems should contain theSameElementsAs emperors
+      }
+
     }
   }
 
