@@ -1,7 +1,10 @@
 package com.sksamuel.elastic4s.streams.fs2
 
 import cats.effect.IO
-import com.sksamuel.elastic4s.searches.SearchRequest
+import cats.instances.list._
+import cats.instances.try_._
+import cats.syntax.either._
+import cats.syntax.traverse._
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest._
 import scala.util.Try
@@ -9,7 +12,11 @@ import scala.concurrent.duration._
 
 case class Item(name: String)
 
-class Fs2SubscriberTest extends WordSpec with DockerTests with Matchers with BeforeAndAfterAll {
+class Fs2SubscriberTest
+    extends WordSpec
+    with DockerTests
+    with Matchers
+    with BeforeAndAfterAll {
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   private val indexName = getClass.getSimpleName.toLowerCase
@@ -38,15 +45,16 @@ class Fs2SubscriberTest extends WordSpec with DockerTests with Matchers with Bef
   )
 
   override protected def beforeAll(): Unit = {
-    Try {
-      client.execute {
-        createIndex(indexName)
-      }.await
-    }
+    Try(client.execute(deleteIndex(indexName)).await)
+    Try(client.execute(createIndex(indexName)).await)
 
     client.execute {
       bulk(emperors.map(indexInto(indexName / indexType).source(_))).refreshImmediately
     }.await
+  }
+
+  override protected def afterAll(): Unit = {
+    Try(client.execute(deleteIndex(indexName)).await)
   }
 
   import com.sksamuel.elastic4s.cats.effect.instances._
@@ -61,7 +69,21 @@ class Fs2SubscriberTest extends WordSpec with DockerTests with Matchers with Bef
 
     "get all the results" in {
       val searchRequest = search(indexName) query "*:*" scroll 20.seconds limit 2
-      subscriber.stream(searchRequest).take(emperors.length).compile.toList.unsafeRunSync() should have size emperors.length
+
+      val items = subscriber
+        .stream(searchRequest)
+        .take(emperors.length)
+        .compile
+        .toList
+        .unsafeRunSync()
+
+      val resultsAsItems = items
+        .traverse(_.safeTo[Item])
+        .toEither
+        .valueOr(ex => fail("Error decoding items", ex))
+
+      items should have size emperors.length
+      resultsAsItems should contain theSameElementsAs emperors
     }
   }
 
