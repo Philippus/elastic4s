@@ -21,6 +21,7 @@ lazy val root = Project("elastic4s", file("."))
     sttp,
     akka,
     httpstreams,
+    fs2streams,
     embedded
   )
 
@@ -133,6 +134,13 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
     libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test"
   )
   .dependsOn(http, testkit % "test", jackson % "test")
+
+lazy val fs2streams = Project("elastic4s-fs2-streams", file("elastic4s-fs2-streams"))
+  .settings(
+    name := "elastic4s-fs2-streams",
+    libraryDependencies += "co.fs2" %% "fs2-core" % Fs2Version
+  )
+  .dependsOn(http, cats_effect % "test", testkit % "test", jackson % "test")
 
 lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
   .settings(

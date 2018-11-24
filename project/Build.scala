@@ -27,6 +27,7 @@ object Build extends AutoPlugin {
     val ReactiveStreamsVersion = "1.0.2"
     val ScalatestVersion       = "3.0.5"
     val Slf4jVersion           = "1.7.25"
+    val Fs2Version             = "1.0.0"
   }
 
   import autoImport._
