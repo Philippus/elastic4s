@@ -12,12 +12,12 @@ import scala.concurrent.duration._
 import scala.language.higherKinds
 
 /**
-  * Fs2 subscriber which returns a [[fs2.Stream]] of [[SearchHit]]
+  * Search result subscriber which returns a [[fs2.Stream]] of [[SearchHit]]
   *
   * @param client The elastic client which is used under the hood.
   * @tparam F The stream effect type
   */
-class Fs2Subscriber[F[_]: Applicative: Functor: Executor: RaiseThrowable](client: ElasticClient)
+class SearchResultSubscriber[F[_]: Applicative: Functor: Executor: RaiseThrowable](client: ElasticClient)
     extends ElasticDsl with Logging {
 
   type ScrollId = String

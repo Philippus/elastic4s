@@ -4,17 +4,21 @@ import cats.effect.IO
 import cats.instances.list._
 import cats.instances.try_._
 import cats.syntax.either._
+import cats.syntax.flatMap._
 import cats.syntax.traverse._
+import com.sksamuel.elastic4s.http.search.SearchHit
 import com.sksamuel.elastic4s.testkit.DockerTests
+import fs2.Stream
 import org.scalacheck._
 import org.scalatest._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import scala.concurrent.ExecutionContext
 import scala.util.Try
 import scala.concurrent.duration._
 
 case class Item(name: String)
 
-class Fs2SubscriberTest
+class SearchResultSubscriberTest
     extends WordSpec
     with DockerTests
     with Matchers
@@ -61,10 +65,10 @@ class Fs2SubscriberTest
   }
 
   import com.sksamuel.elastic4s.cats.effect.instances._
-  val subscriber = new Fs2Subscriber[IO](client)
+  val subscriber = new SearchResultSubscriber[IO](client)
 
-  "Fs2Subscriber" should {
-    "get all the results" in {
+  "SearchResultSubscriber" should {
+    "scrolls through all the results" in {
       val keepAliveGen: Gen[Option[FiniteDuration]] =
         Gen.oneOf(List(
           None,
@@ -85,7 +89,6 @@ class Fs2SubscriberTest
 
           val results = subscriber
             .stream(searchRequest)
-            .take(emperors.length)
             .compile
             .toList
             .unsafeRunSync()
@@ -97,7 +100,6 @@ class Fs2SubscriberTest
 
           resultsAsItems should contain theSameElementsAs emperors
       }
-
     }
   }
 
