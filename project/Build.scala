@@ -26,6 +26,7 @@ object Build extends AutoPlugin {
     val PlayJsonVersion        = "2.6.9"
     val ReactiveStreamsVersion = "1.0.2"
     val ScalatestVersion       = "3.0.5"
+    val ScalamockVersion       = "4.1.0"
     val Slf4jVersion           = "1.7.25"
   }
 
