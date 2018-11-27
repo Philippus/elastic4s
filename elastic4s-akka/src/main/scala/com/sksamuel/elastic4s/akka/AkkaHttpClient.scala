@@ -93,7 +93,7 @@ class AkkaHttpClient(settings: AkkaHttpClientSettings)(implicit system: ActorSys
   private def toRequest(request: ElasticRequest): HttpRequest = {
     HttpRequest(
       method = HttpMethod.custom(request.method),
-      uri = Uri(request.endpoint).withQuery(Query(request.params.mapValues(_.toString))),
+      uri = Uri(request.endpoint).withQuery(Query(request.params)),
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
   }

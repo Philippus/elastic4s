@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s.akka
 
-import scala.util.Try
-
 import akka.actor.ActorSystem
+import com.sksamuel.elastic4s.HealthStatus
 import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.http.cat.CatAliasResponse
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
+
+import scala.util.Try
 
 class AkkaHttpClientTest extends FlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
@@ -39,5 +41,58 @@ class AkkaHttpClientTest extends FlatSpec with Matchers with DockerTests with Be
       indexInto("testindex" / "testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")
     }.await.result.result shouldBe "created"
   }
+
+  it should "work fine whith _cat endpoints " in {
+
+    client.execute {
+      catSegments()
+    }.await.result
+
+    client.execute {
+      catShards()
+    }.await.result
+
+    client.execute {
+      catNodes()
+    }.await.result
+
+    client.execute {
+      catPlugins()
+    }.await.result
+
+    client.execute {
+      catThreadPool()
+    }.await.result
+
+    client.execute {
+      catHealth()
+    }.await.result
+
+    client.execute {
+      catCount()
+    }.await.result
+
+    client.execute {
+      catMaster()
+    }.await.result
+
+    client.execute {
+      catAliases()
+    }.await.result
+
+    client.execute {
+      catIndices()
+    }.await.result
+
+    client.execute {
+      catIndices(HealthStatus.Green)
+    }.await.result
+
+    client.execute {
+      catAllocation()
+    }.await.result
+
+  }
+
 }
 
