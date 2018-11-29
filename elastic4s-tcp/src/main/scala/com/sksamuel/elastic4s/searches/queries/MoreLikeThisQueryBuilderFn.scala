@@ -17,9 +17,7 @@ object MoreLikeThisQueryBuilderFn {
 
       new MoreLikeThisQueryBuilder.Item(doc.index, doc.`type`, builder).routing(doc.routing.orNull)
     }
-
-    println(docs)
-
+    
     val builder = QueryBuilders.moreLikeThisQuery(
       q.fields.toArray,
       if (q.likeTexts.isEmpty) null else q.likeTexts.toArray,
