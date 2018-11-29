@@ -12,6 +12,7 @@ object GeoDistanceQueryBuilder {
     q.geohash.foreach(builder.geohash)
     q.point.foreach { case (lat, long) => builder.point(lat, long) }
     q.distanceStr.foreach(builder.distance)
+    q.ignoreUnmapped.foreach(builder.ignoreUnmapped)
     q.distance.foreach { case (distance, unit) => builder.distance(distance, DistanceUnit.valueOf(unit.name)) }
     q.validationMethod.foreach(builder.setValidationMethod)
     builder
