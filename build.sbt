@@ -187,7 +187,8 @@ lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
   .settings(
     name := "elastic4s-akka",
     libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5",
-    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17"
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17",
+    libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
   .dependsOn(core, http, testkit % "test")
 
