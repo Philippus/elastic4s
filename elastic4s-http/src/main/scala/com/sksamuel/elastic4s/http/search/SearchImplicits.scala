@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.http.{HttpExecutable, IndicesOptionsParams, Respon
 import com.sksamuel.elastic4s.searches.queries.term.{BuildableTermsQuery, TermsQueryDefinition}
 import com.sksamuel.elastic4s.searches.{MultiSearchDefinition, SearchDefinition}
 import org.apache.http.entity.{ContentType, StringEntity}
+import org.elasticsearch.action.search.SearchType
 import org.elasticsearch.client.RestClient
 
 import scala.concurrent.Future
@@ -57,7 +58,7 @@ trait SearchImplicits {
       request.pref.foreach(params.put("preference", _))
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
       request.routing.foreach(params.put("routing", _))
-      request.searchType.map(_.toString).foreach(params.put("search_type", _))
+      request.searchType.filter(_ != SearchType.DEFAULT).map(SearchTypeHttpParameters.convert).foreach(params.put("search_type", _))
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.version.map(_.toString).foreach(params.put("version", _))
