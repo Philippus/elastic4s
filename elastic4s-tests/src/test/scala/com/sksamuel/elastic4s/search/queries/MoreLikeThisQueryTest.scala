@@ -21,17 +21,17 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
     createIndex("drinks").mappings (
       mapping("drink") as (
         textField("text") store true analyzer StandardAnalyzer
-        ) parent "a"
+        )
     ) shards 3
   }.await
 
   client.execute {
     bulk(
-      indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id "4" parent "1",
-      indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" parent "1",
-      indexInto("drinks/drink") fields ("text" -> "Gordons popular gin UK") id "7" parent "1",
-      indexInto("drinks/drink") fields ("text" -> "coors regular is another coors beer by molson") id "8" parent "1",
-      indexInto("drinks/drink") fields ("text" -> "Hendricks upmarket gin UK") id "9" parent "1"
+      indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id "4" routing "1",
+      indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" routing "1",
+      indexInto("drinks/drink") fields ("text" -> "Gordons popular gin UK") id "7" routing "1",
+      indexInto("drinks/drink") fields ("text" -> "coors regular is another coors beer by molson") id "8" routing "1",
+      indexInto("drinks/drink") fields ("text" -> "Hendricks upmarket gin UK") id "9" routing "1"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -49,6 +49,7 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
 
     "find matches based on doc refs" in {
       val ref = DocumentRef("drinks", "drink", "4")
+
       val resp1 = client.execute {
         search("drinks").query {
           moreLikeThisQuery("text")

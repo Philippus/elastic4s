@@ -31,8 +31,7 @@ case class MoreLikeThisQuery(fields: Seq[String],
                              unlikeTexts: Seq[String] = Nil,
                              unlikeDocs: Seq[MoreLikeThisItem] = Nil,
                              stopWords: Seq[String] = Nil,
-                             queryName: Option[String] = None)
-    extends Query {
+                             queryName: Option[String] = None) extends Query {
 
   def analyzer(analyzer: String): MoreLikeThisQuery = copy(analyzer = Some(analyzer))
 
