@@ -54,7 +54,7 @@ lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
     libraryDependencies ++= Seq(
       "org.elasticsearch"                 % "elasticsearch"            % ElasticsearchVersion,
       "org.elasticsearch.client"          % "transport"                % ElasticsearchVersion,
-      "org.codelibs.elasticsearch.module" % "analysis-common"          % ElasticsearchVersion,
+      "org.codelibs.elasticsearch.module" % "analysis-common"          % "6.5.1",
       "com.carrotsearch"                  % "hppc"                     % "0.7.1",
       "joda-time"                         % "joda-time"                % "2.9.9",
       "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-smile" % JacksonVersion,
