@@ -81,13 +81,21 @@ object ElasticClient extends Logging {
   def apply[F[_] : Functor : Executor](props: ElasticProperties,
                                        requestConfigCallback: RequestConfigCallback,
                                        httpClientConfigCallback: HttpClientConfigCallback): ElasticClient = {
+
     val hosts = props.endpoints.map {
-      case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
+      case ElasticNodeEndpoint(protocol, host, port) => new HttpHost(host, port, protocol)
     }
+
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
 
-    val client = RestClient
-      .builder(hosts: _*)
+    val builder = RestClient.builder(hosts: _*)
+
+    props.prefix match {
+      case Some(prefix) => builder.setPathPrefix(prefix)
+      case _ =>
+    }
+
+    val client = builder
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
       .build()

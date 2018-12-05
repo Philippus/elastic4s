@@ -7,7 +7,9 @@ import scala.util.Try
 
 trait DockerTests extends com.sksamuel.elastic4s.http.ElasticDsl with ClientProvider {
 
-  val client = ElasticClient(ElasticProperties("http://localhost:9200"))
+  protected def elasticUri: String = "http://localhost:9200"
+
+  val client = ElasticClient(ElasticProperties(elasticUri))
 
   protected def deleteIdx(indexName: String): Unit = {
     Try {
