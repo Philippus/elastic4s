@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.http.search.SearchHandlers
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -67,5 +68,24 @@ class MultiSearchHttpTest
 
     resp.failures.head.`reason` shouldBe "no such index"
     resp.failures.head.`type` shouldBe "index_not_found_exception"
+  }
+
+  it should "correctly set the preference" in {
+
+    val request = MultiSearchHandler.build(
+      multi(
+        search("jtull") query matchQuery("name", "aqualung") preference "first_preference",
+        search("unknown") query matchAllQuery() preference "second_preference"
+      )
+    )
+
+    val expectedEntity =
+      """{"index":"jtull","preference":"first_preference"}
+        |{"query":{"match":{"name":{"query":"aqualung"}}}}
+        |{"index":"unknown","preference":"second_preference"}
+        |{"query":{"match_all":{}}}
+        |""".stripMargin
+
+    request.entity.head.get shouldBe expectedEntity
   }
 }
