@@ -14,7 +14,6 @@ import org.elasticsearch.plugins.Plugin
 import org.elasticsearch.script.mustache.MustachePlugin
 import org.elasticsearch.transport.Netty4Plugin
 
-import scala.collection.JavaConverters._
 import scala.util.Try
 
 trait LocalNode {
@@ -50,9 +49,11 @@ class RemoteLocalNode(val clusterName: String,
   override def port: Int    = httpAddress.split(':').last.toInt
 }
 
+import scala.collection.JavaConverters._
+
 // a new locally started internal node
 class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
-    extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
+  extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJavaCollection, false)
     with LocalNode
     with Logging {
   super.start()
@@ -130,6 +131,7 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
         stop()
     }
   }
+  override def registerDerivedNodeNameWithLogger(nodeName: String): Unit = ()
 }
 
 object LocalNode {
