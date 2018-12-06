@@ -54,6 +54,17 @@ class ElasticPropertiesTest extends FlatSpec with Matchers {
       http.ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234), ElasticNodeEndpoint("https", "host2", 2345)), Some("/prefix/path"))
   }
 
+  it should "parse multiple hosts and a global prefix" in {
+    val expectedEndpoints = Seq(
+      ElasticNodeEndpoint("https", "host1", 11),
+      ElasticNodeEndpoint("https", "host2", 22),
+      ElasticNodeEndpoint("https", "host3", 33)
+    )
+
+    ElasticProperties("https://host1:11,host2:22,host3:33/prefixGlobal?fizz=buzz") shouldBe
+      http.ElasticProperties(expectedEndpoints, Some("/prefixGlobal"), Map("fizz" -> "buzz"))
+  }
+
   it should "support prefix path with trailing slash" in {
     ElasticProperties("https://host1:1234,host2:2345/prefix/path/") shouldBe
       http.ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234), ElasticNodeEndpoint("https", "host2", 2345)), Some("/prefix/path"))
