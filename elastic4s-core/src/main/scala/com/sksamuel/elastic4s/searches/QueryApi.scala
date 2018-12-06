@@ -139,7 +139,7 @@ trait QueryApi {
   def matchNoneQuery() = MatchNoneQuery()
   def matchAllQuery()  = MatchAllQuery()
 
-  def moreLikeThisQuery(first: String, rest: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(first +: rest)
+  def moreLikeThisQuery(field: String, fields: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(field +: fields)
   def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(fields.toSeq)
   def moreLikeThisQuery(): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(Nil)
 

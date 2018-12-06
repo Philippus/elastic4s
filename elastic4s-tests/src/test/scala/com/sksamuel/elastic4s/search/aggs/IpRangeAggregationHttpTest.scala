@@ -47,8 +47,8 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
 
       val agg = resp.aggs.ipRange("ip_ranges")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        IpRangeBucket(None, 2, None, Some("10.0.0.5"), Map.empty),
-        IpRangeBucket(None, 3, Some("10.0.0.5"), None, Map.empty)
+        IpRangeBucket(Some("*-10.0.0.5"), 2, None, Some("10.0.0.5"), Map.empty),
+        IpRangeBucket(Some("10.0.0.5-*"), 3, Some("10.0.0.5"), None, Map.empty)
       )
     }
 

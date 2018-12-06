@@ -14,9 +14,9 @@ import org.elasticsearch.plugins.Plugin
 import org.elasticsearch.script.mustache.MustachePlugin
 import org.elasticsearch.transport.Netty4Plugin
 
-import scala.collection.JavaConverters._
 import scala.util.Try
 
+@deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
 trait LocalNode {
   def nodeId: String
   def ip: String
@@ -32,6 +32,7 @@ trait LocalNode {
 }
 
 // a connection to a local node that was already started
+@deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
 class RemoteLocalNode(val clusterName: String,
                       val nodeId: String,
                       val ip: String,
@@ -50,9 +51,12 @@ class RemoteLocalNode(val clusterName: String,
   override def port: Int    = httpAddress.split(':').last.toInt
 }
 
+import scala.collection.JavaConverters._
+
 // a new locally started internal node
+@deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
 class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
-    extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJava)
+  extends Node(InternalSettingsPreparer.prepareEnvironment(settings, null), plugins.asJavaCollection, false)
     with LocalNode
     with Logging {
   super.start()
@@ -130,12 +134,15 @@ class InternalLocalNode(settings: Settings, plugins: List[Class[_ <: Plugin]])
         stop()
     }
   }
+  override def registerDerivedNodeNameWithLogger(nodeName: String): Unit = ()
 }
 
+@deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
 object LocalNode {
 
   // creates a LocalNode with all settings provided by the user
   // and using default plugins
+  @deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
   def apply(settings: Settings): InternalLocalNode = {
     require(settings.get("cluster.name") != null)
     require(settings.get("path.home") != null)
@@ -157,12 +164,14 @@ object LocalNode {
   }
 
   // creates a LocalNode with all settings provided by the user
+  @deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
   def apply(map: Map[String, String]): InternalLocalNode = {
     val settings = map.foldLeft(Settings.builder) { case (builder, (key, value)) => builder.put(key, value) }.build()
     apply(settings)
   }
 
   // returns the minimum required settings to create a local node
+  @deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
   def requiredSettings(clusterName: String, homePath: String): Map[String, String] =
     Map(
       "cluster.name"                 -> clusterName,
@@ -176,5 +185,6 @@ object LocalNode {
     * Creates a new LocalNode with default settings using the given cluster name and home path.
     * Other required directories are created inside the path home folder.
     */
+  @deprecated("The elasticsearch embedded module will be removed in 7.0", "6.5")
   def apply(clusterName: String, pathHome: String): InternalLocalNode = apply(requiredSettings(clusterName, pathHome))
 }

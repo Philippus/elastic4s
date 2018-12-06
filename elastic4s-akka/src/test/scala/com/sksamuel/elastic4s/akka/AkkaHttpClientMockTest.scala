@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.akka
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
 import com.sksamuel.elastic4s.akka.AkkaHttpClient.AllHostsBlacklistedException
 import com.sksamuel.elastic4s.http.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
+import org.scalamock.function.MockFunction1
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
@@ -18,16 +18,15 @@ class AkkaHttpClientMockTest
     with ScalaFutures
     with BeforeAndAfterAll {
 
-  private implicit lazy val system = ActorSystem()
+  private implicit lazy val system: ActorSystem = ActorSystem()
 
   override def afterAll: Unit = {
     system.terminate()
   }
 
-  def mockHttpPool() = {
+  def mockHttpPool(): (MockFunction1[HttpRequest, Try[HttpResponse]], TestHttpPoolFactory) = {
     val sendRequest = mockFunction[HttpRequest, Try[HttpResponse]]
     val poolFactory = new TestHttpPoolFactory(sendRequest)
-
     (sendRequest, poolFactory)
   }
 
