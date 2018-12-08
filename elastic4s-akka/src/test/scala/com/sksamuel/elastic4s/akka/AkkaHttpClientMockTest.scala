@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.akka.AkkaHttpClient.AllHostsBlacklistedException
 import com.sksamuel.elastic4s.http.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
 import org.scalamock.function.MockFunction1
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.concurrent._
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 class AkkaHttpClientMockTest
@@ -16,6 +16,7 @@ class AkkaHttpClientMockTest
     with Matchers
     with MockFactory
     with ScalaFutures
+    with IntegrationPatience
     with BeforeAndAfterAll {
 
   private implicit lazy val system: ActorSystem = ActorSystem()

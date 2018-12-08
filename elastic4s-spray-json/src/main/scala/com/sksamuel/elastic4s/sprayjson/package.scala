@@ -18,4 +18,11 @@ package object sprayjson {
       r.read(hit.sourceAsString.parseJson)
     }
   }
+
+  @implicitNotFound("No RootJsonReader for type ${T} found. Bring an implicit RootJsonReader[T] instance in scope")
+  implicit def sprayJsonAggReader[T](implicit r: RootJsonReader[T]): AggReader[T] = new AggReader[T] {
+    override def read(json: String): Try[T] = Try {
+      r.read(json.parseJson)
+    }
+  }
 }

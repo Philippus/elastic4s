@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.json4s
 
-import com.sksamuel.elastic4s.{Hit, HitReader, Indexable}
+import com.sksamuel.elastic4s.{AggReader, Hit, HitReader, Indexable}
 import org.json4s._
 
 import scala.reflect.Manifest
@@ -13,6 +13,13 @@ object ElasticJson4s {
       new HitReader[T] {
         override def read(hit: Hit): Try[T] = Try {
           json4s.read[T](hit.sourceAsString)
+        }
+      }
+
+    implicit def Json4sAggReader[T](implicit json4s: Serialization, formats: Formats, mf: Manifest[T]): AggReader[T] =
+      new AggReader[T] {
+        override def read(json: String): Try[T] = Try {
+          json4s.read[T](json)
         }
       }
 

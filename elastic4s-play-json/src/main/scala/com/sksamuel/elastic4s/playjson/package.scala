@@ -18,4 +18,11 @@ package object playjson {
       Json.parse(hit.sourceAsString).as[T]
     }
   }
+
+  @implicitNotFound("No Reads for type ${T} found. Bring an implicit Reads[T] instance in scope")
+  implicit def playJsonAggReader[T](implicit r: Reads[T]): AggReader[T] = new AggReader[T] {
+    override def read(json: String): Try[T] = Try {
+      Json.parse(json).as[T]
+    }
+  }
 }
