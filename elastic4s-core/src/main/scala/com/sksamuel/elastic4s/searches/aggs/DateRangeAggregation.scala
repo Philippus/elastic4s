@@ -34,8 +34,8 @@ case class DateRangeAggregation(name: String,
   def unboundedFrom(from: ElasticDate): DateRangeAggregation              = copy(unboundedFrom = unboundedFrom :+ (None, from))
   def unboundedFrom(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedFrom = unboundedFrom :+(key.some, from))
 
-  def unboundedTo(from: ElasticDate): DateRangeAggregation              = copy(unboundedTo = unboundedFrom :+ (None, from))
-  def unboundedTo(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedTo = unboundedFrom :+ (key.some, from))
+  def unboundedTo(from: ElasticDate): DateRangeAggregation              = copy(unboundedTo = unboundedTo :+ (None, from))
+  def unboundedTo(key: String, from: ElasticDate): DateRangeAggregation = copy(unboundedTo = unboundedTo :+ (key.some, from))
 
   def format(fmt: String): DateRangeAggregation = copy(format = fmt.some)
 
