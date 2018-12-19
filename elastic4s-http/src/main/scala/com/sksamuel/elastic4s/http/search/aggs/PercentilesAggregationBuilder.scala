@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http.search.aggs
 
+import com.sksamuel.elastic4s.http.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.aggs.PercentilesAggregation
 
@@ -10,6 +11,9 @@ object PercentilesAggregationBuilder {
     builder.startObject("percentiles")
 
     agg.field.foreach(builder.field("field", _))
+
+    agg.script.map(ScriptBuilderFn.apply).foreach(builder.rawField("script", _))
+
     if (agg.percents.nonEmpty)
       builder.array("percents", agg.percents.toArray)
 
