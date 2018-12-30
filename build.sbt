@@ -18,9 +18,10 @@ lazy val root = Project("elastic4s", file("."))
     playjson,
     sprayjson,
     aws,
-    sttp,
-    akka,
-    httpstreams
+    clientsttp,
+    clientakka,
+    httpstreams,
+    akkastreams
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -34,9 +35,9 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     )
   )
 
-lazy val http = Project("elastic4s-http", file("elastic4s-http"))
+lazy val http = Project("elastic4s-client-esjava", file("elastic4s-client-esjava"))
   .settings(
-    name := "elastic4s-http",
+    name := "elastic4s-client-esjava",
     libraryDependencies ++= Seq(
       "org.elasticsearch.client"     % "elasticsearch-rest-client" % ElasticsearchVersion,
       "org.apache.logging.log4j"     % "log4j-api"                 % Log4jVersion % "test",
@@ -47,8 +48,8 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
   )
   .dependsOn(core)
 
-lazy val cats_effect = Project("elastic4s-cats-effect", file("elastic4s-cats-effect"))
-  .settings(name := "elastic4s-cats-effect")
+lazy val cats_effect = Project("elastic4s-effect-cats", file("elastic4s-effect-cats"))
+  .settings(name := "elastic4s-effect-cats")
   .settings(
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-effect" % CatsEffectVersion
@@ -56,8 +57,8 @@ lazy val cats_effect = Project("elastic4s-cats-effect", file("elastic4s-cats-eff
   )
   .dependsOn(http)
 
-lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
-  .settings(name := "elastic4s-scalaz")
+lazy val scalaz = Project("elastic4s-effect-scalaz", file("elastic4s-effect-scalaz"))
+  .settings(name := "elastic4s-effect-scalaz")
   .settings(
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core"       % ScalazVersion,
@@ -66,8 +67,8 @@ lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   )
   .dependsOn(http)
 
-lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
-  .settings(name := "elastic4s-monix")
+lazy val monix = Project("elastic4s-effect-monix", file("elastic4s-effect-monix"))
+  .settings(name := "elastic4s-effect-monix")
   .settings(
     libraryDependencies ++= Seq(
       "io.monix" %% "monix" % MonixVersion
@@ -93,9 +94,16 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
   )
   .dependsOn(http, testkit % "test", jackson % "test")
 
-lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
+lazy val akkastreams = Project("elastic4s-streams-akka", file("elastic4s-streams-akka"))
   .settings(
-    name := "elastic4s-jackson",
+    name := "elastic4s-streams-akka",
+    libraryDependencies += "com.typesafe.akka" % "akka-stream_2.11" % AkkaVersion
+  )
+  .dependsOn(http, testkit % "test", jackson % "test")
+
+lazy val jackson = Project("elastic4s-json-jackson", file("elastic4s-json-jackson"))
+  .settings(
+    name := "elastic4s-json-jackson",
     libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-core"          % JacksonVersion,
     libraryDependencies += "com.fasterxml.jackson.core"     % "jackson-databind"      % JacksonVersion,
     libraryDependencies += "com.fasterxml.jackson.module"   %% "jackson-module-scala" % JacksonVersion exclude ("org.scala-lang", "scala-library"),
@@ -103,57 +111,57 @@ lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
   )
   .dependsOn(core)
 
-lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
+lazy val circe = Project("elastic4s-json-circe", file("elastic4s-json-circe"))
   .settings(
-    name := "elastic4s-circe",
+    name := "elastic4s-json-circe",
     libraryDependencies += "io.circe" %% "circe-core"    % CirceVersion,
     libraryDependencies += "io.circe" %% "circe-generic" % CirceVersion,
     libraryDependencies += "io.circe" %% "circe-parser"  % CirceVersion
   )
   .dependsOn(core)
 
-lazy val json4s = Project("elastic4s-json4s", file("elastic4s-json4s"))
+lazy val json4s = Project("elastic4s-json-json4s", file("elastic4s-json-json4s"))
   .settings(
-    name := "elastic4s-json4s",
+    name := "elastic4s-json-json4s",
     libraryDependencies += "org.json4s" %% "json4s-core"    % Json4sVersion,
     libraryDependencies += "org.json4s" %% "json4s-jackson" % Json4sVersion
   )
   .dependsOn(core)
 
-lazy val playjson = Project("elastic4s-play-json", file("elastic4s-play-json"))
+lazy val playjson = Project("elastic4s-json-play", file("elastic4s-json-play"))
   .settings(
-    name := "elastic4s-play-json",
+    name := "elastic4s-json-play",
     libraryDependencies += "com.typesafe.play" %% "play-json" % PlayJsonVersion
   )
   .dependsOn(core)
 
-lazy val sprayjson = Project("elastic4s-spray-json", file("elastic4s-spray-json"))
+lazy val sprayjson = Project("elastic4s-json-spray", file("elastic4s-json-spray"))
   .settings(
-    name := "elastic4s-spray-json",
+    name := "elastic4s-json-spray",
     libraryDependencies += "io.spray" %% "spray-json" % SprayJsonVersion
   )
   .dependsOn(core)
 
-lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
+lazy val clientsttp = Project("elastic4s-client-sttp", file("elastic4s-client-sttp"))
   .settings(
-    name := "elastic4s-sttp",
+    name := "elastic4s-client-sttp",
     libraryDependencies += "com.softwaremill.sttp" %% "core"                             % SttpVersion,
     libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % SttpVersion
   )
   .dependsOn(core, http)
 
-lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
+lazy val clientakka = Project("elastic4s-client-akka", file("elastic4s-client-akka"))
   .settings(
-    name := "elastic4s-akka",
+    name := "elastic4s-client-akka",
     libraryDependencies += "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
     libraryDependencies += "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
     libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
   .dependsOn(core, http, testkit % "test")
 
-lazy val aws = Project("elastic4s-aws", file("elastic4s-aws"))
+lazy val aws = Project("elastic4s-client-aws", file("elastic4s-client-aws"))
   .settings(
-    name := "elastic4s-aws",
+    name := "elastic4s-client-aws",
     libraryDependencies += "com.amazonaws" % "aws-java-sdk-core" % AWSJavaSdkVersion
   )
   .dependsOn(core, http)
