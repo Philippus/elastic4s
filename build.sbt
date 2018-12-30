@@ -20,8 +20,7 @@ lazy val root = Project("elastic4s", file("."))
     aws,
     sttp,
     akka,
-    httpstreams,
-    embedded
+    httpstreams
   )
 
 lazy val core = Project("elastic4s-core", file("elastic4s-core"))
@@ -48,51 +47,11 @@ lazy val http = Project("elastic4s-http", file("elastic4s-http"))
   )
   .dependsOn(core)
 
-lazy val embedded = Project("elastic4s-embedded", file("elastic4s-embedded"))
-  .settings(
-    name := "elastic4s-embedded",
-    libraryDependencies ++= Seq(
-      "org.elasticsearch"                 % "elasticsearch"            % ElasticsearchVersion,
-      "org.elasticsearch.client"          % "transport"                % ElasticsearchVersion,
-      "org.codelibs.elasticsearch.module" % "analysis-common"          % "6.5.1",
-      "com.carrotsearch"                  % "hppc"                     % "0.7.1",
-      "joda-time"                         % "joda-time"                % "2.9.9",
-      "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-smile" % JacksonVersion,
-      "com.fasterxml.jackson.dataformat"  % "jackson-dataformat-cbor"  % JacksonVersion
-//"org.locationtech.spatial4j" % "spatial4j"               % "0.6",
-//"com.vividsolutions"         % "jts"                     % "1.13",
-//"io.netty"                   % "netty-all"               % "4.1.10.Final",
-//"org.apache.lucene"          % "lucene-core"             % LuceneVersion,
-//"org.apache.lucene"          % "lucene-analyzers-common" % LuceneVersion,
-//"org.apache.lucene"          % "lucene-backward-codecs"  % LuceneVersion,
-//"org.apache.lucene"          % "lucene-grouping"         % LuceneVersion,
-//"org.apache.lucene"          % "lucene-highlighter"      % LuceneVersion,
-//"org.apache.lucene"          % "lucene-join"             % LuceneVersion,
-//"org.apache.lucene"          % "lucene-memory"           % LuceneVersion,
-//"org.apache.lucene"          % "lucene-misc"             % LuceneVersion,
-//"org.apache.lucene"          % "lucene-queries"          % LuceneVersion,
-//"org.apache.lucene"          % "lucene-queryparser"      % LuceneVersion,
-//"org.apache.lucene"          % "lucene-sandbox"          % LuceneVersion,
-//"org.apache.lucene"          % "lucene-spatial"          % LuceneVersion,
-//"org.apache.lucene"          % "lucene-spatial-extras"   % LuceneVersion,
-//"org.apache.lucene"          % "lucene-spatial3d"        % LuceneVersion,
-//"org.apache.lucene"          % "lucene-suggest"          % LuceneVersion,
-//"org.apache.lucene"          % "lucene-join"             % LuceneVersion,
-//"org.apache.logging.log4j"   % "log4j-api"               % Log4jVersion,
-//"org.apache.logging.log4j"   % "log4j-core"              % Log4jVersion,
-//"org.apache.logging.log4j"   % "log4j-1.2-api"           % Log4jVersion,
-//"org.apache.logging.log4j"   % "log4j-slf4j-impl"        % Log4jVersion,
-//"com.fasterxml.jackson.core" % "jackson-core"            % JacksonVersion,
-//"com.tdunning"               % "t-digest"                % "3.1"
-    )
-  )
-  .dependsOn(http)
-
 lazy val cats_effect = Project("elastic4s-cats-effect", file("elastic4s-cats-effect"))
   .settings(name := "elastic4s-cats-effect")
   .settings(
     libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-effect" % "0.8"
+      "org.typelevel" %% "cats-effect" % CatsEffectVersion
     )
   )
   .dependsOn(http)
@@ -101,8 +60,8 @@ lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   .settings(name := "elastic4s-scalaz")
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core"       % "7.2.24",
-      "org.scalaz" %% "scalaz-concurrent" % "7.2.24"
+      "org.scalaz" %% "scalaz-core"       % ScalazVersion,
+      "org.scalaz" %% "scalaz-concurrent" % ScalazVersion
     )
   )
   .dependsOn(http)
@@ -111,7 +70,7 @@ lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
   .settings(name := "elastic4s-monix")
   .settings(
     libraryDependencies ++= Seq(
-      "io.monix" %% "monix" % "2.3.3"
+      "io.monix" %% "monix" % MonixVersion
     )
   )
   .dependsOn(http)
@@ -178,16 +137,16 @@ lazy val sprayjson = Project("elastic4s-spray-json", file("elastic4s-spray-json"
 lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
   .settings(
     name := "elastic4s-sttp",
-    libraryDependencies += "com.softwaremill.sttp" %% "core"                             % "1.2.0",
-    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.2.0"
+    libraryDependencies += "com.softwaremill.sttp" %% "core"                             % SttpVersion,
+    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % SttpVersion
   )
   .dependsOn(core, http)
 
 lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
   .settings(
     name := "elastic4s-akka",
-    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5",
-    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17",
+    libraryDependencies += "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
     libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
   .dependsOn(core, http, testkit % "test")

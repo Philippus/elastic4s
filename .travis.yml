@@ -11,7 +11,7 @@ cache:
     - $HOME/.sbt
 
 before_install:
-- docker run -d -p 9200:9200 -p 9300:9300 -e "path.repo=/tmp" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.5.2
+- docker run -d -p 9200:9200 -p 9300:9300 -e "path.repo=/tmp" -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.0.0-alpha2
 
 before_cache:
   - find $HOME/.sbt -name "*.lock" | xargs rm

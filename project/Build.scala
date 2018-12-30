@@ -11,22 +11,27 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
-    val AkkaVersion            = "2.5.13"
+    val AkkaVersion            = "2.5.19"
+    val AkkaHttpVersion        = "10.1.6"
     val CatsVersion            = "1.4.0"
-    val CirceVersion           = "0.9.3"
+    val CatsEffectVersion      = "1.1.0"
+    val CirceVersion           = "0.11.0"
     val CommonsIoVersion       = "2.4"
-    val ElasticsearchVersion   = "6.5.2"
-    val ExtsVersion            = "1.60.0"
-    val JacksonVersion         = "2.9.6"
-    val Json4sVersion          = "3.6.1"
-    val SprayJsonVersion       = "1.3.4"
-    val AWSJavaSdkVersion      = "1.11.342"
+    val ElasticsearchVersion   = "7.0.0-alpha2"
+    val ExtsVersion            = "1.61.0"
+    val JacksonVersion         = "2.9.8"
+    val Json4sVersion          = "3.6.3"
+    val AWSJavaSdkVersion      = "1.11.475"
     val Log4jVersion           = "2.9.1"
     val MockitoVersion         = "1.9.5"
+    val MonixVersion           = "2.3.3"
     val PlayJsonVersion        = "2.6.9"
     val ReactiveStreamsVersion = "1.0.2"
     val ScalatestVersion       = "3.0.5"
     val ScalamockVersion       = "4.1.0"
+    val ScalazVersion          = "7.2.27"
+    val SprayJsonVersion       = "1.3.4"
+    val SttpVersion            = "1.5.2"
     val Slf4jVersion           = "1.7.25"
   }
 
@@ -34,8 +39,8 @@ object Build extends AutoPlugin {
 
   override def projectSettings = Seq(
     organization := org,
-    scalaVersion := "2.12.6",
-    crossScalaVersions := Seq("2.11.12", "2.12.6"),
+    scalaVersion := "2.12.8",
+    crossScalaVersions := Seq("2.11.12", "2.12.8"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
