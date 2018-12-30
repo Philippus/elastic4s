@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.http.search.InnerHits
-import com.sksamuel.elastic4s.mappings.Child
-import com.sksamuel.elastic4s.searches.queries.InnerHit
+import com.sksamuel.elastic4s.requests.mappings.Child
+import com.sksamuel.elastic4s.requests.searches.InnerHits
+import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
@@ -40,7 +40,7 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
           1,
           Some(1.0),
           List(
-            com.sksamuel.elastic4s.http.search.InnerHit(
+            com.sksamuel.elastic4s.requests.searches.InnerHit(
               indexName,
               "football",
               "2",

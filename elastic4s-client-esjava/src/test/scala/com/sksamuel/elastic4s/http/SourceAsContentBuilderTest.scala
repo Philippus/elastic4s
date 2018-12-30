@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.http
 
+import com.sksamuel.elastic4s.SourceAsContentBuilder
 import org.scalatest.{FunSuite, Matchers}
 
 class SourceAsContentBuilderTest extends FunSuite with Matchers {

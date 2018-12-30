@@ -1,0 +1,13 @@
+{
+  "script_score": {
+    "script": {
+      "source": "some script",
+      "lang": "java",
+      "params": {
+        "param1": "value1",
+        "param2": "value2"
+      }
+    }
+  },
+  "weight": 0.4
+}

@@ -1,0 +1,42 @@
+{
+    "aggs": {
+        "sales_per_month": {
+            "date_histogram": {
+                "interval": "1M",
+                "field": "date"
+            },
+            "aggs": {
+                "total_sales": {
+                    "sum": {
+                        "field": "price"
+                    }
+                },
+                "t-shirts": {
+                    "filter": {
+                        "term": {
+                            "type": {
+                                "value": "t-shirt"
+                            }
+                        }
+                    },
+                    "aggs": {
+                        "sales": {
+                            "sum": {
+                                "field": "price"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "t-shirt-percentage": {
+            "bucket_script": {
+                "buckets_path": {
+                    "tShirtSales": "t-shirts>sales",
+                    "totalSales": "total_sales"
+                },
+                "script": "params.tShirtSales / params.totalSales * 100"
+            }
+        }
+    }
+}

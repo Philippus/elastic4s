@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -42,11 +42,11 @@ class FieldNamesFieldTest extends FlatSpec with Matchers with DockerTests {
     }.await.result.totalHits shouldBe 1
 
     client.execute {
-      search("space").query(fieldNamesQuery("name"))
+      search("space").query(existsQuery("name"))
     }.await.result.totalHits shouldBe 2
 
     client.execute {
-      search("space").query(fieldNamesQuery("location"))
+      search("space").query(existsQuery("location"))
     }.await.result.totalHits shouldBe 1
   }
 }

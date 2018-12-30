@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.akka
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.HealthStatus
-import com.sksamuel.elastic4s.http.ElasticClient
-import com.sksamuel.elastic4s.http.cat.CatAliasResponse
+import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
 
@@ -11,7 +10,7 @@ import scala.util.Try
 
 class AkkaHttpClientTest extends FlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
-  private implicit lazy val system = ActorSystem()
+  private implicit lazy val system: ActorSystem = ActorSystem()
 
   override def beforeAll: Unit = {
     Try {

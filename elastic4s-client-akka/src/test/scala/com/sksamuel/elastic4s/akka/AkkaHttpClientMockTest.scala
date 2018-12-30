@@ -4,8 +4,9 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
+import com.sksamuel.elastic4s.ElasticRequest
 import com.sksamuel.elastic4s.akka.AkkaHttpClient.AllHostsBlacklistedException
-import com.sksamuel.elastic4s.http.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
+import com.sksamuel.elastic4s.{HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
 import org.scalamock.function.MockFunction1
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.concurrent._

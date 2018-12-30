@@ -2,21 +2,22 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
-import com.sksamuel.elastic4s.searches.aggs.{SubAggCollectionMode, TermsOrder}
-import com.sksamuel.elastic4s.searches.queries.funcscorer.MultiValueMode
-import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance
-import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
-import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
-import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
-import com.sksamuel.elastic4s.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
-import com.sksamuel.elastic4s.searches.{DateHistogramInterval, GeoPoint, QueryRescoreMode, ScoreMode, SearchType}
+import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, Preference, ValueType}
+import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
+import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.MultiValueMode
+import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
+import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
+import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
+import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
+import com.sksamuel.elastic4s.requests.searches.{DateHistogramInterval, GeoPoint, QueryRescoreMode, ScoreMode, SearchType}
 import org.joda.time.DateTimeZone
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 
 class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import ElasticDsl._
 
   "the search dsl" should "accept wildcards for index and types" in {
     val req = search("*") types "*" limit 10
@@ -208,9 +209,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for a boolean query with filter" in {
     val req = search("*") limit 5 query {
-      bool {
-        must(termQuery("title", "Search")).filter(termQuery("status", "published"))
-      }
+      boolQuery().must(termQuery("title", "Search")).filter(termQuery("status", "published"))
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_boolean_with_filter.json")
   }
@@ -515,12 +514,11 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for geo distance filter" in {
     val req = search("music") types "bands" postFilter {
-      bool(
-        should(
+      boolQuery()
+        .should(
           geoDistanceQuery("distance") geohash "geo1234" geoDistance GeoDistance.Plane distance "120mi"
-        ) not (
-          geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.Yard)
-          )
+        ).not(
+        geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.Yard)
       )
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_filter_geo_distance.json")

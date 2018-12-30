@@ -2,15 +2,15 @@ package com.sksamuel.elastic4s.akka
 
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success, Try}
-
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
 import akka.stream.scaladsl.{FileIO, Keep, Sink, Source, StreamConverters}
 import akka.stream.{ActorMaterializer, OverflowStrategy, QueueOfferResult}
 import akka.util.ByteString
-import com.sksamuel.elastic4s.http.HttpEntity.StringEntity
-import com.sksamuel.elastic4s.http.{ElasticRequest, HttpClient => ElasticHttpClient, HttpEntity => ElasticHttpEntity, HttpResponse => ElasticHttpResponse}
+import com.sksamuel.elastic4s.ElasticRequest
+import com.sksamuel.elastic4s.HttpEntity.StringEntity
+import com.sksamuel.elastic4s.{HttpClient => ElasticHttpClient, HttpEntity => ElasticHttpEntity, HttpResponse => ElasticHttpResponse}
 
 class AkkaHttpClient private[akka](
                                     settings: AkkaHttpClientSettings,
@@ -21,7 +21,7 @@ class AkkaHttpClient private[akka](
   import AkkaHttpClient._
   import system.dispatcher
 
-  private implicit val materializer = ActorMaterializer()
+  private implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   private val scheme = if (settings.https) "https" else "http"
 

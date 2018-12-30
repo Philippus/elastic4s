@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.jackson.ElasticJackson
+import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
 import org.reactivestreams.tck.{SubscriberWhiteboxVerification, TestEnvironment}
@@ -20,7 +20,7 @@ class BulkIndexingSubscriberWhiteboxTest
       createIndex("bulkindexwhitebox")
     }.await
   } catch {
-    case e: Exception =>
+    case _: Exception =>
   }
 
   object ItemRequestBuilder extends RequestBuilder[Item] {

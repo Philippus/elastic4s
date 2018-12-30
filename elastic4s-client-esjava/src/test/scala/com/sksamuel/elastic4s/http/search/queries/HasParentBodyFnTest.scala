@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.http.search.queries.nested.HasParentBodyFn
-import com.sksamuel.elastic4s.searches.queries.{HasParentQuery, InnerHit}
-import com.sksamuel.elastic4s.searches.queries.matches.MatchQuery
+import com.sksamuel.elastic4s.requests.searches.queries.{HasParentQuery, InnerHit}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
+import com.sksamuel.elastic4s.requests.searches.queries.nested.HasParentBodyFn
 import org.scalatest.{FunSuite, Matchers}
 
 class HasParentBodyFnTest extends FunSuite with Matchers {

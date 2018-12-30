@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.http.ElasticDsl
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
-import com.sksamuel.elastic4s.{ElasticDateMath, Years}
+import com.sksamuel.elastic4s.{ElasticDateMath, ElasticDsl, Years}
 import org.scalatest.WordSpec
 
 import scala.util.Try

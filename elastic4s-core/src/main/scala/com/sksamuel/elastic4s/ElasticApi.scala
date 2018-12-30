@@ -1,44 +1,45 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.admin.IndexAdminApi
-import com.sksamuel.elastic4s.alias.AliasesApi
-import com.sksamuel.elastic4s.analyzers.{AnalyzerApi, NormalizerApi, TokenFilterApi, TokenizerApi}
-import com.sksamuel.elastic4s.bulk.BulkApi
-import com.sksamuel.elastic4s.cat.CatsApi
-import com.sksamuel.elastic4s.cluster.ClusterApi
-import com.sksamuel.elastic4s.count.CountApi
-import com.sksamuel.elastic4s.delete.DeleteApi
-import com.sksamuel.elastic4s.explain.ExplainApi
-import com.sksamuel.elastic4s.get.GetApi
-import com.sksamuel.elastic4s.indexes.admin.{ForceMergeApi, IndexRecoveryApi}
-import com.sksamuel.elastic4s.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
-import com.sksamuel.elastic4s.locks.LocksApi
-import com.sksamuel.elastic4s.mappings.MappingApi
-import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicTemplateApi
-import com.sksamuel.elastic4s.nodes.NodesApi
-import com.sksamuel.elastic4s.reindex.ReindexApi
-import com.sksamuel.elastic4s.script.ScriptApi
-import com.sksamuel.elastic4s.searches._
-import com.sksamuel.elastic4s.searches.aggs.AggregationApi
-import com.sksamuel.elastic4s.searches.aggs.pipeline.PipelineAggregationApi
-import com.sksamuel.elastic4s.searches.collapse.CollapseApi
-import com.sksamuel.elastic4s.searches.queries.funcscorer.ScoreApi
-import com.sksamuel.elastic4s.searches.sort.SortApi
-import com.sksamuel.elastic4s.searches.suggestion.SuggestionApi
-import com.sksamuel.elastic4s.settings.SettingsApi
-import com.sksamuel.elastic4s.snapshots.SnapshotApi
-import com.sksamuel.elastic4s.task.TaskApi
-import com.sksamuel.elastic4s.termvectors.TermVectorApi
-import com.sksamuel.elastic4s.update.UpdateApi
-import com.sksamuel.elastic4s.validate.ValidateApi
+import com.sksamuel.elastic4s.requests.{ExistsApi, TypesApi}
+import com.sksamuel.elastic4s.requests.cluster.ClusterApi
+import com.sksamuel.elastic4s.requests.count.CountApi
+import com.sksamuel.elastic4s.requests.delete.DeleteApi
+import com.sksamuel.elastic4s.requests.explain.ExplainApi
+import com.sksamuel.elastic4s.requests.indexes.admin.{ForceMergeApi, IndexRecoveryApi}
+import com.sksamuel.elastic4s.requests.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
+import com.sksamuel.elastic4s.requests.mappings.MappingApi
+import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicTemplateApi
+import com.sksamuel.elastic4s.requests.admin.IndexAdminApi
+import com.sksamuel.elastic4s.requests.alias.AliasesApi
+import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerApi, NormalizerApi, TokenFilterApi, TokenizerApi}
+import com.sksamuel.elastic4s.requests.nodes.NodesApi
+import com.sksamuel.elastic4s.requests.reindex.ReindexApi
+import com.sksamuel.elastic4s.requests.bulk.BulkApi
+import com.sksamuel.elastic4s.requests.cat.CatsApi
+import com.sksamuel.elastic4s.requests.get.GetApi
+import com.sksamuel.elastic4s.requests.locks.LocksApi
+import com.sksamuel.elastic4s.requests.script.ScriptApi
+import com.sksamuel.elastic4s.requests.searches._
+import com.sksamuel.elastic4s.requests.searches.aggs.AggregationApi
+import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAggregationApi
+import com.sksamuel.elastic4s.requests.searches.collapse.CollapseApi
+import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.ScoreApi
+import com.sksamuel.elastic4s.requests.searches.sort.SortApi
+import com.sksamuel.elastic4s.requests.searches.suggestion.SuggestionApi
+import com.sksamuel.elastic4s.requests.settings.SettingsApi
+import com.sksamuel.elastic4s.requests.snapshots.SnapshotApi
+import com.sksamuel.elastic4s.requests.task.TaskApi
+import com.sksamuel.elastic4s.requests.termvectors.TermVectorApi
+import com.sksamuel.elastic4s.requests.update.UpdateApi
+import com.sksamuel.elastic4s.requests.validate.ValidateApi
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
 // contains all the syntactic definitions
 trait ElasticApi
-    extends ElasticImplicits
-    with AliasesApi
+  extends AliasesApi
+    with ElasticImplicits
     with AggregationApi
     with AnalyzerApi
     with BulkApi

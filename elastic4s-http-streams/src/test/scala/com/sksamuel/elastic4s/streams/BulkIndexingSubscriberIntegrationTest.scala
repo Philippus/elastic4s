@@ -1,19 +1,10 @@
 package com.sksamuel.elastic4s.streams
 
-import java.util.concurrent.{CountDownLatch, TimeUnit}
-import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
-import com.sksamuel.elastic4s.IndexAndTypes
-import com.sksamuel.elastic4s.bulk.BulkCompatibleRequest
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.http.bulk.BulkResponseItem
-import com.sksamuel.elastic4s.mappings.dynamictemplate.DynamicMapping.Strict
-import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
-import org.scalatest.{BeforeAndAfter, Matchers, WordSpec}
 
-
-import scala.util.{Random, Try}
+import scala.util.Random
 
 //class BulkIndexingSubscriberIntegrationTest extends WordSpec with DockerTests with Matchers with BeforeAndAfter {
 //

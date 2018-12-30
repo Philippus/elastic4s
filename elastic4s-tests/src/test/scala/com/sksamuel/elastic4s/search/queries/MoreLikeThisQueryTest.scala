@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.searches.queries.{ArtificialDocument, MoreLikeThisItem}
+import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicy}
+import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, MoreLikeThisItem}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.{DocumentRef, RefreshPolicy}
+import com.sksamuel.elastic4s.ElasticDsl
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try

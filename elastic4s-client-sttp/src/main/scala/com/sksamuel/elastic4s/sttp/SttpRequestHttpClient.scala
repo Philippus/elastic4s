@@ -3,9 +3,8 @@ package com.sksamuel.elastic4s.sttp
 import java.io._
 import java.nio.file.Files
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.HttpEntity.{FileEntity, InputStreamEntity, StringEntity}
-import com.sksamuel.elastic4s.http.{ElasticRequest, HttpClient, HttpEntity, HttpResponse}
+import com.sksamuel.elastic4s.HttpEntity.{FileEntity, InputStreamEntity, StringEntity}
+import com.sksamuel.elastic4s.{ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
 import com.sksamuel.exts.OptionImplicits._
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend

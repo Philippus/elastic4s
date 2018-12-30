@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.monix.instances
 
-import com.sksamuel.elastic4s.http.Functor
+import com.sksamuel.elastic4s.Functor
 import com.sksamuel.elastic4s.monix.TaskExecutor
 import monix.eval.Task
 

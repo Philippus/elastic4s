@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.aws
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.{ElasticClient, ElasticsearchClientUri}
 import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials, DefaultAWSCredentialsProviderChain}
 import com.amazonaws.regions.DefaultAwsRegionProviderChain
+import com.sksamuel.elastic4s.http.JavaClient
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.apache.http.protocol.HttpContext
@@ -20,7 +20,7 @@ object Aws4ElasticClient {
     */
   def apply(config: Aws4ElasticConfig): ElasticClient = {
     val elasticUri = ElasticsearchClientUri(config.endpoint)
-    ElasticClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
+    JavaClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
   }
 
   /**
@@ -29,7 +29,7 @@ object Aws4ElasticClient {
     */
   def apply(endpoint: String): ElasticClient = {
     val elasticUri = ElasticsearchClientUri(endpoint)
-    ElasticClient(elasticUri, httpClientConfigCallback = new DefaultSignedClientConfig)
+    JavaClient(elasticUri, httpClientConfigCallback = new DefaultSignedClientConfig)
   }
 
 }

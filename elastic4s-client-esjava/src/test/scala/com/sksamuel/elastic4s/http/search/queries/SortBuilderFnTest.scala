@@ -1,14 +1,12 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.DistanceUnit
-import com.sksamuel.elastic4s.http.ElasticDsl._
-import com.sksamuel.elastic4s.http.search.SearchBodyBuilderFn
-import com.sksamuel.elastic4s.script.ScriptType
-import com.sksamuel.elastic4s.searches.GeoPoint
-import com.sksamuel.elastic4s.searches.queries.geo.GeoDistanceQuery
-import com.sksamuel.elastic4s.searches.sort.{GeoDistanceSort, SortOrder, ScriptSortType}
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.requests.common.DistanceUnit
+import com.sksamuel.elastic4s.requests.script.ScriptType
+import com.sksamuel.elastic4s.requests.searches.GeoPoint
+import com.sksamuel.elastic4s.requests.searches.queries.SortBuilderFn
+import com.sksamuel.elastic4s.requests.searches.sort.{GeoDistanceSort, ScriptSortType, SortOrder}
 import org.scalatest.{FunSuite, Matchers}
-import com.sksamuel.exts.OptionImplicits._
 
 class SortBuilderFnTest extends FunSuite with Matchers {
 

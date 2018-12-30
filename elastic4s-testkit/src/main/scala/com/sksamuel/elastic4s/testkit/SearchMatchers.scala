@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.http.ElasticClient
-import com.sksamuel.elastic4s.searches.SearchRequest
+import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.requests.searches.SearchRequest
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
@@ -10,7 +10,7 @@ import scala.language.higherKinds
 
 trait SearchMatchers extends Matchers {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   def containId(expectedId: Any)(implicit client: ElasticClient,
                                  timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =

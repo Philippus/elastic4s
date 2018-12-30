@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.json
 
+import com.sksamuel.elastic4s.XContentFactory
 import org.scalatest.{FunSuite, Matchers}
 
 class XContentBuilderTest extends FunSuite with Matchers {

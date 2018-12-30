@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.script.{Script, ScriptType}
+import com.sksamuel.elastic4s.requests.script.{Script, ScriptBuilderFn, ScriptType}
 import org.scalatest.{FunSuite, Matchers}
 
 class ScriptBuilderFnTest extends FunSuite with Matchers {

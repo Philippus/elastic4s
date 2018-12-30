@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.cats.effect.instances
 
 import cats.effect.IO
+import com.sksamuel.elastic4s.Functor
 import com.sksamuel.elastic4s.cats.effect.IOExecutor
-import com.sksamuel.elastic4s.http.Functor
 
 trait IOInstances {
   implicit val ioFunctor: Functor[IO] = new Functor[IO] {

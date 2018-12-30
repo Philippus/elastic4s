@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import java.nio.ByteBuffer
 
+import com.sksamuel.elastic4s.requests.common.DocumentRef
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.collection.mutable

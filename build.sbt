@@ -6,7 +6,7 @@ lazy val root = Project("elastic4s", file("."))
   )
   .aggregate(
     core,
-    http,
+    clientesjava,
     cats_effect,
     scalaz,
     monix,
@@ -35,7 +35,7 @@ lazy val core = Project("elastic4s-core", file("elastic4s-core"))
     )
   )
 
-lazy val http = Project("elastic4s-client-esjava", file("elastic4s-client-esjava"))
+lazy val clientesjava = Project("elastic4s-client-esjava", file("elastic4s-client-esjava"))
   .settings(
     name := "elastic4s-client-esjava",
     libraryDependencies ++= Seq(
@@ -55,7 +55,7 @@ lazy val cats_effect = Project("elastic4s-effect-cats", file("elastic4s-effect-c
       "org.typelevel" %% "cats-effect" % CatsEffectVersion
     )
   )
-  .dependsOn(http)
+  .dependsOn(core)
 
 lazy val scalaz = Project("elastic4s-effect-scalaz", file("elastic4s-effect-scalaz"))
   .settings(name := "elastic4s-effect-scalaz")
@@ -65,7 +65,7 @@ lazy val scalaz = Project("elastic4s-effect-scalaz", file("elastic4s-effect-scal
       "org.scalaz" %% "scalaz-concurrent" % ScalazVersion
     )
   )
-  .dependsOn(http)
+  .dependsOn(core)
 
 lazy val monix = Project("elastic4s-effect-monix", file("elastic4s-effect-monix"))
   .settings(name := "elastic4s-effect-monix")
@@ -74,7 +74,7 @@ lazy val monix = Project("elastic4s-effect-monix", file("elastic4s-effect-monix"
       "io.monix" %% "monix" % MonixVersion
     )
   )
-  .dependsOn(http)
+  .dependsOn(core)
 
 lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(
@@ -83,7 +83,7 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
       "org.scalatest" %% "scalatest" % ScalatestVersion
     )
   )
-  .dependsOn(core, http)
+  .dependsOn(core, clientesjava)
 
 lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-streams"))
   .settings(
@@ -92,14 +92,14 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
     libraryDependencies += "org.reactivestreams" % "reactive-streams"     % ReactiveStreamsVersion,
     libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test"
   )
-  .dependsOn(http, testkit % "test", jackson % "test")
+  .dependsOn(core, testkit % "test", jackson % "test")
 
 lazy val akkastreams = Project("elastic4s-streams-akka", file("elastic4s-streams-akka"))
   .settings(
     name := "elastic4s-streams-akka",
     libraryDependencies += "com.typesafe.akka" % "akka-stream_2.11" % AkkaVersion
   )
-  .dependsOn(http, testkit % "test", jackson % "test")
+  .dependsOn(core, testkit % "test", jackson % "test")
 
 lazy val jackson = Project("elastic4s-json-jackson", file("elastic4s-json-jackson"))
   .settings(
@@ -148,7 +148,7 @@ lazy val clientsttp = Project("elastic4s-client-sttp", file("elastic4s-client-st
     libraryDependencies += "com.softwaremill.sttp" %% "core"                             % SttpVersion,
     libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % SttpVersion
   )
-  .dependsOn(core, http)
+  .dependsOn(core)
 
 lazy val clientakka = Project("elastic4s-client-akka", file("elastic4s-client-akka"))
   .settings(
@@ -157,14 +157,14 @@ lazy val clientakka = Project("elastic4s-client-akka", file("elastic4s-client-ak
     libraryDependencies += "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
     libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
-  .dependsOn(core, http, testkit % "test")
+  .dependsOn(core, testkit % "test")
 
 lazy val aws = Project("elastic4s-client-aws", file("elastic4s-client-aws"))
   .settings(
     name := "elastic4s-client-aws",
     libraryDependencies += "com.amazonaws" % "aws-java-sdk-core" % AWSJavaSdkVersion
   )
-  .dependsOn(core, http)
+  .dependsOn(core, clientesjava)
 
 lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
   .settings(
@@ -183,7 +183,7 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
     parallelExecution in Test := false,
     testForkedParallel in Test := false
   )
-  .dependsOn(http, jackson, circe, aws, testkit % "test")
+  .dependsOn(clientesjava, jackson, circe, aws, testkit % "test")
 
 lazy val noPublishSettings = Seq(
   publish := {},

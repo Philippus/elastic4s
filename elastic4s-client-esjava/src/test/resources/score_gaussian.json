@@ -1,0 +1,12 @@
+{
+  "gauss": {
+    "myfield": {
+      "origin": "1 2",
+      "scale": "3km",
+      "offset": "1km",
+      "decay": 0.2
+    },
+    "multi_value_mode": "min"
+  },
+  "weight": 0.2
+}

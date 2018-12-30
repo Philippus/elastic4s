@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.cat
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.{HealthStatus, RefreshPolicy}
+import com.sksamuel.elastic4s.requests.common.{HealthStatus, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 class CatIndicesTest extends FlatSpec with Matchers with DockerTests {

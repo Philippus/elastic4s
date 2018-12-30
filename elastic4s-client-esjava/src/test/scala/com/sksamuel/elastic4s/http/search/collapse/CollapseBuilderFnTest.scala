@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.collapse
 
-import com.sksamuel.elastic4s.searches.collapse.CollapseRequest
-import com.sksamuel.elastic4s.searches.queries.InnerHit
+import com.sksamuel.elastic4s.requests.searches.collapse.{CollapseBuilderFn, CollapseRequest}
+import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
 import org.scalatest.{FunSuite, Matchers}
 
 class CollapseBuilderFnTest extends FunSuite with Matchers {

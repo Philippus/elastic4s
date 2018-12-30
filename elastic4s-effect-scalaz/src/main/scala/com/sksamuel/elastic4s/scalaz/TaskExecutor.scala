@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.scalaz
 
-import com.sksamuel.elastic4s.http.{ElasticRequest, Executor, HttpClient, HttpResponse}
-
+import com.sksamuel.elastic4s.{ElasticRequest, Executor, HttpClient, HttpResponse}
 import scalaz.\/
 import scalaz.concurrent.Task
 

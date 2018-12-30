@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.http.search.queries.nested.InnerHitQueryBodyFn
-import com.sksamuel.elastic4s.searches.HighlightField
-import com.sksamuel.elastic4s.searches.queries.InnerHit
-import com.sksamuel.elastic4s.searches.sort.FieldSort
+import com.sksamuel.elastic4s.requests.searches.HighlightField
+import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
+import com.sksamuel.elastic4s.requests.searches.queries.nested.InnerHitQueryBodyFn
+import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
 import org.scalatest.{FunSuite, Matchers}
 
 class InnerHitQueryBodyFnTest extends FunSuite with Matchers {

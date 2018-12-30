@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.sort
 
-import com.sksamuel.elastic4s.searches.sort.ScriptSortType
+import com.sksamuel.elastic4s.requests.searches.sort.ScriptSortType
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import org.scalatest.FreeSpec
 

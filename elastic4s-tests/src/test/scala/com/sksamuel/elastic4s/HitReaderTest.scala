@@ -2,7 +2,8 @@ package com.sksamuel.elastic4s
 
 import java.util.UUID
 
-import com.sksamuel.elastic4s.indexes.IndexRequest
+import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.exts.OptionImplicits._
 import org.scalatest.mockito.MockitoSugar

@@ -1,15 +1,15 @@
 package com.sksamuel.elastic4s.http.bulk
 
-import com.sksamuel.elastic4s.IndexAndType
-import com.sksamuel.elastic4s.bulk.BulkRequest
-import com.sksamuel.elastic4s.http.ElasticRequest
-import com.sksamuel.elastic4s.http.HttpEntity.StringEntity
+import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.http.testutils.StringExtensions.StringOps
-import com.sksamuel.elastic4s.indexes.IndexRequest
+import com.sksamuel.elastic4s.requests.bulk.{BulkHandlers, BulkRequest}
+import com.sksamuel.elastic4s.requests.indexes.IndexRequest
+import com.sksamuel.elastic4s.{ElasticRequest, IndexAndType}
+import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
-import org.scalatest.{FlatSpec, FunSuite}
 
 class BulkHandlersTest extends FlatSpec with BulkHandlers {
+
   it should "build bulk definition http body" in {
     val request: BulkRequest = BulkRequest(Seq(
       IndexRequest(IndexAndType("my_index1", "my_type1"), source = Some("""{"field1":"value1"}""")),

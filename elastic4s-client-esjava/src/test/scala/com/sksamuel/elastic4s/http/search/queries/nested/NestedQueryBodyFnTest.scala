@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries.nested
 
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.requests.searches.queries.nested.NestedQueryBodyFn
 import org.scalatest.{FunSuite, Matchers}
 
 class NestedQueryBodyFnTest extends FunSuite with Matchers {

@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.json.XContentBuilder
-
 object XContentFieldValueWriter {
   def apply(source: XContentBuilder, value: FieldValue): Unit = value match {
     case NullFieldValue(name) => source.nullField(name)

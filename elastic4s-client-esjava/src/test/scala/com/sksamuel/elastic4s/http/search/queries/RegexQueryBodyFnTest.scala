@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.http.search.queries.term.RegexQueryBodyFn
-import com.sksamuel.elastic4s.searches.queries.{RegexQuery, RegexpFlag}
+import com.sksamuel.elastic4s.requests.searches.queries.term.RegexQueryBodyFn
+import com.sksamuel.elastic4s.requests.searches.queries.{RegexQuery, RegexpFlag}
 import org.scalatest.{FunSuite, Matchers}
 
 class RegexQueryBodyFnTest extends FunSuite with Matchers {

@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.http.search.queries.nested.HasChildBodyFn
-import com.sksamuel.elastic4s.searches.ScoreMode
-import com.sksamuel.elastic4s.searches.queries.{HasChildQuery, InnerHit}
-import com.sksamuel.elastic4s.searches.queries.matches.MatchQuery
+import com.sksamuel.elastic4s.requests.searches.ScoreMode
+import com.sksamuel.elastic4s.requests.searches.queries.{HasChildQuery, InnerHit}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
+import com.sksamuel.elastic4s.requests.searches.queries.nested.HasChildBodyFn
 import org.scalatest.{FunSuite, Matchers}
 
 class HasChildBodyFnTest extends FunSuite with Matchers {

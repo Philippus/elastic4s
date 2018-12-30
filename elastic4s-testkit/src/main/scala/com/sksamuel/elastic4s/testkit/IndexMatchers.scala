@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.ElasticClient
 import org.scalatest.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait IndexMatchers extends Matchers {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   import scala.concurrent.duration._
 

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.scalaz.instances
 
-import com.sksamuel.elastic4s.http.Functor
+import com.sksamuel.elastic4s.Functor
 import com.sksamuel.elastic4s.scalaz.TaskExecutor
 import scalaz.concurrent.Task
 

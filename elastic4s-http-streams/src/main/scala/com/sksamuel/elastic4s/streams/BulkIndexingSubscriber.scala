@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.bulk.{BulkCompatibleRequest, BulkRequest}
-import com.sksamuel.elastic4s.http.bulk.{BulkResponse, BulkResponseItem}
-import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponse, BulkResponseItem}
+import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -85,7 +84,7 @@ class BulkActor[T](client: ElasticClient,
                    config: SubscriberConfig[T])
     extends Actor {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
   import context.{dispatcher, system}
 
   private val buffer = new ArrayBuffer[T]()
@@ -287,7 +286,7 @@ trait ResponseListener[-T] {
 }
 
 object ResponseListener {
-  val noop = new ResponseListener[Any] {
+  val noop: ResponseListener[Any] = new ResponseListener[Any] {
     override def onAck(resp: BulkResponseItem, original: Any): Unit = ()
   }
 }
@@ -319,7 +318,7 @@ case class SubscriberConfig[T](batchSize: Int = 100,
                                listener: ResponseListener[T] = ResponseListener.noop,
                                completionFn: () => Unit = () => (),
                                successFn: () => Unit = () => (),
-                               errorFn: Throwable => Unit = e => (),
+                               errorFn: Throwable => Unit = _ => (),
                                failureWait: FiniteDuration = 2.seconds,
                                maxAttempts: Int = 5,
                                flushInterval: Option[FiniteDuration] = None,

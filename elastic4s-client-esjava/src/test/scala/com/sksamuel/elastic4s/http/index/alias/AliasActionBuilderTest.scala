@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.http.index.alias
 
-import com.sksamuel.elastic4s.alias.{RemoveAliasAction, AddAliasActionRequest, IndicesAliasesRequest}
-import com.sksamuel.elastic4s.searches.queries.matches.MatchAllQuery
+import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
+import com.sksamuel.elastic4s.requests.indexes.alias.AliasActionBuilder
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchAllQuery
 import org.scalatest.{FunSuite, Matchers}
 
 class AliasActionBuilderTest extends FunSuite with Matchers {

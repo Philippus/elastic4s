@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorRefFactory
-import com.sksamuel.elastic4s.IndexesAndTypes
-import com.sksamuel.elastic4s.http.ElasticClient
-import com.sksamuel.elastic4s.searches.SearchRequest
+import com.sksamuel.elastic4s.{ElasticClient, IndexesAndTypes}
+import com.sksamuel.elastic4s.requests.searches.SearchRequest
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions
@@ -12,7 +11,7 @@ object ReactiveElastic {
 
   implicit class ReactiveElastic(client: ElasticClient) {
 
-    import com.sksamuel.elastic4s.http.ElasticDsl._
+    import com.sksamuel.elastic4s.ElasticDsl._
 
     def subscriber[T](config: SubscriberConfig[T])(implicit builder: RequestBuilder[T],
                                                    actorRefFactory: ActorRefFactory): BulkIndexingSubscriber[T] =

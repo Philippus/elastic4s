@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.http.update
 
 import com.sksamuel.elastic4s.http.JsonSugar
-import com.sksamuel.elastic4s.script.Script
+import com.sksamuel.elastic4s.requests.script.Script
+import com.sksamuel.elastic4s.requests.update.UpdateByQueryBodyFn
 import org.scalatest.WordSpec
 
 class UpdateByQueryBodyFnTest extends WordSpec with JsonSugar {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   "update by query" should {
     "generate correct body" when {

@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.analyzers.StandardAnalyzer
-import com.sksamuel.elastic4s.searches.queries.ArtificialDocument
+import com.sksamuel.elastic4s.requests.searches.queries.ArtificialDocument
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
-import com.sksamuel.elastic4s.{DocumentRef, RefreshPolicy}
+import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicy}
 import org.scalatest.{Matchers, WordSpec}
 
 class MoreLikeThisQueryHttpTest

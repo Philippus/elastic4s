@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.http.ElasticDsl
-import com.sksamuel.elastic4s.http.index.admin.RefreshIndexResponse
-import com.sksamuel.elastic4s.{IndexAndTypes, Indexes}
+import com.sksamuel.elastic4s.requests.indexes.admin.RefreshIndexResponse
+import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
 import org.scalatest.Suite
 
 import scala.util.Try

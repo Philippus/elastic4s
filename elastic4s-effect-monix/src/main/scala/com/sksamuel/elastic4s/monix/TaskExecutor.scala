@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.monix
 
-import com.sksamuel.elastic4s.http.{ElasticRequest, Executor, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.{ElasticRequest, Executor, HttpClient, HttpResponse}
 import monix.eval.Task
 import monix.execution.Cancelable
 

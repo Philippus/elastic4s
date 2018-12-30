@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.ElasticsearchClientUri
-import com.sksamuel.elastic4s.http.{ElasticClient, ElasticDsl, ElasticProperties}
+import com.sksamuel.elastic4s.http.JavaClient
+import com.sksamuel.elastic4s.{ElasticDsl, ElasticProperties}
 
 import scala.util.Try
 
-trait DockerTests extends com.sksamuel.elastic4s.http.ElasticDsl with ClientProvider {
+trait DockerTests extends ElasticDsl with ClientProvider {
 
-  val client = ElasticClient(ElasticProperties("http://localhost:9200"))
+  val client = JavaClient(ElasticProperties("http://localhost:9200"))
 
   protected def deleteIdx(indexName: String): Unit = {
     Try {

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http.index
 
-import com.sksamuel.elastic4s.indexes.{CreateIndexRequest, IndexAliasRequest}
-import com.sksamuel.elastic4s.searches.queries.PrefixQuery
+import com.sksamuel.elastic4s.requests.indexes.{CreateIndexContentBuilder, CreateIndexRequest, IndexAliasRequest}
+import com.sksamuel.elastic4s.requests.searches.queries.PrefixQuery
 import org.scalatest.{FunSuite, Matchers}
 
 class CreateIndexContentBuilderTest extends FunSuite with Matchers {

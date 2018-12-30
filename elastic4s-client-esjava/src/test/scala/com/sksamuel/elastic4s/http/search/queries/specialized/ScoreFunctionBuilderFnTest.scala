@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.http.search.queries.specialized
 
 import com.sksamuel.elastic4s.http.JsonSugar
-import com.sksamuel.elastic4s.searches.queries.funcscorer.{FieldValueFactorFunctionModifier, MultiValueMode}
+import com.sksamuel.elastic4s.requests.searches.queries.ScoreFunctionBuilderFn
+import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FieldValueFactorFunctionModifier, MultiValueMode}
 import org.scalatest.FlatSpec
 
 class ScoreFunctionBuilderFnTest extends FlatSpec with JsonSugar {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   "a score dsl" should "generate correct json for a linear decay function scorer" in {
     val req = linearScore("myfield", "1 2", "2km").offset("200m").decay(0.1).weight(0.1).multiValueMode(MultiValueMode.Min)

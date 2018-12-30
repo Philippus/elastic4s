@@ -1,0 +1,20 @@
+{
+    "function_score": {
+        "min_score": 12.0,
+        "boost": 1.2,
+        "score_mode": "max",
+        "boost_mode": "multiply",
+        "functions": [
+            {
+                "gauss": {
+                    "myfield": {
+                        "origin": "now",
+                        "scale": "28d",
+                        "offset": "19",
+                        "decay": 1.2
+                    }
+                }
+            }
+        ]
+    }
+}

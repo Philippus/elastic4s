@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.http.search.{SearchHit, SearchResponse}
-import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
-import com.sksamuel.elastic4s.searches.SearchRequest
+import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits._
@@ -72,7 +71,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
     with Stash
     with Logging {
 
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
   import context.dispatcher
 
   private var scrollId: String                = _

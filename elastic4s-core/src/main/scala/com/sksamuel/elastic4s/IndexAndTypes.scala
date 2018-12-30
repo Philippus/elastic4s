@@ -10,7 +10,7 @@ case class Index(name: String) {
 
 object Index {
   val _all                                 = Index("_all")
-  val All                                  = _all
+  val All: Index                           = _all
   implicit def toIndex(str: String): Index = Index(str)
 }
 
@@ -26,8 +26,8 @@ case class Indexes(values: Seq[String]) {
   def size: Int                          = values.size
   def isEmpty: Boolean                   = values.isEmpty
   def isNonEmpty: Boolean                = values.nonEmpty
-  def isAll                              = values == Seq("_all")
-  def string                             = if (values.isEmpty) "_all" else values.map(URLEncoder.encode(_, "UTF8")).mkString(",")
+  def isAll: Boolean                     = values == Seq("_all")
+  def string: String                     = if (values.isEmpty) "_all" else values.map(URLEncoder.encode(_, "UTF8")).mkString(",")
   def array: Array[String]               = values.toArray
 }
 

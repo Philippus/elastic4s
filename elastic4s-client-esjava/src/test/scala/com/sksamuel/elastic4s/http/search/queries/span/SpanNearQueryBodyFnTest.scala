@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http.search.queries.span
 
-import com.sksamuel.elastic4s.searches.queries.span.{SpanNearQuery, SpanTermQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanNearQuery, SpanNearQueryBodyFn, SpanTermQuery}
 import org.scalatest.{FunSuite, Matchers}
 
 class SpanNearQueryBodyFnTest extends FunSuite with Matchers {

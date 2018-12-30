@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.mappings.Child
+import com.sksamuel.elastic4s.requests.mappings.Child
 
 /**
   * Converts between scala types and types that Elasticsearch understands.

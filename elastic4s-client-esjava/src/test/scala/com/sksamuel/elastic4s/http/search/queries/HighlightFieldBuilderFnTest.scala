@@ -1,9 +1,8 @@
 package com.sksamuel.elastic4s.http.search.queries
 
-import com.sksamuel.elastic4s.http.search.HighlightFieldBuilderFn
-import com.sksamuel.elastic4s.searches.HighlightField
+import com.sksamuel.elastic4s.requests.searches.{HighlightField, HighlightFieldBuilderFn}
 import org.scalatest.{FunSuite, Matchers}
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl._
 
 class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
 

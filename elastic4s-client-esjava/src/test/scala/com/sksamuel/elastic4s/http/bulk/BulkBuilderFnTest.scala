@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http.bulk
 
-import com.sksamuel.elastic4s.RefreshPolicy
+import com.sksamuel.elastic4s.requests.bulk.BulkBuilderFn
+import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import org.scalatest.{FunSuite, Matchers}
 
 class BulkBuilderFnTest extends FunSuite with Matchers {

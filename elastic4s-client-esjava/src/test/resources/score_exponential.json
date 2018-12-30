@@ -1,0 +1,12 @@
+{
+  "exp": {
+    "myfield": {
+      "origin": "1 2",
+      "scale": "4km",
+      "offset": "100m",
+      "decay": 0.4
+    },
+    "multi_value_mode": "min"
+  },
+  "weight": 0.3
+}

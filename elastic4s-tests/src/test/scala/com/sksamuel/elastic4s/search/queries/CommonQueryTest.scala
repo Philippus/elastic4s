@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.{Indexable, Preference}
-import com.sksamuel.elastic4s.http.ElasticDsl
+import com.sksamuel.elastic4s.requests.common.Preference
+import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 

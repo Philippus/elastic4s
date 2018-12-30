@@ -1,0 +1,6 @@
+{
+    "random_score": {
+        "seed": 12345,
+        "field": "_seq_no"
+    }
+}
