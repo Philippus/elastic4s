@@ -76,7 +76,9 @@ case class SearchHit(@JsonProperty("_id") id: String,
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
 
-case class SearchHits(total: Long,
+case class Total(value: Long, relation: String)
+
+case class SearchHits(total: Total,
                       @JsonProperty("max_score") maxScore: Double,
                       hits: Array[SearchHit]) {
   def size: Long = hits.length
@@ -129,7 +131,7 @@ case class SearchResponse(took: Long,
                           hits: SearchHits) {
 
   def aggregationsAsMap: Map[String, Any] = Option(_aggregationsAsMap).getOrElse(Map.empty)
-  def totalHits: Long = hits.total
+  def totalHits: Long = hits.total.value
   def size: Long = hits.size
   def ids: Seq[String] = hits.hits.map(_.id)
   def maxScore: Double = hits.maxScore

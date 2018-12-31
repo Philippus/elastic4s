@@ -3,14 +3,9 @@ package com.sksamuel.elastic4s.requests.searches
 import java.net.URLEncoder
 
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
-import com.sksamuel.elastic4s.requests.searches.queries.term.{BuildableTermsQuery, TermsQuery}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
 
 trait SearchHandlers {
-
-  implicit def BuildableTermsNoOp[T]: BuildableTermsQuery[T] = new BuildableTermsQuery[T] {
-    override def build(q: TermsQuery[T]): Any = null // not used by the http builders
-  }
 
   implicit object MultiSearchHandler extends Handler[MultiSearchRequest, MultiSearchResponse] {
 

@@ -226,10 +226,10 @@ trait QueryApi {
   def termQuery(tuple: (String, Any)): TermQuery      = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQuery = TermQuery(field, value)
 
-  def termsQuery[T: BuildableTermsQuery](field: String, first: T, rest: T*): TermsQuery[T] =
+  def termsQuery[T](field: String, first: T, rest: T*): TermsQuery[T] =
     termsQuery(field, first +: rest)
 
-  def termsQuery[T](field: String, values: Iterable[T])(implicit buildable: BuildableTermsQuery[T]) =
+  def termsQuery[T](field: String, values: Iterable[T]) =
     TermsQuery(field, values)
 
   def termsLookupQuery(field: String, path: String, ref: DocumentRef) =

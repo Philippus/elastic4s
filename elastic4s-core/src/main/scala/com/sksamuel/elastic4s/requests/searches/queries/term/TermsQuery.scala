@@ -10,8 +10,7 @@ case class TermsQuery[T](field: String,
                          ref: Option[DocumentRef] = None,
                          routing: Option[String] = None,
                          path: Option[String] = None,
-                         queryName: Option[String] = None)(implicit val buildable: BuildableTermsQuery[T])
-    extends Query {
+                         queryName: Option[String] = None) extends Query {
 
   def ref(index: String, `type`: String, id: String): TermsQuery[T] = ref(DocumentRef(index, `type`, id))
   def ref(ref: DocumentRef): TermsQuery[T]                          = copy(ref = ref.some)
@@ -19,8 +18,4 @@ case class TermsQuery[T](field: String,
   def path(path: String): TermsQuery[T]                             = copy(path = path.some)
   def boost(boost: Double): TermsQuery[T]                           = copy(boost = boost.some)
   def queryName(queryName: String): TermsQuery[T]                   = copy(queryName = queryName.some)
-}
-
-trait BuildableTermsQuery[T] {
-  def build(q: TermsQuery[T]): Any
 }
