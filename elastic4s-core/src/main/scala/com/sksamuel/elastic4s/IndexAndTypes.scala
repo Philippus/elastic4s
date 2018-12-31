@@ -42,12 +42,17 @@ object Indexes {
 /**
   * Models exactly one index associated with exactly one type.
   */
+@deprecated("types are deprecated now", "7.0")
 case class IndexAndType(index: String, `type`: String) {
+  @deprecated("types are deprecated now", "7.0")
   def toIndexAndTypes: IndexAndTypes     = IndexAndTypes(index, Seq(`type`))
+  @deprecated("types are deprecated now", "7.0")
   def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(Seq(index), Seq(`type`))
 }
 
+@deprecated("types are deprecated now", "7.0")
 object IndexAndType {
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(str: String): IndexAndType = str.split('/') match {
     case Array(index, tpe) => IndexAndType(index, tpe)
     case _                 => sys.error(s"Could not parse '$str' into index/type")
@@ -61,19 +66,26 @@ object IndexAndType {
   * - index1/type1
   * - index1/type1,type2
   */
+@deprecated("types are deprecated now", "7.0")
 case class IndexAndTypes(index: String, types: Seq[String]) {
+  @deprecated("types are deprecated now", "7.0")
   def toIndexesAndTypes = IndexesAndTypes(Seq(index), types)
 }
 
+@deprecated("types are deprecated now", "7.0")
 object IndexAndTypes {
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(string: String): IndexAndTypes =
     string.split("/") match {
       case Array(index)    => IndexAndTypes(index, Nil)
       case Array(index, t) => IndexAndTypes(index, t.split(","))
       case _               => sys.error(s"Could not parse '$string' into index/type1[,type2,...]")
     }
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndType: IndexAndType): IndexAndTypes     = apply(indexAndType.index, indexAndType.`type`)
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(index: String, `type`: String): IndexAndTypes  = IndexAndTypes(index, Seq(`type`))
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndType: (String, String)): IndexAndTypes = apply(indexAndType._1, indexAndType._2)
 
 }
@@ -89,10 +101,13 @@ object IndexAndTypes {
   * - index1,index2/type1
   * - index1,index2/type1,type2
   */
+@deprecated("types are deprecated now", "7.0")
 case class IndexesAndTypes(indexes: Seq[String], types: Seq[String])
 
+@deprecated("types are deprecated now", "7.0")
 object IndexesAndTypes {
 
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(string: String): IndexesAndTypes =
     string.split("/") match {
       case Array(index)    => IndexesAndTypes(index.split(","), Nil)
@@ -100,23 +115,31 @@ object IndexesAndTypes {
       case _               => sys.error(s"Could not parse '$string' into index1[,index2,...]/type1[,type2,...]")
     }
 
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndType: IndexAndType): IndexesAndTypes = apply(indexAndType.index, indexAndType.`type`)
 
   // iterables of strings are assumed to be lists of indexes with no types
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexes: String*): IndexesAndTypes          = apply(indexes)
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexes: Iterable[String]): IndexesAndTypes = IndexesAndTypes(indexes.toSeq, Nil)
 
   // a tuple is assumed to be an index and a type
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndType: (String, String)): IndexesAndTypes = apply(indexAndType._1, indexAndType._2)
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(index: String, `type`: String): IndexesAndTypes  = IndexesAndTypes(Seq(index), Seq(`type`))
 
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndTypes: IndexAndTypes): IndexesAndTypes = indexAndTypes.toIndexesAndTypes
 }
 
 // Models one ore more indexes associated with exactly one type
+@deprecated("types are deprecated now", "7.0")
 case class IndexesAndType(indexes: Seq[String], `type`: String)
 
 object IndexesAndType {
+  @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndType: IndexAndType): IndexesAndType =
     IndexesAndType(Seq(indexAndType.index), indexAndType.`type`)
 }
