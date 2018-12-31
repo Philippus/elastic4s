@@ -117,7 +117,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
 
       val resp2 = client.execute {
         searchScroll(resp1.scrollId.get).keepAlive(1.minute)
-      }.await
+      }.await.result
 
       val resp3 = client.execute {
         search("katebush")
@@ -130,11 +130,10 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
 
       val resp4 = client.execute {
         searchScroll(resp3.scrollId.get).keepAlive(1.minute)
-      }.await
+      }.await.result
 
-      (resp1.hits.hits.length + resp2.result.hits.hits.length) shouldBe 4
-      (resp3.hits.hits.length + resp4.result.hits.hits.length) shouldBe 5
-      val merged = Seq(resp1.hits.hits, resp3.hits.hits, resp2.result.hits.hits, resp4.result.hits.hits).flatMap(resp => resp.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
+      (resp1.hits.hits ++ resp2.hits.hits ++ resp3.hits.hits ++ resp4.hits.hits).length shouldBe 9
+      val merged = Seq(resp1.hits.hits, resp3.hits.hits, resp2.hits.hits, resp4.hits.hits).flatMap(resp => resp.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
       merged.length shouldBe 9
       merged.max shouldBe "watching you watching me"
       merged.min shouldBe "cloudbusting"
@@ -167,7 +166,7 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
       resp.result.num_freed should be > 0
     }
     "return an error if the scroll id doesn't parse" in {
-      val resp = client.execute {
+      client.execute {
         clearScroll("wibble")
       }.await.error.`type` shouldBe "illegal_argument_exception"
     }
