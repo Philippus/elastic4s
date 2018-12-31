@@ -32,9 +32,9 @@ object FetchSourceContextQueryParameterFn {
     if (context.fetchSource) {
       map.put("_source", "true")
       if (context.includes.nonEmpty)
-        map.put("_source_include", context.includes.mkString(","))
+        map.put("_source_includes", context.includes.mkString(","))
       if (context.excludes.nonEmpty)
-        map.put("_source_exclude", context.excludes.mkString(","))
+        map.put("_source_excludes", context.excludes.mkString(","))
     } else
       map.put("_source", "false")
     map.toMap
