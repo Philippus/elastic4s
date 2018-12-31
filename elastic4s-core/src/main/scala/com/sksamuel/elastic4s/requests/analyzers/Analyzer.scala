@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.analyzers
+package com.sksamuel.elastic4s.requests.analyzers
 
 class Analyzer(val name: String)
 

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.analyzers.SpanishLanguageAnalyzer
+import com.sksamuel.elastic4s.requests.analyzers.SpanishLanguageAnalyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicTemplateBodyFn
 import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
 import org.scalatest.{Matchers, WordSpec}

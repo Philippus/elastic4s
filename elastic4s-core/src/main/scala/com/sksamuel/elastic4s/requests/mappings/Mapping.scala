@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.IndexesAndType
-import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 
 trait MappingDefinitionLike {

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.common.Operator
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
@@ -32,8 +32,8 @@ object ZeroTermsQuery {
   case object All  extends ZeroTermsQuery
   case object None extends ZeroTermsQuery
 
-  def ALL  = All
-  def NONE = None
+  def ALL: All.type = All
+  def NONE: None.type = None
 }
 
 case class FieldWithOptionalBoost(field: String, boost: Option[Double])

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.ElasticApi
-import com.sksamuel.elastic4s.analyzers.{ArmenianLanguageAnalyzer, EnglishLanguageAnalyzer}
+import com.sksamuel.elastic4s.requests.analyzers.{ArmenianLanguageAnalyzer, EnglishLanguageAnalyzer}
 import org.scalatest.{FlatSpec, Matchers}
 
 class TextFieldTest extends FlatSpec with Matchers with ElasticApi {

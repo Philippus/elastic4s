@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search
 
-import com.sksamuel.elastic4s.ElasticDsl
+import com.sksamuel.elastic4s.{ElasticDsl, HitReader}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.CROSS_FIELDS
@@ -9,7 +9,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class SearchHttpTest extends WordSpec with DockerTests with Matchers {
+class SearchTest extends WordSpec with DockerTests with Matchers {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
@@ -96,7 +96,7 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
       }.await.result.size shouldBe 2
     }
     "support unmarshalling through a HitReader" in {
-      implicit val reader = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]
+      implicit val reader: HitReader[Piece] = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]
       client.execute {
         search("chess") query matchAllQuery() sortBy fieldSort("name") size 3
       }.await.result.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
@@ -194,7 +194,8 @@ class SearchHttpTest extends WordSpec with DockerTests with Matchers {
         search("chess")
           .query(
             queryStringQuery("knight horse")
-              .field("name").field("aka")
+              .field("name")
+              .field("aka")
               .defaultOperator("AND")
               .matchType(CROSS_FIELDS)
           )

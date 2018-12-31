@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.analyzers.Analyzer
+import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 
 case class MatchPhrase(field: String,

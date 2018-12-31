@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
+import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, Preference, ValueType}
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.MultiValueMode
@@ -99,7 +99,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate json for a regex query" in {
     val req = search("*") types("users", "tweets") limit 5 query {
-      regexQuery("drummmer" -> "will*") boost 4 flags RegexpFlag.Intersection rewrite "rewrite-to"
+      regexQuery("drummmer", "will*") boost 4 flags RegexpFlag.Intersection rewrite "rewrite-to"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_regex.json")
   }
