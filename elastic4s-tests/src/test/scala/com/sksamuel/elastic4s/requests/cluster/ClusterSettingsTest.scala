@@ -5,7 +5,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class ClusterSettingsHttpTest extends WordSpec with Matchers with DockerTests {
+class ClusterSettingsTest extends WordSpec with Matchers with DockerTests {
 
   private val indexname = "clustersettingstest"
 
