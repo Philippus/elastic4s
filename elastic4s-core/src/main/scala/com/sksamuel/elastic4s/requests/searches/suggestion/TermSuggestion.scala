@@ -9,6 +9,7 @@ object SortBy {
 }
 
 sealed trait SuggestMode
+
 object SuggestMode {
 
   def valueOf(str: String): SuggestMode = str.toUpperCase match {
@@ -21,15 +22,16 @@ object SuggestMode {
   case object Popular extends SuggestMode
   case object Always  extends SuggestMode
 
-  def MISSING = Missing
-  def POPULAR = Popular
-  def ALWAYS  = Always
+  def MISSING: Missing.type = Missing
+  def POPULAR: Popular.type = Popular
+  def ALWAYS: Always.type = Always
 }
 
-sealed trait StringDistanceImpl
-object StringDistanceImpl {
+sealed trait StringDistance
 
-  def valueOf(str: String): StringDistanceImpl = str.toUpperCase match {
+object StringDistance {
+
+  def valueOf(str: String): StringDistance = str.toUpperCase match {
     case "INTERNAL"            => INTERNAL
     case "DAMERAU_LEVENSHTEIN" => DAMERAU_LEVENSHTEIN
     case "LEVENSTEIN"          => LEVENSTEIN
@@ -37,11 +39,11 @@ object StringDistanceImpl {
     case "NGRAM"               => NGRAM
   }
 
-  case object INTERNAL            extends StringDistanceImpl
-  case object DAMERAU_LEVENSHTEIN extends StringDistanceImpl
-  case object LEVENSTEIN          extends StringDistanceImpl
-  case object JAROWINKLER         extends StringDistanceImpl
-  case object NGRAM               extends StringDistanceImpl
+  case object INTERNAL            extends StringDistance
+  case object DAMERAU_LEVENSHTEIN extends StringDistance
+  case object LEVENSTEIN          extends StringDistance
+  case object JAROWINKLER         extends StringDistance
+  case object NGRAM               extends StringDistance
 }
 
 case class TermSuggestion(name: String,
@@ -56,7 +58,7 @@ case class TermSuggestion(name: String,
                           minWordLength: Option[Int] = None,
                           prefixLength: Option[Int] = None,
                           sort: Option[SortBy] = None,
-                          stringDistance: Option[StringDistanceImpl] = None,
+                          stringDistance: Option[StringDistance] = None,
                           suggestMode: Option[SuggestMode] = None,
                           analyzer: Option[String] = None,
                           size: Option[Int] = None,
@@ -74,8 +76,8 @@ case class TermSuggestion(name: String,
   def sort(sort: SortBy): TermSuggestion                      = copy(sort = sort.some)
 
   def stringDistance(dist: String): TermSuggestion =
-    stringDistance(StringDistanceImpl.valueOf(dist.toUpperCase))
-  def stringDistance(dist: StringDistanceImpl): TermSuggestion = copy(stringDistance = dist.some)
+    stringDistance(StringDistance.valueOf(dist.toUpperCase))
+  def stringDistance(dist: StringDistance): TermSuggestion = copy(stringDistance = dist.some)
 
   def mode(suggestMode: String): TermSuggestion      = mode(SuggestMode.valueOf(suggestMode.toUpperCase))
   def mode(suggestMode: SuggestMode): TermSuggestion = copy(suggestMode = suggestMode.some)

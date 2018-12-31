@@ -11,7 +11,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryB
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
-import com.sksamuel.elastic4s.requests.searches.suggestion.{Fuzziness, SortBy, StringDistanceImpl, SuggestMode}
+import com.sksamuel.elastic4s.requests.searches.suggestion.{Fuzziness, SortBy, StringDistance, SuggestMode}
 import com.sksamuel.elastic4s.requests.searches.{DateHistogramInterval, QueryRescoreMode, ScoreMode}
 import org.joda.time.DateTimeZone
 
@@ -96,7 +96,7 @@ object EnumConversions {
 
   def suggestMode(mode: SuggestMode): String = mode.toString.toLowerCase
 
-  def stringDistance(impl: StringDistanceImpl): String = impl.toString
+  def stringDistance(impl: StringDistance): String = impl.toString
 
   def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = flag.toString.toUpperCase
 
