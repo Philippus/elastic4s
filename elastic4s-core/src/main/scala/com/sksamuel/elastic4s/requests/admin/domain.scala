@@ -3,7 +3,13 @@ package com.sksamuel.elastic4s.requests.admin
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.OptionImplicits._
 
-case class OpenIndexRequest(indexes: Indexes)
+case class OpenIndexRequest(indexes: Indexes,
+                            ignoreUnavailable: Option[Boolean] = None,
+                            waitForActiveShards: Option[Int] = None) {
+  def ignoreUnavailable(ignore: Boolean): OpenIndexRequest = copy(ignoreUnavailable = Some(ignore))
+  def waitForActiveShards(count: Int): OpenIndexRequest = copy(waitForActiveShards = Some(count))
+}
+
 case class CloseIndexRequest(indexes: Indexes)
 case class GetSegmentsRequest(indexes: Indexes)
 case class IndicesExistsRequest(indexes: Indexes)

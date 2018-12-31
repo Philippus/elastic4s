@@ -143,9 +143,14 @@ trait IndexAdminHandlers {
   }
 
   implicit object OpenIndexHandler extends Handler[OpenIndexRequest, OpenIndexResponse] {
+
+    private val Method = "POST"
+
     override def build(request: OpenIndexRequest): ElasticRequest = {
-      val endpoint = s"/${request.indexes.values.mkString(",")}/_open"
-      ElasticRequest("POST", endpoint)
+      val endpoint = s"/${request.indexes.values.mkString(",")}/_open?"
+      val endpoint2 = request.ignoreUnavailable.fold(endpoint)(ignore => s"${endpoint}ignore_unavailable=$ignore")
+      val endpoint3 = request.waitForActiveShards.fold(endpoint2)(count => s"$endpoint&wait_for_active_shards=$count")
+      ElasticRequest(Method, endpoint3)
     }
   }
 
