@@ -4,6 +4,7 @@
             "date_range": {
                 "field": "date",
                 "missing": "wibble",
+                "time_zone":"UTC",
                 "ranges": [
                     {
                         "from": "now-1Y",
