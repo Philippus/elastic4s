@@ -344,7 +344,7 @@ case class TopHit(@JsonProperty("_index") index: String,
 }
 
 case class TopHitsResult(name: String,
-                         total: Long,
+                         total: Total,
                          @JsonProperty("max_score") maxScore: Option[Double],
                          hits: Seq[TopHit])
   extends MetricAggregation

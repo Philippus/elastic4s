@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.AggReader
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.searches.Total
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
@@ -48,7 +49,7 @@ class TopHitsAggregationTest extends FreeSpec with DockerTests with Matchers {
 
       val agg = resp.aggs.terms("agg1")
       val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
-      tophits.total shouldBe 3
+      tophits.total shouldBe Total(3, "eq")
       tophits.maxScore shouldBe None
       tophits.name shouldBe "agg2"
       tophits.hits.head.index shouldBe "tophits"
