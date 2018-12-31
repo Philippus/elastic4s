@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.aggs.RangeAggregation
 import org.scalatest.{FunSuite, Matchers}
 
 class RangeAggregationBuilderTest extends FunSuite with Matchers {

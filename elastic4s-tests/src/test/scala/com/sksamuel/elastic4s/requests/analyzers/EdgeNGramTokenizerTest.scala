@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import com.sksamuel.elastic4s.requests.analyzers.TokenizerApi
 import org.scalatest.{Matchers, WordSpec}
 
 class EdgeNGramTokenizerTest extends WordSpec with TokenizerApi with Matchers {

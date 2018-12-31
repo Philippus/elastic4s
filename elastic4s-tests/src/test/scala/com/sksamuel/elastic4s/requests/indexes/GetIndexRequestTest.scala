@@ -37,7 +37,7 @@ class GetIndexRequestTest extends WordSpec with Matchers with DockerTests {
         getIndex("getindextest")
       }.await.result
 
-      resp("getindextest").settings("index.number_of_shards") shouldBe "5"
+      resp("getindextest").settings("index.number_of_shards") shouldBe "1"
       resp("getindextest").settings("index.number_of_replicas") shouldBe "2"
       resp("getindextest").settings("index.provided_name") shouldBe "getindextest"
     }

@@ -33,7 +33,7 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
       val settings = response.settingsForIndex("settingsa")
       settings("index.provided_name") shouldBe "settingsa"
       settings("index.number_of_replicas") shouldBe "1"
-      settings("index.number_of_shards") shouldBe "5"
+      settings("index.number_of_shards") shouldBe "1"
       settings("index.uuid") should not be null
     }
     "return settings from multiple indexes" in {
@@ -45,13 +45,13 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
       val settingsa = response.settingsForIndex("settingsa")
       settingsa("index.provided_name") shouldBe "settingsa"
       settingsa("index.number_of_replicas") shouldBe "1"
-      settingsa("index.number_of_shards") shouldBe "5"
+      settingsa("index.number_of_shards") shouldBe "1"
       settingsa("index.uuid") should not be null
 
       val settingsb = response.settingsForIndex("settingsb")
       settingsb("index.provided_name") shouldBe "settingsb"
       settingsb("index.number_of_replicas") shouldBe "1"
-      settingsb("index.number_of_shards") shouldBe "5"
+      settingsb("index.number_of_shards") shouldBe "1"
       settingsb("index.uuid") should not be null
     }
     "return error if index does not exist" in {

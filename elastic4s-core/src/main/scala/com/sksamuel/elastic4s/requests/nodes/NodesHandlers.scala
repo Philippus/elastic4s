@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.requests.nodes
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.{ElasticRequest, Handler}
-import com.sksamuel.elastic4s.requests.nodes.{NodeInfoRequest, NodeStatsRequest}
 import com.sksamuel.exts.collection.Maps
 import com.typesafe.config.{Config, ConfigFactory}
 

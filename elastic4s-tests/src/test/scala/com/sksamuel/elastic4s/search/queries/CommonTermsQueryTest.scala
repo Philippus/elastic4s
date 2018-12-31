@@ -7,7 +7,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
 
-class CommonQueryTest extends WordSpec with Matchers with DockerTests with ElasticDsl {
+class CommonTermsQueryTest extends WordSpec with Matchers with DockerTests with ElasticDsl {
 
   case class Condiment(name: String, desc: String)
   implicit object CondimentIndexable extends Indexable[Condiment] {
@@ -65,7 +65,7 @@ class CommonQueryTest extends WordSpec with Matchers with DockerTests with Elast
       val resp = client.execute {
         search("condiments") query {
           commonTermsQuery("desc") text "catsup"
-        } preference Preference.PrimaryFirst
+        } preference Preference.Local
       }.await.result
       resp.totalHits shouldBe 1
     }

@@ -49,12 +49,6 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.request.entity.get.get should matchJsonResource("/json/search/search_test_fetch_source_false.json")
   }
 
-  it should "use preference when specified" in {
-    val req = search("*") types("users", "tweets") query "coldplay" preference Preference.PrimaryFirst
-    req.request.entity.get.get should matchJsonResource("/json/search/search_preference_primary_first.json")
-    req.request.params shouldBe Map("preference" -> "_primary_first")
-  }
-
   it should "generate wrapped query for a raw query" in {
     val req = search("*") types("users", "tweets") limit 5 rawQuery {
       """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""

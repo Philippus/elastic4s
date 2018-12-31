@@ -52,8 +52,9 @@ case class SearchHit(@JsonProperty("_id") id: String,
   private def buildInnerHits(_hits: Map[String, Map[String, Any]]): Map[String, InnerHits] =
     Option(_hits).getOrElse(Map.empty).mapValues { hits =>
       val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
+      val total = v("total").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
-        total = v("total").toString.toLong,
+        total = Total(total("value").toString.toLong, total("relation").toString),
         maxScore = Option(v("max_score")).map(_.toString.toDouble),
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
@@ -86,7 +87,7 @@ case class SearchHits(total: Total,
   def nonEmpty: Boolean = hits.nonEmpty
 }
 
-case class InnerHits(total: Long,
+case class InnerHits(total: Total,
                      @JsonProperty("max_score") maxScore: Option[Double],
                      hits: Seq[InnerHit]) {
   def size: Long = hits.length

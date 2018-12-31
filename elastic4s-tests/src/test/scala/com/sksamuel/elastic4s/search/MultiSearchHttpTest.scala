@@ -65,7 +65,7 @@ class MultiSearchHttpTest
     resp.items.last.index shouldBe 1
     resp.items.last.status shouldBe 404
 
-    resp.failures.head.`reason` shouldBe "no such index"
+    resp.failures.head.`reason` shouldBe "no such index [unknown]"
     resp.failures.head.`type` shouldBe "index_not_found_exception"
   }
 

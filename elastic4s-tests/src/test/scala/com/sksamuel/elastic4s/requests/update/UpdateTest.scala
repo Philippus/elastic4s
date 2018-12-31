@@ -165,6 +165,6 @@ class UpdateTest
         "name" -> "spider man"
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
     }.await
-    resp.body.get shouldBe """{"_index":"hans","_type":"albums","_id":"555","_version":1,"result":"created","forced_refresh":true,"_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"get":{"found":true,"_source":{"name":"spider man"}}}"""
+    resp.body.get shouldBe """{"_index":"hans","_type":"albums","_id":"555","_version":1,"result":"created","forced_refresh":true,"_shards":{"total":2,"successful":1,"failed":0},"_seq_no":11,"_primary_term":1,"get":{"found":true,"_source":{"name":"spider man"}}}"""
   }
 }
