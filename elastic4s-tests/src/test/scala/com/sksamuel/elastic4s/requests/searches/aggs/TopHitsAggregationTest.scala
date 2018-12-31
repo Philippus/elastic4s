@@ -7,7 +7,7 @@ import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
 
-class TopHitsAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
+class TopHitsAggregationTest extends FreeSpec with DockerTests with Matchers {
 
   Try {
     client.execute {

@@ -1,13 +1,22 @@
 package com.sksamuel.elastic4s.requests.termvectors
 
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
+import scala.util.Try
+
 class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
 
+  Try {
+    client.execute {
+      deleteIndex("termvecs")
+    }.await
+  }
+
   client.execute {
-    createIndex("hansz").mappings(
+    createIndex("termvecs").mappings(
       mapping("albums").fields(
         textField("name").stored(true).termVector("with_positions_offsets_payloads"),
         intField("rating")
@@ -17,44 +26,50 @@ class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute(
     bulk(
-      indexInto("hansz/albums").fields("name" -> "interstellar", "rating" -> 10) id "1",
-      indexInto("hansz/albums").fields("name" -> "lion king", "rating" -> 8) id "2"
+      indexInto("termvecs/albums").fields("name" -> "interstellar", "rating" -> 10) id "1",
+      indexInto("termvecs/albums").fields("name" -> "lion king", "rating" -> 8) id "2"
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
+  client.execute {
+    count(Indexes("termvecs"))
+  }.await.result.count shouldBe 2
+
   "term vectors" should "return full stats" in {
+
     val response = client.execute {
-      termVectors("hansz", "albums", "1")
+      termVectors("termvecs", "albums", "1")
     }.await.result
 
-    response.index shouldBe "hansz"
+    response.index shouldBe "termvecs"
     response.`type` shouldBe "albums"
     response.id shouldBe "1"
     response.found shouldBe true
-    response.termVectors shouldBe Map("name" -> TermVectors(FieldStatistics(1, 1, 1), Map("interstellar" -> Terms(0, 0, 1.0, 1, List(Token(0, 0, 12))))))
+    response.termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
   }
 
   "multi term vectors" should "return full stats in multiple docs" in {
+
     val response = client.execute {
       multiTermVectors(
-        termVectors("hansz", "albums", "1"),
-        termVectors("hansz", "albums", "2")
+        termVectors("termvecs", "albums", "1"),
+        termVectors("termvecs", "albums", "2")
       )
     }.await.result
 
     val docs = response.docs.sortBy(_.id)
     docs.size shouldBe 2
 
-    docs.head.index shouldBe "hansz"
+    docs.head.index shouldBe "termvecs"
     docs.head.`type` shouldBe "albums"
     docs.head.id shouldBe "1"
     docs.head.found shouldBe true
-    docs.head.termVectors shouldBe Map("name" -> TermVectors(FieldStatistics(1, 1, 1), Map("interstellar" -> Terms(0, 0, 1.0, 1, List(Token(0, 0, 12))))))
+    docs.head.termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
 
-    docs(1).index shouldBe "hansz"
+    docs(1).index shouldBe "termvecs"
     docs(1).`type` shouldBe "albums"
     docs(1).id shouldBe "2"
     docs(1).found shouldBe true
-    docs(1).termVectors shouldBe Map("name" -> TermVectors(FieldStatistics(2, 1, 2), Map("lion" -> Terms(0, 0, 1.0, 1, List(Token(0, 0, 4))), "king" -> Terms(0, 0, 1.0, 1, List(Token(1, 5, 9))))))
+    docs(1).termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
   }
 }

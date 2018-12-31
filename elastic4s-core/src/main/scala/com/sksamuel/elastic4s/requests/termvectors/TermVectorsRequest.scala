@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.termvectors
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.exts.OptionImplicits._
 
-case class TermVectorsRequest(indexAndType: IndexAndType,
+case class TermVectorsRequest(index: Index,
+                              `type`: Option[String],
                               id: String,
                               fieldStatistics: Option[Boolean] = None,
                               offsets: Option[Boolean] = None,
@@ -26,6 +27,10 @@ case class TermVectorsRequest(indexAndType: IndexAndType,
                               maxWordLength: Option[Int] = None,
                               perFieldAnalyzer: Map[String, String] = Map.empty) {
 
+  def field(fieldName: String): TermVectorsRequest = fields(Seq(fieldName))
+  def fields(fields: Iterable[String]): TermVectorsRequest = copy(fields = fields.toSeq)
+  def fields(fields: String*): TermVectorsRequest = copy(fields = fields.toSeq)
+
   def fieldStatistics(boolean: Boolean): TermVectorsRequest = copy(fieldStatistics = Option(boolean))
   def offsets(boolean: Boolean): TermVectorsRequest         = copy(offsets = Option(boolean))
   def parent(str: String): TermVectorsRequest               = copy(parent = Option(str))
@@ -34,8 +39,6 @@ case class TermVectorsRequest(indexAndType: IndexAndType,
   def preference(str: String): TermVectorsRequest           = copy(preference = Option(str))
   def realtime(boolean: Boolean): TermVectorsRequest        = copy(realtime = Option(boolean))
   def routing(str: String): TermVectorsRequest              = copy(routing = Option(str))
-  def fields(fields: Iterable[String]): TermVectorsRequest  = copy(fields = fields.toSeq)
-  def fields(fields: String*): TermVectorsRequest           = copy(fields = fields.toSeq)
   def termStatistics(boolean: Boolean): TermVectorsRequest  = copy(termStatistics = Option(boolean))
   def version(version: Long): TermVectorsRequest            = copy(version = Option(version))
   def versionType(versionType: String): TermVectorsRequest  = copy(versionType = versionType.some)
