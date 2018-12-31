@@ -6,6 +6,8 @@ import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.util.Try
+
 class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
 
   implicit object SongIndexable extends Indexable[Song] {
@@ -14,6 +16,16 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
 
   private val Index = "termsuggest"
   private val indexType = Index / "music"
+
+  Try {
+    client.execute {
+      deleteIndex(Index)
+    }.await
+  }
+
+  client.execute {
+    createIndex(Index)
+  }.await
 
   client.execute(
     bulk(
@@ -49,14 +61,14 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
     "bring back suggestions for matching terms when mode is always" in {
 
       val resp = client.execute {
-        search(indexType).suggestions(termSuggestion("a", "artist", "rozzle kocks").mode(SuggestMode.ALWAYS))
+        search(indexType).suggestions(termSuggestion("a", "artist", "razzle kacks").mode(SuggestMode.ALWAYS))
       }.await.result
 
-      resp.termSuggestion("a")("rozzle").optionsText shouldBe Seq("razzle", "rizzle")
-      resp.termSuggestion("a")("kocks").optionsText shouldBe Seq("kacks", "kicks")
+      resp.termSuggestion("a")("razzle").optionsText shouldBe Seq("rizzle")
+      resp.termSuggestion("a")("kacks").optionsText shouldBe Seq("kicks")
     }
     // seems to be broken in es 7 alpha 2
-    "bring back suggestions that are more popular when popular mode is set" ignore {
+    "bring back suggestions that are more popular when popular mode is set" in {
 
       val resp = client.execute {
         search(indexType).suggestions {
@@ -70,7 +82,7 @@ class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
 
       val resp = client.execute {
         search(indexType).suggestions {
-          termSuggestion("a") on "artist" text "Quean" maxEdits 1 // so Quean->Queen but not Quean -> Quoon
+          termSuggestion("a", "artist" , "Quean").maxEdits(1) // so Quean->Queen but not Quean -> Quoon
         }
       }.await.result
       resp.termSuggestion("a")("quean").optionsText shouldBe Seq("queen")
