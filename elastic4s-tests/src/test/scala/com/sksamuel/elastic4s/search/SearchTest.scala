@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.{ElasticDsl, HitReader}
 import com.sksamuel.elastic4s.jackson.ElasticJackson
+import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.CROSS_FIELDS
 import com.sksamuel.elastic4s.testkit.DockerTests
@@ -201,6 +202,18 @@ class SearchTest extends WordSpec with DockerTests with Matchers {
           )
       }.await
       resp.result.totalHits shouldBe 1
+    }
+    "ignore unavailable should ignore unknown indexes" in {
+      client.execute {
+        search("chess", "qweqwewqe")
+          .query(
+            queryStringQuery("knight horse")
+              .field("name")
+              .field("aka")
+              .defaultOperator("AND")
+              .matchType(CROSS_FIELDS)
+          ).indicesOptions(IndicesOptionsRequest(ignoreUnavailable = true))
+      }.await.result.totalHits shouldBe 1
     }
   }
 }

@@ -3,23 +3,24 @@ package com.sksamuel.elastic4s.requests.searches
 import com.sksamuel.elastic4s.XContentFactory
 
 object MultiSearchBuilderFn {
-  def apply(request: MultiSearchRequest): String =
-    request.searches
-      .flatMap { search =>
-        val header = XContentFactory.jsonBuilder()
 
-        header.field("index", search.indexesTypes.indexes.mkString(","))
-        if (search.indexesTypes.types.nonEmpty)
-          header.field("type", search.indexesTypes.types.mkString(","))
-        search.control.pref.foreach(header.field("preference", _))
-        search.requestCache.map(_.toString).foreach(header.field("request_cache", _))
-        search.searchType.map(_.toString).foreach(header.field("search_type", _))
-        header.endObject()
+  def apply(request: MultiSearchRequest): String = {
 
-        val body = SearchBodyBuilderFn(search)
+    request.searches.flatMap { search =>
+      val header = XContentFactory.jsonBuilder()
 
-        Seq(header.string(), body.string())
+      header.field("index", search.indexesTypes.indexes.mkString(","))
+      if (search.indexesTypes.types.nonEmpty)
+        header.field("type", search.indexesTypes.types.mkString(","))
+      search.pref.foreach(header.field("preference", _))
+      search.requestCache.map(_.toString).foreach(header.field("request_cache", _))
+      search.searchType.map(_.toString).foreach(header.field("search_type", _))
+      header.endObject()
 
-      }
-      .mkString("\n") + "\n"
+      val body = SearchBodyBuilderFn(search)
+
+      Seq(header.string(), body.string())
+
+    }.mkString("\n") + "\n"
+  }
 }

@@ -14,36 +14,36 @@ object SearchBodyBuilderFn {
 
     val builder = XContentFactory.jsonBuilder()
 
-    request.control.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
-    request.control.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
+    request.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
+    request.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
     request.version.map(_.toString).foreach(builder.field("version", _))
 
     request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
     request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
 
-    request.windowing.from.foreach(builder.field("from", _))
-    request.windowing.size.foreach(builder.field("size", _))
+    request.from.foreach(builder.field("from", _))
+    request.size.foreach(builder.field("size", _))
 
     request.profile.foreach(builder.field("profile", _))
 
-    if (request.windowing.slice.nonEmpty) {
+    request.slice.foreach { case (id, max) =>
       builder.startObject("slice")
-      builder.field("id", request.windowing.slice.get._1)
-      builder.field("max", request.windowing.slice.get._2)
+      builder.field("id", id)
+      builder.field("max", max)
       builder.endObject()
     }
 
-    if (request.meta.explain.getOrElse(false))
+    if (request.explain.getOrElse(false))
       builder.field("explain", true)
 
-    request.scoring.minScore.foreach(builder.field("min_score", _))
+    request.minScore.foreach(builder.field("min_score", _))
     if (request.searchAfter.nonEmpty)
       builder.autoarray("search_after", request.searchAfter)
 
-    if (request.fields.scriptFields.nonEmpty) {
+    if (request.scriptFields.nonEmpty) {
       builder.startObject("script_fields")
-      request.fields.scriptFields.foreach { field =>
+      request.scriptFields.foreach { field =>
         builder.startObject(field.field)
         builder.rawField("script", ScriptBuilderFn(field.script))
         builder.endObject()
@@ -51,9 +51,9 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    if (request.scoring.rescorers.nonEmpty) {
+    if (request.rescorers.nonEmpty) {
       builder.startArray("rescore")
-      request.scoring.rescorers.foreach { rescore =>
+      request.rescorers.foreach { rescore =>
         builder.startObject()
         rescore.windowSize.foreach(builder.field("window_size", _))
         builder.startObject("query")
@@ -74,16 +74,16 @@ object SearchBodyBuilderFn {
       builder.endArray()
     }
 
-    request.scoring.trackScores.map(builder.field("track_scores", _))
+    request.trackScores.map(builder.field("track_scores", _))
 
     request.highlight.foreach { highlight =>
       builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
 
-    if (request.suggestions.suggs.nonEmpty) {
+    if (request.suggs.nonEmpty) {
       builder.startObject("suggest")
-      request.suggestions.globalSuggestionText.foreach(builder.field("text", _))
-      request.suggestions.suggs.foreach {
+      request.globalSuggestionText.foreach(builder.field("text", _))
+      request.suggs.foreach {
         case term: TermSuggestion => builder.rawField(term.name, TermSuggestionBuilderFn(term))
         case completion: CompletionSuggestion =>
           builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
@@ -92,8 +92,8 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    if (request.fields.storedFields.nonEmpty)
-      builder.array("stored_fields", request.fields.storedFields.toArray)
+    if (request.storedFields.nonEmpty)
+      builder.array("stored_fields", request.storedFields.toArray)
 
     if (request.indexBoosts.nonEmpty) {
       builder.startArray("indices_boost")
@@ -109,8 +109,8 @@ object SearchBodyBuilderFn {
     // source filtering
     request.fetchContext.foreach(FetchSourceContextBuilderFn(builder, _))
 
-    if (request.fields.docValues.nonEmpty)
-      builder.array("docvalue_fields", request.fields.docValues.toArray)
+    if (request.docValues.nonEmpty)
+      builder.array("docvalue_fields", request.docValues.toArray)
 
     // aggregations
     if (request.aggs.nonEmpty) {
