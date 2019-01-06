@@ -12,7 +12,7 @@ object Build extends AutoPlugin {
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
     val AkkaVersion            = "2.5.19"
-    val AkkaHttpVersion        = "10.1.6"
+    val AkkaHttpVersion        = "10.1.7"
     val CatsVersion            = "1.4.0"
     val CatsEffectVersion      = "1.1.0"
     val CirceVersion           = "0.11.0"
