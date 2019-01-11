@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.VersionType
+import com.sksamuel.elastic4s.{VersionType, DistanceUnit}
+import com.sksamuel.elastic4s.DistanceUnit.{Inch, Yard, Feet, Kilometers, NauticalMiles, Millimeters, Centimeters, Miles, Meters}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
@@ -43,6 +44,18 @@ object EnumConversions {
   def geoDistance(distance: GeoDistance): String = distance match {
     case Arc   => "arc"
     case Plane => "plane"
+  }
+
+  def unit(distanceUnit: DistanceUnit): String = distanceUnit match {
+    case Inch          => "in"
+    case Yard          => "yd"
+    case Feet          => "ft"
+    case Kilometers    => "km"
+    case NauticalMiles => "nmi"
+    case Millimeters   => "mm"
+    case Centimeters   => "cm"
+    case Miles         => "mi"
+    case Meters        => "m"
   }
 
   def order(order: TermsOrder): XContentBuilder = {

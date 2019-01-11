@@ -59,6 +59,7 @@ object GeoDistanceSortBuilderFn {
     geo.geoDistance.map(EnumConversions.geoDistance).foreach(builder.field("distance_type", _))
     geo.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     geo.order.map(o => builder.field("order", EnumConversions.order(o)))
+    geo.unit.map(EnumConversions.unit).foreach(builder.field("unit", _))
     geo.nestedPath.foreach(builder.field("nested_path", _))
     geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
 

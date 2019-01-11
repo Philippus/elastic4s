@@ -51,6 +51,6 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
     )
 
     SearchBodyBuilderFn(req).string shouldBe
-      """{"query":{"geo_distance":{"distance":"100km","location":[-79.38871,43.65435]}},"size":100,"sort":[{"_geo_distance":{"location":[[-79.38871,43.65435]],"order":"asc"}}]}"""
+      """{"query":{"geo_distance":{"distance":"100km","location":[-79.38871,43.65435]}},"size":100,"sort":[{"_geo_distance":{"location":[[-79.38871,43.65435]],"order":"asc","unit":"km"}}]}"""
   }
 }
