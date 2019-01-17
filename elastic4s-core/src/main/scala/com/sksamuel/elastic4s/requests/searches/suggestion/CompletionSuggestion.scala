@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.suggestion
 
+import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.RegexpFlag
 import com.sksamuel.exts.OptionImplicits._
 
@@ -34,7 +35,7 @@ case class CompletionSuggestion(name: String,
                                 unicodeAware: Option[Boolean] = None,
                                 skipDuplicates: Option[Boolean] = None,
                                 text: Option[String] = None,
-                                contexts: Map[String, Seq[CategoryContext]] = Map.empty)
+                                contexts: Map[String, Seq[CompletionContext]] = Map.empty)
     extends Suggestion {
 
   def regex(regex: String): CompletionSuggestion               = copy(regex = regex.some)
@@ -49,12 +50,12 @@ case class CompletionSuggestion(name: String,
   def skipDuplicates(skipDuplicates: Boolean): CompletionSuggestion =
     copy(skipDuplicates = skipDuplicates.some)
 
-  def context(name: String, context: CategoryContext): CompletionSuggestion = contexts(name, Seq(context))
-  def contexts(name: String, contexts: Seq[CategoryContext]): CompletionSuggestion =
+  def context(name: String, context: CompletionContext): CompletionSuggestion = contexts(name, Seq(context))
+  def contexts(name: String, contexts: Seq[CompletionContext]): CompletionSuggestion =
     copy(contexts = this.contexts + (name -> contexts))
 
   // adds more contexts to this query
-  def contexts(map: Map[String, Seq[CategoryContext]]): CompletionSuggestion =
+  def contexts(map: Map[String, Seq[CompletionContext]]): CompletionSuggestion =
     copy(contexts = this.contexts ++ map)
 
   def prefix(prefix: String): CompletionSuggestion = copy(prefix = prefix.some)
@@ -75,4 +76,6 @@ case class CompletionSuggestion(name: String,
       unicodeAware.isDefined
 }
 
-case class CategoryContext(name: String, boost: Double = 1, prefix: Boolean = false)
+sealed trait CompletionContext
+case class CategoryContext(name: String, boost: Double = 1, prefix: Boolean = false) extends CompletionContext
+case class GeoContext(geoPoint: GeoPoint, precision: String, boost: Double = 1) extends CompletionContext
