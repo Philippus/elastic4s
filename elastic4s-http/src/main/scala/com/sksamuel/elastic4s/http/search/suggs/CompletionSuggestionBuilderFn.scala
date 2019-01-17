@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.http.search.suggs
 import com.sksamuel.elastic4s.http.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.suggestion.CompletionSuggestion
+import com.sksamuel.elastic4s.searches.suggestion.GeoContext
+import com.sksamuel.elastic4s.searches.suggestion.CategoryContext
 
 object CompletionSuggestionBuilderFn {
 
@@ -49,9 +51,19 @@ object CompletionSuggestionBuilderFn {
           builder.startArray(key)
           value.foreach { context =>
             builder.startObject()
-            builder.field("context", context.name)
-            builder.field("boost", context.boost)
-            builder.field("prefix", context.prefix)
+            context match {
+              case CategoryContext(name, boost, prefix) =>
+                builder.field("context", name)
+                builder.field("boost", boost)
+                builder.field("prefix", prefix)
+              case GeoContext(geoPoint, precision, boost) =>
+                builder.startObject("context")
+                builder.field("lat", geoPoint.lat)
+                builder.field("lon", geoPoint.long)
+                builder.endObject()
+                builder.field("boost", boost)
+                builder.field("precision", precision)
+            }
             builder.endObject()
           }
           builder.endArray()
