@@ -14,7 +14,7 @@ object Build extends AutoPlugin {
     val AkkaVersion            = "2.5.19"
     val AkkaHttpVersion        = "10.1.7"
     val CatsVersion            = "1.4.0"
-    val CatsEffectVersion      = "1.1.0"
+    val CatsEffectVersion      = "1.2.0"
     val CirceVersion           = "0.11.1"
     val CommonsIoVersion       = "2.6"
     val ElasticsearchVersion   = "7.0.0-alpha2"
