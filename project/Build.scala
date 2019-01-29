@@ -23,7 +23,7 @@ object Build extends AutoPlugin {
     val Json4sVersion          = "3.6.3"
     val AWSJavaSdkVersion      = "1.11.490"
     val Log4jVersion           = "2.9.1"
-    val MockitoVersion         = "1.9.5"
+    val MockitoVersion         = "1.10.19"
     val MonixVersion           = "2.3.3"
     val PlayJsonVersion        = "2.7.1"
     val ReactiveStreamsVersion = "1.0.2"
