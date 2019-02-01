@@ -20,7 +20,7 @@ object Build extends AutoPlugin {
     val ElasticsearchVersion   = "7.0.0-alpha2"
     val ExtsVersion            = "1.61.0"
     val JacksonVersion         = "2.9.8"
-    val Json4sVersion          = "3.6.3"
+    val Json4sVersion          = "3.6.4"
     val AWSJavaSdkVersion      = "1.11.490"
     val Log4jVersion           = "2.9.1"
     val MockitoVersion         = "1.10.19"
