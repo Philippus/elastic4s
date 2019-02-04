@@ -6,7 +6,7 @@ object SearchType {
   case object DfsQueryThenFetch extends SearchType
   case object QueryThenFetch    extends SearchType
 
-  val DEFAULT: DfsQueryThenFetch.type = DfsQueryThenFetch
+  val DEFAULT: QueryThenFetch.type = QueryThenFetch
   val QUERY_THEN_FETCH: QueryThenFetch.type = QueryThenFetch
   val DFS_QUERY_THEN_FETCH: DfsQueryThenFetch.type = DfsQueryThenFetch
 }
