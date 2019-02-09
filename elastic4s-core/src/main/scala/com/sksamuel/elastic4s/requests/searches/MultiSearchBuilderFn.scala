@@ -14,7 +14,10 @@ object MultiSearchBuilderFn {
         header.field("type", search.indexesTypes.types.mkString(","))
       search.pref.foreach(header.field("preference", _))
       search.requestCache.map(_.toString).foreach(header.field("request_cache", _))
-      search.searchType.map(_.toString).foreach(header.field("search_type", _))
+      search.searchType
+        .filter(_ != SearchType.DEFAULT)
+        .map(SearchTypeHttpParameters.convert)
+        .foreach(header.field("search_type", _))
       header.endObject()
 
       val body = SearchBodyBuilderFn(search)
