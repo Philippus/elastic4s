@@ -162,7 +162,9 @@ lazy val clientakka = Project("elastic4s-client-akka", file("elastic4s-client-ak
 lazy val aws = Project("elastic4s-client-aws", file("elastic4s-client-aws"))
   .settings(
     name := "elastic4s-client-aws",
-    libraryDependencies += "com.amazonaws" % "aws-java-sdk-core" % AWSJavaSdkVersion
+    libraryDependencies += "software.amazon.awssdk" % "auth" % AWSJavaSdkVersion,
+    libraryDependencies += "software.amazon.awssdk" % "core" % AWSJavaSdkVersion,
+    libraryDependencies += "software.amazon.awssdk" % "regions" % AWSJavaSdkVersion
   )
   .dependsOn(core, clientesjava)
 

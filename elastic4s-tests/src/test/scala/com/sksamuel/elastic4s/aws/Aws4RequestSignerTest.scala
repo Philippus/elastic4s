@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.aws
 
-import com.amazonaws.auth._
+import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, AwsCredentialsProvider, AwsSessionCredentials, StaticCredentialsProvider}
 import org.scalatest.{Matchers, WordSpec}
+import software.amazon.awssdk.regions.Region
 
 class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
 
@@ -12,7 +13,7 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
 
     "be able to add amazon compliant authentication header" in {
 
-      val chainProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsKey, awsSecret))
+      val chainProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create(awsKey, awsSecret))
       val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
       val withHeaders = signer.withAws4Headers(httpPostRequest)
       withHeaders.getAllHeaders find (_.getName == "Authorization") match {
@@ -22,8 +23,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
     }
 
     "be able to add security Token Header if there is a session key in context" in {
-      val credentials = new BasicSessionCredentials(awsKey, awsSecret, awsSessionToken)
-      val chainProvider = new AWSStaticCredentialsProvider(credentials)
+      val credentials = AwsSessionCredentials.create(awsKey, awsSecret, awsSessionToken)
+      val chainProvider = StaticCredentialsProvider.create(credentials)
       val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
       val withHeaders = signer.withAws4Headers(httpPostRequest)
       withHeaders.getAllHeaders find (_.getName == "X-Amz-Security-Token") match {
@@ -33,8 +34,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
     }
 
     "be able to add date time header when none is found" in {
-      val credentials = new BasicSessionCredentials(awsKey, awsSecret, awsSessionToken)
-      val chainProvider = new AWSStaticCredentialsProvider(credentials)
+      val credentials = AwsSessionCredentials.create(awsKey, awsSecret, awsSessionToken)
+      val chainProvider = StaticCredentialsProvider.create(credentials)
       val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
 
       val withHeaders = signer.withAws4Headers(httpPostRequestWithoutDate)
@@ -45,8 +46,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
     }
 
     "be able to clean bad Host headers" in {
-      val credentials = new BasicSessionCredentials(awsKey, awsSecret, awsSessionToken)
-      val chainProvider = new AWSStaticCredentialsProvider(credentials)
+      val credentials = AwsSessionCredentials.create(awsKey, awsSecret, awsSessionToken)
+      val chainProvider = StaticCredentialsProvider.create(credentials)
       val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
 
       val withHeaders = signer.withAws4Headers(httpPostRequestWithBadHost)
@@ -57,7 +58,7 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
     }
   }
 
-  class Aws4TestRequestSigner(awsCredentialProvider: AWSCredentialsProvider, region: String, date: String, dateTime: String)
+  class Aws4TestRequestSigner(awsCredentialProvider: AwsCredentialsProvider, region: Region, date: String, dateTime: String)
     extends Aws4RequestSigner(awsCredentialProvider, region) {
     override def buildDateAndDateTime() = (date, dateTime)
   }

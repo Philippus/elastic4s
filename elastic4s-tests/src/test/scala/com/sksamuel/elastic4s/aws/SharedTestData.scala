@@ -6,10 +6,11 @@ import java.nio.charset.StandardCharsets
 
 import org.apache.http.client.methods.{HttpGet, HttpPost}
 import org.apache.http.entity.BasicHttpEntity
+import software.amazon.awssdk.regions.Region
 
 trait SharedTestData {
 
-  val region  = "us-east-1"
+  val region  = Region.of("us-east-1")
   val service = "es"
   val dateTime = "20150830T123600Z"
   val date = "20150830"
