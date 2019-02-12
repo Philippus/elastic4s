@@ -40,7 +40,7 @@ object UpdateBuilderFn {
 
     request.docAsUpsert.foreach(_ => builder.field("doc_as_upsert", true))
     request.scriptedUpsert.foreach(_ => builder.field("scripted_upsert", true))
-    request.detectNoop.foreach(_ => builder.field("detect_noop", true))
+    request.detectNoop.foreach(detectNoop => builder.field("detect_noop", detectNoop))
 
     builder.endObject()
     builder
