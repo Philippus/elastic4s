@@ -3,20 +3,21 @@ package com.sksamuel.elastic4s.aws
 import java.time.format.DateTimeFormatter
 import java.time.{ZoneOffset, ZonedDateTime}
 
-import com.amazonaws.auth.{AWSCredentials, AWSCredentialsProvider, AWSSessionCredentials}
+import software.amazon.awssdk.auth.credentials.{AwsCredentials, AwsCredentialsProvider, AwsSessionCredentials}
 import com.sksamuel.elastic4s.aws.Crypto._
 import org.apache.http.{Header, HttpRequest}
+import software.amazon.awssdk.regions.Region
 
 /**
   * AWS request signer (version 4) that follows the documentation given by amazon
   * See <a href="http://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html">request signing documentation</a>
   *
-  * @param provider - an implementation of com.amazonaws.auth.AWSCredentialsProvider capable of providing aws user credentials
+  * @param provider - an implementation of com.amazonaws.auth.AwsCredentialsProvider capable of providing aws user credentials
   * @param region   - amazon region (i.e. eu-west-1)
   * @param service  - service requested, in this context, should always be elastic search, identified by the string "es"
   */
-class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, service: String = "es") {
-  require(provider.getCredentials != null, "AWS Credentials are mandatory. AWSCredentialsProvider provided none.")
+class Aws4RequestSigner(provider: AwsCredentialsProvider, region: Region, service: String = "es") {
+  require(provider.resolveCredentials != null, "AWS Credentials are mandatory. AwsCredentialsProvider provided none.")
 
   val dateHeader          = "X-Amz-Date"
   val authHeader          = "Authorization"
@@ -24,7 +25,7 @@ class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, servic
 
   def withAws4Headers(request: HttpRequest): HttpRequest = {
 
-    val credentials = provider.getCredentials
+    val credentials = provider.resolveCredentials
 
     val (date, dateTime) = buildDateAndDateTime()
 
@@ -41,7 +42,7 @@ class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, servic
 
     /* If the credentials are temporary (session credentials), add an additional security header */
     credentials match {
-      case c: AWSSessionCredentials ⇒ request.addHeader(securityTokenHeader, c.getSessionToken)
+      case c: AwsSessionCredentials ⇒ request.addHeader(securityTokenHeader, c.sessionToken)
       case _                        ⇒
     }
 
@@ -58,23 +59,23 @@ class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, servic
 
   private def buildAuthenticationHeader(canonicalRequest: CanonicalRequest,
                                         stringToSign: StringToSign,
-                                        credentials: AWSCredentials) = {
-    val credentialStr    = s"Credential=${credentials.getAWSAccessKeyId}/${stringToSign.credentialsScope}"
+                                        credentials: AwsCredentials) = {
+    val credentialStr    = s"Credential=${credentials.accessKeyId}/${stringToSign.credentialsScope}"
     val signedHeadersStr = s"SignedHeaders=${canonicalRequest.signedHeaders}"
     val signatureStr     = s"Signature=${buildSignature(stringToSign, credentials)}"
     s"${Crypto.Algorithm} $credentialStr, $signedHeadersStr, $signatureStr"
   }
 
-  private def buildSignature(stringToSign: StringToSign, credentials: AWSCredentials) = {
+  private def buildSignature(stringToSign: StringToSign, credentials: AwsCredentials) = {
     val signatureKey = buildKeyToSign(stringToSign.date, credentials)
     val signature    = sign(stringToSign.toString, signatureKey)
     hexOf(signature).toLowerCase
   }
 
-  private def buildKeyToSign(dateStr: String, credentials: AWSCredentials): Array[Byte] = {
-    val kSecret    = ("AWS4" + credentials.getAWSSecretKey).getBytes("utf-8")
+  private def buildKeyToSign(dateStr: String, credentials: AwsCredentials): Array[Byte] = {
+    val kSecret    = ("AWS4" + credentials.secretAccessKey).getBytes("utf-8")
     val dateKey    = sign(dateStr, kSecret)
-    val regionKey  = sign(region, dateKey)
+    val regionKey  = sign(region.id, dateKey)
     val serviceKey = sign(service, regionKey)
     sign("aws4_request", serviceKey)
   }

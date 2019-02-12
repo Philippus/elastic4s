@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s.aws
 
 import com.sksamuel.elastic4s.{ElasticClient, ElasticsearchClientUri}
-import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials, DefaultAWSCredentialsProviderChain}
-import com.amazonaws.regions.DefaultAwsRegionProviderChain
+import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, AwsCredentialsProviderChain, StaticCredentialsProvider}
+import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain
 import com.sksamuel.elastic4s.http.JavaClient
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.apache.http.protocol.HttpContext
 import org.apache.http.{HttpRequest, HttpRequestInterceptor}
+import software.amazon.awssdk.regions.Region
 
 case class Aws4ElasticConfig(endpoint: String, key: String, secret: String, region: String, service: String = "es") {
   require(key.length > 16 && key.length < 128 && key.matches("[\\w]+"), "Key id must be between 16 and 128 characters.")
@@ -45,8 +46,8 @@ private class DefaultSignedClientConfig extends HttpClientConfigCallback {
 }
 
 private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfig) extends HttpRequestInterceptor {
-  private val chainProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.key, config.secret))
-  private val signer        = new Aws4RequestSigner(chainProvider, config.region, config.service)
+  private val chainProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create(config.key, config.secret))
+  private val signer        = new Aws4RequestSigner(chainProvider, Region.of(config.region), config.service)
 
   override def process(request: HttpRequest, context: HttpContext): Unit = signer.withAws4Headers(request)
 
@@ -58,7 +59,7 @@ private class Aws4HttpRequestInterceptor(config: Aws4ElasticConfig) extends Http
   * See <a href="https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-region-selection.html"> default region selection</a>
   */
 private class DefaultAws4HttpRequestInterceptor extends HttpRequestInterceptor {
-  private val defaultChainProvider = new DefaultAWSCredentialsProviderChain
+  private val defaultChainProvider = AwsCredentialsProviderChain.builder.build
   private val regionProvider       = new DefaultAwsRegionProviderChain
   private val signer               = new Aws4RequestSigner(defaultChainProvider, regionProvider.getRegion)
 
