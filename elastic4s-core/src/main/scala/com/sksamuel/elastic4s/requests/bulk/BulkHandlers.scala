@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.bulk
 
-import com.oracle.webservices.internal.api.message.ContentType
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 import com.sksamuel.exts.Logging
