@@ -32,7 +32,13 @@ trait GetHandlers {
     override def build(request: MultiGetRequest): ElasticRequest = {
       val body   = MultiGetBodyBuilder(request).string()
       val entity = HttpEntity(body, "application/json")
-      ElasticRequest("GET", "/_mget", entity)
+
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.preference.foreach(params.put("preference", _))
+      request.refresh.map(_.toString).foreach(params.put("refresh", _))
+      request.realtime.map(_.toString).foreach(params.put("realtime", _))
+
+      ElasticRequest("GET", "/_mget", params.toMap, entity)
     }
   }
 
