@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.requests.indexes.admin
 import java.net.URLEncoder
 
 import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
+import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 import com.sksamuel.elastic4s.requests.indexes._
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentFactory}
@@ -106,7 +107,10 @@ trait IndexAdminHandlers {
 
     override def build(request: IndicesExistsRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.string}"
-      ElasticRequest("HEAD", endpoint)
+
+      val params = request.indicesOptions.map(IndicesOptionsParams(_)).getOrElse(Map.empty)
+
+      ElasticRequest("HEAD", endpoint, params)
     }
   }
 
