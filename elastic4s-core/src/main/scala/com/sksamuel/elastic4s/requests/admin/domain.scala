@@ -12,7 +12,6 @@ case class OpenIndexRequest(indexes: Indexes,
 
 case class CloseIndexRequest(indexes: Indexes)
 case class GetSegmentsRequest(indexes: Indexes)
-case class IndicesExistsRequest(indexes: Indexes)
 case class TypesExistsRequest(indexes: Seq[String], types: Seq[String])
 case class AliasExistsRequest(alias: String)
 case class IndexStatsRequest(indices: Indexes)
@@ -21,6 +20,11 @@ case class IndicesOptionsRequest(allowNoIndices: Boolean = false,
                                  ignoreUnavailable: Boolean = false,
                                  expandWildcardsOpen: Boolean = false,
                                  expandWildcardClosed: Boolean = false)
+
+case class IndicesExistsRequest(
+  indexes: Indexes,
+  indicesOptions: Option[IndicesOptionsRequest] = None
+)
 
 case class ClearCacheRequest(indexes: Seq[String],
                              fieldDataCache: Option[Boolean] = None,
