@@ -202,12 +202,12 @@ object ArtistIndex extends App {
 }
 ```
 
-## Eventual Consistency
+## Near Real-time search results
 
-Elasticsearch is eventually consistent. This means when you index a document it is not normally immediately available to be searched,
-but queued to be flushed to the indexes on disk. By default flushing occurs every second but this can be reduced (or increased) for bulk inserts.
-Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a flush straight away.
-You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with elastic constantly flushing to disk.
+When you index a document in Elasticsearch, it is not normally immediately available to be searched, as a refresh has to happen to make it available for the search API. By default a refresh occurs every second but this can be increased if needed. Note that this impacts only the visibility of newly indexed documents when using the search API and has nothing 
+to do with data consistency and durability.
+Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a refresh straight after the index operation.
+You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with Elasticsearch refreshing too often. It is also possible to use `WAIT_UNTIL` so that no refresh is forced, but the index request will return only after the new document is available for search.
 
 For more in depth examples keep reading.
 
