@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http.cluster
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.cluster.{ClusterHealthRequest, ClusterSettingsRequest, ClusterStateRequest}
-import com.sksamuel.elastic4s.http.{ElasticRequest, Handler, HttpEntity}
+import com.sksamuel.elastic4s.http.{ElasticRequest, EnumConversions, Handler, HttpEntity}
 import org.apache.http.entity.ContentType
 
 trait ClusterHandlers {
@@ -38,6 +38,7 @@ trait ClusterHandlers {
       request.waitForNodes.map(_.toString).foreach(params.put("wait_for_nodes", _))
       request.waitForNoRelocatingShards.map(_.toString).foreach(params.put("wait_for_no_relocating_shards", _))
       request.timeout.map(_.toString).foreach(params.put("timeout", _))
+      request.level.map(EnumConversions.clusterHealthLevel).foreach(params.put("level", _))
 
       ElasticRequest("GET", endpoint, params.toMap)
     }
@@ -52,7 +53,7 @@ trait ClusterHandlers {
   implicit object ClusterSettingsHandler extends Handler[ClusterSettingsRequest, ClusterSettingsResponse] {
     override def build(request: ClusterSettingsRequest): ElasticRequest = {
       val builder = ClusterBodyBuilderFn(request)
-      val entity = HttpEntity(builder.string, ContentType.APPLICATION_JSON.getMimeType)
+      val entity = HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType)
       ElasticRequest("PUT", "/_cluster/settings", Map("flat_settings" → true), entity)
     }
   }
@@ -85,6 +86,24 @@ case class ClusterHealthResponse(@JsonProperty("cluster_name") clusterName: Stri
                                  @JsonProperty("number_of_pending_tasks") numberOfPendingTasks: Int,
                                  @JsonProperty("number_of_in_flight_fetch") numberOfInFlightFetch: Int,
                                  @JsonProperty("task_max_waiting_in_queue_millis") taskMaxWaitingInQueueMillis: Int,
-                                 @JsonProperty("active_shards_percent_as_number") activeShardsPercentAsNumber: Double)
+                                 @JsonProperty("active_shards_percent_as_number") activeShardsPercentAsNumber: Double,
+                                 indices: Map[String, ClusterHealthIndex])
+
+case class ClusterHealthIndex(status: String,
+                              @JsonProperty("number_of_shards") numberOfShards: Int,
+                              @JsonProperty("number_of_replicas") numberOfReplicas: Int,
+                              @JsonProperty("active_primary_shards") activePrimaryShards: Int,
+                              @JsonProperty("active_shards") activeShards: Int,
+                              @JsonProperty("relocating_shards") relocatingShards: Int,
+                              @JsonProperty("initializing_shards") initializingShards: Int,
+                              @JsonProperty("unassigned_shards") unassignedShards: Int,
+                              shards: Map[String, ClusterHealthShard])
+
+case class ClusterHealthShard(status: String,
+                              @JsonProperty("primary_active") primaryActive: Boolean,
+                              @JsonProperty("active_shards") activeShards: Int,
+                              @JsonProperty("relocating_shards") relocatingShards: Int,
+                              @JsonProperty("initializing_shards") initializingShards: Int,
+                              @JsonProperty("unassigned_shards") unassignedShards: Int)
 
 case class ClusterSettingsResponse(persistent: Map[String, String], transient: Map[String, String])

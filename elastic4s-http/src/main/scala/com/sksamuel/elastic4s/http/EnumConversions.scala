@@ -1,20 +1,15 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.{VersionType, DistanceUnit}
-import com.sksamuel.elastic4s.DistanceUnit.{Inch, Yard, Feet, Kilometers, NauticalMiles, Millimeters, Centimeters, Miles, Meters}
+import com.sksamuel.elastic4s.{DistanceUnit, VersionType}
+import com.sksamuel.elastic4s.DistanceUnit.{Centimeters, Feet, Inch, Kilometers, Meters, Miles, Millimeters, NauticalMiles, Yard}
+import com.sksamuel.elastic4s.cluster.ClusterHealthLevel
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode, MultiValueMode}
 import com.sksamuel.elastic4s.searches.queries.geo.GeoDistance.{Arc, Plane}
 import com.sksamuel.elastic4s.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
-import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryBuilderType.{
-  BEST_FIELDS,
-  CROSS_FIELDS,
-  MOST_FIELDS,
-  PHRASE,
-  PHRASE_PREFIX
-}
+import com.sksamuel.elastic4s.searches.queries.matches.MultiMatchQueryBuilderType.{BEST_FIELDS, CROSS_FIELDS, MOST_FIELDS, PHRASE, PHRASE_PREFIX}
 import com.sksamuel.elastic4s.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.searches.sort.{SortMode, SortOrder}
@@ -82,9 +77,11 @@ object EnumConversions {
 
   def scoreMode(scoreMode: ScoreMode): String = scoreMode.toString.toLowerCase
 
-  def scoreMode(scoreMode: FunctionScoreQueryScoreMode): String = scoreMode.toString.toLowerCase
+  def scoreMode(scoreMode: FunctionScoreQueryScoreMode): String =
+    scoreMode.toString.toLowerCase
 
-  def boostMode(combineFunction: CombineFunction): String = combineFunction.toString.toLowerCase
+  def boostMode(combineFunction: CombineFunction): String =
+    combineFunction.toString.toLowerCase
 
   def geoExecType(execType: GeoExecType): String = execType.toString.toLowerCase
 
@@ -96,7 +93,7 @@ object EnumConversions {
 
   def collectMode(mode: SubAggCollectionMode): String = mode match {
     case SubAggCollectionMode.BreadthFirst => "breadth_first"
-    case SubAggCollectionMode.DepthFirst => "depth_first"
+    case SubAggCollectionMode.DepthFirst   => "depth_first"
   }
 
   def versionType(versionType: VersionType): String = versionType match {
@@ -112,7 +109,8 @@ object EnumConversions {
 
   def stringDistance(impl: StringDistanceImpl): String = impl.toString
 
-  def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String = flag.toString.toUpperCase
+  def simpleQueryStringFlag(flag: SimpleQueryStringFlag): String =
+    flag.toString.toUpperCase
 
   def fuzziness(fuzziness: Fuzziness): String = fuzziness match {
     case Fuzziness.Zero => "0"
@@ -136,13 +134,14 @@ object EnumConversions {
     case ZeroTermsQuery.None => "none"
   }
 
-  def multiMatchQueryBuilderType(mtype: MultiMatchQueryBuilderType): String = mtype match {
-    case BEST_FIELDS   => "best_fields"
-    case MOST_FIELDS   => "most_fields"
-    case CROSS_FIELDS  => "cross_fields"
-    case PHRASE        => "phrase"
-    case PHRASE_PREFIX => "phrase_prefix"
-  }
+  def multiMatchQueryBuilderType(mtype: MultiMatchQueryBuilderType): String =
+    mtype match {
+      case BEST_FIELDS   => "best_fields"
+      case MOST_FIELDS   => "most_fields"
+      case CROSS_FIELDS  => "cross_fields"
+      case PHRASE        => "phrase"
+      case PHRASE_PREFIX => "phrase_prefix"
+    }
 
   def multiValueMode(mode: MultiValueMode): String =
     mode match {
@@ -153,4 +152,10 @@ object EnumConversions {
       case MultiValueMode.Median => "median"
     }
 
+  def clusterHealthLevel(level: ClusterHealthLevel): String =
+    level match {
+      case ClusterHealthLevel.Cluster => "cluster"
+      case ClusterHealthLevel.Indices => "indices"
+      case ClusterHealthLevel.Shards  => "shards"
+    }
 }

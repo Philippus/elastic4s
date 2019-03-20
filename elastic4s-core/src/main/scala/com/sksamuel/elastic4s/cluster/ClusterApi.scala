@@ -40,7 +40,8 @@ case class ClusterHealthRequest(indices: Seq[String],
                                 waitForEvents: Option[Priority] = None,
                                 waitForStatus: Option[HealthStatus] = None,
                                 waitForNodes: Option[String] = None,
-                                waitForNoRelocatingShards: Option[Boolean] = None) {
+                                waitForNoRelocatingShards: Option[Boolean] = None,
+                                level: Option[ClusterHealthLevel] = None) {
 
   def timeout(value: String): ClusterHealthRequest = copy(timeout = value.some)
 
@@ -56,4 +57,21 @@ case class ClusterHealthRequest(indices: Seq[String],
 
   def waitForNoRelocatingShards(waitForNoRelocatingShards: Boolean): ClusterHealthRequest =
     copy(waitForNoRelocatingShards = waitForNoRelocatingShards.some)
+
+  def level(level: ClusterHealthLevel): ClusterHealthRequest =
+    copy(level = level.some)
+}
+
+sealed trait ClusterHealthLevel
+
+object ClusterHealthLevel {
+  def valueOf(str: String): ClusterHealthLevel = str.toLowerCase match {
+    case "cluster" => Cluster
+    case "indices" => Indices
+    case "shards" => Shards
+  }
+
+  case object Cluster extends ClusterHealthLevel
+  case object Indices extends ClusterHealthLevel
+  case object Shards extends ClusterHealthLevel
 }
