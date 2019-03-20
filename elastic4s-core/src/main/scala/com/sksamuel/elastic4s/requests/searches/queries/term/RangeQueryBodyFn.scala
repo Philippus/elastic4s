@@ -41,7 +41,7 @@ object RangeQueryBodyFn {
     range.boost.foreach(builder.field("boost", _))
     range.timeZone.foreach(builder.field("time_zone", _))
     range.queryName.foreach(builder.field("_name", _))
-    range.relation.map(_.getClass.getSimpleName.toUpperCase).foreach(builder.field("relation", _))
+    range.relation.map(_.getClass.getSimpleName.toUpperCase.stripSuffix("$")).foreach(builder.field("relation", _))
 
     builder.endObject().endObject().endObject()
   }
