@@ -64,4 +64,18 @@ trait ClusterHandlers {
       ElasticRequest(Method, Endpoint)
     }
   }
+
+  type RemoteClusterInfoResponse = Map[String, RemoteClusterInfo]
+
+  implicit object RemoteClusterInfoHandler extends Handler[RemoteClusterInfoRequest, RemoteClusterInfoResponse] {
+    override def build(request: RemoteClusterInfoRequest): ElasticRequest = {
+      ElasticRequest("GET", "/_remote/info")
+    }
+  }
+
+  implicit object AddRemoteClusterSettingsHandler extends Handler[AddRemoteClusterSettingsRequest, AddRemoteClusterResponse] {
+    override def build(request: AddRemoteClusterSettingsRequest): ElasticRequest = {
+      ClusterSettingsHandler.build(request.settingsRequest)
+    }
+  }
 }
