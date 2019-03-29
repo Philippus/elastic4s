@@ -25,23 +25,21 @@ class ClusterInfoTest extends WordSpec with Matchers with DockerTests with Befor
         remoteClusterInfo()
       }.await.result
 
-      info.valueAt("cluster_one") should equal(RemoteClusterInfo(
-        seeds = Seq("127.0.0.1:9300", "127.0.0.2:9300"),
-        httpAddresses = Seq("127.0.0.1:9200"),
-        connected = true,
-        numNodesConnected = 1,
-        maxConnectionsPerCluster = 3,
-        initialConnectTimeout = "30s",
-        skipUnavailable = false))
+      info.valueAt("cluster_one") should have(
+        'seeds (Seq("127.0.0.1:9300", "127.0.0.2:9300")),
+        'maxConnectionsPerCluster (3),
+        'initialConnectTimeout ("30s"),
+        'skipUnavailable (false)
+      )
 
-      info.valueAt("cluster_two") should equal(RemoteClusterInfo(
-        seeds = Seq.empty,
-        httpAddresses = Seq.empty,
-        connected = false,
-        numNodesConnected = 0,
-        maxConnectionsPerCluster = 3,
-        initialConnectTimeout = "30s",
-        skipUnavailable = false))
+      info.valueAt("cluster_two") should have(
+        'seeds (Seq.empty),
+        'httpAddresses (Seq.empty),
+        'connected (false),
+        'numNodesConnected (0),
+        'maxConnectionsPerCluster (3),
+        'initialConnectTimeout ("30s"),
+        'skipUnavailable (false))
     }
   }
 
