@@ -33,8 +33,6 @@ class ClusterInfoTest extends WordSpec with Matchers with DockerTests with Befor
       )
 
       info.valueAt("cluster_two") should have(
-        'seeds (Seq.empty),
-        'httpAddresses (Seq.empty),
         'connected (false),
         'numNodesConnected (0),
         'maxConnectionsPerCluster (3),
