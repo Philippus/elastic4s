@@ -17,6 +17,7 @@ object QueryStringBodyFn {
     s.fuzziness.map(_.toString).foreach(builder.field("fuzziness", _))
     s.phraseSlop.map(_.toString).foreach(builder.field("phrase_slop", _))
     s.autoGeneratePhraseQueries.map(_.toString).foreach(builder.field("auto_generate_phrase_queries", _))
+    s.autoGenerateSynonymsPhraseQuery.map(_.toString).foreach(builder.field("auto_generate_synonyms_phrase_query", _))
     s.allowLeadingWildcard.map(_.toString).foreach(builder.field("allow_leading_wildcard", _))
     s.enablePositionIncrements.map(_.toString).foreach(builder.field("enable_position_increments", _))
     s.boost.foreach(builder.field("boost", _))

@@ -11,6 +11,7 @@ object SimpleStringBodyFn {
     s.analyzeWildcard.map(_.toString).foreach(builder.field("analyze_wildcard", _))
     s.lenient.map(_.toString).foreach(builder.field("lenient", _))
     s.minimumShouldMatch.map(_.toString).foreach(builder.field("minimum_should_match", _))
+    s.autoGenerateSynonymsPhraseQuery.map(_.toString).foreach(builder.field("auto_generate_synonyms_phrase_query", _))
     s.quote_field_suffix.foreach(builder.field("quote_field_suffix", _))
     if (s.fields.nonEmpty) {
       val fields = s.fields.map {
