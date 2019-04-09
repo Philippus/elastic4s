@@ -11,7 +11,7 @@ object Build extends Build {
   val ScalatestVersion = "3.0.5"
   val MockitoVersion = "1.9.5"
   val JacksonVersion = "2.9.6"
-  val Slf4jVersion = "1.8.0-beta2"
+  val Slf4jVersion = "1.7.26"
   val ScalaLoggingVersion = "3.9.0"
   val ElasticsearchVersion = "1.7.5"
   val Log4jVersion = "1.2.17"
