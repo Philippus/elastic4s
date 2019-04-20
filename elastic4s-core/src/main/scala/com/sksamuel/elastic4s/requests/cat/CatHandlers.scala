@@ -131,7 +131,7 @@ trait CatHandlers {
   implicit object CatAllocationHandler extends Handler[CatAllocation, Seq[CatAllocationResponse]] {
 
     override def build(request: CatAllocation): ElasticRequest =
-      ElasticRequest("GET", "/_cat/aliases", Map("v" -> "", "format" -> "json", "bytes" -> "b"))
+      ElasticRequest("GET", "/_cat/allocation", Map("v" -> "", "format" -> "json", "bytes" -> "b"))
   }
 
 }
