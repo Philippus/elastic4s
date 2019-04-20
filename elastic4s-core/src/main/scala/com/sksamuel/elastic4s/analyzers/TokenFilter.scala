@@ -42,7 +42,7 @@ case object KStemTokenFilter extends TokenFilter {
 }
 
 case object PorterStemTokenFilter extends TokenFilter {
-  val name = "porterStem"
+  val name = "porter_stem"
 }
 
 case object UniqueTokenFilter extends TokenFilter {
