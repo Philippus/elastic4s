@@ -27,7 +27,7 @@ object Build extends AutoPlugin {
     val MonixVersion           = "2.3.3"
     val PlayJsonVersion        = "2.7.1"
     val ReactiveStreamsVersion = "1.0.2"
-    val ScalatestVersion       = "3.0.6"
+    val ScalatestVersion       = "3.0.7"
     val ScalamockVersion       = "4.1.0"
     val ScalazVersion          = "7.2.27"
     val SprayJsonVersion       = "1.3.5"
