@@ -33,6 +33,7 @@ object AliasActionBuilder {
     addAction.routing.foreach(jsonBuilder.field("routing", _))
     addAction.searchRouting.foreach(jsonBuilder.field("search_routing", _))
     addAction.indexRouting.foreach(jsonBuilder.field("index_routing", _))
+    addAction.isWriteIndex.foreach(jsonBuilder.field("is_write_index", _))
 
     jsonBuilder.endObject().endObject()
   }

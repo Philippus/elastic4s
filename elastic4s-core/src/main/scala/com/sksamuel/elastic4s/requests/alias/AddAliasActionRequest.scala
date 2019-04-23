@@ -8,7 +8,8 @@ case class AddAliasActionRequest(alias: String,
                                  routing: Option[String] = None,
                                  indexRouting: Option[String] = None,
                                  searchRouting: Option[String] = None,
-                                 filter: Option[Query] = None)
+                                 filter: Option[Query] = None,
+                                 isWriteIndex: Option[Boolean] = None)
     extends AliasAction {
   require(alias.nonEmpty, "alias must not be null or empty")
   require(index.nonEmpty, "index must not be null or empty")
@@ -19,4 +20,7 @@ case class AddAliasActionRequest(alias: String,
 
   def filter(query: String): AddAliasActionRequest = filter(QueryStringQuery(query))
   def filter(query: Query): AddAliasActionRequest  = copy(filter = query.some)
+
+  def isWriteIndex(isWriteIndex: Boolean): AddAliasActionRequest =          this.isWriteIndex(isWriteIndex.some)
+  def isWriteIndex(isWriteIndex: Option[Boolean]): AddAliasActionRequest =  copy(isWriteIndex = isWriteIndex)
 }
