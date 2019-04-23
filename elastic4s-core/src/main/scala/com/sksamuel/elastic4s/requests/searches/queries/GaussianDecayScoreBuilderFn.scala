@@ -2,7 +2,11 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer._
-import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{
+  EnumConversions,
+  XContentBuilder,
+  XContentFactory
+}
 
 object GaussianDecayScoreBuilderFn {
   def apply(g: GaussianDecayScore): XContentBuilder = {
@@ -14,9 +18,12 @@ object GaussianDecayScoreBuilderFn {
     g.offset.map(_.toString).foreach(builder.field("offset", _))
     g.decay.foreach(builder.field("decay", _))
     builder.endObject()
-    g.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.field("multi_value_mode", _))
+    g.multiValueMode
+      .map(EnumConversions.multiValueMode)
+      .foreach(builder.field("multi_value_mode", _))
     builder.endObject()
-    g.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    g.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     g.weight.foreach(builder.field("weight", _))
     builder
   }
@@ -29,7 +36,9 @@ object RandomScoreFunctionBuilderFn {
     builder.field("seed", r.seed)
     builder.field("field", r.fieldName)
     builder.endObject()
-    r.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    r.weight.foreach(builder.field("weight", _))
+    r.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -41,7 +50,8 @@ object ScriptScoreBuilderFn {
     builder.rawField("script", ScriptBuilderFn(s.script))
     builder.endObject()
     s.weight.foreach(builder.field("weight", _))
-    s.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    s.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -55,7 +65,8 @@ object FieldValueFactorBuilderFn {
     f.modifier.map(_.toString.toLowerCase).foreach(builder.field("modifier", _))
     f.missing.foreach(builder.field("missing", _))
     builder.endObject()
-    f.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    f.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -70,10 +81,13 @@ object ExponentialDecayScoreBuilderFn {
     g.offset.map(_.toString).foreach(builder.field("offset", _))
     g.decay.foreach(builder.field("decay", _))
     builder.endObject()
-    g.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.field("multi_value_mode", _))
+    g.multiValueMode
+      .map(EnumConversions.multiValueMode)
+      .foreach(builder.field("multi_value_mode", _))
     builder.endObject()
     g.weight.foreach(builder.field("weight", _))
-    g.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    g.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -88,10 +102,13 @@ object LinearDecayScoreBuilderFn {
     g.offset.map(_.toString).foreach(builder.field("offset", _))
     g.decay.foreach(builder.field("decay", _))
     builder.endObject()
-    g.multiValueMode.map(EnumConversions.multiValueMode).foreach(builder.field("multi_value_mode", _))
+    g.multiValueMode
+      .map(EnumConversions.multiValueMode)
+      .foreach(builder.field("multi_value_mode", _))
     builder.endObject()
     g.weight.foreach(builder.field("weight", _))
-    g.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    g.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
@@ -100,7 +117,8 @@ object WeightBuilderFn {
   def apply(w: WeightScore): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("weight", w.weight.toFloat)
-    w.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn.apply(filter)))
+    w.filter.foreach(filter =>
+      builder.rawField("filter", QueryBuilderFn.apply(filter)))
     builder
   }
 }
