@@ -40,9 +40,9 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
 
   client.execute(
     bulk(
-      indexInto("cardagg/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("cardagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("cardagg/buildings") fields("name" -> "Tower of London", "height" -> 169)
+      indexInto("cardagg") fields("name" -> "Willis Tower", "height" -> 1244),
+      indexInto("cardagg") fields("name" -> "Burj Kalifa", "height" -> 2456),
+      indexInto("cardagg") fields("name" -> "Tower of London", "height" -> 169)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

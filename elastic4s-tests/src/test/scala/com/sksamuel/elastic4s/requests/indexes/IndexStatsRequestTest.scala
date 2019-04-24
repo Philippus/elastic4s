@@ -12,9 +12,9 @@ class IndexStatsRequestTest
 
   client.execute {
     bulk(
-      indexInto("indexstats1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("indexstats2/landmarks").fields("name" -> "tower of london"),
-      indexInto("indexstats3/landmarks").fields("name" -> "fountains abbey")
+      indexInto("indexstats1").fields("name" -> "hampton court palace"),
+      indexInto("indexstats2").fields("name" -> "tower of london"),
+      indexInto("indexstats3").fields("name" -> "fountains abbey")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

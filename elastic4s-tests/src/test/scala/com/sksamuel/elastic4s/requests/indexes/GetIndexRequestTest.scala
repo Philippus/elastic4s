@@ -29,7 +29,7 @@ class GetIndexRequestTest extends WordSpec with Matchers with DockerTests {
       val resp = client.execute {
         getIndex("getindextest")
       }.await.result
-      resp("getindextest").mappings shouldBe Map("mytype" -> Mapping(Map("a" -> Field("text"), "b" -> Field("keyword"), "c" -> Field("long"))))
+      resp("getindextest").mappings shouldBe Mapping(Map("a" -> Field("text"), "b" -> Field("keyword"), "c" -> Field("long")))
     }
 
     "return settings" in {

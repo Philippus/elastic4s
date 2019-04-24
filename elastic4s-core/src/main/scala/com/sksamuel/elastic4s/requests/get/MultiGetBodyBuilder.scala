@@ -8,8 +8,8 @@ object MultiGetBodyBuilder {
     builder.startArray("docs")
     request.gets.foreach { get =>
       builder.startObject()
-      builder.field("_index", get.indexAndType.index)
-      builder.field("_type", get.indexAndType.`type`)
+      builder.field("_index", get.index.index)
+      builder.field("_type", "_doc")
       builder.field("_id", get.id)
       get.routing.foreach(builder.field("routing", _))
       get.fetchSource.foreach { context =>
@@ -21,7 +21,7 @@ object MultiGetBodyBuilder {
             builder.array("exclude", context.excludes)
           builder.endObject()
         } else
-          builder.field("_source", false)
+          builder.field("_source", boolean = false)
       }
       if (get.storedFields.nonEmpty)
         builder.array("stored_fields", get.storedFields.toArray)

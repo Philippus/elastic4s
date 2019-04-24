@@ -52,16 +52,10 @@ trait SearchHandlers {
     override def build(request: SearchRequest): ElasticRequest = {
 
       val endpoint =
-        if (request.indexesTypes.indexes.isEmpty && request.indexesTypes.types.isEmpty)
-          "/_search"
-        else if (request.indexesTypes.indexes.isEmpty)
-          "/_all/" + request.indexesTypes.types.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
-        else if (request.indexesTypes.types.isEmpty)
-          "/" + request.indexesTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",") + "/_search"
+        if (request.indexes.values.isEmpty)
+          "/_all/_search"
         else
-          "/" + request.indexesTypes.indexes
-            .map(URLEncoder.encode(_, "UTF-8"))
-            .mkString(",") + "/" + request.indexesTypes.types
+          "/" + request.indexes.values
             .map(URLEncoder.encode(_, "UTF-8"))
             .mkString(",") + "/_search"
 

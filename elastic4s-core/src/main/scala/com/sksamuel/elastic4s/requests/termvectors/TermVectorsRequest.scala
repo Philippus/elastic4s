@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.Index
 import com.sksamuel.exts.OptionImplicits._
 
 case class TermVectorsRequest(index: Index,
-                              `type`: Option[String],
                               id: String,
                               fieldStatistics: Option[Boolean] = None,
                               offsets: Option[Boolean] = None,

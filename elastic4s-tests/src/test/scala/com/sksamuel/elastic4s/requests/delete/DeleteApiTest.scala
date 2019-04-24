@@ -13,20 +13,20 @@ class DeleteApiTest extends FlatSpec with Matchers with TypeCheckedTripleEquals 
   }
 
   it should "accept index and type in dot syntax" in {
-    delete("123").from("places" / "type1")
-    delete("123").from("places" / "type1")
+    delete("123").from("places")
+    delete("123").from("places")
   }
 
   it should "accept routing key" in {
-    delete("141212").from("places" / "type1").routing("my-route")
+    delete("141212").from("places").routing("my-route")
   }
 
   it should "accept version and version type" in {
-    delete("141212") from "places" / "type1" version 53423l versionType VersionType.External
+    delete("141212") from "places" version 53423l versionType VersionType.External
   }
 
   it should "accept refresh" in {
-    delete("141212") from "places" / "type1" refresh RefreshPolicy.Immediate
+    delete("141212") from "places" refresh RefreshPolicy.Immediate
   }
 
   "a delete by query request" should "support the dsl syntax" in {

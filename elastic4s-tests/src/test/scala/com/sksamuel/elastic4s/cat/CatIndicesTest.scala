@@ -8,9 +8,9 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("catindex1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catindex2/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catindex3/landmarks").fields("name" -> "hampton court palace")
+      indexInto("catindex1").fields("name" -> "hampton court palace"),
+      indexInto("catindex2").fields("name" -> "hampton court palace"),
+      indexInto("catindex3").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

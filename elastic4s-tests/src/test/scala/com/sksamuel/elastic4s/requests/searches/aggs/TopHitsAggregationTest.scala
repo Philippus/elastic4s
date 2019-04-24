@@ -27,11 +27,11 @@ class TopHitsAggregationTest extends FreeSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("tophits/landmarks") fields("name" -> "tower of london", "location" -> "london"),
-      indexInto("tophits/landmarks") fields("name" -> "buckingham palace", "location" -> "london"),
-      indexInto("tophits/landmarks") fields("name" -> "hampton court palace", "location" -> "london"),
-      indexInto("tophits/landmarks") fields("name" -> "york minster", "location" -> "yorkshire"),
-      indexInto("tophits/landmarks") fields("name" -> "stonehenge", "location" -> "wiltshire")
+      indexInto("tophits") fields("name" -> "tower of london", "location" -> "london"),
+      indexInto("tophits") fields("name" -> "buckingham palace", "location" -> "london"),
+      indexInto("tophits") fields("name" -> "hampton court palace", "location" -> "london"),
+      indexInto("tophits") fields("name" -> "york minster", "location" -> "yorkshire"),
+      indexInto("tophits") fields("name" -> "stonehenge", "location" -> "wiltshire")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -39,7 +39,7 @@ class TopHitsAggregationTest extends FreeSpec with DockerTests with Matchers {
     "should be useable as a sub agg" in {
 
       val resp = client.execute {
-        search("tophits/landmarks").matchAllQuery().aggs {
+        search("tophits").matchAllQuery().aggs {
           termsAgg("agg1", "location").addSubagg(
             topHitsAgg("agg2").sortBy(fieldSort("name"))
           )
@@ -63,7 +63,7 @@ class TopHitsAggregationTest extends FreeSpec with DockerTests with Matchers {
         override def read(json: String): Try[String] = Try(json)
       }
       val resp = client.execute {
-        search("tophits/landmarks").matchAllQuery().aggs {
+        search("tophits").matchAllQuery().aggs {
           termsAgg("agg1", "location").addSubagg(
             topHitsAgg("agg2").sortBy(fieldSort("name"))
           )

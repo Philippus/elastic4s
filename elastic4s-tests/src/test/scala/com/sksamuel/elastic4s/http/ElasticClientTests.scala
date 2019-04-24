@@ -15,7 +15,7 @@ class ElasticClientTests extends FlatSpec with Matchers with DockerTests {
 
   "DefaultHttpClient" should "support utf-8" in {
     client.execute {
-      indexInto("testindex" / "testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")
+      indexInto("testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")
     }.await.result.result shouldBe "created"
   }
 }

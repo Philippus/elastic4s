@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.requests.explain
 
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.requests.searches.queries.{Query, QueryStringQuery}
 
-case class ExplainRequest(indexAndType: IndexAndType,
+case class ExplainRequest(index: Index,
                           id: String,
                           query: Option[Query] = None,
                           fetchSource: Option[Boolean] = None,

@@ -15,19 +15,19 @@ class GeoBoundsAggregationHttpTest extends FreeSpec with DockerTests with Matche
 
   client.execute {
     createIndex("geoboundsagg") mappings {
-      mapping("doc") fields geopointField("location")
+      mapping() fields geopointField("location")
     }
   }.await
 
   // based on the examples from Geo Distance Aggregation docs
   client.execute(
     bulk(
-      indexInto("geoboundsagg/doc").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
-      indexInto("geoboundsagg/doc").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
-      indexInto("geoboundsagg/doc").fields("location" -> "52.371667,4.914722", "name" -> "Nederlands Scheepvaartmuseum"),
-      indexInto("geoboundsagg/doc").fields("location" -> "51.222900,4.405200", "name" -> "Letterenhuis"),
-      indexInto("geoboundsagg/doc").fields("location" -> "48.861111,2.336389", "name" -> "Musée du Louvre"),
-      indexInto("geoboundsagg/doc").fields("location" -> "48.860000,2.327000", "name" -> "Musée d'Orsay")
+      indexInto("geoboundsagg").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
+      indexInto("geoboundsagg").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
+      indexInto("geoboundsagg").fields("location" -> "52.371667,4.914722", "name" -> "Nederlands Scheepvaartmuseum"),
+      indexInto("geoboundsagg").fields("location" -> "51.222900,4.405200", "name" -> "Letterenhuis"),
+      indexInto("geoboundsagg").fields("location" -> "48.861111,2.336389", "name" -> "Musée du Louvre"),
+      indexInto("geoboundsagg").fields("location" -> "48.860000,2.327000", "name" -> "Musée d'Orsay")
     ).refreshImmediately
   ).await
 

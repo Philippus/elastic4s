@@ -31,10 +31,14 @@ object CreateIndexContentBuilder {
         builder.endObject() // end settings
       }
 
-      if (d.mappings.nonEmpty) {
+      if (d.mappings.length == 1) {
+        builder.rawField("mappings", MappingBuilderFn.build(d.mappings.head))
+      } else if (d.mappings.nonEmpty) {
         builder.startObject("mappings")
-        for (mapping <- d.mappings)
-          builder.rawField(mapping.`type`, MappingBuilderFn.build(mapping))
+        for (mapping <- d.mappings) {
+          require(mapping.name.nonEmpty)
+          builder.rawField(mapping.name.get, MappingBuilderFn.build(mapping))
+        }
         builder.endObject()
       }
 

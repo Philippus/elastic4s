@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.requests.delete
 
-import com.sksamuel.elastic4s.IndexesAndTypes
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 
-case class DeleteByQueryRequest(indexesAndTypes: IndexesAndTypes,
+case class DeleteByQueryRequest(indexes: Indexes,
                                 query: Query,
                                 requestsPerSecond: Option[Float] = None,
                                 maxRetries: Option[Int] = None,

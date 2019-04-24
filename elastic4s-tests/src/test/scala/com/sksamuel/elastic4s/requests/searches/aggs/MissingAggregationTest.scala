@@ -26,10 +26,10 @@ class MissingAggregationTest extends FreeSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("missingagg/buildings") fields("name" -> "Willis Tower", "floors" -> 4),
-      indexInto("missingagg/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("missingagg/buildings") fields("name" -> "Tower of London", "floors" -> 7),
-      indexInto("missingagg/buildings") fields("name" -> "London Bridge", "height" -> 63)
+      indexInto("missingagg") fields("name" -> "Willis Tower", "floors" -> 4),
+      indexInto("missingagg") fields("name" -> "Burj Kalifa", "height" -> 2456),
+      indexInto("missingagg") fields("name" -> "Tower of London", "floors" -> 7),
+      indexInto("missingagg") fields("name" -> "London Bridge", "height" -> 63)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

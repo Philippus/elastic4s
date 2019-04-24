@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.requests.get
 
+import com.sksamuel.elastic4s.IndexLike
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, Preference, VersionType}
-import com.sksamuel.elastic4s.IndexAndType
 import com.sksamuel.exts.OptionImplicits._
 
-case class GetRequest(indexAndType: IndexAndType,
+case class GetRequest(index: IndexLike,
                       id: String,
                       storedFields: Seq[String] = Nil,
                       parent: Option[String] = None,
@@ -15,13 +15,13 @@ case class GetRequest(indexAndType: IndexAndType,
                       version: Option[Long] = None,
                       versionType: Option[VersionType] = None,
                       fetchSource: Option[FetchSourceContext] = None) {
-  require(indexAndType != null, "indexAndTypes must not be null")
+  require(index != null, "indexAndTypes must not be null")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   def fetchSourceContext(fetch: Boolean): GetRequest = copy(fetchSource = FetchSourceContext(fetch).some)
 
   def fetchSourceContext(include: Iterable[String], exclude: Iterable[String] = Nil): GetRequest =
-    copy(fetchSource = FetchSourceContext(true, include.toArray, exclude.toArray).some)
+    copy(fetchSource = FetchSourceContext(fetchSource = true, include.toArray, exclude.toArray).some)
 
   def fetchSourceContext(context: FetchSourceContext): GetRequest = copy(fetchSource = context.some)
 
@@ -52,6 +52,6 @@ case class GetRequest(indexAndType: IndexAndType,
   def routing(r: String): GetRequest   = copy(routing = r.some)
   def version(ver: Long): GetRequest   = copy(version = ver.some)
 
-  def versionType(vtype: String): GetRequest      = versionType(VersionType.valueOf(vtype))
-  def versionType(vtype: VersionType): GetRequest = copy(versionType = vtype.some)
+  def versionType(versionType: String): GetRequest      = this.versionType(VersionType.valueOf(versionType))
+  def versionType(versionType: VersionType): GetRequest = copy(versionType = versionType.some)
 }

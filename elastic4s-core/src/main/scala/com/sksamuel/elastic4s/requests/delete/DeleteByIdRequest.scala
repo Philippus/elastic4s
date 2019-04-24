@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.requests.delete
 
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
-import com.sksamuel.elastic4s.IndexAndType
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
 import com.sksamuel.exts.OptionImplicits._
 
-case class DeleteByIdRequest(indexType: IndexAndType,
+case class DeleteByIdRequest(index: Index,
                              id: String,
                              parent: Option[String] = None,
                              routing: Option[String] = None,

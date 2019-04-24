@@ -16,7 +16,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("intros").mappings(
-      mapping("tv").fields(
+      mapping().fields(
         textField("name").stored(true),
         textField("text").stored(true)
       )
@@ -24,7 +24,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
   }.await
 
   client.execute {
-    indexInto("intros/tv")
+    indexInto("intros")
       .fields(
         "name" -> "star trek",
         "text" -> "Space, the final frontier. These are the voyages of the starship Enterprise. Its continuing mission: to explore strange new worlds, to seek out new life and new civilisations, to boldly go where no one has gone before."
@@ -95,7 +95,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
     }
     "use post tags" in {
       val resp = client.execute {
-        search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
+        search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 postTag "<riker>"
           )
       }.await.result
@@ -105,7 +105,7 @@ class HighlightTest extends WordSpec with Matchers with DockerTests {
     }
     "use highlight query" in {
       val resp = client.execute {
-        search("intros" / "tv") query matchQuery("text", "frontier") highlighting (
+        search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 query matchQuery("text", "life")
           )
       }.await.result

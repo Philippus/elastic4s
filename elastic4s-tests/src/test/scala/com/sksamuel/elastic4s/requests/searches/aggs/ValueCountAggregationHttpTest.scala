@@ -41,9 +41,9 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
 
   client.execute(
     bulk(
-      indexInto("valuecount/buildings") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("valuecount/buildings") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("valuecount/buildings") fields("name" -> "Tower of London", "height" -> 169)
+      indexInto("valuecount") fields("name" -> "Willis Tower", "height" -> 1244),
+      indexInto("valuecount") fields("name" -> "Burj Kalifa", "height" -> 2456),
+      indexInto("valuecount") fields("name" -> "Tower of London", "height" -> 169)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

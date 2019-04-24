@@ -15,7 +15,8 @@ case class CreateIndexRequest(name: String,
                               rawSource: Option[String] = None,
                               waitForActiveShards: Option[Int] = None,
                               aliases: Set[IndexAliasRequest] = Set.empty,
-                              settings: IndexSettings = new IndexSettings) {
+                              settings: IndexSettings = new IndexSettings,
+                              includeTypeName: Option[Boolean] = None) {
 
   def alias(name: String): CreateIndexRequest = alias(IndexAliasRequest(name, None))
   def alias(name: String, filter: Query): CreateIndexRequest =
@@ -38,7 +39,11 @@ case class CreateIndexRequest(name: String,
 
   def indexSetting(name: String, value: Any): CreateIndexRequest = copy(settings = settings.add(name, value))
 
-  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexRequest = mappings(first +: rest)
+  def mappings(mapping: MappingDefinition): CreateIndexRequest = copy(mappings = this.mappings ++ Seq(mapping))
+  @deprecated("types are deprecated now", "7.0")
+  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexRequest =
+    copy(mappings = this.mappings ++ (first +: rest))
+  @deprecated("types are deprecated now", "7.0")
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexRequest =
     copy(mappings = this.mappings ++ mappings)
 
@@ -56,4 +61,7 @@ case class CreateIndexRequest(name: String,
   def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexRequest = analysis(Nil, normalizers)
 
   def source(source: String): CreateIndexRequest = copy(rawSource = source.some)
+
+  def includeTypeName(includeTypeName: Boolean): CreateIndexRequest = copy(includeTypeName = includeTypeName.some)
+  def includeTypeName(includeTypeName: Option[Boolean]): CreateIndexRequest = copy(includeTypeName = includeTypeName)
 }

@@ -17,7 +17,7 @@ class PercentilesBucketPipelineAggHttpTest extends FreeSpec with DockerTests wit
 
   client.execute {
     createIndex("percentilesbucketagg") mappings {
-      mapping("sales") fields(
+      mapping() fields(
         dateField("date"),
         doubleField("value").stored(true)
       )
@@ -26,14 +26,14 @@ class PercentilesBucketPipelineAggHttpTest extends FreeSpec with DockerTests wit
 
   client.execute(
     bulk(
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-03-02", "value" -> 3000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-04-02", "value" -> 4000.0),
-      indexInto("percentilesbucketagg/sales") fields("date" -> "2017-04-02", "value" -> 4000.0)
+      indexInto("percentilesbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-04-02", "value" -> 4000.0),
+      indexInto("percentilesbucketagg") fields("date" -> "2017-04-02", "value" -> 4000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

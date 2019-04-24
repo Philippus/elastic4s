@@ -7,7 +7,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class CatAliasTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
-    indexInto("catalias/landmarks").fields("name" -> "hampton court palace").refresh(RefreshPolicy.Immediate)
+    indexInto("catalias").fields("name" -> "hampton court palace").refresh(RefreshPolicy.Immediate)
   }.await
 
   client.execute {

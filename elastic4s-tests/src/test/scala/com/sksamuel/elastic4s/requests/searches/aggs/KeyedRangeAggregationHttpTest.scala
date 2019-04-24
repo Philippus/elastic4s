@@ -16,7 +16,7 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
 
   client.execute {
     createIndex("keyedrangeaggs") mappings {
-      mapping("tv") fields(
+      mapping() fields(
         textField("name").fielddata(true),
         intField("grade")
       )
@@ -25,12 +25,12 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
 
   client.execute(
     bulk(
-      indexInto("keyedrangeaggs/tv").fields("name" -> "Breaking Bad", "grade" -> 9),
-      indexInto("keyedrangeaggs/tv").fields("name" -> "Better Call Saul", "grade" -> 9),
-      indexInto("keyedrangeaggs/tv").fields("name" -> "Star Trek Discovery", "grade" -> 7),
-      indexInto("keyedrangeaggs/tv").fields("name" -> "Game of Thrones", "grade" -> 8),
-      indexInto("keyedrangeaggs/tv").fields("name" -> "Designated Survivor", "grade" -> 6),
-      indexInto("keyedrangeaggs/tv").fields("name" -> "Walking Dead", "grade" -> 5)
+      indexInto("keyedrangeaggs").fields("name" -> "Breaking Bad", "grade" -> 9),
+      indexInto("keyedrangeaggs").fields("name" -> "Better Call Saul", "grade" -> 9),
+      indexInto("keyedrangeaggs").fields("name" -> "Star Trek Discovery", "grade" -> 7),
+      indexInto("keyedrangeaggs").fields("name" -> "Game of Thrones", "grade" -> 8),
+      indexInto("keyedrangeaggs").fields("name" -> "Designated Survivor", "grade" -> 6),
+      indexInto("keyedrangeaggs").fields("name" -> "Walking Dead", "grade" -> 5)
     ).refreshImmediately
   ).await
 

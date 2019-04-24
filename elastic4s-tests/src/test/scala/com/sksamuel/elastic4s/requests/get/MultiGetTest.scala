@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.FlatSpec
 import org.scalatest.Matchers._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.Try
 
@@ -18,7 +18,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   client.execute {
     createIndex("coldplay").shards(2).mappings(
-      mapping("albums").fields(
+      mapping().fields(
         textField("name").stored(true),
         intField("year").stored(true)
       )
@@ -27,10 +27,10 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
   client.execute(
     bulk(
-      indexInto("coldplay" / "albums") id "1" fields("name" -> "parachutes", "year" -> 2000),
-      indexInto("coldplay" / "albums") id "3" fields("name" -> "x&y", "year" -> 2005),
-      indexInto("coldplay" / "albums") id "5" fields("name" -> "mylo xyloto", "year" -> 2011),
-      indexInto("coldplay" / "albums") id "7" fields("name" -> "ghost stories", "year" -> 2015)
+      indexInto("coldplay") id "1" fields("name" -> "parachutes", "year" -> 2000),
+      indexInto("coldplay") id "3" fields("name" -> "x&y", "year" -> 2005),
+      indexInto("coldplay") id "5" fields("name" -> "mylo xyloto", "year" -> 2011),
+      indexInto("coldplay") id "7" fields("name" -> "ghost stories", "year" -> 2015)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -38,9 +38,9 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3").from("coldplay/albums"),
-        get("5") from "coldplay/albums",
-        get("7") from "coldplay/albums"
+        get("3").from("coldplay"),
+        get("5") from "coldplay",
+        get("7") from "coldplay"
       )
     ).await.result
 
@@ -60,8 +60,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3").from("coldplay/albums"),
-        get("711111") from "coldplay/albums"
+        get("3").from("coldplay"),
+        get("711111") from "coldplay"
       )
     ).await.result
 
@@ -74,8 +74,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3") from "coldplay/albums" storedFields("name", "year"),
-        get("5") from "coldplay/albums" storedFields "name"
+        get("3") from "coldplay" storedFields("name", "year"),
+        get("5") from "coldplay" storedFields "name"
       )
     ).await.result
 
@@ -88,8 +88,8 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3") from "coldplay/albums" fetchSourceContext Seq("name", "year"),
-        get("5") from "coldplay/albums" fetchSourceContext Seq("name")
+        get("3") from "coldplay" fetchSourceContext Seq("name", "year"),
+        get("5") from "coldplay" fetchSourceContext Seq("name")
       )
     ).await.result
     resp.size shouldBe 2
@@ -99,7 +99,7 @@ class MultiGetTest extends FlatSpec with MockitoSugar with DockerTests {
   it should "retrieve documents by id with routing spec" in {
 
     val resp = client.execute(
-      multiget(get("3") from "coldplay/albums" routing "3")
+      multiget(get("3") from "coldplay" routing "3")
     ).await.result
 
     resp.size shouldBe 1

@@ -20,18 +20,18 @@ class ExistsTest extends WordSpec with Matchers with DockerTests {
   }.await
 
   client.execute {
-    indexInto("exists/flowers").withId("a").fields("name" -> "Narcissus")
+    indexInto("exists").withId("a").fields("name" -> "Narcissus")
   }.await
 
   "an exists request" should {
     "return true for an existing doc" in {
       client.execute {
-        exists("a", "exists", "flowers")
+        exists("a", "exists")
       }.await.result shouldBe true
     }
     "return false for non existing doc" in {
       client.execute {
-        exists("b", "exists", "flowers")
+        exists("b", "exists")
       }.await.result shouldBe false
     }
   }

@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
+import org.scalatestplus.mockito.MockitoSugar
 
 class IndexTemplateHttpTest
   extends WordSpec
@@ -15,7 +15,7 @@ class IndexTemplateHttpTest
     "be stored" in {
       client.execute {
         createIndexTemplate("brewery_template", "brew*").mappings(
-          mapping("brands").fields(
+          mapping().fields(
             textField("name"),
             doubleField("year_founded")
           )
@@ -32,7 +32,7 @@ class IndexTemplateHttpTest
     "return error if the template has invalid parameters" in {
       client.execute {
         createIndexTemplate("brewery_template", "brew*").mappings(
-          mapping("brands").fields(
+          mapping().fields(
             textField("name"),
             doubleField("year_founded") analyzer "test_analyzer"
           )
@@ -47,7 +47,7 @@ class IndexTemplateHttpTest
       }.await
 
       client.execute {
-        indexInto("brewers" / "brands") fields(
+        indexInto("brewers") fields(
           "name" -> "fullers",
           "year_founded" -> 1829
         ) refresh RefreshPolicy.Immediate

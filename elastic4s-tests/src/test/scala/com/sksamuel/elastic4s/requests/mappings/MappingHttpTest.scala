@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.requests.analyzers.{CustomAnalyzerDefinition, CustomNormalizerDefinition, LowercaseTokenFilter, WhitespaceAnalyzer, WhitespaceTokenizer}
+import com.sksamuel.elastic4s.requests.analyzers._
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
@@ -21,7 +21,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
   client.execute {
     createIndex("index").mappings(
-      mapping("mapping1") as Seq(
+      mapping() as Seq(
         textField("a") stored true analyzer WhitespaceAnalyzer,
         keywordField("b") normalizer "my_normalizer",
         joinField("c") relation ("parent", Seq("bar", "foo"))
@@ -36,7 +36,7 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
 
   client.execute {
     createIndex("indexnoprops").mappings(
-      mapping("mapping2").dynamic(DynamicMapping.Strict)
+      mapping().dynamic(DynamicMapping.Strict)
     )
   }.await
 
@@ -44,20 +44,21 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
     "return specified mapping" in {
 
       val mappings = client.execute {
-        getMapping("index" / "mapping1")
+        getMapping("index")
       }.await.result
 
-      val properties = mappings.find(_.index == "index").get.mappings("mapping1")
-      val a = properties("a").asInstanceOf[Map[String, Any]]
+      val properties = mappings.find(_.index == "index").get.mappings
+      println(mappings)
+      val a = properties
       a("type") shouldBe "text"
       a("store") shouldBe true
       a("analyzer") shouldBe "whitespace"
 
-      val b = properties("b").asInstanceOf[Map[String, Any]]
+      val b = properties
       b("type") shouldBe "keyword"
       b("normalizer") shouldBe "my_normalizer"
 
-      val c = properties("c").asInstanceOf[Map[String, Any]]
+      val c = properties
       c("type") shouldBe "join"
       c("relations") shouldEqual Map("parent" -> Seq("bar", "foo"))
     }
@@ -65,10 +66,10 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
     "handle properly mapping without properties" in {
 
       val mappings = client.execute {
-        getMapping("indexnoprops" / "mapping2")
+        getMapping("indexnoprops")
       }.await.result
 
-      val properties = mappings.find(_.index == "indexnoprops").get.mappings("mapping2")
+      val properties = mappings.find(_.index == "indexnoprops").get.mappings
 
       properties shouldBe Map.empty
     }

@@ -189,6 +189,7 @@ trait IndexAdminHandlers {
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
+      request.includeTypeName.foreach(params.put("include_type_name", _))
 
       val body   = CreateIndexContentBuilder(request).string()
       val entity = HttpEntity(body, "application/json")

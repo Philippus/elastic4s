@@ -19,12 +19,12 @@ class CatShardsTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("catshards1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catshards1/landmarks").fields("name" -> "stonehenge"),
-      indexInto("catshards1/landmarks").fields("name" -> "kensington palace"),
-      indexInto("catshards2/landmarks").fields("name" -> "blenheim palace"),
-      indexInto("catshards2/landmarks").fields("name" -> "london eye"),
-      indexInto("catshards2/landmarks").fields("name" -> "tower of london")
+      indexInto("catshards1").fields("name" -> "hampton court palace"),
+      indexInto("catshards1").fields("name" -> "stonehenge"),
+      indexInto("catshards1").fields("name" -> "kensington palace"),
+      indexInto("catshards2").fields("name" -> "blenheim palace"),
+      indexInto("catshards2").fields("name" -> "london eye"),
+      indexInto("catshards2").fields("name" -> "tower of london")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

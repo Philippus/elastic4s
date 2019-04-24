@@ -46,7 +46,7 @@
 //  "a percolate request for existing document" should "return queries that match the document" in {
 //    // this is the document we will percolate with
 //    client.execute {
-//      indexInto("percolate/teas") fields "flavour" -> "darjeeling" withId "4"
+//      indexInto("percolate") fields "flavour" -> "darjeeling" withId "4"
 //    }.await
 //
 //    blockUntilCount(4, "percolate")

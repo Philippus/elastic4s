@@ -12,9 +12,9 @@ class CatSegmentsTest
 
   client.execute {
     bulk(
-      indexInto("catseg/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catseg/landmarks").fields("name" -> "tower of london"),
-      indexInto("catseg/landmarks").fields("name" -> "fountains abbey")
+      indexInto("catseg").fields("name" -> "hampton court palace"),
+      indexInto("catseg").fields("name" -> "tower of london"),
+      indexInto("catseg").fields("name" -> "fountains abbey")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

@@ -38,7 +38,7 @@ trait IndexTemplateHandlers {
     override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.name
       val body     = CreateIndexTemplateBodyFn(request)
-      val entity   = HttpEntity(body.string, "application/json")
+      val entity   = HttpEntity(body.string(), "application/json")
       ElasticRequest("PUT", endpoint, entity)
     }
   }
@@ -87,10 +87,13 @@ object CreateIndexTemplateBodyFn {
       builder.endObject()
     }
 
-    if (create.mappings.nonEmpty) {
+    if (create.mappings.length == 1) {
+      builder.rawField("mappings", MappingBuilderFn.build(create.mappings.head))
+    } else if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
-      create.mappings.foreach { mapping =>
-        builder.rawField(mapping.`type`, MappingBuilderFn.build(mapping))
+      for (mapping <- create.mappings) {
+        require(mapping.name.nonEmpty)
+        builder.rawField(mapping.name.get, MappingBuilderFn.build(mapping))
       }
       builder.endObject()
     }

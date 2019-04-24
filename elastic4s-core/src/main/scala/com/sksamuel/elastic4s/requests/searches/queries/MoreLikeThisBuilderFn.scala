@@ -16,7 +16,7 @@ object MoreLikeThisBuilderFn {
     q.likeDocs.foreach { doc =>
       builder.startObject()
       builder.field("_index", doc.ref.index)
-      builder.field("_type", doc.ref.`type`)
+      builder.field("_type", "_doc")
       builder.field("_id", doc.ref.id)
       doc.routing.foreach { r ⇒
         builder.field("routing", r)
@@ -41,7 +41,7 @@ object MoreLikeThisBuilderFn {
       q.unlikeDocs.foreach { doc =>
         builder.startObject()
         builder.field("_index", doc.ref.index)
-        builder.field("_type", doc.ref.`type`)
+        builder.field("_type", "_doc")
         builder.field("_id", doc.ref.id)
         doc.routing.foreach { r ⇒
           builder.field("routing", r)

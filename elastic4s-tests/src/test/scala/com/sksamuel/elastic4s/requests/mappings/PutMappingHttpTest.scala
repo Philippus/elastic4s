@@ -18,21 +18,21 @@ class PutMappingHttpTest extends FunSuite with Matchers with DockerTests {
 
     client.execute {
       createIndex("putmaptest").mappings(
-        mapping("a").fields(
+        mapping().fields(
           keywordField("foo")
         )
       )
     }.await
 
     client.execute {
-      putMapping("putmaptest" / "a").fields(
+      putMapping("putmaptest").fields(
         keywordField("moo")
       )
     }.await
 
     client.execute {
-      getMapping("putmaptest" / "a")
-    }.await.result shouldBe Seq(IndexMappings("putmaptest", Map("a" -> Map("foo" -> Map("type" -> "keyword"), "moo" -> Map("type" -> "keyword")))))
+      getMapping("putmaptest")
+    }.await.result shouldBe Seq(IndexMappings("putmaptest", Map("foo" -> Map("type" -> "keyword"), "moo" -> Map("type" -> "keyword"))))
   }
 
   test("put mapping should support raw source") {
@@ -47,18 +47,18 @@ class PutMappingHttpTest extends FunSuite with Matchers with DockerTests {
 
     client.execute {
       createIndex("putrawtest").mappings(
-        mapping("a").fields(
+        mapping().fields(
           keywordField("foo")
         )
       )
     }.await
 
     client.execute {
-      putMapping("putrawtest" / "a").rawSource(raw)
+      putMapping("putrawtest").rawSource(raw)
     }.await
 
     client.execute {
-      getMapping("putrawtest" / "a")
-    }.await.result shouldBe List(IndexMappings("putrawtest", Map("a" -> Map("foo" -> Map("type" -> "keyword")))))
+      getMapping("putrawtest")
+    }.await.result shouldBe List(IndexMappings("putrawtest", Map("foo" -> Map("type" -> "keyword"))))
   }
 }

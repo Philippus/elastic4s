@@ -80,7 +80,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
                 }
               }
              }
-           """).shards(1).waitForActiveShards(1)
+           """).shards(1).waitForActiveShards(1).includeTypeName(true)
       }.await.result.acknowledged shouldBe true
     }
   }

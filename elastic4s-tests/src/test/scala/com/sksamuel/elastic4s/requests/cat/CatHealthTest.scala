@@ -8,7 +8,7 @@ class CatHealthTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("cathealth/landmarks").fields("name" -> "hampton court palace")
+      indexInto("cathealth").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

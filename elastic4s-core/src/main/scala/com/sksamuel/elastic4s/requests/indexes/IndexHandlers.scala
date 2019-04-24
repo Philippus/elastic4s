@@ -4,8 +4,8 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.collection.Maps
 
 trait IndexHandlers {
@@ -24,11 +24,9 @@ trait IndexHandlers {
 
       val (method, endpoint) = request.id match {
         case Some(id) =>
-          "PUT" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder
-            .encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}/${URLEncoder.encode(id.toString, StandardCharsets.UTF_8.name())}"
+          "PUT" -> s"/${URLEncoder.encode(request.index.name, StandardCharsets.UTF_8.name())}/_doc/${URLEncoder.encode(id.toString, StandardCharsets.UTF_8.name())}"
         case None =>
-          "POST" -> s"/${URLEncoder.encode(request.indexAndType.index, StandardCharsets.UTF_8.name())}/${URLEncoder
-            .encode(request.indexAndType.`type`, StandardCharsets.UTF_8.name())}"
+          "POST" -> s"/${URLEncoder.encode(request.index.name, StandardCharsets.UTF_8.name())}/_doc"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
@@ -46,7 +44,7 @@ trait IndexHandlers {
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
       val body   = IndexContentBuilder(request)
-      val entity = HttpEntity(body.string, "application/json")
+      val entity = HttpEntity(body.string(), "application/json")
 
       logger.debug(s"Endpoint=$endpoint")
       ElasticRequest(method, endpoint, params.toMap, entity)
@@ -68,7 +66,7 @@ case class Mapping(properties: Map[String, Field])
 case class Field(`type`: String)
 
 case class GetIndexResponse(aliases: Map[String, Map[String, Any]],
-                            mappings: Map[String, Mapping],
+                            mappings: Mapping,
                             @JsonProperty("settings") private val _settings: Map[String, Any]) {
   def settings: Map[String, Any] = Maps.flatten(_settings, ".")
 }

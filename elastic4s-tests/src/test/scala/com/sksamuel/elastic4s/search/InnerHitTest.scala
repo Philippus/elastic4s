@@ -13,7 +13,7 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex(indexName).mappings {
-      mapping("football").fields(
+      mapping().fields(
         keywordField("name"),
         joinField("affiliation").relation("club", "player")
       )
@@ -22,8 +22,8 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto(indexName / "football").fields(Map("name" -> "boro", "affiliation" -> "club")).id("1").routing("1"),
-      indexInto(indexName / "football").fields(Map("name" -> "traore", "affiliation" -> Child("player", "1"))).id("2").routing("1")
+      indexInto(indexName).fields(Map("name" -> "boro", "affiliation" -> "club")).id("1").routing("1"),
+      indexInto(indexName).fields(Map("name" -> "traore", "affiliation" -> Child("player", "1"))).id("2").routing("1")
     ).refreshImmediately
   }.await
 
@@ -42,7 +42,7 @@ class InnerHitTest extends WordSpec with Matchers with DockerTests {
           List(
             com.sksamuel.elastic4s.requests.searches.InnerHit(
               indexName,
-              "football",
+              "_doc",
               "2",
               Map.empty,
               Some(1.0),

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.explain
 
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s._
 
 trait ExplainHandlers {
 
@@ -16,7 +16,7 @@ trait ExplainHandlers {
 
     override def build(request: ExplainRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.indexAndType.index}/${request.indexAndType.`type`}/${request.id}/_explain"
+      val endpoint = s"/${request.index.index}/_doc/${request.id}/_explain"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.routing.map(_.toString).foreach(params.put("routing", _))

@@ -16,7 +16,7 @@ class BucketScriptPipelineAggBuilderTest extends FlatSpec with JsonSugar  {
     */
   "AggregationBuilderFn" should "generate correct bucketScript aggregation json" in {
 
-    val search = SearchRequest("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex").aggs(
       dateHistogramAgg("sales_per_month", "date").interval(DateHistogramInterval.Month).subaggs(
         sumAgg("total_sales", "price"),
         filterAgg("t-shirts", termQuery("type", "t-shirt")).addSubagg(

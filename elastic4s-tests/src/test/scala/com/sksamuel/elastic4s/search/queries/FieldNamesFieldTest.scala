@@ -20,10 +20,10 @@ class FieldNamesFieldTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("space/dwarf").fields(
+      indexInto("space").fields(
         "name" -> "Ceres"
       ),
-      indexInto("space/dwarf").fields(
+      indexInto("space").fields(
         "name" -> "Pluto",
         "location" -> "solar system"
       )

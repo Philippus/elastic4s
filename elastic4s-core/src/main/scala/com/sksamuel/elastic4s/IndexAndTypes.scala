@@ -4,8 +4,29 @@ import java.net.URLEncoder
 
 import scala.language.implicitConversions
 
-case class Index(name: String) {
-  def toIndexes: Indexes = Indexes(Seq(name))
+trait IndexesLike {
+  def values: Seq[String]
+  def toIndexes: Indexes = Indexes(values)
+}
+
+object IndexesLike {
+  implicit def apply(indexes: String): IndexesLike           = Indexes(indexes.split(','))
+  def apply(first: String, rest: String*): IndexesLike       = Indexes(first +: rest)
+  implicit def apply(indexes: Iterable[String]): IndexesLike = Indexes(indexes.toSeq)
+}
+
+trait IndexLike extends IndexesLike {
+  def index: String
+
+  override def values: Seq[String] = Seq(index)
+}
+
+object IndexLike {
+  implicit def toIndex(str: String): IndexLike = Index(str)
+}
+
+case class Index(name: String) extends IndexLike {
+  override def index: String = name
 }
 
 object Index {
@@ -20,7 +41,7 @@ object Index {
   * - "index1,index2"
   * - "_all"
   */
-case class Indexes(values: Seq[String]) {
+case class Indexes(values: Seq[String]) extends IndexesLike {
   // returns an IndexesAndTypes where the types is empty
   def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(values, Nil)
   def size: Int                          = values.size
@@ -43,7 +64,7 @@ object Indexes {
   * Models exactly one index associated with exactly one type.
   */
 @deprecated("types are deprecated now", "7.0")
-case class IndexAndType(index: String, `type`: String) {
+case class IndexAndType(index: String, `type`: String) extends IndexLike {
   @deprecated("types are deprecated now", "7.0")
   def toIndexAndTypes: IndexAndTypes     = IndexAndTypes(index, Seq(`type`))
   @deprecated("types are deprecated now", "7.0")
@@ -53,7 +74,8 @@ case class IndexAndType(index: String, `type`: String) {
 @deprecated("types are deprecated now", "7.0")
 object IndexAndType {
   @deprecated("types are deprecated now", "7.0")
-  implicit def apply(str: String): IndexAndType = str.split('/') match {
+  implicit def apply(str: String): IndexLike = str.split('/') match {
+    case Array(index)      => Index(index)
     case Array(index, tpe) => IndexAndType(index, tpe)
     case _                 => sys.error(s"Could not parse '$str' into index/type")
   }
@@ -67,7 +89,7 @@ object IndexAndType {
   * - index1/type1,type2
   */
 @deprecated("types are deprecated now", "7.0")
-case class IndexAndTypes(index: String, types: Seq[String]) {
+case class IndexAndTypes(index: String, types: Seq[String]) extends IndexLike {
   @deprecated("types are deprecated now", "7.0")
   def toIndexesAndTypes = IndexesAndTypes(Seq(index), types)
 }
@@ -75,9 +97,9 @@ case class IndexAndTypes(index: String, types: Seq[String]) {
 @deprecated("types are deprecated now", "7.0")
 object IndexAndTypes {
   @deprecated("types are deprecated now", "7.0")
-  implicit def apply(string: String): IndexAndTypes =
+  implicit def apply(string: String): IndexLike =
     string.split("/") match {
-      case Array(index)    => IndexAndTypes(index, Nil)
+      case Array(index)    => Index(index)
       case Array(index, t) => IndexAndTypes(index, t.split(","))
       case _               => sys.error(s"Could not parse '$string' into index/type1[,type2,...]")
     }
@@ -102,15 +124,17 @@ object IndexAndTypes {
   * - index1,index2/type1,type2
   */
 @deprecated("types are deprecated now", "7.0")
-case class IndexesAndTypes(indexes: Seq[String], types: Seq[String])
+case class IndexesAndTypes(indexes: Seq[String], types: Seq[String]) extends IndexesLike {
+  override def values: Seq[String] = indexes
+}
 
 @deprecated("types are deprecated now", "7.0")
 object IndexesAndTypes {
 
   @deprecated("types are deprecated now", "7.0")
-  implicit def apply(string: String): IndexesAndTypes =
+  implicit def apply(string: String): IndexesLike =
     string.split("/") match {
-      case Array(index)    => IndexesAndTypes(index.split(","), Nil)
+      case Array(index)    => Indexes(index.split(","))
       case Array(index, t) => IndexesAndTypes(index.split(","), t.split(","))
       case _               => sys.error(s"Could not parse '$string' into index1[,index2,...]/type1[,type2,...]")
     }
@@ -136,9 +160,15 @@ object IndexesAndTypes {
 
 // Models one ore more indexes associated with exactly one type
 @deprecated("types are deprecated now", "7.0")
-case class IndexesAndType(indexes: Seq[String], `type`: String)
+case class IndexesAndType(indexes: Seq[String], `type`: Option[String] = None)
 
 object IndexesAndType {
+  def apply(indexes: Seq[String], `type`: String): IndexesAndType = IndexesAndType(indexes, Option(`type`))
+
+  @deprecated("types are deprecated now", "7.0")
+  implicit def apply(indexesLike: IndexesLike): IndexesAndType =
+    IndexesAndType(indexesLike.values, None)
+
   @deprecated("types are deprecated now", "7.0")
   implicit def apply(indexAndType: IndexAndType): IndexesAndType =
     IndexesAndType(Seq(indexAndType.index), indexAndType.`type`)

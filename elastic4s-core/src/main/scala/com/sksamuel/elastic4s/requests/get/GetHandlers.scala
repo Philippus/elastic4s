@@ -72,7 +72,7 @@ trait GetHandlers {
     override def build(request: GetRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.indexAndType.index, "UTF-8")}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id, "UTF-8")}"
+        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_doc/${URLEncoder.encode(request.id, "UTF-8")}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>

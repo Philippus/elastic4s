@@ -19,9 +19,9 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       client.execute {
         bulk(
-          indexInto("jacksontest" / "characters").source(Character("tyrion", "game of thrones")).withId("1"),
-          indexInto("jacksontest" / "characters").source(Character("hank", "breaking bad")).withId("2"),
-          indexInto("jacksontest" / "characters").source(Location("dorne", "game of thrones")).withId("3")
+          indexInto("jacksontest").source(Character("tyrion", "game of thrones")).withId("1"),
+          indexInto("jacksontest").source(Character("hank", "breaking bad")).withId("2"),
+          indexInto("jacksontest").source(Location("dorne", "game of thrones")).withId("3")
         ).refresh(RefreshPolicy.WaitFor)
       }.await
     }

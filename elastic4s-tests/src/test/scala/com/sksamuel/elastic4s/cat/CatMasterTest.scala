@@ -8,7 +8,7 @@ class CatMasterTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("catmaster/landmarks").fields("name" -> "hampton court palace")
+      indexInto("catmaster").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

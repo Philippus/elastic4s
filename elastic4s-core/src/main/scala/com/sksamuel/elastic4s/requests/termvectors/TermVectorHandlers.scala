@@ -10,10 +10,7 @@ trait TermVectorHandlers {
 
     override def build(request: TermVectorsRequest): ElasticRequest = {
 
-      val endpoint = request.`type` match {
-        case Some(tpe) => s"/${request.index.name}/$tpe/${request.id}/_termvectors"
-        case None => s"/${request.index.name}/${request.id}/_termvectors"
-      }
+      val endpoint = s"/${request.index.name}/_termvectors/${request.id}"
 
       val builder = XContentFactory.jsonBuilder()
 
@@ -62,7 +59,6 @@ trait TermVectorHandlers {
         val builder = XContentFactory.jsonBuilder()
 
         builder.field("_index", r.index.name)
-        r.`type`.foreach(builder.field("_type", _))
         builder.field("_id", r.id)
 
         if (r.fields.nonEmpty)

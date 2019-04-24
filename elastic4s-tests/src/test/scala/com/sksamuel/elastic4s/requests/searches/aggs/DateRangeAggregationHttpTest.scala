@@ -26,12 +26,12 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("daterangeaggs/tv").fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2014"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2017"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Game of Thrones", "premiere_date" -> "01/06/2010"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2016"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Walking Dead", "premiere_date" -> "19/01/2011")
+      indexInto("daterangeaggs").fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
+      indexInto("daterangeaggs").fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2014"),
+      indexInto("daterangeaggs").fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2017"),
+      indexInto("daterangeaggs").fields("name" -> "Game of Thrones", "premiere_date" -> "01/06/2010"),
+      indexInto("daterangeaggs").fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2016"),
+      indexInto("daterangeaggs").fields("name" -> "Walking Dead", "premiere_date" -> "19/01/2011")
     ).refreshImmediately
   ).await
 

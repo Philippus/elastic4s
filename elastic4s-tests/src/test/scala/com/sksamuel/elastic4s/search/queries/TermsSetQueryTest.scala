@@ -20,8 +20,8 @@ class TermsSetQueryTest
 
   client.execute {
     bulk(
-      indexInto("randompeople/people") fields ("names" -> Seq("nelson","edmure","john"), "required_matches" -> 2),
-      indexInto("randompeople/people") fields ("names" -> Seq("umber","rudolfus","byron"), "required_matches" -> 1)
+      indexInto("randompeople") fields ("names" -> Seq("nelson","edmure","john"), "required_matches" -> 2),
+      indexInto("randompeople") fields ("names" -> Seq("umber","rudolfus","byron"), "required_matches" -> 1)
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

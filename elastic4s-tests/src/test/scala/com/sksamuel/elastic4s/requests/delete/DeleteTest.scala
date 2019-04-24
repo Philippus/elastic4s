@@ -16,15 +16,15 @@ class DeleteTest extends FlatSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("places/cities") id "99" fields(
+      indexInto("places") id "99" fields(
         "name" -> "London",
         "country" -> "UK"
       ),
-      indexInto("places/cities") id "44" fields(
+      indexInto("places") id "44" fields(
         "name" -> "Philadelphia",
         "country" -> "USA"
       ),
-      indexInto("places/cities") id "615" fields(
+      indexInto("places") id "615" fields(
         "name" -> "Middlesbrough",
         "country" -> "UK",
         "continent" -> "Europe"
@@ -35,32 +35,32 @@ class DeleteTest extends FlatSpec with DockerTests with Matchers {
   "a delete by id query" should "return success but with result = not_found when a document does not exist" in {
 
     client.execute {
-      delete("141212") from "places" / "cities" refresh RefreshPolicy.Immediate
+      delete("141212") from "places" refresh RefreshPolicy.Immediate
     }.await.result.result shouldBe "not_found"
 
     client.execute {
-      searchWithType("places" / "cities").limit(0)
+      search("places").limit(0)
     }.await.result.totalHits shouldBe 3
   }
 
   it should "return an error when the index does not exist" in {
 
     client.execute {
-      delete("141212") from "wooop/la" refresh RefreshPolicy.Immediate
+      delete("141212") from "wooop" refresh RefreshPolicy.Immediate
     }.await.error.`type` shouldBe "index_not_found_exception"
 
     client.execute {
-      searchWithType("places" / "cities").limit(0)
+      search("places").limit(0)
     }.await.result.totalHits shouldBe 3
   }
 
   it should "remove a document when deleting by id" in {
     client.execute {
-      delete("99") from "places/cities" refresh RefreshPolicy.Immediate
+      delete("99") from "places" refresh RefreshPolicy.Immediate
     }.await.result.result shouldBe "deleted"
 
     client.execute {
-      searchWithType("places" / "cities").limit(0)
+      search("places").limit(0)
     }.await.result.totalHits shouldBe 2
   }
 }

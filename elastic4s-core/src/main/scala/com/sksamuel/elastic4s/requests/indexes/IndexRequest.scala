@@ -7,7 +7,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 
-case class IndexRequest(indexAndType: IndexAndType,
+case class IndexRequest(index: Index,
                         id: Option[String] = None,
                         createOnly: Option[Boolean] = None,
                         refresh: Option[RefreshPolicy] = None,
@@ -20,7 +20,7 @@ case class IndexRequest(indexAndType: IndexAndType,
                         fields: Seq[FieldValue] = Nil,
                         source: Option[String] = None)
     extends BulkCompatibleRequest {
-  require(indexAndType != null, "index must not be null or empty")
+  require(index != null, "index must not be null or empty")
 
   def doc(json: String): IndexRequest       = source(json)
   def doc[T: Indexable](t: T): IndexRequest = source(t)

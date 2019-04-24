@@ -9,9 +9,7 @@ object MultiSearchBuilderFn {
     request.searches.flatMap { search =>
       val header = XContentFactory.jsonBuilder()
 
-      header.field("index", search.indexesTypes.indexes.mkString(","))
-      if (search.indexesTypes.types.nonEmpty)
-        header.field("type", search.indexesTypes.types.mkString(","))
+      header.field("index", search.indexes.values.mkString(","))
       search.pref.foreach(header.field("preference", _))
       search.requestCache.map(_.toString).foreach(header.field("request_cache", _))
       search.searchType

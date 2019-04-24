@@ -24,11 +24,11 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
   // based on the examples from IpRange aggregation docs
   client.execute(
     bulk(
-      indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.1"),
-      indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.2"),
-      indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.5"),
-      indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.100"),
-      indexInto("iprangeagg/doc").fields("ip" -> "10.0.0.128")
+      indexInto("iprangeagg").fields("ip" -> "10.0.0.1"),
+      indexInto("iprangeagg").fields("ip" -> "10.0.0.2"),
+      indexInto("iprangeagg").fields("ip" -> "10.0.0.5"),
+      indexInto("iprangeagg").fields("ip" -> "10.0.0.100"),
+      indexInto("iprangeagg").fields("ip" -> "10.0.0.128")
     ).refreshImmediately
   ).await
 

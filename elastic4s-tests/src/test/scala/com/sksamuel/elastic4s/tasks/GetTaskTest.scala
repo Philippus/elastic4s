@@ -11,10 +11,10 @@ class GetTaskTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("get_task_a" / "a").fields(Map("foo" -> "far")),
-      indexInto("get_task_a" / "a").fields(Map("moo" -> "mar")),
-      indexInto("get_task_a" / "a").fields(Map("moo" -> "mar")),
-      indexInto("get_task_a" / "a").fields(Map("goo" -> "gar"))
+      indexInto("get_task_a").fields(Map("foo" -> "far")),
+      indexInto("get_task_a").fields(Map("moo" -> "mar")),
+      indexInto("get_task_a").fields(Map("moo" -> "mar")),
+      indexInto("get_task_a").fields(Map("goo" -> "gar"))
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -37,7 +37,7 @@ class GetTaskTest extends WordSpec with Matchers with DockerTests {
       task.id shouldBe resp.taskId
       task.`type` shouldBe "transport"
       task.action shouldBe "indices:data/write/reindex"
-      task.description shouldBe "reindex from [get_task_a] to [get_task_b]"
+      task.description shouldBe "reindex from [get_task_a] to [get_task_b][_doc]"
       task.startTimeInMillis >= start shouldBe true
     }
   }

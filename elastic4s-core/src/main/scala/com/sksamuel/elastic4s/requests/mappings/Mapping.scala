@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.IndexesAndType
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
+import com.sksamuel.exts.OptionImplicits._
 
 trait MappingDefinitionLike {
   def all: Option[Boolean]
@@ -45,10 +46,9 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
                              meta: Map[String, Any] = Map.empty,
                              routing: Option[Routing] = None,
                              templates: Seq[DynamicTemplateRequest] = Nil,
-                             rawSource: Option[String] = None)
+                             rawSource: Option[String] = None,
+                             includeTypeName: Option[Boolean] = None)
     extends MappingDefinitionLike {
-
-  import com.sksamuel.exts.OptionImplicits._
 
   def all(all: Boolean): PutMappingRequest       = copy(all = all.some)
   def source(source: Boolean): PutMappingRequest = copy(source = source.some)
@@ -95,9 +95,12 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
   def dynamicTemplates(temps: DynamicTemplateRequest*): PutMappingRequest          = templates(temps)
   def templates(temps: Iterable[DynamicTemplateRequest]): PutMappingRequest        = copy(templates = temps.toSeq)
   def templates(temps: DynamicTemplateRequest*): PutMappingRequest                 = copy(templates = temps.toSeq)
+
+  def includeTypeName(includeTypeName: Boolean): PutMappingRequest = copy(includeTypeName = includeTypeName.some)
+  def includeTypeName(includeTypeName: Option[Boolean]): PutMappingRequest = copy(includeTypeName = includeTypeName)
 }
 
-case class MappingDefinition(`type`: String, // the name basically, called a type in es
+case class MappingDefinition(name: Option[String] = None, // the name basically, called a type in es
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
                              sourceExcludes: Seq[String] = Nil,
@@ -162,4 +165,9 @@ case class MappingDefinition(`type`: String, // the name basically, called a typ
   def dynamicTemplates(temps: DynamicTemplateRequest*): MappingDefinition          = templates(temps)
   def templates(temps: Iterable[DynamicTemplateRequest]): MappingDefinition        = copy(templates = temps.toSeq)
   def templates(temps: DynamicTemplateRequest*): MappingDefinition                 = copy(templates = temps.toSeq)
+}
+
+object MappingDefinition {
+  @deprecated("types are deprecated now", "7.0")
+  def apply(name: String): MappingDefinition = MappingDefinition(name = name.some)
 }

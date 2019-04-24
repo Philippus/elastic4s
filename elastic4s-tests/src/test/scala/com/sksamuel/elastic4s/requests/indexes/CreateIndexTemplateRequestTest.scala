@@ -41,8 +41,7 @@ class CreateIndexTemplateRequestTest
       }.await.result
 
       resp.map(_.index) shouldBe Seq("matchme.template")
-      resp.head.mappings.keySet shouldBe Set("sometype1")
-      resp.head.mappings("sometype1").keySet shouldBe Set("field1", "field2", "field3", "field4")
+      resp.head.mappings.keySet shouldBe Set("field1", "field2", "field3", "field4")
     }
   }
 }

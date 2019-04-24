@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search.queries
 
-import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import org.scalatest.WordSpec
 
 import scala.util.Try
@@ -28,32 +28,32 @@ class RangeQueryHttpTest
 
   client.execute {
     bulk(
-      indexInto("rangequeryhttptest/pieces").fields(
+      indexInto("rangequeryhttptest").fields(
         "name" -> "queen",
         "value" -> 10,
         "count" -> 1
       ),
-      indexInto("rangequeryhttptest/pieces").fields(
+      indexInto("rangequeryhttptest").fields(
         "name" -> "king",
         "value" -> 0,
         "count" -> 1
       ),
-      indexInto("rangequeryhttptest/pieces").fields(
+      indexInto("rangequeryhttptest").fields(
         "name" -> "bishop",
         "value" -> 3,
         "count" -> 2
       ),
-      indexInto("rangequeryhttptest/pieces").fields(
+      indexInto("rangequeryhttptest").fields(
         "name" -> "knight",
         "value" -> 3,
         "count" -> 2
       ),
-      indexInto("rangequeryhttptest/pieces").fields(
+      indexInto("rangequeryhttptest").fields(
         "name" -> "rook",
         "value" -> 5,
         "count" -> 2
       ),
-      indexInto("rangequeryhttptest/pieces").fields(
+      indexInto("rangequeryhttptest").fields(
         "name" -> "pawn",
         "value" -> 1,
         "count" -> 8

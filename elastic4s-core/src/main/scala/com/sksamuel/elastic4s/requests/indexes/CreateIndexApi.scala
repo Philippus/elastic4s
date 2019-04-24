@@ -11,7 +11,10 @@ trait CreateIndexApi {
   def tokenizers(tokenizers: Tokenizer*)        = new TokenizersWrapper(tokenizers)
   def filters(filters: TokenFilter*)            = new TokenFiltersWrapper(filters)
 
+  @deprecated("types are deprecated now", "7.0")
   def mapping(name: String): MappingDefinition = MappingDefinition(name)
+
+  def mapping(): MappingDefinition = MappingDefinition()
 
   class AnalyzersWrapper(val analyzers: Iterable[AnalyzerDefinition])
   class TokenizersWrapper(val tokenizers: Iterable[Tokenizer])

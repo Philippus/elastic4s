@@ -6,8 +6,8 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.exts.OptionImplicits._
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers}
+import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.{Success, Try}
 
@@ -39,7 +39,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
 
   client.execute {
     createIndex(IndexName).mappings(
-      mapping(IndexName).fields(
+      mapping().fields(
         textField("name"),
         textField("stadium"),
         intField("founded")
@@ -47,7 +47,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     )
   }.await
 
-  def indexRequest(id: String, team: Team): IndexRequest = indexInto(Index(IndexName), IndexName).source(team).id(id)
+  def indexRequest(id: String, team: Team): IndexRequest = indexInto(IndexName).source(team).id(id)
 
   client.execute(
     bulk(
@@ -127,14 +127,14 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     val milkyway = Galaxy(
       Seq(
         Quadrant("alpha", Map(
-          UUID.randomUUID -> Race("humans", Planet("earth", 0, 0, 0), 19128948125L, true, Affiliation.Federation, None),
-          UUID.randomUUID -> Race("vulcans", Planet("Vulcan", 156.13, 360.0, 98.12), 998342345L, true, Affiliation.Federation, None)
+          UUID.randomUUID -> Race("humans", Planet("earth", 0, 0, 0), 19128948125L, peaceful = true, Affiliation.Federation, None),
+          UUID.randomUUID -> Race("vulcans", Planet("Vulcan", 156.13, 360.0, 98.12), 998342345L, peaceful = true, Affiliation.Federation, None)
         )),
         Quadrant("beta", Map(
-          UUID.randomUUID -> Race("romulans", Planet("Romulus", 510, 236.2, 65.2), 73454525L, true, Affiliation.Other, "Shinzon".some)
+          UUID.randomUUID -> Race("romulans", Planet("Romulus", 510, 236.2, 65.2), 73454525L, peaceful = true, Affiliation.Other, "Shinzon".some)
         )),
         Quadrant("gamma", Map(
-          UUID.randomUUID -> Race("vorta", Planet("Kurill Prime", 11.51, 136.2, 265.6), 4389976L, true, Affiliation.Dominion, "Weyoun".some)
+          UUID.randomUUID -> Race("vorta", Planet("Kurill Prime", 11.51, 136.2, 265.6), 4389976L, peaceful = true, Affiliation.Dominion, "Weyoun".some)
         ))
       )
     )
@@ -148,7 +148,7 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
     import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
     client.execute {
-      indexInto("galaxies/g").doc(milkyway).refresh(RefreshPolicy.IMMEDIATE)
+      indexInto("galaxies").doc(milkyway).refresh(RefreshPolicy.IMMEDIATE)
     }.await
 
     client.execute {

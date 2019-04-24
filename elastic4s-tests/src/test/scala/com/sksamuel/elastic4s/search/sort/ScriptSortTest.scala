@@ -25,9 +25,9 @@ class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("scriptsort/tubestops") fields("name" -> "south kensington", "line" -> "district"),
-      indexInto("scriptsort/tubestops") fields("name" -> "earls court", "line" -> "district"),
-      indexInto("scriptsort/tubestops") fields("name" -> "bank", "line" -> "northern")
+      indexInto("scriptsort") fields("name" -> "south kensington", "line" -> "district"),
+      indexInto("scriptsort") fields("name" -> "earls court", "line" -> "district"),
+      indexInto("scriptsort") fields("name" -> "bank", "line" -> "northern")
     ).refreshImmediately
   }.await
 

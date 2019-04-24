@@ -27,11 +27,11 @@ class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("drinks/drink") fields ("text" -> "coors light is a coors beer by molson") id "4" routing "1",
-      indexInto("drinks/drink") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" routing "1",
-      indexInto("drinks/drink") fields ("text" -> "Gordons popular gin UK") id "7" routing "1",
-      indexInto("drinks/drink") fields ("text" -> "coors regular is another coors beer by molson") id "8" routing "1",
-      indexInto("drinks/drink") fields ("text" -> "Hendricks upmarket gin UK") id "9" routing "1"
+      indexInto("drinks") fields ("text" -> "coors light is a coors beer by molson") id "4" routing "1",
+      indexInto("drinks") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" routing "1",
+      indexInto("drinks") fields ("text" -> "Gordons popular gin UK") id "7" routing "1",
+      indexInto("drinks") fields ("text" -> "coors regular is another coors beer by molson") id "8" routing "1",
+      indexInto("drinks") fields ("text" -> "Hendricks upmarket gin UK") id "9" routing "1"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

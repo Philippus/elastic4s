@@ -91,16 +91,16 @@ class RolloverIndexRequestTest extends WordSpec with Matchers with DockerTests {
     "support max docs" in {
       client.execute {
         bulk(
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo"),
-          indexInto("roll_write" / "wibble").fields("foo" -> "woo")
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo"),
+          indexInto("roll_write").fields("foo" -> "woo")
         ).refreshImmediately
       }.await
       client.execute {

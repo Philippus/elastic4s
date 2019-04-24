@@ -1,54 +1,51 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
 import scala.util.Try
 
-class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
+class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers with BeforeAndAfterAll {
 
-  Try {
+  override protected def beforeAll(): Unit = {
+    deleteIdx("sumagg")
+
     client.execute {
-      deleteIndex("sumagg")
-    }.await
-  }
+      createIndex("sumagg") mappings {
+        mapping("actors") fields(
+          textField("name").fielddata(true),
+          intField("age").stored(true)
+        )
+      }
+    }.await.result.acknowledged shouldBe true
 
-  client.execute {
-    createIndex("sumagg") mappings {
-      mapping("actors") fields(
-        textField("name").fielddata(true),
-        intField("age").stored(true)
-      )
+
+    Try {
+      client.execute {
+        deleteIndex("sumagg2")
+      }.await
     }
-  }.await.result.acknowledged shouldBe true
 
-
-  Try {
     client.execute {
-      deleteIndex("sumagg2")
-    }.await
+      createIndex("sumagg2") mappings {
+        mapping("actors") fields(
+          textField("name").fielddata(true),
+          intField("age").stored(true)
+        )
+      }
+    }.await.result.acknowledged shouldBe true
+
+    client.execute(
+      bulk(
+        indexInto("sumagg") fields("name" -> "clint eastwood", "age" -> "52"),
+        indexInto("sumagg") fields("name" -> "eli wallach", "age" -> "72"),
+        indexInto("sumagg") fields("name" -> "lee van cleef", "age" -> "62"),
+        indexInto("sumagg") fields ("name" -> "nicholas cage"),
+        indexInto("sumagg") fields("name" -> "sean connery", "age" -> "32"),
+        indexInto("sumagg") fields("name" -> "kevin costner", "age" -> "42")
+      ).refreshImmediately
+    ).await
   }
-
-  client.execute {
-    createIndex("sumagg2") mappings {
-      mapping("actors") fields(
-        textField("name").fielddata(true),
-        intField("age").stored(true)
-      )
-    }
-  }.await.result.acknowledged shouldBe true
-
-  client.execute(
-    bulk(
-      indexInto("sumagg/actors") fields("name" -> "clint eastwood", "age" -> "52"),
-      indexInto("sumagg/actors") fields("name" -> "eli wallach", "age" -> "72"),
-      indexInto("sumagg/actors") fields("name" -> "lee van cleef", "age" -> "62"),
-      indexInto("sumagg/actors") fields("name" -> "nicholas cage"),
-      indexInto("sumagg/actors") fields("name" -> "sean connery", "age" -> "32"),
-      indexInto("sumagg/actors") fields("name" -> "kevin costner", "age" -> "42")
-    ).refresh(RefreshPolicy.Immediate)
-  ).await
 
   "sum aggregation" - {
     "should group by field" in {

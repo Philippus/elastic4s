@@ -7,7 +7,7 @@ import scala.util.Try
 
 trait DockerTests extends ElasticDsl with ClientProvider {
 
-  val client = JavaClient(ElasticProperties("http://localhost:9200"))
+  val client = JavaClient(ElasticProperties(s"http://${sys.env.getOrElse("ES_HOST", "127.0.0.1")}:${sys.env.getOrElse("ES_PORT", "9200")}"))
 
   protected def deleteIdx(indexName: String): Unit = {
     Try {
@@ -25,10 +25,6 @@ trait DockerTests extends ElasticDsl with ClientProvider {
 
   protected def cleanIndex(indexName: String): Unit = {
     deleteIdx(indexName)
-    Try {
-      client.execute {
-        ElasticDsl.createIndex(indexName)
-      }.await
-    }
+    createIdx(indexName)
   }
 }

@@ -11,7 +11,7 @@ class TermsLookupQueryTest
 
   client.execute {
     createIndex("lords").mappings(
-      mapping("people").fields(
+      mapping().fields(
         keywordField("name")
       )
     )
@@ -19,7 +19,7 @@ class TermsLookupQueryTest
 
   client.execute {
     createIndex("lordsfanclub").mappings(
-      mapping("fans").fields(
+      mapping().fields(
         keywordField("lordswelike")
       )
     )
@@ -27,11 +27,11 @@ class TermsLookupQueryTest
 
   client.execute {
     bulk(
-      indexInto("lords/people") fields ("name" -> "nelson"),
-      indexInto("lords/people") fields ("name" -> "edmure"),
-      indexInto("lords/people") fields ("name" -> "umber"),
-      indexInto("lords/people") fields ("name" -> "byron"),
-      indexInto("lordsfanclub/fans") fields ("lordswelike" -> List("nelson", "edmure")) id "lordsAppreciationFanClub"
+      indexInto("lords") fields ("name" -> "nelson"),
+      indexInto("lords") fields ("name" -> "edmure"),
+      indexInto("lords") fields ("name" -> "umber"),
+      indexInto("lords") fields ("name" -> "byron"),
+      indexInto("lordsfanclub") fields ("lordswelike" -> List("nelson", "edmure")) id "lordsAppreciationFanClub"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

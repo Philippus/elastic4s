@@ -26,16 +26,16 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("katebush/songs").fields("name" -> "hounds of love", "year" -> "1985").id("1"),
-      indexInto("katebush/songs").fields("name" -> "top of the city", "year" -> "1985").id("2"),
-      indexInto("katebush/songs").fields("name" -> "wuthering heights", "year" -> "1979").id("3"),
-      indexInto("katebush/songs").fields("name" -> "dream of sheep", "year" -> "1985").id("4"),
-      indexInto("katebush/songs").fields("name" -> "waking the watch", "year" -> "1985").id("5"),
-      indexInto("katebush/songs").fields("name" -> "watching you watching me", "year" -> "1985").id("6"),
-      indexInto("katebush/songs").fields("name" -> "cloudbusting", "year" -> "1985").id("7"),
-      indexInto("katebush/songs").fields("name" -> "under ice", "year" -> "1985").id("8"),
-      indexInto("katebush/songs").fields("name" -> "jig of life", "year" -> "1985").id("9"),
-      indexInto("katebush/songs").fields("name" -> "hello earth", "year" -> "1985").id("0")
+      indexInto("katebush").fields("name" -> "hounds of love", "year" -> "1985").id("1"),
+      indexInto("katebush").fields("name" -> "top of the city", "year" -> "1985").id("2"),
+      indexInto("katebush").fields("name" -> "wuthering heights", "year" -> "1979").id("3"),
+      indexInto("katebush").fields("name" -> "dream of sheep", "year" -> "1985").id("4"),
+      indexInto("katebush").fields("name" -> "waking the watch", "year" -> "1985").id("5"),
+      indexInto("katebush").fields("name" -> "watching you watching me", "year" -> "1985").id("6"),
+      indexInto("katebush").fields("name" -> "cloudbusting", "year" -> "1985").id("7"),
+      indexInto("katebush").fields("name" -> "under ice", "year" -> "1985").id("8"),
+      indexInto("katebush").fields("name" -> "jig of life", "year" -> "1985").id("9"),
+      indexInto("katebush").fields("name" -> "hello earth", "year" -> "1985").id("0")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

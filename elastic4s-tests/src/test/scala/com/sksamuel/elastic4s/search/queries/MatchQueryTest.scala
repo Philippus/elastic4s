@@ -23,7 +23,7 @@ class MatchQueryTest
 
   client.execute {
     bulk(
-      indexInto("units/base") fields("name" -> "candela", "scientist.name" -> "Jules Violle", "scientist.country" -> "France")
+      indexInto("units") fields("name" -> "candela", "scientist.name" -> "Jules Violle", "scientist.country" -> "France")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
