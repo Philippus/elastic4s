@@ -3,42 +3,44 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.requests.analyzers._
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 import scala.util.Try
 
-class MappingHttpTest extends WordSpec with DockerTests with Matchers {
+class MappingHttpTest extends WordSpec with DockerTests with Matchers with BeforeAndAfterAll {
 
-  Try {
+  override protected def beforeAll(): Unit = {
+    Try {
+      client.execute {
+        deleteIndex("index")
+      }.await
+
+      client.execute {
+        deleteIndex("indexnoprops")
+      }.await
+    }
+
     client.execute {
-      deleteIndex("index")
+      createIndex("index").mappings(
+        mapping() as Seq(
+          textField("a") stored true analyzer WhitespaceAnalyzer,
+          keywordField("b") normalizer "my_normalizer",
+          joinField("c") relation("parent", Seq("bar", "foo"))
+        )
+      ) analysis {
+        CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
+      } normalizers {
+        CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
+      }
     }.await
 
+
     client.execute {
-      deleteIndex("indexnoprops")
+      createIndex("indexnoprops").mappings(
+        mapping().dynamic(DynamicMapping.Strict)
+      )
     }.await
   }
-
-  client.execute {
-    createIndex("index").mappings(
-      mapping() as Seq(
-        textField("a") stored true analyzer WhitespaceAnalyzer,
-        keywordField("b") normalizer "my_normalizer",
-        joinField("c") relation ("parent", Seq("bar", "foo"))
-      )
-    ) analysis {
-      CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
-    } normalizers {
-      CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
-    }
-  }.await
-
-
-  client.execute {
-    createIndex("indexnoprops").mappings(
-      mapping().dynamic(DynamicMapping.Strict)
-    )
-  }.await
 
   "mapping get" should {
     "return specified mapping" in {
@@ -48,16 +50,16 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
       }.await.result
 
       val properties = mappings.find(_.index == "index").get.mappings
-      val a = properties
+      val a = properties("a").asInstanceOf[Map[String, Any]]
       a("type") shouldBe "text"
       a("store") shouldBe true
       a("analyzer") shouldBe "whitespace"
 
-      val b = properties
+      val b = properties("b").asInstanceOf[Map[String, Any]]
       b("type") shouldBe "keyword"
       b("normalizer") shouldBe "my_normalizer"
 
-      val c = properties
+      val c = properties("c").asInstanceOf[Map[String, Any]]
       c("type") shouldBe "join"
       c("relations") shouldEqual Map("parent" -> Seq("bar", "foo"))
     }

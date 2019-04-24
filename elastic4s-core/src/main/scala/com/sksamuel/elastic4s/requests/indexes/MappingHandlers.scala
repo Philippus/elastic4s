@@ -12,11 +12,11 @@ trait MappingHandlers {
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
       override def handle(response: HttpResponse) : Either[ElasticError, Seq[IndexMappings]] = response.statusCode match {
         case 201 | 200       =>
-          val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Map[String, Any]]]]](response)
+          val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Any]]]](response)
           val raw2 = raw.map {
             case (index, types) =>
               val mappings = types("mappings").getOrElse("properties", Map.empty)
-                IndexMappings(index, mappings)
+              IndexMappings(index, mappings.asInstanceOf[Map[String, Any]])
           }.toSeq
           Right(raw2)
         case _              =>
