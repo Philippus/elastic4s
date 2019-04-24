@@ -41,7 +41,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       // should populate _id, _index and _type for us from the search result
       resp.safeTo[CharacterWithIdTypeAndIndex] shouldBe
-        List(Success(CharacterWithIdTypeAndIndex("2", "jacksontest", "characters", "hank", "breaking bad")))
+        List(Success(CharacterWithIdTypeAndIndex("2", "jacksontest", "_doc", "hank", "breaking bad")))
     }
     "support custom mapper" in {
 

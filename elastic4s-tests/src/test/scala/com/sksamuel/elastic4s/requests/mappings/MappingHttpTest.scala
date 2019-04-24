@@ -48,7 +48,6 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers {
       }.await.result
 
       val properties = mappings.find(_.index == "index").get.mappings
-      println(mappings)
       val a = properties
       a("type") shouldBe "text"
       a("store") shouldBe true
