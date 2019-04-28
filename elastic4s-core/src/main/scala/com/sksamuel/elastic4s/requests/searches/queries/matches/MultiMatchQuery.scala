@@ -54,7 +54,8 @@ case class MultiMatchQuery(text: String,
                            tieBreaker: Option[Double] = None,
                            `type`: Option[MultiMatchQueryBuilderType] = None,
                            zeroTermsQuery: Option[ZeroTermsQuery] = None,
-                           boost: Option[Double] = None)
+                           boost: Option[Double] = None,
+                           autoGenerateSynonymsPhraseQuery: Option[Boolean] = None)
     extends Query {
 
   def fuzzyRewrite(f: String): MultiMatchQuery       = copy(fuzzyRewrite = f.some)
@@ -89,4 +90,6 @@ case class MultiMatchQuery(text: String,
   def tieBreaker(tieBreaker: Double): MultiMatchQuery      = copy(tieBreaker = tieBreaker.some)
   def zeroTermsQuery(ztq: String): MultiMatchQuery         = copy(zeroTermsQuery = ZeroTermsQuery.valueOf(ztq).some)
   def zeroTermsQuery(ztq: ZeroTermsQuery): MultiMatchQuery = copy(zeroTermsQuery = ztq.some)
+  def autoGenerateSynonymsPhraseQuery(autoGenerateSynonymsPhraseQuery: Boolean): MultiMatchQuery =
+    copy(autoGenerateSynonymsPhraseQuery = autoGenerateSynonymsPhraseQuery.some)
 }

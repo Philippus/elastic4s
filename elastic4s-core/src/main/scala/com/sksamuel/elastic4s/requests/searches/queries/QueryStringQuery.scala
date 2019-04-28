@@ -9,6 +9,7 @@ case class QueryStringQuery(query: String,
                             analyzeWildcard: Option[Boolean] = None,
                             analyzer: Option[String] = None,
                             autoGeneratePhraseQueries: Option[Boolean] = None,
+                            autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
                             boost: Option[Double] = None,
                             defaultOperator: Option[String] = None,
                             defaultField: Option[String] = None,
@@ -90,6 +91,9 @@ case class QueryStringQuery(query: String,
 
   def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): QueryStringQuery =
     copy(autoGeneratePhraseQueries = autoGeneratePhraseQueries.some)
+
+  def autoGenerateSynonymsPhraseQuery(autoGenerateSynonymsPhraseQuery: Boolean): QueryStringQuery =
+    copy(autoGenerateSynonymsPhraseQuery = autoGenerateSynonymsPhraseQuery.some)
 
   def phraseSlop(phraseSlop: Int): QueryStringQuery = copy(phraseSlop = phraseSlop.some)
 

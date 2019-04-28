@@ -25,6 +25,7 @@ object MultiMatchBodyFn {
     q.slop.foreach(builder.field("slop", _))
     q.tieBreaker.foreach(builder.field("tie_breaker", _))
     q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(builder.field("zero_terms_query", _))
+    q.autoGenerateSynonymsPhraseQuery.map(_.toString).foreach(builder.field("auto_generate_synonyms_phrase_query", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
     builder.endObject()
