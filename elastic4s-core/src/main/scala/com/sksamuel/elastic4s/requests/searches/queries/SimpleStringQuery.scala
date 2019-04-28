@@ -29,7 +29,7 @@ case class SimpleStringQuery(query: String,
                              lenient: Option[Boolean] = None,
                              fields: Seq[(String, Option[Double])] = Nil,
                              flags: Seq[SimpleQueryStringFlag] = Nil,
-                             minimumShouldMatch: Option[String] = None),
+                             minimumShouldMatch: Option[String] = None,
                              autoGenerateSynonymsPhraseQuery: Option[Boolean] = None)
     extends Query {
 
