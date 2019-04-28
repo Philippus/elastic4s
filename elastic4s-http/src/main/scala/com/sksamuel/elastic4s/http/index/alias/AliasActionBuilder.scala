@@ -1,6 +1,10 @@
 package com.sksamuel.elastic4s.http.index.alias
 
-import com.sksamuel.elastic4s.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
+import com.sksamuel.elastic4s.alias.{
+  AddAliasActionRequest,
+  IndicesAliasesRequest,
+  RemoveAliasAction
+}
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
@@ -11,8 +15,10 @@ object AliasActionBuilder {
 
     val actionsArray = r.actions
       .map {
-        case addAction: AddAliasActionRequest => buildAddAction(addAction).string()
-        case removeAction: RemoveAliasAction  => buildRemoveAction(removeAction).string()
+        case addAction: AddAliasActionRequest =>
+          buildAddAction(addAction).string()
+        case removeAction: RemoveAliasAction =>
+          buildRemoveAction(removeAction).string()
       }
       .mkString(",")
 
@@ -21,7 +27,8 @@ object AliasActionBuilder {
     source.endArray().endObject()
   }
 
-  private def buildAddAction(addAction: AddAliasActionRequest): XContentBuilder = {
+  private def buildAddAction(
+      addAction: AddAliasActionRequest): XContentBuilder = {
     val jsonBuilder = XContentFactory.jsonBuilder().startObject("add")
 
     jsonBuilder.field("index", addAction.index)
@@ -33,11 +40,13 @@ object AliasActionBuilder {
     addAction.routing.foreach(jsonBuilder.field("routing", _))
     addAction.searchRouting.foreach(jsonBuilder.field("search_routing", _))
     addAction.indexRouting.foreach(jsonBuilder.field("index_routing", _))
+    addAction.isWriteIndex.foreach(jsonBuilder.field("is_write_index", _))
 
     jsonBuilder.endObject().endObject()
   }
 
-  private def buildRemoveAction(removeAction: RemoveAliasAction): XContentBuilder = {
+  private def buildRemoveAction(
+      removeAction: RemoveAliasAction): XContentBuilder = {
     val jsonBuilder = XContentFactory.jsonBuilder().startObject("remove")
 
     jsonBuilder.field("index", removeAction.index)
