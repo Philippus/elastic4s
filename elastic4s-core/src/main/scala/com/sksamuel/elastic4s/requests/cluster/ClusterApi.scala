@@ -11,4 +11,6 @@ trait ClusterApi {
   def clusterHealth(): ClusterHealthRequest                             = clusterHealth("_all")
   def clusterHealth(first: String, rest: String*): ClusterHealthRequest = ClusterHealthRequest(first +: rest)
   def clusterHealth(indices: Iterable[String]): ClusterHealthRequest    = ClusterHealthRequest(indices.toIndexedSeq)
+  def remoteClusterInfo() = RemoteClusterInfoRequest()
+  def addRemoteClusterRequest(settings: Map[String, String]) = AddRemoteClusterSettingsRequest(clusterPersistentSettings(settings))
 }

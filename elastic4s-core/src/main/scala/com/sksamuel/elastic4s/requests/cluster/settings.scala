@@ -13,6 +13,9 @@ case class ClusterSettingsRequest(persistentSettings: Map[String, String], trans
 
 case class ClusterSettingsResponse(persistent: Map[String, String], transient: Map[String, String])
 
+case class AddRemoteClusterSettingsRequest(settingsRequest: ClusterSettingsRequest)
+case class AddRemoteClusterResponse(persistent: Map[String, Any], transient: Map[String, Any])
+
 object ClusterSettingsBodyBuilderFn {
   def apply(request: ClusterSettingsRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
