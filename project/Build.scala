@@ -1,8 +1,8 @@
 import com.typesafe.sbt.SbtPgp
 import com.typesafe.sbt.pgp.PgpKeys
+import sbt.Keys._
 import sbt._
 import sbt.plugins.JvmPlugin
-import sbt.Keys._
 
 object Build extends AutoPlugin {
 
@@ -37,7 +37,7 @@ object Build extends AutoPlugin {
 
   import autoImport._
 
-  override def projectSettings = Seq(
+  override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
     scalaVersion := "2.12.8",
     crossScalaVersions := Seq("2.11.12", "2.12.8"),
