@@ -97,7 +97,7 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
 lazy val akkastreams = Project("elastic4s-streams-akka", file("elastic4s-streams-akka"))
   .settings(
     name := "elastic4s-streams-akka",
-    libraryDependencies += "com.typesafe.akka" % "akka-stream_2.11" % AkkaVersion
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % AkkaVersion
   )
   .dependsOn(core, testkit % "test", jackson % "test")
 

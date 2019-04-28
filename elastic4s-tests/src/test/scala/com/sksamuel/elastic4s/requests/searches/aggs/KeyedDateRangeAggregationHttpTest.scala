@@ -18,12 +18,14 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
   }
 
   client.execute {
-    createIndex("daterangeaggs") mappings {
-      mapping() fields(
+
+    createIndex("daterangeaggs").mapping(
+      mapping(
+
         textField("name").fielddata(true),
         dateField("premiere_date").format("dd/MM/yyyy")
       )
-    }
+    )
   }.await
 
   val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")

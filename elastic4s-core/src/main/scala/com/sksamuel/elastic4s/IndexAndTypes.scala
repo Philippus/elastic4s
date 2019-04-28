@@ -43,13 +43,20 @@ object Index {
   */
 case class Indexes(values: Seq[String]) extends IndexesLike {
   // returns an IndexesAndTypes where the types is empty
-  def toIndexesAndTypes: IndexesAndTypes = IndexesAndTypes(values, Nil)
-  def size: Int                          = values.size
-  def isEmpty: Boolean                   = values.isEmpty
-  def isNonEmpty: Boolean                = values.nonEmpty
-  def isAll: Boolean                     = values == Seq("_all")
-  def string: String                     = if (values.isEmpty) "_all" else values.map(URLEncoder.encode(_, "UTF8")).mkString(",")
-  def array: Array[String]               = values.toArray
+  def toIndexesAndTypes: IndexesAndTypes         = IndexesAndTypes(values, Nil)
+  def size: Int                                  = values.size
+  def isEmpty: Boolean                           = values.isEmpty
+  def isNonEmpty: Boolean                        = values.nonEmpty
+  def isAll: Boolean                             = values == Seq("_all")
+  def string(urlEncode: Boolean = false): String = {
+    if (values.isEmpty) {
+      "_all"
+    } else {
+      val indexNames = if (urlEncode) values.map(URLEncoder.encode(_, "UTF8")) else values
+      indexNames.mkString(",")
+    }
+  }
+  def array: Array[String]                       = values.toArray
 }
 
 object Indexes {

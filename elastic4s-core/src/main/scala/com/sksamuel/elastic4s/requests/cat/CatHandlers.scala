@@ -6,7 +6,7 @@ trait CatHandlers {
 
   implicit object CatSegmentsHandler extends Handler[CatSegments, Seq[CatSegmentsResponse]] {
     override def build(request: CatSegments): ElasticRequest = {
-      val endpoint = if (request.indices.isAll) "/_cat/segments" else "/_cat/segments/" + request.indices.string
+      val endpoint = if (request.indices.isAll) "/_cat/segments" else "/_cat/segments/" + request.indices.string(true)
       ElasticRequest("GET", endpoint, Map("v" -> "", "format" -> "json", "bytes" -> "b"))
     }
   }

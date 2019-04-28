@@ -62,7 +62,7 @@ trait IndexTemplateHandlers {
     }
 
     override def build(request: GetIndexTemplateRequest): ElasticRequest = {
-      val endpoint = s"/_template/" + request.indexes.string
+      val endpoint = s"/_template/" + request.indexes.string(true)
       ElasticRequest("GET", endpoint)
     }
   }

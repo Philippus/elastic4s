@@ -58,6 +58,7 @@ object FieldBuilderFn {
         basic.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
         basic.indexOptions.foreach(builder.field("index_options", _))
         basic.scalingFactor.foreach(builder.field("scaling_factor", _))
+        basic.fielddata.map(_.toString).foreach(builder.field("fielddata", _))
         basic.coerce.foreach(builder.field("coerce", _))
         basic.format.foreach(builder.field("format", _))
         basic.similarity.foreach(builder.field("similarity", _))
@@ -116,6 +117,7 @@ object FieldBuilderFn {
         text.maxInputLength.foreach(builder.field("max_input_length", _))
         text.ignoreAbove.foreach(builder.field("ignore_above", _))
         text.similarity.foreach(builder.field("similarity", _))
+        text.indexOptions.foreach(builder.field("index_options", _))
 
       case keyword: KeywordField =>
         keyword.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))

@@ -403,6 +403,11 @@ trait HasAggregations extends Transformable {
 
   def dataAsMap: Map[String, Any] = if(data != null) data else Map.empty
 
+  def getAgg(name: String): Option[Aggregations] = dataAsMap.get(name) match {
+    case Some(agg: Map[_, _]) => Some(Aggregations(agg.asInstanceOf[Map[String, Any]]))
+    case _ => None
+  }
+
   def contains(name: String): Boolean = data.contains(name)
   def names: Iterable[String] = data.keys
 

@@ -9,6 +9,7 @@ case class QueryStringQuery(query: String,
                             analyzeWildcard: Option[Boolean] = None,
                             analyzer: Option[String] = None,
                             autoGeneratePhraseQueries: Option[Boolean] = None,
+                            autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
                             boost: Option[Double] = None,
                             defaultOperator: Option[String] = None,
                             defaultField: Option[String] = None,
@@ -19,7 +20,7 @@ case class QueryStringQuery(query: String,
                             fuzzyPrefixLength: Option[Int] = None,
                             fuzzyRewrite: Option[String] = None,
                             lenient: Option[Boolean] = None,
-                            minimumShouldMatch: Option[Int] = None,
+                            minimumShouldMatch: Option[String] = None,
                             phraseSlop: Option[Int] = None,
                             quoteFieldSuffix: Option[String] = None,
                             queryName: Option[String] = None,
@@ -67,7 +68,7 @@ case class QueryStringQuery(query: String,
   def lenient(lenient: Boolean): QueryStringQuery =
     copy(lenient = lenient.some)
 
-  def minimumShouldMatch(minimumShouldMatch: Int): QueryStringQuery =
+  def minimumShouldMatch(minimumShouldMatch: String): QueryStringQuery =
     copy(minimumShouldMatch = minimumShouldMatch.some)
 
   def enablePositionIncrements(enablePositionIncrements: Boolean): QueryStringQuery =
@@ -90,6 +91,9 @@ case class QueryStringQuery(query: String,
 
   def autoGeneratePhraseQueries(autoGeneratePhraseQueries: Boolean): QueryStringQuery =
     copy(autoGeneratePhraseQueries = autoGeneratePhraseQueries.some)
+
+  def autoGenerateSynonymsPhraseQuery(autoGenerateSynonymsPhraseQuery: Boolean): QueryStringQuery =
+    copy(autoGenerateSynonymsPhraseQuery = autoGenerateSynonymsPhraseQuery.some)
 
   def phraseSlop(phraseSlop: Int): QueryStringQuery = copy(phraseSlop = phraseSlop.some)
 

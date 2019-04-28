@@ -100,7 +100,12 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
   def includeTypeName(includeTypeName: Option[Boolean]): PutMappingRequest = copy(includeTypeName = includeTypeName)
 }
 
-case class MappingDefinition(name: Option[String] = None, // the name basically, called a type in es
+object MappingDefinition {
+  def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition("", fields = fields)
+}
+
+case class MappingDefinition(`type`: String, // type is now deprecated and can largely be ignored
+
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
                              sourceExcludes: Seq[String] = Nil,

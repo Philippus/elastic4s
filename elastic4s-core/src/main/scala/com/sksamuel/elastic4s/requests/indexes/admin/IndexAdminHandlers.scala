@@ -106,7 +106,7 @@ trait IndexAdminHandlers {
     }
 
     override def build(request: IndicesExistsRequest): ElasticRequest = {
-      val endpoint = s"/${request.indexes.string}"
+      val endpoint = s"/${request.indexes.string(true)}"
 
       val params = request.indicesOptions.map(IndicesOptionsParams(_)).getOrElse(Map.empty)
 
@@ -116,7 +116,7 @@ trait IndexAdminHandlers {
 
   implicit object GetSegmentHandler extends Handler[GetSegmentsRequest, GetSegmentsResponse] {
     override def build(request: GetSegmentsRequest): ElasticRequest = {
-      val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string}/_segments"
+      val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string(true)}/_segments"
       ElasticRequest("GET", endpoint, Map("verbose" -> "true"))
     }
   }

@@ -31,6 +31,7 @@ object CreateIndexContentBuilder {
         builder.endObject() // end settings
       }
 
+
       if (d.mappings.length == 1) {
         builder.rawField("mappings", MappingBuilderFn.build(d.mappings.head))
       } else if (d.mappings.nonEmpty) {
@@ -40,7 +41,6 @@ object CreateIndexContentBuilder {
           builder.rawField(mapping.name.get, MappingBuilderFn.build(mapping))
         }
         builder.endObject()
-      }
 
       if (d.aliases.nonEmpty) {
         builder.startObject("aliases")

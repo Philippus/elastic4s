@@ -55,6 +55,7 @@ case class TextField(name: String,
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
   override def index(index: Boolean): T = copy(index = index.toString.some)
+  def indexOptions(indexOptions: String): T = copy(indexOptions = indexOptions.some)
 
   def positionIncrementGap(positionIncrementGap: Int): T = copy(positionIncrementGap = positionIncrementGap.some)
   def maxInputLength(maxInputLength: Int): T             = copy(maxInputLength = maxInputLength.some)
