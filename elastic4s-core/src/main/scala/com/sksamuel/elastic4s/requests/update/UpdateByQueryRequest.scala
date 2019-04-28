@@ -1,14 +1,14 @@
 package com.sksamuel.elastic4s.requests.update
 
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes}
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 
-case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
+case class UpdateByQueryRequest(indexes: Indexes,
                                 query: Query,
                                 requestsPerSecond: Option[Float] = None,
                                 maxRetries: Option[Int] = None,
@@ -67,8 +67,4 @@ case class UpdateByQueryRequest(indexesAndTypes: IndexesAndTypes,
   def shouldStoreResult(shouldStoreResult: Boolean): UpdateByQueryRequest =
     copy(shouldStoreResult = shouldStoreResult.some)
 
-}
-
-object UpdateByQueryRequest {
-  def apply(indexes: Indexes, query: Query) = new UpdateByQueryRequest(indexes.toIndexesAndTypes, query)
 }

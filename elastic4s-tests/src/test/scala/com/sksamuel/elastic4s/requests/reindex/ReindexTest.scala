@@ -16,10 +16,10 @@ class ReindexTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("reindex" / "a").fields(Map("foo" -> "far")),
-      indexInto("reindex" / "a").fields(Map("moo" -> "mar")),
-      indexInto("reindex" / "a").fields(Map("moo" -> "mar")),
-      indexInto("reindex2" / "a").fields(Map("goo" -> "gar"))
+      indexInto("reindex").fields(Map("foo" -> "far")),
+      indexInto("reindex").fields(Map("moo" -> "mar")),
+      indexInto("reindex").fields(Map("moo" -> "mar")),
+      indexInto("reindex2").fields(Map("goo" -> "gar"))
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

@@ -15,11 +15,11 @@ class ExistsQueryTest extends WordSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("person" / "interest") fields(
+      indexInto("person") fields(
         "name" -> "reese",
         "weapon" -> "revolver"
       ),
-      indexInto("person" / "interest") fields(
+      indexInto("person") fields(
         "name" -> "finch",
         "weapon" -> "computer"
       )
@@ -29,14 +29,14 @@ class ExistsQueryTest extends WordSpec with DockerTests with Matchers {
   "exists query" should {
     "match non-null fields" in {
       client.execute {
-        search("person" / "interest") postFilter {
+        search("person") postFilter {
           existsQuery("name")
         }
       }.await.result.totalHits shouldBe 2
     }
     "not match null fields" in {
       client.execute {
-        search("person" / "interest") postFilter {
+        search("person") postFilter {
           existsQuery("place")
         }
       }.await.result.totalHits shouldBe 0

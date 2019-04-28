@@ -26,12 +26,12 @@ class MinBucketPipelineAggPipelineAggHttpTest extends FreeSpec with DockerTests 
 
   client.execute(
     bulk(
-      indexInto("minbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("minbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("minbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("minbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("minbucketagg/sales") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("minbucketagg/sales") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("minbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("minbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("minbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("minbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("minbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("minbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

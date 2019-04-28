@@ -22,11 +22,11 @@ class MoreLikeThisQueryHttpTest
 
   client.execute {
     bulk(
-      indexInto("mltq/alcohol") fields ("text" -> "coors light is a coors beer by molson") id "4",
-      indexInto("mltq/alcohol") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6",
-      indexInto("mltq/alcohol") fields ("text" -> "Gordons popular gin UK") id "7",
-      indexInto("mltq/alcohol") fields ("text" -> "coors regular is another coors beer by molson") id "8",
-      indexInto("mltq/alcohol") fields ("text" -> "Hendricks upmarket gin UK") id "9"
+      indexInto("mltq") fields ("text" -> "coors light is a coors beer by molson") id "4",
+      indexInto("mltq") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6",
+      indexInto("mltq") fields ("text" -> "Gordons popular gin UK") id "7",
+      indexInto("mltq") fields ("text" -> "coors regular is another coors beer by molson") id "8",
+      indexInto("mltq") fields ("text" -> "Hendricks upmarket gin UK") id "9"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

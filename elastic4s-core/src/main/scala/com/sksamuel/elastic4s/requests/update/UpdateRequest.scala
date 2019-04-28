@@ -8,7 +8,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class UpdateRequest(indexAndType: IndexAndType,
+case class UpdateRequest(index: Index,
                          id: String,
                          detectNoop: Option[Boolean] = None,
                          docAsUpsert: Option[Boolean] = None,
@@ -28,7 +28,7 @@ case class UpdateRequest(indexAndType: IndexAndType,
                          documentFields: Map[String, Any] = Map.empty,
                          documentSource: Option[String] = None)
     extends BulkCompatibleRequest {
-  require(indexAndType != null, "indexAndTypes must not be null or empty")
+  require(index != null, "indexAndTypes must not be null or empty")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   // detects if a doc has not change and if so will not perform any action
@@ -70,7 +70,7 @@ case class UpdateRequest(indexAndType: IndexAndType,
   def fetchSource(fetch: Boolean): UpdateRequest = copy(fetchSource = FetchSourceContext(fetch).some)
 
   def fetchSource(includes: Iterable[String], excludes: Iterable[String]): UpdateRequest =
-    copy(fetchSource = FetchSourceContext(true, includes.toArray, excludes.toArray).some)
+    copy(fetchSource = FetchSourceContext(fetchSource = true, includes.toArray, excludes.toArray).some)
 
   def parent(parent: String): UpdateRequest = copy(parent = parent.some)
 

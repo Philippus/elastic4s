@@ -130,10 +130,10 @@
 //  "default NGramTokenizer" - {
 //    "should index 2 combinations" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("ngram" -> "cr")
+//        search("analyzer") query termQuery("ngram" -> "cr")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query termQuery("ngram" -> "craf")
+//        search("analyzer") query termQuery("ngram" -> "craf")
 //      }.await.totalHits shouldBe 0
 //    }
 //  }
@@ -141,7 +141,7 @@
 //  "custom NGramTokenizer" - {
 //    "should index specified combinations" in {
 //      http.execute {
-//        search("analyzer/test") query matchQuery("custom_ngram" , "dy")
+//        search("analyzer") query matchQuery("custom_ngram" , "dy")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
 //        search("analyzer" / "test") query matchQuery("custom_ngram" , "dc50")
@@ -152,25 +152,25 @@
 //  "custom EdgeNGram Tokenizer" - {
 //    "should support side option" in {
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" , "es")
+//        search("analyzer") query matchQuery("edgengram" , "es")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" , "nes")
+//        search("analyzer") query matchQuery("edgengram" , "nes")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" , "ones")
+//        search("analyzer") query matchQuery("edgengram" , "ones")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" , "rones")
+//        search("analyzer") query matchQuery("edgengram" , "rones")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" , "hrones")
+//        search("analyzer") query matchQuery("edgengram" , "hrones")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" -> "thrones")
+//        search("analyzer") query matchQuery("edgengram" -> "thrones")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query matchQuery("edgengram" -> "ga")
+//        search("analyzer") query matchQuery("edgengram" -> "ga")
 //      }.await.totalHits shouldBe 0
 //    }
 //  }
@@ -178,7 +178,7 @@
 //  "SnowballAnalyzer" - {
 //    "should stem words" in {
 //      http.execute {
-//        search("analyzer/test").query(termQuery("snowball" -> "sky"))
+//        search("analyzer").query(termQuery("snowball" -> "sky"))
 //      }.await.totalHits shouldBe 1
 //    }
 //  }
@@ -186,7 +186,7 @@
 //  "StandardAnalyzer" - {
 //    "should honour max token length" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("standard1" -> "aaaaaaaaaaa")
+//        search("analyzer") query termQuery("standard1" -> "aaaaaaaaaaa")
 //      }.await.totalHits shouldBe 0
 //    }
 //  }
@@ -194,27 +194,27 @@
 //  "PatternAnalyzer" - {
 //    "should split on regex special character" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern1" -> "abc")
+//        search("analyzer") query termQuery("pattern1" -> "abc")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern1" -> "def")
+//        search("analyzer") query termQuery("pattern1" -> "def")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern1" -> "123")
+//        search("analyzer") query termQuery("pattern1" -> "123")
 //      }.await.totalHits shouldBe 0
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern1" -> "abc123def")
+//        search("analyzer") query termQuery("pattern1" -> "abc123def")
 //      }.await.totalHits shouldBe 0
 //    }
 //    "should split on normal character" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern2" -> "coldplay")
+//        search("analyzer") query termQuery("pattern2" -> "coldplay")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern2" -> "jethro tull")
+//        search("analyzer") query termQuery("pattern2" -> "jethro tull")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query termQuery("pattern2" -> "jethro")
+//        search("analyzer") query termQuery("pattern2" -> "jethro")
 //      }.await.totalHits shouldBe 0
 //    }
 //  }
@@ -230,10 +230,10 @@
 //  "StopAnalyzerPath" - {
 //    "should exclude stop words from config/stoplist.txt" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("stop_path" -> "and")
+//        search("analyzer") query termQuery("stop_path" -> "and")
 //      }.await.totalHits shouldBe 0
 //      http.execute {
-//        search("analyzer/test") query termQuery("stop_path" -> "testing") // not in stoplist
+//        search("analyzer") query termQuery("stop_path" -> "testing") // not in stoplist
 //      }.await.totalHits shouldBe 1
 //    }
 //  }
@@ -285,7 +285,7 @@
 //  "ShingleTokenFilter(max_shingle_size = 2, output_unigrams = true)" - {
 //    "should split on shingle size from 1 to 2 term " in {
 //      http.execute {
-//        search("analyzer/test").query(termQuery("shingle2" -> "keep"))
+//        search("analyzer").query(termQuery("shingle2" -> "keep"))
 //      }.await.totalHits shouldBe 1
 //      http.execute {
 //        search in "analyzer/test" query termQuery("shingle2" -> "keep unigram")
@@ -296,7 +296,7 @@
 //  "ShingleTokenFilter(output_unigrams_if_no_shingles = true)" - {
 //    "should keep one term field" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("noshingle" -> "keep")
+//        search("analyzer") query termQuery("noshingle" -> "keep")
 //      }.await.totalHits shouldBe 1
 //    }
 //  }
@@ -304,7 +304,7 @@
 //  "ShingleTokenFilter(token_separator = '#')" - {
 //    "should use '#' in 'one two' to define shingle term as 'one#two' " in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("shingleseparator" -> "one#two")
+//        search("analyzer") query termQuery("shingleseparator" -> "one#two")
 //      }.await.totalHits shouldBe 1
 //    }
 //  }
@@ -312,10 +312,10 @@
 //  "ApostropheCharFilter" - {
 //    "should remove the apostrophe and the characters after it" in {
 //      http.execute {
-//        search("analyzer/test") query termQuery("apos" -> "didn")
+//        search("analyzer") query termQuery("apos" -> "didn")
 //      }.await.totalHits shouldBe 1
 //      http.execute {
-//        search("analyzer/test") query termQuery("apos" -> "didn't")
+//        search("analyzer") query termQuery("apos" -> "didn't")
 //      }.await.totalHits shouldBe 0
 //    }
 //  }

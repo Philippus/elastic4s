@@ -8,9 +8,9 @@ class CatAllocationTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("catalloc1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catalloc2/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catalloc3/landmarks").fields("name" -> "hampton court palace")
+      indexInto("catalloc1").fields("name" -> "hampton court palace"),
+      indexInto("catalloc2").fields("name" -> "hampton court palace"),
+      indexInto("catalloc3").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

@@ -39,17 +39,17 @@ class CountTest extends WordSpec with DockerTests with Matchers {
 
   client.execute {
     bulk(
-      indexInto("stads/stads").fields("name" -> "riverside stadium"),
-      indexInto("stads/stads").fields("name" -> "stadium of shite"),
-      indexInto("stads/stads").fields("name" -> "sports arena dot com ashley stadium"),
-      indexInto("stads/stads").fields("name" -> "macron"),
-      indexInto("stads/stads").fields("name" -> "old trafford"),
-      indexInto("stads/stads").fields("name" -> "pride park"),
-      indexInto("stads/stads").fields("name" -> "hillsborough"),
-      indexInto("stads/stads").fields("name" -> "KCom Stadium"),
-      indexInto("stads/stads").fields("name" -> "Anfield"),
-      indexInto("stads2/stads2").fields("name" -> "Stamford Bridge"),
-      indexInto("stads3/stads3").fields("name" -> "AMEX Stadium")
+      indexInto("stads").fields("name" -> "riverside stadium"),
+      indexInto("stads").fields("name" -> "stadium of shite"),
+      indexInto("stads").fields("name" -> "sports arena dot com ashley stadium"),
+      indexInto("stads").fields("name" -> "macron"),
+      indexInto("stads").fields("name" -> "old trafford"),
+      indexInto("stads").fields("name" -> "pride park"),
+      indexInto("stads").fields("name" -> "hillsborough"),
+      indexInto("stads").fields("name" -> "KCom Stadium"),
+      indexInto("stads").fields("name" -> "Anfield"),
+      indexInto("stads2").fields("name" -> "Stamford Bridge"),
+      indexInto("stads3").fields("name" -> "AMEX Stadium")
     ).refreshImmediately
   }.await
 
@@ -71,11 +71,8 @@ class CountTest extends WordSpec with DockerTests with Matchers {
     }
     "count with type set" in {
       client.execute {
-        count("stads", "stads")
+        count("stads")
       }.await.result.count shouldBe 9
-      client.execute {
-        count("stads", "nonexisting")
-      }.await.result.count shouldBe 0
     }
   }
 }

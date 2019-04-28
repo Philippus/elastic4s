@@ -27,7 +27,7 @@ class BulkIndexingSubscriberWhiteboxTest
 
     import ElasticJackson.Implicits._
 
-    override def request(t: Item): BulkCompatibleRequest = indexInto("bulkindexwhitebox" / "castles").doc(t)
+    override def request(t: Item): BulkCompatibleRequest = indexInto("bulkindexwhitebox").doc(t)
   }
 
   override def createSubscriber(probe: WhiteboxSubscriberProbe[Item]): Subscriber[Item] = {

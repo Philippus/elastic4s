@@ -16,18 +16,18 @@ class GeoHashGridAggregationHttpTest extends FreeSpec with DockerTests with Matc
 
   client.execute {
     createIndex("geohashgridagg") mappings {
-      mapping("doc") fields geopointField("location")
+      mapping() fields geopointField("location")
     }
   }.await
 
   client.execute(
     bulk(
-      indexInto("geohashgridagg/doc").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
-      indexInto("geohashgridagg/doc").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
-      indexInto("geohashgridagg/doc").fields("location" -> "52.371667,4.914722", "name" -> "Nederlands Scheepvaartmuseum"),
-      indexInto("geohashgridagg/doc").fields("location" -> "51.222900,4.405200", "name" -> "Letterenhuis"),
-      indexInto("geohashgridagg/doc").fields("location" -> "48.861111,2.336389", "name" -> "Musée du Louvre"),
-      indexInto("geohashgridagg/doc").fields("location" -> "48.860000,2.327000", "name" -> "Musée d'Orsay")
+      indexInto("geohashgridagg").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
+      indexInto("geohashgridagg").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
+      indexInto("geohashgridagg").fields("location" -> "52.371667,4.914722", "name" -> "Nederlands Scheepvaartmuseum"),
+      indexInto("geohashgridagg").fields("location" -> "51.222900,4.405200", "name" -> "Letterenhuis"),
+      indexInto("geohashgridagg").fields("location" -> "48.861111,2.336389", "name" -> "Musée du Louvre"),
+      indexInto("geohashgridagg").fields("location" -> "48.860000,2.327000", "name" -> "Musée d'Orsay")
     ).refreshImmediately
   ).await
 

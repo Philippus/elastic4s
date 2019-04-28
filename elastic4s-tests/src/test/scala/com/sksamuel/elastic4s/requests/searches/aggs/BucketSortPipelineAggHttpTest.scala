@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.requests.searches.{Aggregations, DateHistogramInterval}
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, SortOrder}
+import com.sksamuel.elastic4s.requests.searches.{Aggregations, DateHistogramInterval}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FreeSpec, Matchers}
 
@@ -27,12 +27,12 @@ class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Match
 
   client.execute(
     bulk(
-      indexInto("bucketsortagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("bucketsortagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("bucketsortagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("bucketsortagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("bucketsortagg/sales") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("bucketsortagg/sales") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("bucketsortagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("bucketsortagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("bucketsortagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("bucketsortagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("bucketsortagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("bucketsortagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

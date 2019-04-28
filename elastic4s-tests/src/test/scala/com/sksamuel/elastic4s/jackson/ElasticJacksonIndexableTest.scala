@@ -19,9 +19,9 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       client.execute {
         bulk(
-          indexInto("jacksontest" / "characters").source(Character("tyrion", "game of thrones")).withId("1"),
-          indexInto("jacksontest" / "characters").source(Character("hank", "breaking bad")).withId("2"),
-          indexInto("jacksontest" / "characters").source(Location("dorne", "game of thrones")).withId("3")
+          indexInto("jacksontest").source(Character("tyrion", "game of thrones")).withId("1"),
+          indexInto("jacksontest").source(Character("hank", "breaking bad")).withId("2"),
+          indexInto("jacksontest").source(Location("dorne", "game of thrones")).withId("3")
         ).refresh(RefreshPolicy.WaitFor)
       }.await
     }
@@ -41,7 +41,7 @@ class ElasticJacksonIndexableTest extends WordSpec with Matchers with DockerTest
 
       // should populate _id, _index and _type for us from the search result
       resp.safeTo[CharacterWithIdTypeAndIndex] shouldBe
-        List(Success(CharacterWithIdTypeAndIndex("2", "jacksontest", "characters", "hank", "breaking bad")))
+        List(Success(CharacterWithIdTypeAndIndex("2", "jacksontest", "_doc", "hank", "breaking bad")))
     }
     "support custom mapper" in {
 

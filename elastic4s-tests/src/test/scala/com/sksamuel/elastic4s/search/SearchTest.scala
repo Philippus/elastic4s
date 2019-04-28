@@ -30,34 +30,34 @@ class SearchTest extends WordSpec with DockerTests with Matchers {
 
   client.execute {
     bulk(
-      indexInto("chess/pieces").fields(
+      indexInto("chess").fields(
         "name" -> "queen",
         "value" -> 10,
         "count" -> 1
       ).routing("wibble"),
-      indexInto("chess/pieces").fields(
+      indexInto("chess").fields(
         "name" -> "king",
         "value" -> 0,
         "count" -> 1
       ),
-      indexInto("chess/pieces").fields(
+      indexInto("chess").fields(
         "name" -> "bishop",
         "value" -> 3,
         "count" -> 2
       ),
-      indexInto("chess/pieces").fields(
+      indexInto("chess").fields(
         "name" -> "knight",
         "aka" -> "horse",
         "value" -> 3,
         "count" -> 2
       ),
-      indexInto("chess/pieces").fields(
+      indexInto("chess").fields(
         "name" -> "rook",
         "aka" -> "castle",
         "value" -> 5,
         "count" -> 2
       ),
-      indexInto("chess/pieces").fields(
+      indexInto("chess").fields(
         "name" -> "pawn",
         "value" -> 1,
         "count" -> 8

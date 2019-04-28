@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.searches.DateRangeBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
@@ -16,22 +18,55 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
   }
 
   client.execute {
+
     createIndex("daterangeaggs").mapping(
       mapping(
+
         textField("name").fielddata(true),
         dateField("premiere_date").format("dd/MM/yyyy")
       )
     )
   }.await
 
+  val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
+
   client.execute(
     bulk(
-      indexInto("daterangeaggs/tv").fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2014"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2017"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Game of Thrones", "premiere_date" -> "01/06/2010"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2016"),
-      indexInto("daterangeaggs/tv").fields("name" -> "Walking Dead", "premiere_date" -> "19/01/2011")
+      indexInto("daterange").fields("name" -> "Breaking Bad",
+        "premiere_date" -> DateTime
+          .now()
+          .minusYears(10)
+          .toString(dateFormatter)),
+      indexInto("daterange").fields("name" -> "Better Call Saul",
+        "premiere_date" -> DateTime
+          .now()
+          .minusYears(5)
+          .minusMonths(1)
+          .toString(dateFormatter)),
+      indexInto("daterange").fields("name" -> "Star Trek Discovery",
+        "premiere_date" -> DateTime
+          .now()
+          .minusYears(2)
+          .minusMonths(6)
+          .toString(dateFormatter)),
+      indexInto("daterange").fields("name" -> "Game of Thrones",
+        "premiere_date" -> DateTime
+          .now()
+          .minusYears(9)
+          .minusMonths(6)
+          .toString(dateFormatter)),
+      indexInto("daterange").fields("name" -> "Designated Survivor",
+        "premiere_date" -> DateTime
+          .now()
+          .minusYears(3)
+          .minusMonths(1)
+          .toString(dateFormatter)),
+      indexInto("daterange").fields("name" -> "Walking Dead",
+        "premiere_date" -> DateTime
+          .now()
+          .minusYears(8)
+          .minusMonths(3)
+          .toString(dateFormatter))
     ).refreshImmediately
   ).await
 

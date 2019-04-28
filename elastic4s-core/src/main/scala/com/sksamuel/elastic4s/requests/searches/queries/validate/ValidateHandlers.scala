@@ -26,8 +26,7 @@ trait ValidateHandlers {
 
     override def build(request: ValidateRequest): ElasticRequest = {
 
-      val endpoint =
-        s"${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_validate/query"
+      val endpoint = s"${request.indexes.values.mkString(",")}/_validate/query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.explain.map(_.toString).foreach(params.put("explain", _))

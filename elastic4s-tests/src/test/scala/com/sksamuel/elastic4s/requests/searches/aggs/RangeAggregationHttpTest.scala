@@ -2,21 +2,15 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.searches.RangeBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.{BeforeAndAfterAll, FreeSpec, Matchers}
 
-import scala.util.Try
+class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers with BeforeAndAfterAll {
 
-class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
-
-  Try {
-    client.execute {
-      deleteIndex("rangeaggs")
-    }.await
-  }
+  deleteIdx("rangeaggs")
 
   client.execute {
     createIndex("rangeaggs") mappings {
-      mapping("tv") fields(
+      mapping() fields(
         textField("name").fielddata(true),
         intField("grade")
       )
@@ -25,18 +19,17 @@ class RangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("rangeaggs/tv").fields("name" -> "Breaking Bad", "grade" -> 9),
-      indexInto("rangeaggs/tv").fields("name" -> "Better Call Saul", "grade" -> 9),
-      indexInto("rangeaggs/tv").fields("name" -> "Star Trek Discovery", "grade" -> 7),
-      indexInto("rangeaggs/tv").fields("name" -> "Game of Thrones", "grade" -> 8),
-      indexInto("rangeaggs/tv").fields("name" -> "Designated Survivor", "grade" -> 6),
-      indexInto("rangeaggs/tv").fields("name" -> "Walking Dead", "grade" -> 5)
+      indexInto("rangeaggs").fields("name" -> "Breaking Bad", "grade" -> 9),
+      indexInto("rangeaggs").fields("name" -> "Better Call Saul", "grade" -> 9),
+      indexInto("rangeaggs").fields("name" -> "Star Trek Discovery", "grade" -> 7),
+      indexInto("rangeaggs").fields("name" -> "Game of Thrones", "grade" -> 8),
+      indexInto("rangeaggs").fields("name" -> "Designated Survivor", "grade" -> 6),
+      indexInto("rangeaggs").fields("name" -> "Walking Dead", "grade" -> 5)
     ).refreshImmediately
   ).await
 
   "range agg" - {
     "should aggregate ranges" in {
-
       val resp = client.execute {
         search("rangeaggs").matchAllQuery().aggs {
           rangeAgg("agg1", "grade")

@@ -19,9 +19,9 @@ class CatCountTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("catcount1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("catcount1/landmarks").fields("name" -> "tower of london"),
-      indexInto("catcount2/landmarks").fields("name" -> "stonehenge")
+      indexInto("catcount1").fields("name" -> "hampton court palace"),
+      indexInto("catcount1").fields("name" -> "tower of london"),
+      indexInto("catcount2").fields("name" -> "stonehenge")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

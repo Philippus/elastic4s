@@ -16,7 +16,7 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("lecarre").mappings(
-      mapping("characters").fields(
+      mapping().fields(
         textField("name")
       )
     ).shards(1).waitForActiveShards(1)
@@ -26,31 +26,31 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
     "delete matched docs" in {
 
       client.execute {
-        indexInto("lecarre" / "characters").fields("name" -> "jonathon pine").id("2").refresh(RefreshPolicy.Immediate)
+        indexInto("lecarre").fields("name" -> "jonathon pine").id("2").refresh(RefreshPolicy.Immediate)
       }.await
 
       client.execute {
-        indexInto("lecarre" / "characters").fields("name" -> "george smiley").id("4").refresh(RefreshPolicy.Immediate)
+        indexInto("lecarre").fields("name" -> "george smiley").id("4").refresh(RefreshPolicy.Immediate)
       }.await
 
       client.execute {
-        search("lecarre" / "characters").matchAllQuery()
+        search("lecarre").matchAllQuery()
       }.await.result.totalHits shouldBe 2
 
       client.execute {
-        delete("2").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
+        delete("2").from("lecarre").refresh(RefreshPolicy.Immediate)
       }.await
 
       client.execute {
-        search("lecarre" / "characters").matchAllQuery()
+        search("lecarre").matchAllQuery()
       }.await.result.totalHits shouldBe 1
 
       client.execute {
-        delete("4").from("lecarre" / "characters").refresh(RefreshPolicy.Immediate)
+        delete("4").from("lecarre").refresh(RefreshPolicy.Immediate)
       }.await
 
       client.execute {
-        search("lecarre" / "characters").matchAllQuery()
+        search("lecarre").matchAllQuery()
       }.await.result.totalHits shouldBe 0
     }
   }

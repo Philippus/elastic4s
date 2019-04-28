@@ -17,11 +17,11 @@ class AliasesHttpTest extends WordSpec with Matchers with DockerTests {
   addIndex("mountains")
 
   client.execute {
-    indexInto("beaches/a").fields("name" -> "gold").refreshImmediately
+    indexInto("beaches").fields("name" -> "gold").refreshImmediately
   }.await
 
   client.execute {
-    indexInto("beaches/a").fields("name" -> "sword").refreshImmediately
+    indexInto("beaches").fields("name" -> "sword").refreshImmediately
   }.await
 
   "alias actions" should {

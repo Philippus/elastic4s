@@ -8,7 +8,7 @@ class CumulativeSumAggBuilderTest extends FunSuite with Matchers{
   import com.sksamuel.elastic4s.ElasticDsl._
 
   test("cumulative sum agg should match the basic spec"){
-    val search = SearchRequest("myIndex" / "myType").aggs(
+    val search = SearchRequest("myIndex").aggs(
       dateHistogramAgg("sales_per_month", "date")
         .interval(DateHistogramInterval.Month)
         .subaggs(

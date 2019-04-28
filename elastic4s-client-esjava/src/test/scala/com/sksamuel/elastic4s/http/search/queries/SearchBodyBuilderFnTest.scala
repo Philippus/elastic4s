@@ -11,7 +11,7 @@ import org.scalatest.{FunSuite, Matchers}
 class SearchBodyBuilderFnTest extends FunSuite with Matchers {
 
   test("highlight with 'matchedMatchedFields' generates proper 'matched_fields' field as array field.") {
-    val request = search("example" / "1") highlighting {
+    val request = search("example") highlighting {
       highlight("text")
       .matchedFields("text", "text.ngram", "text.japanese")
     }
@@ -19,7 +19,7 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
       """{"highlight":{"fields":{"text":{"matched_fields":["text","text.ngram","text.japanese"]}}}}"""
   }
   test("highlight with 'highlighterType' generates 'type' field.") {
-    val request = search("example" / "1") highlighting {
+    val request = search("example") highlighting {
       highlight("text")
         .highlighterType("fvh")
     }
@@ -27,7 +27,7 @@ class SearchBodyBuilderFnTest extends FunSuite with Matchers {
       """{"highlight":{"fields":{"text":{"type":"fvh"}}}}"""
   }
   test("highlight with 'boundaryChars' generates 'boundary_chars' field.") {
-    val request = search("example" / "1") highlighting {
+    val request = search("example") highlighting {
       highlight("text")
         .boundaryChars("test")
     }

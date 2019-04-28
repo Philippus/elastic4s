@@ -15,7 +15,8 @@ case class CreateIndexRequest(name: String,
                               rawSource: Option[String] = None,
                               waitForActiveShards: Option[Int] = None,
                               aliases: Set[IndexAliasRequest] = Set.empty,
-                              settings: IndexSettings = new IndexSettings) {
+                              settings: IndexSettings = new IndexSettings,
+                              includeTypeName: Option[Boolean] = None) {
 
   def alias(name: String): CreateIndexRequest = alias(IndexAliasRequest(name, None))
   def alias(name: String, filter: Query): CreateIndexRequest =
@@ -50,6 +51,7 @@ case class CreateIndexRequest(name: String,
     if (mappings.size == 1) mapping(mappings.head) else throw new UnsupportedOperationException("Cannot specify multiple types when creating an index in version 7+")
   }
 
+
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)
   def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexRequest              = analysis(analyzers, Nil)
   def analysis(analyzers: Iterable[AnalyzerDefinition],
@@ -64,4 +66,7 @@ case class CreateIndexRequest(name: String,
   def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexRequest = analysis(Nil, normalizers)
 
   def source(source: String): CreateIndexRequest = copy(rawSource = source.some)
+
+  def includeTypeName(includeTypeName: Boolean): CreateIndexRequest = copy(includeTypeName = includeTypeName.some)
+  def includeTypeName(includeTypeName: Option[Boolean]): CreateIndexRequest = copy(includeTypeName = includeTypeName)
 }

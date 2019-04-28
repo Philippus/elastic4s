@@ -6,10 +6,8 @@ import org.scalatest.{FunSuite, Matchers}
 
 class CompositeAggregationBuilderTest extends FunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
-
   test("CompositeAggregationBuilder should build simple terms-valued composites") {
-    val search = SearchRequest("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex").aggs(
       CompositeAggregation("comp", sources = Seq(
         TermsValueSource("s1", field = Some("f1")))
       )
@@ -20,7 +18,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("CompositeAggregationBuilder should terms-valued composites with multiple terms") {
-    val search = SearchRequest("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex").aggs(
       CompositeAggregation("comp", sources = Seq(
         TermsValueSource("s1", field = Some("f1")),
         TermsValueSource("s2", field = Some("f2"))
@@ -32,7 +30,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("CompositeAggregationBuilder should build script-valued composites") {
-    val search = SearchRequest("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex").aggs(
       CompositeAggregation("comp", sources = Seq(
         TermsValueSource("s1", script = Some(Script("doc['product'].value"))))
       )
@@ -43,7 +41,7 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
   }
 
   test("CompositeAggregationBuilder should respect all possible value types and attributes") {
-    val search = SearchRequest("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex").aggs(
       CompositeAggregation("comp", sources = Seq(
         TermsValueSource("s1", field = Some("f1"), order = Some("desc")),
         HistogramValueSource("s2", 5, field = Some("f2"), order = Some("desc")),

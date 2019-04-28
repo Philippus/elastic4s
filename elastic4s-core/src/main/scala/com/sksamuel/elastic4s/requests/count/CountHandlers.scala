@@ -12,17 +12,10 @@ trait CountHandlers {
 
     override def build(request: CountRequest): ElasticRequest = {
 
-      val endpoint =
-        if (request.indexes.isEmpty && request.types.isEmpty)
-          "/_count"
-        else if (request.indexes.isEmpty)
-          "/_all/" + request.types.map(URLEncoder.encode).mkString(",") + "/_count"
-        else if (request.types.isEmpty)
-          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
+      val endpoint = if(request.indexes.isEmpty)
+          "/_all/_count"
         else
-          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/" + request.types
-            .map(URLEncoder.encode)
-            .mkString(",") + "/_count"
+          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)
       val body    = builder.string()

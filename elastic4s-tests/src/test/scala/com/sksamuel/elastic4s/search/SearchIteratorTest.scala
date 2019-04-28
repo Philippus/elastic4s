@@ -24,7 +24,7 @@ class SearchIteratorTest
 
   client.execute {
     createIndex("searchiterator").mappings(
-      mapping("pieces").fields(
+      mapping().fields(
         keywordField("name")
       )
     )
@@ -32,32 +32,32 @@ class SearchIteratorTest
 
   client.execute {
     bulk(
-      indexInto("searchiterator/pieces").fields(
+      indexInto("searchiterator").fields(
         "name" -> "queen",
         "value" -> 10,
         "count" -> 1
       ),
-      indexInto("searchiterator/pieces").fields(
+      indexInto("searchiterator").fields(
         "name" -> "king",
         "value" -> 0,
         "count" -> 1
       ),
-      indexInto("searchiterator/pieces").fields(
+      indexInto("searchiterator").fields(
         "name" -> "bishop",
         "value" -> 3,
         "count" -> 2
       ),
-      indexInto("searchiterator/pieces").fields(
+      indexInto("searchiterator").fields(
         "name" -> "knight",
         "value" -> 3,
         "count" -> 2
       ),
-      indexInto("searchiterator/pieces").fields(
+      indexInto("searchiterator").fields(
         "name" -> "rook",
         "value" -> 5,
         "count" -> 2
       ),
-      indexInto("searchiterator/pieces").fields(
+      indexInto("searchiterator").fields(
         "name" -> "pawn",
         "value" -> 1,
         "count" -> 8

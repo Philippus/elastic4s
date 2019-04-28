@@ -17,7 +17,7 @@ class AvgBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
 
   client.execute {
     createIndex("avgbucketagg") mappings {
-      mapping("sales") fields(
+      mapping() fields(
         dateField("date"),
         doubleField("value").stored(true)
       )
@@ -26,12 +26,12 @@ class AvgBucketPipelineAggHttpTest extends FreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("avgbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("avgbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("avgbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("avgbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("avgbucketagg/sales") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("avgbucketagg/sales") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("avgbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("avgbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("avgbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("avgbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("avgbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("avgbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

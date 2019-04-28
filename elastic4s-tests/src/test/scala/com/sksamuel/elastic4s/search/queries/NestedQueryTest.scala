@@ -16,7 +16,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
 
   client.execute {
     createIndex("nested").mappings(
-      mapping("places").fields(
+      mapping().fields(
         keywordField("name"),
         nestedField("states")
       )
@@ -25,7 +25,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("nested" / "places") fields(
+      indexInto("nested") fields(
         "name" -> "usa",
         "states" -> Seq(
           Map(
@@ -39,7 +39,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
           )
         )
       ),
-      indexInto("nested" / "places") fields(
+      indexInto("nested") fields(
         "name" -> "fictional usa",
         "states" -> Seq(
           Map(
@@ -61,7 +61,7 @@ class NestedQueryTest extends WordSpec with DockerTests with Matchers {
       client.execute {
         search("nested") query {
           nestedQuery("states").query {
-            boolQuery.must(
+            boolQuery().must(
               matchQuery("states.name", "Montana"),
               matchQuery("states.entry", 1889)
             )

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.requests.indexes.admin.RefreshIndexResponse
-import com.sksamuel.elastic4s.{ElasticDsl, IndexAndTypes, Indexes}
+import com.sksamuel.elastic4s.{ElasticDsl, Indexes}
 import org.scalatest.Suite
 
 import scala.util.Try
@@ -84,11 +84,11 @@ trait ElasticSugar extends ElasticDsl {
     blockUntilEmpty(index)
   }
 
-  def blockUntilDocumentExists(id: String, index: String, `type`: String): Unit =
+  def blockUntilDocumentExists(id: String, index: String): Unit =
     blockUntil(s"Expected to find document $id") { () =>
       client
         .execute {
-          get(id).from(index / `type`)
+          get(id).from(index)
         }
         .await
         .result
@@ -106,36 +106,22 @@ trait ElasticSugar extends ElasticDsl {
       expected <= result.totalHits
     }
 
-  def blockUntilCount(expected: Long, indexAndTypes: IndexAndTypes): Unit =
+  def blockUntilCount(expected: Long, indexes: Indexes): Unit =
     blockUntil(s"Expected count of $expected") { () =>
       val result = client
         .execute {
-          search(indexAndTypes).matchAllQuery().size(0)
+          search(indexes).matchAllQuery().size(0)
         }
         .await
         .result
       expected <= result.totalHits
     }
 
-  /**
-    * Will block until the given index and optional types have at least the given number of documents.
-    */
-  def blockUntilCount(expected: Long, index: String, types: String*): Unit =
-    blockUntil(s"Expected count of $expected") { () =>
-      val result = client
-        .execute {
-          search(index / types).matchAllQuery().size(0)
-        }
-        .await
-        .result
-      expected <= result.totalHits
-    }
-
-  def blockUntilExactCount(expected: Long, index: String, types: String*): Unit =
+  def blockUntilExactCount(expected: Long, index: String): Unit =
     blockUntil(s"Expected count of $expected") { () =>
       expected == client
         .execute {
-          search(index / types).size(0)
+          search(index).size(0)
         }
         .await
         .result
@@ -163,11 +149,11 @@ trait ElasticSugar extends ElasticDsl {
       !doesIndexExists(index)
     }
 
-  def blockUntilDocumentHasVersion(index: String, `type`: String, id: String, version: Long): Unit =
+  def blockUntilDocumentHasVersion(index: String, id: String, version: Long): Unit =
     blockUntil(s"Expected document $id to have version $version") { () =>
       client
         .execute {
-          get(id).from(index / `type`)
+          get(id).from(index)
         }
         .await
         .result

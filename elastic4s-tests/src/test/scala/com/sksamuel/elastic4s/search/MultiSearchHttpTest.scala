@@ -24,8 +24,8 @@ class MultiSearchHttpTest
 
   client.execute {
     bulk(
-      indexInto("jtull" / "albums") fields ("name" -> "aqualung") id "14",
-      indexInto("jtull" / "albums") fields ("name" -> "passion play") id "51"
+      indexInto("jtull") fields ("name" -> "aqualung") id "14",
+      indexInto("jtull") fields ("name" -> "passion play") id "51"
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -35,7 +35,7 @@ class MultiSearchHttpTest
       multi(
         search("jtull") query matchQuery("name", "aqualung"),
         search("jtull") query "passion",
-        search("jtull" / "albums") query matchAllQuery()
+        search("jtull") query matchAllQuery()
       )
     }.await.result
 

@@ -24,12 +24,12 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
   // based on the examples from Geo Distance Aggregation docs
   client.execute(
     bulk(
-      indexInto("geodistanceagg/doc").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
-      indexInto("geodistanceagg/doc").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
-      indexInto("geodistanceagg/doc").fields("location" -> "52.371667,4.914722", "name" -> "Nederlands Scheepvaartmuseum"),
-      indexInto("geodistanceagg/doc").fields("location" -> "51.222900,4.405200", "name" -> "Letterenhuis"),
-      indexInto("geodistanceagg/doc").fields("location" -> "48.861111,2.336389", "name" -> "Musée du Louvre"),
-      indexInto("geodistanceagg/doc").fields("location" -> "48.860000,2.327000", "name" -> "Musée d'Orsay")
+      indexInto("geodistanceagg").fields("location" -> "52.374081,4.912350", "name" -> "NEMO Science Museum"),
+      indexInto("geodistanceagg").fields("location" -> "52.369219,4.901618", "name" -> "Museum Het Rembrandthuis"),
+      indexInto("geodistanceagg").fields("location" -> "52.371667,4.914722", "name" -> "Nederlands Scheepvaartmuseum"),
+      indexInto("geodistanceagg").fields("location" -> "51.222900,4.405200", "name" -> "Letterenhuis"),
+      indexInto("geodistanceagg").fields("location" -> "48.861111,2.336389", "name" -> "Musée du Louvre"),
+      indexInto("geodistanceagg").fields("location" -> "48.860000,2.327000", "name" -> "Musée d'Orsay")
     ).refreshImmediately
   ).await
 

@@ -17,7 +17,7 @@ class MovAvgPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers 
 
   client.execute {
     createIndex("movavgbucketagg") mappings {
-      mapping("sales") fields(
+      mapping() fields(
         dateField("date"),
         doubleField("value").stored(true)
       )
@@ -26,12 +26,12 @@ class MovAvgPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers 
 
   client.execute(
     bulk(
-      indexInto("movavgbucketagg/sales") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("movavgbucketagg/sales") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("movavgbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("movavgbucketagg/sales") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("movavgbucketagg/sales") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("movavgbucketagg/sales") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("movavgbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("movavgbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("movavgbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("movavgbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("movavgbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("movavgbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

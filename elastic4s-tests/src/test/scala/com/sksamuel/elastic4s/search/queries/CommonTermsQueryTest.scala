@@ -30,9 +30,9 @@ class CommonTermsQueryTest extends WordSpec with Matchers with DockerTests with 
 
   client.execute {
     bulk(
-      indexInto("condiments" / "test") source ranch,
-      indexInto("condiments" / "test") source ketchup,
-      indexInto("condiments" / "test") source brownSauce
+      indexInto("condiments") source ranch,
+      indexInto("condiments") source ketchup,
+      indexInto("condiments") source brownSauce
     ).refreshImmediately
   }.await
 

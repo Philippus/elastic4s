@@ -26,7 +26,7 @@ class RefreshIndexRequestTest extends WordSpec with Matchers with DockerTests {
     "refresh pending docs" in {
 
       client.execute {
-        indexInto("refreshtest/dday").fields("name" -> "omaha")
+        indexInto("refreshtest").fields("name" -> "omaha")
       }.await
 
       // no data because the refresh is 10 minutes

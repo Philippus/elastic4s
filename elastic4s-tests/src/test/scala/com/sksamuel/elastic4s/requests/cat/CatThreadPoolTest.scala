@@ -8,8 +8,8 @@ class CatThreadPoolTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("amoonshapedpool1/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("amoonshapedpool2/landmarks").fields("name" -> "hampton court palace")
+      indexInto("amoonshapedpool1").fields("name" -> "hampton court palace"),
+      indexInto("amoonshapedpool2").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

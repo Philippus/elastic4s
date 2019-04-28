@@ -21,7 +21,7 @@ class SettingsTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("settings" / "a").fields(Map("foo" -> "bar"))
+      indexInto("settings").fields(Map("foo" -> "bar"))
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

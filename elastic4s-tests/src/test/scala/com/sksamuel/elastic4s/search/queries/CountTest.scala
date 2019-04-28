@@ -15,8 +15,8 @@ class CountTest extends FlatSpec with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("london/landmarks").fields("name" -> "hampton court palace"),
-      indexInto("london/landmarks").fields("name" -> "tower of london")
+      indexInto("london").fields("name" -> "hampton court palace"),
+      indexInto("london").fields("name" -> "tower of london")
     ).refreshImmediately
   }.await
 

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.IndexesAndTypes
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, Preference}
 import com.sksamuel.elastic4s.requests.script.ScriptField
@@ -15,7 +15,7 @@ import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class SearchRequest(indexesTypes: IndexesAndTypes,
+case class SearchRequest(indexes: Indexes,
                          aggs: Seq[AbstractAggregation] = Nil,
                          collapse: Option[CollapseRequest] = None,
                          docValues: Seq[String] = Nil,
@@ -65,11 +65,6 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
   def query(q: Query): SearchRequest = copy(query = q.some)
 
   def minScore(min: Double): SearchRequest = copy(minScore = Some(min))
-
-  def types(first: String, rest: String*): SearchRequest = types(first +: rest)
-
-  def types(types: Iterable[String]): SearchRequest =
-    copy(indexesTypes = IndexesAndTypes(indexesTypes.indexes, types.toSeq))
 
   def bool(block: => BoolQuery): SearchRequest = query(block)
 
@@ -171,7 +166,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
     *
     * Example:
     * {{{
-    * search in "*" types("users", "tweets") limit 5 rawQuery {
+    * search in "*" limit 5 rawQuery {
     * """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
     * } searchType SearchType.Scan
     * }}}
@@ -192,7 +187,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
     *
     * Example:
     * {{{
-    * search in "*" types("users", "tweets") limit 5 source {
+    * search in "*" limit 5 source {
     * """{ "query": { "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } } }"""
     * } searchType SearchType.Scan
     * }}}

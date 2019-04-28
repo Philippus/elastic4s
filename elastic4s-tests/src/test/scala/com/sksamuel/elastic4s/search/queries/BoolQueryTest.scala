@@ -20,19 +20,19 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("fonts/family").fields("name" -> "helvetica", "style" -> "sans"),
-      indexInto("fonts/family").fields("name" -> "helvetica modern", "style" -> "serif"),
-      indexInto("fonts/family").fields("name" -> "arial", "style" -> "serif"),
-      indexInto("fonts/family").fields("name" -> "verdana", "style" -> "serif"),
-      indexInto("fonts/family").fields("name" -> "times new roman", "style" -> "serif"),
-      indexInto("fonts/family").fields("name" -> "roman comic", "style" -> "comic"),
-      indexInto("fonts/family").fields("name" -> "comic sans", "style" -> "comic")
+      indexInto("fonts").fields("name" -> "helvetica", "style" -> "sans"),
+      indexInto("fonts").fields("name" -> "helvetica modern", "style" -> "serif"),
+      indexInto("fonts").fields("name" -> "arial", "style" -> "serif"),
+      indexInto("fonts").fields("name" -> "verdana", "style" -> "serif"),
+      indexInto("fonts").fields("name" -> "times new roman", "style" -> "serif"),
+      indexInto("fonts").fields("name" -> "roman comic", "style" -> "comic"),
+      indexInto("fonts").fields("name" -> "comic sans", "style" -> "comic")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "bool query" should "support must and not" in {
     val resp = client.execute {
-      search("fonts/family").query {
+      search("fonts").query {
         boolQuery().must("helvetica").not("serif")
       }
     }.await.result
@@ -43,7 +43,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support multiple must queries" in {
     val resp = client.execute {
-      search("fonts/family").query {
+      search("fonts").query {
         boolQuery().must("times", "new")
       }
     }.await.result
@@ -54,7 +54,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support not" in {
     val resp = client.execute {
-      search("fonts/family").query {
+      search("fonts").query {
         boolQuery().not("sans")
       }
     }.await.result
@@ -65,7 +65,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support must" in {
     val resp = client.execute {
-      search("fonts/family").query {
+      search("fonts").query {
         boolQuery().must("roman")
       }
     }.await.result
@@ -76,7 +76,7 @@ class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
 
   it should "support or using should" in {
     val resp = client.execute {
-      search("fonts/family").query {
+      search("fonts").query {
         boolQuery().should(
           matchPhraseQuery("name", "times new roman"),
           matchPhraseQuery("name", "comic sans")

@@ -18,7 +18,7 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex(indexname).mappings {
-      mapping("elements").fields(
+      mapping().fields(
         intField("atomicweight").stored(true),
         textField("name").stored(true)
       )
@@ -29,8 +29,8 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        indexInto(indexname / "elements") fields("atomicweight" -> 2, "name" -> "helium") id "2",
-        indexInto(indexname / "elements") fields("atomicweight" -> 4, "name" -> "lithium") id "4"
+        indexInto(indexname) fields("atomicweight" -> 2, "name" -> "helium") id "2",
+        indexInto(indexname) fields("atomicweight" -> 4, "name" -> "lithium") id "4"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
@@ -46,10 +46,10 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
   it should "return details of which items succeeded and failed" in {
     val result = client.execute {
       bulk(
-        update("2").in(indexname / "elements").doc("atomicweight" -> 2, "name" -> "helium"),
-        indexInto(indexname / "elements").fields("atomicweight" -> 8, "name" -> "oxygen") id "8",
-        update("6").in(indexname / "elements").doc("atomicweight" -> 4, "name" -> "lithium"),
-        delete("10").from(indexname / "elements")
+        update("2").in(indexname).doc("atomicweight" -> 2, "name" -> "helium"),
+        indexInto(indexname).fields("atomicweight" -> 8, "name" -> "oxygen") id "8",
+        update("6").in(indexname).doc("atomicweight" -> 4, "name" -> "lithium"),
+        delete("10").from(indexname)
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -65,8 +65,8 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        update("2").in(indexname / "elements") doc("atomicweight" -> 6, "name" -> "carbon"),
-        update("4").in(indexname / "elements") doc("atomicweight" -> 8, "name" -> "oxygen")
+        update("2").in(indexname) doc("atomicweight" -> 6, "name" -> "carbon"),
+        update("4").in(indexname) doc("atomicweight" -> 8, "name" -> "oxygen")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
@@ -83,8 +83,8 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "10",
-        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "11"
+        indexInto(indexname) fields("atomicweight" -> 6, "name" -> "carbon") id "10",
+        indexInto(indexname) fields("atomicweight" -> 8, "name" -> "oxygen") id "11"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
@@ -98,8 +98,8 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     val result = client.execute {
       bulk(
-        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "10" createOnly false,
-        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "11" createOnly true
+        indexInto(indexname) fields("atomicweight" -> 6, "name" -> "carbon") id "10" createOnly false,
+        indexInto(indexname) fields("atomicweight" -> 8, "name" -> "oxygen") id "11" createOnly true
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -112,17 +112,17 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        deleteById(indexname, "elements", "2"),
-        deleteById(indexname, "elements", "4")
+        deleteById(indexname,"2"),
+        deleteById(indexname,"4")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
     client.execute {
-      get(indexname, "elements", "2")
+      get(indexname, "2")
     }.await.result.found shouldBe false
 
     client.execute {
-      get(indexname, "elements", "4")
+      get(indexname, "4")
       get("4").from(indexname)
     }.await.result.found shouldBe false
   }
@@ -131,15 +131,15 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "20",
-        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "21"
+        indexInto(indexname) fields("atomicweight" -> 6, "name" -> "carbon") id "20",
+        indexInto(indexname) fields("atomicweight" -> 8, "name" -> "oxygen") id "21"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
     val result = client.execute {
       bulk(
-        deleteById(indexname, "elements", "20") version(1),
-        deleteById(indexname, "elements", "21") version(2)
+        deleteById(indexname, "20") version 1,
+        deleteById(indexname, "21") version 2
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -148,11 +148,11 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
     result.successes.map(_.itemId).toSet shouldBe Set(0)
 
     client.execute {
-      get(indexname, "elements", "20")
+      get(indexname, "20")
     }.await.result.found shouldBe false
 
     client.execute {
-      get(indexname, "elements", "21")
+      get(indexname, "21")
     }.await.result.found shouldBe true
 
   }
@@ -161,15 +161,15 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        indexInto(indexname / "elements") fields("atomicweight" -> 6, "name" -> "carbon") id "22",
-        indexInto(indexname / "elements") fields("atomicweight" -> 8, "name" -> "oxygen") id "23"
+        indexInto(indexname) fields("atomicweight" -> 6, "name" -> "carbon") id "22",
+        indexInto(indexname) fields("atomicweight" -> 8, "name" -> "oxygen") id "23"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
     val result = client.execute {
       bulk(
-        updateById(indexname, "elements", "22") doc("atomicweight" -> 9) version(1),
-        updateById(indexname, "elements", "23") doc("atomicweight" -> 10) version(2)
+        updateById(indexname, "22") doc("atomicweight" -> 9) version 1,
+        updateById(indexname, "23") doc("atomicweight" -> 10) version 2
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -178,13 +178,13 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
     result.successes.map(_.itemId).toSet shouldBe Set(0)
 
     val carbon = client.execute {
-      get(indexname, "elements", "22")
+      get(indexname, "22")
     }.await.result
     carbon.found shouldBe true
     carbon.sourceAsMap("atomicweight") shouldBe 9
 
     val oxygen = client.execute {
-      get(indexname, "elements", "23")
+      get(indexname, "23")
     }.await.result
     oxygen.found shouldBe true
     oxygen.sourceAsMap("atomicweight") shouldBe 8

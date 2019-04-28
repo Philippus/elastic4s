@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import java.util.UUID
 
+import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.VersionType.External
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.Indexable
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
@@ -25,18 +25,18 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("electronics").mappings(mapping("electronics"))
+    createIndex("electronics").mappings(mapping())
   }.await
 
   client.execute {
     bulk(
-      indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42l).versionType(VersionType.External),
-      indexInto("electronics" / "electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
-      indexInto("electronics" / "electronics").fields(Map("name" -> "iphone", "colour" -> null)),
-      indexInto("electronics" / "electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
-      indexInto("electronics" / "electronics").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
-      indexInto("electronics" / "electronics").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
-      indexInto("electronics" / "electronics").source(Phone("nokia blabble", "4g"))
+      indexInto("electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42l).versionType(VersionType.External),
+      indexInto("electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
+      indexInto("electronics").fields(Map("name" -> "iphone", "colour" -> null)),
+      indexInto("electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
+      indexInto("electronics").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
+      indexInto("electronics").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
+      indexInto("electronics").source(Phone("nokia blabble", "4g"))
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -48,28 +48,26 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
     }
     "support index names with +" in {
       client.execute {
-        createIndex("hello+world").mappings(mapping("wobble"))
+        createIndex("hello+world").mappings(mapping())
       }.await
       client.execute {
-        indexInto("hello+world/wobble").fields(Map("foo" -> "bar")).withId("a").refreshImmediately
+        indexInto("hello+world").fields(Map("foo" -> "bar")).withId("a").refreshImmediately
       }.await
       client.execute {
         search("hello+world").matchAllQuery()
       }.await.result.totalHits shouldBe 1
     }
-    "support / in ids" in {
+    "not support / in ids" in {
+      cleanIndex("indexidtest")
       client.execute {
-        createIndex("indexidtest").mappings(mapping("wobble"))
-      }.await
-      client.execute {
-        indexInto("indexidtest/wobble").fields(Map("foo" -> "bar")).withId("a/b").refreshImmediately
+        indexInto("indexidtest/indexidtest").fields(Map("foo" -> "bar")).withId("a/b").refreshImmediately
       }.await
       client.execute {
         search("indexidtest").matchAllQuery()
-      }.await.result.totalHits shouldBe 1
+      }.await.result.totalHits shouldBe 0
       client.execute {
-        get("indexidtest", "wobble", "a/b")
-      }.await.result.exists shouldBe true
+        get("indexidtest", "a/b")
+      }.await.result.exists shouldBe false
     }
     "support external versions" in {
       val found = client.execute {
@@ -129,7 +127,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
       val id = UUID.randomUUID()
       val indexName = s"electronics-$id"
       client.execute {
-        createIndex(indexName).mappings(mapping("electronics"))
+        createIndex(indexName).mappings(mapping())
           .alias("alias_1")
           .alias("alias_2")
       }.await
@@ -145,24 +143,24 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
     }
     "return created status" in {
       val result = client.execute {
-        indexInto("electronics" / "electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
+        indexInto("electronics").fields("name" -> "super phone").refresh(RefreshPolicy.Immediate)
       }.await
       result.result.result shouldBe "created"
     }
     "return OK status if the document already exists" in {
       val id = UUID.randomUUID().toString
       client.execute {
-        indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
+        indexInto("electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
       val result = client.execute {
-        indexInto("electronics" / "electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
+        indexInto("electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
       result.result.result shouldBe "updated"
     }
     "handle update concurrency" in {
       val id = UUID.randomUUID.toString
       client.execute {
-        indexInto("electronics" / "electronics")
+        indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
           .version(2l)
@@ -170,7 +168,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
           .refresh(RefreshPolicy.Immediate)
       }.await
       val result = client.execute {
-        indexInto("electronics" / "electronics")
+        indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
           .version(2l)

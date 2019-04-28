@@ -15,11 +15,11 @@ class TermVectorTest
 
   client.execute {
     bulk(
-      indexInto("termvectortest/startrek") fields("name" -> "james kirk", "rank" -> "captain") id "1",
-      indexInto("termvectortest/startrek") fields("name" -> "jean luc picard", "rank" -> "captain") id "2",
-      indexInto("termvectortest/startrek") fields("name" -> "will riker", "rank" -> "cmdr") id "3",
-      indexInto("termvectortest/startrek") fields("name" -> "data", "rank" -> "ltr cmdr") id "4",
-      indexInto("termvectortest/startrek") fields("name" -> "geordie la forge", "rank" -> "ltr cmdr") id "5"
+      indexInto("termvectortest") fields("name" -> "james kirk", "rank" -> "captain") id "1",
+      indexInto("termvectortest") fields("name" -> "jean luc picard", "rank" -> "captain") id "2",
+      indexInto("termvectortest") fields("name" -> "will riker", "rank" -> "cmdr") id "3",
+      indexInto("termvectortest") fields("name" -> "data", "rank" -> "ltr cmdr") id "4",
+      indexInto("termvectortest") fields("name" -> "geordie la forge", "rank" -> "ltr cmdr") id "5"
     )
   }.await
 
@@ -27,7 +27,7 @@ class TermVectorTest
     "return number of terms for a field in " in {
 
       val f = client.execute {
-        termVectors("termvectortest", "startrek", "5")
+        termVectors("termvectortest", "5")
           .termStatistics(true)
           .fields("name", "rank")
           .fieldStatistics(true)
@@ -36,7 +36,7 @@ class TermVectorTest
       whenReady(f) { resp =>
         val result = resp.result
         result.index shouldBe "termvectortest"
-        result.`type` shouldBe "startrek"
+        result.`type` shouldBe "_doc"
         result.id shouldBe "5"
         result.termVectors("name").terms.size shouldBe 3 // geordie la forge
         result.termVectors("rank").terms.size shouldBe 2 // ltr cmdr

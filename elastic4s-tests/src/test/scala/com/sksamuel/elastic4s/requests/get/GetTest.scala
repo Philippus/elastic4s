@@ -16,7 +16,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("beer").mappings {
-      mapping("lager").fields(
+      mapping().fields(
         textField("name").stored(true),
         textField("brand").stored(true),
         textField("ingredients").stored(true)
@@ -26,12 +26,12 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("beer/lager") fields(
+      indexInto("beer") fields(
         "name" -> "coors light",
         "brand" -> "coors",
         "ingredients" -> Seq("hops", "barley", "water", "yeast")
       ) id "4",
-      indexInto("beer/lager") fields(
+      indexInto("beer") fields(
         "name" -> "bud lite",
         "brand" -> "bud",
         "ingredients" -> Seq("hops", "barley", "water", "yeast")
@@ -63,7 +63,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "retrieve a document by id without source" in {
 
     val resp = client.execute {
-      get("8") from "beer/lager" fetchSourceContext false
+      get("8") from "beer" fetchSourceContext false
     }.await.result
 
     resp.exists should be(true)
@@ -75,7 +75,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "support source includes" in {
 
     val resp = client.execute {
-      get("8") from "beer/lager" fetchSourceInclude "brand"
+      get("8") from "beer" fetchSourceInclude "brand"
     }.await.result
 
     resp.exists should be(true)
@@ -86,7 +86,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "support source excludes" in {
 
     val resp = client.execute {
-      get("8") from "beer/lager" fetchSourceExclude "brand"
+      get("8") from "beer" fetchSourceExclude "brand"
     }.await.result
 
     resp.exists should be(true)
@@ -97,7 +97,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "support source includes and excludes" in {
 
     val resp = client.execute {
-      get("8") from "beer/lager" fetchSourceContext(List("name"), List("brand"))
+      get("8") from "beer" fetchSourceContext(List("name"), List("brand"))
     }.await.result
 
     resp.exists should be(true)
@@ -108,7 +108,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "retrieve a document supporting stored fields" in {
 
     val resp = client.execute {
-      get("4") from "beer/lager" storedFields("name", "brand")
+      get("4") from "beer" storedFields("name", "brand")
     }.await.result
 
     resp.exists should be(true)
@@ -120,7 +120,7 @@ class GetTest extends FlatSpec with Matchers with DockerTests {
   it should "retrieve multi value fields" in {
 
     val resp = client.execute {
-      get("4") from "beer/lager" storedFields "ingredients"
+      get("4") from "beer" storedFields "ingredients"
     }.await.result
 
     val field = resp.storedField("ingredients")

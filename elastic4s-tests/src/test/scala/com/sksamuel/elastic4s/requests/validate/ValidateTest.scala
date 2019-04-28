@@ -16,7 +16,7 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("food").mappings(
-      mapping("pasta").fields(
+      mapping().fields(
         textField("name"),
         textField("color"),
         dateField("sellbydate")
@@ -25,7 +25,7 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
   }.await
 
   client.execute {
-    indexInto("food/pasta") fields(
+    indexInto("food") fields(
       "name" -> "maccaroni",
       "color" -> "yellow",
       "sellbydate" -> "2005-01-01"
@@ -35,13 +35,13 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
   "a validate query" should {
     "return valid when the query is valid for a string query" in {
       val resp = client.execute {
-        validateIn("food/pasta") query "maccaroni"
+        validateIn("food") query "maccaroni"
       }.await.result
       resp.valid shouldBe true
     }
     "return valid when the query is valid for a dsl query" in {
       val resp = client.execute {
-        validateIn("food/pasta") query {
+        validateIn("food") query {
           matchQuery("name", "maccaroni")
         }
       }.await.result
@@ -49,7 +49,7 @@ class ValidateTest extends WordSpec with Matchers with DockerTests {
     }
     "return invalid when the query is nonsense" in {
       val resp = client.execute {
-        validateIn("food/pasta") query {
+        validateIn("food") query {
           matchQuery("sellbydate", "qweqwe")
         }
       }.await.result

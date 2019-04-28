@@ -8,9 +8,9 @@ class GetSegmentTest extends FlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("segments_1" / "a") fields ("show" -> "star trek"),
-      indexInto("segments_2" / "b") fields ("show" -> "mindhunter"),
-      indexInto("segments_3" / "c") fields ("show" -> "better call saul")
+      indexInto("segments_1") fields ("show" -> "star trek"),
+      indexInto("segments_2") fields ("show" -> "mindhunter"),
+      indexInto("segments_3") fields ("show" -> "better call saul")
     ).refresh(RefreshPolicy.IMMEDIATE)
   }.await
 

@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
-import com.sksamuel.elastic4s.requests.analyzers.{CustomAnalyzerDefinition, CustomNormalizerDefinition, EdgeNGramTokenizer, HtmlStripCharFilter, LimitTokenCountTokenFilter, LowercaseTokenFilter, LowercaseTokenizer, MappingCharFilter, NGramTokenizer, PatternAnalyzerDefinition, PatternReplaceCharFilter, PatternReplaceTokenFilter, ReverseTokenFilter, SnowballAnalyzerDefinition, StandardAnalyzerDefinition, StandardTokenizer, StemmerOverrideTokenFilter, StemmerTokenFilter, StopTokenFilter, UppercaseTokenFilter, WordDelimiterTokenFilter}
+import com.sksamuel.elastic4s.requests.analyzers._
 import com.sksamuel.elastic4s.requests.mappings.PrefixTree
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
-import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
+import org.scalatestplus.mockito.MockitoSugar
 
 import scala.concurrent.duration._
 import scala.io.Source

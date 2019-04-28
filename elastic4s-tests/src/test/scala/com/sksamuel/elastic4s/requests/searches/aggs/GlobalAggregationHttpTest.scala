@@ -22,11 +22,11 @@ class GlobalAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
 
   client.execute(
     bulk(
-      indexInto("globalagg/colors") fields("name" -> "cyan"),
-      indexInto("globalagg/colors") fields("name" -> "magenta"),
-      indexInto("globalagg/colors") fields("name" -> "yellow"),
-      indexInto("globalagg/colors") fields("name" -> "black"),
-      indexInto("globalagg/colors") fields("name" -> "black")
+      indexInto("globalagg") fields("name" -> "cyan"),
+      indexInto("globalagg") fields("name" -> "magenta"),
+      indexInto("globalagg") fields("name" -> "yellow"),
+      indexInto("globalagg") fields("name" -> "black"),
+      indexInto("globalagg") fields("name" -> "black")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

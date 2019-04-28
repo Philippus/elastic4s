@@ -34,8 +34,8 @@ trait SearchMatchers extends Matchers {
         val exists = resp.hits.hits.flatMap(_.fields).toMap.contains(value)
         MatchResult(
           exists,
-          s"Search ${left.indexesTypes.indexes.mkString(",")}/${left.indexesTypes.types.mkString(",")} did not contain field value '$value'",
-          s"Search ${left.indexesTypes.indexes.mkString(",")}/${left.indexesTypes.types.mkString(",")} contained unwanted field value $value"
+          s"Search ${left.indexes.values.mkString(",")} did not contain field value '$value'",
+          s"Search ${left.indexes.values.mkString(",")} contained unwanted field value $value"
         )
       }
     }

@@ -26,12 +26,12 @@ class DateHistogramAggregationHttpTest extends FreeSpec with DockerTests with Ma
 
   client.execute(
     bulk(
-      indexInto("datehistaggs/tv") fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
-      indexInto("datehistaggs/tv") fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2008"),
-      indexInto("datehistaggs/tv") fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2008"),
-      indexInto("datehistaggs/tv") fields("name" -> "Game of Thrones", "premiere_date" -> "01/06/2008"),
-      indexInto("datehistaggs/tv") fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2008"),
-      indexInto("datehistaggs/tv") fields("name" -> "Walking Dead", "premiere_date" -> "19/01/2008")
+      indexInto("datehistaggs") fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
+      indexInto("datehistaggs") fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2008"),
+      indexInto("datehistaggs") fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2008"),
+      indexInto("datehistaggs") fields("name" -> "Game of Thrones", "premiere_date" -> "01/06/2008"),
+      indexInto("datehistaggs") fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2008"),
+      indexInto("datehistaggs") fields("name" -> "Walking Dead", "premiere_date" -> "19/01/2008")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

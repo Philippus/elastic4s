@@ -26,16 +26,16 @@ class UpdateByQueryTest
 
   client.execute {
     bulk(
-      indexInto("pop/pop").fields("name" -> "sprite", "type" -> "lemonade", "foo" -> "f"),
-      indexInto("pop/pop").fields("name" -> "fanta", "type" -> "orangeade", "foo" -> "f"),
-      indexInto("pop/pop").fields("name" -> "pepsi", "type" -> "cola", "foo" -> "f")
+      indexInto("pop").fields("name" -> "sprite", "type" -> "lemonade", "foo" -> "f"),
+      indexInto("pop").fields("name" -> "fanta", "type" -> "orangeade", "foo" -> "f"),
+      indexInto("pop").fields("name" -> "pepsi", "type" -> "cola", "foo" -> "f")
     ).refreshImmediately
   }.await
 
   "an update by query request" should "support script based update" in {
 
     client.execute {
-      updateByQuery("pop", "pop", matchAllQuery()).script(script("ctx._source.foo = 'bar'").lang("painless")).refreshImmediately
+      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'bar'").lang("painless")).refreshImmediately
     }.await.result.updated shouldBe 3
 
     client.execute {
@@ -45,7 +45,7 @@ class UpdateByQueryTest
 
   it should "return errors if the update fails" in {
     client.execute {
-      updateByQuery("pop", "pop", prefixQuery("name", "spr")).script("wibble")
+      updateByQuery("pop", prefixQuery("name", "spr")).script("wibble")
     }.await.error.`type` shouldBe "script_exception"
   }
 }

@@ -8,7 +8,7 @@ class MaxBucketAggBuilderTest extends FunSuite with Matchers {
   import com.sksamuel.elastic4s.ElasticDsl._
 
   test("max bucket agg should match the spec") {
-    val search = SearchRequest("myindex" / "mytype").aggs(
+    val search = SearchRequest("myindex").aggs(
       dateHistogramAgg("sales_per_month", "date").interval(DateHistogramInterval.Month).addSubagg(
         sumAgg("sales", "price")
       ),

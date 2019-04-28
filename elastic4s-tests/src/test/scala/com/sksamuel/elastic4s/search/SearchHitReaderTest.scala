@@ -20,12 +20,12 @@ class SearchHitReaderTest extends FlatSpec with Matchers with DockerTests {
 
     client.execute {
       createIndex("cars").mappings(
-        mapping("models")
+        mapping()
       )
     }.await
 
     client.execute {
-      indexInto("cars" / "models").doc(focus).refresh(RefreshPolicy.Immediate)
+      indexInto("cars").doc(focus).refresh(RefreshPolicy.Immediate)
     }.await
 
     Thread.sleep(3000)

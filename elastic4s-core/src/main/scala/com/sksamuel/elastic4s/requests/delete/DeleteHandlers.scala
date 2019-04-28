@@ -30,11 +30,7 @@ trait DeleteHandlers {
 
     override def build(request: DeleteByQueryRequest): ElasticRequest = {
 
-      val endpoint =
-        if (request.indexesAndTypes.types.isEmpty)
-          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/_all/_delete_by_query"
-        else
-          s"/${request.indexesAndTypes.indexes.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/${request.indexesAndTypes.types.head}/_delete_by_query"
+      val endpoint = s"/${request.indexes.values.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/_doc/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false))
@@ -46,8 +42,8 @@ trait DeleteHandlers {
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
       val body = DeleteByQueryBodyFn(request)
-      logger.debug(s"Delete by query ${body.string}")
-      val entity = HttpEntity(body.string, "application/json")
+      logger.debug(s"Delete by query ${body.string()}")
+      val entity = HttpEntity(body.string(), "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
@@ -77,7 +73,7 @@ trait DeleteHandlers {
     override def build(request: DeleteByIdRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.indexType.index, "UTF-8")}/${request.indexType.`type`}/${URLEncoder.encode(request.id.toString, "UTF-8")}"
+        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_doc/${URLEncoder.encode(request.id.toString, "UTF-8")}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.parent.foreach(params.put("parent", _))

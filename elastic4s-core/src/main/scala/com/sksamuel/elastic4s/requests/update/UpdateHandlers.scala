@@ -59,7 +59,7 @@ trait UpdateHandlers {
     override def build(request: UpdateRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.indexAndType.index, "UTF-8")}/${request.indexAndType.`type`}/${URLEncoder.encode(request.id, "UTF-8")}/_update"
+        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_doc/${URLEncoder.encode(request.id, "UTF-8")}/_update"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
@@ -74,7 +74,7 @@ trait UpdateHandlers {
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body   = UpdateBuilderFn(request)
-      val entity = HttpEntity(body.string, "application/json")
+      val entity = HttpEntity(body.string(), "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
@@ -83,11 +83,7 @@ trait UpdateHandlers {
   implicit object UpdateByQueryHandler extends Handler[UpdateByQueryRequest, UpdateByQueryResponse] {
     override def build(request: UpdateByQueryRequest): ElasticRequest = {
 
-      val endpoint =
-        if (request.indexesAndTypes.types.isEmpty)
-          s"/${request.indexesAndTypes.indexes.mkString(",")}/_update_by_query"
-        else
-          s"/${request.indexesAndTypes.indexes.mkString(",")}/${request.indexesAndTypes.types.mkString(",")}/_update_by_query"
+      val endpoint = s"/${request.indexes.values.mkString(",")}/_doc/_update_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       if (request.proceedOnConflicts.getOrElse(false))
@@ -102,8 +98,8 @@ trait UpdateHandlers {
       request.slices.foreach(params.put("slices", _))
 
       val body = UpdateByQueryBodyFn(request)
-      logger.debug(s"Delete by query ${body.string}")
-      val entity = HttpEntity(body.string, "application/json")
+      logger.debug(s"Delete by query ${body.string()}")
+      val entity = HttpEntity(body.string(), "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
