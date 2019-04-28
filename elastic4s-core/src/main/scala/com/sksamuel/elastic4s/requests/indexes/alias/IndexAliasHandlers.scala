@@ -24,7 +24,7 @@ trait IndexAliasHandlers {
     }
 
     override def build(request: GetAliasesRequest): ElasticRequest = {
-      val endpoint = s"/${request.indices.string}/_alias/${request.aliases.mkString(",")}"
+      val endpoint = s"/${request.indices.string(true)}/_alias/${request.aliases.mkString(",")}"
       val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore =>
         Map("ignore_unavailable" -> ignore)
       }
