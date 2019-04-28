@@ -58,6 +58,7 @@ object FieldBuilderFn {
         basic.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
         basic.indexOptions.foreach(builder.field("index_options", _))
         basic.scalingFactor.foreach(builder.field("scaling_factor", _))
+        basic.fielddata.map(_.toString).foreach(builder.field("fielddata", _))
         basic.coerce.foreach(builder.field("coerce", _))
         basic.format.foreach(builder.field("format", _))
         basic.similarity.foreach(builder.field("similarity", _))

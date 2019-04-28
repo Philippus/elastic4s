@@ -69,6 +69,7 @@ case class BasicField(name: String,
                       copyTo: Seq[String] = Nil,
                       docValues: Option[Boolean] = None,
                       enabled: Option[Boolean] = None,
+                      fielddata: Option[Boolean] = None,
                       fields: Seq[FieldDefinition] = Nil,
                       format: Option[String] = None,
                       includeInAll: Option[Boolean] = None,
@@ -110,6 +111,8 @@ case class BasicField(name: String,
   def ignoreAbove(ignoreAbove: Int): T                = copy(ignoreAbove = ignoreAbove.some)
   def ignoreMalformed(ignoreMalformed: Boolean): T    = copy(ignoreMalformed = ignoreMalformed.some)
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
+
+  def fielddata(fielddata: Boolean): T = copy(fielddata = fielddata.some)
 
   override def index(index: Boolean): T = copy(index = index.toString.some)
   def index(index: String): BasicField = {

@@ -27,8 +27,8 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("foo").mappings(
-      mapping("bar").fields(
+    createIndex("foo").mapping(
+      mapping(
         textField("baz").fields(
           textField("inner1") analyzer PatternAnalyzer,
           textField("inner2")
@@ -40,8 +40,8 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
   "CreateIndex Http Request" should {
     "return ack" in {
       val resp = client.execute {
-        createIndex("cuisine").mappings(
-          mapping("food").fields(
+        createIndex("cuisine").mapping(
+          mapping(
             textField("name"),
             geopointField("location")
           )
@@ -54,8 +54,8 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
     "return error object when index already exists" in {
 
       val resp = client.execute {
-        createIndex("foo").mappings(
-          mapping("a").fields(
+        createIndex("foo").mapping(
+          mapping(
             textField("b")
           )
         )
@@ -68,16 +68,15 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
     "create from raw source" in {
 
       client.execute {
-        createIndex("landscape").source(s"""
+        createIndex("landscape").source(
+          s"""
              {
               "mappings": {
-                "mountains": {
                   "properties": {
                     "name": {
                       "type": "text"
                     }
                   }
-                }
               }
              }
            """).shards(1).waitForActiveShards(1)

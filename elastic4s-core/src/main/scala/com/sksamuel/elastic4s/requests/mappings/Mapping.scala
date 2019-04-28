@@ -97,7 +97,11 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
   def templates(temps: DynamicTemplateRequest*): PutMappingRequest                 = copy(templates = temps.toSeq)
 }
 
-case class MappingDefinition(`type`: String, // the name basically, called a type in es
+object MappingDefinition {
+  def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition("", fields = fields)
+}
+
+case class MappingDefinition(`type`: String, // type is now deprecated and can largely be ignored
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
                              sourceExcludes: Seq[String] = Nil,

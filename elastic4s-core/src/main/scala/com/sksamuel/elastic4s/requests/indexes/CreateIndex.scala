@@ -11,7 +11,7 @@ case class IndexAliasRequest(name: String, filter: Option[Query] = None, routing
 
 case class CreateIndexRequest(name: String,
                               analysis: Option[AnalysisDefinition] = None,
-                              mappings: Seq[MappingDefinition] = Nil,
+                              mapping: Option[MappingDefinition] = None,
                               rawSource: Option[String] = None,
                               waitForActiveShards: Option[Int] = None,
                               aliases: Set[IndexAliasRequest] = Set.empty,
@@ -38,9 +38,17 @@ case class CreateIndexRequest(name: String,
 
   def indexSetting(name: String, value: Any): CreateIndexRequest = copy(settings = settings.add(name, value))
 
-  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexRequest = mappings(first +: rest)
-  def mappings(mappings: Iterable[MappingDefinition]): CreateIndexRequest =
-    copy(mappings = this.mappings ++ mappings)
+  def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
+
+  @deprecated("Use of type is deprecated in 7; create the mapping without a type name, eg createIndex(\"foo\").mapping(mapping(field1, field2))", "7.0.0")
+  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexRequest = {
+    if (rest.isEmpty) mapping(first) else throw new UnsupportedOperationException("Cannot specify multiple types when creating an index in version 7+")
+  }
+
+  @deprecated("Use of type is deprecated in 7; create the mapping without a type name, eg createIndex(\"foo\").mapping(mapping(field1, field2))", "7.0.0")
+  def mappings(mappings: Iterable[MappingDefinition]): CreateIndexRequest = {
+    if (mappings.size == 1) mapping(mappings.head) else throw new UnsupportedOperationException("Cannot specify multiple types when creating an index in version 7+")
+  }
 
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)
   def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexRequest              = analysis(analyzers, Nil)

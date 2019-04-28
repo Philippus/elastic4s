@@ -31,11 +31,8 @@ object CreateIndexContentBuilder {
         builder.endObject() // end settings
       }
 
-      if (d.mappings.nonEmpty) {
-        builder.startObject("mappings")
-        for (mapping <- d.mappings)
-          builder.rawField(mapping.`type`, MappingBuilderFn.build(mapping))
-        builder.endObject()
+      d.mapping.foreach { mapping =>
+        builder.rawField("mappings", MappingBuilderFn.build(mapping))
       }
 
       if (d.aliases.nonEmpty) {
