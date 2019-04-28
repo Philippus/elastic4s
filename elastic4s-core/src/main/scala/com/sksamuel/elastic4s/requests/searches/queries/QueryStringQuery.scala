@@ -19,7 +19,7 @@ case class QueryStringQuery(query: String,
                             fuzzyPrefixLength: Option[Int] = None,
                             fuzzyRewrite: Option[String] = None,
                             lenient: Option[Boolean] = None,
-                            minimumShouldMatch: Option[Int] = None,
+                            minimumShouldMatch: Option[String] = None,
                             phraseSlop: Option[Int] = None,
                             quoteFieldSuffix: Option[String] = None,
                             queryName: Option[String] = None,
@@ -67,7 +67,7 @@ case class QueryStringQuery(query: String,
   def lenient(lenient: Boolean): QueryStringQuery =
     copy(lenient = lenient.some)
 
-  def minimumShouldMatch(minimumShouldMatch: Int): QueryStringQuery =
+  def minimumShouldMatch(minimumShouldMatch: String): QueryStringQuery =
     copy(minimumShouldMatch = minimumShouldMatch.some)
 
   def enablePositionIncrements(enablePositionIncrements: Boolean): QueryStringQuery =
