@@ -1,8 +1,8 @@
 import com.typesafe.sbt.SbtPgp
 import com.typesafe.sbt.pgp.PgpKeys
+import sbt.Keys._
 import sbt._
 import sbt.plugins.JvmPlugin
-import sbt.Keys._
 
 object Build extends AutoPlugin {
 
@@ -11,13 +11,13 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
-    val AkkaVersion            = "2.5.21"
-    val AkkaHttpVersion        = "10.1.7"
+    val AkkaVersion            = "2.5.22"
+    val AkkaHttpVersion        = "10.1.8"
     val CatsVersion            = "1.4.0"
     val CatsEffectVersion      = "1.2.0"
     val CirceVersion           = "0.11.1"
     val CommonsIoVersion       = "2.6"
-    val ElasticsearchVersion   = "7.0.0-beta1"
+    val ElasticsearchVersion   = "7.0.0"
     val ExtsVersion            = "1.61.0"
     val JacksonVersion         = "2.9.8"
     val Json4sVersion          = "3.6.5"
@@ -25,19 +25,19 @@ object Build extends AutoPlugin {
     val Log4jVersion           = "2.11.1"
     val MockitoVersion         = "1.10.19"
     val MonixVersion           = "2.3.3"
-    val PlayJsonVersion        = "2.7.1"
+    val PlayJsonVersion        = "2.7.3"
     val ReactiveStreamsVersion = "1.0.2"
-    val ScalatestVersion       = "3.0.6"
+    val ScalatestVersion       = "3.0.7"
     val ScalamockVersion       = "4.1.0"
     val ScalazVersion          = "7.2.27"
     val SprayJsonVersion       = "1.3.5"
-    val SttpVersion            = "1.5.11"
+    val SttpVersion            = "1.5.14"
     val Slf4jVersion           = "1.7.26"
   }
 
   import autoImport._
 
-  override def projectSettings = Seq(
+  override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
     scalaVersion := "2.12.8",
     crossScalaVersions := Seq("2.11.12", "2.12.8"),

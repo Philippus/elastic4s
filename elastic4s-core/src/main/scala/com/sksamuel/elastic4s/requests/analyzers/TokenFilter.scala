@@ -40,7 +40,7 @@ case object KStemTokenFilter extends TokenFilter {
 }
 
 case object PorterStemTokenFilter extends TokenFilter {
-  val name = "porterStem"
+  val name = "porter_stem"
 }
 
 case object UniqueTokenFilter extends TokenFilter {
@@ -61,8 +61,8 @@ case class SynonymTokenFilter(name: String,
   val filterType = "synonym"
 
   override def build(source: XContentBuilder): Unit = {
-    path.foreach(source.field("synonyms_path", _))
-    source.array("synonyms", synonyms.toArray)
+    if(synonyms.isEmpty) path.foreach(source.field("synonyms_path", _))
+    if(synonyms.nonEmpty) source.array("synonyms", synonyms.toArray)
     format.foreach(source.field("format", _))
     ignoreCase.foreach(source.field("ignore_case", _))
     expand.foreach(source.field("expand", _))
@@ -75,6 +75,36 @@ case class SynonymTokenFilter(name: String,
   def format(format: String): SynonymTokenFilter               = copy(format = Some(format))
   def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter      = copy(ignoreCase = Some(ignoreCase))
   def expand(expand: Boolean): SynonymTokenFilter              = copy(expand = Some(expand))
+}
+
+case class SynonymGraphTokenFilter(name: String,
+                                   path: Option[String] = None,
+                                   synonyms: Set[String] = Set.empty,
+                                   ignoreCase: Option[Boolean] = None,
+                                   format: Option[String] = None,
+                                   expand: Option[Boolean] = None,
+                                   tokenizer: Option[Tokenizer] = None)
+  extends TokenFilterDefinition {
+
+  require(path.isDefined || synonyms.nonEmpty, "synonym_graph requires either `synonyms` or `synonyms_path` to be configured")
+
+  val filterType = "synonym_graph"
+
+  override def build(source: XContentBuilder): Unit = {
+    if(synonyms.isEmpty) path.foreach(source.field("synonyms_path", _))
+    if(synonyms.nonEmpty) source.array("synonyms", synonyms.toArray)
+    format.foreach(source.field("format", _))
+    ignoreCase.foreach(source.field("ignore_case", _))
+    expand.foreach(source.field("expand", _))
+    tokenizer.foreach(t => source.field("tokenizer", t.name))
+  }
+
+  def path(path: String): SynonymGraphTokenFilter = copy(path = Some(path))
+  def synonyms(synonyms: Iterable[String]): SynonymGraphTokenFilter = copy(synonyms = synonyms.toSet)
+  def tokenizer(tokenizer: Tokenizer): SynonymGraphTokenFilter = copy(tokenizer = Some(tokenizer))
+  def format(format: String): SynonymGraphTokenFilter = copy(format = Some(format))
+  def ignoreCase(ignoreCase: Boolean): SynonymGraphTokenFilter = copy(ignoreCase = Some(ignoreCase))
+  def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = Some(expand))
 }
 
 case class TruncateTokenFilter(name: String, length: Option[Int] = None) extends TokenFilterDefinition {

@@ -61,7 +61,7 @@ trait SnapshotHandlers {
 
       val body = XContentFactory.jsonBuilder()
       if (request.indices.isNonEmpty)
-        body.field("indices", request.indices.string)
+        body.field("indices", request.indices.string(false))
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))
       request.includeGlobalState.foreach(body.field("include_global_state", _))
       request.partial.foreach(body.field("partial", _))
@@ -92,9 +92,12 @@ trait SnapshotHandlers {
     override def build(request: RestoreSnapshotRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName + "/_restore"
 
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
+
       val body = XContentFactory.jsonBuilder()
       if (request.indices.isNonEmpty)
-        body.field("indices", request.indices.string)
+        body.field("indices", request.indices.string(false))
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))
       request.includeGlobalState.foreach(body.field("include_global_state", _))
       request.partial.foreach(body.field("partial", _))
@@ -103,7 +106,7 @@ trait SnapshotHandlers {
       request.renameReplacement.foreach(body.field("rename_replacement", _))
       val entity = HttpEntity(body.string, "application/json")
 
-      ElasticRequest("POST", endpoint, entity)
+      ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
 }

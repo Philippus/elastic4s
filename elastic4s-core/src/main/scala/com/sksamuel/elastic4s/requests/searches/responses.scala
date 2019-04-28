@@ -120,6 +120,7 @@ case class InnerHit(index: String,
     }
   }
 
+  def sourceAsString: String = SourceAsContentBuilder(source).string()
 }
 
 case class SearchResponse(took: Long,

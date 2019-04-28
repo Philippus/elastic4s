@@ -29,7 +29,7 @@ case class SimpleStringQuery(query: String,
                              lenient: Option[Boolean] = None,
                              fields: Seq[(String, Option[Double])] = Nil,
                              flags: Seq[SimpleQueryStringFlag] = Nil,
-                             minimumShouldMatch: Option[Int] = None,
+                             minimumShouldMatch: Option[String] = None),
                              autoGenerateSynonymsPhraseQuery: Option[Boolean] = None)
     extends Query {
 
@@ -42,7 +42,7 @@ case class SimpleStringQuery(query: String,
 
   def lenient(lenient: Boolean): SimpleStringQuery = copy(lenient = lenient.some)
 
-  def minimumShouldMatch(minimumShouldMatch: Int): SimpleStringQuery =
+  def minimumShouldMatch(minimumShouldMatch: String): SimpleStringQuery =
     copy(minimumShouldMatch = minimumShouldMatch.some)
 
   def analyzeWildcard(analyzeWildcard: Boolean): SimpleStringQuery =
