@@ -14,8 +14,8 @@ class GeoCentroidAggregationHttpTest extends FreeSpec with DockerTests with Matc
   }
 
   client.execute {
-    createIndex("geocentroidagg") mappings {
-      mapping("doc") fields geopointField("location")
+    createIndex("geocentroidagg") mapping {
+      properties(geopointField("location"))
     }
   }.await
 

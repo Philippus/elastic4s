@@ -18,8 +18,8 @@ class DateRangeQueryHttpTest
   }
 
   client.execute {
-    ElasticDsl.createIndex("daterange") mappings {
-      mapping("tv") fields(
+    ElasticDsl.createIndex("daterange") mapping {
+      properties(
         textField("name").fielddata(true),
         dateField("premiere_date").format("dd/MM/yyyy")
       )

@@ -11,8 +11,8 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers wit
     deleteIdx("sumagg")
 
     client.execute {
-      createIndex("sumagg") mappings {
-        mapping("actors") fields(
+      createIndex("sumagg") mapping {
+        properties(
           textField("name").fielddata(true),
           intField("age").stored(true)
         )
@@ -27,8 +27,8 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers wit
     }
 
     client.execute {
-      createIndex("sumagg2") mappings {
-        mapping("actors") fields(
+      createIndex("sumagg2") mapping {
+        properties(
           textField("name").fielddata(true),
           intField("age").stored(true)
         )
@@ -48,6 +48,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers wit
   }
 
   "sum aggregation" - {
+
     "should group by field" in {
 
       val resp = client.execute {
@@ -60,6 +61,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers wit
       val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 260.0
     }
+
     "should support missing" in {
       val resp = client.execute {
         search("sumagg").matchAllQuery().aggs {
@@ -71,6 +73,7 @@ class SumAggregationHttpTest extends FreeSpec with DockerTests with Matchers wit
       val agg = resp.aggs.sum("agg1")
       agg.value shouldBe 360
     }
+
     "should support when no documents match" in {
       val resp = client.execute {
         search("sumagg2").matchAllQuery().aggs {

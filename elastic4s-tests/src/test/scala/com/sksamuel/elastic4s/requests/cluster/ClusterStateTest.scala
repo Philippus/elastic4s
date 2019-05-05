@@ -31,7 +31,7 @@ class ClusterStateTest extends WordSpec with Matchers with DockerTests {
       }.await.result
 
       state.clusterName shouldBe "docker-cluster"
-      state.compressedSizeInBytes > 0 shouldBe true
+      state.clusterUUID should not be null
       state.stateUuid should not be null
       state.masterNode should not be null
       state.metadata.get.clusterUuid should not be null

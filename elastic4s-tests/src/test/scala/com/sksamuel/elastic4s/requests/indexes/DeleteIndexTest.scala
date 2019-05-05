@@ -10,8 +10,8 @@ class DeleteIndexTest extends WordSpec with Matchers with DockerTests {
     "delete index" in {
 
       client.execute {
-        createIndex("languages").mappings(
-          mapping("dialects").fields(
+        createIndex("languages").mapping(
+          properties(
             textField("type")
           )
         ).shards(1).waitForActiveShards(1)
@@ -32,16 +32,16 @@ class DeleteIndexTest extends WordSpec with Matchers with DockerTests {
 
     "support multiple indexes" in {
       client.execute {
-        createIndex("languages1").mappings(
-          mapping("dialects").fields(
+        createIndex("languages1").mapping(
+          properties(
             textField("type")
           )
         )
       }.await
 
       client.execute {
-        createIndex("languages2").mappings(
-          mapping("dialects").fields(
+        createIndex("languages2").mapping(
+          properties(
             textField("type")
           )
         )

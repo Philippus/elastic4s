@@ -16,8 +16,8 @@ class DateHistogramAggregationHttpTest extends FreeSpec with DockerTests with Ma
   }
 
   client.execute {
-    createIndex("datehistaggs") mappings {
-      mapping("tv") fields(
+    createIndex("datehistaggs") mapping {
+      properties(
         textField("name").fielddata(true),
         dateField("premiere_date").format("dd/MM/yyyy")
       )
