@@ -33,8 +33,8 @@ class ClusterInfoTest extends WordSpec with Matchers with DockerTests with Befor
       )
 
       info.valueAt("cluster_two") should have(
-        'connected (true),
-        'numNodesConnected (1),
+        'connected (false),
+        'numNodesConnected (0),
         'maxConnectionsPerCluster (3),
         'initialConnectTimeout ("30s"),
         'skipUnavailable (false))
