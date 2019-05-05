@@ -14,8 +14,8 @@ class ClusterInfoTest extends WordSpec with Matchers with DockerTests with Befor
 
   client.execute {
     addRemoteClusterRequest(Map(
-      "search.remote.cluster_one.seeds" → "127.0.0.1:9300, 127.0.0.2:9300",
-      "search.remote.cluster_two.seeds" → "127.0.0.3:9300"))
+      "search.remote.cluster_one.seeds" -> "127.0.0.1:9300, 127.0.0.2:9300",
+      "search.remote.cluster_two.seeds" -> "127.0.0.3:9300"))
   }.await
 
   "remote cluster info request" should {
@@ -33,8 +33,8 @@ class ClusterInfoTest extends WordSpec with Matchers with DockerTests with Befor
       )
 
       info.valueAt("cluster_two") should have(
-        'connected (false),
-        'numNodesConnected (0),
+        'connected (true),
+        'numNodesConnected (1),
         'maxConnectionsPerCluster (3),
         'initialConnectTimeout ("30s"),
         'skipUnavailable (false))

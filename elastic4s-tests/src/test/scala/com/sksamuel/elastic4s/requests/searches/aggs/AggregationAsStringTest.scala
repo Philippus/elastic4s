@@ -15,8 +15,8 @@ class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
   }
 
   client.execute {
-    createIndex("aggstring") mappings {
-      mapping("buildings") fields(
+    createIndex("aggstring") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

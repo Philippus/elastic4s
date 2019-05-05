@@ -41,7 +41,7 @@ case class CreateIndexRequest(name: String,
 
   def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
 
-  @deprecated("use mapping since indexes now only have a single type", "7.0.0")
+  @deprecated("use mapping not mappings since creating an index only support a single mapping now", "7.0.0")
   def mappings(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
 
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)

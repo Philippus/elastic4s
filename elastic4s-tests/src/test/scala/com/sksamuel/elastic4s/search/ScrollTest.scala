@@ -16,8 +16,8 @@ class ScrollTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("katebush").mappings(
-      mapping("songs").fields(
+    createIndex("katebush").mapping(
+      properties(
         intField("year"),
         textField("name").fielddata(true).stored(true)
       )

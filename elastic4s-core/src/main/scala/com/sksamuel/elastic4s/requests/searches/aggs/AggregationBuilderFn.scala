@@ -62,7 +62,7 @@ object AggregationBuilderFn {
       // Not implemented
       case ni =>
         throw new NotImplementedError(
-          s"Aggregation ${ni.getClass.getName} has not yet been implemented for the HTTP client."
+          s"Aggregation ${ni.getClass.getName} has not yet been implemented. Please add a PR!"
         )
     }
     builder

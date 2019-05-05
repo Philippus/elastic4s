@@ -16,7 +16,8 @@
                     "random_score": {
                         "seed": 1234,
                         "field": "_seq_no"
-                    }
+                    },
+                    "weight": 1.2
                 },
                 {
                     "script_score": {

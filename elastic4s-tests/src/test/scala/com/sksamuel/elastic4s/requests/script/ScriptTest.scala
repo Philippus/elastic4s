@@ -14,8 +14,8 @@ class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
   }
 
   client.execute {
-    createIndex("script").mappings(
-      mapping("tubestops").fields(
+    createIndex("script").mapping(
+      properties(
         textField("name").fielddata(true),
         textField("line").fielddata(true)
       )

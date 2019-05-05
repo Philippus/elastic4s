@@ -14,8 +14,8 @@ class GetIndexRequestTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("getindextest").mappings(
-      mapping("mytype").fields(
+    createIndex("getindextest").mapping(
+      properties(
         textField("a"),
         keywordField("b"),
         longField("c")

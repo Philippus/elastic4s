@@ -21,8 +21,8 @@ class SearchTest extends WordSpec with DockerTests with Matchers {
   }
 
   client.execute {
-    createIndex("chess").mappings(
-      mapping("pieces").fields(
+    createIndex("chess").mapping(
+      properties(
         textField("name").fielddata(true)
       )
     )

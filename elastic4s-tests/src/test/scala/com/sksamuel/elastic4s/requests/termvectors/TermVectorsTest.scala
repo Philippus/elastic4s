@@ -15,8 +15,8 @@ class TermVectorsTest extends FlatSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("termvecs").mappings(
-      mapping("albums").fields(
+    createIndex("termvecs").mapping(
+      properties(
         textField("name").stored(true).termVector("with_positions_offsets_payloads"),
         intField("rating")
       )

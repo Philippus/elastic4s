@@ -11,7 +11,7 @@ trait CreateIndexApi {
   def tokenizers(tokenizers: Tokenizer*)        = new TokenizersWrapper(tokenizers)
   def filters(filters: TokenFilter*)            = new TokenFiltersWrapper(filters)
 
-  @deprecated("Use of type is deprecated in 7; create the mapping without a type name, eg createIndex(\"foo\").mapping(properties(fielda, fieldb))", "7.0.0")
+  @deprecated("Use of types is deprecated in 7; create the mapping without a type name by using properties, eg createIndex(\"foo\").mapping(properties(fielda, fieldb))", "7.0.0")
   def mapping(name: String): MappingDefinition = MappingDefinition(Some(name))
 
   val emptyMapping: MappingDefinition = MappingDefinition.empty

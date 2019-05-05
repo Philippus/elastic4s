@@ -145,7 +145,7 @@ class AliasesHttpTest extends WordSpec with Matchers with DockerTests {
   private def addIndex(index: String): Unit = {
     client.execute {
       createIndex(index).mapping(
-        mapping("a").fields(
+        properties(
           textField("b")
         )
       ).shards(1).replicas(0).waitForActiveShards(1)
