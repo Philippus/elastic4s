@@ -24,6 +24,11 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
   private val out: Outlet[SearchHit] = Outlet.create("ElasticSource.out")
   override val shape: SourceShape[SearchHit] = SourceShape.of(out)
 
+  private implicit val searchHandler: Handler[SearchRequest, SearchResponse] = SearchHandlers.SearchHandler
+  private implicit val scrollHandler: Handler[SearchScrollRequest, SearchResponse] = SearchScrollHandlers.SearchScrollHandler
+  private implicit val executor: Executor[Future] = Executor.FutureExecutor
+  private implicit val functor: Functor[Future] = Functor.FutureFunctor
+
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new GraphStageLogic(shape) with OutHandler {
 
     private val buffer = scala.collection.mutable.Queue.empty[SearchHit]
@@ -32,11 +37,6 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
 
     // Parse the keep alive setting out of the original query.
     private val keepAlive = settings.search.keepAlive.map(_.toString).getOrElse("1m")
-
-    private implicit val searchHandler: Handler[SearchRequest, SearchResponse] = SearchHandlers.SearchHandler
-    private implicit val scrollHandler: Handler[SearchScrollRequest, SearchResponse] = SearchScrollHandlers.SearchScrollHandler
-    private implicit val executor: Executor[Future] = Executor.FutureExecutor
-    private implicit val functor: Functor[Future] = Functor.FutureFunctor
 
     if (settings.warm)
       fetch()
