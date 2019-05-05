@@ -6,8 +6,8 @@ import com.sksamuel.elastic4s.{Index, Indexes}
 trait UpdateApi {
 
   def updateById(index: Index, id: String) = UpdateRequest(index.name, id)
-  def updateByQuery(index: Index, query: Query) =
-    UpdateByQueryRequest(index.name, query)
+
+  def updateByQuery(index: Index, query: Query) = UpdateByQueryRequest(index.name, query)
 
   def update(id: String): UpdateExpectsIn = new UpdateExpectsIn(id)
   class UpdateExpectsIn(id: String) {

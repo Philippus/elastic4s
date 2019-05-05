@@ -34,7 +34,10 @@ case class UpdateByQueryRequest(indexes: Indexes,
   def abortOnVersionConflict(abortOnVersionConflict: Boolean): UpdateByQueryRequest =
     proceedOnConflicts(abortOnVersionConflict)
 
-  def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = copy(refresh = refresh.some)
+  def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = {
+    if (refresh == RefreshPolicy.WAIT_FOR) throw new UnsupportedOperationException("Update by query does not support RefreshPolicy.WAIT_FOR")
+    copy(refresh = refresh.some)
+  }
   def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
 
   def scroll(scroll: String): UpdateByQueryRequest = copy(scroll = scroll.some)
