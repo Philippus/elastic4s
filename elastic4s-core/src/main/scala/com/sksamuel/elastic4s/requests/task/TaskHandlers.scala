@@ -31,7 +31,7 @@ case class Task(node: String,
   def runningTime: FiniteDuration = running_time_in_nanos.nanos
 }
 
-case class TaskStatus(total: Long, updated: Long, Created: Long, deleted: Long, batches: Long)
+case class TaskStatus(total: Long, updated: Long, created: Long, deleted: Long, batches: Long)
 
 trait TaskHandlers {
 
