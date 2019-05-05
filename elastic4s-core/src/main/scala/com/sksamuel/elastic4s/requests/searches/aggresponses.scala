@@ -529,10 +529,10 @@ trait HasAggregations extends Transformable {
     StatsBucketAggResult(
       name,
       count = agg(name)("count").toString.toLong,
-      min = agg(name)("min").toString.toDouble,
-      max = agg(name)("max").toString.toDouble,
-      avg = agg(name)("avg").toString.toDouble,
-      sum = agg(name)("sum").toString.toDouble
+      min = agg(name).getOrElse("min", 0).toString.toDouble,
+      max = agg(name).getOrElse("max", 0).toString.toDouble,
+      avg = agg(name).getOrElse("avg", 0).toString.toDouble,
+      sum = agg(name).getOrElse("sum", 0).toString.toDouble
     )
 }
 
