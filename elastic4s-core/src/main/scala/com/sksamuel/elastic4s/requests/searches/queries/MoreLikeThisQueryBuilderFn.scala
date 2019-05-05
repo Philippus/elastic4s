@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
-object MoreLikeThisBuilderFn {
+object MoreLikeThisQueryBuilderFn {
   def apply(q: MoreLikeThisQuery): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
@@ -16,7 +16,6 @@ object MoreLikeThisBuilderFn {
     q.likeDocs.foreach { doc =>
       builder.startObject()
       builder.field("_index", doc.ref.index.name)
-      builder.field("_type", "_doc")
       builder.field("_id", doc.ref.id)
       doc.routing.foreach { r ⇒
         builder.field("routing", r)
@@ -40,7 +39,6 @@ object MoreLikeThisBuilderFn {
       q.unlikeDocs.foreach { doc =>
         builder.startObject()
         builder.field("_index", doc.ref.index.name)
-        builder.field("_type", "_doc")
         builder.field("_id", doc.ref.id)
         doc.routing.foreach { r ⇒
           builder.field("routing", r)

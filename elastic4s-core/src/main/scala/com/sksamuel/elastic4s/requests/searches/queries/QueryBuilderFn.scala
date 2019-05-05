@@ -33,7 +33,7 @@ object QueryBuilderFn {
     case q: MatchQuery          => MatchQueryBuilderFn(q)
     case q: MatchPhrase         => MatchPhraseQueryBodyFn(q)
     case q: MatchPhrasePrefix   => MatchPhrasePrefixBodyFn(q)
-    case q: MoreLikeThisQuery   => MoreLikeThisBuilderFn(q)
+    case q: MoreLikeThisQuery   => MoreLikeThisQueryBuilderFn(q)
     case q: MultiMatchQuery     => MultiMatchBodyFn(q)
     case q: NestedQuery         => NestedQueryBodyFn(q)
     case NoopQuery              => XContentFactory.jsonBuilder()

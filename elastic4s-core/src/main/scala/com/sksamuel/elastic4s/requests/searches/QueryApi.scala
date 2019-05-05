@@ -107,7 +107,7 @@ trait QueryApi {
     }
   }
 
-  def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit = new com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
+  def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit = com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
 
   @deprecated("use matchQuery(field, value) instead of the tupled version", "5.2.0")
   def matchQuery(tuple: (String, Any)): MatchQuery      = MatchQuery(tuple._1, tuple._2)
