@@ -16,8 +16,8 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
   }
 
   client.execute {
-    createIndex("valuecount") mappings {
-      mapping("buildings") fields(
+    createIndex("valuecount") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )
@@ -31,8 +31,8 @@ class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTe
   }
 
   client.execute {
-    createIndex("valuecount2") mappings {
-      mapping("buildings") fields(
+    createIndex("valuecount2") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

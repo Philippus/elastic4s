@@ -16,8 +16,8 @@ class GeoDistanceAggregationHttpTest extends FreeSpec with DockerTests with Matc
   }
 
   client.execute {
-    createIndex("geodistanceagg") mappings {
-      mapping("doc") fields geopointField("location")
+    createIndex("geodistanceagg") mapping {
+      properties(geopointField("location"))
     }
   }.await
 

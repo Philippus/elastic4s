@@ -15,8 +15,8 @@ class KeyedRangeAggregationHttpTest extends FreeSpec with DockerTests with Match
   }
 
   client.execute {
-    createIndex("keyedrangeaggs") mappings {
-      mapping() fields(
+    createIndex("keyedrangeaggs") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("grade")
       )

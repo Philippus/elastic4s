@@ -18,10 +18,8 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
   }
 
   client.execute {
-
     createIndex("daterangeaggs").mapping(
-      mapping(
-
+      properties(
         textField("name").fielddata(true),
         dateField("premiere_date").format("dd/MM/yyyy")
       )
@@ -32,36 +30,36 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
 
   client.execute(
     bulk(
-      indexInto("daterange").fields("name" -> "Breaking Bad",
+      indexInto("daterangeaggs").fields("name" -> "Breaking Bad",
         "premiere_date" -> DateTime
           .now()
           .minusYears(10)
           .toString(dateFormatter)),
-      indexInto("daterange").fields("name" -> "Better Call Saul",
+      indexInto("daterangeaggs").fields("name" -> "Better Call Saul",
         "premiere_date" -> DateTime
           .now()
           .minusYears(5)
           .minusMonths(1)
           .toString(dateFormatter)),
-      indexInto("daterange").fields("name" -> "Star Trek Discovery",
+      indexInto("daterangeaggs").fields("name" -> "Star Trek Discovery",
         "premiere_date" -> DateTime
           .now()
           .minusYears(2)
           .minusMonths(6)
           .toString(dateFormatter)),
-      indexInto("daterange").fields("name" -> "Game of Thrones",
+      indexInto("daterangeaggs").fields("name" -> "Game of Thrones",
         "premiere_date" -> DateTime
           .now()
           .minusYears(9)
           .minusMonths(6)
           .toString(dateFormatter)),
-      indexInto("daterange").fields("name" -> "Designated Survivor",
+      indexInto("daterangeaggs").fields("name" -> "Designated Survivor",
         "premiere_date" -> DateTime
           .now()
           .minusYears(3)
           .minusMonths(1)
           .toString(dateFormatter)),
-      indexInto("daterange").fields("name" -> "Walking Dead",
+      indexInto("daterangeaggs").fields("name" -> "Walking Dead",
         "premiere_date" -> DateTime
           .now()
           .minusYears(8)

@@ -16,8 +16,8 @@ class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matche
   }
 
   client.execute {
-    createIndex("daterangeaggs") mappings {
-      mapping("tv") fields(
+    createIndex("daterangeaggs") mapping {
+      properties(
         textField("name").fielddata(true),
         dateField("premiere_date").format("dd/MM/yyyy")
       )

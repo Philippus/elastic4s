@@ -21,8 +21,8 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
   }
 
   client.execute {
-    createIndex("minmaxagg") mappings {
-      mapping("buildings") fields(
+    createIndex("minmaxagg") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )
@@ -30,8 +30,8 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
   }.await
 
   client.execute {
-    createIndex("minmaxagg2") mappings {
-      mapping("buildings") fields(
+    createIndex("minmaxagg2") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )
@@ -39,8 +39,8 @@ class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers 
   }.await
 
   client.execute {
-    createIndex("minmaxagg3") mappings {
-      mapping("buildings") fields(
+    createIndex("minmaxagg3") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

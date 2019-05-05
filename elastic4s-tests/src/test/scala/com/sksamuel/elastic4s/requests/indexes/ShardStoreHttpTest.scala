@@ -15,8 +15,8 @@ class ShardStoreHttpTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("shardstoretest").mappings(
-      mapping("dday").fields(
+    createIndex("shardstoretest").mapping(
+      properties(
         textField("name")
       )
     ).shards(1).replicas(0).waitForActiveShards(1)

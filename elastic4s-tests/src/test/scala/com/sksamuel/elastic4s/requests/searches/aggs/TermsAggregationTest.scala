@@ -16,8 +16,8 @@ class TermsAggregationTest extends FreeSpec with DockerTests with Matchers {
   }
 
   client.execute {
-    createIndex("termsagg") mappings {
-      mapping("curry") fields(
+    createIndex("termsagg") mapping {
+      properties(
         textField("name").fielddata(true),
         textField("strength").fielddata(true).stored(true),
         keywordField("origin")

@@ -20,16 +20,16 @@ class ClearCacheRequestTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("clearcache1").mappings(
-      mapping("flowers").fields(
+    createIndex("clearcache1").mapping(
+      properties(
         textField("name")
       )
     )
   }.await
 
   client.execute {
-    createIndex("clearcache2").mappings(
-      mapping("plants").fields(
+    createIndex("clearcache2").mapping(
+      properties(
         textField("name")
       )
     )

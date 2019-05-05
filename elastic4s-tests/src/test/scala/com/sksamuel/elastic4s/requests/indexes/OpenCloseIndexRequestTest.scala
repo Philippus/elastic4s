@@ -6,6 +6,8 @@ import org.scalatest.exceptions.TestFailedDueToTimeoutException
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.util.Try
 
 class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests with TimeLimits {
@@ -17,8 +19,8 @@ class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests 
   }
 
   client.execute {
-    createIndex("pasta").mappings(
-      mapping("types").fields(
+    createIndex("pasta").mapping(
+      properties(
         textField("name"),
         textField("region")
       )
@@ -45,12 +47,14 @@ class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests 
         openIndex("pasta").waitForActiveShards(1)
       }.await.result.acknowledged shouldBe true
 
+      val f = client.execute {
+        openIndex("pasta").waitForActiveShards(10)
+      }
+
       // this should timeout as we don't have enough shards
       intercept[TestFailedDueToTimeoutException] {
         failAfter(Span(3, Seconds)) {
-          client.execute {
-            openIndex("pasta").waitForActiveShards(10)
-          }.await
+          Await.ready(f, 3.seconds)
         }
       }
     }
