@@ -15,8 +15,8 @@ class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
   }
 
   client.execute {
-    createIndex("scriptsort").mappings(
-      mapping("tubestops").fields(
+    createIndex("scriptsort").mapping(
+      mapping(
         textField("name").fielddata(true),
         textField("line").fielddata(true)
       )

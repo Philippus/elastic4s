@@ -41,16 +41,8 @@ case class CreateIndexRequest(name: String,
 
   def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
 
-  @deprecated("Use of type is deprecated in 7; create the mapping without a type name, eg createIndex(\"foo\").mapping(mapping(field1, field2))", "7.0.0")
-  def mappings(first: MappingDefinition, rest: MappingDefinition*): CreateIndexRequest = {
-    if (rest.isEmpty) mapping(first) else throw new UnsupportedOperationException("Cannot specify multiple types when creating an index in version 7+")
-  }
-
-  @deprecated("Use of type is deprecated in 7; create the mapping without a type name, eg createIndex(\"foo\").mapping(mapping(field1, field2))", "7.0.0")
-  def mappings(mappings: Iterable[MappingDefinition]): CreateIndexRequest = {
-    if (mappings.size == 1) mapping(mappings.head) else throw new UnsupportedOperationException("Cannot specify multiple types when creating an index in version 7+")
-  }
-
+  @deprecated("use mapping since indexes now only have a single type", "7.0.0")
+  def mappings(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
 
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)
   def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexRequest              = analysis(analyzers, Nil)

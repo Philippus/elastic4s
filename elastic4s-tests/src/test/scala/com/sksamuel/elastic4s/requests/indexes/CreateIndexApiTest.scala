@@ -15,10 +15,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
 
   "the index dsl" should "generate json to include mapping properties" in {
     val req = createIndex("users").mappings(
-      mapping("tweets") as(
-        geopointField("name"),
-        dateField("content") nullValue "no content"
-      ) all false size true numericDetection true boostNullValue 1.2 boostName "myboost" meta Map("class" -> "com.sksamuel.User"),
       mapping("users").as(
         ipField("name") nullValue "127.0.0.1" boost 1.0,
         intField("location") nullValue 0,
@@ -34,7 +30,6 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
   "the index dsl" should "allow provide mapping properties using rawSource" in {
     val tweetRawSource = """{"_all": {"enabled": false},"numeric_detection": true,"_boost": {"name": "myboost","null_value": 1.2},"_size": {"enabled": true},"properties": {"name": {"type": "geo_point"},"content": {"type": "date","null_value": "no content"}},"_meta": {"class": "com.sksamuel.User"}}"""
     val req = createIndex("users").mappings(
-      mapping("tweets").rawSource(tweetRawSource),
       mapping("users").as(
         ipField("name") nullValue "127.0.0.1" boost 1.0,
         intField("location") nullValue 0,

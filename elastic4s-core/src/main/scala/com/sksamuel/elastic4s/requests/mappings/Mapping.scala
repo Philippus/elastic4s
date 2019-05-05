@@ -101,11 +101,11 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
 }
 
 object MappingDefinition {
-  def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition("", fields = fields)
+  val empty = MappingDefinition(None)
+  def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition(None, fields = fields)
 }
 
-case class MappingDefinition(`type`: String, // type is now deprecated and can largely be ignored
-
+case class MappingDefinition(`type`: Option[String] = None, // type is now deprecated and can largely be ignored, it will be removed completely in 8.0
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
                              sourceExcludes: Seq[String] = Nil,
@@ -113,7 +113,7 @@ case class MappingDefinition(`type`: String, // type is now deprecated and can l
                              numericDetection: Option[Boolean] = None,
                              size: Option[Boolean] = None,
                              dynamicDateFormats: Seq[String] = Nil,
-                             fields: Seq[FieldDefinition] = Nil,
+                             fields: Seq[FieldDefinition] = Nil, // fields maps to the properties object in the json
                              analyzer: Option[String] = None,
                              boostName: Option[String] = None,
                              boostNullValue: Option[Double] = None,
@@ -170,9 +170,4 @@ case class MappingDefinition(`type`: String, // type is now deprecated and can l
   def dynamicTemplates(temps: DynamicTemplateRequest*): MappingDefinition          = templates(temps)
   def templates(temps: Iterable[DynamicTemplateRequest]): MappingDefinition        = copy(templates = temps.toSeq)
   def templates(temps: DynamicTemplateRequest*): MappingDefinition                 = copy(templates = temps.toSeq)
-}
-
-object MappingDefinition {
-  @deprecated("types are deprecated now", "7.0")
-  def apply(name: String): MappingDefinition = MappingDefinition(name = name.some)
 }

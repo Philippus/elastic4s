@@ -17,7 +17,6 @@ class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matc
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 
   private val indexName = getClass.getSimpleName.toLowerCase
-  private val indexType = "emperor"
 
   private implicit val system: ActorSystem = ActorSystem()
 
@@ -45,7 +44,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matc
 
   implicit object RichSearchHitRequestBuilder extends RequestBuilder[SearchHit] {
     override def request(hit: SearchHit): IndexRequest = {
-      indexInto(indexName / indexType).doc(hit.sourceAsString)
+      indexInto(indexName).doc(hit.sourceAsString)
     }
   }
 
@@ -56,7 +55,7 @@ class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matc
   }
 
   client.execute {
-    bulk(emperors.map(indexInto(indexName / indexType).source(_))).refreshImmediately
+    bulk(emperors.map(indexInto(indexName).source(_))).refreshImmediately
   }.await
 
   "elastic-streams" should {

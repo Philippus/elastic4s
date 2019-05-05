@@ -92,8 +92,8 @@ object CreateIndexTemplateBodyFn {
     } else if (create.mappings.nonEmpty) {
       builder.startObject("mappings")
       for (mapping <- create.mappings) {
-        require(mapping.name.nonEmpty)
-        builder.rawField(mapping.name.get, MappingBuilderFn.build(mapping))
+        require(mapping.`type`.nonEmpty)
+        builder.rawField(mapping.`type`.get, MappingBuilderFn.build(mapping))
       }
       builder.endObject()
     }

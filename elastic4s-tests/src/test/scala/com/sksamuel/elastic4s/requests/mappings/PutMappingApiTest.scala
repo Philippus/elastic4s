@@ -20,7 +20,7 @@ class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
 
   "a put mapping dsl" should "be accepted by the client" in {
     client.execute {
-      putMapping("index" / "type").as(
+      putMapping("index").as(
         geopointField("name"),
         dateField("content") nullValue "no content"
       )
@@ -29,7 +29,7 @@ class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
 
   it should "accept same fields as mapping api" in {
     client.execute {
-      putMapping("index" / "type").as(
+      putMapping("index").as(
         dateField("content") nullValue "no content"
       ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2
     }.await
@@ -37,7 +37,7 @@ class PutMappingApiTest extends FlatSpec with Matchers with DockerTests {
 
   it should "accept same several new fields with different types as mapping api and return the right mapping in get" in {
     client.execute {
-      putMapping("index" / "type").as(
+      putMapping("index").as(
         dateField("content") nullValue "no content",
         textField("description") boost 1.5,
         doubleField("price"),

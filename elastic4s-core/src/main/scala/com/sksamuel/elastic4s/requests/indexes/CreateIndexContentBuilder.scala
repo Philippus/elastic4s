@@ -31,16 +31,12 @@ object CreateIndexContentBuilder {
         builder.endObject() // end settings
       }
 
-
-      if (d.mappings.length == 1) {
-        builder.rawField("mappings", MappingBuilderFn.build(d.mappings.head))
-      } else if (d.mappings.nonEmpty) {
-        builder.startObject("mappings")
-        for (mapping <- d.mappings) {
-          require(mapping.name.nonEmpty)
-          builder.rawField(mapping.name.get, MappingBuilderFn.build(mapping))
+      d.mapping.foreach { mapping =>
+        mapping.`type` match {
+          case Some(t) => builder.rawField("mappings", MappingBuilderFn.buildWithName(mapping, t))
+          case None => builder.rawField("mappings", MappingBuilderFn.build(mapping))
         }
-        builder.endObject()
+      }
 
       if (d.aliases.nonEmpty) {
         builder.startObject("aliases")

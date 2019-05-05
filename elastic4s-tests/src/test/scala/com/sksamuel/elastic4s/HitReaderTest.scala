@@ -38,12 +38,18 @@ class HitReaderTest extends FlatSpec with MockitoSugar with DockerTests with Mat
   }
 
   client.execute {
-    createIndex(IndexName).mappings(
-      mapping().fields(
+    createIndex(IndexName).mapping(
+      properties(
         textField("name"),
         textField("stadium"),
         intField("founded")
       )
+    )
+  }.await
+
+  client.execute {
+    createIndex(IndexName).mapping(
+      emptyMapping.dateDetection(true)
     )
   }.await
 
