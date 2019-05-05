@@ -4,6 +4,8 @@ import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity
 
 case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 
+object SearchScrollHandlers extends SearchScrollHandlers
+
 trait SearchScrollHandlers {
 
   implicit object ClearScrollHandler extends Handler[ClearScrollRequest, ClearScrollResponse] {

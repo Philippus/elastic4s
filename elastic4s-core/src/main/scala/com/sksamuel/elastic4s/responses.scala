@@ -13,6 +13,10 @@ sealed trait Response[+U] {
   def flatMap[V](f: U => Response[V]): Response[V]
 
   final def fold[V](ifError: => V)(f: U => V): V = if (isError) ifError else f(result)
+  final def fold[V](onError: RequestFailure => V, onSuccess: U => V): V = this match {
+    case failure: RequestFailure => onError(failure)
+    case RequestSuccess(_, _, _, result) => onSuccess(result)
+  }
   final def foreach[V](f: U => V): Unit          = if (!isError) f(result)
 
   final def toOption: Option[U] = if (isError) None else Some(result)
@@ -21,8 +25,7 @@ sealed trait Response[+U] {
 case class RequestSuccess[U](override val status: Int, // the http status code of the response
                              override val body: Option[String], // the http response body if the response included one
                              override val headers: Map[String, String], // any http headers included in the response
-                             override val result: U)
-    extends Response[U] {
+                             override val result: U) extends Response[U] {
   override def isError = false
   override def error   = throw new NoSuchElementException(s"Request success $result")
 
@@ -33,11 +36,9 @@ case class RequestSuccess[U](override val status: Int, // the http status code o
 case class RequestFailure(override val status: Int, // the http status code of the response
                           override val body: Option[String], // the http response body if the response included one
                           override val headers: Map[String, String], // any http headers included in the response
-                          override val error: ElasticError)
-    extends Response[Nothing] {
+                          override val error: ElasticError) extends Response[Nothing] {
   override def result  = throw new NoSuchElementException(s"Request Failure $error")
   override def isError = true
-
   final def map[V](f: Nothing => V): Response[V]               = this
   final def flatMap[V](f: Nothing => Response[V]): Response[V] = this
 }

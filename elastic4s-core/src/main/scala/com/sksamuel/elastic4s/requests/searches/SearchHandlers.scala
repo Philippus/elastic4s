@@ -82,3 +82,5 @@ trait SearchHandlers {
     }
   }
 }
+
+object SearchHandlers extends SearchHandlers

@@ -10,7 +10,9 @@ case class ElasticError(`type`: String,
                         index: Option[String],
                         shard: Option[String],
                         @JsonProperty("root_cause") rootCause: Seq[ElasticError],
-                        @JsonProperty("caused_by") causedBy: Option[ElasticError.CausedBy])
+                        @JsonProperty("caused_by") causedBy: Option[ElasticError.CausedBy]) {
+  def asException: Exception = causedBy.fold(new RuntimeException(s"${`type`} $reason"))(cause => new RuntimeException(s"${`type`} $reason", new RuntimeException(cause.toString)))
+}
 
 object ElasticError {
 
