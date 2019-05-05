@@ -23,7 +23,7 @@ class SubscriberListenerTest extends WordSpec with Matchers with DockerTests {
   }
 
   "Reactive streams subscriber" should {
-    "invoke listener for each confirmed doc" in {
+    "invoke listener for each confirmed doc" ignore {
 
       val latch = new CountDownLatch(Ship.ships.length)
 
