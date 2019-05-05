@@ -21,22 +21,20 @@ object ElasticJackson {
                                          manifest: Manifest[T]): HitReader[T] = new HitReader[T] {
       override def read(hit: Hit): Try[T] = Try {
         require(hit.sourceAsString != null)
-        try {
-          val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]
-          if (!node.has("_id")) node.put("_id", hit.id)
-          if (!node.has("_type")) node.put("_type", hit.`type`)
-          if (!node.has("_index")) node.put("_index", hit.index)
-          //  if (!node.has("_score")) node.put("_score", hit.score)
-          if (!node.has("_version")) node.put("_version", hit.version)
-          if (!node.has("_timestamp"))
-            hit
-              .sourceFieldOpt("_timestamp")
-              .collect {
-                case f => f.toString
-              }
-              .foreach(node.put("_timestamp", _))
-          mapper.readValue[T](mapper.writeValueAsBytes(node))
-        }
+        val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]
+        if (!node.has("_id")) node.put("_id", hit.id)
+        if (!node.has("_type")) node.put("_type", hit.`type`)
+        if (!node.has("_index")) node.put("_index", hit.index)
+        //  if (!node.has("_score")) node.put("_score", hit.score)
+        if (!node.has("_version")) node.put("_version", hit.version)
+        if (!node.has("_timestamp"))
+          hit
+            .sourceFieldOpt("_timestamp")
+            .collect {
+              case f => f.toString
+            }
+            .foreach(node.put("_timestamp", _))
+        mapper.readValue[T](mapper.writeValueAsBytes(node))
       }
     }
   }

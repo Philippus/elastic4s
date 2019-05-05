@@ -1,0 +1,25 @@
+{
+    "_all": {
+        "enabled": false
+    },
+    "numeric_detection": true,
+    "_boost": {
+        "name": "myboost",
+        "null_value": 1.2
+    },
+    "_size": {
+        "enabled": true
+    },
+    "properties": {
+        "name": {
+            "type": "geo_point"
+        },
+        "content": {
+            "type": "date",
+            "null_value": "no content"
+        }
+    },
+    "_meta": {
+        "class": "com.sksamuel.User"
+    }
+}

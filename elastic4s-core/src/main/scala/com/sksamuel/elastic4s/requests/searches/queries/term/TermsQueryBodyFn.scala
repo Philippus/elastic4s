@@ -10,7 +10,7 @@ object TermsQueryBodyFn {
     if (t.ref.nonEmpty) {
       builder.startObject(t.field)
       t.ref.foreach { ref =>
-        builder.field("index", ref.index)
+        builder.field("index", ref.index.name)
         builder.field("type", "_doc")
         builder.field("id", ref.id)
       }

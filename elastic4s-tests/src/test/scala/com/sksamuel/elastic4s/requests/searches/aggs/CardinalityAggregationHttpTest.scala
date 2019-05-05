@@ -15,8 +15,8 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
   }
 
   client.execute {
-    createIndex("cardagg") mappings {
-      mapping("buildings") fields(
+    createIndex("cardagg") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )
@@ -30,8 +30,8 @@ class CardinalityAggregationHttpTest extends FreeSpec with DockerTests with Matc
   }
 
   client.execute {
-    createIndex("cardagg2") mappings {
-      mapping("buildings") fields(
+    createIndex("cardagg2") mapping {
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

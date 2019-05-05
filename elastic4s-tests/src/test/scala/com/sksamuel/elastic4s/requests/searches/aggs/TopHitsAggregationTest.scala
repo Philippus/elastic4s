@@ -17,8 +17,8 @@ class TopHitsAggregationTest extends FreeSpec with DockerTests with Matchers {
   }
 
   client.execute {
-    createIndex("tophits") mappings {
-      mapping("landmarks") fields(
+    createIndex("tophits") mapping {
+      properties(
         textField("name").fielddata(true),
         textField("location").fielddata(true)
       )

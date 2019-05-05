@@ -9,7 +9,7 @@ object TermsLookupQueryBodyFn {
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 
     builder.startObject(t.field)
-    builder.field("index", t.termsLookup.ref.index)
+    builder.field("index", t.termsLookup.ref.index.name)
     builder.field("type", "_doc")
     builder.field("id", t.termsLookup.ref.id)
 

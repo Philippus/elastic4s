@@ -3,14 +3,19 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.requests.common.DocumentRef
 
 case class MoreLikeThisItem(ref: DocumentRef, routing: Option[String] = None)
+
 object MoreLikeThisItem {
-  def apply(index: String, `type`: String, id: String): MoreLikeThisItem =
-    MoreLikeThisItem(DocumentRef(index, `type`, id))
-  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem =
-    MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
+
+  @deprecated("types are deprecated in 7.0", "7.0")
+  def apply(index: String, `type`: String, id: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, `type`, id))
+
+  @deprecated("types are deprecated in 7.0", "7.0")
+  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
+
+  def apply(index: String, id: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, id))
 }
 
-case class ArtificialDocument(index: String, `type`: String, doc: String, routing: Option[String] = None)
+case class ArtificialDocument(index: String, doc: String, routing: Option[String] = None)
 
 case class MoreLikeThisQuery(fields: Seq[String],
                              likeTexts: Seq[String] = Nil,

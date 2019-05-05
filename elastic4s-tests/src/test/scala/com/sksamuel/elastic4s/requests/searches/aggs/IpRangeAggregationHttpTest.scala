@@ -16,8 +16,8 @@ class IpRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers
   }
 
   client.execute {
-    createIndex("iprangeagg") mappings {
-      mapping("doc") fields ipField("ip")
+    createIndex("iprangeagg") mapping {
+      properties(ipField("ip"))
     }
   }.await
 

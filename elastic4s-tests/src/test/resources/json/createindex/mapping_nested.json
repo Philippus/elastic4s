@@ -1,58 +1,52 @@
 {
     "mappings": {
-        "tweets": {
-            "numeric_detection": true,
-            "_boost": {
-                "name": "myboost",
-                "null_value": 1.2
+        "numeric_detection": true,
+        "_boost": {
+            "name": "myboost",
+            "null_value": 1.2
+        },
+        "_size": {
+            "enabled": true
+        },
+        "properties": {
+            "_id": {
+                "type": "text",
+                "analyzer": "keyword"
             },
-            "_size": {
-                "enabled": true
+            "name": {
+                "type": "text",
+                "analyzer": "keyword"
             },
-            "properties": {
-                "_id": {
-                    "type": "string",
-                    "analyzer": "keyword"
-                },
-                "name": {
-                    "type": "string",
-                    "analyzer": "keyword"
-                },
-                "locations": {
-                    "type": "geo_point",
-                    "validate": true,
-                    "normalize": true
-                },
-                "date": {
-                    "type": "date",
-                    "precision_step": 5
-                },
-                "size": {
-                    "type": "long"
-                },
-                "read": {
-                    "type": "boolean"
-                },
-                "content": {
-                    "type": "string"
-                },
-                "user": {
-                    "type": "nested",
-                    "include_in_root": "yes",
-                    "include_in_parent": "yes",
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "email": {
-                            "type": "string"
-                        },
-                        "last": {
-                            "type": "nested",
-                            "properties": {
-                                "lastLogin": {
-                                    "type": "date"
-                                }
+            "locations": {
+                "type": "geo_point",
+                "doc_values": true
+            },
+            "date": {
+                "type": "date"
+            },
+            "size": {
+                "type": "long"
+            },
+            "read": {
+                "type": "boolean"
+            },
+            "content": {
+                "type": "text"
+            },
+            "user": {
+                "type": "nested",
+                "properties": {
+                    "name": {
+                        "type": "text"
+                    },
+                    "email": {
+                        "type": "text"
+                    },
+                    "last": {
+                        "type": "nested",
+                        "properties": {
+                            "lastLogin": {
+                                "type": "date"
                             }
                         }
                     }

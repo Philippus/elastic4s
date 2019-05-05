@@ -16,8 +16,8 @@ class FlushIndexRequestTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex(indexname).mappings(
-      mapping("pasta").fields(
+    createIndex(indexname).mapping(
+      properties(
         textField("name")
       )
     )

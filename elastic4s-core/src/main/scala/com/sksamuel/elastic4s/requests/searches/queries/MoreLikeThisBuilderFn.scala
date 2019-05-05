@@ -15,7 +15,7 @@ object MoreLikeThisBuilderFn {
     q.likeTexts.foreach(text => builder.value(text))
     q.likeDocs.foreach { doc =>
       builder.startObject()
-      builder.field("_index", doc.ref.index)
+      builder.field("_index", doc.ref.index.name)
       builder.field("_type", "_doc")
       builder.field("_id", doc.ref.id)
       doc.routing.foreach { r ⇒
@@ -26,7 +26,6 @@ object MoreLikeThisBuilderFn {
     q.artificialDocs.foreach { doc =>
       builder.startObject()
       builder.field("_index", doc.index)
-      builder.field("_type", doc.`type`)
       builder.rawField("doc", doc.doc)
       doc.routing.foreach { r ⇒
         builder.field("routing", r)
@@ -40,7 +39,7 @@ object MoreLikeThisBuilderFn {
       q.unlikeTexts.foreach(text => builder.value(text))
       q.unlikeDocs.foreach { doc =>
         builder.startObject()
-        builder.field("_index", doc.ref.index)
+        builder.field("_index", doc.ref.index.name)
         builder.field("_type", "_doc")
         builder.field("_id", doc.ref.id)
         doc.routing.foreach { r ⇒

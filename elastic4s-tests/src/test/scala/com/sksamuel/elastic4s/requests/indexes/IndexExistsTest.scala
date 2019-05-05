@@ -15,8 +15,8 @@ class IndexExistsTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("indexexists").mappings {
-      mapping("flowers") fields textField("name")
+    createIndex("indexexists").mapping {
+      properties(textField("name"))
     }
   }.await
 
