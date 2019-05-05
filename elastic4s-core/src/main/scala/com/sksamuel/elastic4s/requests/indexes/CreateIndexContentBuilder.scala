@@ -7,9 +7,9 @@ import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 object CreateIndexContentBuilder {
 
   def apply(d: CreateIndexRequest): XContentBuilder =
-    if (d.rawSource.isDefined)
+    if (d.rawSource.isDefined) {
       XContentFactory.parse(d.rawSource.get)
-    else {
+    } else {
       val builder = XContentFactory.jsonBuilder()
 
       if (d.settings.settings.nonEmpty || d.analysis.nonEmpty) {

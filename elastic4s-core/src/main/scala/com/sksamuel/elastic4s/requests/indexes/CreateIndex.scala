@@ -57,8 +57,14 @@ case class CreateIndexRequest(name: String,
     analysis(Nil, first +: rest)
   def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexRequest = analysis(Nil, normalizers)
 
+  /**
+    * Creates an index using the json provided as is.
+    */
   def source(source: String): CreateIndexRequest = copy(rawSource = source.some)
 
+  @deprecated("types are deprecated", "7.0.0")
   def includeTypeName(includeTypeName: Boolean): CreateIndexRequest = copy(includeTypeName = includeTypeName.some)
+
+  @deprecated("types are deprecated", "7.0.0")
   def includeTypeName(includeTypeName: Option[Boolean]): CreateIndexRequest = copy(includeTypeName = includeTypeName)
 }

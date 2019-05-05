@@ -28,7 +28,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("foo").mapping(
-      mapping(
+      properties(
         textField("baz").fields(
           textField("inner1") analyzer PatternAnalyzer,
           textField("inner2")
@@ -41,7 +41,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
     "return ack" in {
       val resp = client.execute {
         createIndex("cuisine").mapping(
-          mapping(
+          properties(
             textField("name"),
             geopointField("location")
           )
@@ -55,7 +55,7 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
 
       val resp = client.execute {
         createIndex("foo").mapping(
-          mapping(
+          properties(
             textField("b")
           )
         )
@@ -72,16 +72,30 @@ class CreateIndexTest extends WordSpec with Matchers with DockerTests {
           s"""
              {
               "mappings": {
-                  "properties": {
-                    "name": {
-                      "type": "text"
-                    }
-                  }
+               "properties": {
+                 "content": { "type": "text" },
+                 "user_name": { "type": "keyword" },
+                 "tweeted_at": { "type": "date" }
+               }
               }
              }
-           """).shards(1).waitForActiveShards(1).includeTypeName(true)
+           """)
+          .shards(1)
+          .waitForActiveShards(1)
       }.await.result.acknowledged shouldBe true
+
+      client.execute {
+        getMapping("landscape")
+      }.await.result shouldBe List(
+        IndexMappings(
+          "landscape",
+          Map(
+            "content" -> Map("type" -> "text"),
+            "user_name" -> Map("type" -> "keyword"),
+            "tweeted_at" -> Map("type" -> "date")
+          )
+        )
+      )
     }
   }
-
 }
