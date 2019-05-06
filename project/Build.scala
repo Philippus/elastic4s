@@ -15,9 +15,9 @@ object Build extends AutoPlugin {
     val AkkaHttpVersion        = "10.1.8"
     val CatsVersion            = "1.4.0"
     val CatsEffectVersion      = "1.2.0"
-    val CirceVersion           = "0.11.1"
+    val CirceVersion           = "0.12.0"
     val CommonsIoVersion       = "2.6"
-    val ElasticsearchVersion   = "7.0.0"
+    val ElasticsearchVersion   = "7.0.1"
     val ExtsVersion            = "1.61.0"
     val JacksonVersion         = "2.9.8"
     val Json4sVersion          = "3.6.5"
@@ -40,7 +40,7 @@ object Build extends AutoPlugin {
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
     scalaVersion := "2.12.8",
-    crossScalaVersions := Seq("2.11.12", "2.12.8"),
+    crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0-RC1"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
