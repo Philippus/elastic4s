@@ -404,12 +404,21 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script.json")
   }
 
-  it should "generate correct json for script sort with params" in {
+  it should "generate correct json for script sort with params but unspecified lang" in {
     val req = search("music") sortBy {
       scriptSort(script("doc.score")
         .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.Desc
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script_params.json")
+  }
+
+  it should "generate correct json for script sort with params and lang" in {
+    val req = search("music") sortBy {
+      scriptSort(script("doc.score")
+        .lang("painless")
+        .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.Desc
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script_lang.json")
   }
 
   it should "generate correct json for geo sort" in {

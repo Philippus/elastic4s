@@ -4,6 +4,7 @@
             "_script": {
                 "script": {
                     "source": "doc.score",
+                    "lang": "painless",
                     "params": {
                         "param1": "value1",
                         "param2": "value2"
