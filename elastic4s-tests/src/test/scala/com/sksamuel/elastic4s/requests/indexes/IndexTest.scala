@@ -4,7 +4,7 @@ import java.util.UUID
 
 import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.VersionType.External
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Shards, VersionType}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
@@ -25,7 +25,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("electronics").mappings(mapping())
+    createIndex("electronics")
   }.await
 
   client.execute {
@@ -48,7 +48,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
     }
     "support index names with +" in {
       client.execute {
-        createIndex("hello+world").mappings(mapping())
+        createIndex("hello+world")
       }.await
       client.execute {
         indexInto("hello+world").fields(Map("foo" -> "bar")).withId("a").refreshImmediately
@@ -127,7 +127,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
       val id = UUID.randomUUID()
       val indexName = s"electronics-$id"
       client.execute {
-        createIndex(indexName).mappings(mapping())
+        createIndex(indexName)
           .alias("alias_1")
           .alias("alias_2")
       }.await
@@ -182,6 +182,13 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
         indexInto("**1w11oowo/!!!!o_$$$")
       }.await
       result.error should not be null
+    }
+    "response should contain shards" in {
+      val shards = client.execute {
+        indexInto("electronics").fields(Map("name" -> "galaxy fold", "screensize" -> 8))
+      }.await.result.shards
+      shards should not be null
+      shards shouldBe Shards(2, 0, 1)
     }
   }
 }
