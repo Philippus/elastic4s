@@ -14,22 +14,23 @@ trait SearchHandlers {
     override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
       override def handle(response: HttpResponse): Right[Nothing, MultiSearchResponse] = {
         val json = JacksonSupport.mapper.readTree(response.entity.get.content)
-        val items = json
-          .get("responses")
-          .elements
-          .asScala
-          .zipWithIndex
-          .map {
-            case (element, index) =>
-              val status = element.get("status").intValue()
-              val either =
-                if (element.has("error"))
-                  Left(JacksonSupport.mapper.treeToValue[SearchError](element.get("error")))
-                else
-                  Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
-              MultisearchResponseItem(index, status, either)
-          }
-          .toSeq
+        val items = Option(json.get("responses")) match {
+          case Some(node) =>
+            node.elements
+              .asScala
+              .zipWithIndex
+              .map {
+                case (element, index) =>
+                  val status = element.get("status").intValue()
+                  val either =
+                    if (element.has("error"))
+                      Left(JacksonSupport.mapper.treeToValue[SearchError](element.get("error")))
+                    else
+                      Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
+                  MultisearchResponseItem(index, status, either)
+              }.toSeq
+          case None => Nil
+        }
         Right(MultiSearchResponse(items))
       }
     }
