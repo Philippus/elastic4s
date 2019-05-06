@@ -60,6 +60,7 @@ object QueryBuilderFn {
     case t: TermsSetQuery       => TermsSetQueryBodyFn(t)
     case q: TypeQuery           => TypeQueryBodyFn(q)
     case q: WildcardQuery       => WildcardQueryBodyFn(q)
+    case c: CustomQuery => c.buildQueryBody()
 
     // Not implemented
     case ni =>
