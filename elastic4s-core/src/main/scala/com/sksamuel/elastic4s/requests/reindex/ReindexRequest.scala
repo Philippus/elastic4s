@@ -10,6 +10,7 @@ import scala.concurrent.duration.FiniteDuration
 
 case class ReindexRequest(sourceIndexes: Indexes,
                           targetIndex: Index,
+                          @deprecated("types are deprecated in 7.0", "7.0")
                           targetType: Option[String] = None,
                           filter: Option[Query] = None,
                           requestsPerSecond: Option[Float] = None,
