@@ -61,7 +61,8 @@ trait IndexHandlers {
   }
 }
 
-case class Mapping(properties: Map[String, Field])
+case class Mapping(properties: Map[String, Field],
+                   @JsonProperty("_meta") meta: Map[String, String] = Map.empty)
 
 case class Field(`type`: String)
 

@@ -33,6 +33,7 @@ class GetIndexRequestTest extends WordSpec with Matchers with DockerTests {
     }
 
     "return settings" in {
+
       val resp = client.execute {
         getIndex("getindextest")
       }.await.result
@@ -57,6 +58,29 @@ class GetIndexRequestTest extends WordSpec with Matchers with DockerTests {
       }.await.result
 
       resp("getindextest").aliases.keySet shouldBe Set("myalias1", "myalias2")
+    }
+
+    "return meta data" in {
+
+      Try {
+        client.execute {
+          deleteIndex("getindexwithmeta")
+        }.await
+      }
+
+      client.execute {
+        createIndex("getindexwithmeta").mapping(
+          properties(
+            textField("a")
+          ).meta(Map("foo" -> "bar"))
+        )
+      }.await
+
+      val resp = client.execute {
+        getIndex("getindexwithmeta")
+      }.await.result
+
+      resp("getindexwithmeta").mappings.meta shouldBe Map("foo" -> "bar")
     }
   }
 }

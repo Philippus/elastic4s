@@ -143,9 +143,10 @@ case class MappingDefinition(`type`: Option[String] = None, // type is now depre
   def parent(parent: String): MappingDefinition = copy(parent = parent.some)
 
   def dynamic(dynamic: DynamicMapping): MappingDefinition            = copy(dynamic = dynamic.some)
-  def meta(map: Map[String, Any]): MappingDefinition                 = copy(meta = map)
   def dateDetection(dateDetection: Boolean): MappingDefinition       = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): MappingDefinition = copy(numericDetection = numericDetection.some)
+
+  def meta(map: Map[String, Any]): MappingDefinition                 = copy(meta = map)
 
   def fields(fields: Iterable[FieldDefinition]): MappingDefinition = as(fields)
   def fields(fields: FieldDefinition*): MappingDefinition          = as(fields)
