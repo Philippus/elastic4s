@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.ValueType
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.{IncludeExclude, IncludePartition}
+import com.sksamuel.elastic4s.requests.searches.IncludePartition
 import com.sksamuel.exts.OptionImplicits._
-import com.sksamuel.exts.StringOption
 
 sealed trait SubAggCollectionMode
 object SubAggCollectionMode {
@@ -25,7 +24,10 @@ case class TermsAggregation(name: String,
                             collectMode: Option[SubAggCollectionMode] = None,
                             orders: Seq[TermsOrder] = Nil,
                             shardSize: Option[Int] = None,
-                            includeExclude: Option[IncludeExclude] = None,
+                            includeExactValues: Seq[String] = Nil,
+                            includeRegex: Option[String] = None,
+                            excludeExactValues: Seq[String] = Nil,
+                            excludeRegex: Option[String] = None,
                             includePartition: Option[IncludePartition] = None,
                             subaggs: Seq[AbstractAggregation] = Nil,
                             metadata: Map[String, AnyRef] = Map.empty)
@@ -51,20 +53,14 @@ case class TermsAggregation(name: String,
 
   def shardSize(shardSize: Int): TermsAggregation = copy(shardSize = shardSize.some)
 
-  def includes: Seq[String] = includeExclude.fold(Nil: Seq[String])(_.include)
-  def excludes: Seq[String] = includeExclude.fold(Nil: Seq[String])(_.exclude)
+  def includeExactValues(head: String, tail: String*): TermsAggregation = copy(includeExactValues = head +: tail)
+  def excludeExactValues(head: String, tail: String*): TermsAggregation = copy(excludeExactValues = head +: tail)
 
-  def include(include: String): TermsAggregation = includeExclude(Seq(include), excludes)
-  def exclude(exclude: String): TermsAggregation = includeExclude(includes, Seq(exclude))
+  def includeExactValues(includes: Seq[String]): TermsAggregation = copy(includeExactValues = includes)
+  def excludeExactValues(excludes: Seq[String]): TermsAggregation = copy(includeExactValues = excludes)
 
-  def include(includes: Seq[String]): TermsAggregation = includeExclude(includes, excludes)
-  def exclude(excludes: Seq[String]): TermsAggregation = includeExclude(includes, excludes)
-
-  def includeExclude(include: String, exclude: String): TermsAggregation =
-    copy(includeExclude = IncludeExclude(StringOption(include).toSeq, StringOption(exclude).toSeq).some)
-
-  def includeExclude(include: Iterable[String], exclude: Iterable[String]): TermsAggregation =
-    copy(includeExclude = IncludeExclude(include.toSeq, exclude.toSeq).some)
+  def includeRegex(regex: String): TermsAggregation = copy(includeRegex = Some(regex))
+  def excludeRegex(regex: String): TermsAggregation = copy(excludeRegex = Some(regex))
 
   def includePartition(partition: Int, numPartitions: Int): TermsAggregation =
     copy(includePartition = IncludePartition(partition, numPartitions).some)
