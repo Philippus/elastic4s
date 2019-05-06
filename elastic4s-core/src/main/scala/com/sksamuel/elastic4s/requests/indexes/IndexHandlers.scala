@@ -58,6 +58,12 @@ trait IndexHandlers {
       val method   = "GET"
       ElasticRequest(method, endpoint)
     }
+
+    override def responseHandler: ResponseHandler[Map[String, GetIndexResponse]] = {
+      ResponseHandler.default[Map[String, GetIndexResponse]].map { map =>
+        map.mapValues { resp => if (resp.mappings.meta == null) resp.copy(mappings = resp.mappings.copy(meta = Map.empty)) else resp }
+      }
+    }
   }
 }
 

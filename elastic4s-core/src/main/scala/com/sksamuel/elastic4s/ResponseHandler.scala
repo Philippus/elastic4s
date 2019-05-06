@@ -40,12 +40,21 @@ object ResponseHandler extends Logging {
 
 // standard response handler, 200-204s are ok, and everything else is marhalled into an error
 class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
+  self =>
+
   override def handle(response: HttpResponse): Either[ElasticError, U] = response.statusCode match {
     case 200 | 201 | 202 | 203 | 204 =>
       val entity = response.entity.getOrError("No entity defined")
       Right(ResponseHandler.fromEntity[U](entity))
     case _ =>
       Left(ElasticError.parse(response))
+  }
+
+  def map[V](fn: U => V): ResponseHandler[V] = new ResponseHandler[V] {
+    override def handle(response: HttpResponse): Either[ElasticError, V] = {
+      val u = self.handle(response)
+      u.map(fn)
+    }
   }
 }
 
