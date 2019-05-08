@@ -52,7 +52,6 @@ object Build extends AutoPlugin {
     SbtPgp.autoImport.useGpgAgent := true,
     sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
     sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
-    credentials += Credentials(Path.userHome / ".sbt" / "pgp.credentials"),
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
