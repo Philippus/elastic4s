@@ -31,7 +31,7 @@ object ClusterStatsResponse {
                          @JsonProperty("miss_count") missCount: Long,
                          @JsonProperty("cache_size") cacheSize: Long,
                          @JsonProperty("cache_count") cacheCount: Long,
-                         @JsonProperty("evictions") evictions: Long,
+                         @JsonProperty("evictions") evictions: Long
                        )
 
   case class Indices(count: Int,

@@ -52,8 +52,10 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
 
   def map[V](fn: U => V): ResponseHandler[V] = new ResponseHandler[V] {
     override def handle(response: HttpResponse): Either[ElasticError, V] = {
-      val u = self.handle(response)
-      u.map(fn)
+      self.handle(response) match {
+        case Left(error) => Left(error)
+        case Right(u) => Right(fn(u))
+      }
     }
   }
 }
