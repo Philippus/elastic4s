@@ -8,7 +8,9 @@ import com.sksamuel.exts.Logging
 import scala.io.Source
 
 /**
-  * Adapts an underlying http client so that it can be used by the elastic client.
+  * A typeclass for an underlying http client so that it can be used by the ElasticClient.
+  * The idea is that this trait can be used to wrap a HTTP library such as Apache HTTP commons, or
+  * Akka HTTP client or whatever. The wrapped client can then be passed into the ElasticClient.
   */
 trait HttpClient extends Logging {
 

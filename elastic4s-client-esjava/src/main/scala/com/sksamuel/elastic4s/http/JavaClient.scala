@@ -4,7 +4,7 @@ import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 
-import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticProperties, ElasticRequest, ElasticsearchClientUri, Executor, Functor, HttpClient, HttpEntity, HttpResponse, Show}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticProperties, ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse, Show}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
@@ -18,7 +18,9 @@ import scala.language.higherKinds
 
 case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
 
-// an implementation of the elastic4s HttpRequestClient that wraps the elasticsearch java client
+/**
+  * An implementation of HttpClient that wraps the Elasticsearch Java Rest Client
+  */
 class JavaClient(client: RestClient) extends HttpClient {
 
   def apacheEntity(entity: HttpEntity): AbstractHttpEntity = entity match {
@@ -87,22 +89,21 @@ object JavaClient extends Logging {
     * @param client the Java client to wrap
     * @return newly created Scala client
     */
-  def fromRestClient[F[_] : Functor : Executor](client: RestClient): ElasticClient = ElasticClient(new JavaClient(client))
+  def fromRestClient(client: RestClient): JavaClient = new JavaClient(client)
 
   /**
     * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client
     * as the underlying client. Optional callbacks can be passed in to configure the client.
     */
-  def apply[F[_] : Functor : Executor](props: ElasticProperties): ElasticClient =
-    apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback)
+  def apply(props: ElasticProperties): JavaClient = apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback)
 
   /**
     * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client
     * as the underlying client. Optional callbacks can be passed in to configure the client.
     */
-  def apply[F[_] : Functor : Executor](props: ElasticProperties,
-                                       requestConfigCallback: RequestConfigCallback,
-                                       httpClientConfigCallback: HttpClientConfigCallback): ElasticClient = {
+  def apply(props: ElasticProperties,
+            requestConfigCallback: RequestConfigCallback,
+            httpClientConfigCallback: HttpClientConfigCallback): JavaClient = {
     val hosts = props.endpoints.map {
       case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
     }
@@ -124,10 +125,10 @@ object JavaClient extends Logging {
     * Alternatively, create a [[RestClient]] manually and invoke [[fromRestClient(RestClient)]].
     */
   @deprecated("Use apply(ElasticProperties)", "6.3.3")
-  def apply[F[_] : Functor : Executor](uri: ElasticsearchClientUri,
-                                       requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
-                                       httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
-                                      ): ElasticClient = {
+  def apply(uri: ElasticsearchClientUri,
+            requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
+            httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
+           ): JavaClient = {
     val hosts = uri.hosts.map {
       case (host, port) =>
         new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")

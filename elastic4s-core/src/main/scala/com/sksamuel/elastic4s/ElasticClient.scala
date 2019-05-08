@@ -4,10 +4,17 @@ import com.sksamuel.exts.Logging
 
 import scala.language.higherKinds
 
-abstract class ElasticClient extends Logging {
-
-  // the underlying client that performs the requests
-  def client: HttpClient
+/**
+  * An [[ElasticClient]] is used to execute HTTP requests against an ElasticSearch cluster.
+  * This class delegates the actual HTTP calls to an instance of [[HttpClient]].
+  *
+  * Any third party HTTP client library can be made to work with elastic4s by creating an
+  * instance of the HttpClient typeclass wrapping the underlying client library and
+  * then creating the ElasticClient with it.
+  *
+  * @param client the HTTP client library to use
+  **/
+case class ElasticClient(client: HttpClient) extends Logging {
 
   /**
     * Returns a String containing the request details.
@@ -19,8 +26,8 @@ abstract class ElasticClient extends Logging {
   // where U is particular to the request type.
   // For example a search request will return a Response[SearchResponse].
   def execute[T, U, F[_]](t: T)(implicit
-                                functor: Functor[F],
                                 executor: Executor[F],
+                                functor: Functor[F],
                                 handler: Handler[T, U],
                                 manifest: Manifest[U]): F[Response[U]] = {
     val request = handler.build(t)
@@ -33,20 +40,5 @@ abstract class ElasticClient extends Logging {
     }
   }
 
-  def close(): Unit
-}
-
-object ElasticClient extends Logging {
-
-  /**
-    * Creates a new [[ElasticClient]] by wrapping the given the [[HttpClient]].
-    *
-    * Any library can be made to work with elastic4s by creating an instance
-    * of the HttpClient typeclass wrapping the underlying library and
-    * then creating the ElasticClient using this method.
-    */
-  def apply[F[_] : Functor : Executor](hc: HttpClient): ElasticClient = new ElasticClient {
-    override def client: HttpClient = hc
-    override def close(): Unit = hc.close()
-  }
+  def close(): Unit = client.close()
 }
