@@ -14,12 +14,12 @@ case class Aws4ElasticConfig(endpoint: String, key: String, secret: String, regi
   require(key.length > 16 && key.length < 128 && key.matches("[\\w]+"), "Key id must be between 16 and 128 characters.")
 }
 
-object Aws4ElasticClient {
+object AwsJavaClient {
 
   /**
     * Creates ES HttpClient with aws4 request signer interceptor using custom config (key, secret, region and service).
     */
-  def apply(config: Aws4ElasticConfig): ElasticClient = {
+  def apply(config: Aws4ElasticConfig): JavaClient = {
     val elasticUri = ElasticsearchClientUri(config.endpoint)
     JavaClient(elasticUri, httpClientConfigCallback = new SignedClientConfig(config))
   }
@@ -28,7 +28,7 @@ object Aws4ElasticClient {
     * Convenience method to create ES HttpClient with aws4 request signer interceptor using default aws environment variables.
     * See <a href="http://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html">amazon environment variables documentation</a>
     */
-  def apply(endpoint: String): ElasticClient = {
+  def apply(endpoint: String): JavaClient = {
     val elasticUri = ElasticsearchClientUri(endpoint)
     JavaClient(elasticUri, httpClientConfigCallback = new DefaultSignedClientConfig)
   }
