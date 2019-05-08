@@ -1,8 +1,8 @@
 import com.typesafe.sbt.SbtPgp
-import com.typesafe.sbt.pgp.PgpKeys
 import sbt.Keys._
 import sbt._
 import sbt.plugins.JvmPlugin
+import xerial.sbt.Sonatype
 
 object Build extends AutoPlugin {
 
@@ -46,19 +46,19 @@ object Build extends AutoPlugin {
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
     javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
     publishArtifact in Test := false,
-    fork in Test:= false,
+    fork in Test := false,
     parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
-    sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-    sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
+    Sonatype.autoImport.sonatypeProfileName := "sksamuel",
+    publishTo := Sonatype.autoImport.sonatypePublishTo.value,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
-      "com.sksamuel.exts" %% "exts"       % ExtsVersion,
-      "org.slf4j"         % "slf4j-api"   % Slf4jVersion,
-      "org.mockito"       % "mockito-all" % MockitoVersion % "test",
-      "org.scalatest"     %% "scalatest"  % ScalatestVersion % "test"
+      "com.sksamuel.exts" %% "exts" % ExtsVersion,
+      "org.slf4j" % "slf4j-api" % Slf4jVersion,
+      "org.mockito" % "mockito-all" % MockitoVersion % "test",
+      "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
