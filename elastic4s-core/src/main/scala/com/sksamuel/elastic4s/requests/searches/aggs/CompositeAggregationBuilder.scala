@@ -19,9 +19,11 @@ object CompositeAggregationBuilder {
       s.order.foreach(builder.field("order", _))
       s match {
         case HistogramValueSource(_, interval, _, _, _) => builder.field("interval", interval)
-        case DateHistogramValueSource(_, interval, _, _, _, timeZone) => {
+        case DateHistogramValueSource(_, interval, _, _, _, timeZone, format, missingBucket) => {
           builder.field("interval", interval)
           timeZone.foreach(builder.field("time_zone", _))
+          format.foreach(builder.field("format", _))
+          if(missingBucket){ builder.field("missing_bucket", true) }
         }
         case _ =>
       }
@@ -30,6 +32,11 @@ object CompositeAggregationBuilder {
       builder.endObject()
     })
     builder.endArray()
+    agg.after.map(afterMap => {
+      builder.startObject("after")
+      afterMap.map { case (k,v) => builder.autofield(k,v) }
+      builder.endObject()
+    })
     builder.endObject()
 
     SubAggsBuilderFn(agg, builder)
