@@ -7,11 +7,11 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class SnapshotTest extends FlatSpec with Matchers with DockerTests {
 
-  private val repoName = "repotest_" + UUID.randomUUID()
+  private val repoName = "repotest_" + UUID.randomUUID().toString
 
   "createRepository" should "create a new repo" in {
     val resp = client.execute {
-      createRepository(repoName, "fs").settings(Map("location" -> ("/tmp/backup_" + UUID.randomUUID)))
+      createRepository(repoName, "fs").settings(Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString)))
     }.await
     resp.result.acknowledged shouldBe true
   }
