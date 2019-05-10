@@ -17,9 +17,9 @@ class BulkHandlersTest extends FlatSpec with BulkHandlers {
     ))
 
     val expected =
-      """{"index":{"_index":"my_index1","_type":"_doc"}}
+      """{"index":{"_index":"my_index1"}}
         |{"field1":"value1"}
-        |{"index":{"_index":"my_index2","_type":"_doc"}}
+        |{"index":{"_index":"my_index2"}}
         |{"field2":"value2"}
         |""".stripMargin.withUnixLineEndings
 

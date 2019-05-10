@@ -18,14 +18,14 @@ class BulkBuilderFnTest extends FunSuite with Matchers {
     ).refresh(RefreshPolicy.Immediate)
 
     BulkBuilderFn(req).mkString("\n") shouldBe
-      """{"update":{"_index":"chemistry","_type":"_doc","_id":"2"}}
+      """{"update":{"_index":"chemistry","_id":"2"}}
         |{"doc":{"atomicweight":2,"name":"helium"}}
-        |{"index":{"_index":"chemistry","_type":"_doc","_id":"8"}}
+        |{"index":{"_index":"chemistry","_id":"8"}}
         |{"atomicweight":8,"name":"oxygen"}
-        |{"update":{"_index":"chemistry","_type":"_doc","_id":"6"}}
+        |{"update":{"_index":"chemistry","_id":"6"}}
         |{"doc":{"atomicweight":4,"name":"lithium"}}
-        |{"delete":{"_index":"chemistry","_type":"_doc","_id":"10"}}
-        |{"index":{"_index":"chemistry","_type":"_doc","_id":"14","pipeline":"periodic-table"}}
+        |{"delete":{"_index":"chemistry","_id":"10"}}
+        |{"index":{"_index":"chemistry","_id":"14","pipeline":"periodic-table"}}
         |{"atomicweight":81,"name":"thallium"}""".stripMargin
 
   }
@@ -37,9 +37,9 @@ class BulkBuilderFnTest extends FunSuite with Matchers {
     ).refresh(RefreshPolicy.Immediate)
 
     BulkBuilderFn(req).mkString("\n") shouldBe
-      """{"index":{"_index":"chemistry","_type":"_doc","_id":"8"}}
+      """{"index":{"_index":"chemistry","_id":"8"}}
         |{"atomicweight":8,"name":"oxygen"}
-        |{"create":{"_index":"chemistry","_type":"_doc","_id":"1"}}
+        |{"create":{"_index":"chemistry","_id":"1"}}
         |{"atomicweight":1,"name":"hydrogen"}""".stripMargin
 
   }

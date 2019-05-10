@@ -6,6 +6,6 @@ class NormalizerBuilderTest extends FunSuite with Matchers {
 
   test("should build normalizer to spec") {
     val n = CustomNormalizer("my_normalizer", List("quote"), List("lowercase", "asciifolding"))
-    NormalizerBuilder.build(n).string() shouldBe """{"my_normalizer":{"type":"custom","filter":["lowercase","asciifolding"],"char_filter":["quote"]}}"""
+    NormalizerBuilder.build(n).string() shouldBe """{"type":"custom","filter":["lowercase","asciifolding"],"char_filter":["quote"]}"""
   }
 }
