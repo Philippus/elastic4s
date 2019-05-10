@@ -88,7 +88,7 @@ object CompositeAggregation {
         name = name,
         buckets = buckets,
         afterKey = data.get("after_key").map(_.asInstanceOf[Map[String, Any]]),
-        data = data,
+        data = data
       )
     }
   }
