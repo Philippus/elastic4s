@@ -37,6 +37,32 @@ case class SynonymTokenFilter(override val name: String,
   def expand(expand: Boolean): SynonymTokenFilter = copy(expand = expand.some)
 }
 
+case class WordDelimiterGraphTokenFilter(override val name: String,
+                                         preserveOriginal: Option[Boolean] = None,
+                                         catenateNumbers: Option[Boolean] = None,
+                                         catenateWords: Option[Boolean] = None,
+                                         catenateAll: Option[Boolean] = None,
+                                         generateWordParts: Option[Boolean] = None,
+                                         generateNumberParts: Option[Boolean] = None,
+                                         splitOnCaseChange: Option[Boolean] = None,
+                                         splitOnNumerics: Option[Boolean] = None,
+                                         stem_english_possessive: Option[Boolean] = None) extends TokenFilter {
+
+  override def build: XContentBuilder = {
+    val b = XContentFactory.jsonBuilder()
+    b.field("type", "word_delimiter_graph")
+    preserveOriginal.foreach(b.field("preserve_original", _))
+    catenateNumbers.foreach(b.field("catenate_numbers", _))
+    catenateWords.foreach(b.field("catenate_words", _))
+    catenateAll.foreach(b.field("catenate_all", _))
+    generateWordParts.foreach(b.field("generate_word_parts", _))
+    generateNumberParts.foreach(b.field("generate_number_parts", _))
+    splitOnCaseChange.foreach(b.field("split_on_case_change", _))
+    splitOnNumerics.foreach(b.field("split_on_numerics", _))
+    b
+  }
+}
+
 case class SynonymGraphTokenFilter(override val name: String,
                                    path: Option[String] = None,
                                    synonyms: Set[String] = Set.empty,
