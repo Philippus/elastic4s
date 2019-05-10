@@ -17,8 +17,8 @@ class DeleteByQueryTest extends WordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex(indexname).mappings(
-      mapping().fields(
+    createIndex(indexname).mapping(
+      properties(
         textField("name")
       )
     ).shards(1).waitForActiveShards(1)
@@ -47,6 +47,29 @@ class DeleteByQueryTest extends WordSpec with Matchers with DockerTests {
         search(indexname).matchAllQuery()
       }.await.result.totalHits shouldBe 2
     }
+
+    "respect size parameter" in {
+
+      client.execute {
+        bulk(
+          indexInto(indexname).fields("name" -> "mrs havisham").id("5"),
+          indexInto(indexname).fields("name" -> "peggotty").id("6"),
+        ).refresh(RefreshPolicy.Immediate)
+      }.await
+
+      client.execute {
+        search(indexname).matchAllQuery()
+      }.await.result.totalHits shouldBe 4
+
+      client.execute {
+        deleteByQuery(indexname, matchAllQuery()).refresh(RefreshPolicy.Immediate).size(3)
+      }.await.result.deleted shouldBe 3
+
+      client.execute {
+        search(indexname).matchAllQuery()
+      }.await.result.totalHits shouldBe 1
+    }
+
     "return a Left[RequestFailure] when the delete fails" in {
       client.execute {
         deleteByQuery(",", matchQuery("name", "bumbles"))
