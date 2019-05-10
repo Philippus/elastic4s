@@ -69,7 +69,7 @@ object CompositeAggregation {
     name: String,
     buckets: Seq[CompositeAggBucket],
     afterKey: Option[Map[String, Any]],
-    private val data: Map[String, Any],
+    private val data: Map[String, Any]
   ) extends BucketAggregation
 
   implicit class CompositeAggResult(aggs: HasAggregations){
