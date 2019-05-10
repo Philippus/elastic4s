@@ -24,7 +24,7 @@ class AnalysisBuilderTest extends FunSuite with Matchers {
         )
       )
     )
-    AnalysisBuilder.build(analysis).string() shouldBe """{"analysis":{"analyzer":{"my_analyzer":{"type":"custom","tokenizer":"my_uax_tokenizer","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"tokenizer":{"my_uax_tokenizer":{"type":"uax_url_email","max_token_length":255}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}}"""
+    AnalysisBuilder.build(analysis).string() shouldBe """{"analyzer":{"my_analyzer":{"type":"custom","tokenizer":"my_uax_tokenizer","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"tokenizer":{"my_uax_tokenizer":{"type":"uax_url_email","max_token_length":255}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}"""
   }
 
   test("custom normalizers") {
@@ -45,6 +45,6 @@ class AnalysisBuilderTest extends FunSuite with Matchers {
         )
       )
     )
-    AnalysisBuilder.build(analysis).string() shouldBe """{"analysis":{"normalizer":{"my_normalizer":{"type":"custom","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}}"""
+    AnalysisBuilder.build(analysis).string() shouldBe """{"normalizer":{"my_normalizer":{"type":"custom","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}"""
   }
 }
