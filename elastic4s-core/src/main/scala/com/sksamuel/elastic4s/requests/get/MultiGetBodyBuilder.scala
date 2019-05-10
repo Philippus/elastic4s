@@ -9,7 +9,6 @@ object MultiGetBodyBuilder {
     request.gets.foreach { get =>
       builder.startObject()
       builder.field("_index", get.index.index)
-      builder.field("_type", "_doc")
       builder.field("_id", get.id)
       get.routing.foreach(builder.field("routing", _))
       get.fetchSource.foreach { context =>

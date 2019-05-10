@@ -15,7 +15,6 @@ object BulkBuilderFn {
         val createOrIndex = if (index.createOnly.getOrElse(false)) "create" else "index"
         builder.startObject(createOrIndex)
         builder.field("_index", index.index.name)
-        builder.field("_type", "_doc")
         index.id.foreach(id => builder.field("_id", id.toString))
         index.parent.foreach(builder.field("_parent", _))
         index.routing.foreach(builder.field("routing", _))
@@ -32,7 +31,6 @@ object BulkBuilderFn {
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("delete")
         builder.field("_index", delete.index.index)
-        builder.field("_type", "_doc")
         builder.field("_id", delete.id.toString)
         delete.parent.foreach(builder.field("_parent", _))
         delete.routing.foreach(builder.field("_routing", _))
@@ -47,7 +45,6 @@ object BulkBuilderFn {
         val builder = XContentFactory.jsonBuilder()
         builder.startObject("update")
         builder.field("_index", update.index.index)
-        builder.field("_type", "_doc")
         builder.field("_id", update.id)
         update.parent.foreach(builder.field("_parent", _))
         update.routing.foreach(builder.field("_routing", _))
