@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes
 
+import com.sksamuel.elastic4s.requests.analysis.AnalysisBuilder
 import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
@@ -12,7 +13,7 @@ object CreateIndexContentBuilder {
     } else {
       val builder = XContentFactory.jsonBuilder()
 
-      if (d.settings.settings.nonEmpty || d.analysis.nonEmpty) {
+      if (d.settings.settings.nonEmpty || d._analysis.nonEmpty || d.analysis.nonEmpty) {
         builder.startObject("settings")
 
         if (d.settings.settings.nonEmpty) {
@@ -26,7 +27,9 @@ object CreateIndexContentBuilder {
           builder.endObject()
         }
 
-        d.analysis.foreach(AnalysisBuilderFn.build(_, builder))
+        d._analysis.foreach(AnalysisBuilderFn.build(_, builder))
+
+        d.analysis.foreach { a => builder.rawField("analysis", AnalysisBuilder.build(a)) }
 
         builder.endObject() // end settings
       }

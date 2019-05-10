@@ -79,6 +79,13 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def array(field: String, strings: List[String]): XContentBuilder = {
+    startArray(field)
+    strings.toArray.foreach(array.add)
+    endArray()
+    this
+  }
+
   def array(field: String, longs: Array[Long]): XContentBuilder = {
     startArray(field)
     longs.foreach(array.add)

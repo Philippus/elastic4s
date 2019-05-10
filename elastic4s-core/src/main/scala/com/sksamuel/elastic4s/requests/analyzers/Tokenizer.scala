@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.analyzers
 
 import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
+@deprecated("use new analysis package", "7.0.1")
 abstract class Tokenizer(val name: String) {
 
   def build(source: XContentBuilder): Unit = {}
@@ -15,20 +16,39 @@ abstract class Tokenizer(val name: String) {
   def customized: Boolean = false
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case object WhitespaceTokenizer  extends Tokenizer("whitespace")
+
+@deprecated("use new analysis package", "7.0.1")
 case object LetterTokenizer      extends Tokenizer("letter")
+
+@deprecated("use new analysis package", "7.0.1")
 case object LowercaseTokenizer   extends Tokenizer("lowercase")
+
+@deprecated("use new analysis package", "7.0.1")
 case object StandardTokenizer    extends Tokenizer("standard")
+
+@deprecated("use new analysis package", "7.0.1")
 case object PatternTokenizer     extends Tokenizer("pattern")
+
+@deprecated("use new analysis package", "7.0.1")
 case object KeywordTokenizer     extends Tokenizer("keyword")
+
+@deprecated("use new analysis package", "7.0.1")
 case object NGramTokenizer       extends Tokenizer("nGram")
+
+@deprecated("use new analysis package", "7.0.1")
 case object EdgeNGramTokenizer   extends Tokenizer("edgeNGram")
+
+@deprecated("use new analysis package", "7.0.1")
 case object UaxUrlEmailTokenizer extends Tokenizer("uax_url_email")
 
+@deprecated("use new analysis package", "7.0.1")
 abstract class CustomizedTokenizer(override val name: String) extends Tokenizer(name) {
   override def customized: Boolean = true
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class PredefinedTokenizer(override val name: String) extends Tokenizer(name)
 
 case class UaxUrlEmailTokenizer(override val name: String, maxTokenLength: Int = 255)
@@ -41,6 +61,7 @@ case class UaxUrlEmailTokenizer(override val name: String, maxTokenLength: Int =
   def maxTokenLength(maxTokenLength: Int): UaxUrlEmailTokenizer = copy(maxTokenLength = maxTokenLength)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class StandardTokenizer(override val name: String, maxTokenLength: Int = 255) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "standard")
@@ -50,6 +71,7 @@ case class StandardTokenizer(override val name: String, maxTokenLength: Int = 25
   def maxTokenLength(maxTokenLength: Int): StandardTokenizer = copy(maxTokenLength = maxTokenLength)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class PatternTokenizer(override val name: String, pattern: String = "\\W+", flags: String = "", group: Int = -1)
     extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
@@ -66,6 +88,7 @@ case class PatternTokenizer(override val name: String, pattern: String = "\\W+",
   def group(group: Int): PatternTokenizer        = copy(group = group)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class KeywordTokenizer(override val name: String, bufferSize: Int = 256) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "keyword")
@@ -75,6 +98,7 @@ case class KeywordTokenizer(override val name: String, bufferSize: Int = 256) ex
   def bufferSize(bufferSize: Int): KeywordTokenizer = copy(bufferSize = bufferSize)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class NGramTokenizer(override val name: String,
                           minGram: Int = 1,
                           maxGram: Int = 2,
@@ -93,6 +117,7 @@ case class NGramTokenizer(override val name: String,
   def tokenChars(tokenChar: String, rest: String*): NGramTokenizer = copy(tokenChars = tokenChar +: rest)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class EdgeNGramTokenizer(override val name: String,
                               minGram: Int = 1,
                               maxGram: Int = 2,
@@ -111,6 +136,7 @@ case class EdgeNGramTokenizer(override val name: String,
   def tokenChars(tokenChar: String, rest: String*): EdgeNGramTokenizer = copy(tokenChars = tokenChar +: rest)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class PathHierarchyTokenizer(override val name: String,
                                   delimiter: Char = '/',
                                   replacement: Char = '/',

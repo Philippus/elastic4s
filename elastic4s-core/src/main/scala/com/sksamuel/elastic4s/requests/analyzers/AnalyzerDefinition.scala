@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.analyzers
 
 import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
-// Base class for analyzers that have custom parameters set.
+@deprecated("use new analysis package", "7.0.1")
 abstract class AnalyzerDefinition(val name: String) {
 
   def buildWithName(source: XContentBuilder): Unit = {
@@ -32,6 +32,7 @@ abstract class AnalyzerDefinition(val name: String) {
   }
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class StopAnalyzerDefinition(override val name: String, stopwords: Iterable[String] = Nil)
     extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
@@ -43,6 +44,7 @@ case class StopAnalyzerDefinition(override val name: String, stopwords: Iterable
   def stopwords(stopwords: String, rest: String*): StopAnalyzerDefinition = copy(stopwords = stopwords +: rest)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class StandardAnalyzerDefinition(override val name: String,
                                       stopwords: Iterable[String] = Nil,
                                       maxTokenLength: Int = 255)
@@ -58,6 +60,7 @@ case class StandardAnalyzerDefinition(override val name: String,
   def maxTokenLength(maxTokenLength: Int): StandardAnalyzerDefinition         = copy(maxTokenLength = maxTokenLength)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class PatternAnalyzerDefinition(override val name: String, regex: String, lowercase: Boolean = true)
     extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
@@ -69,6 +72,7 @@ case class PatternAnalyzerDefinition(override val name: String, regex: String, l
   def lowercase(lowercase: Boolean): PatternAnalyzerDefinition = copy(lowercase = lowercase)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class SnowballAnalyzerDefinition(override val name: String,
                                       lang: String = "English",
                                       stopwords: Iterable[String] = Nil)
@@ -85,6 +89,7 @@ case class SnowballAnalyzerDefinition(override val name: String,
   def stopwords(stopwords: String, rest: String*): SnowballAnalyzerDefinition = copy(stopwords = stopwords +: rest)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class CustomAnalyzerDefinition(override val name: String, tokenizer: Tokenizer, filters: Seq[AnalyzerFilter] = Nil)
     extends AnalyzerDefinition(name) {
 
@@ -103,6 +108,7 @@ case class CustomAnalyzerDefinition(override val name: String, tokenizer: Tokeni
   def addFilter(filter: AnalyzerFilter): CustomAnalyzerDefinition     = copy(filters = filters :+ filter)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 object CustomAnalyzerDefinition {
   def apply(name: String,
             tokenizer: Tokenizer,

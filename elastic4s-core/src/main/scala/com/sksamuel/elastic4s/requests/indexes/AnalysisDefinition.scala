@@ -2,8 +2,11 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, CharFilterDefinition, CustomAnalyzerDefinition, CustomNormalizerDefinition, NormalizerDefinition, TokenFilterDefinition, Tokenizer}
 
-case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition], normalizers: Iterable[NormalizerDefinition]) {
+@deprecated("use new analysis package", "7.0.1")
+case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition],
+                              normalizers: Iterable[NormalizerDefinition]) {
 
+  @deprecated("use new analysis package", "7.0.1")
   def tokenizers: Iterable[Tokenizer] =
     analyzers
       .collect {
@@ -12,6 +15,7 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition], normalize
       .map(_.tokenizer)
       .filter(_.customized)
 
+  @deprecated("use new analysis package", "7.0.1")
   def tokenFilterDefinitions: Iterable[TokenFilterDefinition] = {
     val fromAnalyzers = analyzers
       .collect {
@@ -29,6 +33,7 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition], normalize
     }
   }
 
+  @deprecated("use new analysis package", "7.0.1")
   def charFilterDefinitions: Iterable[CharFilterDefinition] = {
     val fromAnalyzers = analyzers
       .collect {

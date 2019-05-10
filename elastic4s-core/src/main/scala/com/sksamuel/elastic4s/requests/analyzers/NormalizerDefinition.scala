@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.analyzers
 
 import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
-// Base class for normalizers that have custom parameters set.
+@deprecated("use new analysis package", "7.0.1")
 abstract class NormalizerDefinition(val name: String) {
 
   def buildWithName(source: XContentBuilder): Unit = {
@@ -32,6 +32,7 @@ abstract class NormalizerDefinition(val name: String) {
   }
 }
 
+@deprecated("use new analysis package", "7.0.1")
 case class CustomNormalizerDefinition(override val name: String, filters: Seq[AnalyzerFilter] = Nil)
     extends NormalizerDefinition(name) {
 
@@ -49,6 +50,7 @@ case class CustomNormalizerDefinition(override val name: String, filters: Seq[An
   def addFilter(filter: AnalyzerFilter): CustomNormalizerDefinition     = copy(filters = filters :+ filter)
 }
 
+@deprecated("use new analysis package", "7.0.1")
 object CustomNormalizerDefinition {
   def apply(name: String, first: AnalyzerFilter, rest: AnalyzerFilter*): CustomNormalizerDefinition =
     CustomNormalizerDefinition(name, first +: rest)
