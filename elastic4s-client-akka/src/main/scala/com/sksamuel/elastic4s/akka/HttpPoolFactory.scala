@@ -12,7 +12,7 @@ import akka.stream.scaladsl.Flow
   */
 private[akka] trait HttpPoolFactory {
 
-  def create[T](): Flow[(HttpRequest, T), (Try[HttpResponse], T), NotUsed]
+  def create[T](): Flow[(HttpRequest, T), (HttpRequest, Try[HttpResponse], T), NotUsed]
 
   def shutdown(): Future[Unit]
 }

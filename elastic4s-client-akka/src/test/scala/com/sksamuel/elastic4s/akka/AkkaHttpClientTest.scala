@@ -94,5 +94,11 @@ class AkkaHttpClientTest extends FlatSpec with Matchers with DockerTests with Be
 
   }
 
+  it should "work with head methods" in {
+    client.execute(
+      indexExists("unknown_index")
+    ).await.result
+  }
+
 }
 

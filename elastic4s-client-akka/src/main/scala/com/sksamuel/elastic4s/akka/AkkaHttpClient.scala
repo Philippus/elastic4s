@@ -10,13 +10,17 @@ import akka.stream.{ActorMaterializer, OverflowStrategy, QueueOfferResult}
 import akka.util.ByteString
 import com.sksamuel.elastic4s.ElasticRequest
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
-import com.sksamuel.elastic4s.{HttpClient => ElasticHttpClient, HttpEntity => ElasticHttpEntity, HttpResponse => ElasticHttpResponse}
+import com.sksamuel.elastic4s.{
+  HttpClient => ElasticHttpClient,
+  HttpEntity => ElasticHttpEntity,
+  HttpResponse => ElasticHttpResponse
+}
 
-class AkkaHttpClient private[akka](
-                                    settings: AkkaHttpClientSettings,
-                                    blacklist: Blacklist,
-                                    httpPoolFactory: HttpPoolFactory)(implicit system: ActorSystem)
-  extends ElasticHttpClient {
+class AkkaHttpClient private[akka] (
+    settings: AkkaHttpClientSettings,
+    blacklist: Blacklist,
+    httpPoolFactory: HttpPoolFactory)(implicit system: ActorSystem)
+    extends ElasticHttpClient {
 
   import AkkaHttpClient._
   import system.dispatcher
@@ -28,36 +32,40 @@ class AkkaHttpClient private[akka](
   private val queue =
     Source
       .queue[(ElasticRequest, RequestState)](settings.queueSize,
-      OverflowStrategy.backpressure)
+                                             OverflowStrategy.backpressure)
       .statefulMapConcat { () =>
         val hosts = iterateHosts
 
-        in => {
-          (in, hosts.next()) match {
-            case ((r, s), Some(host)) =>
-              // if host is resolved - send request forward
-              s.host.success(host)
-              toRequest(r, host) match {
-                case Success(req) =>
-                  (req, s) :: Nil
-                case Failure(e) =>
-                  s.host.failure(e)
-                  s.response.failure(e)
-                  Nil
-              }
-            case ((_, s), None) =>
-              // if not - all hosts are blacklisted, return an error
-              val exception = AllHostsBlacklistedException
-              s.host.failure(exception)
-              s.response.failure(exception)
-              Nil
+        in =>
+          {
+            (in, hosts.next()) match {
+              case ((r, s), Some(host)) =>
+                // if host is resolved - send request forward
+                s.host.success(host)
+                toRequest(r, host) match {
+                  case Success(req) =>
+                    (req, s) :: Nil
+                  case Failure(e) =>
+                    s.host.failure(e)
+                    s.response.failure(e)
+                    Nil
+                }
+              case ((_, s), None) =>
+                // if not - all hosts are blacklisted, return an error
+                val exception = AllHostsBlacklistedException
+                s.host.failure(exception)
+                s.response.failure(exception)
+                Nil
+            }
           }
-        }
       }
       .via(httpPoolFactory.create[RequestState]())
       .flatMapMerge(
         settings.poolSettings.maxConnections, {
-          case (Success(r), s) =>
+          case (request, Success(response), state) if request.method == HttpMethods.HEAD =>
+            response.discardEntityBytes()
+            Source.single((Success(toResponse(response, ByteString.empty)), state))
+          case (_, Success(r), s) =>
             r.entity.dataBytes
               .fold(ByteString())(_ ++ _)
               .map(data => (Success(toResponse(r, data)), s))
@@ -65,12 +73,12 @@ class AkkaHttpClient private[akka](
                 case t: Throwable =>
                   Source.single(Failure(t), s)
               })
-          case (Failure(e), s) => Source.single(Failure(e), s)
+          case (_, Failure(e), s) => Source.single(Failure(e), s)
         }
       )
       .toMat(Sink.foreach({
         case (Success(resp), s) => s.response.success(resp)
-        case (Failure(e), s) => s.response.failure(e)
+        case (Failure(e), s)    => s.response.failure(e)
       }))(Keep.left)
       .run()
 
@@ -103,13 +111,13 @@ class AkkaHttpClient private[akka](
   }
 
   private def queueRequestWithRetry(
-                                     request: ElasticRequest,
-                                     startTimeNanos: Long = System.nanoTime): Future[ElasticHttpResponse] = {
+      request: ElasticRequest,
+      startTimeNanos: Long = System.nanoTime): Future[ElasticHttpResponse] = {
 
     val state = RequestState()
 
     def retryIfPossible(notPossible: => Either[Throwable, ElasticHttpResponse])
-    : Future[ElasticHttpResponse] = {
+      : Future[ElasticHttpResponse] = {
       val timePassed = System.nanoTime - startTimeNanos
       if (timePassed < settings.maxRetryTimeout.toNanos) {
         logger.trace(s"Retrying a request: ${request.endpoint}")
@@ -172,28 +180,28 @@ class AkkaHttpClient private[akka](
 
   private def isRetryStatus(statusCode: StatusCode) = {
     statusCode match {
-      case StatusCodes.BadGateway => true
+      case StatusCodes.BadGateway         => true
       case StatusCodes.ServiceUnavailable => true
-      case StatusCodes.GatewayTimeout => true
-      case _ => false
+      case StatusCodes.GatewayTimeout     => true
+      case _                              => false
     }
   }
 
   private def isRetryException(t: Throwable): Boolean = {
     t match {
       case AllHostsBlacklistedException => false
-      case _ => true
+      case _                            => true
     }
   }
 
   private[akka] def sendAsync(
-                               request: ElasticRequest): Future[ElasticHttpResponse] = {
+      request: ElasticRequest): Future[ElasticHttpResponse] = {
     queueRequestWithRetry(request)
   }
 
   override def send(
-                     request: ElasticRequest,
-                     callback: Either[Throwable, ElasticHttpResponse] => Unit): Unit = {
+      request: ElasticRequest,
+      callback: Either[Throwable, ElasticHttpResponse] => Unit): Unit = {
     sendAsync(request).onComplete {
       case Success(r) => callback(Right(r))
       case Failure(e) => callback(Left(e))
@@ -211,7 +219,7 @@ class AkkaHttpClient private[akka](
   private def toRequest(request: ElasticRequest,
                         host: String): Try[HttpRequest] = Try {
     HttpRequest(
-      method = HttpMethod.custom(request.method),
+      method = HttpMethods.getForKeyCaseInsensitive(request.method).getOrElse(HttpMethod.custom(request.method)),
       uri = Uri(request.endpoint)
         .withQuery(Query(request.params))
         .withAuthority(Uri.Authority.parse(host))
@@ -254,10 +262,10 @@ class AkkaHttpClient private[akka](
 object AkkaHttpClient {
 
   def apply(settings: AkkaHttpClientSettings)(
-    implicit system: ActorSystem): AkkaHttpClient = {
+      implicit system: ActorSystem): AkkaHttpClient = {
 
     val blacklist = new DefaultBlacklist(settings.blacklistMinDuration,
-      settings.blacklistMaxDuration)
+                                         settings.blacklistMaxDuration)
 
     val httpPoolFactory = new DefaultHttpPoolFactory(settings.poolSettings)
 
@@ -265,10 +273,10 @@ object AkkaHttpClient {
   }
 
   private[akka] case class RequestState(response: Promise[ElasticHttpResponse] =
-                                        Promise(),
+                                          Promise(),
                                         host: Promise[String] = Promise())
 
   private[akka] case object AllHostsBlacklistedException
-    extends Exception("All hosts are blacklisted!")
+      extends Exception("All hosts are blacklisted!")
 
 }

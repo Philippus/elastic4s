@@ -11,10 +11,10 @@ import akka.stream.scaladsl.Flow
 class TestHttpPoolFactory(sendRequest: HttpRequest => Try[HttpResponse],
                           timeout: FiniteDuration = 2.seconds) extends HttpPoolFactory {
 
-  override def create[T](): Flow[(HttpRequest, T), (Try[HttpResponse], T), NotUsed] = {
+  override def create[T](): Flow[(HttpRequest, T), (HttpRequest, Try[HttpResponse], T), NotUsed] = {
     Flow[(HttpRequest, T)]
       .map {
-        case (r, s) => (Try(sendRequest(r)).flatten, s)
+        case (r, s) => (r, Try(sendRequest(r)).flatten, s)
       }
   }
 
