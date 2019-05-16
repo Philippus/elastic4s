@@ -15,9 +15,9 @@ object MultiGetBodyBuilder {
         if (context.includes.nonEmpty || context.excludes.nonEmpty) {
           builder.startObject("_source")
           if (context.includes.nonEmpty)
-            builder.array("include", context.includes)
+            builder.array("include", context.includes.toList)
           if (context.excludes.nonEmpty)
-            builder.array("exclude", context.excludes)
+            builder.array("exclude", context.excludes.toList)
           builder.endObject()
         } else
           builder.field("_source", boolean = false)
