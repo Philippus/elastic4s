@@ -21,10 +21,16 @@ private[akka] class DefaultHttpPoolFactory(settings: ConnectionPoolSettings)(
     Duration.Inf) // we guarantee to consume consume data from all responses
 
   override def create[T]()
-  : Flow[(HttpRequest, T), (Try[HttpResponse], T), NotUsed] = {
-    http.superPool[T](
-      settings = poolSettings
-    )
+  : Flow[(HttpRequest, T), (HttpRequest, Try[HttpResponse], T), NotUsed] = {
+    Flow[(HttpRequest, T)].map {
+      case (request, state) => (request, (request, state))
+    }.via{
+      http.superPool[(HttpRequest, T)](
+        settings = poolSettings
+      ).map {
+        case (response, (request, state)) => (request, response, state)
+      }
+    }
   }
 
   override def shutdown(): Future[Unit] = http.shutdownAllConnectionPools()
