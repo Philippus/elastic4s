@@ -11,9 +11,20 @@ case class ElasticError(`type`: String,
                         index: Option[String],
                         shard: Option[String],
                         @JsonProperty("root_cause") rootCause: Seq[ElasticError],
-                        @JsonProperty("caused_by") causedBy: Option[ElasticError.CausedBy]) {
+                        @JsonProperty("caused_by") causedBy: Option[ElasticError.CausedBy],
+                        phase: Option[String] = None,
+                        grouped: Option[Boolean] = None,
+                        @JsonProperty("failed_shards") failedShards: Seq[FailedShard] = Seq()
+) {
   def asException: Exception = causedBy.fold(new RuntimeException(s"${`type`} $reason"))(cause => new RuntimeException(s"${`type`} $reason", new RuntimeException(cause.toString)))
 }
+
+case class FailedShard(
+  shard: Int,
+  index: Option[String],
+  node: Option[String],
+  reason: Option[ElasticError] // reason is a nested ElasticError here, rather than a string as it is in ElasticError
+)
 
 object ElasticError {
 

@@ -1,0 +1,160 @@
+{
+  "error": {
+    "root_cause": [
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "2d8the20RkivmZXZDwkp1Q",
+        "index": "items_landsat_20190129_0"
+      },
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "5Hf4_3kfQyOOlDaxRutbfw",
+        "index": "items_mcd43a4_20190129_0"
+      },
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "Eon1vwa_Rw6bBIX7yeiaGQ",
+        "index": "items_mod11a1_20190128_1"
+      },
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "JymClp-5TlSFZR66coY3iQ",
+        "index": "items_mod13a1_20190129_0"
+      },
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "kwb1hINcQp6kQfOB96QE6Q",
+        "index": "items_myd11a1_20190129_0"
+      },
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "yQbbws04Q5KuoM3EJhzGYw",
+        "index": "items_myd13a1_20190129_0"
+      },
+      {
+        "type": "query_shard_exception",
+        "reason": "failed to create query",
+        "index_uuid": "7G0HbvMrR8egEYBEAGrI5w",
+        "index": "items_s2_20190129_0"
+      }
+    ],
+    "type": "search_phase_execution_exception",
+    "reason": "all shards failed",
+    "phase": "query",
+    "grouped": true,
+    "failed_shards": [
+      {
+        "shard": 0,
+        "index": "items_landsat_20190129_0",
+        "node": "X6_5FwQsQOSTMc-4wEjLCA",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "2d8the20RkivmZXZDwkp1Q",
+          "index": "items_landsat_20190129_0",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      },
+      {
+        "shard": 0,
+        "index": "items_mcd43a4_20190129_0",
+        "node": "CbJaMLCATb2DG4xGa7HUOA",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "5Hf4_3kfQyOOlDaxRutbfw",
+          "index": "items_mcd43a4_20190129_0",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      },
+      {
+        "shard": 0,
+        "index": "items_mod11a1_20190128_1",
+        "node": "KPg66KspQoKBeiOaDqOzUQ",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "Eon1vwa_Rw6bBIX7yeiaGQ",
+          "index": "items_mod11a1_20190128_1",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      },
+      {
+        "shard": 0,
+        "index": "items_mod13a1_20190129_0",
+        "node": "X6_5FwQsQOSTMc-4wEjLCA",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "JymClp-5TlSFZR66coY3iQ",
+          "index": "items_mod13a1_20190129_0",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      },
+      {
+        "shard": 0,
+        "index": "items_myd11a1_20190129_0",
+        "node": "KPg66KspQoKBeiOaDqOzUQ",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "kwb1hINcQp6kQfOB96QE6Q",
+          "index": "items_myd11a1_20190129_0",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      },
+      {
+        "shard": 0,
+        "index": "items_myd13a1_20190129_0",
+        "node": "KPg66KspQoKBeiOaDqOzUQ",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "yQbbws04Q5KuoM3EJhzGYw",
+          "index": "items_myd13a1_20190129_0",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      },
+      {
+        "shard": 0,
+        "index": "items_s2_20190129_0",
+        "node": "X6_5FwQsQOSTMc-4wEjLCA",
+        "reason": {
+          "type": "query_shard_exception",
+          "reason": "failed to create query",
+          "index_uuid": "7G0HbvMrR8egEYBEAGrI5w",
+          "index": "items_s2_20190129_0",
+          "caused_by": {
+            "type": "illegal_argument_exception",
+            "reason": "Points of LinearRing do not form a closed linestring"
+          }
+        }
+      }
+    ]
+  },
+  "status": 400
+}
