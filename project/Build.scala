@@ -19,7 +19,7 @@ object Build extends AutoPlugin {
     val CommonsIoVersion       = "2.6"
     val ElasticsearchVersion   = "7.0.1"
     val ExtsVersion            = "1.61.0"
-    val JacksonVersion         = "2.9.8"
+    val JacksonVersion         = "2.9.9"
     val Json4sVersion          = "3.6.6"
     val AWSJavaSdkVersion      = "2.5.8"
     val Log4jVersion           = "2.11.1"
