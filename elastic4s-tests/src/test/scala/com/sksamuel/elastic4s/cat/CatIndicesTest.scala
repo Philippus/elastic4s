@@ -10,7 +10,8 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
     bulk(
       indexInto("catindex1").fields("name" -> "hampton court palace"),
       indexInto("catindex2").fields("name" -> "hampton court palace"),
-      indexInto("catindex3").fields("name" -> "hampton court palace")
+      indexInto("catindex3").fields("name" -> "hampton court palace"),
+      indexInto("catindex33").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -22,6 +23,17 @@ class CatIndicesTest extends FlatSpec with Matchers with DockerTests {
     indexes.contains("catindex1") shouldBe true
     indexes.contains("catindex2") shouldBe true
     indexes.contains("catindex3") shouldBe true
+  }
+
+  it should "return all indexes matching a pattern" in {
+    val indexes = client.execute {
+      catIndices("catindex3*")
+    }.await.result.map(_.index).toSet
+
+    indexes.contains("catindex1") shouldBe false
+    indexes.contains("catindex2") shouldBe false
+    indexes.contains("catindex3") shouldBe true
+    indexes.contains("catindex33") shouldBe true
   }
 
   it should "use health param" in {
