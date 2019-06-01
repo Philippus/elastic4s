@@ -121,11 +121,15 @@ trait CatHandlers {
     val BaseParams: Map[String, Any] = Map("v" -> "", "format" -> "json", "bytes" -> "b")
 
     override def build(request: CatIndexes): ElasticRequest = {
+      val endPoint = request.indexPattern match {
+        case Some(indexPattern) => s"/_cat/indices/$indexPattern"
+        case _ => "/_cat/indices"
+      }
       val params = request.health match {
         case Some(health) => BaseParams + ("health" -> health.getClass.getSimpleName.toLowerCase.stripSuffix("$"))
         case _ => BaseParams
       }
-      ElasticRequest("GET", "/_cat/indices", params)
+      ElasticRequest("GET", endPoint, params)
     }
   }
 
