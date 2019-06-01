@@ -75,12 +75,17 @@ trait CatImplicits {
 
   implicit object CatIndexesExecutable extends HttpExecutable[CatIndexesDefinition, Seq[CatIndices]] {
 
-    val BaseEndpoint = "/_cat/indices?v&format=json&bytes=b"
+    val BaseEndpoint = "/_cat/indices"
+    val BaseQueryParams = "?v&format=json&bytes=b"
 
     override def execute(client: RestClient, request: CatIndexesDefinition): Future[Seq[CatIndices]] = {
-      val endpoint = request.health match {
-        case Some(health) => BaseEndpoint + "&health=" + health.getClass.getSimpleName.toLowerCase.stripSuffix("$")
-        case _ => BaseEndpoint
+      val queryParams = request.health match {
+        case Some(health) => BaseQueryParams + "&health=" + health.getClass.getSimpleName.toLowerCase.stripSuffix("$")
+        case _ => BaseQueryParams
+      }
+      val endpoint = request.indexPattern match {
+        case Some(indexPattern) => BaseEndpoint + s"/$indexPattern" + queryParams
+        case _ => BaseEndpoint + queryParams
       }
       client.async("GET", endpoint, Map.empty, ResponseHandler.default)
     }
