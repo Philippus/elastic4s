@@ -13,8 +13,9 @@ trait CatsApi {
 
   def catHealth(): CatHealth = CatHealth()
 
-  def catIndices(): CatIndexes                     = CatIndexes(None)
-  def catIndices(health: HealthStatus): CatIndexes = CatIndexes(health.some)
+  def catIndices(): CatIndexes                     = CatIndexes(None, None)
+  def catIndices(health: HealthStatus): CatIndexes = CatIndexes(health.some, None)
+  def catIndices(indexPattern: String): CatIndexes = CatIndexes(None, indexPattern.some)
 
   def catMaster(): CatMaster = CatMaster()
 
@@ -38,4 +39,4 @@ case class CatThreadPool()
 case class CatAllocation()
 case class CatAliases()
 case class CatMaster()
-case class CatIndexes(health: Option[HealthStatus])
+case class CatIndexes(health: Option[HealthStatus], indexPattern: Option[String])
