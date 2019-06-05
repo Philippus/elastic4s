@@ -184,6 +184,7 @@ class XContentBuilder(root: JsonNode) {
       case values: Iterator[_]             => autovalue(values.toSeq)
       case values: java.util.Collection[_] => autovalue(values.asScala)
       case values: java.util.Iterator[_]   => autovalue(values.asScala.toSeq)
+      case values: Product                 => autovalue(values.productIterator.toSeq)
       case map: Map[_, _] =>
         startObject()
         map.foreach { case (k, v) => autofield(k.toString, v) }
@@ -226,6 +227,7 @@ class XContentBuilder(root: JsonNode) {
       case values: Iterator[_]             => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
       case values: java.util.Iterator[_]   => autoarray(name, values.asScala.toSeq)
+      case values: Product                 => autoarray(name, values.productIterator.toSeq)
       case map: Map[_, _] =>
         startObject(name)
         map.foreach { case (k, v) => autofield(k.toString, v) }
