@@ -1,6 +1,9 @@
 package com.sksamuel.elastic4s.requests.delete
 
+import java.util.UUID
+
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.common.VersionType.Internal
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 
@@ -52,6 +55,33 @@ class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
       client.execute {
         search("lecarre").matchAllQuery()
       }.await.result.totalHits shouldBe 0
+    }
+
+    "handle delete concurrency with internal versioning" in {
+
+      val id = UUID.randomUUID.toString
+      val insertResult = client.execute {
+        indexInto("lecarre")
+          .fields("name" -> "george smiley")
+          .withId(id)
+          .versionType(Internal)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      val wrongPrimaryTermResult = client.execute {
+        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).
+          ifPrimaryTerm(insertResult.result.primaryTerm + 1).versionType(Internal).refresh(RefreshPolicy.Immediate)
+      }.await
+      wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
+      val wrongSeqNoResult = client.execute {
+        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo + 1).
+          ifPrimaryTerm(insertResult.result.primaryTerm).versionType(Internal).refresh(RefreshPolicy.Immediate)
+      }.await
+      wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
+      val successfulDeleteResult = client.execute {
+        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).
+          ifPrimaryTerm(insertResult.result.primaryTerm).versionType(Internal).refresh(RefreshPolicy.Immediate)
+      }.await
+      successfulDeleteResult.isSuccess shouldBe true
     }
   }
 }

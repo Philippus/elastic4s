@@ -15,6 +15,8 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("_type") `type`: String,
                           @JsonProperty("_id") id: String,
                           @JsonProperty("_version") version: Long,
+                          @JsonProperty("_seq_no") seqNo: Long,
+                          @JsonProperty("_primary_term") primaryTerm: Long,
                           result: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
@@ -70,6 +72,8 @@ trait UpdateHandlers {
       request.routing.foreach(params.put("routing", _))
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.version.map(_.toString).foreach(params.put("version", _))
+      request.ifPrimaryTerm.map(_.toString).foreach(params.put("if_primary_term", _))
+      request.ifSeqNo.map(_.toString).foreach(params.put("if_seq_no", _))
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 

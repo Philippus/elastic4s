@@ -7,6 +7,8 @@ case class GetResponse(@JsonProperty("_id") id: String,
                        @JsonProperty("_index") index: String,
                        @JsonProperty("_type") `type`: String,
                        @JsonProperty("_version") version: Long,
+                       @JsonProperty("_seq_no") seqNo: Long,
+                       @JsonProperty("_primary_term") primaryTerm: Long,
                        found: Boolean,
                        @JsonProperty("fields") private val _fields: Map[String, AnyRef],
                        private val _source: Map[String, AnyRef])
