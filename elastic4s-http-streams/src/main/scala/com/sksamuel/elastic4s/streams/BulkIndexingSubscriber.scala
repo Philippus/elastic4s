@@ -68,9 +68,9 @@ object BulkActor {
 
   case object ForceIndexing
 
-  case class Result[T](items: Seq[BulkResponseItem], originals: Seq[T], isFinal: Boolean)
+  case class Result[T](items: Seq[BulkResponseItem], originals: Seq[T], requestNext: Boolean)
 
-  case class FailedResult[T](items: Seq[BulkResponseItem], originals: Seq[T], isFinal: Boolean)
+  case class FailedResult[T](items: Seq[BulkResponseItem], originals: Seq[T], requestNext: Boolean)
 
   case class Request(n: Int)
 
@@ -158,7 +158,7 @@ class BulkActor[T](client: ElasticClient,
           case (item, original) =>
             config.listener.onAck(item, original)
         }
-      checkCompleteOrRequestNext(msg.items.size, msg.isFinal)
+      checkCompleteOrRequestNext(msg.items.size, msg.requestNext)
 
     case msg: BulkActor.FailedResult[T] =>
       failed = failed + msg.items.size
@@ -168,7 +168,7 @@ class BulkActor[T](client: ElasticClient,
           case (item, original) =>
             config.listener.onFailure(item, original)
         }
-      checkCompleteOrRequestNext(msg.items.size, msg.isFinal)
+      checkCompleteOrRequestNext(msg.items.size, msg.requestNext)
 
     case t: T =>
       buffer.append(t)
@@ -180,9 +180,9 @@ class BulkActor[T](client: ElasticClient,
 
   // need to check if we're completed, because if we are then this might be the last pending conf
   // and if it is, we can shutdown.
-  private def checkCompleteOrRequestNext(n: Int, isFinal: Boolean): Unit =
+  private def checkCompleteOrRequestNext(n: Int, requestNext: Boolean): Unit =
     if (completed) shutdownIfAllConfirmed()
-    else if (isFinal) self ! BulkActor.Request(n)
+    else if (requestNext) self ! BulkActor.Request(n)
 
   // Stops the schedulers if they exist and invoke final functions
   override def postStop(): Unit = {
@@ -224,7 +224,10 @@ class BulkActor[T](client: ElasticClient,
       case Success(failure: RequestFailure) => self ! new RuntimeException(failure.toString)
       case Success(RequestSuccess(_, _, _, result)) =>
         if (result.hasSuccesses)
-          self ! BulkActor.Result(result.successes, result.successes.map(getOriginalForResponse), isFinal = !result.errors)
+          self ! BulkActor.Result(
+            result.successes,
+            result.successes.map(getOriginalForResponse),
+            requestNext = !result.errors)
         if (result.errors) {
           val failures = if (attempts > 0) {
             val (retriable, nonRetriable) = result.failures.partition(failure =>
@@ -237,7 +240,7 @@ class BulkActor[T](client: ElasticClient,
             }
             nonRetriable
           } else result.failures
-          self ! BulkActor.FailedResult(failures, failures.map(getOriginalForResponse), isFinal = attempts == 0)
+          self ! BulkActor.FailedResult(failures, failures.map(getOriginalForResponse), requestNext = attempts == 0)
         }
     }
   }
