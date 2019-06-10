@@ -68,9 +68,9 @@ object BulkActor {
 
   case object ForceIndexing
 
-  case class Result[T](items: Seq[BulkResponseItem], originals: Seq[T])
+  case class Result[T](items: Seq[BulkResponseItem], originals: Seq[T], isFinal: Boolean)
 
-  case class FailedResult[T](items: Seq[BulkResponseItem], originals: Seq[T])
+  case class FailedResult[T](items: Seq[BulkResponseItem], originals: Seq[T], isFinal: Boolean)
 
   case class Request(n: Int)
 
@@ -158,7 +158,7 @@ class BulkActor[T](client: ElasticClient,
           case (item, original) =>
             config.listener.onAck(item, original)
         }
-      checkCompleteOrRequestNext(msg.items.size)
+      checkCompleteOrRequestNext(msg.items.size, msg.isFinal)
 
     case msg: BulkActor.FailedResult[T] =>
       failed = failed + msg.items.size
@@ -168,7 +168,7 @@ class BulkActor[T](client: ElasticClient,
           case (item, original) =>
             config.listener.onFailure(item, original)
         }
-      checkCompleteOrRequestNext(msg.items.size)
+      checkCompleteOrRequestNext(msg.items.size, msg.isFinal)
 
     case t: T =>
       buffer.append(t)
@@ -180,9 +180,9 @@ class BulkActor[T](client: ElasticClient,
 
   // need to check if we're completed, because if we are then this might be the last pending conf
   // and if it is, we can shutdown.
-  private def checkCompleteOrRequestNext(n: Int): Unit =
+  private def checkCompleteOrRequestNext(n: Int, isFinal: Boolean): Unit =
     if (completed) shutdownIfAllConfirmed()
-    else self ! BulkActor.Request(n)
+    else if (isFinal) self ! BulkActor.Request(n)
 
   // Stops the schedulers if they exist and invoke final functions
   override def postStop(): Unit = {
@@ -208,10 +208,10 @@ class BulkActor[T](client: ElasticClient,
     def getOriginalForResponse(response: BulkResponseItem) = originals(response.itemId)
 
     // returns just requests that failed as a new bulk definition (+ originals)
-    def getRetryDef(resp: BulkResponse): (BulkRequest, Seq[T]) = {
+    def getRetryDef(failures: Seq[BulkResponseItem]): (BulkRequest, Seq[T]) = {
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
 
-      val failureIds     = resp.failures.map(_.itemId).toSet
+      val failureIds     = failures.map(_.itemId).toSet
       val retryOriginals = filterByIndexes(originals, failureIds)
       val failedReqs     = filterByIndexes(req.requests, failureIds)
 
@@ -223,17 +223,22 @@ class BulkActor[T](client: ElasticClient,
       case Failure(e)                       => self ! e
       case Success(failure: RequestFailure) => self ! new RuntimeException(failure.toString)
       case Success(RequestSuccess(_, _, _, result)) =>
-        if (result.errors)
-          // all failures need to be resent, if retries left, but only after we wait for the failureWait period to
-          // avoid flooding the cluster
-          if (attempts > 0) {
-            val (retryDef, originals) = getRetryDef(result)
-            system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef, originals, attempts - 1))
-          } else
-            self ! BulkActor.FailedResult(result.failures, result.failures.map(getOriginalForResponse))
-
         if (result.hasSuccesses)
-          self ! BulkActor.Result(result.successes, result.successes.map(getOriginalForResponse))
+          self ! BulkActor.Result(result.successes, result.successes.map(getOriginalForResponse), isFinal = !result.errors)
+        if (result.errors) {
+          val failures = if (attempts > 0) {
+            val (retriable, nonRetriable) = result.failures.partition(failure =>
+              config.retryFailure(failure, getOriginalForResponse(failure)))
+            // all retriable failures need to be resent, if retries left, but only after we wait for the failureWait
+            // period to avoid flooding the cluster
+            if (retriable.nonEmpty) {
+              val (retryDef, originals) = getRetryDef(retriable)
+              system.scheduler.scheduleOnce(config.failureWait, self, BulkActor.Send(retryDef, originals, attempts - 1))
+            }
+            nonRetriable
+          } else result.failures
+          self ! BulkActor.FailedResult(failures, failures.map(getOriginalForResponse), isFinal = attempts == 0)
+        }
     }
   }
 
@@ -303,6 +308,8 @@ object ResponseListener {
   * @param errorFn            a function which is invoked after there is an error
   * @param failureWait        the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of
   *                           indicating backpressure, so this parameter determines how long to wait between requests.
+  * @param retryFailure       a function which is invoked for every failure in a bulk request, and returns true if the
+ *                            failure should be retried or false if it should not.
   * @param maxAttempts        the max number of times to try a request. If it fails too many times it probably isn't back pressure
   *                           but an error with the document.
   * @param flushInterval      used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
@@ -320,6 +327,7 @@ case class SubscriberConfig[T](batchSize: Int = 100,
                                successFn: () => Unit = () => (),
                                errorFn: Throwable => Unit = _ => (),
                                failureWait: FiniteDuration = 2.seconds,
+                               retryFailure: (BulkResponseItem, T) => Boolean = (_: BulkResponseItem, _: T) => true,
                                maxAttempts: Int = 5,
                                flushInterval: Option[FiniteDuration] = None,
                                flushAfter: Option[FiniteDuration] = None)
