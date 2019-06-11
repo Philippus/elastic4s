@@ -327,29 +327,6 @@ scala
 resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven"
 ```
 
-## Embedded Node
-
-A locally configured node and client can be created by including the elastic4s-embedded module. Then a local node can be started by invoking `LocalNode()` with the cluster name and data path. From the local node we can return a handle to the client by invoking the `client` function.
-
-```scala
-import com.sksamuel.elastic4s.embedded.LocalNode
-val node = LocalNode(clusterName, pathHome)
-val client = node.client(shutdownNodeOnClose = true)
-```
-
-To specify settings for the local node you can pass in a settings object like this:
-```scala
-val settings = Settings.builder()
-      .put("cluster.name", "elasticsearch")
-      .put("path.home", "mypath")
-      .put("http.enabled", false)
-      .build()
-val node = LocalNode(settings)
-val client = node.client(<shutdownNodeOnClose>)
-```
-
-If `shutdownNodeOnClose` is true, then once close is called on the client, the local node will be stopped. Otherwise you will manage the lifecycle of the local node yourself (stopping it before exiting the process).
-
 ## Create Index
 
 All documents in Elasticsearch are stored in an index. We do not need to tell Elasticsearch in advance what an index
@@ -452,11 +429,11 @@ Simply add the import for your chosen library below and then with those implicit
 
 | Library | Elastic4s Module | Import |
 |---------|------------------|--------|
-|[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson)|import ElasticJackson.Implicits._|
-|[Json4s](http://json4s.org/)|[elastic4s-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json4s)|import ElasticJson4s.Implicits._|
-|[Circe](https://github.com/travisbrown/circe)|[elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
-|[PlayJson](https://github.com/playframework/play-json)|[elastic4s-play-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-play-json)|import com.sksamuel.elastic4s.playjson._|
-|[Spray Json](https://github.com/spray/spray-json)|[elastic4s-spray-json](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-spray-json)|import com.sksamuel.elastic4s.sprayjson._|
+|[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-json-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-jackson)|import ElasticJackson.Implicits._|
+|[Json4s](http://json4s.org/)|[elastic4s-json-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-json4s)|import ElasticJson4s.Implicits._|
+|[Circe](https://github.com/travisbrown/circe)|[elastic4-json-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
+|[PlayJson](https://github.com/playframework/play-json)|[elastic4s-json-play](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-play)|import com.sksamuel.elastic4s.playjson._|
+|[Spray Json](https://github.com/spray/spray-json)|[elastic4s-json-spray](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)|import com.sksamuel.elastic4s.sprayjson._|
 
 ## Searching
 
