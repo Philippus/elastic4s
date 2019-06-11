@@ -83,7 +83,7 @@ trait UpdateHandlers {
   implicit object UpdateByQueryHandler extends Handler[UpdateByQueryRequest, UpdateByQueryResponse] {
     override def build(request: UpdateByQueryRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.indexes.values.mkString(",")}/_doc/_update_by_query"
+      val endpoint = s"/${request.indexes.values.mkString(",")}/_update_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       if (request.proceedOnConflicts.getOrElse(false))
