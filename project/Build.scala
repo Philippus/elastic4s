@@ -1,6 +1,6 @@
 import com.typesafe.sbt.SbtPgp
 import sbt.Keys._
-import sbt._
+import sbt.{Credentials, Path, _}
 import sbt.plugins.JvmPlugin
 import xerial.sbt.Sonatype
 
@@ -37,6 +37,9 @@ object Build extends AutoPlugin {
 
   import autoImport._
 
+  def isTravis = System.getenv("TRAVIS") == "true"
+  def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER")
+
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
     scalaVersion := "2.12.8",
@@ -50,7 +53,16 @@ object Build extends AutoPlugin {
     parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
-    Sonatype.autoImport.sonatypeProfileName := "sksamuel",
+    if (isTravis) {
+      credentials += Credentials(
+        "Sonatype Nexus Repository Manager",
+        "oss.sonatype.org",
+        sys.env("OSSRH_USERNAME"),
+        sys.env("OSSRH_PASSWORD")
+      )
+    } else {
+      credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")
+    },
     publishTo := Sonatype.autoImport.sonatypePublishTo.value,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
@@ -60,6 +72,11 @@ object Build extends AutoPlugin {
       "org.mockito" % "mockito-all" % MockitoVersion % "test",
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
+    if (isTravis) {
+      version := s"7.0.2.$travisBuildNumber-SNAPSHOT"
+    } else {
+      version := "7.0.2"
+    },
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
       if (version.value.trim.endsWith("SNAPSHOT"))
