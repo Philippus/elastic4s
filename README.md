@@ -311,22 +311,6 @@ val client = HttpClient(ElasticsearchClientUri("localhost", 9200), new RequestCo
   })
 ```
 
-## X-Pack-Security
-
-Elastic4s also supports the xpack-security add on (TCP client only). To use this, add the `elastic-xpack-security` dependency to your build and create a client using the `XPackElasticClient` object instead of the `ElasticClient` object. Eg,
-
-scala
-```
-val client = XPackElasticClient(settings, uri, <plugins>...)
-```
-
-If you are using SBT then you might need to add a resolver to the elasticsearch repo.
-
-scala
-```
-resolvers += "elasticsearch-releases" at "https://artifacts.elastic.co/maven"
-```
-
 ## Create Index
 
 All documents in Elasticsearch are stored in an index. We do not need to tell Elasticsearch in advance what an index
