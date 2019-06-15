@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.bulk
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.common.VersionType.Internal
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -125,6 +126,47 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
       get(indexname, "4")
       get("4").from(indexname)
     }.await.result.found shouldBe false
+  }
+
+  it should "handle concurrency with internal versioning" in {
+
+    val result = client.execute {
+      bulk(
+        indexInto(indexname).fields("atomicweight" -> 2, "name" -> "helium") versionType Internal id "2",
+        indexInto(indexname).fields("atomicweight" -> 4, "name" -> "lithium") versionType Internal id "4",
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result
+    val wrongPrimaryTermResult = client.execute {
+      bulk(
+        result.items.map {
+          responseItem => delete(responseItem.id).from(indexname)
+            .ifPrimaryTerm(responseItem.primaryTerm + 1)
+            .ifSeqNo(responseItem.seqNo)
+            .versionType(Internal)
+        }
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result.errors shouldBe true
+    val wrongSeqNoResult = client.execute {
+      bulk(
+        result.items.map {
+          responseItem => delete(responseItem.id).from(indexname)
+            .ifPrimaryTerm(responseItem.primaryTerm)
+            .ifSeqNo(responseItem.seqNo + 1)
+            .versionType(Internal)
+        }
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result.errors shouldBe true
+    val successfulUpdateResult = client.execute {
+      bulk(
+        result.items.map {
+          responseItem => delete(responseItem.id).from(indexname)
+            .ifPrimaryTerm(responseItem.primaryTerm)
+            .ifSeqNo(responseItem.seqNo)
+            .versionType(Internal)
+        }
+      ).refresh(RefreshPolicy.Immediate)
+    }.await
+    successfulUpdateResult.isSuccess shouldBe true
   }
 
 }

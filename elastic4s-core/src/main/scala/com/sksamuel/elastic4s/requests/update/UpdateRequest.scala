@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
-import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy}
+import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy, VersionType}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.exts.OptionImplicits._
 
@@ -21,6 +21,8 @@ case class UpdateRequest(index: Index,
                          scriptedUpsert: Option[Boolean] = None,
                          timeout: Option[Duration] = None,
                          version: Option[Long] = None,
+                         ifSeqNo: Option[Long] = None,
+                         ifPrimaryTerm: Option[Long] = None,
                          versionType: Option[String] = None,
                          waitForActiveShards: Option[Int] = None,
                          upsertSource: Option[String] = None,
@@ -106,6 +108,9 @@ case class UpdateRequest(index: Index,
 
   def versionType(versionType: String): UpdateRequest = copy(versionType = versionType.some)
   def version(version: Long): UpdateRequest           = copy(version = version.some)
+  def ifSeqNo(ifSeqNo: Long): UpdateRequest           = copy(ifSeqNo = ifSeqNo.some)
+  def ifPrimaryTerm(ifPrimaryTerm: Long): UpdateRequest =
+    copy(ifPrimaryTerm = ifPrimaryTerm.some)
   def waitForActiveShards(waitForActiveShards: Int): UpdateRequest =
     copy(waitForActiveShards = waitForActiveShards.some)
 }

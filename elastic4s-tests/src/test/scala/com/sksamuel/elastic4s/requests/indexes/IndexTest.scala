@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.indexes
 import java.util.UUID
 
 import com.sksamuel.elastic4s.Indexable
-import com.sksamuel.elastic4s.requests.common.VersionType.External
+import com.sksamuel.elastic4s.requests.common.VersionType.{External, Internal}
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Shards, VersionType}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
@@ -157,9 +157,9 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
       }.await
       result.result.result shouldBe "updated"
     }
-    "handle update concurrency" in {
+    "handle update concurrency with external versioning" in {
       val id = UUID.randomUUID.toString
-      client.execute {
+      val insertResult = client.execute {
         indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
@@ -176,6 +176,46 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
           .refresh(RefreshPolicy.Immediate)
       }.await
       result.error.toString should include ("version_conflict_engine_exception")
+    }
+    "handle update concurrency with internal versioning" in {
+      val id = UUID.randomUUID.toString
+      val insertResult = client.execute {
+        indexInto("electronics")
+          .fields("name" -> "super phone")
+          .withId(id)
+          .versionType(Internal)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      val wrongPrimaryTermResult = client.execute {
+        indexInto("electronics")
+          .fields("name" -> "super phone")
+          .withId(id)
+          .ifSeqNo(insertResult.result.seqNo)
+          .ifPrimaryTerm(insertResult.result.primaryTerm + 1)
+          .versionType(Internal)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
+      val wrongSeqNoResult = client.execute {
+        indexInto("electronics")
+          .fields("name" -> "super phone")
+          .withId(id)
+          .ifSeqNo(insertResult.result.seqNo+1)
+          .ifPrimaryTerm(insertResult.result.primaryTerm)
+          .versionType(Internal)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
+      val successfulUpdateResult = client.execute {
+        indexInto("electronics")
+          .fields("name" -> "super phone")
+          .withId(id)
+          .ifSeqNo(insertResult.result.seqNo)
+          .ifPrimaryTerm(insertResult.result.primaryTerm)
+          .versionType(Internal)
+          .refresh(RefreshPolicy.Immediate)
+      }.await
+      successfulUpdateResult.isSuccess shouldBe true
     }
     "return Left when the request has an invalid index name" in {
       val result = client.execute {

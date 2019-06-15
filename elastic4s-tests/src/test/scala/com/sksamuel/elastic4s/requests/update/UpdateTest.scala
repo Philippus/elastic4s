@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.update
 
+import java.util.UUID
+
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
@@ -166,5 +168,30 @@ class UpdateTest
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
     }.await
     resp.body.get shouldBe """{"_index":"hans","_type":"_doc","_id":"555","_version":1,"result":"created","forced_refresh":true,"_shards":{"total":2,"successful":1,"failed":0},"_seq_no":11,"_primary_term":1,"get":{"_seq_no":11,"_primary_term":1,"found":true,"_source":{"name":"spider man"}}}"""
+  }
+
+  it should "handle concurrency with internal versioning" in {
+
+    val id = UUID.randomUUID.toString
+    val result = client.execute {
+      update(id).in("hans").docAsUpsert(
+        "name" -> "rain man"
+      ).refresh(RefreshPolicy.Immediate)
+    }.await
+    val wrongPrimaryTermResult = client.execute {
+      update(id).in("hans").doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
+        .ifPrimaryTerm(result.result.primaryTerm + 1).refresh(RefreshPolicy.Immediate)
+    }.await
+    wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
+    val wrongSeqNoResult = client.execute {
+      update(id).in("hans").doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo + 1)
+        .ifPrimaryTerm(result.result.primaryTerm).refresh(RefreshPolicy.Immediate)
+    }.await
+    wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
+    val successfulUpdateResult = client.execute {
+      update(id).in("hans").doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
+        .ifPrimaryTerm(result.result.primaryTerm).refresh(RefreshPolicy.Immediate)
+    }.await
+    successfulUpdateResult.isSuccess shouldBe true
   }
 }
