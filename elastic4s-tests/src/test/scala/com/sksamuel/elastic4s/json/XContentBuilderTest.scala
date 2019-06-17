@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.json
 
+import java.math.BigInteger
+
 import com.sksamuel.elastic4s.XContentFactory
 import org.scalatest.{FunSuite, Matchers}
 
@@ -38,6 +40,10 @@ class XContentBuilderTest extends FunSuite with Matchers {
     XContentFactory.obj().array("doubles", Array(124.45, 962.23)).string shouldBe """{"doubles":[124.45,962.23]}"""
   }
 
+  test("should support biginteger arrays") {
+    XContentFactory.obj().autoarray("bigintegers", Array(new BigInteger("123"), new BigInteger("456"))).string shouldBe """{"bigintegers":[123,456]}"""
+  }
+
   test("should support long arrays") {
     XContentFactory.obj().array("longs", Array(345345435345L, 3257059014L)).string shouldBe """{"longs":[345345435345,3257059014]}"""
   }
@@ -54,8 +60,12 @@ class XContentBuilderTest extends FunSuite with Matchers {
     XContentFactory.obj().field("dec", BigDecimal("291839123.12321312")).string shouldBe """{"dec":291839123.12321312}"""
   }
 
-  test("should support biginteger fields") {
+  test("should support bigint fields") {
     XContentFactory.obj().field("bigint", BigInt("98123981231982361893619")).string shouldBe """{"bigint":98123981231982361893619}"""
+  }
+
+  test("should support biginteger fields") {
+    XContentFactory.obj().autofield("biginteger", new BigInteger("98123981231982361893619")).string shouldBe """{"biginteger":98123981231982361893619}"""
   }
 
   test("should support int fields") {
