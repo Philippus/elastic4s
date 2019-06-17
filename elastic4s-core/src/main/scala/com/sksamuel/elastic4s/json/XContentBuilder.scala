@@ -149,6 +149,11 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def field(name: String, bi: BigInt): XContentBuilder = {
+    obj.put(name, bi.underlying())
+    this
+  }
+
   def field(name: String, double: Double): XContentBuilder = {
     obj.put(name, double)
     this
@@ -167,6 +172,7 @@ class XContentBuilder(root: JsonNode) {
       case v: Short      => array.add(v)
       case v: Byte       => array.add(v)
       case v: BigDecimal => array.add(v.bigDecimal)
+      case v: BigInt     => array.add(v.bigInteger)
       case null          => array.addNull()
       case values: Seq[_] =>
         startArray()
@@ -210,6 +216,7 @@ class XContentBuilder(root: JsonNode) {
       case v: Short                        => obj.put(name, v)
       case v: Byte                         => obj.put(name, v)
       case v: BigDecimal                   => obj.put(name, v.bigDecimal)
+      case v: BigInt                       => obj.put(name, v.bigInteger)
       case values: Array[_]                => autoarray(name, values)
       case values: Seq[_]                  => autoarray(name, values)
       case values: Iterator[_]             => autoarray(name, values.toSeq)
@@ -262,6 +269,11 @@ class XContentBuilder(root: JsonNode) {
 
   def value(bd: BigDecimal): XContentBuilder = {
     array.add(bd.underlying)
+    this
+  }
+
+  def value(bi: BigInt): XContentBuilder = {
+    array.add(bi.underlying)
     this
   }
 

@@ -49,6 +49,14 @@ class XContentBuilderTest extends FunSuite with Matchers {
     XContentFactory.obj().field("double", 5612.3734).string shouldBe """{"double":5612.3734}"""
   }
 
+  test("should support bigdecimal fields") {
+    XContentFactory.obj().field("dec", BigDecimal("291839123.12321312")).string shouldBe """{"dec":291839123.12321312}"""
+  }
+
+  test("should support biginteger fields") {
+    XContentFactory.obj().field("bigint", BigInt("98123981231982361893619")).string shouldBe """{"bigint":98123981231982361893619}"""
+  }
+
   test("should support int fields") {
     XContentFactory.obj().field("int", 3242365).string shouldBe """{"int":3242365}"""
   }
