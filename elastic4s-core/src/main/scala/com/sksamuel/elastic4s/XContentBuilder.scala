@@ -156,6 +156,11 @@ class XContentBuilder(root: JsonNode) {
     this
   }
 
+  def field(name: String, bi: BigInt): XContentBuilder = {
+    obj.put(name, bi.underlying())
+    this
+  }
+
   def field(name: String, double: Double): XContentBuilder = {
     obj.put(name, double)
     this
@@ -165,16 +170,19 @@ class XContentBuilder(root: JsonNode) {
     import scala.collection.JavaConverters._
     requireArray()
     value match {
-      case v: String     => array.add(v)
-      case v: Double     => array.add(v)
-      case v: Float      => array.add(v)
-      case v: Int        => array.add(v)
-      case v: Long       => array.add(v)
-      case v: Boolean    => array.add(v)
-      case v: Short      => array.add(v)
-      case v: Byte       => array.add(v)
-      case v: BigDecimal => array.add(v.bigDecimal)
-      case null          => array.addNull()
+      case v: String               => array.add(v)
+      case v: Double               => array.add(v)
+      case v: Float                => array.add(v)
+      case v: Int                  => array.add(v)
+      case v: Long                 => array.add(v)
+      case v: Boolean              => array.add(v)
+      case v: Short                => array.add(v)
+      case v: Byte                 => array.add(v)
+      case v: BigDecimal           => array.add(v.bigDecimal)
+      case v: java.math.BigDecimal => array.add(v)
+      case v: BigInt               => array.add(v.bigInteger)
+      case v: java.math.BigInteger => array.add(v)
+      case null                    => array.addNull()
       case values: Seq[_] =>
         startArray()
         values.foreach(autovalue)
@@ -218,6 +226,9 @@ class XContentBuilder(root: JsonNode) {
       case v: Short                        => obj.put(name, v)
       case v: Byte                         => obj.put(name, v)
       case v: BigDecimal                   => obj.put(name, v.bigDecimal)
+      case v: java.math.BigDecimal         => obj.put(name, v)
+      case v: BigInt                       => obj.put(name, v.bigInteger)
+      case v: java.math.BigInteger         => obj.put(name, v)
       case values: Array[_]                => autoarray(name, values)
       case values: Seq[_]                  => autoarray(name, values)
       case values: Iterator[_]             => autoarray(name, values.toSeq)
@@ -271,6 +282,11 @@ class XContentBuilder(root: JsonNode) {
 
   def value(bd: BigDecimal): XContentBuilder = {
     array.add(bd.underlying)
+    this
+  }
+
+  def value(bi: BigInt): XContentBuilder = {
+    array.add(bi.underlying)
     this
   }
 
