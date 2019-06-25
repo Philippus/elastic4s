@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.XContentFactory
+import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 
 object MultiSearchBuilderFn {
 
@@ -16,6 +17,13 @@ object MultiSearchBuilderFn {
         .filter(_ != SearchType.DEFAULT)
         .map(SearchTypeHttpParameters.convert)
         .foreach(header.field("search_type", _))
+
+      search.indicesOptions.foreach {
+        IndicesOptionsParams(_).map {
+          case (n@"ignore_unavailable", v@"true") => header.field(n, v)
+          case _ => ()
+        }
+      }
       header.endObject()
 
       val body = SearchBodyBuilderFn(search)
