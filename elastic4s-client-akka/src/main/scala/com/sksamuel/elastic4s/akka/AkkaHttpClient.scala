@@ -169,12 +169,8 @@ class AkkaHttpClient private[akka] (
         }
       }
       .recoverWith {
-        case err: Throwable =>
-          if (isRetryException(err)) {
-            markDead().flatMap(_ => retryIfPossible(Left(err)))
-          } else {
-            markDead().flatMap(_ => Future.failed(err))
-          }
+        case err @ AllHostsBlacklistedException => retryIfPossible(Left(err))
+        case err: Throwable => markDead().flatMap(_ => retryIfPossible(Left(err)))
       }
   }
 
@@ -184,13 +180,6 @@ class AkkaHttpClient private[akka] (
       case StatusCodes.ServiceUnavailable => true
       case StatusCodes.GatewayTimeout     => true
       case _                              => false
-    }
-  }
-
-  private def isRetryException(t: Throwable): Boolean = {
-    t match {
-      case AllHostsBlacklistedException => false
-      case _                            => true
     }
   }
 
