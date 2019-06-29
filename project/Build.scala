@@ -13,11 +13,11 @@ object Build extends AutoPlugin {
     val org                    = "com.sksamuel.elastic4s"
     val AkkaVersion            = "2.5.23"
     val AkkaHttpVersion        = "10.1.8"
-    val CatsVersion            = "1.6.0"
-    val CatsEffectVersion      = "1.3.1"
-    val CirceVersion           = "0.12.0-M2"
+    val CatsVersion            = "2.0.0-M4"
+    val CatsEffectVersion      = "2.0.0-M4"
+    val CirceVersion           = "0.12.0-M3"
     val CommonsIoVersion       = "2.6"
-    val ElasticsearchVersion   = "7.0.1"
+    val ElasticsearchVersion   = "7.1.1"
     val ExtsVersion            = "1.61.1"
     val JacksonVersion         = "2.9.9"
     val Json4sVersion          = "3.6.7"
@@ -25,13 +25,13 @@ object Build extends AutoPlugin {
     val Log4jVersion           = "2.11.1"
     val MockitoVersion         = "1.10.19"
     val MonixVersion           = "2.3.3"
-    val PlayJsonVersion        = "2.7.3"
+    val PlayJsonVersion        = "2.7.4"
     val ReactiveStreamsVersion = "1.0.2"
     val ScalatestVersion       = "3.0.8"
-    val ScalamockVersion       = "4.1.0"
-    val ScalazVersion          = "7.2.27"
+    val ScalamockVersion       = "4.3.0"
+    val ScalazVersion          = "7.2.28"
     val SprayJsonVersion       = "1.3.5"
-    val SttpVersion            = "1.5.18"
+    val SttpVersion            = "1.6.0"
     val Slf4jVersion           = "1.7.26"
   }
 
@@ -42,8 +42,8 @@ object Build extends AutoPlugin {
 
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
-    scalaVersion := "2.12.8",
-    crossScalaVersions := Seq("2.11.12", "2.12.8"),
+    scalaVersion := "2.13.0",
+    crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
@@ -57,8 +57,8 @@ object Build extends AutoPlugin {
       credentials += Credentials(
         "Sonatype Nexus Repository Manager",
         "oss.sonatype.org",
-        sys.env("OSSRH_USERNAME"),
-        sys.env("OSSRH_PASSWORD")
+        sys.env.getOrElse("OSSRH_USERNAME", ""),
+        sys.env.getOrElse("OSSRH_PASSWORD", "")
       )
     } else {
       credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")

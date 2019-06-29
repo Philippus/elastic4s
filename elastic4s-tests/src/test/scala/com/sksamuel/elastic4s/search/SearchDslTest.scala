@@ -913,7 +913,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   }
 
   it should "generate json for docvalue fields" in {
-    val req = search("music") matchAllQuery() docValues ("field1", "field2")
+    val req = search("music").matchAllQuery docValues ("field1", "field2")
     req.request.entity.get.get should matchJsonResource("/json/search/search_doc_values.json")
   }
 }

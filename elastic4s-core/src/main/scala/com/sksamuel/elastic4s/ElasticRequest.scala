@@ -14,10 +14,10 @@ object ElasticRequest {
     apply(method, endpoint, Map.empty[String, Any], body)
 
   def apply(method: String, endpoint: String, params: Map[String, Any]): ElasticRequest =
-    apply(method, endpoint, params.mapValues(_.toString), None)
+    apply(method, endpoint, params.mapValues(_.toString).toMap, None)
 
   def apply(method: String, endpoint: String, params: Map[String, Any], body: HttpEntity): ElasticRequest =
-    apply(method, endpoint, params.mapValues(_.toString), Some(body))
+    apply(method, endpoint, params.mapValues(_.toString).toMap, Some(body))
 
   implicit val ElasticRequestShow: Show[ElasticRequest] = new Show[ElasticRequest] {
     override def show(t: ElasticRequest): String = {

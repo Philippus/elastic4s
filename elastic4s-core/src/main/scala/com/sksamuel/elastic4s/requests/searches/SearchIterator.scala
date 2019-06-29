@@ -28,15 +28,15 @@ object SearchIterator {
 
       import com.sksamuel.elastic4s.ElasticDsl._
 
-      private var iterator: Iterator[SearchHit] = Iterator.empty
+      private var internalIterator: Iterator[SearchHit] = Iterator.empty
       private var scrollId: Option[String]      = None
 
-      override def hasNext: Boolean = iterator.hasNext || {
-        iterator = fetchNext()
-        iterator.hasNext
+      override def hasNext: Boolean = internalIterator.hasNext || {
+        internalIterator = fetchNext()
+        internalIterator.hasNext
       }
 
-      override def next(): SearchHit = iterator.next()
+      override def next(): SearchHit = internalIterator.next()
 
       def fetchNext(): Iterator[SearchHit] = {
 
