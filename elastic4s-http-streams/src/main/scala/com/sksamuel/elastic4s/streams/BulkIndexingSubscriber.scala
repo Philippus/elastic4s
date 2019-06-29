@@ -249,7 +249,7 @@ class BulkActor[T](client: ElasticClient,
   private def index(): Unit = {
 
     def bulkDef: BulkRequest = {
-      val defs   = buffer.map(t => builder.request(t))
+      val defs   = buffer.map(t => builder.request(t)).toSeq
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
       BulkRequest(defs).refresh(policy)
     }

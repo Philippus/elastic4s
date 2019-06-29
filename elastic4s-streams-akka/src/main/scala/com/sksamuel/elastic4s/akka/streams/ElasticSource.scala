@@ -51,7 +51,7 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
             case Some(id) =>
               scrollId = id
               fetching = false
-              buffer.enqueue(searchr.hits.hits: _*)
+              buffer ++= searchr.hits.hits
               if (isAvailable(out)) {
                 push(out, buffer.dequeue)
                 maybeFetch()
