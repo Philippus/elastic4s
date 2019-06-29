@@ -57,8 +57,8 @@ object Build extends AutoPlugin {
       credentials += Credentials(
         "Sonatype Nexus Repository Manager",
         "oss.sonatype.org",
-        sys.env("OSSRH_USERNAME"),
-        sys.env("OSSRH_PASSWORD")
+        sys.env.getOrElse("OSSRH_USERNAME", ""),
+        sys.env.getOrElse("OSSRH_PASSWORD", "")
       )
     } else {
       credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")
