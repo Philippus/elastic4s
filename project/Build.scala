@@ -73,9 +73,9 @@ object Build extends AutoPlugin {
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {
-      version := s"7.0.2.$travisBuildNumber-SNAPSHOT"
+      version := s"7.0.3.$travisBuildNumber-SNAPSHOT"
     } else {
-      version := "7.0.2"
+      version := "7.0.3"
     },
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
