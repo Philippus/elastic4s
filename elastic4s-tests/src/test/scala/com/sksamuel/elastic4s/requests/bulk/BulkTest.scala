@@ -133,7 +133,7 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
     val result = client.execute {
       bulk(
         indexInto(indexname).fields("atomicweight" -> 2, "name" -> "helium") versionType Internal id "2",
-        indexInto(indexname).fields("atomicweight" -> 4, "name" -> "lithium") versionType Internal id "4",
+        indexInto(indexname).fields("atomicweight" -> 4, "name" -> "lithium") versionType Internal id "4"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
     val wrongPrimaryTermResult = client.execute {

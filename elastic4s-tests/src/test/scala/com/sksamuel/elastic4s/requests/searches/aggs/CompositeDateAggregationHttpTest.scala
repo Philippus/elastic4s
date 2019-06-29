@@ -67,7 +67,7 @@ class CompositeDateAggregationHttpTest extends FreeSpec with DockerTests with Ma
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
         CompositeAggBucket(Map("dateHist" -> "01.01.2008"), 3, Map.empty),
         CompositeAggBucket(Map("dateHist" -> "01.03.2008"), 1, Map.empty),
-        CompositeAggBucket(Map("dateHist" -> "01.06.2008"), 2, Map.empty),
+        CompositeAggBucket(Map("dateHist" -> "01.06.2008"), 2, Map.empty)
       )
     }
 
@@ -99,7 +99,7 @@ class CompositeDateAggregationHttpTest extends FreeSpec with DockerTests with Ma
 
       val agg = resp.aggs.compositeAgg("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        CompositeAggBucket(Map("dateHist" -> "01.06.2008"), 2, Map.empty),
+        CompositeAggBucket(Map("dateHist" -> "01.06.2008"), 2, Map.empty)
       )
     }
 

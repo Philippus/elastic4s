@@ -53,7 +53,7 @@ class DeleteByQueryTest extends WordSpec with Matchers with DockerTests {
       client.execute {
         bulk(
           indexInto(indexname).fields("name" -> "mrs havisham").id("5"),
-          indexInto(indexname).fields("name" -> "peggotty").id("6"),
+          indexInto(indexname).fields("name" -> "peggotty").id("6")
         ).refresh(RefreshPolicy.Immediate)
       }.await
 
