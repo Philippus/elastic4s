@@ -9,7 +9,7 @@ lazy val root = Project("elastic4s", file("."))
     clientesjava,
     cats_effect,
     scalaz,
-    monix,
+//  monix,
     tests,
     testkit,
     circe,
