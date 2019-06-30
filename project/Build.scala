@@ -37,8 +37,8 @@ object Build extends AutoPlugin {
 
   import autoImport._
 
-  def isTravis = System.getenv("TRAVIS") == "true"
-  def travisBuildNumber = System.getenv("TRAVIS_BUILD_NUMBER")
+  def isTravis: Boolean = System.getenv("TRAVIS") == "true"
+  def travisBuildNumber: String = System.getenv("TRAVIS_BUILD_NUMBER")
 
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
@@ -73,9 +73,9 @@ object Build extends AutoPlugin {
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {
-      version := s"7.0.2.$travisBuildNumber-SNAPSHOT"
+      version := s"7.1.0.$travisBuildNumber-SNAPSHOT"
     } else {
-      version := "7.0.2"
+      version := "7.1.0"
     },
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
