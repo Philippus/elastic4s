@@ -18,7 +18,7 @@ class ElasticErrorTest extends FlatSpec with Matchers with ElasticDsl {
   }
 
   it must "parse a large error response including failed_shards" in {
-    val error = ElasticError.parse(HttpResponse(123, Some(StringEntity(Source.fromInputStream(getClass.getResourceAsStream("error_response_with_failed_shards.json")).mkString, None)), Map()))
+    val error = ElasticError.parse(HttpResponse(123, Some(StringEntity(Source.fromInputStream(getClass.getResourceAsStream("/error_response_with_failed_shards.json")).mkString, None)), Map()))
 
     assert(error.`type` == "search_phase_execution_exception")
     assert(error.reason == "all shards failed")
