@@ -39,6 +39,7 @@ trait DeleteHandlers {
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
+      request.routing.map(_.toString).foreach(params.put("routing", _))
       request.size.map(_.toString).foreach(params.put("size", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 
