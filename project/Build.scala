@@ -17,7 +17,7 @@ object Build extends AutoPlugin {
     val CatsEffectVersion      = "2.0.0-M4"
     val CirceVersion           = "0.12.0-M3"
     val CommonsIoVersion       = "2.6"
-    val ElasticsearchVersion   = "7.1.1"
+    val ElasticsearchVersion   = "7.2.0"
     val ExtsVersion            = "1.61.1"
     val JacksonVersion         = "2.9.9"
     val Json4sVersion          = "3.6.7"
@@ -73,9 +73,9 @@ object Build extends AutoPlugin {
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {
-      version := s"7.1.0.$travisBuildNumber-SNAPSHOT"
+      version := s"7.2.0.$travisBuildNumber-SNAPSHOT"
     } else {
-      version := "7.1.0"
+      version := "7.2.0"
     },
     publishTo := {
       val nexus = "https://oss.sonatype.org/"

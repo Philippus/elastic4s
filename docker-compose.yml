@@ -2,11 +2,10 @@ version: '3.3'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.2.0
     environment:
       discovery.type: single-node
       network.host: 0.0.0.0
       path.repo: /tmp/elastic4s
     ports:
       - 9200:9200
-      - 9300:9300
