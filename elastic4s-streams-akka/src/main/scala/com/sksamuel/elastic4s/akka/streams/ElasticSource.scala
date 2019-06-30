@@ -52,7 +52,7 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
               scrollId = id
               fetching = false
               buffer ++= searchr.hits.hits
-              if (isAvailable(out)) {
+              if (buffer.nonEmpty && isAvailable(out)) {
                 push(out, buffer.dequeue)
                 maybeFetch()
               }
