@@ -25,9 +25,8 @@ Elastic4s supports Scala collections so you don't have to do tedious conversions
 
 ### Release
 
-Elastic4s is released for both Scala 2.11 and Scala 2.12. Scala 2.10 support has been dropped starting with the 5.0.x release train. For releases that are compatible with earlier versions of Elasticsearch,
+Elastic4s is released for Scala 2.11, 2.12 and 2.13. Scala 2.10 support has been dropped starting with the 5.0.x release train. Scala 2.11 support is likely to be dropped in the near future. For releases that are compatible with earlier versions of Elasticsearch,
 [search maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22).
-For more information read [Using Elastic4s in your project](#using-elastic4s-in-your-project).
 
 | Elasticsearch Version | Scala 2.11 | Scala 2.12 | Scala 2.13 |
 |-----------------------|------------|------------|------------|
