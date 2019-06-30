@@ -10,6 +10,7 @@ object PercentilesAggregationBuilder {
     builder.startObject("percentiles")
 
     agg.field.foreach(builder.field("field", _))
+    agg.keyed.foreach(builder.field("keyed", _))
 
     if (agg.percents.nonEmpty)
       builder.array("percents", agg.percents.toArray)

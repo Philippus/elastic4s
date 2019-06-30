@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import java.util
+
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.requests.common.DocumentRef
 import com.sksamuel.elastic4s.{AggReader, JacksonSupport, SourceAsContentBuilder}
@@ -472,9 +474,15 @@ trait HasAggregations extends Transformable {
   def sum(name: String): SumAggResult = SumAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
   def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
   def max(name: String): MaxAggResult = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+
   def percentiles(name: String): PercentilesAggResult = {
-    val values = agg(name)("values").asInstanceOf[Map[String, Double]]
-    PercentilesAggResult(name, values)
+    // can be keyed, so values can be either map or list
+    val values = agg(name)("values")
+    val map = values match {
+      case _: Map[_, _] => values.asInstanceOf[Map[String, Double]]
+      case _: List[_] => values.asInstanceOf[List[Map[String, Double]]].map { innermap => innermap("key").toString -> innermap("value") }.toMap
+    }
+    PercentilesAggResult(name, map)
   }
 
   def geoBounds(name: String): GeoBoundsAggResult = {

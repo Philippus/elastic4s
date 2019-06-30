@@ -11,6 +11,7 @@ case class PercentilesAggregation(name: String,
                                   numberOfSignificantValueDigits: Option[Int] = None,
                                   percents: Seq[Double] = Nil,
                                   compression: Option[Double] = None,
+                                  keyed: Option[Boolean] = None,
                                   subaggs: Seq[AbstractAggregation] = Nil,
                                   metadata: Map[String, AnyRef] = Map.empty)
     extends Aggregation {
@@ -22,6 +23,7 @@ case class PercentilesAggregation(name: String,
 
   def compression(compression: Double): T = copy(compression = compression.some)
 
+  def keyed(keyed: Boolean): T    = copy(keyed = keyed.some)
   def format(format: String): T   = copy(format = format.some)
   def field(field: String): T     = copy(field = field.some)
   def missing(missing: AnyRef): T = copy(missing = missing.some)
