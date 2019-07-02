@@ -56,6 +56,7 @@ object BulkBuilderFn {
         update.ifPrimaryTerm.foreach(builder.field("if_primary_term", _))
         update.ifSeqNo.foreach(builder.field("if_seq_no", _))
         update.versionType.foreach(builder.field("version_type", _))
+        update.retryOnConflict.foreach(builder.field("retry_on_conflict", _))
         builder.endObject()
         builder.endObject()
 
