@@ -50,8 +50,6 @@ Elastic4s is released for Scala 2.11, 2.12 and 2.13. Scala 2.10 support has been
 
 For release prior to 5.0 search maven central.
 
-See full [changelog](#changelog).
-
 ## Quick Start
 
 We have created sample projects in both sbt, maven and gradle. Check them out here:
