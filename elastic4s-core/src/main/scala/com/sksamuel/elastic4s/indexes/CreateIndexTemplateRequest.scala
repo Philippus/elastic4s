@@ -20,7 +20,8 @@ case class CreateIndexTemplateRequest(name: String,
                                       order: Option[Int] = None,
                                       version: Option[Int] = None,
                                       create: Option[Boolean] = None,
-                                      aliases: Seq[TemplateAlias] = Nil) {
+                                      aliases: Seq[TemplateAlias] = Nil,
+                                      includeTypeName:Option[Boolean]=None) {
   require(name.nonEmpty, "template name must not be null or empty")
   require(pattern.nonEmpty, "pattern must not be null or empty")
 
@@ -69,4 +70,6 @@ case class CreateIndexTemplateRequest(name: String,
 
   def aliases(first: TemplateAlias, rest: TemplateAlias*): CreateIndexTemplateRequest = aliases(first +: rest)
   def aliases(aliases: Iterable[TemplateAlias]): CreateIndexTemplateRequest           = copy(aliases = aliases.toSeq)
+
+  def includeTypeName(include:Boolean):CreateIndexTemplateRequest = copy(includeTypeName=include.some)
 }
