@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.{JsonAnySetter, JsonProperty}
 import com.sksamuel.elastic4s.json.JacksonSupport
 
 import scala.collection.mutable
+import scala.util.Try
 
 case class ElasticError(`type`: String,
                         reason: String,
@@ -34,12 +35,14 @@ object ElasticError {
   def parse(r: HttpResponse): ElasticError =
     r.entity match {
       case Some(entity) =>
-        val node = JacksonSupport.mapper.readTree(entity.content)
-        if (node != null && node.has("error")) {
-          val errorNode = node.get("error")
-          JacksonSupport.mapper.readValue[ElasticError](JacksonSupport.mapper.writeValueAsBytes(errorNode))
-        } else
-          ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil, None)
+        Try(JacksonSupport.mapper.readTree(entity.content)).map { node =>
+          if (node != null && node.has("error")) {
+            val errorNode = node.get("error")
+            JacksonSupport.mapper.readValue[ElasticError](JacksonSupport.mapper.writeValueAsBytes(errorNode))
+          } else {
+            ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil, None)
+          }
+        }.getOrElse(ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil, None))
       case _ =>
         ElasticError(r.statusCode.toString, r.statusCode.toString, None, None, None, Nil, None)
     }
