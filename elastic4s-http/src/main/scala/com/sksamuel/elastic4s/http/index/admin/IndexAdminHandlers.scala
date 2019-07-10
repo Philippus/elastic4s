@@ -110,7 +110,9 @@ trait IndexAdminHandlers {
 
     override def build(request: IndicesExistsRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.string}"
-      ElasticRequest("HEAD", endpoint, Map("include_type_name" -> true))
+      val params   = scala.collection.mutable.Map.empty[String, String]
+      request.includeTypeName.map(_.toString).foreach(params.put("include_type_name", _))
+      ElasticRequest("HEAD", endpoint, params.toMap)
     }
   }
 
