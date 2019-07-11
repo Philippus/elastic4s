@@ -41,9 +41,13 @@ trait IndexTemplateHandlers {
 
     override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.name
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+      request.includeTypeName.foreach(params.put("include_type_name", _))
+
       val body     = CreateIndexTemplateBodyFn(request)
       val entity   = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
-      ElasticRequest("PUT", endpoint, entity)
+      ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
   }
 
@@ -67,7 +71,7 @@ trait IndexTemplateHandlers {
 
     override def build(request: GetIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_template/" + request.indexes.string
-      ElasticRequest("GET", endpoint)
+      ElasticRequest("GET", endpoint, Map("include_type_name"->true))
     }
   }
 }

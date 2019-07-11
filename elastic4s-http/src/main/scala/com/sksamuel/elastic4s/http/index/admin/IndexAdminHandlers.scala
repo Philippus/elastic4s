@@ -110,7 +110,9 @@ trait IndexAdminHandlers {
 
     override def build(request: IndicesExistsRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.string}"
-      ElasticRequest("HEAD", endpoint)
+      val params   = scala.collection.mutable.Map.empty[String, String]
+      request.includeTypeName.map(_.toString).foreach(params.put("include_type_name", _))
+      ElasticRequest("HEAD", endpoint, params.toMap)
     }
   }
 
@@ -184,6 +186,7 @@ trait IndexAdminHandlers {
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
+      request.includeTypeName.foreach(params.put("include_type_name", _))
 
       val body   = CreateIndexContentBuilder(request).string()
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)

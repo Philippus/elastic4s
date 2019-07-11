@@ -1,4 +1,3 @@
-//Unpublished Work (c) 2018 Deere & Company
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.http.HttpEntity.StringEntity

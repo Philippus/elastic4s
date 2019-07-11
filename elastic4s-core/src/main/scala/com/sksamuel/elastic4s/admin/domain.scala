@@ -6,7 +6,7 @@ import com.sksamuel.exts.OptionImplicits._
 case class OpenIndexRequest(indexes: Indexes)
 case class CloseIndexRequest(indexes: Indexes)
 case class GetSegmentsRequest(indexes: Indexes)
-case class IndicesExistsRequest(indexes: Indexes)
+case class IndicesExistsRequest(indexes: Indexes, includeTypeName:Option[Boolean]=None)
 case class TypesExistsRequest(indexes: Seq[String], types: Seq[String])
 case class AliasExistsRequest(alias: String)
 case class IndexStatsRequest(indices: Indexes)
