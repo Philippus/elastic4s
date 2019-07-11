@@ -212,28 +212,5 @@ class AkkaHttpClientMockTest
         Map.empty)
     }
 
-    "return error if all hosts are blacklisted" in {
-
-      val hosts = List(
-        "host1",
-        "host2"
-      )
-
-      val blacklist = mock[Blacklist]
-
-      val (_, httpPool) = mockHttpPool()
-
-      val client =
-        new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
-
-      (blacklist.contains _).expects("host1").returns(true)
-      (blacklist.size _).expects().returns(2)
-
-      client
-        .sendAsync(ElasticRequest("GET", "/test"))
-        .failed
-        .futureValue shouldBe AllHostsBlacklistedException
-    }
-
   }
 }
