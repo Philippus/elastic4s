@@ -30,7 +30,7 @@ case class UpdateRequest(index: Index,
                          documentFields: Map[String, Any] = Map.empty,
                          documentSource: Option[String] = None)
     extends BulkCompatibleRequest {
-  require(index != null, "indexAndTypes must not be null or empty")
+  require(index != null, "index must not be null or empty")
   require(id.toString.nonEmpty, "id must not be null or empty")
 
   // detects if a doc has not change and if so will not perform any action
