@@ -9,7 +9,11 @@ object DateHistogramAggregationBuilder {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("date_histogram")
 
+    // only one of these three options is allowed in an aggregation
     agg.interval.map(EnumConversions.interval).foreach(builder.field("interval", _))
+    agg.fixedInterval.map(EnumConversions.interval).foreach(builder.field("fixed_interval", _))
+    agg.calendarInterval.map(EnumConversions.interval).foreach(builder.field("calendar_interval", _))
+
     agg.minDocCount.foreach(builder.field("min_doc_count", _))
     agg.timeZone.map(EnumConversions.timeZone).foreach(builder.field("time_zone", _))
     agg.order.map(EnumConversions.order).foreach(builder.rawField("order", _))
