@@ -56,6 +56,7 @@ object BulkBuilderFn {
         update.routing.foreach(builder.field("_routing", _))
         update.version.foreach(builder.field("version", _))
         update.versionType.foreach(builder.field("version_type", _))
+        update.retryOnConflict.foreach(builder.field("retry_on_conflict", _))
         builder.endObject()
         builder.endObject()
 
