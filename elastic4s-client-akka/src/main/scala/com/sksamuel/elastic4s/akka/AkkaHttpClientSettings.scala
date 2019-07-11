@@ -43,5 +43,4 @@ case class AkkaHttpClientSettings(https: Boolean,
                                   blacklistMinDuration: FiniteDuration = AkkaHttpClientSettings.default.blacklistMinDuration,
                                   blacklistMaxDuration: FiniteDuration = AkkaHttpClientSettings.default.blacklistMaxDuration,
                                   maxRetryTimeout: FiniteDuration = AkkaHttpClientSettings.default.maxRetryTimeout,
-                                  requestCallback: HttpRequest => HttpRequest = identity ) {
-}
+                                  requestCallback: HttpRequest => HttpRequest = identity)
