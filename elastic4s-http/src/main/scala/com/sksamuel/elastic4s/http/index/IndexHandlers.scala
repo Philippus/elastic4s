@@ -4,6 +4,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.http.HttpEntity.ByteArrayEntity
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.indexes.{GetIndexRequest, IndexContentBuilder, IndexRequest}
 import com.sksamuel.exts.collection.Maps
@@ -47,7 +48,7 @@ trait IndexHandlers {
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
       val body   = IndexContentBuilder(request)
-      val entity = HttpEntity(body.string, ContentType.APPLICATION_JSON.getMimeType)
+      val entity = ByteArrayEntity(body.bytes, Some(ContentType.APPLICATION_JSON.getMimeType))
 
       logger.debug(s"Endpoint=$endpoint")
       ElasticRequest(method, endpoint, params.toMap, entity)
