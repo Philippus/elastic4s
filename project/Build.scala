@@ -23,7 +23,7 @@ object Build extends AutoPlugin {
     val Json4sVersion          = "3.6.7"
     val AWSJavaSdkVersion      = "2.7.1"
     val Log4jVersion           = "2.11.1"
-    val MockitoVersion         = "1.10.19"
+    val MockitoVersion         = "3.0.0"
     val MonixVersion           = "2.3.3"
     val PlayJsonVersion        = "2.7.4"
     val ReactiveStreamsVersion = "1.0.2"
@@ -69,7 +69,7 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "com.sksamuel.exts" %% "exts" % ExtsVersion,
       "org.slf4j" % "slf4j-api" % Slf4jVersion,
-      "org.mockito" % "mockito-all" % MockitoVersion % "test",
+      "org.mockito" % "mockito-core" % MockitoVersion % "test",
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {
