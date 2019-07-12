@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.HttpEntity.ByteArrayEntity
 import com.sksamuel.exts.collection.Maps
 
 trait IndexHandlers {
@@ -46,7 +47,7 @@ trait IndexHandlers {
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
       val body   = IndexContentBuilder(request)
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = ByteArrayEntity(body.bytes, Some("application/json"))
 
       logger.debug(s"Endpoint=$endpoint")
       ElasticRequest(method, endpoint, params.toMap, entity)
