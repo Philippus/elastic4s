@@ -18,6 +18,10 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers with Befor
       client.execute {
         deleteIndex("indexnoprops")
       }.await
+
+      client.execute {
+        deleteIndex("indexnopropsempty")
+      }.await
     }
 
     client.execute {
@@ -38,6 +42,12 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers with Befor
     client.execute {
       createIndex("indexnoprops").mappings(
         mapping().dynamic(DynamicMapping.Strict)
+      )
+    }.await
+
+    client.execute {
+      createIndex("indexnopropsempty").mappings(
+        mapping()
       )
     }.await
   }
@@ -71,6 +81,54 @@ class MappingHttpTest extends WordSpec with DockerTests with Matchers with Befor
       }.await.result
 
       val properties = mappings.find(_.index == "indexnoprops").get.mappings
+
+      properties shouldBe Map.empty
+    }
+
+    "handle properly completely empty mapping" in {
+
+      val mappings = client.execute {
+        getMapping("indexnopropsempty")
+      }.await.result
+
+      val properties = mappings.find(_.index == "indexnopropsempty").get.mappings
+
+      properties shouldBe Map.empty
+    }
+  }
+
+  "specific field mapping get" should {
+    "return specified mapping" in {
+      val mappings = client.execute {
+        getMapping("index").fields("a")
+      }.await.result
+
+      val properties = mappings.find(_.index == "index").get.mappings
+      properties.size shouldBe 1
+      val a = properties("a").asInstanceOf[Map[String, Any]]
+      a("type") shouldBe "text"
+      a("store") shouldBe true
+      a("analyzer") shouldBe "whitespace"
+    }
+
+    "handle properly mapping without properties" in {
+
+      val mappings = client.execute {
+        getMapping("indexnoprops").fields("a")
+      }.await.result
+
+      val properties = mappings.find(_.index == "indexnoprops").get.mappings
+
+      properties shouldBe Map.empty
+    }
+
+    "handle properly completely empty mapping" in {
+
+      val mappings = client.execute {
+        getMapping("indexnopropsempty").fields("a")
+      }.await.result
+
+      val properties = mappings.find(_.index == "indexnopropsempty").get.mappings
 
       properties shouldBe Map.empty
     }

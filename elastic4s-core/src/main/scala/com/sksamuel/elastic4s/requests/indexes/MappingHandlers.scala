@@ -10,12 +10,13 @@ trait MappingHandlers {
   implicit object GetMappingHandler extends Handler[GetMappingRequest, Seq[IndexMappings]] {
 
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
+
       override def handle(response: HttpResponse) : Either[ElasticError, Seq[IndexMappings]] = response.statusCode match {
         case 201 | 200       =>
           val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Any]]]](response)
           val raw2 = raw.map {
             case (index, types) =>
-              val mappings = types("mappings").getOrElse("properties", Map.empty)
+              val mappings = getMappings(types("mappings"))
               IndexMappings(index, mappings.asInstanceOf[Map[String, Any]])
           }.toSeq
           Right(raw2)
@@ -28,12 +29,34 @@ trait MappingHandlers {
       }
     }
 
+    private def getMappings(mappings: Map[String, Any]) = {
+      mappings
+        .getOrElse("properties", getFieldMappings(mappings))
+    }
+
+    private def getFieldMappings(possibleFieldMapping: Map[String, Any]) = {
+      possibleFieldMapping.size match {
+        case 0 => Map.empty
+        case _: Int => possibleFieldMapping.head._2 match {
+          case map: Map[String, Any] =>
+            map.getOrElse("mapping", Map.empty)
+          case _ =>
+            Map.empty
+        }
+      }
+    }
 
     override def build(request: GetMappingRequest): ElasticRequest = {
-      val endpoint = request.indexes match {
+      val baseEndpoint = request.indexes match {
         case Indexes(Nil)       => "/_mapping"
         case Indexes(indexes)   => s"/${indexes.mkString(",")}/_mapping"
       }
+
+      val endpoint = request.fields match {
+        case Nil => baseEndpoint
+        case fields: Seq[String] => s"$baseEndpoint/field/${fields.mkString(",")}"
+      }
+
       ElasticRequest("GET", endpoint)
     }
   }
