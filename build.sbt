@@ -14,7 +14,7 @@ lazy val root = Project("elastic4s", file("."))
     testkit,
     //circe,
     jackson,
-    //json4s,
+    json4s,
     //playjson,
     sprayjson,
     aws,
