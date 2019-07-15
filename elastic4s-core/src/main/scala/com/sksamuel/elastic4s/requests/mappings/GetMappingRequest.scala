@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.exts.OptionImplicits._
 
-case class GetMappingRequest(indexes: Indexes, local: Option[Boolean] = None) {
-  def local(local: Boolean): GetMappingRequest = copy(local = local.some)
+case class GetMappingRequest(indexes: Indexes, fields: Seq[String] = Nil) {
+  def fields(first: String, rest: String*): GetMappingRequest = fields(first +: rest)
+
+  def fields(_fields: Seq[String]): GetMappingRequest = copy(fields = _fields)
 }

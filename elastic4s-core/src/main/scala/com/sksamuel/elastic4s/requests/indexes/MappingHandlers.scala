@@ -30,10 +30,16 @@ trait MappingHandlers {
 
 
     override def build(request: GetMappingRequest): ElasticRequest = {
-      val endpoint = request.indexes match {
+      val baseEndpoint = request.indexes match {
         case Indexes(Nil)       => "/_mapping"
         case Indexes(indexes)   => s"/${indexes.mkString(",")}/_mapping"
       }
+
+      val endpoint = request.fields match {
+        case Nil => baseEndpoint
+        case fields: Seq[String] => s"$baseEndpoint/field/${fields.mkString(",")}"
+      }
+
       ElasticRequest("GET", endpoint)
     }
   }
