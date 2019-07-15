@@ -38,6 +38,7 @@ case class UpdateRequest(indexAndType: IndexAndType,
   def doc(doc: String): UpdateRequest                               = copy(documentSource = doc.some)
 
   // Sets the fields to use for updates when a script is not specified.
+  def doc(field: (String, Any)): UpdateRequest = doc(Map(field))
   def doc(fields: (String, Any)*): UpdateRequest = doc(fields.toMap)
 
   // Sets the fields to use for updates when a script is not specified.
@@ -55,6 +56,7 @@ case class UpdateRequest(indexAndType: IndexAndType,
   def docAsUpsert[T: Indexable](t: T): UpdateRequest = doc(t).copy(docAsUpsert = true.some)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
+  def docAsUpsert(fields: (String, Any)): UpdateRequest = docAsUpsert(Map(fields))
   def docAsUpsert(fields: (String, Any)*): UpdateRequest = docAsUpsert(fields.toMap)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist

@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.http.get.MetaDataFields
 import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
+import scala.reflect.ClassTag
 import scala.util.Try
 
 case class SearchHit(@JsonProperty("_id") id: String,
@@ -72,7 +73,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
           )
         }
       )
-    }
+    }.toMap
 
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
@@ -155,10 +156,10 @@ case class SearchResponse(took: Long,
       }
       .toMap
 
-  def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
-  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
+  def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm).toMap
+  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion).toMap
+  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase).toMap
 
-  def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader : ClassTag]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Try[T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }

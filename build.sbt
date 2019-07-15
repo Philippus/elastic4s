@@ -7,18 +7,18 @@ lazy val root = Project("elastic4s", file("."))
   .aggregate(
     core,
     http,
-    cats_effect,
-    scalaz,
-    monix,
+    //cats_effect,
+    //scalaz,
+    //monix,
     tests,
     testkit,
-    circe,
+    //circe,
     jackson,
-    json4s,
-    playjson,
+    //json4s,
+    //playjson,
     sprayjson,
     aws,
-    sttp,
+    //sttp,
     akka,
     httpstreams,
     embedded
@@ -186,8 +186,8 @@ lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
 lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
   .settings(
     name := "elastic4s-akka",
-    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5",
-    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17",
+    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.8",
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.23",
     libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
   .dependsOn(core, http, testkit % "test")
@@ -216,7 +216,7 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
     parallelExecution in Test := false,
     testForkedParallel in Test := false
   )
-  .dependsOn(http, jackson, circe, aws, testkit % "test")
+  .dependsOn(http, jackson, /*circe,*/ aws, testkit % "test")
 
 lazy val noPublishSettings = Seq(
   publish := {},
