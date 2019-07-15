@@ -8,7 +8,7 @@ lazy val root = Project("elastic4s", file("."))
     core,
     http,
     //cats_effect,
-    //scalaz,
+    scalaz,
     //monix,
     tests,
     testkit,
@@ -101,8 +101,8 @@ lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   .settings(name := "elastic4s-scalaz")
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core"       % "7.2.24",
-      "org.scalaz" %% "scalaz-concurrent" % "7.2.24"
+      "org.scalaz" %% "scalaz-core"       % "7.2.28",
+      "org.scalaz" %% "scalaz-concurrent" % "7.2.28"
     )
   )
   .dependsOn(http)
