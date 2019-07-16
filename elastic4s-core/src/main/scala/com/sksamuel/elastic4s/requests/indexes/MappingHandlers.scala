@@ -38,10 +38,8 @@ trait MappingHandlers {
       possibleFieldMapping.size match {
         case 0 => Map.empty
         case _: Int => possibleFieldMapping.head._2 match {
-          case map: Map[String, Any] =>
-            map.getOrElse("mapping", Map.empty)
-          case _ =>
-            Map.empty
+          case map: Map[String, Any] => map.getOrElse("mapping", Map.empty)
+          case _ => Map.empty
         }
       }
     }
