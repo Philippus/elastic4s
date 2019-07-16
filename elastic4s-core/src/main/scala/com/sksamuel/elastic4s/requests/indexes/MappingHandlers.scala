@@ -15,7 +15,10 @@ trait MappingHandlers {
           val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Any]]]](response)
           val raw2 = raw.map {
             case (index, types) =>
-              val mappings = types("mappings").getOrElse("properties", types("mappings"))
+              val mappings = types("mappings") match {
+                case Map.empty => Map.empty
+                case nonEmptyMap: Map[string, Any] => nonEmptyMap.getOrElse("properties", nonEmptyMap)
+              }
               IndexMappings(index, mappings.asInstanceOf[Map[String, Any]])
           }.toSeq
           Right(raw2)
