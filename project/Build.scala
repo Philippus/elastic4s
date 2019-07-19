@@ -12,7 +12,7 @@ object Build extends AutoPlugin {
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
     val AkkaVersion            = "2.5.23"
-    val AkkaHttpVersion        = "10.1.8"
+    val AkkaHttpVersion        = "10.1.9"
     val CatsVersion            = "2.0.0-M4"
     val CatsEffectVersion      = "2.0.0-M4"
     val CirceVersion           = "0.12.0-M3"
@@ -23,7 +23,7 @@ object Build extends AutoPlugin {
     val Json4sVersion          = "3.6.7"
     val AWSJavaSdkVersion      = "2.7.1"
     val Log4jVersion           = "2.12.0"
-    val MockitoVersion         = "1.10.19"
+    val MockitoVersion         = "3.0.0"
     val MonixVersion           = "2.3.3"
     val PlayJsonVersion        = "2.7.4"
     val ReactiveStreamsVersion = "1.0.2"
@@ -31,7 +31,7 @@ object Build extends AutoPlugin {
     val ScalamockVersion       = "4.3.0"
     val ScalazVersion          = "7.2.28"
     val SprayJsonVersion       = "1.3.5"
-    val SttpVersion            = "1.6.2"
+    val SttpVersion            = "1.6.3"
     val Slf4jVersion           = "1.7.26"
   }
 
@@ -69,7 +69,7 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "com.sksamuel.exts" %% "exts" % ExtsVersion,
       "org.slf4j" % "slf4j-api" % Slf4jVersion,
-      "org.mockito" % "mockito-all" % MockitoVersion % "test",
+      "org.mockito" % "mockito-core" % MockitoVersion % "test",
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {

@@ -173,7 +173,7 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
     name := "elastic4s-tests",
     libraryDependencies ++= Seq(
       "commons-io"                   % "commons-io"            % CommonsIoVersion % "test",
-      "org.mockito"                  % "mockito-all"           % MockitoVersion   % "test",
+      "org.mockito"                  % "mockito-core"          % MockitoVersion   % "test",
       "com.fasterxml.jackson.core"   % "jackson-core"          % JacksonVersion   % "test",
       "com.fasterxml.jackson.core"   % "jackson-databind"      % JacksonVersion   % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion   % "test" exclude ("org.scala-lang", "scala-library"),
