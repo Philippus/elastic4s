@@ -16,7 +16,7 @@ case class MappingCharFilter(override val name: String,
     mappings.foreach { case (k, v) =>
       b.value(s"$k=>$v")
     }
-    b.endObject()
+    b.endArray()
     b.endObject()
   }
 }
