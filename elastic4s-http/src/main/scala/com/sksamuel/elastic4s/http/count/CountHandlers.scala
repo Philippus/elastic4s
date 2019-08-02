@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.http.count
 
 import java.net.URLEncoder
-import java.nio.charset.Charset
 
 import com.sksamuel.elastic4s.count.CountRequest
 import com.sksamuel.elastic4s.http._
@@ -24,7 +23,7 @@ trait CountHandlers {
           "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
         else
           "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/" + request.types
-            .map(URLEncoder.encode(_, Charset.defaultCharset()))
+            .map(URLEncoder.encode)
             .mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)
