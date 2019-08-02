@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.http.count
 
 import java.net.URLEncoder
+import java.nio.charset.Charset
 
 import com.sksamuel.elastic4s.count.CountRequest
 import com.sksamuel.elastic4s.http._
@@ -18,12 +19,12 @@ trait CountHandlers {
         if (request.indexes.isEmpty && request.types.isEmpty)
           "/_count"
         else if (request.indexes.isEmpty)
-          "/_all/" + request.types.map(URLEncoder.encode).mkString(",") + "/_count"
+          "/_all/" + request.types.map(URLEncoder.encode(_, Charset.defaultCharset())).mkString(",") + "/_count"
         else if (request.types.isEmpty)
-          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
+          "/" + request.indexes.values.map(URLEncoder.encode(_, Charset.defaultCharset())).mkString(",") + "/_count"
         else
-          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/" + request.types
-            .map(URLEncoder.encode)
+          "/" + request.indexes.values.map(URLEncoder.encode(_, Charset.defaultCharset())).mkString(",") + "/" + request.types
+            .map(URLEncoder.encode(_, Charset.defaultCharset()))
             .mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)

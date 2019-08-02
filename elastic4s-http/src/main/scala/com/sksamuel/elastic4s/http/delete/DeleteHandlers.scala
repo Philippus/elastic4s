@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.http.delete
 
 import java.net.URLEncoder
 
-import com.sksamuel.elastic4s.Show
 import com.sksamuel.elastic4s.delete.{DeleteByIdRequest, DeleteByQueryRequest}
 import com.sksamuel.elastic4s.http._
 import com.sksamuel.elastic4s.http.search.queries.QueryBuilderFn
@@ -43,7 +42,7 @@ trait DeleteHandlers {
         params.put("conflicts", "proceed")
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
-      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
+      request.timeout.map(t => s"${t.toMillis}ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
 

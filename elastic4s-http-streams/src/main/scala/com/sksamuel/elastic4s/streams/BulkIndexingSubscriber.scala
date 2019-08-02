@@ -94,16 +94,16 @@ class BulkActor[T](client: ElasticClient,
   private var completed = false
 
   // total number of documents requested from our publisher
-  private var requested: Long = 0l
+  private var requested: Long = 0L
 
   // total number of documents acknowledged at the elasticsearch cluster level but pending confirmation of index
-  private var sent: Long = 0l
+  private var sent: Long = 0L
 
   // total number of documents confirmed as successful
-  private var confirmed: Long = 0l
+  private var confirmed: Long = 0L
 
   // total number of documents that failed the retry attempts and are ignored
-  private var failed: Long = 0l
+  private var failed: Long = 0L
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
   // we can be stuck at batchSize-1 waiting for the nth message to arrive.
@@ -252,7 +252,7 @@ class BulkActor[T](client: ElasticClient,
     def bulkDef: BulkRequest = {
       val defs   = buffer.map(t => builder.request(t))
       val policy = if (config.refreshAfterOp) RefreshPolicy.Immediate else RefreshPolicy.NONE
-      BulkRequest(defs).refresh(policy)
+      BulkRequest(defs.toIndexedSeq).refresh(policy)
     }
 
     sent = sent + buffer.size

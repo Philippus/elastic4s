@@ -9,7 +9,7 @@ case class BulkRequest(requests: Seq[BulkCompatibleRequest],
                        timeout: Option[String] = None,
                        refresh: Option[RefreshPolicy] = None) {
 
-  def timeout(timeout: Duration): BulkRequest = copy(timeout = (timeout.toNanos + "n").some)
+  def timeout(timeout: Duration): BulkRequest = copy(timeout = (s"${timeout.toNanos}n").some)
   def timeout(timeout: String): BulkRequest   = copy(timeout = timeout.some)
 
   @deprecated("use the typed version, refresh(RefreshPolicy)", "6.0.0")

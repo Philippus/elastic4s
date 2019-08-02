@@ -133,7 +133,7 @@ case class KeywordMarkerTokenFilter(name: String,
   }
 
   def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter        = copy(keywords = keywords)
-  def keywords(first: String, rest: String*): KeywordMarkerTokenFilter = copy(keywords = first +: rest)
+  def keywords(first: String, rest: String*): KeywordMarkerTokenFilter = copy(keywords = first +: rest.toIndexedSeq)
   def keywordsPath(path: String): KeywordMarkerTokenFilter             = copy(keywordsPath = path.some)
   def keywordsPattern(pattern: String): KeywordMarkerTokenFilter       = copy(keywordsPattern = pattern.some)
   def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter        = copy(ignoreCase = ignoreCase.some)
@@ -147,7 +147,7 @@ case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil) extends
     source.array("articles", articles.toArray)
 
   def articles(articles: Seq[String]): ElisionTokenFilter        = copy(articles = articles)
-  def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
+  def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest.toIndexedSeq)
 }
 
 case class LimitTokenCountTokenFilter(name: String,
@@ -239,7 +239,7 @@ case class PatternCaptureTokenFilter(name: String, patterns: Seq[String] = Nil, 
   }
 
   def patterns(patterns: Seq[String]): PatternCaptureTokenFilter             = copy(patterns = patterns)
-  def patterns(first: String, rest: String*): PatternCaptureTokenFilter      = copy(patterns = first +: rest)
+  def patterns(first: String, rest: String*): PatternCaptureTokenFilter      = copy(patterns = first +: rest.toIndexedSeq)
   def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 
