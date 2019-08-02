@@ -19,11 +19,11 @@ trait CountHandlers {
         if (request.indexes.isEmpty && request.types.isEmpty)
           "/_count"
         else if (request.indexes.isEmpty)
-          "/_all/" + request.types.map(URLEncoder.encode(_, Charset.defaultCharset())).mkString(",") + "/_count"
+          "/_all/" + request.types.map(URLEncoder.encode).mkString(",") + "/_count"
         else if (request.types.isEmpty)
-          "/" + request.indexes.values.map(URLEncoder.encode(_, Charset.defaultCharset())).mkString(",") + "/_count"
+          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
         else
-          "/" + request.indexes.values.map(URLEncoder.encode(_, Charset.defaultCharset())).mkString(",") + "/" + request.types
+          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/" + request.types
             .map(URLEncoder.encode(_, Charset.defaultCharset()))
             .mkString(",") + "/_count"
 
