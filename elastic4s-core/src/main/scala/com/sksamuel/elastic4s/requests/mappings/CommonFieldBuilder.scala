@@ -119,6 +119,16 @@ object FieldBuilderFn {
         text.similarity.foreach(builder.field("similarity", _))
         text.indexOptions.foreach(builder.field("index_options", _))
 
+      case text: SearchAsYouTypeField =>
+        text.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
+        text.positionIncrementGap.foreach(builder.field("position_increment_gap", _))
+        text.fielddata.foreach(builder.field("fielddata", _))
+        text.maxInputLength.foreach(builder.field("max_input_length", _))
+        text.ignoreAbove.foreach(builder.field("ignore_above", _))
+        text.similarity.foreach(builder.field("similarity", _))
+        text.indexOptions.foreach(builder.field("index_options", _))
+        text.maxShingleSize.foreach(builder.field("max_shingle_size", _))
+
       case keyword: KeywordField =>
         keyword.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
         keyword.ignoreAbove.foreach(builder.field("ignore_above", _))

@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{HistogramOrder, SubAggColl
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode, MultiValueMode}
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance.{Arc, Plane}
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
-import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.{BEST_FIELDS, CROSS_FIELDS, MOST_FIELDS, PHRASE, PHRASE_PREFIX}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.{BEST_FIELDS, BOOL_PREFIX, CROSS_FIELDS, MOST_FIELDS, PHRASE, PHRASE_PREFIX}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
@@ -128,6 +128,7 @@ object EnumConversions {
     case CROSS_FIELDS  => "cross_fields"
     case PHRASE        => "phrase"
     case PHRASE_PREFIX => "phrase_prefix"
+    case BOOL_PREFIX   => "bool_prefix"
   }
 
   def multiValueMode(mode: MultiValueMode): String =

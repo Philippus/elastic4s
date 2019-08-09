@@ -228,6 +228,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_phrase_prefix.json")
   }
 
+  it should "generate json for a bool prefix query" in {
+    val req = search("*").limit(5).query {
+      matchBoolPrefixQuery("name", "coldplay")
+        .maxExpansions(3)
+        .fuzziness("0<1")
+        .analyzer(SnowballAnalyzer)
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_match_bool_prefix.json")
+  }
+
   it should "generate json for term post filter" in {
     val req = search("music") postFilter {
       termQuery("singer", "chris martin") queryName "namey"
