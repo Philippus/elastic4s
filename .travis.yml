@@ -27,7 +27,6 @@ script:
 - sbt clean test
 
 jdk:
-- oraclejdk8
-- openjdk11
+- oraclejdk11
 
 after_success: "./snapshot_deploy.sh"
