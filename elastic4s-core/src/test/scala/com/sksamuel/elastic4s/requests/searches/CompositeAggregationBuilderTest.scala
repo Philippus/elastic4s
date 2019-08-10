@@ -54,4 +54,15 @@ class CompositeAggregationBuilderTest extends FunSuite with Matchers {
 
   }
 
+  test("CompositeAggregationBuilder should build simple terms-valued composites with after paramters") {
+    val search = SearchRequest("myindex").aggs(
+      CompositeAggregation("comp", sources = Seq(
+        TermsValueSource("s1", field = Some("f1"))),
+        after = Some(Map("myafter1" -> 1, "myafter2" -> "2"))
+      )
+    )
+
+    SearchBodyBuilderFn(search).string() shouldBe
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}}],"after":{"myafter1":1,"myafter2":"2"}}}}}"""
+  }
 }
