@@ -56,4 +56,8 @@ object HttpEntity {
 
     def get: String = Files.readAllLines(content.toPath).asScala.mkString("\n")
   }
+
+  case class ByteArrayEntity(content: Array[Byte], contentCharset: Option[String]) extends HttpEntity {
+    def get: String = new String(content, contentCharset.getOrElse("utf-8"))
+  }
 }
