@@ -32,7 +32,7 @@ object Build extends AutoPlugin {
     val ScalazVersion          = "7.2.28"
     val SprayJsonVersion       = "1.3.5"
     val SttpVersion            = "1.6.4"
-    val Slf4jVersion           = "1.7.27"
+    val Slf4jVersion           = "1.7.28"
   }
 
   import autoImport._
