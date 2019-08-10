@@ -23,7 +23,7 @@ object BulkBuilderFn {
         index.parent.foreach(builder.field("_parent", _))
         index.routing.foreach(builder.field("routing", _))
         index.version.foreach(builder.field("version", _))
-        index.versionType.foreach(versionType ⇒ builder.field("version_type", VersionTypeHttpString(versionType)))
+        index.versionType.foreach(versionType => builder.field("version_type", VersionTypeHttpString(versionType)))
         index.pipeline.foreach(builder.field("pipeline", _))
         builder.endObject()
         builder.endObject()
@@ -40,7 +40,7 @@ object BulkBuilderFn {
         delete.parent.foreach(builder.field("_parent", _))
         delete.routing.foreach(builder.field("_routing", _))
         delete.version.foreach(builder.field("version", _))
-        delete.versionType.foreach(versionType ⇒ builder.field("version_type", VersionTypeHttpString(versionType)))
+        delete.versionType.foreach(versionType => builder.field("version_type", VersionTypeHttpString(versionType)))
         builder.endObject()
         builder.endObject()
 
