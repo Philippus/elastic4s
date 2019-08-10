@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticProper
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
-import org.apache.http.entity.{AbstractHttpEntity, ContentType, FileEntity, InputStreamEntity, StringEntity}
+import org.apache.http.entity.{AbstractHttpEntity, ByteArrayEntity, ContentType, FileEntity, InputStreamEntity, StringEntity}
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 import org.elasticsearch.client.{Request, ResponseException, ResponseListener, RestClient}
@@ -27,6 +27,8 @@ class JavaClient(client: RestClient) extends HttpClient {
     case e: HttpEntity.StringEntity =>
       logger.debug(e.content)
       new StringEntity(e.content, ContentType.APPLICATION_JSON)
+    case e: HttpEntity.ByteArrayEntity =>
+      new ByteArrayEntity(e.content, ContentType.APPLICATION_JSON)
     case e: HttpEntity.InputStreamEntity =>
       logger.debug(e.content.toString)
       new InputStreamEntity(e.content, ContentType.APPLICATION_JSON)

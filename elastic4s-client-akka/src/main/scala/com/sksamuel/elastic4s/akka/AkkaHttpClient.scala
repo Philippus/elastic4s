@@ -234,6 +234,12 @@ class AkkaHttpClient private[akka] (
             .flatMap(value => ContentType.parse(value).right.toOption)
             .getOrElse(ContentTypes.`text/plain(UTF-8)`)
         HttpEntity(ct, ByteString(content))
+      case ElasticHttpEntity.ByteArrayEntity(content, contentType) =>
+        val ct =
+          contentType
+            .flatMap(value => ContentType.parse(value).right.toOption)
+            .getOrElse(ContentTypes.`text/plain(UTF-8)`)
+        HttpEntity(ct, ByteString(content))
       case ElasticHttpEntity.FileEntity(file, contentType) =>
         val ct = contentType
           .flatMap(value => ContentType.parse(value).right.toOption)
