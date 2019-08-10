@@ -207,7 +207,7 @@ class AkkaHttpClient private[akka] (
 
   private def toRequest(request: ElasticRequest,
                         host: String): Try[HttpRequest] = Try {
-    HttpRequest(
+    val httpRequest = HttpRequest(
       method = HttpMethods.getForKeyCaseInsensitive(request.method).getOrElse(HttpMethod.custom(request.method)),
       uri = Uri(request.endpoint)
         .withQuery(Query(request.params))
@@ -215,6 +215,7 @@ class AkkaHttpClient private[akka] (
         .withScheme(scheme),
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
+    settings.requestCallback(httpRequest)
   }
 
   private def toResponse(response: HttpResponse,

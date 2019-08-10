@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.akka
 
 import java.util.concurrent.TimeUnit
 
+import akka.http.scaladsl.model.HttpRequest
+
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
-
 import akka.http.scaladsl.settings.ConnectionPoolSettings
 import com.typesafe.config.{Config, ConfigFactory}
 
@@ -41,4 +42,5 @@ case class AkkaHttpClientSettings(https: Boolean,
                                   poolSettings: ConnectionPoolSettings,
                                   blacklistMinDuration: FiniteDuration = AkkaHttpClientSettings.default.blacklistMinDuration,
                                   blacklistMaxDuration: FiniteDuration = AkkaHttpClientSettings.default.blacklistMaxDuration,
-                                  maxRetryTimeout: FiniteDuration = AkkaHttpClientSettings.default.maxRetryTimeout)
+                                  maxRetryTimeout: FiniteDuration = AkkaHttpClientSettings.default.maxRetryTimeout,
+                                  requestCallback: HttpRequest => HttpRequest = identity)
