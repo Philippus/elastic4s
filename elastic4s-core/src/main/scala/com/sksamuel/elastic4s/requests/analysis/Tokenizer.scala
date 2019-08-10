@@ -36,7 +36,7 @@ case class StandardTokenizer(override val name: String,
                              maxTokenLength: Int = 255) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "standard")
     b.field("max_token_length", maxTokenLength)
     b.endObject()
@@ -50,7 +50,7 @@ case class PatternTokenizer(override val name: String,
                             flags: String = "", group: Int = -1) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "pattern")
     if (flags.nonEmpty)
       b.field("flags", flags)
@@ -83,7 +83,7 @@ case class NGramTokenizer(override val name: String,
                           tokenChars: Iterable[String] = Nil) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "nGram")
     b.field("min_gram", minGram)
     b.field("max_gram", maxGram)
@@ -103,7 +103,7 @@ case class EdgeNGramTokenizer(override val name: String,
                               tokenChars: Iterable[String] = Nil) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "edgeNGram")
     b.field("min_gram", minGram)
     b.field("max_gram", maxGram)
@@ -125,7 +125,7 @@ case class PathHierarchyTokenizer(override val name: String,
                                   skip: Int = 0) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "path_hierarchy")
     b.field("delimiter", delimiter.toString)
     b.field("replacement", replacement.toString)
@@ -140,7 +140,7 @@ case class WhitespaceTokenizer(override val name: String,
                                maxTokenLength: Char = '/') extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "whitespace")
     b.field("max_token_length", maxTokenLength)
     b.endObject()
@@ -151,7 +151,7 @@ case class ClassicTokenizer(override val name: String,
                             maxTokenLength: Char = '/') extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "classic")
     b.field("max_token_length", maxTokenLength)
     b.endObject()
@@ -161,7 +161,7 @@ case class ClassicTokenizer(override val name: String,
 case class ThaiTokenizer(name: String) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "thai")
     b.endObject()
   }
@@ -171,7 +171,7 @@ case class ICUTokenizer(override val name: String,
                         ruleFiles: String) extends Tokenizer {
 
   override def build: XContentBuilder = {
-    val b = XContentFactory.jsonBuilder().startObject(name)
+    val b = XContentFactory.jsonBuilder()
     b.field("type", "icu_tokenizer")
     b.field("rule_files", ruleFiles)
     b.endObject()
