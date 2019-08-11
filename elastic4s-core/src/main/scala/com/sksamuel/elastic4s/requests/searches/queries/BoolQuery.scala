@@ -28,29 +28,21 @@ case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
     * Appends the given queries to the existing not queries.
     */
   def withNot(first: Query, rest: Query*): BoolQuery = withNot(first +: rest)
-  @deprecated("use withNot", "6.0.0")
-  def appendNot(first: Query, rest: Query*): BoolQuery = appendNot(first +: rest)
 
   /**
     * Appends the given queries to the existing not queries.
     */
-  def withNot(queries: Iterable[Query]): BoolQuery = appendNot(queries)
-  @deprecated("use withNot", "6.0.0")
-  def appendNot(queries: Iterable[Query]): BoolQuery = copy(not = not ++ queries.toSeq)
+  def withNot(queries: Iterable[Query]): BoolQuery = copy(not = not ++ queries.toSeq)
 
   /**
     * Appends the current 'must' queries with the given queries.
     */
   def withMust(first: Query, rest: Query*): BoolQuery = withMust(first +: rest)
-  @deprecated("use withMust", "6.0.0")
-  def appendMust(first: Query, rest: Query*): BoolQuery = appendMust(first +: rest)
 
   /**
     * Appends the current 'must' queries with the given queries.
     */
-  def withMust(queries: Iterable[Query]): BoolQuery = appendMust(queries)
-  @deprecated("use withMust", "6.0.0")
-  def appendMust(queries: Iterable[Query]): BoolQuery = copy(must = must ++ queries.toIndexedSeq)
+  def withMust(queries: Iterable[Query]): BoolQuery = copy(must = must ++ queries.toIndexedSeq)
 
   /**
     * Replaces the current 'must' queries with the given queries.
@@ -76,15 +68,11 @@ case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
     * Appends the current 'should' queries with the given queries.
     */
   def withShould(first: Query, rest: Query*): BoolQuery = withShould(first +: rest)
-  @deprecated("use withMust", "6.0.0")
-  def appendShould(first: Query, rest: Query*): BoolQuery = appendShould(first +: rest)
 
   /**
     * Appends the current 'should' queries with the given queries.
     */
-  def withShould(queries: Iterable[Query]): BoolQuery = appendShould(queries)
-  @deprecated("use withMust", "6.0.0")
-  def appendShould(queries: Iterable[Query]): BoolQuery = copy(should = should ++ queries.toSeq)
+  def withShould(queries: Iterable[Query]): BoolQuery = copy(should = should ++ queries.toSeq)
 
   /**
     * Replaces the current 'should' queries with the given queries.

@@ -24,10 +24,6 @@ case class DeleteByQueryRequest(indexes: Indexes,
   def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
 
-  @deprecated("use proceedOnConflicts", "6.2.0")
-  def abortOnVersionConflict(abortOnVersionConflict: Boolean): DeleteByQueryRequest =
-    proceedOnConflicts(abortOnVersionConflict)
-
   def refresh(refresh: RefreshPolicy): DeleteByQueryRequest = copy(refresh = refresh.some)
   def refreshImmediately: DeleteByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
 

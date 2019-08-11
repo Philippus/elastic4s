@@ -33,12 +33,6 @@ case class GetRequest(index: IndexLike,
   def fetchSourceExclude(excludes: Iterable[String]): GetRequest = fetchSourceContext(Nil, excludes)
   def fetchSourceExclude(excludes: String*): GetRequest          = fetchSourceContext(Nil, excludes)
 
-  @deprecated("use storedFields", "5.0.0")
-  def fields(fs: String*): GetRequest = storedFields(fs)
-
-  @deprecated("use storedFields", "5.0.0")
-  def fields(fs: Iterable[String]): GetRequest = storedFields(fs)
-
   def storedFields(first: String, rest: String*): GetRequest = storedFields(first +: rest)
   def storedFields(fs: Iterable[String]): GetRequest         = copy(storedFields = fs.toSeq)
 
