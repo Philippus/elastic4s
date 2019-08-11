@@ -4,7 +4,7 @@ import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 
-import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticProperties, ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse, Show}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
@@ -108,32 +108,6 @@ object JavaClient extends Logging {
             httpClientConfigCallback: HttpClientConfigCallback): JavaClient = {
     val hosts = props.endpoints.map {
       case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
-    }
-    logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
-
-    val client = RestClient
-      .builder(hosts: _*)
-      .setRequestConfigCallback(requestConfigCallback)
-      .setHttpClientConfigCallback(httpClientConfigCallback)
-      .build()
-
-    fromRestClient(client)
-  }
-
-  /**
-    * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client
-    * as the underlying client. Optional callbacks can be passed in to configure the client.
-    *
-    * Alternatively, create a [[RestClient]] manually and invoke [[fromRestClient(RestClient)]].
-    */
-  @deprecated("Use apply(ElasticProperties)", "6.3.3")
-  def apply(uri: ElasticsearchClientUri,
-            requestConfigCallback: RequestConfigCallback = NoOpRequestConfigCallback,
-            httpClientConfigCallback: HttpClientConfigCallback = NoOpHttpClientConfigCallback
-           ): JavaClient = {
-    val hosts = uri.hosts.map {
-      case (host, port) =>
-        new HttpHost(host, port, if (uri.options.getOrElse("ssl", "false") == "true") "https" else "http")
     }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
 

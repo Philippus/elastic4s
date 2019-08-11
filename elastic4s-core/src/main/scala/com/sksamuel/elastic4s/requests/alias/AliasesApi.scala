@@ -29,12 +29,4 @@ trait AliasesApi {
   def getAliases(indexes: Indexes, aliases: Seq[String]): GetAliasesRequest   = GetAliasesRequest(indexes, aliases)
   def getAliases(index: String, aliases: Seq[String]): GetAliasesRequest      = getAliases(Indexes(index), aliases)
   def getAliases(index: Seq[String], aliases: Seq[String]): GetAliasesRequest = getAliases(Indexes(index), aliases)
-
-  @deprecated("use getAliases(indexes, aliases), where you can pass in Nil for indexes or aliases to act as a wildcard",
-              "6.0.0")
-  def getAlias(first: String, rest: String*): GetAliasesRequest = GetAliasesRequest(Nil, first +: rest)
-
-  @deprecated("use getAliases(indexes, aliases), where you can pass in Nil for indexes or aliases to act as a wildcard",
-              "6.0.0")
-  def getAlias(aliases: Iterable[String]): GetAliasesRequest = GetAliasesRequest(Nil, aliases.toSeq)
 }

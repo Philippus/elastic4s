@@ -61,10 +61,10 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
     copy(sourceExcludes = sourceExcludes.toSeq)
 
   def analyzer(analyzer: String): PutMappingRequest   = copy(analyzer = analyzer.some)
+
+  @deprecated("use new analysis package", "7.2.0")
   def analyzer(analyzer: Analyzer): PutMappingRequest = copy(analyzer = analyzer.name.some)
 
-  @deprecated("use boostName", "5.2")
-  def boost(boostName: String): PutMappingRequest     = copy(boostName = boostName.some)
   def boostName(boostName: String): PutMappingRequest = copy(boostName = boostName.some)
 
   def boostNullValue(boostNullValue: Double): PutMappingRequest      = copy(boostNullValue = boostNullValue.some)
@@ -132,10 +132,9 @@ case class MappingDefinition(`type`: Option[String] = None, // type is now depre
   def sourceExcludes(sourceExcludes: String*): MappingDefinition          = copy(sourceExcludes = sourceExcludes)
   def sourceExcludes(sourceExcludes: Iterable[String]): MappingDefinition = copy(sourceExcludes = sourceExcludes.toSeq)
   def analyzer(analyzer: String): MappingDefinition                       = copy(analyzer = analyzer.some)
-  def analyzer(analyzer: Analyzer): MappingDefinition                     = copy(analyzer = analyzer.name.some)
 
-  @deprecated("use boostName", "5.2")
-  def boost(boostName: String): MappingDefinition = copy(boostName = boostName.some)
+  @deprecated("use new analysis package", "7.2.0")
+  def analyzer(analyzer: Analyzer): MappingDefinition                     = copy(analyzer = analyzer.name.some)
 
   def boostName(boostName: String): MappingDefinition           = copy(boostName = boostName.some)
   def boostNullValue(boostNullValue: Double): MappingDefinition = copy(boostNullValue = boostNullValue.some)

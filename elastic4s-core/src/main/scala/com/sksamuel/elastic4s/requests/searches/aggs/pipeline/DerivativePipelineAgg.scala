@@ -15,9 +15,6 @@ case class DerivativePipelineAgg(name: String,
 
   def unit(unit: FiniteDuration): DerivativePipelineAgg = copy(unit = Some(unit))
 
-  @deprecated("use unit(duration)", "6.0.0")
-  def unit(unit: String): DerivativePipelineAgg = copy(unitString = Some(unit))
-
   def format(format: String): DerivativePipelineAgg                  = copy(format = Some(format))
   def gapPolicy(gapPolicy: GapPolicy): DerivativePipelineAgg         = copy(gapPolicy = Some(gapPolicy))
   def metadata(metadata: Map[String, AnyRef]): DerivativePipelineAgg = copy(metadata = metadata)

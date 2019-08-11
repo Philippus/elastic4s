@@ -17,7 +17,6 @@ lazy val root = Project("elastic4s", file("."))
     json4s,
     playjson,
     sprayjson,
-    aws,
     clientsttp,
     clientakka,
     httpstreams,
@@ -159,15 +158,6 @@ lazy val clientakka = Project("elastic4s-client-akka", file("elastic4s-client-ak
   )
   .dependsOn(core, testkit % "test")
 
-lazy val aws = Project("elastic4s-client-aws", file("elastic4s-client-aws"))
-  .settings(
-    name := "elastic4s-client-aws",
-    libraryDependencies += "software.amazon.awssdk" % "auth" % AWSJavaSdkVersion,
-    libraryDependencies += "software.amazon.awssdk" % "core" % AWSJavaSdkVersion,
-    libraryDependencies += "software.amazon.awssdk" % "regions" % AWSJavaSdkVersion
-  )
-  .dependsOn(core, clientesjava)
-
 lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
   .settings(
     name := "elastic4s-tests",
@@ -185,7 +175,7 @@ lazy val tests = Project("elastic4s-tests", file("elastic4s-tests"))
     parallelExecution in Test := false,
     testForkedParallel in Test := false
   )
-  .dependsOn(clientesjava, jackson, circe, aws, testkit % "test")
+  .dependsOn(clientesjava, jackson, circe, testkit % "test")
 
 lazy val noPublishSettings = Seq(
   publish := {},

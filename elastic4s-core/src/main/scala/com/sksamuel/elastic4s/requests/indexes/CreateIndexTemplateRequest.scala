@@ -24,12 +24,15 @@ case class CreateIndexTemplateRequest(name: String,
   require(name.nonEmpty, "template name must not be null or empty")
   require(pattern.nonEmpty, "pattern must not be null or empty")
 
+  @deprecated("use new analysis package", "7.2.0")
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexTemplateRequest =
     analysis(first +: rest, Nil)
 
+  @deprecated("use new analysis package", "7.2.0")
   def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexTemplateRequest =
     analysis(analyzers, Nil)
 
+  @deprecated("use new analysis package", "7.2.0")
   def analysis(analyzers: Iterable[AnalyzerDefinition],
                normalizers: Iterable[NormalizerDefinition]): CreateIndexTemplateRequest =
     analysis match {
@@ -37,8 +40,11 @@ case class CreateIndexTemplateRequest(name: String,
       case Some(a) => copy(analysis = AnalysisDefinition(a.analyzers ++ analyzers, a.normalizers ++ normalizers).some)
     }
 
+  @deprecated("use new analysis package", "7.2.0")
   def normalizers(first: NormalizerDefinition, rest: NormalizerDefinition*): CreateIndexTemplateRequest =
     analysis(Nil, first +: rest)
+
+  @deprecated("use new analysis package", "7.2.0")
   def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexTemplateRequest =
     analysis(Nil, normalizers)
 
@@ -46,18 +52,6 @@ case class CreateIndexTemplateRequest(name: String,
     mappings(first +: rest)
 
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexTemplateRequest = copy(mappings = mappings.toSeq)
-
-  @deprecated("use settings(map)", "6.0.0")
-  def indexSetting(key: String, value: Double): CreateIndexTemplateRequest = settings(Map(key -> value))
-
-  @deprecated("use settings(map)", "6.0.0")
-  def indexSetting(key: String, value: Long): CreateIndexTemplateRequest = settings(Map(key -> value))
-
-  @deprecated("use settings(map)", "6.0.0")
-  def indexSetting(key: String, value: Boolean): CreateIndexTemplateRequest = settings(Map(key -> value))
-
-  @deprecated("use settings(map)", "6.0.0")
-  def indexSetting(key: String, value: String): CreateIndexTemplateRequest = settings(Map(key -> value))
 
   def version(version: Int): CreateIndexTemplateRequest = copy(version = version.some)
 

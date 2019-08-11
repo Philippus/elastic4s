@@ -39,25 +39,4 @@ trait DynamicTemplateApi {
   def dynamicShortField(): BasicField                 = BasicField("", "short")
   def dynamicTextField(): TextField                   = TextField("")
   def dynamicTokenCountField(): BasicField            = BasicField("", "token_count")
-
-  @deprecated("use dynamicIntField(), dynamicTextField() and so on", "5.2.12")
-  def dynamicTemplateMapping(fieldType: FieldType): FieldDefinition = fieldType match {
-    case BinaryType     => binaryField("")
-    case BooleanType    => booleanField("")
-    case ByteType       => byteField("")
-    case CompletionType => completionField("")
-    case DateType       => dateField("")
-    case DoubleType     => doubleField("")
-    case FloatType      => floatField("")
-    case IntegerType    => intField("")
-    case IpType         => ipField("")
-    case GeoPointType   => geopointField("")
-    case GeoShapeType   => geoshapeField("")
-    case LongType       => longField("")
-    case NestedType     => nestedField("")
-    case ObjectType     => objectField("")
-    case ShortType      => shortField("")
-    case TextType       => textField("")
-    case TokenCountType => tokenCountField("")
-  }
 }

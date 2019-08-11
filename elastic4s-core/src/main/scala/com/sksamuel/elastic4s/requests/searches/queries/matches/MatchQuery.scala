@@ -32,9 +32,6 @@ case class MatchQuery(field: String,
   def fuzzyRewrite(fuzzyRewrite: String): MatchQuery = copy(fuzzyRewrite = fuzzyRewrite.some)
   def prefixLength(prefixLength: Int): MatchQuery    = copy(prefixLength = prefixLength.some)
 
-  @deprecated("use lenient(Boolean)", "5.0.0")
-  def setLenient(l: Boolean): MatchQuery = lenient(l)
-
   def fuzzyTranspositions(f: Boolean): MatchQuery =
     copy(fuzzyTranspositions = f.some)
 
