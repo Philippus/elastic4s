@@ -50,7 +50,7 @@ trait GetHandlers {
 
         def bad(status: Int): Left[ElasticError, GetResponse] = {
           val node = ResponseHandler.fromResponse[JsonNode](response)
-          if (node.get("error").isObject)
+          if (node.has("error") && node.get("error").isObject)
             Left(ElasticError.parse(response))
           else
             Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil, None))
