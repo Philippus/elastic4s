@@ -18,13 +18,6 @@ case class TermBucket(key: String, override val docCount: Long, private[elastic4
 
 case class TermsAggResult(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Long, otherDocCount: Long)
   extends BucketAggregation {
-
-  @deprecated("use buckets", "5.2.9")
-  def getBuckets: Seq[TermBucket] = buckets
-
-  @deprecated("use bucket", "5.2.9")
-  def getBucketByKey(key: String): TermBucket = bucket(key)
-
   def bucket(key: String): TermBucket = bucketOpt(key).get
   def bucketOpt(key: String): Option[TermBucket] = buckets.find(_.key == key)
 }

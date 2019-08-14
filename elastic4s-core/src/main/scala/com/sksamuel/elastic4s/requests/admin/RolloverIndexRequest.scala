@@ -26,13 +26,9 @@ case class RolloverIndexRequest(sourceAlias: String,
 
   def maxSize(maxSize: String): RolloverIndexRequest = copy(maxSize = maxSize.some)
 
-  def maxDocs(maxDocs: Long): RolloverIndexRequest = maxIndexDocsCondition(maxDocs)
-  @deprecated("use maxDocs", "6.1.2")
-  def maxIndexDocsCondition(maxDocs: Long): RolloverIndexRequest = copy(maxDocs = maxDocs.some)
+  def maxDocs(maxDocs: Long): RolloverIndexRequest = copy(maxDocs = maxDocs.some)
 
   def maxAge(maxAge: String): RolloverIndexRequest = copy(maxAge = maxAge.some)
-  @deprecated("use maxDocs", "6.1.2")
-  def maxIndexAgeCondition(_maxAge: String): RolloverIndexRequest = maxAge(_maxAge)
 
   def dryRun(dryRun: Boolean): RolloverIndexRequest = copy(dryRun = dryRun.some)
 

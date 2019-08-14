@@ -68,9 +68,6 @@ case class SearchRequest(indexes: Indexes,
 
   def bool(block: => BoolQuery): SearchRequest = query(block)
 
-  @deprecated("Use matchAllQuery()", "5.2.0")
-  def matchAll(): SearchRequest = query(new MatchAllQuery)
-
   def inner(first: InnerHit, rest: InnerHit*): SearchRequest = inner(first +: rest)
 
   def inner(inners: Iterable[InnerHit]): SearchRequest = copy(inners = inners.toSeq)
@@ -89,9 +86,6 @@ case class SearchRequest(indexes: Indexes,
 
   def aggregations(first: AbstractAggregation, rest: AbstractAggregation*): SearchRequest =
     aggregations(first +: rest)
-
-  @deprecated("use sortBy", "5.0.0")
-  def sort(sorts: Sort*): SearchRequest = sortBy(sorts)
 
   def sortBy(sorts: Sort*): SearchRequest = sortBy(sorts)
 
@@ -131,19 +125,10 @@ case class SearchRequest(indexes: Indexes,
   // Adds a single prefix query to this search
   def prefix(name: String, value: Any): SearchRequest = query(PrefixQuery(name, value))
 
-  @deprecated("use regexQuery(...)", "5.0.0")
-  def regex(tuple: (String, String)): SearchRequest = regexQuery(tuple)
-
   def regexQuery(tuple: (String, String)): SearchRequest = regexQuery(tuple._1, tuple._2)
 
   // Adds a single regex query to this search
   def regexQuery(field: String, value: String): SearchRequest = query(RegexQuery(field, value))
-
-  @deprecated("use termQuery()", "5.0.0")
-  def term(tuple: (String, Any)): SearchRequest = termQuery(tuple)
-
-  @deprecated("use termQuery()", "5.0.0")
-  def term(field: String, value: Any): SearchRequest = termQuery(field, value)
 
   def termQuery(tuple: (String, Any)): SearchRequest = termQuery(tuple._1, tuple._2)
 
@@ -266,9 +251,6 @@ case class SearchRequest(indexes: Indexes,
   def stats(groups: String*): SearchRequest = copy(stats = groups.toSeq)
 
   def trackScores(enabled: Boolean): SearchRequest = copy(trackScores = enabled.some)
-
-  @deprecated("Renamed to storedFields", "5.0.0")
-  def fields(fields: String*): SearchRequest = storedFields(fields)
 
   def storedFields(first: String, rest: String*): SearchRequest = storedFields(first +: rest)
 

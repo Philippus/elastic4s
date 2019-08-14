@@ -38,7 +38,7 @@ case class CompositeAggregation(name: String,
                                 size: Option[Int] = None,
                                 subaggs: Seq[AbstractAggregation] = Nil,
                                 metadata: Map[String, AnyRef] = Map.empty,
-                                after: Option[Map[String, AnyRef]] = None)
+                                after: Option[Map[String, Any]] = None)
   extends Aggregation {
 
   type T = CompositeAggregation
@@ -47,7 +47,7 @@ case class CompositeAggregation(name: String,
 
   def size(size: Int): CompositeAggregation = copy(size = size.some)
 
-  def after(after: Map[String, AnyRef]): CompositeAggregation = copy(after = after.some)
+  def after(after: Map[String, Any]): CompositeAggregation = copy(after = after.some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
 

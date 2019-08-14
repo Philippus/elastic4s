@@ -30,10 +30,6 @@ case class UpdateByQueryRequest(indexes: Indexes,
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
 
-  @deprecated("use proceedOnConflicts", "6.2.0")
-  def abortOnVersionConflict(abortOnVersionConflict: Boolean): UpdateByQueryRequest =
-    proceedOnConflicts(abortOnVersionConflict)
-
   def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = {
     if (refresh == RefreshPolicy.WAIT_FOR) throw new UnsupportedOperationException("Update by query does not support RefreshPolicy.WAIT_FOR")
     copy(refresh = refresh.some)

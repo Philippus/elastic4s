@@ -207,7 +207,7 @@ class AkkaHttpClient private[akka] (
 
   private def toRequest(request: ElasticRequest,
                         host: String): Try[HttpRequest] = Try {
-    HttpRequest(
+    val httpRequest = HttpRequest(
       method = HttpMethods.getForKeyCaseInsensitive(request.method).getOrElse(HttpMethod.custom(request.method)),
       uri = Uri(request.endpoint)
         .withQuery(Query(request.params))
@@ -215,6 +215,7 @@ class AkkaHttpClient private[akka] (
         .withScheme(scheme),
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
+    settings.requestCallback(httpRequest)
   }
 
   private def toResponse(response: HttpResponse,
@@ -229,6 +230,12 @@ class AkkaHttpClient private[akka] (
   private def toEntity(entity: ElasticHttpEntity): RequestEntity = {
     entity match {
       case ElasticHttpEntity.StringEntity(content, contentType) =>
+        val ct =
+          contentType
+            .flatMap(value => ContentType.parse(value).right.toOption)
+            .getOrElse(ContentTypes.`text/plain(UTF-8)`)
+        HttpEntity(ct, ByteString(content))
+      case ElasticHttpEntity.ByteArrayEntity(content, contentType) =>
         val ct =
           contentType
             .flatMap(value => ContentType.parse(value).right.toOption)

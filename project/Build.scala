@@ -11,18 +11,18 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org                    = "com.sksamuel.elastic4s"
-    val AkkaVersion            = "2.5.23"
+    val AkkaVersion            = "2.5.24"
     val AkkaHttpVersion        = "10.1.9"
-    val CatsVersion            = "2.0.0-M4"
-    val CatsEffectVersion      = "2.0.0-M4"
-    val CirceVersion           = "0.12.0-M3"
+    val CatsVersion            = "2.0.0-RC1"
+    val CatsEffectVersion      = "2.0.0-RC1"
+    val CirceVersion           = "0.12.0-RC1"
     val CommonsIoVersion       = "2.6"
     val ElasticsearchVersion   = "7.2.1"
     val ExtsVersion            = "1.61.1"
     val JacksonVersion         = "2.9.9"
     val Json4sVersion          = "3.6.7"
     val AWSJavaSdkVersion      = "2.7.1"
-    val Log4jVersion           = "2.12.0"
+    val Log4jVersion           = "2.12.1"
     val MockitoVersion         = "3.0.0"
     val MonixVersion           = "2.3.3"
     val PlayJsonVersion        = "2.7.4"
@@ -32,7 +32,7 @@ object Build extends AutoPlugin {
     val ScalazVersion          = "7.2.28"
     val SprayJsonVersion       = "1.3.5"
     val SttpVersion            = "1.6.4"
-    val Slf4jVersion           = "1.7.27"
+    val Slf4jVersion           = "1.7.28"
   }
 
   import autoImport._
@@ -42,8 +42,8 @@ object Build extends AutoPlugin {
 
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
-    scalaVersion := "2.11.12",
-    crossScalaVersions := Seq("2.11.12", "2.12.8", "2.13.0"),
+    scalaVersion := "2.12.8",
+    crossScalaVersions := Seq("2.12.8", "2.13.0"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
@@ -73,7 +73,7 @@ object Build extends AutoPlugin {
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {
-      version := s"7.3.0.$travisBuildNumber-SNAPSHOT"
+      version := s"7.3.1.$travisBuildNumber-SNAPSHOT"
     } else {
       version := "7.3.0"
     },

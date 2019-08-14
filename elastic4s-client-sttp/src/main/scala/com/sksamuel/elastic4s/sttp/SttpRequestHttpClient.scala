@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.sttp
 import java.io._
 import java.nio.file.Files
 
-import com.sksamuel.elastic4s.HttpEntity.{FileEntity, InputStreamEntity, StringEntity}
+import com.sksamuel.elastic4s.HttpEntity.{FileEntity, InputStreamEntity, StringEntity, ByteArrayEntity}
 import com.sksamuel.elastic4s.{ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
 import com.sksamuel.exts.OptionImplicits._
 import com.softwaremill.sttp._
@@ -49,6 +49,7 @@ class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClien
     val r2 = entity.contentCharset.fold(r)(r.contentType)
     entity match {
       case StringEntity(content: String, _) => r2.body(content)
+      case ByteArrayEntity(content, _) => r2.body(content)
       case InputStreamEntity(in: InputStream, _) =>
         r2.body(Source.fromInputStream(in, "UTF8").getLines().mkString("\n"))
       case FileEntity(file: File, _) => r2.body(Files.readAllBytes(file.toPath))

@@ -14,20 +14,6 @@ trait SearchTemplateApi {
     def body(body: String): PutSearchTemplateRequest  = PutSearchTemplateRequest(name, None, body.some)
   }
 
-  @deprecated("Use the stored scripts api to store templates", "6.0.0")
-  def putSearchTemplate(name: String, query: Query): PutSearchTemplateRequest =
-    PutSearchTemplateRequest(name, query.some, None)
-
-  @deprecated("Use the stored scripts api to store templates", "6.0.0")
-  def putSearchTemplate(name: String, body: String): PutSearchTemplateRequest =
-    PutSearchTemplateRequest(name, none, body.some)
-
-  @deprecated("Use the stored scripts api to get templates", "6.0.0")
-  def getSearchTemplate(name: String): GetSearchTemplateRequest = GetSearchTemplateRequest(name)
-
-  @deprecated("Use the stored scripts api to delete templates", "6.0.0")
-  def removeSearchTemplate(name: String): RemoveSearchTemplateRequest = RemoveSearchTemplateRequest(name)
-
   def templateSearch(indexesAndTypes: IndexesAndTypes): TemplateSearchExpectsName =
     new TemplateSearchExpectsName(indexesAndTypes)
 

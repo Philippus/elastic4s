@@ -480,7 +480,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for common terms query" in {
     val req = search("music") query {
-      commonQuery("name") text "some text here" analyzer WhitespaceAnalyzer boost 12.3 cutoffFrequency 14.4 highFreqOperator "AND" lowFreqOperator "OR" lowFreqMinimumShouldMatch "3<80%" highFreqMinimumShouldMatch 2
+      commonTermsQuery("name") text "some text here" analyzer WhitespaceAnalyzer boost 12.3 cutoffFrequency 14.4 highFreqOperator "AND" lowFreqOperator "OR" lowFreqMinimumShouldMatch "3<80%" highFreqMinimumShouldMatch 2
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_query_commonterms.json")
   }
@@ -529,9 +529,9 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") postFilter {
       boolQuery()
         .should(
-          geoDistanceQuery("distance") geohash "geo1234" geoDistance GeoDistance.Plane distance "120mi"
+          geoDistanceQuery("distance", "geo1234") geoDistance GeoDistance.Plane distance "120mi"
         ).not(
-        geoDistanceQuery("distance").point(45.4d, 76.6d) distance(45, DistanceUnit.Yard)
+        geoDistanceQuery("distance", 45.4d, 76.6d) distance(45, DistanceUnit.Yard)
       )
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_filter_geo_distance.json")
@@ -655,14 +655,14 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for terms aggregation" in {
     val req = search("music") aggs {
-      termsAggregation("my_terms_agg") field "keyword" size 10 order TermsOrder("count", true)
+      termsAggregation("my_terms_agg") field "keyword" size 10 order TermsOrder("count")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_terms.json")
   }
 
   it should "generate correct json for top hits aggregation" in {
     val req = search("music") aggs {
-      termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count", true) addSubAggregation (
+      termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count") addSubAggregation (
         topHitsAggregation("top_tag_hits") size 1 sortBy {
           fieldSort("last_activity_date") order SortOrder.Desc
         } fetchSource(Array("title"), Array.empty)
@@ -799,10 +799,10 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for multiple suggestions" in {
     val req = search("music") query "coldplay" suggestions(
-      termSuggestion("my-suggestion-1") on "names" text "clocks by culdpaly" maxEdits 2 mode "Popular" shardSize 2 accuracy 0.6,
-      termSuggestion("my-suggestion-2") on "names" text "aqualuck by jethro toll" size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
-      termSuggestion("my-suggestion-3") on "names" text "bountiful day by u22" maxInspections 3 stringDistance "levenstein",
-      termSuggestion("my-suggestion-4") on "names" text "whatever some text" maxTermFreq 0.5 minWordLength 5 mode
+      termSuggestion("my-suggestion-1", "names", "clocks by culdpaly") maxEdits 2 mode "Popular" shardSize 2 accuracy 0.6,
+      termSuggestion("my-suggestion-2", "names", "aqualuck by jethro toll") size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
+      termSuggestion("my-suggestion-3", "names", "bountiful day by u22") maxInspections 3 stringDistance "levenstein",
+      termSuggestion("my-suggestion-4", "names", "whatever some text") maxTermFreq 0.5 minWordLength 5 mode
         SuggestMode.Always
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_suggestions_multiple.json")
@@ -811,8 +811,8 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
   // for backwards compatibility default suggester is the term suggester
   it should "generate correct json for suggestions" in {
     val req = search("music") query termQuery("name", "coldplay") suggestions(
-      termSuggestion("suggestion-1") on "name" text "clocks by culdpaly" maxEdits 2,
-      termSuggestion("suggestion-2") on "name" text "aqualuck by jethro toll"
+      termSuggestion("suggestion-1", "name", "clocks by culdpaly").maxEdits(2),
+      termSuggestion("suggestion-2", "name", "aqualuck by jethro toll")
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_suggestions.json")
   }
@@ -828,16 +828,16 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for suggestions of multiple suggesters" in {
     val req = search("music") query termQuery("name", "coldplay") suggestions(
-      termSuggestion("suggestion-term") on "name" text "culdpaly" maxEdits 2,
-      phraseSuggestion("suggestion-phrase") on "name" text "aqualuck by jethro toll" maxErrors 1.0f addDirectGenerator DirectGenerator(field = "fieldName", minWordLength = Some(3), prefixLength = Some(0)),
-      completionSuggestion("suggestion-completion") on "ac" text "cold"
+      termSuggestion("suggestion-term", "name", "culdpaly") maxEdits 2,
+      phraseSuggestion("suggestion-phrase", "name").text("aqualuck by jethro toll") maxErrors 1.0f addDirectGenerator DirectGenerator(field = "fieldName", minWordLength = Some(3), prefixLength = Some(0)),
+      completionSuggestion("suggestion-completion", "ac").text("cold")
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_suggestions_multiple_suggesters.json")
   }
 
   it should "generate correct json for completion suggestions" in {
     val req = search("music") query "coldplay" suggestions
-      completionSuggestion("my-suggestion-1").on("artist").text("wildcats by ratatat")
+      completionSuggestion("my-suggestion-1", "artist").text("wildcats by ratatat")
         .fuzzyPrefixLength(12)
         .fuzziness(Fuzziness.Two)
         .maxDeterminizedStates(3)
@@ -892,7 +892,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
 
   it should "generate correct json for a geo distance range filter" in {
     val req = search("*") postFilter {
-      geoDistanceQuery("postcode").geohash("hash123").queryName("myfilter")
+      geoDistanceQuery("postcode", "hash123").queryName("myfilter")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_filter_geo_range.json")
   }

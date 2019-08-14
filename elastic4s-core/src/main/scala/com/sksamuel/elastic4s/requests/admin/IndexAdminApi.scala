@@ -40,8 +40,6 @@ trait IndexAdminApi {
 
   def rolloverIndex(alias: String): RolloverIndexRequest = RolloverIndexRequest(alias)
 
-  @deprecated("use shrinkIndex(source, target)", "6.1.2")
-  def shrink(source: String, target: String): ShrinkIndexRequest      = ShrinkIndexRequest(source, target)
   def shrinkIndex(source: String, target: String): ShrinkIndexRequest = ShrinkIndexRequest(source, target)
 
   def updateIndexLevelSettings(first: String, rest: String*): UpdateIndexLevelSettingsRequest =

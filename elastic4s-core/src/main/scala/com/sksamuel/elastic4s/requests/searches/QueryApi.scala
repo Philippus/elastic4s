@@ -20,8 +20,6 @@ trait QueryApi {
   def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
     BoostingQuery(positiveQuery, negativeQuery)
 
-  @deprecated("use commonTermsQuery", "6.1.2")
-  def commonQuery(field: String)      = new CommonQueryExpectsText(field)
   def commonTermsQuery(field: String) = new CommonQueryExpectsText(field)
 
   class CommonQueryExpectsText(name: String) {
@@ -29,8 +27,6 @@ trait QueryApi {
     def query(q: String): CommonTermsQuery = text(q)
   }
 
-  @deprecated("use commonTermsQuery", "6.1.2")
-  def commonQuery(field: String, text: String)      = CommonTermsQuery(field, text)
   def commonTermsQuery(field: String, text: String) = CommonTermsQuery(field, text)
 
   def constantScoreQuery(query: Query): ConstantScore = ConstantScore(query)
@@ -49,6 +45,7 @@ trait QueryApi {
   def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQuery =
     GeoBoundingBoxQuery(field).withGeohash(topleft, bottomright)
 
+  @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "7.2.0")
   def geoDistanceQuery(field: String): GeoDistanceExpectsPoint           = new GeoDistanceExpectsPoint(field)
   def geoDistanceQuery(field: String, geohash: String): GeoDistanceQuery = GeoDistanceQuery(field).geohash(geohash)
   def geoDistanceQuery(field: String, lat: Double, long: Double): GeoDistanceQuery =
@@ -109,8 +106,6 @@ trait QueryApi {
 
   def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit = com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
 
-  @deprecated("use matchQuery(field, value) instead of the tupled version", "5.2.0")
-  def matchQuery(tuple: (String, Any)): MatchQuery      = MatchQuery(tuple._1, tuple._2)
   def matchQuery(field: String, value: Any): MatchQuery = MatchQuery(field, value)
 
   def matchPhraseQuery(field: String, value: Any): MatchPhrase = MatchPhrase(field, value)
@@ -165,6 +160,8 @@ trait QueryApi {
   def queryStringQuery(queryString: String): QueryStringQuery = QueryStringQuery(queryString)
 
   def percolateQuery(`type`: String, field: String = "query") = new PercolateExpectsUsing(`type`, field)
+
+  @deprecated("types are going away", "7.2.0")
   class PercolateExpectsUsing(`type`: String, field: String) {
     def usingId(index: String, `type`: String, id: Any): PercolateQuery =
       usingId(DocumentRef(index, `type`, id.toString))
@@ -183,12 +180,8 @@ trait QueryApi {
 
   def rawQuery(json: String): RawQuery = RawQuery(json)
 
-  @deprecated("use the non-tupled version regexQuery(field,value)", "6.1.2")
-  def regexQuery(tuple: (String, String)): RegexQuery      = regexQuery(tuple._1, tuple._2)
   def regexQuery(field: String, value: String): RegexQuery = RegexQuery(field, value)
 
-  @deprecated("use the non-tupled version prefixQuery(field,value)", "6.1.2")
-  def prefixQuery(tuple: (String, Any)): PrefixQuery      = prefixQuery(tuple._1, tuple._2)
   def prefixQuery(field: String, value: Any): PrefixQuery = PrefixQuery(field, value)
 
   def scriptQuery(script: Script): ScriptQuery = ScriptQuery(script)
@@ -223,8 +216,6 @@ trait QueryApi {
 
   def spanMultiTermQuery(query: MultiTermQuery) = SpanMultiTermQuery(query)
 
-  @deprecated("use the non-tupled version termQuery(field,value)", "6.1.2")
-  def termQuery(tuple: (String, Any)): TermQuery      = termQuery(tuple._1, tuple._2)
   def termQuery(field: String, value: Any): TermQuery = TermQuery(field, value)
 
   def termsQuery[T](field: String, first: T, rest: T*): TermsQuery[T] =
@@ -247,8 +238,6 @@ trait QueryApi {
                     minimumShouldMatchScript: Script): com.sksamuel.elastic4s.requests.searches.queries.term.TermsSetQuery =
     TermsSetQuery(field, terms, minimumShouldMatchScript = Some(minimumShouldMatchScript))
 
-  @deprecated("use the non-tupled version wildcardQuery(field,value)", "6.1.2")
-  def wildcardQuery(tuple: (String, Any)): WildcardQuery      = wildcardQuery(tuple._1, tuple._2)
   def wildcardQuery(field: String, value: Any): WildcardQuery = WildcardQuery(field, value)
 
   def typeQuery(`type`: String) = TypeQuery(`type`)
