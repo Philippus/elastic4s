@@ -832,6 +832,7 @@ For the tests to work you will need to run a local elastic instance on port 9200
 * AOE
 * Starmind
 * ShopRunner
+* Soundcloud
 
 _Raise a PR to add your company here_
 
