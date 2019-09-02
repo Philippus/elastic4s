@@ -1,0 +1,13 @@
+{
+    "query": {
+        "match_bool_prefix": {
+            "name": {
+                "query": "coldplay",
+                "analyzer": "snowball",
+                "fuzziness": "0<1",
+                "max_expansions": 3
+            }
+        }
+    },
+    "size": 5
+}

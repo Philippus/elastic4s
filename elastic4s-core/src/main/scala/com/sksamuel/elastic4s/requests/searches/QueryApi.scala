@@ -111,6 +111,7 @@ trait QueryApi {
   def matchPhraseQuery(field: String, value: Any): MatchPhrase = MatchPhrase(field, value)
 
   def matchPhrasePrefixQuery(field: String, value: Any) = MatchPhrasePrefix(field, value)
+  def matchBoolPrefixQuery(field: String, value: Any) = MatchBoolPrefix(field, value)
 
   def multiMatchQuery(text: String) = MultiMatchQuery(text)
 
