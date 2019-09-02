@@ -12,6 +12,8 @@ trait MappingApi {
 
   def getMapping(indexes: Indexes): GetMappingRequest               = GetMappingRequest(indexes)
 
+  def getMapping(indexes: Indexes, fields: String*): GetFieldMappingRequest = GetFieldMappingRequest(indexes, fields)
+
   def putMapping(indexes: Indexes): PutMappingRequest               = PutMappingRequest(IndexesAndType(indexes))
 
   @deprecated("types are deprecated now", "7.0")
