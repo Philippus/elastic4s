@@ -7,6 +7,7 @@ lazy val root = Project("elastic4s", file("."))
   .aggregate(
     core,
     clientesjava,
+    clientsSniffed,
     cats_effect,
     scalaz,
 //  monix,
@@ -46,6 +47,15 @@ lazy val clientesjava = Project("elastic4s-client-esjava", file("elastic4s-clien
     )
   )
   .dependsOn(core)
+
+lazy val clientsSniffed = Project("elastic4s-client-sniffed", file("elastic4s-client-sniffed"))
+  .settings(
+    name := "elastic4s-client-sniffed",
+    libraryDependencies ++= Seq(
+      "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" % ElasticsearchVersion,
+    )
+  )
+  .dependsOn(clientesjava)
 
 lazy val cats_effect = Project("elastic4s-effect-cats", file("elastic4s-effect-cats"))
   .settings(name := "elastic4s-effect-cats")
@@ -152,9 +162,9 @@ lazy val clientsttp = Project("elastic4s-client-sttp", file("elastic4s-client-st
 lazy val clientakka = Project("elastic4s-client-akka", file("elastic4s-client-akka"))
   .settings(
     name := "elastic4s-client-akka",
-    libraryDependencies += "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+    libraryDependencies += "com.typesafe.akka" %% "akka-http"   % AkkaHttpVersion,
     libraryDependencies += "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
-    libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
+    libraryDependencies += "org.scalamock"     %% "scalamock"   % ScalamockVersion % "test"
   )
   .dependsOn(core, testkit % "test")
 
