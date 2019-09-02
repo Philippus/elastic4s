@@ -530,3 +530,23 @@ case class CompoundWordTokenFilter(override val name: String,
   def onlyLongestMatch(onlyLongestMatch: Boolean): CompoundWordTokenFilter =
     copy(onlyLongestMatch = onlyLongestMatch.some)
 }
+
+case class MultiplexerTokenFilter(override val name: String,
+                                  filters: Seq[String] = Nil,
+                                  preserveOriginal: Option[Boolean] = None) extends TokenFilter {
+
+  override def build: XContentBuilder = {
+    val b = XContentFactory.jsonBuilder()
+    b.field("type", "multiplexer")
+    if (filters.nonEmpty)
+      b.array("filters", filters.toArray)
+    preserveOriginal.foreach(b.field("preserve_original", _))
+    b
+  }
+
+  def filters(filters: Seq[String]): MultiplexerTokenFilter =
+    copy(filters = filters)
+
+  def preserveOriginal(preserveOriginal: Boolean): MultiplexerTokenFilter =
+    copy(preserveOriginal = preserveOriginal.some)
+}

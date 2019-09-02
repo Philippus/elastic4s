@@ -5,11 +5,11 @@ import com.sksamuel.elastic4s.requests.searches.RawQueryBodyFn
 import com.sksamuel.elastic4s.requests.searches.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FunctionScoreQuery, ScriptScore}
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoBoundingBoxQueryBodyFn, GeoDistanceQuery, GeoDistanceQueryBodyFn, GeoPolygonQuery, GeoPolyonQueryBodyFn, GeoShapeQuery, GeoShapeQueryBodyFn}
-import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchNoneQuery, MatchPhrase, MatchPhrasePrefix, MatchQuery, MultiMatchQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefix, MatchNoneQuery, MatchPhrase, MatchPhrasePrefix, MatchQuery, MultiMatchQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanContainingQuery, SpanContainingQueryBodyFn, SpanFirstQuery, SpanFirstQueryBodyFn, SpanMultiTermQuery, SpanMultiTermQueryBodyFn, SpanNearQuery, SpanNearQueryBodyFn, SpanNotQuery, SpanNotQueryBodyFn, SpanOrQuery, SpanOrQueryBodyFn, SpanTermQuery, SpanTermQueryBodyFn, SpanWithinQuery, SpanWithinQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQuery, TermQueryBodyFn, TermsLookupQuery, TermsLookupQueryBodyFn, TermsQuery, TermsQueryBodyFn, TermsSetQuery, TermsSetQueryBodyFn, TypeQueryBodyFn, WildcardQueryBodyFn}
-import com.sksamuel.elastic4s.requests.searches.queries.text.{CommonTermsQueryBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
+import com.sksamuel.elastic4s.requests.searches.queries.text.{CommonTermsQueryBodyFn, MatchBoolPrefixBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
 
 object QueryBuilderFn {
   def apply(q: Query): XContentBuilder = q match {
@@ -33,6 +33,7 @@ object QueryBuilderFn {
     case q: MatchQuery          => MatchQueryBuilderFn(q)
     case q: MatchPhrase         => MatchPhraseQueryBodyFn(q)
     case q: MatchPhrasePrefix   => MatchPhrasePrefixBodyFn(q)
+    case q: MatchBoolPrefix     => MatchBoolPrefixBodyFn(q)
     case q: MoreLikeThisQuery   => MoreLikeThisQueryBuilderFn(q)
     case q: MultiMatchQuery     => MultiMatchBodyFn(q)
     case q: NestedQuery         => NestedQueryBodyFn(q)

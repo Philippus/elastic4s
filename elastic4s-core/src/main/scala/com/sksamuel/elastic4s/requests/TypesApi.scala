@@ -1,14 +1,15 @@
 package com.sksamuel.elastic4s.requests
 
 import com.sksamuel.elastic4s.requests.mappings.FieldType.{BinaryType, BooleanType, ByteType, CompletionType, DateType, DoubleType, FloatType, GeoPointType, GeoShapeType, IntegerType, IpType, KeywordType, LongType, NestedType, ObjectType, PercolatorType, ShortType, TextType, TokenCountType}
-import com.sksamuel.elastic4s.requests.mappings.{BasicField, CompletionField, GeoshapeField, JoinField, KeywordField, NestedField, ObjectField, RangeField, TextField}
+import com.sksamuel.elastic4s.requests.mappings.{BasicField, CompletionField, GeoshapeField, JoinField, KeywordField, NestedField, ObjectField, RangeField, SearchAsYouTypeField, TextField}
 import com.sksamuel.elastic4s.requests.script.{Script, ScriptField}
 
 trait TypesApi {
 
   // string datatypes
-  def keywordField(name: String): KeywordField = KeywordField(name)
-  def textField(name: String): TextField       = TextField(name)
+  def keywordField(name: String): KeywordField            = KeywordField(name)
+  def textField(name: String): TextField                  = TextField(name)
+  def searchAsYouType(name: String): SearchAsYouTypeField = SearchAsYouTypeField(name)
 
   // numeric datatypes
   def byteField(name: String): BasicField        = BasicField(name, "byte")

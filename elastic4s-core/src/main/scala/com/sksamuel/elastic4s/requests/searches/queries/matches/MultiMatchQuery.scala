@@ -14,6 +14,7 @@ object MultiMatchQueryBuilderType {
     case "CROSS_FIELDS"  => CROSS_FIELDS
     case "PHRASE"        => PHRASE
     case "PHRASE_PREFIX" => PHRASE_PREFIX
+    case "BOOL_PREFIX"   => BOOL_PREFIX
   }
 
   case object BEST_FIELDS   extends MultiMatchQueryBuilderType
@@ -21,6 +22,7 @@ object MultiMatchQueryBuilderType {
   case object CROSS_FIELDS  extends MultiMatchQueryBuilderType
   case object PHRASE        extends MultiMatchQueryBuilderType
   case object PHRASE_PREFIX extends MultiMatchQueryBuilderType
+  case object BOOL_PREFIX   extends MultiMatchQueryBuilderType
 }
 
 sealed trait ZeroTermsQuery
