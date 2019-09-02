@@ -42,8 +42,8 @@ object Build extends AutoPlugin {
 
   override def projectSettings: Seq[Def.Setting[_]] = Seq(
     organization := org,
-    scalaVersion := "2.12.8",
-    crossScalaVersions := Seq("2.12.8", "2.13.0"),
+    scalaVersion := "2.12.9",
+    crossScalaVersions := Seq("2.12.9", "2.13.0"),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.url("https://artifacts.elastic.co/maven"),
@@ -73,9 +73,9 @@ object Build extends AutoPlugin {
       "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
     ),
     if (isTravis) {
-      version := s"7.3.1.$travisBuildNumber-SNAPSHOT"
+      version := s"7.3.2.$travisBuildNumber-SNAPSHOT"
     } else {
-      version := "7.3.0"
+      version := "7.3.1"
     },
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
