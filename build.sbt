@@ -9,7 +9,7 @@ lazy val root = Project("elastic4s", file("."))
     http,
     cats_effect,
     scalaz,
-    //monix,
+    monix,
     tests,
     testkit,
     circe,
@@ -92,7 +92,7 @@ lazy val cats_effect = Project("elastic4s-cats-effect", file("elastic4s-cats-eff
   .settings(name := "elastic4s-cats-effect")
   .settings(
     libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-effect" % "2.0.0-M4"
+      "org.typelevel" %% "cats-effect" % "2.0.0"
     )
   )
   .dependsOn(http)
@@ -107,14 +107,14 @@ lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   )
   .dependsOn(http)
 
-/*lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
+lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
   .settings(name := "elastic4s-monix")
   .settings(
     libraryDependencies ++= Seq(
-      "io.monix" %% "monix" % "2.3.3"
+      "io.monix" %% "monix" % "3.0.0"
     )
   )
-  .dependsOn(http)*/
+  .dependsOn(http)
 
 lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(
