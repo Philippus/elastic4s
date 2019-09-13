@@ -11,7 +11,7 @@ class TasksTest extends FlatSpec with DockerTests with Matchers {
       listTasks()
     }.await.result
 
-    resp.nodes.head._2.roles shouldBe Seq("master", "data", "ingest")
+    resp.nodes.head._2.roles should contain theSameElementsAs(Seq("master", "data", "ingest"))
     resp.nodes.head._2.tasks.values.forall(_.startTimeInMillis > 0) shouldBe true
   }
 
