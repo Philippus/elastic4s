@@ -10,7 +10,7 @@ lazy val root = Project("elastic4s", file("."))
     clientsSniffed,
     cats_effect,
     scalaz,
-//  monix,
+    monix,
     tests,
     testkit,
     circe,
@@ -76,14 +76,14 @@ lazy val scalaz = Project("elastic4s-effect-scalaz", file("elastic4s-effect-scal
   )
   .dependsOn(core)
 
-//lazy val monix = Project("elastic4s-effect-monix", file("elastic4s-effect-monix"))
-//  .settings(name := "elastic4s-effect-monix")
-//  .settings(
-//    libraryDependencies ++= Seq(
-//      "io.monix" %% "monix" % MonixVersion
-//    )
-//  )
-//  .dependsOn(core)
+lazy val monix = Project("elastic4s-effect-monix", file("elastic4s-effect-monix"))
+  .settings(name := "elastic4s-effect-monix")
+  .settings(
+    libraryDependencies ++= Seq(
+      "io.monix" %% "monix" % MonixVersion
+    )
+  )
+  .dependsOn(core)
 
 lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(
