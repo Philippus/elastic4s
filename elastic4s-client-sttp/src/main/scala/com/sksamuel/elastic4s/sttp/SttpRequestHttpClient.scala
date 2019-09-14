@@ -3,28 +3,25 @@ package com.sksamuel.elastic4s.sttp
 import java.io._
 import java.nio.file.Files
 
-import com.sksamuel.elastic4s.HttpEntity.{FileEntity, InputStreamEntity, StringEntity, ByteArrayEntity}
-import com.sksamuel.elastic4s.{ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
+import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
+import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
 import com.sksamuel.exts.OptionImplicits._
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 import scala.io.Source
 import scala.util.{Failure, Success}
 
-class SttpRequestHttpClient(clientUri: ElasticsearchClientUri) extends HttpClient {
-
-  import scala.concurrent.ExecutionContext.Implicits._
-
-  implicit val sttpBackend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend()
+class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(implicit ec: ExecutionContext, sttpBackend: SttpBackend[Future, Nothing]) extends HttpClient {
 
   private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
-    val url = uri"http://${clientUri.hosts.head._1}:${clientUri.hosts.head._2}/$endpoint?$params"
+    val url = uri"${nodeEndpoint.protocol}://${nodeEndpoint.host}:${nodeEndpoint.port}/$endpoint?$params"
     method.toUpperCase match {
       case "GET"    => sttp.get(url)
       case "HEAD"   => sttp.head(url)
-      case "POST"   => sttp.get(url)
+      case "POST"   => sttp.post(url)
       case "PUT"    => sttp.put(url)
       case "DELETE" => sttp.delete(url)
     }
