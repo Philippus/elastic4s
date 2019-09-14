@@ -14,7 +14,15 @@ import scala.concurrent.ExecutionContext
 import scala.io.Source
 import scala.util.{Failure, Success}
 
-class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(implicit ec: ExecutionContext, sttpBackend: SttpBackend[Future, Nothing]) extends HttpClient {
+class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
+  implicit ec: ExecutionContext, sttpBackend: SttpBackend[Future, Nothing]) extends HttpClient {
+
+  /** Alternative constructor for backwards compatibility. */
+  @deprecated("Use the constructor which takes an ElasticNodeEndpoint", "7.3.2")
+  def this(clientUri: ElasticsearchClientUri) {
+    this(ElasticNodeEndpoint("http", clientUri.hosts.head._1, clientUri.hosts.head._2, None))(
+      SttpRequestHttpClient.defaultEc, SttpRequestHttpClient.defaultSttpBackend)
+  }
 
   private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
     val url = uri"${nodeEndpoint.protocol}://${nodeEndpoint.host}:${nodeEndpoint.port}/$endpoint?$params"
@@ -77,6 +85,12 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(implicit ec: Exec
 }
 
 object SttpRequestHttpClient {
+
+  private def defaultEc: ExecutionContext = ExecutionContext.global
+  private def defaultSttpBackend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend()
+
   /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
-  def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(ExecutionContext.global, AsyncHttpClientFutureBackend())
+  def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(
+    defaultEc, defaultSttpBackend)
+
 }
