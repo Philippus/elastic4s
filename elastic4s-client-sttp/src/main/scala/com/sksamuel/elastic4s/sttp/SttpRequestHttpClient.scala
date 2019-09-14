@@ -75,3 +75,8 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(implicit ec: Exec
     }
   }
 }
+
+object SttpRequestHttpClient {
+  /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
+  def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(ExecutionContext.global, AsyncHttpClientFutureBackend())
+}
