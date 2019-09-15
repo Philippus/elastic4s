@@ -76,9 +76,9 @@ object Build extends AutoPlugin {
       "org.mockito" % "mockito-core" % MockitoVersion % "test"
     ),
     if (isTravis) {
-      version := s"7.3.2.$travisBuildNumber-SNAPSHOT"
+      version := s"7.3.3.$travisBuildNumber-SNAPSHOT"
     } else {
-      version := "7.3.1"
+      version := "7.3.2"
     },
     publishTo := {
       val nexus = "https://oss.sonatype.org/"
