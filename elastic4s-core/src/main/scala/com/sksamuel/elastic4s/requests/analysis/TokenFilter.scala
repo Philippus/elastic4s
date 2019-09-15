@@ -490,6 +490,14 @@ sealed trait CompoundWordTokenFilterType {
   def name: String
 }
 
+case object HyphenationDecompounder extends CompoundWordTokenFilterType {
+  val name = "hyphenation_decompounder"
+}
+
+case object DictionaryDecompounder extends CompoundWordTokenFilterType {
+  val name = "dictionary_decompounder"
+}
+
 case class CompoundWordTokenFilter(override val name: String,
                                    `type`: CompoundWordTokenFilterType,
                                    wordList: Iterable[String] = Nil,
