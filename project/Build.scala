@@ -66,6 +66,8 @@ object Build extends AutoPlugin {
       credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")
     },
     publishTo := Sonatype.autoImport.sonatypePublishTo.value,
+    publishConfiguration := publishConfiguration.value.withOverwrite(true),
+    publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true),
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
