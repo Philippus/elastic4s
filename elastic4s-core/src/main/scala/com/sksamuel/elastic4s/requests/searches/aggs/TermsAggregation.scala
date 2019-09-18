@@ -57,7 +57,7 @@ case class TermsAggregation(name: String,
   def excludeExactValues(head: String, tail: String*): TermsAggregation = copy(excludeExactValues = head +: tail)
 
   def includeExactValues(includes: Seq[String]): TermsAggregation = copy(includeExactValues = includes)
-  def excludeExactValues(excludes: Seq[String]): TermsAggregation = copy(includeExactValues = excludes)
+  def excludeExactValues(excludes: Seq[String]): TermsAggregation = copy(excludeExactValues = excludes)
 
   def includeRegex(regex: String): TermsAggregation = copy(includeRegex = Some(regex))
   def excludeRegex(regex: String): TermsAggregation = copy(excludeRegex = Some(regex))
