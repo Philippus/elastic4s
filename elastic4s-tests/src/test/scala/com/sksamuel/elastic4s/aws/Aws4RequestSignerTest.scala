@@ -16,8 +16,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
       val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
       val withHeaders = signer.withAws4Headers(httpPostRequest)
       withHeaders.getAllHeaders find (_.getName == "Authorization") match {
-        case Some(header) ⇒ header.getValue shouldBe (result)
-        case _            ⇒ 1 shouldBe (0)
+        case Some(header) => header.getValue shouldBe (result)
+        case _            => 1 shouldBe (0)
       }
     }
 
@@ -27,8 +27,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
       val signer = new Aws4TestRequestSigner(chainProvider, region, date, dateTime)
       val withHeaders = signer.withAws4Headers(httpPostRequest)
       withHeaders.getAllHeaders find (_.getName == "X-Amz-Security-Token") match {
-        case Some(header) ⇒ header.getValue shouldBe (awsSessionToken)
-        case _            ⇒ 1 shouldBe (0)
+        case Some(header) => header.getValue shouldBe (awsSessionToken)
+        case _            => 1 shouldBe (0)
       }
     }
 
@@ -39,8 +39,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
 
       val withHeaders = signer.withAws4Headers(httpPostRequestWithoutDate)
       withHeaders.getAllHeaders find (_.getName == "Authorization") match {
-        case Some(header) ⇒ header.getValue shouldBe (result)
-        case _            ⇒ 1 shouldBe (0)
+        case Some(header) => header.getValue shouldBe (result)
+        case _            => 1 shouldBe (0)
       }
     }
 
@@ -51,8 +51,8 @@ class Aws4RequestSignerTest extends WordSpec with Matchers with SharedTestData {
 
       val withHeaders = signer.withAws4Headers(httpPostRequestWithBadHost)
       withHeaders.getAllHeaders find (_.getName == "Authorization") match {
-        case Some(header) ⇒ header.getValue shouldBe (result)
-        case _            ⇒ 1 shouldBe (0)
+        case Some(header) => header.getValue shouldBe (result)
+        case _            => 1 shouldBe (0)
       }
     }
   }

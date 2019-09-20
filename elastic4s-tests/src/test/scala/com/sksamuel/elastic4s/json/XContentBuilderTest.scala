@@ -40,7 +40,7 @@ class XContentBuilderTest extends FunSuite with Matchers {
   }
 
   test("should support biginteger arrays") {
-    XContentFactory.obj().autoarray("bigintegers", Array[BigInteger](new BigInteger("123"), new BigInteger("456"))).string shouldBe """{"bigintegers":[123,456]}"""
+    XContentFactory.obj().autoarray("bigintegers", Array[BigInteger](new BigInteger("123"), new BigInteger("456")).toIndexedSeq).string shouldBe """{"bigintegers":[123,456]}"""
   }
 
   test("should support long arrays") {

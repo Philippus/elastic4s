@@ -26,12 +26,12 @@ class ClusterSettingsHttpTest extends WordSpec with Matchers with DockerTests {
     "return cluster settings updated" in {
 
       val settings = client.execute {
-        clusterPersistentSettings(Map("indices.recovery.max_bytes_per_sec" → "50mb"))
-          .transientSettings(Map("search.max_buckets" → "30000"))
+        clusterPersistentSettings(Map("indices.recovery.max_bytes_per_sec" -> "50mb"))
+          .transientSettings(Map("search.max_buckets" -> "30000"))
       }.await.result
 
-      settings.transient shouldBe Map("search.max_buckets" → "30000")
-      settings.persistent shouldBe Map("indices.recovery.max_bytes_per_sec" → "50mb")
+      settings.transient shouldBe Map("search.max_buckets" -> "30000")
+      settings.persistent shouldBe Map("indices.recovery.max_bytes_per_sec" -> "50mb")
     }
   }
 }

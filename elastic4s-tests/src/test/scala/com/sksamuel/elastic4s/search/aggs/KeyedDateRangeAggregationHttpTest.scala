@@ -50,7 +50,7 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.keyedDateRange("agg1")
-      agg.buckets.mapValues(_.copy(data = Map.empty)) shouldBe Map(
+      agg.buckets.mapValues(_.copy(data = Map.empty)).toMap shouldBe Map(
         "old" -> DateRangeBucket(Some("1.1976768E12"), Some("15/12/2007"), Some("1.3555296E12"), Some("15/12/2012"), None, 3, Map.empty),
         "new" -> DateRangeBucket(Some("1.3555296E12"), Some("15/12/2012"), Some("1.513296E12"), Some("15/12/2017"), None, 3, Map.empty)
       )
@@ -69,7 +69,7 @@ class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with M
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.keyedDateRange("agg1")
-      agg.buckets.mapValues(_.copy(data = Map.empty)) shouldBe Map(
+      agg.buckets.mapValues(_.copy(data = Map.empty)).toMap shouldBe Map(
         "old" -> DateRangeBucket(Some("1.1976768E12"), Some("15/12/2007"), Some("1.3555296E12"), Some("15/12/2012"), None, 3, Map.empty),
         "new" -> DateRangeBucket(Some("1.3555296E12"), Some("15/12/2012"), Some("1.513296E12"), Some("15/12/2017"), None, 3, Map.empty)
       )

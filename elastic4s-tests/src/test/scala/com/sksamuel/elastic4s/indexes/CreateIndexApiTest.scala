@@ -89,7 +89,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
         ReverseTokenFilter,
         LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
         edgeNGramTokenFilter("myEdgeNGramTokenFilter").minGram(3).maxGram(50).side("front"),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2").toIndexedSeq),
         HtmlStripCharFilter,
         MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
         PatternReplaceCharFilter(
@@ -132,7 +132,7 @@ class CreateIndexApiTest extends FlatSpec with MockitoSugar with JsonSugar with 
         ReverseTokenFilter,
         LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
         edgeNGramTokenFilter("myEdgeNGramTokenFilter").minGram(3).maxGram(50).side("front"),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2").toIndexedSeq),
         HtmlStripCharFilter,
         MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
         PatternReplaceCharFilter(
