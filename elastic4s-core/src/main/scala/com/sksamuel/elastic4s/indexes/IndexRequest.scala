@@ -45,7 +45,7 @@ case class IndexRequest(indexAndType: IndexAndType,
   def versionType(versionType: VersionType): IndexRequest = copy(versionType = versionType.some)
 
   def timeout(timeout: String): IndexRequest          = copy(timeout = timeout.some)
-  def timeout(duration: FiniteDuration): IndexRequest = copy(timeout = (duration.toSeconds + "s").some)
+  def timeout(duration: FiniteDuration): IndexRequest = copy(timeout = (s"${duration.toSeconds}s").some)
 
   // if set to true then trying to update a document will fail
   def createOnly(createOnly: Boolean): IndexRequest = copy(createOnly = createOnly.some)
@@ -53,5 +53,5 @@ case class IndexRequest(indexAndType: IndexAndType,
   def fields(_fields: (String, Any)*): IndexRequest          = fields(_fields.toMap)
   def fields(_fields: Iterable[(String, Any)]): IndexRequest = fields(_fields.toMap)
   def fields(fields: Map[String, Any]): IndexRequest         = copy(fields = FieldsMapper.mapFields(fields))
-  def fieldValues(fields: FieldValue*): IndexRequest         = copy(fields = fields)
+  def fieldValues(fields: FieldValue*): IndexRequest         = copy(fields = fields.toIndexedSeq)
 }

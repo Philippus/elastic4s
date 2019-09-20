@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.json.XContentBuilder
 
 object AnalysisBuilderFn {
 
-  def build(ad: AnalysisDefinition, source: XContentBuilder) {
+  def build(ad: AnalysisDefinition, source: XContentBuilder): XContentBuilder = {
     source.startObject("analysis")
 
     val charFilterDefinitions = ad.charFilterDefinitions

@@ -155,12 +155,12 @@ trait ElasticSugar extends ElasticDsl {
     }
 
   def blockUntilIndexExists(index: String): Unit =
-    blockUntil(s"Expected exists index $index") { () ⇒
+    blockUntil(s"Expected exists index $index") { () =>
       doesIndexExists(index)
     }
 
   def blockUntilIndexNotExists(index: String): Unit =
-    blockUntil(s"Expected not exists index $index") { () ⇒
+    blockUntil(s"Expected not exists index $index") { () =>
       !doesIndexExists(index)
     }
 
