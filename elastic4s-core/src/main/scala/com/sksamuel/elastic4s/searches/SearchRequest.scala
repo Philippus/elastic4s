@@ -241,7 +241,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
   def keepAlive(duration: FiniteDuration): SearchRequest = scroll(duration)
 
   def scroll(keepAlive: String): SearchRequest = copy(keepAlive = keepAlive.some)
-  def scroll(duration: FiniteDuration): SearchRequest = copy(keepAlive = Some(duration.toSeconds + "s"))
+  def scroll(duration: FiniteDuration): SearchRequest = copy(keepAlive = Some(s"${duration.toSeconds}s"))
 
   def slice(id: Int, max: Int): SearchRequest = copy(windowing = windowing.copy(slice = Some(id, max)))
 
@@ -266,7 +266,7 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
 
   def indexBoost(map: Map[String, Double]): SearchRequest = indexBoost(map.toList: _*)
 
-  def indexBoost(tuples: (String, Double)*): SearchRequest = copy(indexBoosts = tuples)
+  def indexBoost(tuples: (String, Double)*): SearchRequest = copy(indexBoosts = tuples.toIndexedSeq)
 
   def timeout(timeout: FiniteDuration): SearchRequest = copy(control = control.copy(timeout = timeout.some))
 

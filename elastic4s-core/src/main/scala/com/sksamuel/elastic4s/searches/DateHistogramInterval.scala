@@ -43,22 +43,22 @@ object DateHistogramInterval {
   }
 
   def seconds(seconds: Long): DateHistogramInterval = new DateHistogramInterval {
-    override def interval: String = seconds + "s"
+    override def interval: String = s"${seconds}s"
   }
 
   def minutes(mins: Long): DateHistogramInterval = new DateHistogramInterval {
-    override def interval: String = mins + "m"
+    override def interval: String = s"${mins}m"
   }
 
   def hours(hours: Long): DateHistogramInterval = new DateHistogramInterval {
-    override def interval: String = hours + "h"
+    override def interval: String = s"${hours}h"
   }
 
   def days(days: Long): DateHistogramInterval = new DateHistogramInterval {
-    override def interval: String = days + "d"
+    override def interval: String = s"${days}d"
   }
 
   def weeks(weeks: Long): DateHistogramInterval = new DateHistogramInterval {
-    override def interval: String = weeks + "w"
+    override def interval: String = s"${weeks}w"
   }
 }

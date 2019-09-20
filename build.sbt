@@ -92,7 +92,7 @@ lazy val cats_effect = Project("elastic4s-cats-effect", file("elastic4s-cats-eff
   .settings(name := "elastic4s-cats-effect")
   .settings(
     libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-effect" % "0.8"
+      "org.typelevel" %% "cats-effect" % "2.0.0"
     )
   )
   .dependsOn(http)
@@ -101,8 +101,8 @@ lazy val scalaz = Project("elastic4s-scalaz", file("elastic4s-scalaz"))
   .settings(name := "elastic4s-scalaz")
   .settings(
     libraryDependencies ++= Seq(
-      "org.scalaz" %% "scalaz-core"       % "7.2.24",
-      "org.scalaz" %% "scalaz-concurrent" % "7.2.24"
+      "org.scalaz" %% "scalaz-core"       % "7.2.28",
+      "org.scalaz" %% "scalaz-concurrent" % "7.2.28"
     )
   )
   .dependsOn(http)
@@ -111,7 +111,7 @@ lazy val monix = Project("elastic4s-monix", file("elastic4s-monix"))
   .settings(name := "elastic4s-monix")
   .settings(
     libraryDependencies ++= Seq(
-      "io.monix" %% "monix" % "2.3.3"
+      "io.monix" %% "monix" % "3.0.0"
     )
   )
   .dependsOn(http)
@@ -147,9 +147,18 @@ lazy val jackson = Project("elastic4s-jackson", file("elastic4s-jackson"))
 lazy val circe = Project("elastic4s-circe", file("elastic4s-circe"))
   .settings(
     name := "elastic4s-circe",
-    libraryDependencies += "io.circe" %% "circe-core"    % CirceVersion,
-    libraryDependencies += "io.circe" %% "circe-generic" % CirceVersion,
-    libraryDependencies += "io.circe" %% "circe-parser"  % CirceVersion
+    libraryDependencies ++= {
+      scalaBinaryVersion.value match {
+        case "2.11" => Seq(
+          "io.circe" %% "circe-core"    % Circe211Version,
+          "io.circe" %% "circe-generic" % Circe211Version,
+          "io.circe" %% "circe-parser"  % Circe211Version)
+        case _ => Seq(
+          "io.circe" %% "circe-core"    % CirceVersion,
+          "io.circe" %% "circe-generic" % CirceVersion,
+          "io.circe" %% "circe-parser"  % CirceVersion)
+      }
+    }
   )
   .dependsOn(core)
 
@@ -178,16 +187,16 @@ lazy val sprayjson = Project("elastic4s-spray-json", file("elastic4s-spray-json"
 lazy val sttp = Project("elastic4s-sttp", file("elastic4s-sttp"))
   .settings(
     name := "elastic4s-sttp",
-    libraryDependencies += "com.softwaremill.sttp" %% "core"                             % "1.2.0",
-    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.2.0"
+    libraryDependencies += "com.softwaremill.sttp" %% "core"                             % "1.6.4",
+    libraryDependencies += "com.softwaremill.sttp" %% "async-http-client-backend-future" % "1.6.4"
   )
   .dependsOn(core, http)
 
 lazy val akka = Project("elastic4s-akka", file("elastic4s-akka"))
   .settings(
     name := "elastic4s-akka",
-    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.5",
-    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.17",
+    libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.9",
+    libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.23",
     libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
   .dependsOn(core, http, testkit % "test")

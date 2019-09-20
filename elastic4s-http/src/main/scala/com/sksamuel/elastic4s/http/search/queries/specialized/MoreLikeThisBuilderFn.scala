@@ -19,7 +19,7 @@ object MoreLikeThisBuilderFn {
       builder.field("_index", doc.ref.index)
       builder.field("_type", doc.ref.`type`)
       builder.field("_id", doc.ref.id)
-      doc.routing.foreach { r ⇒
+      doc.routing.foreach { r =>
         builder.field("routing", r)
       }
       builder.endObject()
@@ -29,7 +29,7 @@ object MoreLikeThisBuilderFn {
       builder.field("_index", doc.index)
       builder.field("_type", doc.`type`)
       builder.rawField("doc", doc.doc)
-      doc.routing.foreach { r ⇒
+      doc.routing.foreach { r =>
         builder.field("routing", r)
       }
       builder.endObject()
@@ -44,7 +44,7 @@ object MoreLikeThisBuilderFn {
         builder.field("_index", doc.ref.index)
         builder.field("_type", doc.ref.`type`)
         builder.field("_id", doc.ref.id)
-        doc.routing.foreach { r ⇒
+        doc.routing.foreach { r =>
           builder.field("routing", r)
         }
         builder.endObject()

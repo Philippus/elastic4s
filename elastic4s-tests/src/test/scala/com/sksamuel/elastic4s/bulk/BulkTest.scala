@@ -168,8 +168,8 @@ class BulkTest extends FlatSpec with Matchers with DockerTests {
 
     val result = client.execute {
       bulk(
-        updateById(indexname, "elements", "22") doc("atomicweight" -> 9) version(1),
-        updateById(indexname, "elements", "23") doc("atomicweight" -> 10) version(2)
+        updateById(indexname, "elements", "22") doc(Map("atomicweight" -> 9)) version(1),
+        updateById(indexname, "elements", "23") doc(Map("atomicweight" -> 10)) version(2)
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 

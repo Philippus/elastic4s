@@ -96,7 +96,7 @@ trait UpdateHandlers {
         params.put("conflicts", "proceed")
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.foreach(params.put("requests_per_second", _))
-      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
+      request.timeout.map(t => s"${t.toMillis}ms").foreach(params.put("timeout", _))
       request.scroll.foreach(params.put("scroll", _))
       request.scrollSize.foreach(params.put("scroll_size", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))

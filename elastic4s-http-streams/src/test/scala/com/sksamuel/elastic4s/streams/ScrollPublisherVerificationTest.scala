@@ -52,7 +52,7 @@ class ScrollPublisherVerificationTest
 
   private val query = search("scrollpubver").matchAllQuery().scroll("1m").limit(2)
 
-  override def boundedDepthOfOnNextAndRequestRecursion: Long = 2l
+  override def boundedDepthOfOnNextAndRequestRecursion: Long = 2L
 
   override def createFailedPublisher(): Publisher[SearchHit] = null
 

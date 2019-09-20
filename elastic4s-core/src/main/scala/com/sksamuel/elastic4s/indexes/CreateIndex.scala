@@ -30,7 +30,7 @@ case class CreateIndexRequest(name: String,
   def shards(shds: Int): CreateIndexRequest    = copy(settings = settings.shards = shds)
   def replicas(repls: Int): CreateIndexRequest = copy(settings = settings.replicas = repls)
 
-  def refreshInterval(duration: Duration): CreateIndexRequest = refreshInterval(duration.toMillis + "ms")
+  def refreshInterval(duration: Duration): CreateIndexRequest = refreshInterval(s"${duration.toMillis}ms")
   def refreshInterval(interval: String): CreateIndexRequest   = copy(settings = settings.refreshInterval = interval)
 
   def settings(map: Map[String, Any]): CreateIndexRequest =

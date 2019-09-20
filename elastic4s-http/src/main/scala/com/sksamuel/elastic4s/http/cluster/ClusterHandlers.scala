@@ -54,7 +54,7 @@ trait ClusterHandlers {
     override def build(request: ClusterSettingsRequest): ElasticRequest = {
       val builder = ClusterBodyBuilderFn(request)
       val entity = HttpEntity(builder.string(), ContentType.APPLICATION_JSON.getMimeType)
-      ElasticRequest("PUT", "/_cluster/settings", Map("flat_settings" → true), entity)
+      ElasticRequest("PUT", "/_cluster/settings", Map("flat_settings" -> true), entity)
     }
   }
 }

@@ -96,7 +96,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
 
   private def send(k: Long): Unit = {
     require(queue.size >= k)
-    for (_ <- 0l until k)
+    for (_ <- 0L until k)
       if (max == 0 || processed < max) {
         s.onNext(queue.dequeue)
         processed = processed + 1
@@ -165,7 +165,8 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
     case Success(resp: RequestSuccess[SearchResponse]) =>
       scrollId = resp.result.scrollId.getOrError("Response did not include a scroll id")
-      queue.enqueue(resp.result.hits.hits: _*)
+      resp.result.hits.hits.foreach(h => queue.enqueue(h))
+
       context become ready
       unstashAll()
   }

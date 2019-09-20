@@ -39,7 +39,7 @@ class UpdateTest
   "an update request" should "support field based update" in {
     client.execute {
       update("5").in("hans" / "albums").doc(
-        "name" -> "man of steel"
+        Map("name" -> "man of steel")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
@@ -80,7 +80,7 @@ class UpdateTest
   it should "support field based upsert" in {
     client.execute {
       update("5").in("hans/albums").docAsUpsert(
-        "name" -> "batman"
+        Map("name" -> "batman")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
@@ -103,7 +103,7 @@ class UpdateTest
 
     client.execute {
       update("5").in("hans/albums").docAsUpsert(
-        "length" -> 12.34
+        Map("length" -> 12.34)
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
@@ -115,7 +115,7 @@ class UpdateTest
   it should "insert non existent doc when using docAsUpsert" in {
     client.execute {
       update("14").in("hans/albums").docAsUpsert(
-        "name" -> "hunt for the red october"
+        Map("name" -> "hunt for the red october")
       )
     }.await.result.result shouldBe "created"
   }
@@ -123,7 +123,7 @@ class UpdateTest
   it should "return errors when the index does not exist" in {
     val resp = client.execute {
       update("5").in("wowooasdsad" / "qweqwe").doc(
-        "name" -> "gladiator"
+        Map("name" -> "gladiator")
       )
     }.await
     resp.error.`type` shouldBe "document_missing_exception"
@@ -133,7 +133,7 @@ class UpdateTest
   it should "return errors when the id does not exist" in {
     val resp = client.execute {
       update("234234").in("hans/albums").doc(
-        "name" -> "gladiator"
+        Map("name" -> "gladiator")
       )
     }.await
     resp.error.`type` shouldBe "document_missing_exception"
@@ -143,7 +143,7 @@ class UpdateTest
   it should "not return source by default" in {
     val resp = client.execute {
       update("666").in("hans/albums").docAsUpsert(
-        "name" -> "dunkirk"
+        Map("name" -> "dunkirk")
       ).refresh(RefreshPolicy.Immediate)
     }.await
     resp.result.source shouldBe Map.empty
@@ -152,7 +152,7 @@ class UpdateTest
   it should "return source when specified" in {
     val resp = client.execute {
       update("667").in("hans/albums").docAsUpsert(
-        "name" -> "thin red line"
+        Map("name" -> "thin red line")
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
     }.await
     resp.result.source shouldBe Map("name" -> "thin red line")
@@ -161,7 +161,7 @@ class UpdateTest
   it should "include the original json" in {
     val resp = client.execute {
       update("555").in("hans/albums").docAsUpsert(
-        "name" -> "spider man"
+        Map("name" -> "spider man")
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
     }.await
     resp.body.get shouldBe """{"_index":"hans","_type":"albums","_id":"555","_version":1,"result":"created","forced_refresh":true,"_shards":{"total":2,"successful":1,"failed":0},"_seq_no":3,"_primary_term":1,"get":{"found":true,"_source":{"name":"spider man"}}}"""

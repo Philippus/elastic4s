@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.aws
 
 import com.sksamuel.elastic4s.aws.Crypto._
 import java.net.{URI, URLEncoder}
+import java.nio.charset.Charset
 
 import org.apache.http.{HttpEntityEnclosingRequest, HttpRequest}
 import org.apache.http.client.methods.HttpRequestWrapper
@@ -56,16 +57,16 @@ object CanonicalRequest {
 
   private def canonicalQueryString(httpRequest: HttpRequest): String = {
     val uri        = new URI(httpRequest.getRequestLine.getUri)
-    val parameters = URLEncodedUtils.parse(uri, "utf-8")
-    parameters.asScala.sortBy(_.getName).map(h ⇒ s"${h.getName}=${h.getValue}").mkString("&")
+    val parameters = URLEncodedUtils.parse(uri, Charset.forName("utf-8"))
+    parameters.asScala.sortBy(_.getName).map(h => s"${h.getName}=${h.getValue}").mkString("&")
   }
 
   private def canonicalHeaders(httpRequest: HttpRequest): String =
     httpRequest
       .getAllHeaders()
       .sortBy(_.getName.toLowerCase)
-      .filterNot(h ⇒ ignoredHeaders.contains(h.getName.toLowerCase))
-      .map(h ⇒ s"${h.getName.toLowerCase}:${h.getValue.trim}")
+      .filterNot(h => ignoredHeaders.contains(h.getName.toLowerCase))
+      .map(h => s"${h.getName.toLowerCase}:${h.getValue.trim}")
       .mkString("\n")
 
   private def signedHeaders(httpRequest: HttpRequest): String =
@@ -78,8 +79,8 @@ object CanonicalRequest {
     }
 
     getPayload(httpRequest) match {
-      case Some(payload) ⇒ hashPayloadString(payload)
-      case None          ⇒ hashPayloadString("")
+      case Some(payload) => hashPayloadString(payload)
+      case None          => hashPayloadString("")
     }
   }
 
