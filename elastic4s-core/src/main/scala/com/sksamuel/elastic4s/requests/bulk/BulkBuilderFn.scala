@@ -27,7 +27,7 @@ object BulkBuilderFn {
         builder.endObject()
 
         rows += builder.string
-        rows += IndexContentBuilder(index).string()
+        rows += IndexContentBuilder(index)
 
       case delete: DeleteByIdRequest =>
         val builder = XContentFactory.jsonBuilder()
