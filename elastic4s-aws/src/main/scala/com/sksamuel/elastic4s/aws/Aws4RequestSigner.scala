@@ -41,8 +41,8 @@ class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, servic
 
     /* If the credentials are temporary (session credentials), add an additional security header */
     credentials match {
-      case c: AWSSessionCredentials ⇒ request.addHeader(securityTokenHeader, c.getSessionToken)
-      case _                        ⇒
+      case c: AWSSessionCredentials => request.addHeader(securityTokenHeader, c.getSessionToken)
+      case _                        =>
     }
 
     request
@@ -87,8 +87,8 @@ class Aws4RequestSigner(provider: AWSCredentialsProvider, region: String, servic
 
   private def setHeader(h: String, f: Header => String)(request: HttpRequest): HttpRequest = {
     request.getAllHeaders.find(_.getName == h) match {
-      case Some(header) ⇒ request.setHeader(h, f(header))
-      case _            ⇒
+      case Some(header) => request.setHeader(h, f(header))
+      case _            =>
     }
     request
   }

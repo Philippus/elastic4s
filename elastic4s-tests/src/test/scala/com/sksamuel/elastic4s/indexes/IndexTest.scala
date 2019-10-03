@@ -29,7 +29,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42l).versionType(VersionType.External),
+      indexInto("electronics" / "electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42L).versionType(VersionType.External),
       indexInto("electronics" / "electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
       indexInto("electronics" / "electronics").fields(Map("name" -> "iphone", "colour" -> null)),
       indexInto("electronics" / "electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
@@ -75,7 +75,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
         search("electronics").query(matchQuery("name", "galaxy")).version(true)
       }.await.result.hits.hits(0)
       found.id shouldBe "55A"
-      found.version shouldBe 42l
+      found.version shouldBe 42L
     }
     "handle custom id" in {
       client.execute {
@@ -164,7 +164,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
         indexInto("electronics" / "electronics")
           .fields("name" -> "super phone")
           .withId(id)
-          .version(2l)
+          .version(2L)
           .versionType(External)
           .refresh(RefreshPolicy.Immediate)
       }.await
@@ -172,7 +172,7 @@ class IndexTest extends WordSpec with Matchers with DockerTests {
         indexInto("electronics" / "electronics")
           .fields("name" -> "super phone")
           .withId(id)
-          .version(2l)
+          .version(2L)
           .versionType(External)
           .refresh(RefreshPolicy.Immediate)
       }.await

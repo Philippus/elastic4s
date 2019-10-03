@@ -8,13 +8,13 @@ object ClusterBodyBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     if(request.persistentSettings.nonEmpty) {
       builder.startObject("persistent")
-      request.persistentSettings.foreach(t ⇒ builder.field(t._1, t._2))
+      request.persistentSettings.foreach(t => builder.field(t._1, t._2))
       builder.endObject()
     }
 
     if(request.transientSettings.nonEmpty) {
       builder.startObject("transient")
-      request.transientSettings.foreach(t ⇒ builder.field(t._1, t._2))
+      request.transientSettings.foreach(t => builder.field(t._1, t._2))
       builder.endObject()
     }
     builder

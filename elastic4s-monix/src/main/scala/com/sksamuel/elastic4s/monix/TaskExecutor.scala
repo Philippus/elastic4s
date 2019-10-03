@@ -6,7 +6,7 @@ import monix.execution.Cancelable
 
 class TaskExecutor extends Executor[Task] {
   override def exec(client: HttpClient, request: ElasticRequest): Task[HttpResponse] =
-    Task.async {
+    Task.create {
       case (_, callback) =>
         client.send(request, {
           case Left(t)  => callback.onError(t)

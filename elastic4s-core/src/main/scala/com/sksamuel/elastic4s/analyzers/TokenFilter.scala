@@ -348,7 +348,7 @@ case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil, ru
     rulesPath.foreach(source.field("rules_path", _))
   }
 
-  def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules)
+  def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules.toIndexedSeq)
   def rulesPath(path: String): StemmerOverrideTokenFilter     = copy(rulesPath = path.some)
 }
 
