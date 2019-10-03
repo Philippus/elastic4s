@@ -15,7 +15,8 @@
             "boost": 6.5,
             "tie_breaker": 0.5,
             "rewrite": "writer",
-            "query": "coldplay"
+            "query": "coldplay",
+            "time_zone": "+02:00"
         }
     },
     "size": 5

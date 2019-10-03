@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType
 import com.sksamuel.exts.OptionImplicits._
+import org.joda.time.DateTimeZone
 
 case class QueryStringQuery(query: String,
                             allowLeadingWildcard: Option[Boolean] = None,
@@ -27,7 +29,8 @@ case class QueryStringQuery(query: String,
                             rewrite: Option[String] = None,
                             splitOnWhitespace: Option[Boolean] = None,
                             tieBreaker: Option[Double] = None,
-                            `type`: Option[MultiMatchQueryBuilderType] = None)
+                            `type`: Option[MultiMatchQueryBuilderType] = None,
+                            timeZone: Option[String] = None)
     extends Query {
 
   def rewrite(rewrite: String): QueryStringQuery = copy(rewrite = rewrite.some)
@@ -99,4 +102,7 @@ case class QueryStringQuery(query: String,
 
   def matchType(t: String): QueryStringQuery = matchType(MultiMatchQueryBuilderType.valueOf(t))
   def matchType(t: MultiMatchQueryBuilderType): QueryStringQuery = copy(`type` = t.some)
+
+  def timeZone(t: String): QueryStringQuery = copy(timeZone = t.some)
+  def timeZone(t: DateTimeZone): QueryStringQuery = timeZone(EnumConversions.timeZone(t))
 }

@@ -26,6 +26,7 @@ object QueryStringBodyFn {
     s.tieBreaker.foreach(builder.field("tie_breaker", _))
     s.`type`.map(EnumConversions.multiMatchQueryBuilderType).foreach(builder.field("type", _))
     s.rewrite.map(_.toString).foreach(builder.field("rewrite", _))
+    s.timeZone.foreach(builder.field("time_zone", _))
 
     if (s.fields.nonEmpty) {
       val fields = s.fields.map {
