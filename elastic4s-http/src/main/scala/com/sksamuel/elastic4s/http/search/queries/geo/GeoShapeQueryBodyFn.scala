@@ -80,7 +80,7 @@ object GeoShapeQueryBodyFn {
 
       case CircleShape(Circle(point, (radius, unit))) =>
         builder.array("coordinates", point)
-        builder.field("radius", unit.toMeters(radius) + "m")
+        builder.field("radius", s"${unit.toMeters(radius)}m")
 
       case PolygonShape(p) =>
         val coords = p.holes.fold(Seq(p.points))(h => Seq(p.points) ++ h)

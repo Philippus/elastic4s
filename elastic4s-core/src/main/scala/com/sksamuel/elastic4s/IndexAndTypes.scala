@@ -34,7 +34,7 @@ case class Indexes(values: Seq[String]) {
 object Indexes {
   val All                                                = Indexes("_all")
   val Empty                                              = Indexes(Nil)
-  implicit def apply(indexes: String): Indexes           = Indexes(indexes.split(','))
+  implicit def apply(indexes: String): Indexes           = Indexes(indexes.split(',').toIndexedSeq)
   def apply(first: String, rest: String*): Indexes       = Indexes(first +: rest)
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }
@@ -69,7 +69,7 @@ object IndexAndTypes {
   implicit def apply(string: String): IndexAndTypes =
     string.split("/") match {
       case Array(index)    => IndexAndTypes(index, Nil)
-      case Array(index, t) => IndexAndTypes(index, t.split(","))
+      case Array(index, t) => IndexAndTypes(index, t.split(",").toIndexedSeq)
       case _               => sys.error(s"Could not parse '$string' into index/type1[,type2,...]")
     }
   implicit def apply(indexAndType: IndexAndType): IndexAndTypes     = apply(indexAndType.index, indexAndType.`type`)
@@ -95,8 +95,8 @@ object IndexesAndTypes {
 
   implicit def apply(string: String): IndexesAndTypes =
     string.split("/") match {
-      case Array(index)    => IndexesAndTypes(index.split(","), Nil)
-      case Array(index, t) => IndexesAndTypes(index.split(","), t.split(","))
+      case Array(index)    => IndexesAndTypes(index.split(",").toIndexedSeq, Nil)
+      case Array(index, t) => IndexesAndTypes(index.split(",").toIndexedSeq, t.split(",").toIndexedSeq)
       case _               => sys.error(s"Could not parse '$string' into index1[,index2,...]/type1[,type2,...]")
     }
 

@@ -10,7 +10,7 @@ object GeoDistanceQueryBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("geo_distance")
     q.distance.foreach {
-      case (value, unit) => builder.field("distance", unit.toMeters(value) + "m")
+      case (value, unit) => builder.field("distance", s"${unit.toMeters(value)}m")
     }
     q.distanceStr.foreach(builder.field("distance", _))
     q.point.foreach {

@@ -41,11 +41,11 @@ object FieldsMapper {
         NestedFieldValue(Some(name), nestedFields)
 
       case (name: String, nest: Array[Map[_, _]]) =>
-        val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
+        val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]]))).toIndexedSeq
         ArrayFieldValue(name, nested)
 
       case (name: String, arr: Array[Any]) =>
-        val values = arr.map(new SimpleFieldValue(None, _))
+        val values = arr.map(new SimpleFieldValue(None, _)).toIndexedSeq
         ArrayFieldValue(name, values)
 
       case (name: String, a: FieldValue) =>
@@ -55,11 +55,11 @@ object FieldsMapper {
         s.headOption match {
           case Some(m: Map[_, _]) =>
             val nested = s.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-            ArrayFieldValue(name, nested.toSeq)
+            ArrayFieldValue(name, nested.toIndexedSeq)
 
           case Some(a: Any) =>
             val values = s.map(new SimpleFieldValue(None, _))
-            ArrayFieldValue(name, values.toSeq)
+            ArrayFieldValue(name, values.toIndexedSeq)
 
           case _ =>
             // can't work out or empty - map to empty

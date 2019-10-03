@@ -21,7 +21,7 @@ before_script:
 - sudo chmod +x /usr/local/bin/sbt
 
 scala:
-- 2.12.6
+- 2.12.8
 
 script:
 - sbt clean test
