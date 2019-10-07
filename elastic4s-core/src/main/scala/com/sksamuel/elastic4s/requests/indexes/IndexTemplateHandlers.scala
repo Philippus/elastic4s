@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.requests.analysis.AnalysisBuilder
 import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
@@ -81,9 +82,7 @@ object CreateIndexTemplateBodyFn {
       create.settings.foreach {
         case (key, value) => builder.autofield(key, value)
       }
-      create.analysis.foreach { analysis =>
-        AnalysisBuilderFn.build(analysis, builder)
-      }
+      builder.rawField("analysis", AnalysisBuilder.build(create.analysis.get))
       builder.endObject()
     }
 

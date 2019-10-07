@@ -16,7 +16,9 @@ case class CreateIndexTemplateRequest(name: String,
                                       pattern: String,
                                       settings: Map[String, Any] = Map.empty,
                                       mappings: Seq[MappingDefinition] = Nil,
-                                      analysis: Option[AnalysisDefinition] = None,
+                                      @deprecated("use the new analysis package", "7.0.1")
+                                      _analysis: Option[AnalysisDefinition] = None,
+                                      analysis: Option[com.sksamuel.elastic4s.requests.analysis.Analysis] = None,
                                       order: Option[Int] = None,
                                       version: Option[Int] = None,
                                       create: Option[Boolean] = None,
@@ -32,12 +34,14 @@ case class CreateIndexTemplateRequest(name: String,
   def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexTemplateRequest =
     analysis(analyzers, Nil)
 
+  def analysis(analysis: com.sksamuel.elastic4s.requests.analysis.Analysis): CreateIndexTemplateRequest = copy(analysis = analysis.some)
+
   @deprecated("use new analysis package", "7.2.0")
   def analysis(analyzers: Iterable[AnalyzerDefinition],
                normalizers: Iterable[NormalizerDefinition]): CreateIndexTemplateRequest =
-    analysis match {
-      case None    => copy(analysis = AnalysisDefinition(analyzers, normalizers).some)
-      case Some(a) => copy(analysis = AnalysisDefinition(a.analyzers ++ analyzers, a.normalizers ++ normalizers).some)
+    _analysis match {
+      case None => copy(_analysis = AnalysisDefinition(analyzers, normalizers).some)
+      case Some(a) => copy(_analysis = AnalysisDefinition(a.analyzers ++ analyzers, a.normalizers ++ normalizers).some)
     }
 
   @deprecated("use new analysis package", "7.2.0")
