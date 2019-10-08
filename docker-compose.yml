@@ -10,3 +10,5 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+    volumes:
+      - "./elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
