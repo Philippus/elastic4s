@@ -58,7 +58,7 @@ case class GeometryCollectionShape(shapes: Seq[ShapeDefinition]) extends Collect
 
 sealed trait Shape
 case class InlineShape(shape: ShapeDefinition)                                     extends Shape
-case class PreindexedShape(id: String, index: Index, `type`: String, path: String) extends Shape
+case class PreindexedShape(id: String, index: Index, path: String) extends Shape
 
 case class GeoShapeQuery(field: String,
                          shape: Shape,
@@ -75,8 +75,8 @@ case class GeoShapeQuery(field: String,
   def strategy(strategy: SpatialStrategy): GeoShapeQuery = copy(strategy = strategy.some)
 
   def inlineShape(shape: ShapeDefinition) = copy(shape = InlineShape(shape))
-  def preindexedShape(id: String, index: Index, `type`: String, path: String) =
-    copy(shape = PreindexedShape(id, index, `type`, path))
+  def preindexedShape(id: String, index: Index, path: String) =
+    copy(shape = PreindexedShape(id, index, path))
 
   def ignoreUnmapped(ignore: Boolean): GeoShapeQuery = copy(ignoreUnmapped = ignore.some)
 }

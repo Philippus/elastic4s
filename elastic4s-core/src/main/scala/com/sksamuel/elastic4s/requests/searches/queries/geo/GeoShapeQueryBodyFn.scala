@@ -25,11 +25,10 @@ object GeoShapeQueryBodyFn {
         buildShapeDefinition(shape, builder)
         builder.endObject()
 
-      case PreindexedShape(id, index, tpe, path) =>
+      case PreindexedShape(id, index,  path) =>
         builder.startObject("indexed_shape")
         builder.field("id", id)
         builder.field("index", index.name)
-        builder.field("type", tpe)
         builder.field("path", path)
         builder.endObject()
     }
