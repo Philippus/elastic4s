@@ -18,6 +18,8 @@ import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
 import com.sksamuel.elastic4s.requests.security.roles.admin.RoleAdminHandlers
 import com.sksamuel.elastic4s.requests.security.roles.RoleHandlers
+import com.sksamuel.elastic4s.requests.security.users.admin.UserAdminHandlers
+import com.sksamuel.elastic4s.requests.security.users.UserHandlers
 import com.sksamuel.elastic4s.requests.settings.SettingsHandlers
 import com.sksamuel.elastic4s.requests.snapshots.SnapshotHandlers
 import com.sksamuel.elastic4s.requests.task.TaskHandlers
@@ -57,6 +59,8 @@ trait ElasticDsl
     with UpdateHandlers
     with TaskHandlers
     with TermVectorHandlers
+    with UserAdminHandlers
+    with UserHandlers
     with ValidateHandlers {
 
   implicit class RichRequest[T](t: T) {

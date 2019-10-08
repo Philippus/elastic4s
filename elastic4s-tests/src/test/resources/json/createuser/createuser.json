@@ -1,0 +1,11 @@
+{
+    "enabled": true,
+    "email": "user@test.com",
+    "full_name": "Test User",
+    "metadata": {
+        "age": 99,
+        "occupation": "testing"
+    },
+    "password": "test1234",
+    "roles": ["role1", "role2"]
+}

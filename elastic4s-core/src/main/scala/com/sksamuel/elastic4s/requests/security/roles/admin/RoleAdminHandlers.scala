@@ -26,7 +26,7 @@ trait RoleAdminHandlers {
 				case UpdateRole => "PUT"
 			}
 
-			ElasticRequest("POST", endpoint, entity)
+			ElasticRequest(method, endpoint, entity)
 		}
 	}
 
