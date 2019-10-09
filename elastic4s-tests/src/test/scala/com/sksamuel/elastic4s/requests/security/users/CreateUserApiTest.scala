@@ -16,7 +16,7 @@ class CreateUserApiTest extends FlatSpec with JsonSugar with Matchers with OneIn
 			password=PlaintextPassword("test1234"),
 			roles=Seq("role1", "role2")
 		)
-		CreateOrUpdateUserContentBuilder(req).string() should matchJsonResource("/json/createUser/createuser.json")
+		CreateOrUpdateUserContentBuilder(req).string() should matchJsonResource("/json/createuser/createuser.json")
 	}
 
 	it should "handle updating users" in {
@@ -25,6 +25,6 @@ class CreateUserApiTest extends FlatSpec with JsonSugar with Matchers with OneIn
 			enabled=Some(false),
 			metadata=Map("age" -> 100)
 		)
-		CreateOrUpdateUserContentBuilder(req).string() should matchJsonResource("/json/createUser/updateuser.json")
+		CreateOrUpdateUserContentBuilder(req).string() should matchJsonResource("/json/createuser/updateuser.json")
 	}
 }

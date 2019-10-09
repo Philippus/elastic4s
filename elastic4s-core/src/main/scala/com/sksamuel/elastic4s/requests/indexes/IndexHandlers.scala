@@ -15,9 +15,9 @@ trait IndexHandlers {
 
     override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexResponse] = response.statusCode match {
-        case 201 | 200       => Right(ResponseHandler.fromResponse[IndexResponse](response))
-        case 400 | 409 | 500 => Left(ElasticError.parse(response))
-        case _               => sys.error(response.toString)
+        case 201 | 200                   => Right(ResponseHandler.fromResponse[IndexResponse](response))
+        case 400 | 401 | 403 | 409 | 500 => Left(ElasticError.parse(response))
+        case _                           => sys.error(response.toString)
       }
     }
 
