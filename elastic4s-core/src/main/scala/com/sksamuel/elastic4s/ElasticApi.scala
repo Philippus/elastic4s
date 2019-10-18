@@ -26,6 +26,10 @@ import com.sksamuel.elastic4s.requests.searches.collapse.CollapseApi
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.ScoreApi
 import com.sksamuel.elastic4s.requests.searches.sort.SortApi
 import com.sksamuel.elastic4s.requests.searches.suggestion.SuggestionApi
+import com.sksamuel.elastic4s.requests.security.roles.admin.ClearRolesCacheApi
+import com.sksamuel.elastic4s.requests.security.roles.{CreateRoleApi, DeleteRoleApi, RoleApi}
+import com.sksamuel.elastic4s.requests.security.users.admin.UserAdminApi
+import com.sksamuel.elastic4s.requests.security.users.{CreateUserApi, DeleteUserApi, UserApi}
 import com.sksamuel.elastic4s.requests.settings.SettingsApi
 import com.sksamuel.elastic4s.requests.snapshots.SnapshotApi
 import com.sksamuel.elastic4s.requests.task.TaskApi
@@ -45,11 +49,16 @@ trait ElasticApi
     with BulkApi
     with CatsApi
     with CreateIndexApi
+    with ClearRolesCacheApi
     with ClusterApi
     with CollapseApi
     with CountApi
+    with CreateRoleApi
+    with CreateUserApi
     with DeleteApi
     with DeleteIndexApi
+    with DeleteRoleApi
+    with DeleteUserApi
     with DynamicTemplateApi
     with ExistsApi
     with ExplainApi
@@ -67,6 +76,7 @@ trait ElasticApi
     with QueryApi
     with PipelineAggregationApi
     with ReindexApi
+    with RoleApi
     with ScriptApi
     with ScoreApi
     with ScrollApi
@@ -82,6 +92,8 @@ trait ElasticApi
     with TokenFilterApi
     with TypesApi
     with UpdateApi
+    with UserAdminApi
+    with UserApi
     with ValidateApi {
 
   implicit class RichFuture[T](future: Future[T]) {

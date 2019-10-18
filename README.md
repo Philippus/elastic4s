@@ -815,8 +815,8 @@ And to test
 sbt test
 ```
 
-For the tests to work you will need to run a local elastic instance on port 9200. One easy way of doing this is to use docker:
-`docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "path.repo=/tmp" docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.2` replacing that 6.1.2 with whatever version is current.
+For the tests to work you will need to run a local elastic instance on port 9200, _with security enabled_. One easy way of doing this is to use docker (via docker-compose):
+`docker-compose up`
 
 ## Used By
 * Barclays Bank

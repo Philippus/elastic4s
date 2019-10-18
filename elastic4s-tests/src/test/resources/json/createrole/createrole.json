@@ -1,0 +1,23 @@
+{
+    "run_as": ["other_user"],
+    "cluster": ["monitor"],
+    "global": {
+        "application": {
+            "manage": {
+                "applications": ["myapp-*"]
+            }
+        }
+    },
+    "indices": [{
+        "names": ["index1", "index2"],
+        "privileges": ["read"],
+        "field_security": {
+            "except": ["protected_field"]
+        },
+        "query": "{\"match\": {\"category\": \"testing\"}}"
+    }],
+    "applications": [{
+        "application": "myapp",
+        "privileges": ["data:read/*"]
+    }]
+}
