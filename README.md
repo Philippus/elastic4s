@@ -89,6 +89,9 @@ where `F` is some effect type.
 #### Scalaz Task
 `import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task` 
 
+#### ZIO Task
+`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task` 
+
 ### Example SBT Setup
 
 ```scala
