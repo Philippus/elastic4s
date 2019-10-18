@@ -51,7 +51,7 @@ object MappingBuilderFn {
         builder.field("dynamic", dynamic match {
           case DynamicMapping.Strict => "strict"
           case DynamicMapping.False  => "false"
-          case _                     => "dynamic"
+          case _                     => "true"
         })
     )
 
