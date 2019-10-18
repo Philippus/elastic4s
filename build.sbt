@@ -10,6 +10,7 @@ lazy val root = Project("elastic4s", file("."))
     clientsSniffed,
     cats_effect,
     scalaz,
+    zio,
     monix,
     tests,
     testkit,
@@ -72,6 +73,15 @@ lazy val scalaz = Project("elastic4s-effect-scalaz", file("elastic4s-effect-scal
     libraryDependencies ++= Seq(
       "org.scalaz" %% "scalaz-core"       % ScalazVersion,
       "org.scalaz" %% "scalaz-concurrent" % ScalazVersion
+    )
+  )
+  .dependsOn(core)
+
+lazy val zio = Project("elastic4s-effect-zio", file("elastic4s-effect-zio"))
+  .settings(name := "elastic4s-effect-zio")
+  .settings(
+    libraryDependencies ++= Seq(
+      "dev.zio" %% "zio" % ZIOVersion
     )
   )
   .dependsOn(core)
