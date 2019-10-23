@@ -84,7 +84,7 @@ lazy val zio = Project("elastic4s-effect-zio", file("elastic4s-effect-zio"))
       "dev.zio" %% "zio" % ZIOVersion
     )
   )
-  .dependsOn(core)
+  .dependsOn(core, testkit % "test")
 
 lazy val monix = Project("elastic4s-effect-monix", file("elastic4s-effect-monix"))
   .settings(name := "elastic4s-effect-monix")
