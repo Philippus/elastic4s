@@ -56,6 +56,10 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
                 push(out, buffer.dequeue)
                 maybeFetch()
               }
+              // complete when no more elements to emit
+              if (searchr.hits.hits.length == 0) {
+                complete(out)
+              }
           }
       }
     }
