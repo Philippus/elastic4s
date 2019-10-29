@@ -30,7 +30,7 @@ object Build extends AutoPlugin {
     val ScalatestVersion       = "3.0.8"
     val ScalamockVersion       = "4.4.0"
     val ScalazVersion          = "7.2.29"
-    val ZIOVersion             = "1.0.0-RC15"
+    val ZIOVersion             = "1.0.0-RC16"
     val SprayJsonVersion       = "1.3.5"
     val SttpVersion            = "1.7.2"
     val Slf4jVersion           = "1.7.28"
