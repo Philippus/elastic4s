@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.searches
 import java.net.URLEncoder
 
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
 
 trait SearchHandlers {
 
@@ -24,7 +24,7 @@ trait SearchHandlers {
                   val status = element.get("status").intValue()
                   val either =
                     if (element.has("error"))
-                      Left(JacksonSupport.mapper.treeToValue[SearchError](element.get("error")))
+                      Left(JacksonSupport.mapper.treeToValue[ElasticError](element.get("error")))
                     else
                       Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
                   MultisearchResponseItem(index, status, either)
