@@ -70,6 +70,28 @@ class MultiSearchHttpTest
     resp.failures.head.`type` shouldBe "index_not_found_exception"
   }
 
+  it should "correctly return the root cause if one search failed with 'all shards failed'" in {
+
+    val resp = client.execute {
+      multi(
+        search("jtull") query matchQuery("name", "aqualung"),
+        search("jtull") query matchAllQuery() aggregations rangeAgg("invalid", "name")
+      )
+    }.await.result
+
+    resp.successes.size shouldBe 1
+    resp.failures.size shouldBe 1
+    resp.items.head.index shouldBe 0
+    resp.items.head.status shouldBe 200
+    resp.items.last.index shouldBe 1
+    resp.items.last.status shouldBe 400
+
+    resp.failures.head.`reason` shouldBe "all shards failed"
+    resp.failures.head.`type` shouldBe "search_phase_execution_exception"
+    resp.failures.head.rootCause.head.reason.contains("Fielddata is disabled on text fields by default") shouldBe true
+    resp.failures.head.rootCause.head.`type` shouldBe "illegal_argument_exception"
+  }
+
   it should "correctly set the preference" in {
 
     val request = MultiSearchHandler.build(
