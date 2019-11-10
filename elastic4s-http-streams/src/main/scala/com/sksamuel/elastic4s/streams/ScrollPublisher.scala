@@ -157,8 +157,8 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
     // if we had no results from ES then we have nothing left to publish and our work here is done
     case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isEmpty =>
       logger.debug("Response from ES came back empty; this means no more items upstream so will complete subscription")
+      scrollId = resp.result.scrollId.getOrElse(scrollId)
       s.onComplete()
-      client.execute(clearScroll(scrollId))
       logger.debug("Stopping publisher actor")
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
@@ -167,5 +167,10 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       queue ++= resp.result.hits.hits
       context become ready
       unstashAll()
+  }
+
+  override def postStop() = {
+    super.postStop()
+    client.execute(clearScroll(scrollId))
   }
 }
