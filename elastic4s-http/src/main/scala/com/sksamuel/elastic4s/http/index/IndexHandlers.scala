@@ -59,8 +59,10 @@ trait IndexHandlers {
 
     override def build(request: GetIndexRequest): ElasticRequest = {
       val endpoint = "/" + request.index
-      val method   = "GET"
-      ElasticRequest(method, endpoint)
+      val params   = scala.collection.mutable.Map.empty[String, Boolean]
+      request.includeTypeName.foreach(params.put("include_type_name", _))
+
+      ElasticRequest("GET", endpoint, params.toMap)
     }
   }
 }
