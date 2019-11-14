@@ -1,3 +1,5 @@
+dist: trusty
+
 sudo: required
 
 language: scala
@@ -21,7 +23,8 @@ before_script:
 - sudo chmod +x /usr/local/bin/sbt
 
 scala:
-- 2.12.8
+- 2.12.10
+- 2.13.1
 
 script:
 - sbt clean test
