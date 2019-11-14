@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.mappings
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.exts.OptionImplicits._
 
-case class GetMappingRequest(indexesAndTypes: IndexesAndTypes, local: Option[Boolean] = None) {
+case class GetMappingRequest(indexesAndTypes: IndexesAndTypes, local: Option[Boolean] = None, includeTypeName: Option[Boolean] = None) {
 
   def types(first: String, rest: String*): GetMappingRequest = types(first +: rest)
 
@@ -11,4 +11,6 @@ case class GetMappingRequest(indexesAndTypes: IndexesAndTypes, local: Option[Boo
     copy(indexesAndTypes = IndexesAndTypes(indexesAndTypes.indexes, types))
 
   def local(local: Boolean): GetMappingRequest = copy(local = local.some)
+
+  def includeTypeName(includeTypeName: Boolean): GetMappingRequest = copy(includeTypeName = includeTypeName.some)
 }
