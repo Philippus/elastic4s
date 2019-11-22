@@ -7,20 +7,23 @@ import com.sksamuel.exts.OptionImplicits._
 sealed abstract class ValueSource(val valueSourceType: String, val name: String,
                                   val field: Option[String],
                                   val script: Option[Script],
-                                  val order: Option[String])
+                                  val order: Option[String],
+                                  val missingBucket: Boolean)
 
 case class TermsValueSource(override val name: String,
                             override val field: Option[String] = None,
                             override val script: Option[Script] = None,
-                            override val order: Option[String] = None)
-  extends ValueSource("terms", name, field, script, order)
+                            override val order: Option[String] = None,
+                            override val missingBucket: Boolean = false)
+  extends ValueSource("terms", name, field, script, order, missingBucket)
 
 case class HistogramValueSource(override val name: String,
                                 interval: Int,
                                 override val field: Option[String] = None,
                                 override val script: Option[Script] = None,
-                                override val order: Option[String] = None)
-  extends ValueSource("histogram", name, field, script, order)
+                                override val order: Option[String] = None,
+                                override val missingBucket: Boolean = false)
+  extends ValueSource("histogram", name, field, script, order, missingBucket)
 
 case class DateHistogramValueSource(override val name: String,
                                     interval: String,
@@ -29,8 +32,8 @@ case class DateHistogramValueSource(override val name: String,
                                     override val order: Option[String] = None,
                                     timeZone: Option[String] = None,
                                     format: Option[String] = None,
-                                    missingBucket: Boolean = false)
-  extends ValueSource("date_histogram", name, field, script, order)
+                                    override val missingBucket: Boolean = false)
+  extends ValueSource("date_histogram", name, field, script, order, missingBucket)
 
 
 case class CompositeAggregation(name: String,
