@@ -7,7 +7,7 @@ class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Ma
 
   import PutPipelineRequestHandler._
 
-  // See the docs: https://www.elastic.co/guide/en/elasticsearch/reference/master/geoip-processor.html#geoip-processor
+  // Docs: https://www.elastic.co/guide/en/elasticsearch/reference/master/geoip-processor.html#geoip-processor
   it should "build a pipeline request with a geoip processor" in {
     val req = PutPipelineRequest("geoip", "Add geoip info", Processor("geoip", "{\"field\": \"ip\"}"))
     val correctJson =
@@ -26,6 +26,7 @@ class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Ma
     build(req) shouldBe ElasticRequest("PUT", "_ingest/pipeline/geoip", HttpEntity(correctJson))
   }
 
+  // Docs: https://github.com/spinscale/elasticsearch-ingest-langdetect#usage
   it should "build a pipeline request with a langdetect processor" in {
     val req = PutPipelineRequest("langdetect-pipeline", "A pipeline to do whatever",
       Processor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }"))
