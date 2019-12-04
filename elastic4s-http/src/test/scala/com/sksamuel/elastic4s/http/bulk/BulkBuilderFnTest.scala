@@ -42,4 +42,21 @@ class BulkBuilderFnTest extends FunSuite with Matchers {
         |{"atomicweight":1,"name":"hydrogen"}""".stripMargin
 
   }
+
+  test("bulk content builder should support retry_on_conflict setting in UpdateRequest") {
+    val req = bulk(
+      indexInto("chemistry/elements").fields("atomicweight" -> 8, "name" -> "oxygen").withId("8"),
+      updateById("chemistry", "elements", "8")
+        .doc("atomicweight" -> 1, "name" -> "hydrogen")
+        .retryOnConflict(3)
+    ).refresh(RefreshPolicy.Immediate)
+
+    BulkBuilderFn(req).mkString("\n") shouldBe
+      """{"index":{"_index":"chemistry","_type":"elements","_id":"8"}}
+        |{"atomicweight":8,"name":"oxygen"}
+        |{"update":{"_index":"chemistry","_type":"elements","_id":"8","retry_on_conflict":3}}
+        |{"doc":{"atomicweight":1,"name":"hydrogen"}}""".stripMargin
+
+  }
+
 }
