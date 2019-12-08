@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.requests.script.Script
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
-class UpdateByQueryBodyFnTest extends WordSpec with JsonSugar {
+class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 

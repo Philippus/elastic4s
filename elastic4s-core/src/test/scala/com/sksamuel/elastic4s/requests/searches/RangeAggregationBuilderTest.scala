@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.aggs.{RangeAggregation, RangeAggregationBuilder}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class RangeAggregationBuilderTest extends FunSuite with Matchers {
+class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("range aggregation with 'field' and 'ranges' should generate expected json") {
     val agg = RangeAggregation("price_ranges")

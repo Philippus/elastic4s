@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.testutils
 
 import com.sksamuel.elastic4s.testutils.StringExtensions.StringOps
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers.convertToStringShouldWrapper
+import matchers.should.Matchers.convertToStringShouldWrapper
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class StringExtensionsTest extends FlatSpec {
+class StringExtensionsTest extends AnyFlatSpec {
 
   it should "convert line endings to Windows style" in {
     "one\r\ntwo\nthree\n".withWindowsLineEndings shouldBe "one\r\ntwo\r\nthree\r\n"

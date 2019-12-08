@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.requests.script.{Script, ScriptBuilderFn, ScriptType}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class ScriptBuilderFnTest extends FunSuite with Matchers {
+class ScriptBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("should handle recursive maps") {
     ScriptBuilderFn(Script("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string shouldBe

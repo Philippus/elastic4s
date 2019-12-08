@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CreateOrUpdateRoleContentBuilderTest extends FunSuite with Matchers {
+class CreateOrUpdateRoleContentBuilderTest extends AnyFunSuite with Matchers {
 	test("CreateOrUpdateRoleContentBuilder should generate the correct json") {
 		// Example taken from https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-role.html#security-api-put-role-example
 		val create = CreateOrUpdateRoleRequest(

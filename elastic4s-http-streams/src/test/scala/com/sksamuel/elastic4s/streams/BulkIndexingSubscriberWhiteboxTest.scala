@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.tck.SubscriberWhiteboxVerification.{SubscriberPuppet, WhiteboxSubscriberProbe}
 import org.reactivestreams.tck.{SubscriberWhiteboxVerification, TestEnvironment}
 import org.reactivestreams.{Subscriber, Subscription}
-import org.scalatest.testng.TestNGSuiteLike
+import org.scalatestplus.testng.TestNGSuiteLike
 
 class BulkIndexingSubscriberWhiteboxTest
   extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))

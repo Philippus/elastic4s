@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.bulk
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class BulkBuilderFnTest extends FunSuite with Matchers {
+class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
   import com.sksamuel.elastic4s.ElasticApi._
 

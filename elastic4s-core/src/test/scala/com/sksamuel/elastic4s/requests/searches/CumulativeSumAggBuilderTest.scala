@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CumulativeSumAggBuilderTest extends FunSuite with Matchers{
+class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
 
   import com.sksamuel.elastic4s.ElasticDsl._
 

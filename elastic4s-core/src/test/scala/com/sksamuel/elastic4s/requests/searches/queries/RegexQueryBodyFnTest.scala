@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.requests.searches.queries.term.RegexQueryBodyFn
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class RegexQueryBodyFnTest extends FunSuite with Matchers {
+class RegexQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("regex query should generate expected json") {
     val q = RegexQuery("mysearch", ".*")

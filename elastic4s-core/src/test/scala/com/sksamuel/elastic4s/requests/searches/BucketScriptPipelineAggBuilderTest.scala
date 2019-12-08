@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.JsonSugar
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
 
-class BucketScriptPipelineAggBuilderTest extends FlatSpec with JsonSugar  {
+class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar  {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 

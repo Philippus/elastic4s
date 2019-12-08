@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
 import com.sksamuel.elastic4s.requests.searches.queries.nested.HasParentBodyFn
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class HasParentBodyFnTest extends FunSuite with Matchers {
+class HasParentBodyFnTest extends AnyFunSuite with Matchers {
 
   test("has parent should generate expected json") {
     val q = HasParentQuery("blog", MatchQuery("tag", "something"), true)

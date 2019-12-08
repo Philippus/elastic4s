@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.aggs.{CompositeAggregation, DateHistogramValueSource, HistogramValueSource, TermsValueSource}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CompositeAggregationBuilderTest extends FunSuite with Matchers {
+class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("CompositeAggregationBuilder should build simple terms-valued composites") {
     val search = SearchRequest("myindex").aggs(

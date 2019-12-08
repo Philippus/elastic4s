@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s
 
 import java.time.LocalDate
 
-import org.scalatest.Matchers
+import org.scalatest
+import org.scalatest.matchers.should.Matchers
 
-class ElasticDateTest extends org.scalatest.FlatSpec with Matchers {
+class ElasticDateTest extends scalatest.flatspec.AnyFlatSpec with Matchers {
 
   "ElasticDate" should "support 'now' for the date" in {
     ElasticDate.now.show should fullyMatch regex "now"

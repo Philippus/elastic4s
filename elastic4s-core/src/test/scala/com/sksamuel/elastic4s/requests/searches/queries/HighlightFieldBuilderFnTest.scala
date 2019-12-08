@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.requests.searches.{HighlightField, HighlightFieldBuilderFn}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class HighlightFieldBuilderFnTest extends FunSuite with Matchers {
+class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("'boundaryChars' generates 'boundary_chars' field.") {
     val highlight = HighlightField("text").boundaryChars("test")

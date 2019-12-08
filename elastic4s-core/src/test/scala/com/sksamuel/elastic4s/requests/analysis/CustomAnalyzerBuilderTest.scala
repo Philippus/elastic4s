@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analysis
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CustomAnalyzerBuilderTest extends FunSuite with Matchers {
+class CustomAnalyzerBuilderTest extends AnyFunSuite with Matchers {
 
   test("custom analyzer builder with all standard options") {
     val a = CustomAnalyzer("my_custom_analyzer", "uaxurl", Nil, Nil)

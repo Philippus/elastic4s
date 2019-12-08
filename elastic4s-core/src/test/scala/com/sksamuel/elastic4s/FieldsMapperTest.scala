@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FunSuite, Matchers}
 import scala.collection.JavaConverters._
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class FieldsMapperTest extends FunSuite with Matchers {
+class FieldsMapperTest extends AnyFunSuite with Matchers {
 
   test("support head nulls in collections") {
     val expected = Map("Things" -> Array[Object](null, Map("Color" -> "red").asJava))

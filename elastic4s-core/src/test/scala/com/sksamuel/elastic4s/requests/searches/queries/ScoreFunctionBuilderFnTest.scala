@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FieldValueFactorFunctionModifier, MultiValueMode}
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
-class ScoreFunctionBuilderFnTest extends FlatSpec with JsonSugar {
+class ScoreFunctionBuilderFnTest extends AnyFlatSpec with JsonSugar {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 

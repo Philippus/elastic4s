@@ -5,9 +5,10 @@ import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.script.ScriptType
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.sort.{GeoDistanceSort, ScriptSortType, SortOrder}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SortBuilderFnTest extends FunSuite with Matchers {
+class SortBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("sort script parameters are encoded with the correct type") {
     val scr = script("dummy script")
