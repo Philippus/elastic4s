@@ -15,7 +15,7 @@ trait IndexMatchers extends Matchers {
     new Matcher[String] {
 
       def apply(left: String): MatchResult = {
-        val count = client.execute(search(left).size(0)).await(timeout).result.totalHits
+        val count = client.execute(search(left).size(0).restTotalHitsAsInt(true)).await(timeout).result.totalHits
         MatchResult(
           count == expectedCount,
           s"Index $left had count $count but expected $expectedCount",
@@ -55,7 +55,7 @@ trait IndexMatchers extends Matchers {
     new Matcher[String] {
 
       override def apply(left: String): MatchResult = {
-        val count = client.execute(search(left).size(0)).await(timeout).result.totalHits
+        val count = client.execute(search(left).size(0).restTotalHitsAsInt(true)).await(timeout).result.totalHits
         MatchResult(
           count == 0,
           s"Index $left was not empty",

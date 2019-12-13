@@ -45,11 +45,14 @@ trait SearchScrollHandlers {
 
     override def build(req: SearchScrollRequest): ElasticRequest = {
 
+      val params = scala.collection.mutable.Map.empty[String, String]
+      req.restTotalHitsAsInt.map(_.toString).foreach(params.put("rest_total_hits_as_int", _))
+
       val body = SearchScrollBuilderFn(req).string()
       logger.debug("Executing search scroll: " + body)
       val entity = HttpEntity(body, ContentType.APPLICATION_JSON.getMimeType)
 
-      ElasticRequest("POST", "/_search/scroll", entity)
+      ElasticRequest("POST", "/_search/scroll", params.toMap, entity)
     }
   }
 }

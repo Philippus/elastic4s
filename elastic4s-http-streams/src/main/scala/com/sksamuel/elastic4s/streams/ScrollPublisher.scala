@@ -116,9 +116,10 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       logger.debug(
         s"Request for $n items, but only ${queue.size} available; sending ${queue.size} now, requesting $toRequest from upstream"
       )
+
       Option(scrollId) match {
         case None     => client.execute(query).onComplete(result => self ! result)
-        case Some(id) => client.execute(searchScroll(id) keepAlive keepAlive).onComplete(result => self ! result)
+        case Some(id) => client.execute(searchScroll(id).keepAlive(keepAlive).copy(restTotalHitsAsInt = query.restTotalHitsAsInt)).onComplete(result => self ! result)
       }
       // we switch state while we're waiting on elasticsearch, so we know not to send another request to ES
       // because we are using a scroll and can only have one active request at at time.

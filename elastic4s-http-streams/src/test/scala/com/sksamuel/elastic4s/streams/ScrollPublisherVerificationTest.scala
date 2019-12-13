@@ -50,7 +50,7 @@ class ScrollPublisherVerificationTest
     ).refreshImmediately
   }.await
 
-  private val query = search("scrollpubver").matchAllQuery().scroll("1m").limit(2)
+  private val query = search("scrollpubver").matchAllQuery().scroll("1m").limit(2).restTotalHitsAsInt(true)
 
   override def boundedDepthOfOnNextAndRequestRecursion: Long = 2l
 
