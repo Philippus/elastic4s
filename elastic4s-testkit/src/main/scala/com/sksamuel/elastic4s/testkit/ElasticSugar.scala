@@ -100,7 +100,7 @@ trait ElasticSugar extends ElasticDsl {
     blockUntil(s"Expected count of $expected") { () =>
       val result = client
         .execute {
-          search(index).matchAllQuery().size(0)
+          search(index).matchAllQuery().size(0).restTotalHitsAsInt(true)
         }
         .await
         .result
