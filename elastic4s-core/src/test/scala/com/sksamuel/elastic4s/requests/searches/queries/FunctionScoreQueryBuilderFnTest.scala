@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.ElasticDsl.matchPhraseQuery
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{CombineFunction, FunctionScoreQuery, FunctionScoreQueryScoreMode, GaussianDecayScore}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class FunctionScoreQueryBuilderFnTest extends FunSuite with Matchers with JsonSugar {
+class FunctionScoreQueryBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
 
   test("gaussian scorer") {
     val func = FunctionScoreQuery()

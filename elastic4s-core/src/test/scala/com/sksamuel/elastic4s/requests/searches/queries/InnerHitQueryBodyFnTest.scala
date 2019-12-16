@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.requests.searches.HighlightField
 import com.sksamuel.elastic4s.requests.searches.queries.nested.InnerHitQueryBodyFn
 import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class InnerHitQueryBodyFnTest extends FunSuite with Matchers {
+class InnerHitQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("inner hit should generate expected json") {
     val q = InnerHit("inners")

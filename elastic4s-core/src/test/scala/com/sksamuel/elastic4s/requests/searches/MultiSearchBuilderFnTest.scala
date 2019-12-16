@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import org.scalatest.{Matchers, WordSpec}
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class MultiSearchBuilderFnTest extends WordSpec with Matchers {
+class MultiSearchBuilderFnTest extends AnyWordSpec with Matchers {
 
   private val searchRequest: SearchRequest = search("someIndex")
 

@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.queries.nested
 
 import com.sksamuel.elastic4s.ElasticDsl._
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class NestedQueryBodyFnTest extends FunSuite with Matchers {
+class NestedQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("it should creates specified query") {
     val query = nestedQuery("messages", matchAllQuery())

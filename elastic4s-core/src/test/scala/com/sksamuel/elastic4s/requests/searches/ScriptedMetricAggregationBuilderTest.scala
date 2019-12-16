@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.searches.aggs.{ScriptedMetricAggregation, ScriptedMetricAggregationBuilder}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class ScriptedMetricAggregationBuilderTest extends FunSuite with Matchers {
+class ScriptedMetricAggregationBuilderTest extends AnyFunSuite with Matchers {
   test("scripted metric aggregation should generate expected json") {
     val q = ScriptedMetricAggregation("scripted_metric")
         .initScript("params._agg.transactions = []")

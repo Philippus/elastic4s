@@ -6,9 +6,9 @@ import com.sksamuel.elastic4s.requests.searches.SearchHit
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.Publisher
 import org.reactivestreams.tck.{PublisherVerification, TestEnvironment}
-import org.scalatest.testng.TestNGSuiteLike
 
 import scala.util.Try
+import org.scalatestplus.testng.TestNGSuiteLike
 
 class ScrollPublisherVerificationTest
   extends PublisherVerification[SearchHit](

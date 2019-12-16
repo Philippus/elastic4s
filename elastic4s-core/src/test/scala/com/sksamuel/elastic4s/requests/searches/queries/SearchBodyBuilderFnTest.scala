@@ -6,9 +6,10 @@ import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistanceQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{GeoDistanceSort, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, SearchBodyBuilderFn}
 import com.sksamuel.exts.OptionImplicits._
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SearchBodyBuilderFnTest extends FunSuite with Matchers {
+class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("highlight with 'matchedMatchedFields' generates proper 'matched_fields' field as array field.") {
     val request = search("example") highlighting {

@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.index
 import com.sksamuel.elastic4s.requests.analysis.{Analysis, CustomNormalizer, PatternReplaceCharFilter, TruncateTokenFilter, UniqueTokenFilter}
 import com.sksamuel.elastic4s.requests.indexes.{CreateIndexContentBuilder, CreateIndexRequest, IndexAliasRequest}
 import com.sksamuel.elastic4s.requests.searches.queries.PrefixQuery
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CreateIndexContentBuilderTest extends FunSuite with Matchers {
+class CreateIndexContentBuilderTest extends AnyFunSuite with Matchers {
 
   test("create index should include aliases when set") {
     val create = CreateIndexRequest("myindex", aliases = Set(IndexAliasRequest("alias1", None), IndexAliasRequest("alias2", Option(PrefixQuery("myfield", "pre")))))

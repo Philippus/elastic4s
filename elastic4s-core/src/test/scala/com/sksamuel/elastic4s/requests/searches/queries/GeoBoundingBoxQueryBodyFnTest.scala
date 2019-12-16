@@ -2,9 +2,11 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{Corners, GeoBoundingBoxQuery, GeoBoundingBoxQueryBodyFn, GeoExecType}
-import org.scalatest.{FunSuite, GivenWhenThen, Matchers}
+import org.scalatest.GivenWhenThen
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class GeoBoundingBoxQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen {
+class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenThen {
 
   test("Should correctly build geo box search with top_left and bottom_right corners") {
     Given("Some geo bounding box query")

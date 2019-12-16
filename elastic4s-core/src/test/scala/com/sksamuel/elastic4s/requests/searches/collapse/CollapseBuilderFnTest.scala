@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.collapse
 
 import com.sksamuel.elastic4s.requests.searches.collapse.{CollapseBuilderFn, CollapseRequest}
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CollapseBuilderFnTest extends FunSuite with Matchers {
+class CollapseBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("collapse builder should generate simple collapse json") {
     val c = CollapseRequest("something")

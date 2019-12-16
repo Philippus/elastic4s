@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.{ElasticDsl, RequestFailure, RequestSuccess, Response}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ElasticClientResponsesTest extends FlatSpec with Matchers with ElasticDsl {
+class ElasticClientResponsesTest extends AnyFlatSpec with Matchers with ElasticDsl {
 
   "HttpClient" should "provide flatMap and for-comprehension on responses" in {
     // Functor

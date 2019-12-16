@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s.circe
 
-import org.scalatest.{GivenWhenThen, Matchers, WordSpec}
+import org.scalatest.GivenWhenThen
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 case class Place(id: Int, name: String)
 case class Cafe(name: String, place: Place)
 
-class CodecDerivationTest extends WordSpec with Matchers with GivenWhenThen {
+class CodecDerivationTest extends AnyWordSpec with Matchers with GivenWhenThen {
 
   "A derived HitReader instance" should {
 

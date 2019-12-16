@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.index.alias
 import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
 import com.sksamuel.elastic4s.requests.indexes.alias.AliasActionBuilder
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchAllQuery
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class AliasActionBuilderTest extends FunSuite with Matchers {
+class AliasActionBuilderTest extends AnyFunSuite with Matchers {
 
   test("alias action should generate expected json") {
     val actions = IndicesAliasesRequest(Seq(

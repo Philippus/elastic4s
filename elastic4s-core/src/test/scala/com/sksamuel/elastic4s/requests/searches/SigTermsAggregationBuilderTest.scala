@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.searches.aggs.SigTermsAggregationBuilder
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SigTermsAggregationBuilderTest extends FunSuite with Matchers{
+class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers{
 
   import com.sksamuel.elastic4s.ElasticDsl._
 

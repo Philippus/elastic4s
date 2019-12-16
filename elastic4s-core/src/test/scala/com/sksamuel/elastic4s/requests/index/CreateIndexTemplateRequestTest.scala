@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.index
 
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.analysis.{Analysis, CustomNormalizer}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CreateIndexTemplateRequestTest extends FunSuite with ElasticDsl with Matchers {
+class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Matchers {
 
   test("testing if entity created by createIndexTemplate has proper form"){
 

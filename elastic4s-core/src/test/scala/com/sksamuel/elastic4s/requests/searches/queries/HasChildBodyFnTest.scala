@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.requests.searches.ScoreMode
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
 import com.sksamuel.elastic4s.requests.searches.queries.nested.HasChildBodyFn
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class HasChildBodyFnTest extends FunSuite with Matchers {
+class HasChildBodyFnTest extends AnyFunSuite with Matchers {
 
   test("has child should generate expected json") {
     val q = HasChildQuery("blog_tag", MatchQuery("tag", "something"), ScoreMode.Min)

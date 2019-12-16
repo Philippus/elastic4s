@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.searches.aggs.{TopHitsAggregation, TopHitsAggregationBuilder}
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, SortMode}
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class TopHitsAggregationBuilderTest extends FunSuite with Matchers {
+class TopHitsAggregationBuilderTest extends AnyFunSuite with Matchers {
   test("top hits aggregation should generate expected json") {
     val q = TopHitsAggregation("top_items")
       .size(5)

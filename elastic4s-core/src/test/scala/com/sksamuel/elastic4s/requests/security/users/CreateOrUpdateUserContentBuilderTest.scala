@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.security.users
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class CreateOrUpdateUserContentBuilderTest extends FunSuite with Matchers {
+class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 	val spaceBetweenPunctuation = "([:\\{]) *([a-z\"\\[\\{])".r
 
 	test("CreateOrUpdateUserContentBuilder should generate the correct json") {

@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.requests.searches.queries.term.RangeQueryBodyFn
-import org.scalatest.{FunSuite, GivenWhenThen, Matchers}
+import org.scalatest.GivenWhenThen
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class RangeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen {
+class RangeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenThen {
 
   test("Should correctly build range with relation search query") {
     Given("Some range query")

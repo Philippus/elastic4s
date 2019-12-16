@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.searches.queries.span
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SpanNearQueryBodyFnTest extends FunSuite with Matchers {
+class SpanNearQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("SpanNearQueryBodyFn apply should return appropriate XContentBuilder") {
     val builder = SpanNearQueryBodyFn.apply(SpanNearQuery(

@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.requests.bulk
 import com.sksamuel.elastic4s.ElasticRequest
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
-import org.scalatest.FlatSpec
-import org.scalatest.Matchers._
+import matchers.should.Matchers._
+import org.scalatest.matchers
+import org.scalatest.flatspec.AnyFlatSpec
 
-class BulkHandlersTest extends FlatSpec with BulkHandlers {
+class BulkHandlersTest extends AnyFlatSpec with BulkHandlers {
 
   import com.sksamuel.elastic4s.testutils.StringExtensions._
 

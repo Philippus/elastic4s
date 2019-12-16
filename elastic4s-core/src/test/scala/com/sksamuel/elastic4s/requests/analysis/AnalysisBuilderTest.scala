@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analysis
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class AnalysisBuilderTest extends FunSuite with Matchers {
+class AnalysisBuilderTest extends AnyFunSuite with Matchers {
 
   test("custom analyzers") {
     val analysis = Analysis(

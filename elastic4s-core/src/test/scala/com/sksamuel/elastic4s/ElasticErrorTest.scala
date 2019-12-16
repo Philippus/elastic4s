@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
-import org.scalatest.{FlatSpec, Matchers}
 
 import scala.io.Source
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ElasticErrorTest extends FlatSpec with Matchers with ElasticDsl {
+class ElasticErrorTest extends AnyFlatSpec with Matchers with ElasticDsl {
 
   "ElasticError" should "properly handle an error response with an invalid body" in {
     val error = ElasticError.parse(HttpResponse(123, Some(StringEntity("{", None)), Map()))

@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SourceAsContentBuilderTest extends FunSuite with Matchers {
+class SourceAsContentBuilderTest extends AnyFunSuite with Matchers {
 
   test("source as content builder should handle tuples") {
     val map = Map("name" -> "sammy", "teams" -> Seq(("football", "boro"), ("baseball", "phillies")), "projects" -> null)
