@@ -84,6 +84,7 @@ object ScriptSortBuilderFn {
     scriptSort.order.map(a => builder.field("order", EnumConversions.order(a)))
     scriptSort.sortMode.map(a => builder.field("mode", EnumConversions.sortMode(a)))
     scriptSort.nestedPath.map(a => builder.field("nested_path", a))
+    scriptSort.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
 
     builder.endObject()
   }
