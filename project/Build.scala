@@ -29,7 +29,7 @@ object Build extends AutoPlugin {
     val ReactiveStreamsVersion = "1.0.3"
     val ScalatestVersion       = "3.1.0"
     val ScalamockVersion       = "4.4.0"
-    val ScalazVersion          = "7.2.29"
+    val ScalazVersion          = "7.2.30"
     val ZIOVersion             = "1.0.0-RC17"
     val SprayJsonVersion       = "1.3.5"
     val SttpVersion            = "1.7.2"
