@@ -99,7 +99,8 @@ lazy val testkit = Project("elastic4s-testkit", file("elastic4s-testkit"))
   .settings(
     name := "elastic4s-testkit",
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % ScalatestVersion
+      "org.scalatest" %% "scalatest" % ScalatestVersion,
+      "org.scalatestplus" %% "mockito-1-10" % ScalatestPlusVersion
     )
   )
   .dependsOn(core, clientesjava)
@@ -109,7 +110,8 @@ lazy val httpstreams = Project("elastic4s-http-streams", file("elastic4s-http-st
     name := "elastic4s-http-streams",
     libraryDependencies += "com.typesafe.akka"   %% "akka-actor"          % AkkaVersion,
     libraryDependencies += "org.reactivestreams" % "reactive-streams"     % ReactiveStreamsVersion,
-    libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test"
+    libraryDependencies += "org.reactivestreams" % "reactive-streams-tck" % ReactiveStreamsVersion % "test",
+    libraryDependencies += "org.scalatestplus" %% "testng-6-7" % ScalatestPlusVersion % "test"
   )
   .dependsOn(core, testkit % "test", jackson % "test")
 
