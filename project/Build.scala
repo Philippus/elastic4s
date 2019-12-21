@@ -28,6 +28,7 @@ object Build extends AutoPlugin {
     val PlayJsonVersion        = "2.8.1"
     val ReactiveStreamsVersion = "1.0.3"
     val ScalatestVersion       = "3.1.0"
+    val ScalatestPlusVersion   = "3.1.0.0"
     val ScalamockVersion       = "4.4.0"
     val ScalazVersion          = "7.2.30"
     val ZIOVersion             = "1.0.0-RC17"
@@ -70,8 +71,9 @@ object Build extends AutoPlugin {
     libraryDependencies ++= Seq(
       "com.sksamuel.exts" %% "exts" % ExtsVersion,
       "org.slf4j" % "slf4j-api" % Slf4jVersion,
-      "org.mockito" % "mockito-core" % MockitoVersion % "test",
-      "org.scalatest" %% "scalatest" % ScalatestVersion % "test"
+      "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
+      "org.scalatestplus" %% "mockito-1-10" % ScalatestPlusVersion % "test",
+      "org.mockito" % "mockito-core" % MockitoVersion % "test"
     ),
     if (isTravis) {
       version := s"7.3.2.$travisBuildNumber-SNAPSHOT"
