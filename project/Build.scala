@@ -1,8 +1,8 @@
 import com.typesafe.sbt.SbtPgp
+import com.typesafe.sbt.pgp.PgpKeys
 import sbt.Keys._
 import sbt.{Credentials, Path, _}
 import sbt.plugins.JvmPlugin
-import xerial.sbt.Sonatype
 
 object Build extends AutoPlugin {
 
@@ -52,6 +52,9 @@ object Build extends AutoPlugin {
     parallelExecution in ThisBuild := false,
     SbtPgp.autoImport.useGpg := true,
     SbtPgp.autoImport.useGpgAgent := true,
+    sbtrelease.ReleasePlugin.autoImport.releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+    sbtrelease.ReleasePlugin.autoImport.releaseCrossBuild := true,
+    credentials += Credentials(Path.userHome / ".sbt" / "pgp.credentials"),
     if (isTravis) {
       credentials += Credentials(
         "Sonatype Nexus Repository Manager",
@@ -62,7 +65,6 @@ object Build extends AutoPlugin {
     } else {
       credentials += Credentials(Path.userHome / ".sbt" / "credentials.sbt")
     },
-    publishTo := Sonatype.autoImport.sonatypePublishTo.value,
     scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8"),
     javacOptions := Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
