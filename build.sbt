@@ -42,6 +42,7 @@ lazy val warnUnusedImport = Seq(
 )
 
 lazy val commonSettings = Seq(
+  version := (if (isTravis.value) s"7.1.0.$travisBuildNumber-SNAPSHOT" else version.value),
   resolvers ++= Seq(
     Resolver.mavenCentral,
     Resolver.sonatypeRepo("snapshots"),
@@ -101,20 +102,17 @@ lazy val pomSettings = Seq(
   </developers>
 )
 
+val travisCreds = Credentials(
+  "Sonatype Nexus Repository Manager",
+  "oss.sonatype.org",
+  sys.env.getOrElse("OSSRH_USERNAME", ""),
+  sys.env.getOrElse("OSSRH_PASSWORD", "")
+)
+
+val localCreds = Credentials(Path.userHome / ".sbt" / "credentials.sbt")
+
 lazy val credentialSettings = Seq(
-  credentials += Credentials(Path.userHome / ".sbt" / "pgp.credentials"),
-  credentials += {
-    if (isTravis.value) {
-      Credentials(
-        "Sonatype Nexus Repository Manager",
-        "oss.sonatype.org",
-        sys.env.getOrElse("OSSRH_USERNAME", ""),
-        sys.env.getOrElse("OSSRH_PASSWORD", "")
-      )
-    } else {
-      Credentials(Path.userHome / ".sbt" / "credentials.sbt")
-    }
-  }
+  credentials := (if (isTravis.value) Seq(travisCreds) else Seq(localCreds))
 )
 
 lazy val noPublishSettings = Seq(
@@ -172,18 +170,18 @@ lazy val core = (project in file("elastic4s-core"))
   )
 
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
-    .dependsOn(core)
-    .settings(name := "elastic4s-client-esjava")
-    .settings(allSettings)
-    .settings(
-      libraryDependencies ++= Seq(
-        "org.elasticsearch.client" % "elasticsearch-rest-client" % ElasticsearchVersion,
-        "org.apache.logging.log4j" % "log4j-api" % Log4jVersion % "test",
-        "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-        "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-        "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
-      )
+  .dependsOn(core)
+  .settings(name := "elastic4s-client-esjava")
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.elasticsearch.client" % "elasticsearch-rest-client" % ElasticsearchVersion,
+      "org.apache.logging.log4j" % "log4j-api" % Log4jVersion % "test",
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
     )
+  )
 
 lazy val cats_effect = (project in file("elastic4s-effect-cats"))
   .dependsOn(core)
