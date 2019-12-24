@@ -43,11 +43,7 @@ lazy val warnUnusedImport = Seq(
 
 lazy val commonSettings = Seq(
   version := (if (isTravis.value) s"7.1.0.$travisBuildNumber-SNAPSHOT" else version.value),
-  resolvers ++= Seq(
-    Resolver.mavenCentral,
-    Resolver.sonatypeRepo("snapshots"),
-    Resolver.mavenLocal
-  ),
+  resolvers ++= Seq(Resolver.mavenLocal),
   parallelExecution in Test := false,
   scalacOptions in(Compile, doc) := (scalacOptions in(Compile, doc)).value.filter(_ != "-Xfatal-warnings"),
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
@@ -62,9 +58,9 @@ lazy val publishSettings = Seq(
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
     if (isTravis.value)
-      Some("Snapshots".at(nexus + "content/repositories/snapshots"))
+      Some("snapshots" at nexus + "content/repositories/snapshots")
     else
-      Some("Releases".at(nexus + "service/local/staging/deploy/maven2"))
+      Some("releases" at nexus + "service/local/staging/deploy/maven2")
   }
 )
 
