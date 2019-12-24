@@ -43,7 +43,7 @@ lazy val warnUnusedImport = Seq(
 
 lazy val commonSettings = Seq(
   resolvers ++= Seq(
-    Resolver.sonatypeRepo("releases"),
+    Resolver.mavenCentral,
     Resolver.sonatypeRepo("snapshots"),
     Resolver.mavenLocal
   ),
