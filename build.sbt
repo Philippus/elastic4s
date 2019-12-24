@@ -46,7 +46,7 @@ lazy val warnUnusedImport = Seq(
 
 lazy val commonSettings = Seq(
   organization := "com.sksamuel.elastic4s",
-  version := (if (isTravis.value) s"7.1.0.$travisBuildNumber-SNAPSHOT" else version.value),
+  version := (if (isTravis.value) version.value + s".$travisBuildNumber-SNAPSHOT" else version.value),
   resolvers ++= Seq(Resolver.mavenLocal),
   parallelExecution in Test := false,
   scalacOptions in(Compile, doc) := (scalacOptions in(Compile, doc)).value.filter(_ != "-Xfatal-warnings"),
