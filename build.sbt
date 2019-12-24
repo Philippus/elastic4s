@@ -60,7 +60,7 @@ lazy val publishSettings = Seq(
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
-    if (isSnapshot.value)
+    if (isTravis.value)
       Some("Snapshots".at(nexus + "content/repositories/snapshots"))
     else
       Some("Releases".at(nexus + "service/local/staging/deploy/maven2"))
