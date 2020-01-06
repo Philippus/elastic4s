@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.NumberSerializers
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.sksamuel.elastic4s.requests.searches.Total
 
 object JacksonSupport {
 
@@ -22,5 +23,6 @@ object JacksonSupport {
 
   val module = new SimpleModule {
     addSerializer(new NumberSerializers.DoubleSerializer(classOf[Double]))
+    addDeserializer(classOf[Total], new Total.Deserializer(classOf[Total]))
   }
 }

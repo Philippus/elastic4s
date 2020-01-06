@@ -1,13 +1,16 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import scala.reflect.ClassTag
+import scala.util.Try
+
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.databind.{DeserializationContext, JsonNode}
 import com.sksamuel.elastic4s.requests.common.Shards
 import com.sksamuel.elastic4s.requests.explain.Explanation
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
 import com.sksamuel.elastic4s.{Hit, HitReader, SourceAsContentBuilder}
-
-import scala.reflect.ClassTag
-import scala.util.Try
 
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
@@ -81,6 +84,16 @@ case class SearchHit(@JsonProperty("_id") id: String,
 }
 
 case class Total(value: Long, relation: String)
+
+object Total {
+  class Deserializer(vc: Class[_]) extends StdDeserializer[Total](vc) {
+    override def deserialize(p: JsonParser, ctxt: DeserializationContext): Total = {
+      val node: JsonNode = p.getCodec.readTree(p)
+      if(node.isNumber) Total(node.toString.toLong, "eq")
+      else Total(node.findValue("value").asLong, node.findValue("relation").asText())
+    }
+  }
+}
 
 case class SearchHits(total: Total,
                       @JsonProperty("max_score") maxScore: Double,
