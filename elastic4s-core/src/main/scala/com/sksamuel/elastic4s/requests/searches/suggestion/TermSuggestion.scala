@@ -34,15 +34,15 @@ object StringDistance {
   def valueOf(str: String): StringDistance = str.toUpperCase match {
     case "INTERNAL"            => INTERNAL
     case "DAMERAU_LEVENSHTEIN" => DAMERAU_LEVENSHTEIN
-    case "LEVENSTEIN"          => LEVENSTEIN
-    case "JAROWINKLER"         => JAROWINKLER
+    case "LEVENSHTEIN"         => LEVENSHTEIN
+    case "JARO_WINKLER"        => JARO_WINKLER
     case "NGRAM"               => NGRAM
   }
 
   case object INTERNAL            extends StringDistance
   case object DAMERAU_LEVENSHTEIN extends StringDistance
-  case object LEVENSTEIN          extends StringDistance
-  case object JAROWINKLER         extends StringDistance
+  case object LEVENSHTEIN         extends StringDistance
+  case object JARO_WINKLER        extends StringDistance
   case object NGRAM               extends StringDistance
 }
 
