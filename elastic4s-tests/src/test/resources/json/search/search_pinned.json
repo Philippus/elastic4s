@@ -1,0 +1,11 @@
+{
+    "size": 5,
+    "query": {
+        "pinned": {
+            "ids": ["1", "2", "3"],
+            "organic": {
+                "match_all": {}
+            }
+        }
+    }
+}

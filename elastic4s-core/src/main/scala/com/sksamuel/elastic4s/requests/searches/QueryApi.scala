@@ -176,6 +176,8 @@ trait QueryApi {
       PercolateQuery(field, `type`, source = Some(indexable.json(t)))
   }
 
+  def pinnedQuery(ids: List[String], organic: Query): PinnedQuery = PinnedQuery(ids, organic)
+
   def rangeQuery(field: String): RangeQuery = RangeQuery(field)
 
   def rawQuery(json: String): RawQuery = RawQuery(json)
