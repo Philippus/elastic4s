@@ -29,7 +29,7 @@
             "term": {
                 "field": "names",
                 "max_inspections": 3,
-                "string_distance": "LEVENSTEIN"
+                "string_distance": "LEVENSHTEIN"
             }
         },
         "my-suggestion-4": {

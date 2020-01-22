@@ -801,7 +801,7 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
     val req = search("music") query "coldplay" suggestions(
       termSuggestion("my-suggestion-1", "names", "clocks by culdpaly") maxEdits 2 mode "Popular" shardSize 2 accuracy 0.6,
       termSuggestion("my-suggestion-2", "names", "aqualuck by jethro toll") size 5 mode "Missing" minDocFreq 0.2 prefixLength 3,
-      termSuggestion("my-suggestion-3", "names", "bountiful day by u22") maxInspections 3 stringDistance "levenstein",
+      termSuggestion("my-suggestion-3", "names", "bountiful day by u22") maxInspections 3 stringDistance "levenshtein",
       termSuggestion("my-suggestion-4", "names", "whatever some text") maxTermFreq 0.5 minWordLength 5 mode
         SuggestMode.Always
     )
