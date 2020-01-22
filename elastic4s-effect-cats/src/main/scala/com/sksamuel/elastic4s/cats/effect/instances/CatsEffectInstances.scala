@@ -13,3 +13,6 @@ trait CatsEffectInstances {
   implicit def catsEffectExecutor[F[_]: Async]: Executor[F] =
     new CatsEffectExecutor[F]
 }
+
+@deprecated("Use CatsEffectInstances instead")
+trait IOInstances extends CatsEffectInstances
