@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.requests.searches._
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.MultiValueMode
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
-import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
@@ -68,6 +68,13 @@ class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneIn
       termQuery("singer", "chris martin") boost 1.6
     } searchType SearchType.DEFAULT
     req.request.entity.get.get should matchJsonResource("/json/search/search_term.json")
+  }
+
+  it should "generate json for a pinned query" in {
+    val req = search("*") limit 5 query {
+      pinnedQuery(List("1", "2", "3"), matchAllQuery())
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_pinned.json")
   }
 
   it should "generate json for a range query" in {
