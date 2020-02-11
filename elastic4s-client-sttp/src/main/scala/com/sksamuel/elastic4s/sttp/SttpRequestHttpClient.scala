@@ -6,11 +6,11 @@ import java.nio.file.Files
 import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
 import com.sksamuel.exts.OptionImplicits._
+import com.softwaremill.sttp.Uri.QueryFragment
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend
 
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.util.{Failure, Success}
 
@@ -25,7 +25,15 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
   }
 
   private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
-    val url = uri"${nodeEndpoint.protocol}://${nodeEndpoint.host}:${nodeEndpoint.port}/$endpoint?$params"
+    val url = new Uri(
+      nodeEndpoint.protocol,
+      None,
+      nodeEndpoint.host,
+      nodeEndpoint.port.some,
+      collection.immutable.Seq(endpoint.stripPrefix("/").split('/'): _*),
+      collection.immutable.Seq(params.map{ case (k, v) => QueryFragment.KeyValue(k, v.toString) }.toSeq: _*),
+      None
+    )
     method.toUpperCase match {
       case "GET"    => sttp.get(url)
       case "HEAD"   => sttp.head(url)
