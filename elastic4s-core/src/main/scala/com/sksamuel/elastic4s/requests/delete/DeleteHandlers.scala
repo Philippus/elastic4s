@@ -30,7 +30,7 @@ trait DeleteHandlers {
 
     override def build(request: DeleteByQueryRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.indexes.values.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/_doc/_delete_by_query"
+      val endpoint = s"/${request.indexes.values.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false))
