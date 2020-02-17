@@ -30,7 +30,7 @@ object SigTextAggregationBuilder {
       includeBuilder.field("num_partitions", incpart.numPartitions)
       includeBuilder.endObject()
     }
-    agg.heuristic.foreach(builder.field("", _))
+    agg.heuristic.foreach(heuristic => builder.autofield(heuristic._1, heuristic._2))
     agg.backgroundFilter.map(QueryBuilderFn.apply).foreach { x =>
       builder.rawField("background_filter", x)
     }
