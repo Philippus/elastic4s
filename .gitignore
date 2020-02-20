@@ -3,6 +3,7 @@
 .idea
 *.iml
 pom.xml.versionsBackup
+.hydra
 
 # sbt specific
 dist/*

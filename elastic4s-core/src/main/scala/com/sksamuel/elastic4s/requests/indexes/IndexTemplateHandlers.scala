@@ -77,7 +77,7 @@ object CreateIndexTemplateBodyFn {
     create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))
 
-    if (create.settings.nonEmpty) {
+    if (create.settings.nonEmpty || create.analysis.nonEmpty) {
       builder.startObject("settings")
       create.settings.foreach {
         case (key, value) => builder.autofield(key, value)
