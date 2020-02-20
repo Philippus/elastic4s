@@ -77,12 +77,12 @@ object CreateIndexTemplateBodyFn {
     create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))
 
-    if (create.settings.nonEmpty || create.analysis.nonEmpty) {
+    if (create.settings.nonEmpty) {
       builder.startObject("settings")
       create.settings.foreach {
         case (key, value) => builder.autofield(key, value)
       }
-      builder.rawField("analysis", AnalysisBuilder.build(create.analysis.get))
+      if(create.analysis.nonEmpty) builder.rawField("analysis", AnalysisBuilder.build(create.analysis.get))
       builder.endObject()
     }
 
