@@ -16,7 +16,7 @@ case class SigTermsAggregation(name: String,
                                backgroundFilter: Option[Query] = None,
                                subaggs: Seq[AbstractAggregation] = Nil,
                                metadata: Map[String, AnyRef] = Map.empty,
-                               heuristic: Option[String] = None,
+                               heuristic: Option[(String, Map[String, Any])] = None,
                                filterDuplicateText: Option[Boolean] = None)
     extends Aggregation {
 
@@ -37,7 +37,8 @@ case class SigTermsAggregation(name: String,
   def includePartition(partition: Int, numPartitions: Int): T =
     copy(includePartition = IncludePartition(partition, numPartitions).some)
 
-  def significanceHeuristic(heuristic: String): SigTermsAggregation = copy(heuristic = heuristic.some)
+  def significanceHeuristic(heuristic: String, params: Map[String, Any] = Map.empty): SigTermsAggregation =
+    copy(heuristic = (heuristic, params).some)
 
   def field(field: String): SigTermsAggregation            = copy(field = field.some)
   def shardMinDocCount(min: Long): SigTermsAggregation     = copy(shardMinDocCount = min.some)
