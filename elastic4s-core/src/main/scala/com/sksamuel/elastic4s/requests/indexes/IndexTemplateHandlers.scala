@@ -82,7 +82,7 @@ object CreateIndexTemplateBodyFn {
       create.settings.foreach {
         case (key, value) => builder.autofield(key, value)
       }
-      if(create.analysis.nonEmpty) builder.rawField("analysis", AnalysisBuilder.build(create.analysis.get))
+      create.analysis.foreach(a => builder.rawField("analysis", AnalysisBuilder.build(a)))
       builder.endObject()
     }
 
