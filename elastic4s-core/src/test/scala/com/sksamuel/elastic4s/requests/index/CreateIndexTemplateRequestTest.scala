@@ -20,4 +20,15 @@ class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Ma
 
     CreateIndexTemplateHandler.build(templateDef).entity.get.get shouldBe expectedEntityContent
   }
+
+  test("testing if entity created by createIndexTemplate without analysis"){
+
+    val templateName = "test_template_without_analysis"
+
+    val templateDef = createIndexTemplate(templateName, "index_pattern").settings(Map("number_of_shards" -> 1))
+
+    val expectedEntityContent = """{"index_patterns":["index_pattern"],"settings":{"number_of_shards":1}}"""
+
+    CreateIndexTemplateHandler.build(templateDef).entity.get.get shouldBe expectedEntityContent
+  }
 }

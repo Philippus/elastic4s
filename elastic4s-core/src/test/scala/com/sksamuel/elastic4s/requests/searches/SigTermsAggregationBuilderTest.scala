@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.SigTermsAggregationBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers{
+class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
@@ -17,5 +17,26 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers{
       """{"significant_terms":{"field":"field","background_filter":{"term":{"text":{"value":"test"}}}}}"""
   }
 
+  test("sig terms aggregation with heuristic 'percentage' should generate expected json") {
+    val agg = sigTermsAggregation("name")
+      .field("field")
+      .significanceHeuristic("percentage")
+    SigTermsAggregationBuilder(agg).string() shouldBe
+      """{"significant_terms":{"field":"field","percentage":{}}}"""
+  }
+
+  test("sig terms aggregation with heuristic 'mutual_information' with parameters should generate expected json") {
+    val agg = sigTermsAggregation("name")
+      .field("field")
+      .significanceHeuristic(
+        "mutual_information",
+        Map(
+          "include_negatives" -> true,
+          "background_is_superset" -> false
+        )
+      )
+    SigTermsAggregationBuilder(agg).string() shouldBe
+      """{"significant_terms":{"field":"field","mutual_information":{"include_negatives":true,"background_is_superset":false}}}"""
+  }
 
 }
