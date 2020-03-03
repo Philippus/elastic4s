@@ -47,12 +47,14 @@ case class NestedFieldDefinition(name: String,
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
 
   @deprecated(
-    "This setting was removed from the Elasticsearch documentation in version 2.0. See the following discussion regarding removing support in a future version of elasticsearch: https://github.com/elastic/elasticsearch/issues/12461"
+    "This setting was removed from the Elasticsearch documentation in version 2.0. See the following discussion regarding removing support in a future version of elasticsearch: https://github.com/elastic/elasticsearch/issues/12461",
+    "2.0"
   )
   def includeInParent(includeInParent: Boolean): T = copy(includeInParent = includeInParent.some)
 
   @deprecated(
-    "This setting was removed from the Elasticsearch documentation in version 2.0. See the following discussion regarding removing support in a future version of elasticsearch: https://github.com/elastic/elasticsearch/issues/12461"
+    "This setting was removed from the Elasticsearch documentation in version 2.0. See the following discussion regarding removing support in a future version of elasticsearch: https://github.com/elastic/elasticsearch/issues/12461",
+    "2.0"
   )
   def includeInRoot(includeInRoot: Boolean): T = copy(includeInRoot = includeInRoot.some)
 
