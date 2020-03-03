@@ -16,7 +16,7 @@ trait ExplainHandlers {
 
     override def build(request: ExplainRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.index.index}/_doc/${request.id}/_explain"
+      val endpoint = s"/${request.index.index}/_explain/${request.id}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.routing.map(_.toString).foreach(params.put("routing", _))
