@@ -10,6 +10,8 @@ case class NestedField(name: String,
                        dynamic: Option[String] = None,
                        enabled: Option[Boolean] = None,
                        includeInAll: Option[Boolean] = None,
+                       includeInParent: Option[Boolean] = None,
+                       includeInRoot: Option[Boolean] = None,
                        index: Option[String] = None,
                        indexOptions: Option[String] = None,
                        fields: Seq[FieldDefinition] = Nil,
@@ -43,6 +45,18 @@ case class NestedField(name: String,
   override def enabled(enabled: Boolean): T = copy(enabled = enabled.some)
 
   override def includeInAll(includeInAll: Boolean): T = copy(includeInAll = includeInAll.some)
+
+  @deprecated(
+    "This setting was removed from the Elasticsearch documentation in version 2.0. See the following discussion regarding removing support in a future version of elasticsearch: https://github.com/elastic/elasticsearch/issues/12461",
+    "2.0"
+  )
+  def includeInParent(includeInParent: Boolean): T = copy(includeInParent = includeInParent.some)
+
+  @deprecated(
+    "This setting was removed from the Elasticsearch documentation in version 2.0. See the following discussion regarding removing support in a future version of elasticsearch: https://github.com/elastic/elasticsearch/issues/12461",
+    "2.0"
+  )
+  def includeInRoot(includeInRoot: Boolean): T = copy(includeInRoot = includeInRoot.some)
 
   override def index(index: Boolean): T = copy(index = index.toString.some)
 
