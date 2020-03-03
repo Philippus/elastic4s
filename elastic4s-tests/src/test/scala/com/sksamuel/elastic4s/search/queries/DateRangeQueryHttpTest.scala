@@ -42,7 +42,7 @@ class DateRangeQueryHttpTest
     "support date math for gte" in {
       val resp = http.execute {
         search("daterange") query {
-          rangeQuery("premiere_date").gte(ElasticDateMath("now").minus(5, Years))
+          rangeQuery("premiere_date").gte(ElasticDateMath("16/12/2017").minus(5, Years))
         }
       }.await.right.get.result
       resp.totalHits shouldBe 3
