@@ -30,4 +30,6 @@ jdk:
 - oraclejdk8
 - openjdk11
 
+dist: trusty
+
 after_success: "./snapshot_deploy.sh"
