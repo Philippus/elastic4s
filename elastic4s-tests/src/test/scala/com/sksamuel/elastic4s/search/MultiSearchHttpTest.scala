@@ -88,7 +88,11 @@ class MultiSearchHttpTest
 
     resp.failures.head.`reason` shouldBe "all shards failed"
     resp.failures.head.`type` shouldBe "search_phase_execution_exception"
-    resp.failures.head.rootCause.head.reason.contains("Fielddata is disabled on text fields by default") shouldBe true
+
+    // the failure message changed in 7.6.0, so this handles both messages as a passed test
+    (resp.failures.head.rootCause.head.reason.startsWith("Fielddata is disabled on text fields by default") ||
+      resp.failures.head.rootCause.head.reason.startsWith("Text fields are not optimised for operations")) shouldBe true
+
     resp.failures.head.rootCause.head.`type` shouldBe "illegal_argument_exception"
   }
 
