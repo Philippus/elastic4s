@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.SpanSugar._
 import org.scalatest.matchers.should.Matchers
+import org.scalatest.time.SpanSugar._
 import org.scalatest.wordspec.AnyWordSpec
 
 class TermVectorTest

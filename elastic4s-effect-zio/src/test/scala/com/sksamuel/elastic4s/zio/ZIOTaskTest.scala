@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.zio
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.zio.instances._
 import org.scalatest.BeforeAndAfterAll
-import zio.{DefaultRuntime, Task}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+import zio.{DefaultRuntime, Task}
 
 class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 

@@ -5,10 +5,10 @@ import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
-
-import scala.util.Try
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.util.Try
 
 class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 

@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.util.Try
 
 class PutMappingApiTest extends AnyFlatSpec with Matchers with DockerTests {
 

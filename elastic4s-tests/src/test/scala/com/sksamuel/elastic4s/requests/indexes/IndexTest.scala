@@ -6,10 +6,10 @@ import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.VersionType.{External, Internal}
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Shards, VersionType}
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Try
 
 class IndexTest extends AnyWordSpec with Matchers with DockerTests {
 

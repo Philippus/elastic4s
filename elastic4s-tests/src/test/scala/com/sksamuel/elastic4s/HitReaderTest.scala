@@ -6,11 +6,11 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.exts.OptionImplicits._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.{Success, Try}
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 
 class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with Matchers {
 

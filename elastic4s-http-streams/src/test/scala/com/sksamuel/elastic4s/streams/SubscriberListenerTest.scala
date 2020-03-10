@@ -5,10 +5,10 @@ import java.util.concurrent.{CountDownLatch, TimeUnit}
 import akka.actor.ActorSystem
 import com.sksamuel.elastic4s.requests.bulk.BulkResponseItem
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Try
 
 class SubscriberListenerTest extends AnyWordSpec with Matchers with DockerTests {
 

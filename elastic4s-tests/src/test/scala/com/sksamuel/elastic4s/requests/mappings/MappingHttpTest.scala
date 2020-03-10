@@ -4,10 +4,10 @@ import com.sksamuel.elastic4s.requests.analyzers._
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
-
-import scala.util.Try
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Try
 
 class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with BeforeAndAfterAll {
 

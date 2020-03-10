@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.cat
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.util.Try
 
 class CatCountTest extends AnyFlatSpec with Matchers with DockerTests {
 

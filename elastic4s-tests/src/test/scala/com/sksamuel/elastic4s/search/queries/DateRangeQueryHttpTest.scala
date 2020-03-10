@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import com.sksamuel.elastic4s.{ElasticDateMath, ElasticDsl, Years}
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
-import org.scalatest.wordspec.AnyWordSpec
 
 class DateRangeQueryHttpTest
   extends AnyWordSpec

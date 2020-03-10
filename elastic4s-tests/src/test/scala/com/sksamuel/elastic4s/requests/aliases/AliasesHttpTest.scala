@@ -4,10 +4,10 @@ import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.requests.indexes.admin.{AliasActionResponse, AliasExistsResponse}
 import com.sksamuel.elastic4s.requests.indexes.alias.{Alias, IndexAliases}
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Try
 
 class AliasesHttpTest extends AnyWordSpec with Matchers with DockerTests {
 

@@ -6,10 +6,10 @@ import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.OptionValues
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class UpdateTest
   extends AnyFlatSpec

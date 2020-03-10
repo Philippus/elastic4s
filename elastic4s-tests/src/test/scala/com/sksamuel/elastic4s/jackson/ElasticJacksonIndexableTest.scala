@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.{DeserializationContext, JsonDeserializer,
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Success
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Success
 
 class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerTests {
 

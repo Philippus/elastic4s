@@ -6,10 +6,10 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.CROSS_FIELDS
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDsl, HitReader}
-
-import scala.util.Try
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Try
 
 class SearchTest extends AnyWordSpec with DockerTests with Matchers {
 

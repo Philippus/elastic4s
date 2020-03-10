@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Try
-import org.scalatest.flatspec.AnyFlatSpec
 
 class CountTest extends AnyFlatSpec with DockerTests {
 

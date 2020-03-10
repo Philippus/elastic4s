@@ -6,12 +6,12 @@ import com.sksamuel.elastic4s.requests.analyzers._
 import com.sksamuel.elastic4s.requests.mappings.PrefixTree
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import org.scalatest.OneInstancePerTest
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.mockito.MockitoSugar
 
 import scala.concurrent.duration._
 import scala.io.Source
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers
 
 class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar with Matchers with OneInstancePerTest {
 

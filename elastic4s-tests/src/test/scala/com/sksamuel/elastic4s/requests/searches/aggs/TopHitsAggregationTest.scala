@@ -4,10 +4,10 @@ import com.sksamuel.elastic4s.AggReader
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.Total
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.util.Try
 
 class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 

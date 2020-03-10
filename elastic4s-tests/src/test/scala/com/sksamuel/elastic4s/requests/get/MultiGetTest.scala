@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.requests.get
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
 import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.Try
-import org.scalatest.flatspec.AnyFlatSpec
 
 class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
 

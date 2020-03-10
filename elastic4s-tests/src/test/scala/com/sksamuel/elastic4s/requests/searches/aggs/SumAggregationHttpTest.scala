@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
-
-import scala.util.Try
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.util.Try
 
 class SumAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers with BeforeAndAfterAll {
 

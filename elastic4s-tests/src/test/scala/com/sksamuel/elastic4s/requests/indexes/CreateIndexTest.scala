@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.requests.analyzers.PatternAnalyzer
 import com.sksamuel.elastic4s.testkit.DockerTests
-
-import scala.util.Try
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.util.Try
 
 class CreateIndexTest extends AnyWordSpec with Matchers with DockerTests {
 
