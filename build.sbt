@@ -30,10 +30,11 @@ val ZIOVersion             = "1.0.0-RC18"
 val SprayJsonVersion       = "1.3.5"
 val SttpVersion            = "1.7.2"
 val Slf4jVersion           = "1.7.30"
+val ScalatestPlusMockitoArtifactId = "mockito-3-2"
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.12.8", "2.13.0")
+  scalaVersion := "2.12.10",
+  crossScalaVersions := Seq("2.12.10", "2.13.1")
 )
 
 lazy val warnUnusedImport = Seq(
@@ -76,7 +77,7 @@ lazy val commonJvmSettings = Seq(
   Test / fork := true,
   Test / javaOptions := Seq("-Xmx3G"),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-  javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:MaxPermSize=2048M", "-XX:+CMSClassUnloadingEnabled"),
+  javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled"),
 )
 
 lazy val commonDeps = Seq(
@@ -85,7 +86,7 @@ lazy val commonDeps = Seq(
     "org.slf4j" % "slf4j-api" % Slf4jVersion,
     "org.scalatest" %% "scalatest" % ScalatestVersion % "test",
     "org.mockito" % "mockito-core" % MockitoVersion % "test",
-    "org.scalatestplus" %% "mockito-1-10" % ScalatestPlusVersion % "test"
+    "org.scalatestplus" %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion % "test"
   )
 )
 
@@ -244,7 +245,7 @@ lazy val testkit = (project in file("elastic4s-testkit"))
   .settings(
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest" % ScalatestVersion,
-      "org.scalatestplus" %% "mockito-1-10" % ScalatestPlusVersion
+      "org.scalatestplus" %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
     )
   )
 
