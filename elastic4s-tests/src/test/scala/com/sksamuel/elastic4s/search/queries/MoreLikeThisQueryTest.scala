@@ -5,11 +5,12 @@ import com.sksamuel.elastic4s.requests.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicy}
 import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, MoreLikeThisItem}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class MoreLikeThisQueryTest extends WordSpec with Matchers with DockerTests {
+class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
   Try {
     client.execute(

@@ -2,10 +2,11 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicy}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 class TermsLookupQueryTest
-  extends FlatSpec
+  extends AnyFlatSpec
     with DockerTests
     with Matchers {
 

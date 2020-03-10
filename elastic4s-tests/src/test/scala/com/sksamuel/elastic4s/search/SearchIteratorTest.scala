@@ -4,13 +4,13 @@ import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.SearchIterator
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
-import org.scalatest.WordSpec
 
 import scala.concurrent.duration._
 import scala.util.Try
+import org.scalatest.wordspec.AnyWordSpec
 
 class SearchIteratorTest
-  extends WordSpec
+  extends AnyWordSpec
     with ElasticMatchers
     with DockerTests {
 

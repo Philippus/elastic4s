@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.requests.analyzers.SpanishLanguageAnalyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicTemplateBodyFn
 import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class DynamicTemplateApiTest extends WordSpec with Matchers with JsonSugar with ElasticApi {
+class DynamicTemplateApiTest extends AnyWordSpec with Matchers with JsonSugar with ElasticApi {
 
   "dynamic templates" should {
     "support match" in {

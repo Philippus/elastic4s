@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class GetSegmentTest extends FlatSpec with Matchers with DockerTests {
+class GetSegmentTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(

@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class RolloverIndexRequestTest extends WordSpec with Matchers with DockerTests {
+class RolloverIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class UaxUrlEmailTokenizerTest extends WordSpec with TokenizerApi with Matchers {
+class UaxUrlEmailTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers {
 
   "UaxUrlEmailTokenizer builder" should {
     "set max token length" in {

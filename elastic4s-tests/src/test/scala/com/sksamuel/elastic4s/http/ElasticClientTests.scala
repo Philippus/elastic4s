@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ElasticClientTests extends FlatSpec with Matchers with DockerTests {
+class ElasticClientTests extends AnyFlatSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

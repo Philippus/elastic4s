@@ -6,11 +6,12 @@ import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.VersionType.{External, Internal}
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Shards, VersionType}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class IndexTest extends WordSpec with Matchers with DockerTests {
+class IndexTest extends AnyWordSpec with Matchers with DockerTests {
 
   case class Phone(name: String, speed: String)
 

@@ -4,11 +4,12 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.{Aggregations, DateHistogramInterval}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-class BucketSortPipelineAggHttpTest extends FreeSpec with DockerTests with Matchers {
+class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Matchers {
 
   Try {
     client.execute {

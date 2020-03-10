@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class SnowballTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
+class SnowballTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers {
 
   "SnowballTokenFilter builder" should {
     "set language" in {

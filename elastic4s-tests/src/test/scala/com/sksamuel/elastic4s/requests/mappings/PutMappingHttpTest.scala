@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.requests.indexes.IndexMappings
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FunSuite, Matchers}
 
 import scala.util.Try
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class PutMappingHttpTest extends FunSuite with Matchers with DockerTests {
+class PutMappingHttpTest extends AnyFunSuite with Matchers with DockerTests {
 
   test("put mapping should add new field to an existing type") {
 

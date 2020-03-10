@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.Try
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class GetRoleTest extends WordSpec with Matchers with DockerTests {
+class GetRoleTest extends AnyWordSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

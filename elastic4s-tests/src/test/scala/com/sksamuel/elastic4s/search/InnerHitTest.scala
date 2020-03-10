@@ -4,9 +4,10 @@ import com.sksamuel.elastic4s.requests.mappings.Child
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
 import com.sksamuel.elastic4s.requests.searches.{InnerHits, Total}
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class InnerHitTest extends WordSpec with Matchers with DockerTests {
+class InnerHitTest extends AnyWordSpec with Matchers with DockerTests {
 
   val indexName = "inner_hit_test"
   deleteIdx(indexName)

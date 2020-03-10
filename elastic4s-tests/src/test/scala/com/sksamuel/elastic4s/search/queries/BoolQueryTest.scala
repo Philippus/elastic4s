@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class BoolQueryTest extends FlatSpec with Matchers with DockerTests {
+class BoolQueryTest extends AnyFlatSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

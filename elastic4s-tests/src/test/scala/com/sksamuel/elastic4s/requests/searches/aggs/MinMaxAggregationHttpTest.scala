@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-class MinMaxAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
+class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers {
 
   Try {
     client.execute {

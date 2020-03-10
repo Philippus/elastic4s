@@ -2,10 +2,12 @@ package com.sksamuel.elastic4s.zio
 
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.zio.instances._
-import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers}
+import org.scalatest.BeforeAndAfterAll
 import zio.{DefaultRuntime, Task}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ZIOTaskTest extends FlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
+class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   implicit class RichZIO[A](zio: Task[A]) {
     def unsafeRun: Either[Throwable, A] =

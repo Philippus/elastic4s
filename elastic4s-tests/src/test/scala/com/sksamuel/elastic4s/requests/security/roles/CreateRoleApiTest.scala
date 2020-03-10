@@ -2,9 +2,11 @@ package com.sksamuel.elastic4s.requests.security.roles
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
-import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
+import org.scalatest.OneInstancePerTest
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CreateRoleApiTest extends FlatSpec with JsonSugar with Matchers with OneInstancePerTest {
+class CreateRoleApiTest extends AnyFlatSpec with JsonSugar with Matchers with OneInstancePerTest {
 
 	"the role dsl" should "generate valid json" in {
 		val req = createRole(

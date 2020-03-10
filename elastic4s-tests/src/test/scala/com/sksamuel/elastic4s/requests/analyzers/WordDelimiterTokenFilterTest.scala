@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class WordDelimiterTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
+class WordDelimiterTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers {
 
   "WordDelimiterTokenFilter builder" should {
     "set generateNumberParts" in {

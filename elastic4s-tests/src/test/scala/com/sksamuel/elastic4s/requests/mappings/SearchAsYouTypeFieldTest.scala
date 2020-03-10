@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.requests.analyzers.{ArmenianLanguageAnalyzer, EnglishLanguageAnalyzer}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class SearchAsYouTypeFieldTest extends FlatSpec with Matchers with ElasticApi {
+class SearchAsYouTypeFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
   "search as you type def" should "support additional text properties" in {
     val field = searchAsYouType("myfield")

@@ -4,13 +4,14 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.concurrent.TimeLimits
 import org.scalatest.exceptions.TestFailedDueToTimeoutException
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.util.Try
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class OpenCloseIndexRequestTest extends WordSpec with Matchers with DockerTests with TimeLimits {
+class OpenCloseIndexRequestTest extends AnyWordSpec with Matchers with DockerTests with TimeLimits {
 
   Try {
     client.execute {

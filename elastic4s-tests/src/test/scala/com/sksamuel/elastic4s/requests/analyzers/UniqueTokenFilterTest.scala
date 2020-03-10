@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class UniqueTokenFilterTest extends WordSpec with AnalyzerApi with Matchers with TokenFilterApi {
+class UniqueTokenFilterTest extends AnyWordSpec with AnalyzerApi with Matchers with TokenFilterApi {
 
   "UniqueTokenFilter builder" should {
     "not set any defaults" in {

@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CustomAnalyzerTest extends FlatSpec with Matchers {
+class CustomAnalyzerTest extends AnyFlatSpec with Matchers {
 
   "CustomAnalyzer" should "support predefined tokenizers and filters" in {
     CustomAnalyzerDefinition(

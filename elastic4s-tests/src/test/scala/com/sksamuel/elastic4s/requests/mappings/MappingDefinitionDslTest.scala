@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.requests.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
 import com.sksamuel.elastic4s.requests.indexes.CreateIndexContentBuilder
 import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class MappingDefinitionDslTest extends WordSpec with Matchers with JsonSugar with ElasticApi {
+class MappingDefinitionDslTest extends AnyWordSpec with Matchers with JsonSugar with ElasticApi {
 
   "mapping definition" should {
     "insert source exclusion directives when set" in {

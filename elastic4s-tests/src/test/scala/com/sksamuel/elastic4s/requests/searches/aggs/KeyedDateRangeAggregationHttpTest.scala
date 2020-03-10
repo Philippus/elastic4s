@@ -5,11 +5,12 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
 import org.joda.time.DateTime
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
-import org.scalatest.{FreeSpec, Matchers}
 
 import scala.util.Try
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-class KeyedDateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
+class KeyedDateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers {
 
   Try {
     client.execute {

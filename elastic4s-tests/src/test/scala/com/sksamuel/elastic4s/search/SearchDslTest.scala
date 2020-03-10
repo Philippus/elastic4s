@@ -12,10 +12,11 @@ import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
 import org.joda.time.DateTimeZone
-import org.scalatest.{FlatSpec, OneInstancePerTest}
+import org.scalatest.OneInstancePerTest
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatest.flatspec.AnyFlatSpec
 
-class SearchDslTest extends FlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
+class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
 
   import ElasticDsl._
 

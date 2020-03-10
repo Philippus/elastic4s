@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.requests.analyzers.{ArmenianLanguageAnalyzer, EnglishLanguageAnalyzer}
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class TextFieldTest extends FlatSpec with Matchers with ElasticApi {
+class TextFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
   "text field def" should "support text properties" in {
     val field = textField("myfield")

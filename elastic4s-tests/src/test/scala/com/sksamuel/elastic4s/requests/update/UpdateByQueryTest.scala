@@ -2,13 +2,15 @@ package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers, OptionValues}
+import org.scalatest.OptionValues
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 class UpdateByQueryTest
-  extends FlatSpec
+  extends AnyFlatSpec
     with Matchers
     with DockerTests
     with OptionValues {

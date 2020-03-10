@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FunSuite, Matchers}
 
 import scala.util.Try
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class AggregationAsStringTest extends FunSuite with DockerTests with Matchers {
+class AggregationAsStringTest extends AnyFunSuite with DockerTests with Matchers {
 
   Try {
     client.execute {
