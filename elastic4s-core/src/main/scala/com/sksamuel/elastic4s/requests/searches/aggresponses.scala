@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import java.util
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.requests.common.DocumentRef
 import com.sksamuel.elastic4s.{AggReader, JacksonSupport, SourceAsContentBuilder}

@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
-
-import scala.io.Source
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
+
+import scala.io.Source
 
 class ElasticErrorTest extends AnyFlatSpec with Matchers with ElasticDsl {
 

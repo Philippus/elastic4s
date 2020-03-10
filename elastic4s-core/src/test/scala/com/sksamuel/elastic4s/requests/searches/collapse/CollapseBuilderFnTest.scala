@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.collapse
 
-import com.sksamuel.elastic4s.requests.searches.collapse.{CollapseBuilderFn, CollapseRequest}
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

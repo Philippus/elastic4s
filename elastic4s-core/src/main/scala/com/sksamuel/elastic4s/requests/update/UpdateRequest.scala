@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
-import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy, VersionType}
+import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.exts.OptionImplicits._
 

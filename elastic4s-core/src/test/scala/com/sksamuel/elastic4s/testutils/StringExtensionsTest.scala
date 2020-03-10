@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.testutils
 
 import com.sksamuel.elastic4s.testutils.StringExtensions.StringOps
-import org.scalatest.matchers.should.Matchers.convertToStringShouldWrapper
 import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers.convertToStringShouldWrapper
 
 class StringExtensionsTest extends AnyFlatSpec {
 

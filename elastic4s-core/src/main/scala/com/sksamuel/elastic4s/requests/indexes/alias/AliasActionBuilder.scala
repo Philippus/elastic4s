@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.indexes.alias
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object AliasActionBuilder {
 

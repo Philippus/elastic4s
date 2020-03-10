@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.requests.searches._
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.MultiValueMode
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
-import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MultiMatchQueryBuilderType, ZeroTermsQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}

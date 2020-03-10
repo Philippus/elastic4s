@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorRefFactory
-import com.sksamuel.elastic4s.{ElasticClient, IndexesAndTypes}
 import com.sksamuel.elastic4s.requests.searches.SearchRequest
+import com.sksamuel.elastic4s.{ElasticClient, IndexesAndTypes}
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions

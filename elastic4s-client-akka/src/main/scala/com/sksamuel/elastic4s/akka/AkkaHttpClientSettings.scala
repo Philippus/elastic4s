@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.akka
 import java.util.concurrent.TimeUnit
 
 import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.settings.ConnectionPoolSettings
+import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration._
-import akka.http.scaladsl.settings.ConnectionPoolSettings
-import com.typesafe.config.{Config, ConfigFactory}
 
 object AkkaHttpClientSettings {
 

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
-import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
 
 case class IndexMappings(index: String, mappings: Map[String, Any])
 

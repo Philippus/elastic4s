@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s
 
-import scala.collection.JavaConverters._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+
+import scala.collection.JavaConverters._
 
 class FieldsMapperTest extends AnyFunSuite with Matchers {
 

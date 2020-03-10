@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.cluster
 
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 case class ClusterSettingsRequest(persistentSettings: Map[String, String], transientSettings: Map[String, String]) {
 

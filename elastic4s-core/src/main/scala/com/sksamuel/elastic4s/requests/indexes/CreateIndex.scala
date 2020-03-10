@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, NormalizerDefinition}
-import com.sksamuel.elastic4s.requests.mappings.{Analysis, MappingDefinition}
+import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 

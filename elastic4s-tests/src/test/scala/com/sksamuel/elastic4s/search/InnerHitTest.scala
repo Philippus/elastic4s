@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.requests.mappings.Child
-import com.sksamuel.elastic4s.requests.searches.{InnerHits, Total}
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
+import com.sksamuel.elastic4s.requests.searches.{InnerHits, Total}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 

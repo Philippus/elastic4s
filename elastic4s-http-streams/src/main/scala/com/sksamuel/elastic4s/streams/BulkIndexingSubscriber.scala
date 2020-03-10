@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor._
-import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
-import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponse, BulkResponseItem}
+import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer

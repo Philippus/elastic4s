@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.search.queries
 
+import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicy}
 import org.scalatest.{FlatSpec, Matchers}
 
 class TermsSetQueryTest
@@ -32,7 +32,7 @@ class TermsSetQueryTest
     }.await.result
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""")
   }
-  
+
   // Test: Satisfying the requirements only one 'minimum should match' field (second one)
   "a terms set query with minimum shoud match field" should "return any documents that match at least one term" in {
     val resp = client.execute {
@@ -57,12 +57,12 @@ class TermsSetQueryTest
     }.await.result
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""")
   }
-  
+
   // Test: Satisfying the requirements of the 'minimum should match' script for both documents
   "a terms set query with minimum shoud match script" should "return any documents that match at least one or more terms" in {
     val resp = client.execute {
       search("randompeople") query termsSetQuery("names", Set("nelson","edmure","byron","pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
     }.await.result
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""", """{"names":["umber","rudolfus","byron"],"required_matches":1}""")
-  }  
-} 
+  }
+}

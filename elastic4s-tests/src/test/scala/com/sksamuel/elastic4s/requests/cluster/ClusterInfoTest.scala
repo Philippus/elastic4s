@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.cluster
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 import org.scalatest.PartialFunctionValues._
+import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
 
 class ClusterInfoTest extends WordSpec with Matchers with DockerTests with BeforeAndAfterAll {
 

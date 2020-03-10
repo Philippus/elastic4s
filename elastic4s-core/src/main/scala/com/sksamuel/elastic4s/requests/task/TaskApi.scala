@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.task
 
-import scala.concurrent.duration.FiniteDuration
 import com.sksamuel.exts.OptionImplicits._
+
+import scala.concurrent.duration.FiniteDuration
 
 trait TaskApi {
 

@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.requests.cluster
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.{ElasticRequest, Handler}
 import com.sksamuel.elastic4s.requests.common.{HealthStatus, Priority}
-
 import com.sksamuel.exts.OptionImplicits._
 
 case class ClusterHealthRequest(indices: Seq[String],

@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.{ElasticRequest, Handler}
 import com.sksamuel.elastic4s.requests.admin.IndexStatsRequest
+import com.sksamuel.elastic4s.{ElasticRequest, Handler}
 
 case class Docs(count: Long, deleted: Long)
 case class Store(@JsonProperty("size_in_bytes") sizeInBytes: Long)

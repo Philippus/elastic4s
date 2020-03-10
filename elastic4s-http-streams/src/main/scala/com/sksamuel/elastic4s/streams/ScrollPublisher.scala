@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
-import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
+import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits._
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
