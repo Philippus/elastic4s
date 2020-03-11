@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.text
 
-import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchBoolPrefix}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchBoolPrefix
 import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object MatchBoolPrefixBodyFn {

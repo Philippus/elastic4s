@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.GapPolicy
-
-import scala.concurrent.duration._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+
+import scala.concurrent.duration._
 
 class DerivativeAggBuilderTest extends AnyFunSuite with Matchers {
 

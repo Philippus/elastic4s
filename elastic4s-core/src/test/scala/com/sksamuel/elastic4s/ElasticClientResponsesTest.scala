@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.{ElasticDsl, RequestFailure, RequestSuccess, Response}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.elastic4s.requests.searches.queries.Query
+import com.sksamuel.elastic4s.requests.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.exts.OptionImplicits._
 
 case class SigTermsAggregation(name: String,

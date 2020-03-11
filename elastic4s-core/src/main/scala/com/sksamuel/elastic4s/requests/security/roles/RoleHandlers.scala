@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
 import java.net.URLEncoder
-import com.sksamuel.elastic4s.{Handler, ElasticRequest, ResponseHandler}
+
+import com.sksamuel.elastic4s.{ElasticRequest, Handler}
 
 trait RoleHandlers {
 	private val ROLE_BASE_PATH = "/_security/role/"

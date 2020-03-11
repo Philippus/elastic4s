@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.cats.effect.instances
 
 import cats.effect.Async
-import cats.{Functor => CatsFunctor}
-import com.sksamuel.elastic4s.{Executor, Functor}
+import cats.{Functor ⇒ CatsFunctor}
 import com.sksamuel.elastic4s.cats.effect.CatsEffectExecutor
+import com.sksamuel.elastic4s.{Executor, Functor}
 
 trait CatsEffectInstances {
   implicit def catsFunctor[F[_]: CatsFunctor]: Functor[F] = new Functor[F] {

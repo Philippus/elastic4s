@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.akka
 
-import scala.concurrent.Future
-import scala.util.Try
-
 import akka.NotUsed
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse}
 import akka.stream.scaladsl.Flow
+
+import scala.concurrent.Future
+import scala.util.Try
 
 /**
   * Factory for Akka's http pool flow.

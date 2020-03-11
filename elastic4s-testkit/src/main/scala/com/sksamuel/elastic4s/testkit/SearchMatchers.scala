@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.testkit
 
 import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.requests.searches.SearchRequest
+import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 import scala.concurrent.duration._
 import scala.language.higherKinds
-import org.scalatest.matchers.should.Matchers
 
 trait SearchMatchers extends Matchers {
 

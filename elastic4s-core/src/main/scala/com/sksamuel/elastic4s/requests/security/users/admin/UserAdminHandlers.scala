@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.requests.security.users.admin
 
 import java.net.URLEncoder
-import com.sksamuel.elastic4s.{Handler, ResponseHandler, HttpResponse, ElasticError, ElasticRequest, HttpEntity}
-import com.sksamuel.elastic4s.requests.security.users.{CreateOrUpdateUserRequest, CreateUserResponse, CreateOrUpdateUserContentBuilder, CreateUser, UpdateUser}
-import com.sksamuel.elastic4s.requests.security.users.DeleteUserRequest
+
+import com.sksamuel.elastic4s.requests.security.users.{CreateOrUpdateUserContentBuilder, CreateOrUpdateUserRequest, CreateUser, CreateUserResponse, DeleteUserRequest, UpdateUser}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 trait UserAdminHandlers {
 	private val USER_BASE_PATH = "/_security/user/"

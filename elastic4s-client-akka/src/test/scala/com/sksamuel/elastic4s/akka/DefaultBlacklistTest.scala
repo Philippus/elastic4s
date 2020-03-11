@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.akka
 
+import org.scalatest.{Matchers, WordSpec}
+
 import scala.concurrent.duration._
 import scala.language.postfixOps
-
-import org.scalatest.{Matchers, WordSpec}
 
 class DefaultBlacklistTest extends WordSpec with Matchers {
 

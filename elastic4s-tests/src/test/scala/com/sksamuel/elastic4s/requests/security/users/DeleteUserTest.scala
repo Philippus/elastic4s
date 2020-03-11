@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.security.users
 
-import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.{Matchers, WordSpec}
 

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings.dynamictemplate
 
 import com.sksamuel.elastic4s.ElasticApi
-import com.sksamuel.elastic4s.requests.mappings.FieldType._
 import com.sksamuel.elastic4s.requests.mappings._
 import com.sksamuel.elastic4s.requests.script.ScriptField
 

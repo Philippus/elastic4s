@@ -1,8 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import scala.reflect.ClassTag
-import scala.util.Try
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
@@ -11,6 +8,9 @@ import com.sksamuel.elastic4s.requests.common.Shards
 import com.sksamuel.elastic4s.requests.explain.Explanation
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
 import com.sksamuel.elastic4s.{Hit, HitReader, SourceAsContentBuilder}
+
+import scala.reflect.ClassTag
+import scala.util.Try
 
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,

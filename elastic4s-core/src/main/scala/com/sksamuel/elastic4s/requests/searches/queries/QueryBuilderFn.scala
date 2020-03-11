@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.RawQueryBodyFn
 import com.sksamuel.elastic4s.requests.searches.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FunctionScoreQuery, ScriptScore}
@@ -10,6 +9,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.nested.{HasChildBodyFn, 
 import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanContainingQuery, SpanContainingQueryBodyFn, SpanFirstQuery, SpanFirstQueryBodyFn, SpanMultiTermQuery, SpanMultiTermQueryBodyFn, SpanNearQuery, SpanNearQueryBodyFn, SpanNotQuery, SpanNotQueryBodyFn, SpanOrQuery, SpanOrQueryBodyFn, SpanTermQuery, SpanTermQueryBodyFn, SpanWithinQuery, SpanWithinQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQuery, TermQueryBodyFn, TermsLookupQuery, TermsLookupQueryBodyFn, TermsQuery, TermsQueryBodyFn, TermsSetQuery, TermsSetQueryBodyFn, TypeQueryBodyFn, WildcardQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.text.{CommonTermsQueryBodyFn, MatchBoolPrefixBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
+import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object QueryBuilderFn {
   def apply(q: Query): XContentBuilder = q match {
