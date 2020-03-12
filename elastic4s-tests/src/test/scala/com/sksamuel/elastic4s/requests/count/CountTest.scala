@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.count
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class CountTest extends WordSpec with DockerTests with Matchers {
+class CountTest extends AnyWordSpec with DockerTests with Matchers {
 
   Try {
     client.execute {

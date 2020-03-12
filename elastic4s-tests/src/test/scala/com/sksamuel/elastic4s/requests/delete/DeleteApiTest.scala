@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.requests.delete
 
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
 import org.scalactic.TypeCheckedTripleEquals
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class DeleteApiTest extends FlatSpec with Matchers with TypeCheckedTripleEquals {
+class DeleteApiTest extends AnyFlatSpec with Matchers with TypeCheckedTripleEquals {
 
   import com.sksamuel.elastic4s.ElasticApi._
 

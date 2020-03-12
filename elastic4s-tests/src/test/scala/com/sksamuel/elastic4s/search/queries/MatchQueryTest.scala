@@ -2,12 +2,13 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
 class MatchQueryTest
-  extends FlatSpec
+  extends AnyFlatSpec
     with DockerTests
     with Matchers {
 

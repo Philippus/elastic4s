@@ -4,11 +4,12 @@ import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.suggestion.SuggestMode
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class TermSuggestionsTest extends WordSpec with Matchers with DockerTests {
+class TermSuggestionsTest extends AnyWordSpec with Matchers with DockerTests {
 
   implicit object SongIndexable extends Indexable[Song] {
     override def json(t: Song): String = s"""{"name":"${t.name}", "artist":"${t.artist}"}"""

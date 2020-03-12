@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CustomAnalyzerDefinitionTest extends FlatSpec with Matchers {
+class CustomAnalyzerDefinitionTest extends AnyFlatSpec with Matchers {
 
   "CustomAnalyzerDefinition" should "build correct json" in {
     CustomAnalyzerDefinition("mycustom", KeywordTokenizer, KStemTokenFilter, ApostropheTokenFilter)

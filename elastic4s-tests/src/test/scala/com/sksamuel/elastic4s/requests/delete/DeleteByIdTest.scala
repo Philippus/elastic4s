@@ -5,11 +5,12 @@ import java.util.UUID
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.common.VersionType.Internal
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class DeleteByIdTest extends WordSpec with Matchers with DockerTests {
+class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

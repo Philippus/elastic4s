@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s.akka
 
-import org.scalatest.{Matchers, WordSpec}
+
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class DefaultBlacklistTest extends WordSpec with Matchers {
+class DefaultBlacklistTest extends AnyWordSpec with Matchers {
 
   val minDuration = 1 second
   val maxDuration = 10 seconds

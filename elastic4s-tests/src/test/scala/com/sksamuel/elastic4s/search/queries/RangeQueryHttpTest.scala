@@ -3,12 +3,12 @@ package com.sksamuel.elastic4s.search.queries
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
-import org.scalatest.WordSpec
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
 class RangeQueryHttpTest
-  extends WordSpec
+  extends AnyWordSpec
     with DockerTests
     with ElasticMatchers {
 

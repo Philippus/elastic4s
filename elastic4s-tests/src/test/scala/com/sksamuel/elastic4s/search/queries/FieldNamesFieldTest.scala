@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
-class FieldNamesFieldTest extends FlatSpec with Matchers with DockerTests {
+class FieldNamesFieldTest extends AnyFlatSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

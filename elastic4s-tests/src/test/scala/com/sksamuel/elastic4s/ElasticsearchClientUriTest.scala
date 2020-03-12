@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ElasticsearchClientUriTest extends FlatSpec with Matchers {
+class ElasticsearchClientUriTest extends AnyFlatSpec with Matchers {
 
   private def testString(connectionString: String,
                          hosts: List[(String, Int)],

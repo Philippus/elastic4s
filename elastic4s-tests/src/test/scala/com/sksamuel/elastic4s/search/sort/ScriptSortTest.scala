@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.search.sort
 
 import com.sksamuel.elastic4s.requests.searches.sort.ScriptSortType
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 
 import scala.util.Try
 
-class ScriptSortTest extends FreeSpec with ElasticMatchers with DockerTests {
+class ScriptSortTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
   Try {
     client.execute {

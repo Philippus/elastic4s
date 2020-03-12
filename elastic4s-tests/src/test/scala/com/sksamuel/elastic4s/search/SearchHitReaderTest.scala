@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.search
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Success
 
-class SearchHitReaderTest extends FlatSpec with Matchers with DockerTests {
+class SearchHitReaderTest extends AnyFlatSpec with Matchers with DockerTests {
 
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
 

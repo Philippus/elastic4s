@@ -4,9 +4,10 @@ import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.requests.indexes.alias
 import com.sksamuel.elastic4s.requests.indexes.alias.Alias
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FunSuite, Matchers}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class GetAliasesTest extends FunSuite with Matchers with DockerTests {
+class GetAliasesTest extends AnyFunSuite with Matchers with DockerTests {
 
   test("get all aliases") {
     client.execute {

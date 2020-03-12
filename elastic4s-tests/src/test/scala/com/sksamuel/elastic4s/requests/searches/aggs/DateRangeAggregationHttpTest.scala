@@ -3,11 +3,12 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.searches.DateRangeBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
-class DateRangeAggregationHttpTest extends FreeSpec with DockerTests with Matchers {
+class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers {
 
   Try {
     client.execute {

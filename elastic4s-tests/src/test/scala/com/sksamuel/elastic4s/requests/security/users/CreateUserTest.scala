@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.security.users
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class CreateUserTest extends WordSpec with Matchers with DockerTests {
+class CreateUserTest extends AnyWordSpec with Matchers with DockerTests {
 
 	Try {
 		client.execute {

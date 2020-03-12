@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.requests.cluster
 
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.PartialFunctionValues._
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class ClusterInfoTest extends WordSpec with Matchers with DockerTests with BeforeAndAfterAll {
+class ClusterInfoTest extends AnyWordSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   override protected def afterAll(): Unit = {
     client.execute {

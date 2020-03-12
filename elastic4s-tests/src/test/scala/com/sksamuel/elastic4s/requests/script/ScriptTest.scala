@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.requests.script
 
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 
 import scala.util.Try
 
-class ScriptTest extends FreeSpec with ElasticMatchers with DockerTests {
+class ScriptTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
   Try {
     client.execute {

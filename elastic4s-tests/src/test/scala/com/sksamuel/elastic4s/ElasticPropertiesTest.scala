@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ElasticPropertiesTest extends FlatSpec with Matchers {
+class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
 
   "elasticsearch properties" should "parse multiple host/ports" in {
     ElasticProperties("http://host1:1234,host2:2345") shouldBe

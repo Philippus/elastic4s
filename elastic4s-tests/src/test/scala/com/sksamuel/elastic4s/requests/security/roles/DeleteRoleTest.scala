@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class DeleteRoleTest extends WordSpec with Matchers with DockerTests {
+class DeleteRoleTest extends AnyWordSpec with Matchers with DockerTests {
 
   "delete role request" should {
     "delete role" in {

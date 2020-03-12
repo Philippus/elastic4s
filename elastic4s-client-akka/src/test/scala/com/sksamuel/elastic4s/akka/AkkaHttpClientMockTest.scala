@@ -5,14 +5,16 @@ import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
 import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity ⇒ ElasticEntity, HttpResponse ⇒ ElasticResponse}
 import org.scalamock.function.MockFunction1
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent._
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
 class AkkaHttpClientMockTest
-  extends WordSpec
+  extends AnyWordSpec
     with Matchers
     with MockFactory
     with ScalaFutures

@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class StopTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
+class StopTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers {
 
   "StopTokenFilter builder" should {
     "set stop words" in {

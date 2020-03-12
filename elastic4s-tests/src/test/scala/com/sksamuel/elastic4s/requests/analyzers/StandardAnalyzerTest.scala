@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class StandardAnalyzerTest extends WordSpec with AnalyzerApi with Matchers {
+class StandardAnalyzerTest extends AnyWordSpec with AnalyzerApi with Matchers {
 
   "StandardAnalyzer builder" should {
     "set stopwords" in {

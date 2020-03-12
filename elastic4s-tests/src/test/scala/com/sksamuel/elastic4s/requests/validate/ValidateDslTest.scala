@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.requests.validate
 
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatestplus.mockito.MockitoSugar
 
-class ValidateDslTest extends FlatSpec with MockitoSugar {
+class ValidateDslTest extends AnyFlatSpec with MockitoSugar {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 

@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class IndexAndTypesTest extends WordSpec with Matchers {
+class IndexAndTypesTest extends AnyWordSpec with Matchers {
 
   "IndexAndTypes" should {
     "parse /" in {

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.util.Try
 
-class CountTest extends FlatSpec with DockerTests {
+class CountTest extends AnyFlatSpec with DockerTests {
 
   Try {
     client.execute {

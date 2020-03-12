@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class CommonGramsTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
+class CommonGramsTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers {
 
   "CommonGramsTokenFilter builder" should {
     "not set any defaults" in {

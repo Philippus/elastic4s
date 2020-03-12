@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 
 class IndexTemplateHttpTest
-  extends WordSpec
+  extends AnyWordSpec
     with MockitoSugar
     with Matchers
     with DockerTests {

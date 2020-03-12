@@ -3,11 +3,12 @@ package com.sksamuel.elastic4s.search.queries
 import com.sksamuel.elastic4s.requests.common.Preference
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDsl, Indexable}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class CommonTermsQueryTest extends WordSpec with Matchers with DockerTests with ElasticDsl {
+class CommonTermsQueryTest extends AnyWordSpec with Matchers with DockerTests with ElasticDsl {
 
   case class Condiment(name: String, desc: String)
   implicit object CondimentIndexable extends Indexable[Condiment] {

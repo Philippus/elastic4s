@@ -2,9 +2,10 @@ package com.sksamuel.elastic4s.cat
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CatAliasTest extends FlatSpec with Matchers with DockerTests {
+class CatAliasTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     indexInto("catalias").fields("name" -> "hampton court palace").refresh(RefreshPolicy.Immediate)

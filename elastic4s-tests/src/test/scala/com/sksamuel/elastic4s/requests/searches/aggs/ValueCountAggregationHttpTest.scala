@@ -3,11 +3,12 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
-import org.scalatest.{FreeSpec, Matchers}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
-class ValueCountAggregationHttpTest extends FreeSpec with Matchers with DockerTests {
+class ValueCountAggregationHttpTest extends AnyFreeSpec with Matchers with DockerTests {
 
   Try {
     client.execute {

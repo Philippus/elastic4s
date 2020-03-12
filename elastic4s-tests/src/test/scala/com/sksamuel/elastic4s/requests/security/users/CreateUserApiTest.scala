@@ -2,9 +2,11 @@ package com.sksamuel.elastic4s.requests.security.users
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
-import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
+import org.scalatest.OneInstancePerTest
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class CreateUserApiTest extends FlatSpec with JsonSugar with Matchers with OneInstancePerTest {
+class CreateUserApiTest extends AnyFlatSpec with JsonSugar with Matchers with OneInstancePerTest {
 
 	"the user dsl" should "generate valid json" in {
 		val req = createUser(

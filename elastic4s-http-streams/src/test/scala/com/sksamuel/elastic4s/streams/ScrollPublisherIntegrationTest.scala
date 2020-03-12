@@ -7,11 +7,12 @@ import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.requests.searches.SearchHit
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.reactivestreams.{Subscriber, Subscription}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class ScrollPublisherIntegrationTest extends WordSpec with DockerTests with Matchers  {
+class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with Matchers  {
 
   import ReactiveElastic._
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._

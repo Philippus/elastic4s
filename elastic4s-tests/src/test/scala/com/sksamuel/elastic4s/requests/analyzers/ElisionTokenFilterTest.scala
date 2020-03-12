@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class ElisionTokenFilterTest extends WordSpec with TokenFilterApi with Matchers {
+class ElisionTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers {
 
   "ElisionTokenFilter builder" should {
     "set articles" in {
