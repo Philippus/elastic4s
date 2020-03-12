@@ -7,5 +7,5 @@ scala:
 script:
 - sbt clean test
 jdk:
-- oraclejdk8
+- openjdk8
 sudo: required

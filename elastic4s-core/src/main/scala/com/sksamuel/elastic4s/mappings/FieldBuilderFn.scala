@@ -96,6 +96,8 @@ object FieldBuilderFn {
 
       case nested: NestedFieldDefinition =>
         nested.dynamic.foreach(builder.field("dynamic", _))
+        nested.includeInParent.foreach(builder.field("include_in_parent", _))
+        nested.includeInRoot.foreach(builder.field("include_in_root", _))
 
       case text: TextFieldDefinition =>
         text.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
