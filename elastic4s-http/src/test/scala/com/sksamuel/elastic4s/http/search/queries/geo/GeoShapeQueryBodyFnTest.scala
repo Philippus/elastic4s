@@ -37,7 +37,7 @@ class GeoShapeQueryBodyFnTest extends FunSuite with Matchers with GivenWhenThen 
     val queryBody = GeoShapeQueryBodyFn(query)
 
     Then("query should have right field and coordinate")
-    queryBody.string() shouldEqual pointQuery
+    queryBody.string() shouldEqual pointQueryWithRelation
   }
 
   test("Should correctly build geo shape envelope query") {
