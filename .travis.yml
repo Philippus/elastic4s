@@ -28,4 +28,4 @@ script:
 - sbt clean scalafmtCheck scalafmtSbtCheck test
 
 jdk:
-- oraclejdk8
+- openjdk8
