@@ -33,7 +33,7 @@ object TermsAggResult {
     data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
       TermBucket(
         map("key").toString,
-        map("doc_count").toString.toInt,
+        map("doc_count").toString.toLong,
         map
       )
     },
@@ -52,7 +52,7 @@ object HistogramAggResult {
     data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
       HistogramBucket(
         map("key").toString,
-        map("doc_count").toString.toInt,
+        map("doc_count").toString.toLong,
         map
       )
     }
@@ -89,7 +89,7 @@ object DateHistogramAggResult {
     DateHistogramBucket(
       key,
       map("key").toString.toLong,
-      map("doc_count").toString.toInt,
+      map("doc_count").toString.toLong,
       map
     )
 }
@@ -413,10 +413,10 @@ trait HasAggregations extends Transformable {
 
   // bucket aggs
   def global(name: String): GlobalAggregationResult =
-    GlobalAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+    GlobalAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
 
   def filter(name: String): FilterAggregationResult =
-    FilterAggregationResult(name, agg(name)("doc_count").toString.toInt, agg(name))
+    FilterAggregationResult(name, agg(name)("doc_count").toString.toLong, agg(name))
 
   def filters(name: String): FiltersAggregationResult =
     FiltersAggregationResult(
@@ -558,11 +558,11 @@ trait Transformable {
   }
 }
 
-case class GlobalAggregationResult(name: String, docCount: Int, private[elastic4s] val data: Map[String, Any])
+case class GlobalAggregationResult(name: String, docCount: Long, private[elastic4s] val data: Map[String, Any])
   extends BucketAggregation
     with HasAggregations
 
-case class FilterAggregationResult(name: String, docCount: Int, private[elastic4s] val data: Map[String, Any])
+case class FilterAggregationResult(name: String, docCount: Long, private[elastic4s] val data: Map[String, Any])
   extends BucketAggregation
     with HasAggregations
 
