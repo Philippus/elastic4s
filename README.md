@@ -419,7 +419,7 @@ Simply add the import for your chosen library below and then with those implicit
 |---------|------------------|--------|
 |[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-json-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-jackson)|import ElasticJackson.Implicits._|
 |[Json4s](http://json4s.org/)|[elastic4s-json-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-json4s)|import ElasticJson4s.Implicits._|
-|[Circe](https://github.com/travisbrown/circe)|[elastic4-json-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
+|[Circe](https://github.com/travisbrown/circe)|[elastic4s-json-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
 |[PlayJson](https://github.com/playframework/play-json)|[elastic4s-json-play](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-play)|import com.sksamuel.elastic4s.playjson._|
 |[Spray Json](https://github.com/spray/spray-json)|[elastic4s-json-spray](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)|import com.sksamuel.elastic4s.sprayjson._|
 
