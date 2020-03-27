@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class GeoBoundingBoxQueryBodyFnSpec extends AnyFunSuite with Matchers {
+class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("it should process geohash field") {
     val query = geoBoxQuery("location").withGeohash("a", "b")
