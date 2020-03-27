@@ -154,7 +154,6 @@ lazy val root = Project("elastic4s", file("."))
     json4s,
     playjson,
     sprayjson,
-    aws,
     clientsttp,
     clientakka,
     httpstreams,
@@ -333,18 +332,7 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
     libraryDependencies += "org.scalamock" %% "scalamock" % ScalamockVersion % "test"
   )
 
-lazy val aws = (project in file("elastic4s-client-aws"))
-  .dependsOn(core, clientesjava)
-  .settings(name := "elastic4s-client-aws")
-  .settings(allSettings)
-  .settings(
-    libraryDependencies += "software.amazon.awssdk" % "auth" % AWSJavaSdkVersion,
-    libraryDependencies += "software.amazon.awssdk" % "core" % AWSJavaSdkVersion,
-    libraryDependencies += "software.amazon.awssdk" % "regions" % AWSJavaSdkVersion
-  )
-
 lazy val tests = (project in file("elastic4s-tests"))
-  .dependsOn(clientesjava, jackson, circe, aws, testkit % "test")
   .settings(name := "elastic4s-tests")
   .settings(allSettings)
   .settings(noPublishSettings)
