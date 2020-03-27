@@ -29,7 +29,6 @@ object GeoBoundingBoxQueryBodyFn {
       case (topleft, bottomright) =>
         builder.field("top_left", topleft)
         builder.field("bottom_right", bottomright)
-        builder.endObject()
     }
 
     builder.endObject().endObject().endObject()
