@@ -61,7 +61,7 @@ object GeoDistanceSortBuilderFn {
     val q = geo.unit.map { unit =>
       EnumConversions.unit(unit)
     }
-    //geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
+    geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
     geo.nestedPath.foreach(builder.field("nested_path", _))
     geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
 
