@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.ElasticApi
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class NestedFieldTest extends FlatSpec with Matchers with ElasticApi {
+class NestedFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
   val field: NestedField = nestedField("myfield")
 
