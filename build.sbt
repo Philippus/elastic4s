@@ -334,7 +334,7 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
 
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, jackson, testkit % "test")
   .settings(allSettings)
   .settings(noPublishSettings)
   .settings(
