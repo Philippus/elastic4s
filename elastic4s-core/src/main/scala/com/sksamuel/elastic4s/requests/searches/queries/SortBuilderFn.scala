@@ -5,10 +5,10 @@ import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory
 
 object SortBuilderFn {
   def apply(sort: Sort): XContentBuilder = sort match {
-    case fs: FieldSort       => FieldSortBuilderFn(fs)
+    case fs: FieldSort => FieldSortBuilderFn(fs)
     case gs: GeoDistanceSort => GeoDistanceSortBuilderFn(gs)
-    case ss: ScoreSort       => ScoreSortBuilderFn(ss)
-    case scrs: ScriptSort    => ScriptSortBuilderFn(scrs)
+    case ss: ScoreSort => ScoreSortBuilderFn(ss)
+    case scrs: ScriptSort => ScriptSortBuilderFn(scrs)
   }
 }
 
@@ -58,7 +58,10 @@ object GeoDistanceSortBuilderFn {
     geo.geoDistance.map(EnumConversions.geoDistance).foreach(builder.field("distance_type", _))
     geo.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     geo.order.map(o => builder.field("order", EnumConversions.order(o)))
-    geo.unit.map(EnumConversions.unit).foreach(builder.field("unit", _))
+    val q = geo.unit.map { unit =>
+      EnumConversions.unit(unit)
+    }
+    //geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
     geo.nestedPath.foreach(builder.field("nested_path", _))
     geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
 

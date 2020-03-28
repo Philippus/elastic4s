@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 
 class NestedFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
-  val field: NestedField = nestedField("myfield")
+  private val field = NestedField("myfield")
 
   "A NestedField" should "support boolean dynamic property" in {
     FieldBuilderFn(field.dynamic(true)).string() shouldBe

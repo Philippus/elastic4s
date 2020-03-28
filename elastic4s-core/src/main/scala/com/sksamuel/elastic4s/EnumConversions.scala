@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
-import com.sksamuel.elastic4s.requests.common.DistanceUnit.{Centimeters, Feet, Inch, Kilometers, Meters, Miles, Millimeters, NauticalMiles, Yard}
 import com.sksamuel.elastic4s.requests.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.requests.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode, MultiValueMode}
@@ -40,15 +39,15 @@ object EnumConversions {
   }
 
   def unit(distanceUnit: DistanceUnit): String = distanceUnit match {
-    case Inch          => "in"
-    case Yard          => "yd"
-    case Feet          => "ft"
-    case Kilometers    => "km"
-    case NauticalMiles => "nmi"
-    case Millimeters   => "mm"
-    case Centimeters   => "cm"
-    case Miles         => "mi"
-    case Meters        => "m"
+    case DistanceUnit.Inch          => "in"
+    case DistanceUnit.Yard          => "yd"
+    case DistanceUnit.Feet          => "ft"
+    case DistanceUnit.Kilometers    => "km"
+    case DistanceUnit.NauticalMiles => "nmi"
+    case DistanceUnit.Millimeters   => "mm"
+    case DistanceUnit.Centimeters   => "cm"
+    case DistanceUnit.Miles         => "mi"
+    case DistanceUnit.Meters        => "m"
   }
 
   def order(order: TermsOrder): XContentBuilder = {

@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.requests.common
 
+// derived from https://github.com/elastic/elasticsearch/blob/master/server/src/main/java/org/elasticsearch/common/unit/DistanceUnit.java
 sealed trait DistanceUnit {
   def meters: Double
   def toMeters(value: Double): Double = value * meters
 }
+
 object DistanceUnit {
 
   val INCH          = Inch

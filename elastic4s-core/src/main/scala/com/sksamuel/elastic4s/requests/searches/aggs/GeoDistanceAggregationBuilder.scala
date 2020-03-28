@@ -21,7 +21,7 @@ object GeoDistanceAggregationBuilder {
     agg.keyed.foreach(builder.field("keyed", _))
 
     agg.distanceType.map(EnumConversions.geoDistance).foreach(builder.field("distance_type", _))
-    agg.unit.map(EnumConversions.unit).foreach(builder.field("unit", _))
+//    agg.unit.map { unit => EnumConversions.unit(unit) }.foreach { unit => builder.field("unit", unit) }
 
     agg.script.foreach { script =>
       builder.rawField("script", ScriptBuilderFn(script))
