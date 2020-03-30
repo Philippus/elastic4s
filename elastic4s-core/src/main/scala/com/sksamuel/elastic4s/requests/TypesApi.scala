@@ -41,6 +41,8 @@ trait TypesApi {
   def dateRangeField(name: String): RangeField    = RangeField(name, "date_range")
   def ipRangeField(name: String): RangeField      = RangeField(name, "ip_range")
 
+  def flattenedField(name: String): BasicField = BasicField(name, "flattened")
+
   // complex datatypes
   def nestedField(name: String): NestedField = NestedField(name)
   def objectField(name: String): ObjectField = ObjectField(name)
