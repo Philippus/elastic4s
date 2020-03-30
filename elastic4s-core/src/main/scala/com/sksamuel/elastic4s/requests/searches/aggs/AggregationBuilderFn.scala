@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {

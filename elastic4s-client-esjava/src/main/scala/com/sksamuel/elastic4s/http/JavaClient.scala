@@ -4,7 +4,7 @@ import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 
-import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
+import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig

@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.get
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.{Hit, SourceAsContentBuilder}
+import com.sksamuel.elastic4s.Hit
+import com.sksamuel.elastic4s.json.SourceAsContentBuilder
 
 case class GetResponse(@JsonProperty("_id") id: String,
                        @JsonProperty("_index") index: String,

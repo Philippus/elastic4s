@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.get
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object MultiGetBodyBuilder {
   def apply(request: MultiGetRequest): XContentBuilder = {

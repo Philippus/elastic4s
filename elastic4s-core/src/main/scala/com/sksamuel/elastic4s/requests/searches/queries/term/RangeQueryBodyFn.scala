@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries.term
 
+import com.sksamuel.elastic4s.ElasticDate
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.RangeQuery
-import com.sksamuel.elastic4s.{ElasticDate, XContentBuilder, XContentFactory}
 
 object RangeQueryBodyFn {
 

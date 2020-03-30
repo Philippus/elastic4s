@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.collapse
 
 import com.sksamuel.elastic4s.requests.searches.queries.nested.InnerHitQueryBodyFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object CollapseBuilderFn {
 

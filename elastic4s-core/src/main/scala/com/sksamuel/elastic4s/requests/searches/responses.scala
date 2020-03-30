@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.{DeserializationContext, JsonNode}
+import com.sksamuel.elastic4s.json.SourceAsContentBuilder
 import com.sksamuel.elastic4s.requests.common.Shards
 import com.sksamuel.elastic4s.requests.explain.Explanation
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
-import com.sksamuel.elastic4s.{Hit, HitReader, SourceAsContentBuilder}
+import com.sksamuel.elastic4s.{Hit, HitReader}
 
 import scala.reflect.ClassTag
 import scala.util.Try

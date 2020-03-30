@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.admin.RolloverIndexRequest
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 case class RolloverResponse(@JsonProperty("old_index") oldIndex: String,
                             @JsonProperty("new_index") newIndex: String,

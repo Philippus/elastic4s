@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.term
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object TermsQueryBodyFn {
   def apply(t: TermsQuery[_]): XContentBuilder = {

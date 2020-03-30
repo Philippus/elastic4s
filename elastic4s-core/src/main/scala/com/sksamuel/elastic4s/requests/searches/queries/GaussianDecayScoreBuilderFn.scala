@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer._
-import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory}
 
 object GaussianDecayScoreBuilderFn {
   def apply(g: GaussianDecayScore): XContentBuilder = {

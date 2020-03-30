@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchNoneQuery}
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object MatchAllBodyFn {
   def apply(q: MatchAllQuery): XContentBuilder = {

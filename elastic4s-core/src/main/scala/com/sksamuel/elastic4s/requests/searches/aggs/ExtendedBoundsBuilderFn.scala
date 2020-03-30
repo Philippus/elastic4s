@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ExtendedBoundsBuilderFn {
   def apply(agg: ExtendedBounds): XContentBuilder = {

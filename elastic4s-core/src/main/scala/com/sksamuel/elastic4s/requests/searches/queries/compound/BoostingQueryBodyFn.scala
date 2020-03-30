@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.compound
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, QueryBuilderFn}
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object BoostingQueryBodyFn {
   def apply(q: BoostingQuery): XContentBuilder = {

@@ -1,10 +1,11 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.json
 
 import java.util
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
 import com.fasterxml.jackson.databind.util.RawValue
+import com.sksamuel.elastic4s.JacksonSupport
 
 object XContentFactory {
   def jsonBuilder(): XContentBuilder          = obj()

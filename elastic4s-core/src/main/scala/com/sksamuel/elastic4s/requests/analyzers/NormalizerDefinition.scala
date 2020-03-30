@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 @deprecated("use new analysis package", "7.0.1")
 abstract class NormalizerDefinition(val name: String) {

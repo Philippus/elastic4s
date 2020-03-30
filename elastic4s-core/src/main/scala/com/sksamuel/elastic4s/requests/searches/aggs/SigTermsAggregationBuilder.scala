@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object SigTermsAggregationBuilder {
   def apply(agg: SigTermsAggregation): XContentBuilder = {

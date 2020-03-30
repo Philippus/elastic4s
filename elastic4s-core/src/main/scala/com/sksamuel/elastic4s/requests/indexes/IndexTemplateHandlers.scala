@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.analysis.AnalysisBuilder
 import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class CreateIndexTemplateResponse(acknowledged: Boolean)
 case class DeleteIndexTemplateResponse()

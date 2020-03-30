@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries.geo
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.Shapes.{Circle, Polygon}
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 import scala.language.implicitConversions
 

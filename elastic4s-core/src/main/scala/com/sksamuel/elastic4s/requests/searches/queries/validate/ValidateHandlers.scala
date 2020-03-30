@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.requests.searches.queries.validate
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.Shards
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.validate.ValidateRequest
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 case class ValidateResponse(valid: Boolean, @JsonProperty("_shards") shards: Shards, explanations: Seq[Explanation]) {
   def isValid: Boolean = valid

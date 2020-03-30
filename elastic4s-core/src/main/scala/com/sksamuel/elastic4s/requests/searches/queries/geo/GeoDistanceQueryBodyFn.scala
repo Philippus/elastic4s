@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.geo
 
-import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object GeoDistanceQueryBodyFn {
 

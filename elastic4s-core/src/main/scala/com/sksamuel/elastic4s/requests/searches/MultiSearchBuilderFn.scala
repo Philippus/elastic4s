@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.XContentFactory
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 
 object MultiSearchBuilderFn {

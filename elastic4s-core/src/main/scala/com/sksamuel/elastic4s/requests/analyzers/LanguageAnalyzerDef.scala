@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import com.sksamuel.elastic4s.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 @deprecated("use new analysis package", "7.0.1")
 abstract class LanguageAnalyzerDef(override val name: String, stopwords: Iterable[String] = Nil)

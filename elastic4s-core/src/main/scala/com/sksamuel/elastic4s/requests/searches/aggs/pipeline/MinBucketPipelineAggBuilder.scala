@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
 import com.sksamuel.elastic4s.requests.searches.aggs.AggMetaDataFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object MinBucketPipelineAggBuilder {
   def apply(agg: MinBucketPipelineAgg): XContentBuilder = {

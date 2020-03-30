@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
-import com.sksamuel.elastic4s.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.exts.OptionImplicits._
 
 trait TokenFilter extends AnalyzerFilter

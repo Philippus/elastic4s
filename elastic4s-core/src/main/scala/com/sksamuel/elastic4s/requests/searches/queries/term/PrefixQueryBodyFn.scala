@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.term
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.PrefixQuery
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object PrefixQueryBodyFn {
   def apply(q: PrefixQuery): XContentBuilder = {

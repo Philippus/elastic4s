@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.requests.admin.UpdateIndexLevelSettingsRequest
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object UpdateIndexLevelSettingsBuilder {
 

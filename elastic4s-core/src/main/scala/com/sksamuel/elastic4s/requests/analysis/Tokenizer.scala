@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.analysis
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 trait Tokenizer {
   def name: String

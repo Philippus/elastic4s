@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 trait Query
 

@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.{QueryBuilderFn, SortBuilderFn}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestion, TermSuggestionBuilderFn}
-import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory}
 
 object SearchBodyBuilderFn {
 

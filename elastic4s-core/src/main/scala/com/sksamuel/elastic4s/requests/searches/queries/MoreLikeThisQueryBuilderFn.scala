@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object MoreLikeThisQueryBuilderFn {
   def apply(q: MoreLikeThisQuery): XContentBuilder = {

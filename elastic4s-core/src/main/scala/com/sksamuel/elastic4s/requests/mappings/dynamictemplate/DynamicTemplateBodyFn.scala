@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings.dynamictemplate
 
 import com.sksamuel.elastic4s.requests.mappings.FieldBuilderFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object DynamicTemplateBodyFn {
 

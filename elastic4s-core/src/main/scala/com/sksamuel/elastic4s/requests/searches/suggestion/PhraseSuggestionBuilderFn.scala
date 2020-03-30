@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.suggestion
 
-import com.sksamuel.elastic4s.{SourceAsContentBuilder, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{SourceAsContentBuilder, XContentBuilder, XContentFactory}
 
 object PhraseSuggestionBuilderFn {
   def apply(phrase: PhraseSuggestion): XContentBuilder = {

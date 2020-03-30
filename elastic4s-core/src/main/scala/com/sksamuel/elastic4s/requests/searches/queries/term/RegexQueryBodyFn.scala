@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries.term
 
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.RegexQuery
-import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory}
 
 object RegexQueryBodyFn {
   def apply(q: RegexQuery): XContentBuilder = {

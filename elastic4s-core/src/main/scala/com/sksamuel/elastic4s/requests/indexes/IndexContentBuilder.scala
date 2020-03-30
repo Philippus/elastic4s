@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes
 
-import com.sksamuel.elastic4s.{XContentFactory, XContentFieldValueWriter}
+import com.sksamuel.elastic4s.json.{XContentFactory, XContentFieldValueWriter}
 
 object IndexContentBuilder {
   def apply(request: IndexRequest): String =

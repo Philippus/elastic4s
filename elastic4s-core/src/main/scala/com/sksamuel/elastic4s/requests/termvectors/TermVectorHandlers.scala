@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.termvectors
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.common.DocumentRef
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait TermVectorHandlers {
 

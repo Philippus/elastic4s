@@ -2,10 +2,11 @@ package com.sksamuel.elastic4s.requests.delete
 
 import java.net.URLEncoder
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.indexes.VersionTypeHttpString
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryRequest): XContentBuilder = {

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.suggestion
 
-import com.sksamuel.elastic4s.XContentFactory
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.exts.OptionImplicits._
 

@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.requests.update
 import java.net.URLEncoder
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, FetchSourceContextQueryParameterFn, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.OptionImplicits._
 
 case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter

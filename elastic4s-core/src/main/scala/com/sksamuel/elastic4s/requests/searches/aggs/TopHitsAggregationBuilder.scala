@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.SortBuilderFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object TopHitsAggregationBuilder {
 

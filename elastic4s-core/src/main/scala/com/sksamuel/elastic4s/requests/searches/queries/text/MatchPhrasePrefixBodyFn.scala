@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.text
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchPhrasePrefix
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object MatchPhrasePrefixBodyFn {
   def apply(q: MatchPhrasePrefix): XContentBuilder = {

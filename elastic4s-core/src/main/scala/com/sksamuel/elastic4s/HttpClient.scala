@@ -8,7 +8,7 @@ import com.sksamuel.exts.Logging
 import scala.io.Source
 
 /**
-  * A typeclass for an underlying http client so that it can be used by the ElasticClient.
+  * A typeclass for an underlying http client so that it can be used by the [[ElasticClient]].
   * The idea is that this trait can be used to wrap a HTTP library such as Apache HTTP commons, or
   * Akka HTTP client or whatever. The wrapped client can then be passed into the ElasticClient.
   */
@@ -21,13 +21,13 @@ trait HttpClient extends Logging {
     *
     * The callback function should be invoked with a HttpResponse for all requests that received
     * a response, including 4xx and 5xx responses. The callback function should only be invoked
-    * with an exception if the client failed.
+    * with an exception if the client could not complete the request.
     */
   def send(request: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit
 
   /**
     * Closes the underlying http client. Can be a no-op if the underlying client does not have
-    * state that needs to be closed
+    * state that needs to be closed.
     */
   def close(): Unit
 }

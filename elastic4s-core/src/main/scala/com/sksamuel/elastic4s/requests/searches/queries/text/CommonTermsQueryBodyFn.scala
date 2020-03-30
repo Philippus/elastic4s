@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.text
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.CommonTermsQuery
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object CommonTermsQueryBodyFn {
   def apply(q: CommonTermsQuery): XContentBuilder = {

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.security.users.admin
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ChangePasswordContentBuilder {
 	def apply(c: ChangePasswordRequest): XContentBuilder = {

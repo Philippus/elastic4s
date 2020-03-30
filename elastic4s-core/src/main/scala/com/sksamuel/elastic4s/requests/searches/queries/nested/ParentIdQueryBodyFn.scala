@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.nested
 
 import com.sksamuel.elastic4s.requests.searches.queries.ParentIdQuery
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ParentIdQueryBodyFn {
   def apply(q: ParentIdQuery): XContentBuilder = {

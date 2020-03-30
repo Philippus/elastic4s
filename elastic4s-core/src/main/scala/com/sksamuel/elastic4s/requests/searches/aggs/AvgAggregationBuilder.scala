@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object AvgAggregationBuilder {
   def apply(agg: AvgAggregation): XContentBuilder = {

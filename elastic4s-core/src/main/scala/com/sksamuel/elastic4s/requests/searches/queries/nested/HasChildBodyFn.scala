@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries.nested
 
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.{HasChildQuery, QueryBuilderFn}
-import com.sksamuel.elastic4s.{EnumConversions, XContentBuilder, XContentFactory}
 
 object HasChildBodyFn {
 

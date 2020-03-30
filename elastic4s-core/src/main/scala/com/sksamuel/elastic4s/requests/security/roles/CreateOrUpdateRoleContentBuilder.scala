@@ -1,24 +1,24 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object CreateOrUpdateRoleContentBuilder {
 	def apply(c: CreateOrUpdateRoleRequest): XContentBuilder = {
 		val builder = XContentFactory.jsonBuilder()
 
-		if (c.runAs.length > 0) {
+		if (c.runAs.nonEmpty) {
 			builder.autoarray("run_as", c.runAs)
 		}
-		if (c.clusterPermissions.length > 0) {
+		if (c.clusterPermissions.nonEmpty) {
 			builder.autoarray("cluster", c.clusterPermissions)
 		}
 		if (c.global.nonEmpty) {
 			builder.rawField("global", GlobalPrivilegesContentBuilder(c.global.get))
 		}
-		if (c.indices.length > 0) {
+		if (c.indices.nonEmpty) {
 			builder.array("indices", c.indices.map(IndexPrivilegesContentBuilder(_)).toArray)
 		}
-		if (c.applications.length > 0) {
+		if (c.applications.nonEmpty) {
 			builder.array("applications", c.applications.map(ApplicationPrivilegesContentBuilder(_)).toArray)
 		}
 
@@ -35,14 +35,14 @@ object IndexPrivilegesContentBuilder {
 		builder.autoarray("privileges", i.privileges)
 
 		if (
-			i.field_security.nonEmpty && 
-			(i.field_security.get.grant.length > 0 || i.field_security.get.except.length > 0)
+			i.field_security.nonEmpty &&
+			(i.field_security.get.grant.nonEmpty || i.field_security.get.except.nonEmpty)
 		) {
 			builder.startObject("field_security")
-			if (i.field_security.get.grant.length > 0) {
+			if (i.field_security.get.grant.nonEmpty) {
 				builder.autoarray("grant", i.field_security.get.grant)
 			}
-			if (i.field_security.get.except.length > 0) {
+			if (i.field_security.get.except.nonEmpty) {
 				builder.autoarray("except", i.field_security.get.except)
 			}
 			builder.endObject()
@@ -77,13 +77,13 @@ object ApplicationPrivilegesContentBuilder {
 
 		builder.field("application", a.application)
 
-		if (a.privileges.length > 0) {
+		if (a.privileges.nonEmpty) {
 			builder.autoarray("privileges", a.privileges)
 		}
 
-		if (a.resources.length > 0) {
+		if (a.resources.nonEmpty) {
 			builder.autoarray("resources", a.resources)
-		}		
+		}
 
 		builder
 	}

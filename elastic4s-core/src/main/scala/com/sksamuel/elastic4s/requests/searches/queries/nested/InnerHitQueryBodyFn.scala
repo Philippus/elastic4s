@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.nested
 import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.requests.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.{InnerHit, SortBuilderFn}
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object InnerHitQueryBodyFn {
 

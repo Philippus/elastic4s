@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class ClearScrollResponse(succeeded: Boolean, num_freed: Int)
 

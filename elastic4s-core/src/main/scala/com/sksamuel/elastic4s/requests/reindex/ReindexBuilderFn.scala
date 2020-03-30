@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.reindex
 
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ReindexBuilderFn {
 

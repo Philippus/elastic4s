@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.common
 
-import com.sksamuel.elastic4s.XContentBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 
 // takes a FetchSourceContext and returns the appropriate json
 // https://www.elastic.co/guide/en/elasticsearch/reference/5.6/search-request-source-filtering.html

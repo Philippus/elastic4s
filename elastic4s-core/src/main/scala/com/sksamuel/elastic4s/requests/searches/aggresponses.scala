@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.SourceAsContentBuilder
 import com.sksamuel.elastic4s.requests.common.DocumentRef
-import com.sksamuel.elastic4s.{AggReader, JacksonSupport, SourceAsContentBuilder}
+import com.sksamuel.elastic4s.{AggReader, JacksonSupport}
 
 import scala.util.Try
 

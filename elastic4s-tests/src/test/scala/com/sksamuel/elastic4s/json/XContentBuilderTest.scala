@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.json
 
 import java.math.BigInteger
 
-import com.sksamuel.elastic4s.XContentFactory
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

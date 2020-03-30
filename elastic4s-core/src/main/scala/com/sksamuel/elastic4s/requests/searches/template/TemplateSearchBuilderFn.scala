@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.template
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.TemplateSearchRequest
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object TemplateSearchBuilderFn {
   def apply(req: TemplateSearchRequest): XContentBuilder = {

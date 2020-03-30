@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.requests.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}

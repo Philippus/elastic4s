@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.bulk
 
-import com.sksamuel.elastic4s.XContentFactory
+import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.delete.DeleteByIdRequest
 import com.sksamuel.elastic4s.requests.indexes.{IndexContentBuilder, IndexRequest, VersionTypeHttpString}
 import com.sksamuel.elastic4s.requests.update.{UpdateBuilderFn, UpdateRequest}

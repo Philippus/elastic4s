@@ -1,4 +1,6 @@
-package com.sksamuel.elastic4s
+package com.sksamuel.elastic4s.json
+
+import com.sksamuel.elastic4s.{ArrayFieldValue, FieldValue, NestedFieldValue, NullFieldValue, SimpleFieldValue}
 
 object XContentFieldValueWriter {
   def apply(source: XContentBuilder, value: FieldValue): Unit = value match {

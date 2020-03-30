@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.span
 
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
 
 object SpanNotQueryBodyFn {
   def apply(q: SpanNotQuery): XContentBuilder = {

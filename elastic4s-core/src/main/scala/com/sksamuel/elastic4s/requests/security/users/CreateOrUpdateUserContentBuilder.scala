@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.security.users
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object CreateOrUpdateUserContentBuilder {
 	def apply(c: CreateOrUpdateUserRequest): XContentBuilder = {
@@ -24,7 +24,7 @@ object CreateOrUpdateUserContentBuilder {
 			c.metadata.foreach { case (key, value) =>
 				builder.autofield(key, value)
 			}
-		
+
 			builder.endObject()
 		}
 

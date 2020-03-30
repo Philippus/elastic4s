@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.json.SourceAsContentBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

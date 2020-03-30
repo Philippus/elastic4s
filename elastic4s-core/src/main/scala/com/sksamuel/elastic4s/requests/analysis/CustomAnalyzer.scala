@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.analysis
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 /**
   * When the built-in analyzers do not fulfil your needs, you can create a custom analyzer
