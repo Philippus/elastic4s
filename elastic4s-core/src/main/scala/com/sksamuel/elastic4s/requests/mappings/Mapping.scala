@@ -101,7 +101,7 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
 }
 
 object MappingDefinition {
-  val empty = MappingDefinition(None)
+  val empty: MappingDefinition = MappingDefinition(None)
   def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition(None, fields = fields)
 }
 
