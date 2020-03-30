@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.IndexesAndType
+import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 import com.sksamuel.exts.OptionImplicits._
@@ -37,7 +38,9 @@ case class PutMappingRequest(indexesAndType: IndexesAndType,
                              numericDetection: Option[Boolean] = None,
                              size: Option[Boolean] = None,
                              dynamicDateFormats: Seq[String] = Nil,
+                             @deprecated("use properties with instances of ElasticField", "7.7")
                              fields: Seq[FieldDefinition] = Nil,
+                             properties:Seq[ElasticField] = Nil,
                              analyzer: Option[String] = None,
                              boostName: Option[String] = None,
                              boostNullValue: Option[Double] = None,
