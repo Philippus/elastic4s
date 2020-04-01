@@ -7,7 +7,7 @@ trait IngestHandlers {
   implicit object PutPipelineRequestHandler extends Handler[PutPipelineRequest, PutPipelineResponse] {
     private def processorToXContent(p: Processor): XContentBuilder = {
       val xcb = XContentFactory.jsonBuilder()
-      xcb.rawField(p.name, XContentFactory.parse(p.configuration))
+      xcb.rawField(p.name, p.buildProcessorBody())
       xcb
     }
 

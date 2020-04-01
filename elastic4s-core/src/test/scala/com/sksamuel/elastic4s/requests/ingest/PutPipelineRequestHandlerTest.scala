@@ -8,8 +8,8 @@ class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Ma
   import PutPipelineRequestHandler._
 
   // Docs: https://www.elastic.co/guide/en/elasticsearch/reference/master/geoip-processor.html#geoip-processor
-  it should "build a pipeline request with a geoip processor" in {
-    val req = PutPipelineRequest("geoip", "Add geoip info", Processor("geoip", "{\"field\": \"ip\"}"))
+  it should "build a pipeline request with a geoip processor using the RawProcessor case class" in {
+    val req = PutPipelineRequest("geoip", "Add geoip info", CustomProcessor("geoip", "{\"field\": \"ip\"}"))
     val correctJson =
       XContentFactory.parse("""
         |{
@@ -26,10 +26,32 @@ class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Ma
     build(req) shouldBe ElasticRequest("PUT", "_ingest/pipeline/geoip", HttpEntity(correctJson))
   }
 
+  it should "build a pipeline request with a geoip processor using the strongly-typed case class" in {
+    val proc = GeoIPProcessor("ip", Some("geo"), Some("GeoLite2-Country.mmdb"))
+    val req = PutPipelineRequest("geoip", "Add geoip info", proc)
+    val correctJson = XContentFactory.parse(
+      """
+        |{
+        |  "description" : "Add geoip info",
+        |  "processors" : [
+        |    {
+        |      "geoip" : {
+        |        "field" : "ip",
+        |        "target_field" : "geo",
+        |        "database_file" : "GeoLite2-Country.mmdb"
+        |      }
+        |    }
+        |  ]
+        |}
+        |""".stripMargin).string()
+
+    build(req) shouldBe ElasticRequest("PUT", "_ingest/pipeline/geoip", HttpEntity(correctJson))
+  }
+
   // Docs: https://github.com/spinscale/elasticsearch-ingest-langdetect#usage
   it should "build a pipeline request with a langdetect processor" in {
     val req = PutPipelineRequest("langdetect-pipeline", "A pipeline to do whatever",
-      Processor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }"))
+      CustomProcessor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }"))
     val correctJson = XContentFactory.parse(
       """
         |{
@@ -51,8 +73,8 @@ class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Ma
   it should "build a pipeline request with multiple processors" in {
     val req = PutPipelineRequest("multi-pipeline", "A pipeline with multiple processors",
       Seq(
-        Processor("geoip", "{\"field\": \"ip\"}"),
-        Processor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }")
+        GeoIPProcessor(field = "ip"),
+        CustomProcessor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }")
       ))
     val correctJson = XContentFactory.parse(
       """
@@ -78,4 +100,3 @@ class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Ma
 
 
 }
-
