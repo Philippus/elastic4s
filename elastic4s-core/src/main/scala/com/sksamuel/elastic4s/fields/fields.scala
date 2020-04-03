@@ -367,4 +367,28 @@ case class IpField(name: String,
                    properties: Seq[ElasticField] = Nil,
                    store: Option[Boolean] = None) extends ElasticField
 
+case class DenseVectorField(name: String,
+                            dims: Int,
+                            analysis: Analysis = Analysis(),
+                            boost: Option[Double] = None,
+                            coerce: Option[Boolean] = None,
+                            copyTo: Seq[String] = Nil,
+                            docValues: Option[Boolean] = None,
+                            enabled: Option[Boolean] = None,
+                            fielddata: Option[Boolean] = None,
+                            fields: Seq[ElasticField] = Nil,
+                            format: Option[String] = None,
+                            includeInAll: Option[Boolean] = None,
+                            ignoreAbove: Option[Int] = None,
+                            ignoreMalformed: Option[Boolean] = None,
+                            index: Option[String] = None,
+                            indexOptions: Option[String] = None,
+                            norms: Option[Boolean] = None,
+                            nulls: Nulls = Nulls(),
+                            scalingFactor: Option[Double] = None,
+                            similarity: Option[String] = None,
+                            store: Option[Boolean] = None,
+                            termVector: Option[String] = None)
+  extends ElasticField
+
 case class IndexPrefixes(minChars: Int, maxChars: Int)
