@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.requests.ingest
 
-import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity, XContentFactory}
-import org.scalatest.{FlatSpec, Matchers}
+import com.sksamuel.elastic4s.json.XContentFactory
+import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class PutPipelineRequestHandlerTest extends FlatSpec with IngestHandlers with Matchers {
+class PutPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with Matchers {
 
   import PutPipelineRequestHandler._
 
