@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.ingest
 
-import com.sksamuel.elastic4s.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 /**
   * Abstract representation of a processor with a constant name (e.g. "geoip") and an [[XContentBuilder]] that
@@ -26,7 +26,7 @@ case class CustomProcessor(name: String, rawJsonOptions: String) extends Process
 case class GeoIPProcessor(field: String, targetField: Option[String] = None, databaseFile: Option[String] = None,
                           properties: Option[Seq[String]] = None, ignoreMissing: Option[Boolean] = None,
                           firstOnly: Option[Boolean] = None) extends Processor {
-  override def name: String = "geoip"
+  override def name: String = GeoIPProcessor.name
   override def buildProcessorBody(): XContentBuilder = {
     val xcb = XContentFactory.jsonBuilder()
     xcb.field("field", field)
@@ -37,5 +37,9 @@ case class GeoIPProcessor(field: String, targetField: Option[String] = None, dat
     firstOnly.foreach(xcb.field("first_only", _))
     xcb
   }
+}
+
+object GeoIPProcessor {
+  val name = "geoip"
 }
 
