@@ -76,7 +76,11 @@ Requests are created using the elastic4s DSL. For example to create a search req
 search("index" / "type").query("findthistext")
 ```
 
-The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. 
+The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended.
+
+```scala
+import com.sksamuel.elastic4s.ElasticDsl._
+```
 
 ### Alternative Executors
 The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
@@ -90,25 +94,19 @@ where `F` is some effect type.
 `import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
 
 #### Scalaz Task
-`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task` 
+`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task`
 
 #### ZIO Task
-`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task` 
+`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task`
 
-### Example SBT Setup
+### Simple SBT Setup
 
 ```scala
 // major.minor are in sync with the elasticsearch releases
 val elastic4sVersion = "x.x.x"
 libraryDependencies ++= Seq(
-  "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
-
-  // for the default http client
+  // recommended client for beginners
   "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % elastic4sVersion,
-
-  // if you want to use reactive streams
-  "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % elastic4sVersion,
-
   // testing
   "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test"
 )
@@ -119,23 +117,20 @@ libraryDependencies ++= Seq(
 An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create an
 index and index a one field document. Then we will search for that document using a simple text query.
 
+**Note:** As of version `0.7.x` the `LocalNode` functionality has been removed. It is recommended that you stand up
+a local ElasticSearch Docker container for development. This is the same strategy used in the [tests](https://github.com/sksamuel/elastic4s/blob/master/elastic4s-testkit/src/main/scala/com/sksamuel/elastic4s/testkit/DockerTests.scala).
+
 ```scala
-import com.sksamuel.elastic4s.RefreshPolicy
-import com.sksamuel.elastic4s.embedded.LocalNode
-import com.sksamuel.elastic4s.http.search.SearchResponse
-import com.sksamuel.elastic4s.http.{RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.http.JavaClient
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, ElasticProperties}
 
 object ArtistIndex extends App {
 
-  // spawn an embedded node for testing
-  val localNode = LocalNode("mycluster", "/tmp/datapath")
-
-  // in this example we create a client attached to the embedded node, but
-  // in a real application you would provide the HTTP address to the ElasticClient constructor.
-  val client = localNode.client(shutdownNodeOnClose = true)
+  // in this example we create a client to a local Docker container at localhost:9200
+  val client = ElasticClient(JavaClient(ElasticProperties(s"http://${sys.env.getOrElse("ES_HOST", "127.0.0.1")}:${sys.env.getOrElse("ES_PORT", "9200")}")))
 
   // we must import the dsl
-  import com.sksamuel.elastic4s.http.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl._
 
   // Next we create an index in advance ready to receive documents.
   // await is a helper method to make this operation synchronous instead of async
@@ -181,141 +176,43 @@ object ArtistIndex extends App {
 
 ## Near Real-time search results
 
-When you index a document in Elasticsearch, it is not normally immediately available to be searched, as a refresh has to happen to make it available for the search API. By default a refresh occurs every second but this can be increased if needed. Note that this impacts only the visibility of newly indexed documents when using the search API and has nothing 
+When you index a document in Elasticsearch, it is not normally immediately available to be searched, as a refresh has to happen to make it available for the search API. By default a refresh occurs every second but this can be increased if needed. Note that this impacts only the visibility of newly indexed documents when using the search API and has nothing
 to do with data consistency and durability.
 Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a refresh straight after the index operation.
 You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with Elasticsearch refreshing too often. It is also possible to use `WAIT_UNTIL` so that no refresh is forced, but the index request will return only after the new document is available for search.
 
 For more in depth examples keep reading.
 
-## Syntax
-
-Here is a list of the common requests and the syntax used to create them and whether they are supported by the TCP or HTTP client. If the HTTP client does not support them, you will need to fall back to the TCP, or use the Java client and build the JSON yourself. Or even better, raise a PR with the addition. For more details on each request click
-through to the readme page. For options that are not yet documented, refer to the Elasticsearch documentation asthe DSL closely mirrors the standard Java API / REST API.
-
-| Operation                                 | Syntax | HTTP | TCP |
-|-------------------------------------------|--------|------|-----|
-| [Add Alias]                               | `addAlias(alias, index)`                  | yes | yes |
-| [Bulk]                                    | `bulk(query1, query2, query3...)`         | yes | yes |
-| Cancel Tasks                              | `cancelTasks(<nodeIds>)`                  | yes | yes |
-| Cat Aliases                               | `catAliases()`                            | yes | |
-| Cat Allocation                            | `catAllocation()`                         | yes | |
-| Cat Counts                                | `catCount()` or `catCount(<indexes>`      | yes | |
-| Cat Indices                               | `catIndices()`                            | yes | |
-| Cat Master                                | `catMaster()`                             | yes | |
-| Cat Nodes                                 | `catNodes()`                              | yes | |
-| Cat Plugins                               | `catPlugins()`                            | yes | |
-| Cat Segments                              | `catSegments(indices)`                    | yes | |
-| Cat Shards                                | `catShards()`                             | yes | |
-| Cat Thread Pools                          | `catThreadPool()`                         | yes | |
-| Clear index cache                         | `clearCache(<index>)`                     | yes | yes |
-| Close index                               | `closeIndex(<name>)`                      | yes | yes |
-| Cluster health                            | `clusterHealth()`                         | yes | yes |
-| Cluster stats                             | `clusterStats()`                          | yes | yes |
-| [Create Index]                            | `createIndex(<name>).mappings( mapping(<name>).as( ... fields ... ) )`| yes  | yes |
-| [Create Repository]                       | `createRepository(name, type)`            | yes | yes |
-| [Create Snapshot]                         | `createSnapshot(name, repo)`              | yes | yes |
-| Create Template                           | `createTemplate(<name>).pattern(<pattern>).mappings {...}`| yes | yes |
-| [Delete by id]                            | `deleteById(index, type, id)`             | yes | yes |
-| Delete by query                           | `deleteByQuery(index, type, query)`       | yes | yes |
-| [Delete index]                            | `deleteIndex(index) [settings]`           | yes | yes |
-| [Delete Snapshot]                         | `deleteSnapshot(name, repo)`              | yes | yes |
-| Delete Template                           | `deleteTemplate(<name>)`                  | yes | yes |
-| Document Exists                           | `exists(id, index, type)`                 | yes | |
-| [Explain]                                 | `explain(<index>, <type>, <id>)`          | yes | yes |
-| Field stats                               | `fieldStats(<indexes>)`                   |     | yes |
-| Flush Index                               | `flushIndex(<index>)`                     | yes | yes |
-| [Force Merge]                             | `forceMerge(<indexes>)`                   | yes | yes |
-| [Get]                                     | `get(index, type, id)`                    | yes | yes |
-| Get All Aliases                           | `getAliases()`                            | yes | yes |
-| Get Alias                                 | `getAlias(<name>).on(<index>)`            | yes | yes |
-| Get Mapping                               | `getMapping(<index> / <type>)`            | yes | yes |
-| Get Segments                              | `getSegments(<indexes>)`                  | yes | yes |
-| Get Snapshot                              | `getSnapshot(name, repo)`                 | yes | yes |
-| Get Template                              | `getTemplate(<name>)`                     | yes | yes |
-| [Index]                                   | `indexInto(<index> / <type>).doc(<doc>)`  | yes | yes |
-| Index exists                              | `indexExists(<name>)`                     | yes | yes |
-| Index stats                               | `indexStats(indices)`                     | yes | |
-| List Tasks                                | `listTasks(nodeIds)`                      | yes | yes |
-| Lock Acquire                              | `acquireGlobalLock()`                     | yes | |
-| Lock Release                              | `releaseGlobalLock()`                     | yes | |
-| [Multiget]                                | `multiget( get(1).from(<index> / <type>), get(2).from(<index> / <type>) )` |  yes | yes |
-| [Multisearch]                             | `multi( search(...), search(...) )`       | yes | yes |
-| Node Info                                 | `nodeInfo(<optional node list>`           | yes | |
-| Node Stats                                | `nodeStats(<optional node list>).stats(<stats>`| yes | |
-| Open index                                | `openIndex(<name>)`                       | yes | yes |
-| Put mapping                               | `putMapping(<index> / <type>) as { mappings block }` | yes | yes |
-| Recover Index                             | `recoverIndex(<name>)`                    | yes | yes |
-| Refresh index                             | `refreshIndex(<name>)`                    | yes | yes |
-| Register Query                            | `register(<query>).into(<index> / <type>, <field>)` |   | yes |
-| [Remove Alias]                            | `removeAlias(<alias>).on(<index>)`        | yes | yes |
-| [Restore Snapshot]                        | `restoreSnapshot(name, repo)`             | yes | yes |
-| Rollover                                  | `rolloverIndex(alias)`                    | yes | |
-| [Search]                                  | `search(index).query(<query>)`            | yes | yes |
-| Search scroll                             | `searchScroll(<scrollId>)`                | yes | yes |
-| Shrink Index                              | `shrinkIndex(source, target)`             | yes | |
-| Term Vectors                              | `termVectors(<index>, <type>, <id>)`      | yes | yes |
-| Type Exists                               | `typesExists(<types>) in <index>`         | yes | yes |
-| [Update By Id]                            | `updateById(index, type, id)`             | yes | yes |
-| Update by query                           | `updateByQuery(index, type, query)`       | yes | yes |
-| [Validate]                                | `validateIn(<index/type>).query(<query>)` | yes | yes |
-
-Please also note [some java interoperability notes](https://sksamuel.github.io/elastic4s/docs/misc/javainterop.html).
-
-
 ## Connecting to a Cluster
 
-To connect to a stand alone elasticsearch cluster we use the methods on the HttpClient or TcpClient companion objects.
-For example, `TcpClient.transport` or `HttpClient.apply`. These methods accept an instance of `ElasticsearchClientUri`
-which specifies the host, port and cluster name of the cluster. The cluster name does not need to be specified if it is the
-default, which is "elasticsearch" but if you changed it you must specify it in the uri.
-
-Please note that the TCP interface uses port 9300 and HTTP uses 9200 (unless of course you have changed these in your cluster).
-
-Here is an example of connecting to a TCP cluster with the standard settings.
+To connect to a standalone ElasticSearch cluster, pass a `JavaClient` to an `ElasticClient`. You can specify protocol,
+host, and port in a single string.
 
 ```scala
-val client = TcpClient.transport(ElasticsearchClientUri("host1", 9300))
+val client = ElasticClient(JavaClient(ElasticProperties("http://host1:9200")))
 ```
 
-For multiple nodes it's better to use the elasticsearch client uri connection string.
-This is in the format `"elasticsearch://host1:port2,host2:port2,...?param=value&param2=value2"`. For example:
+For multiple nodes you can pass a comma-separated list of endpoints in a single string:
 
 ```scala
-val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=mycluster")
-val client = TcpClient.transport(uri)
+val nodes ="http://host1:9200,http://host2:9200,http://host3:9200"
+val client = ElasticClient(JavaClient(ElasticProperties(nodes)))
 ```
 
-If you need to pass settings to the client, then you need to invoke `transport` with a settings object.
-For example to specify the cluster name (if you changed the default then you must specify the cluster name).
+### Using different clients
+
+It is possible to use Akka HTTP in place of the Java client in order to connect to a cluster:
+
+Add the following to your `built.sbt`, replace `x.x.x` with your version of ElasticSearch:
 
 ```scala
-import org.elasticsearch.common.settings.Settings
-val settings = Settings.builder().put("cluster.name", "myClusterName").build()
-val client = TcpClient.transport(settings, ElasticsearchClientUri("elasticsearch://somehost:9300"))
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-client-akka_2.13" % "x.x.x"
 ```
 
-If you already have a handle to a Node in the Java API then you can create a client from it easily:
-```scala
-val node = ... // node from the java API somewhere
-val client = TcpClient.fromNode(node)
-```
-
-Here is an example of connecting to a HTTP cluster.
+And then you can use the `AkkaHttpClient` in your code:
 
 ```scala
-val client = HttpClient(ElasticsearchClientUri("localhost", 9200))
-```
-
-The http client internally uses the Apache Http Client, which we can customize by passing in two callbacks.
-
-```scala
-val client = HttpClient(ElasticsearchClientUri("localhost", 9200), new RequestConfigCallback {
-    override def customizeRequestConfig(requestConfigBuilder: Builder) = ...
-    }
-  }, new HttpClientConfigCallback {
-    override def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder) = ...
-  })
+val client = ElasticClient(AkkaHttpClient("http://host1:9200"))
 ```
 
 ## Create Index
