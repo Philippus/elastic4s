@@ -63,6 +63,17 @@ To get started you will need to add a dependency:
 
 * [elastic4s-client-esjava](https://mvnrepository.com/artifact/com.sksamuel.elastic4s/a:elastic4s-client-esjava)
 
+```scala
+// major.minor are in sync with the elasticsearch releases
+val elastic4sVersion = "x.x.x"
+libraryDependencies ++= Seq(
+  // recommended client for beginners
+  "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % elastic4sVersion,
+  // test kit
+  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test"
+)
+```
+
 The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you
 want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]`
 (or use one of the [Alternative executors](#alternative-executors)) where T is the response
@@ -82,20 +93,8 @@ The DSL methods are located in the `ElasticDsl` trait which needs to be imported
 import com.sksamuel.elastic4s.ElasticDsl._
 ```
 
-### SBT Setup
 
-```scala
-// major.minor are in sync with the elasticsearch releases
-val elastic4sVersion = "x.x.x"
-libraryDependencies ++= Seq(
-  // recommended client for beginners
-  "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % elastic4sVersion,
-  // testing
-  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test"
-)
-```
-
-## Connecting to a Cluster
+### Connecting to a Cluster
 
 To connect to a standalone ElasticSearch cluster, pass a `JavaClient` to an `ElasticClient`. You can specify protocol,
 host, and port in a single string.
@@ -113,7 +112,8 @@ val client = ElasticClient(JavaClient(ElasticProperties(nodes)))
 
 ### Using different clients
 
-It is possible to use Akka HTTP in place of the Java client in order to connect to a cluster:
+It is possible to use [alternative clients](https://search.maven.org/search?q=g:com.sksamuel.elastic4s%20elastic4s-client)
+in order to connect to a cluster, such as Akka HTTP:
 
 Add the following to your `built.sbt`, replace `x.x.x` with your version of ElasticSearch:
 
@@ -121,7 +121,7 @@ Add the following to your `built.sbt`, replace `x.x.x` with your version of Elas
 libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-client-akka_2.13" % "x.x.x"
 ```
 
-And then you can use the `AkkaHttpClient` in your code:
+And then pass `AkkaHttpClient` to the object `ElasticClient.apply` method:
 
 ```scala
 val client = ElasticClient(AkkaHttpClient("http://host1:9200"))
