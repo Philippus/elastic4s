@@ -82,24 +82,7 @@ The DSL methods are located in the `ElasticDsl` trait which needs to be imported
 import com.sksamuel.elastic4s.ElasticDsl._
 ```
 
-### Alternative Executors
-The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
-adding appropriate imports. The imports will create an implicit `Executor[F]` and a `Functor[F]`,
-where `F` is some effect type.
-
-#### Cats-Effect IO
-`import com.sksamuel.elastic4s.cats.effect.instances._` will provide implicit instances for `cats.effect.IO`
-
-#### Monix Task
-`import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
-
-#### Scalaz Task
-`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task`
-
-#### ZIO Task
-`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task`
-
-### Simple SBT Setup
+### SBT Setup
 
 ```scala
 // major.minor are in sync with the elasticsearch releases
@@ -112,7 +95,39 @@ libraryDependencies ++= Seq(
 )
 ```
 
-### Example Application
+## Connecting to a Cluster
+
+To connect to a standalone ElasticSearch cluster, pass a `JavaClient` to an `ElasticClient`. You can specify protocol,
+host, and port in a single string.
+
+```scala
+val client = ElasticClient(JavaClient(ElasticProperties("http://host1:9200")))
+```
+
+For multiple nodes you can pass a comma-separated list of endpoints in a single string:
+
+```scala
+val nodes ="http://host1:9200,http://host2:9200,http://host3:9200"
+val client = ElasticClient(JavaClient(ElasticProperties(nodes)))
+```
+
+### Using different clients
+
+It is possible to use Akka HTTP in place of the Java client in order to connect to a cluster:
+
+Add the following to your `built.sbt`, replace `x.x.x` with your version of ElasticSearch:
+
+```scala
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-client-akka_2.13" % "x.x.x"
+```
+
+And then you can use the `AkkaHttpClient` in your code:
+
+```scala
+val client = ElasticClient(AkkaHttpClient("http://host1:9200"))
+```
+
+## Example Application
 
 An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create an
 index and index a one field document. Then we will search for that document using a simple text query.
@@ -174,6 +189,26 @@ object ArtistIndex extends App {
 }
 ```
 
+
+## Alternative Executors
+
+The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
+adding appropriate imports. The imports will create an implicit `Executor[F]` and a `Functor[F]`,
+where `F` is some effect type.
+
+### Cats-Effect IO
+`import com.sksamuel.elastic4s.cats.effect.instances._` will provide implicit instances for `cats.effect.IO`
+
+### Monix Task
+`import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
+
+### Scalaz Task
+`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task`
+
+### ZIO Task
+`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task`
+
+
 ## Near Real-time search results
 
 When you index a document in Elasticsearch, it is not normally immediately available to be searched, as a refresh has to happen to make it available for the search API. By default a refresh occurs every second but this can be increased if needed. Note that this impacts only the visibility of newly indexed documents when using the search API and has nothing
@@ -183,37 +218,6 @@ You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with Elas
 
 For more in depth examples keep reading.
 
-## Connecting to a Cluster
-
-To connect to a standalone ElasticSearch cluster, pass a `JavaClient` to an `ElasticClient`. You can specify protocol,
-host, and port in a single string.
-
-```scala
-val client = ElasticClient(JavaClient(ElasticProperties("http://host1:9200")))
-```
-
-For multiple nodes you can pass a comma-separated list of endpoints in a single string:
-
-```scala
-val nodes ="http://host1:9200,http://host2:9200,http://host3:9200"
-val client = ElasticClient(JavaClient(ElasticProperties(nodes)))
-```
-
-### Using different clients
-
-It is possible to use Akka HTTP in place of the Java client in order to connect to a cluster:
-
-Add the following to your `built.sbt`, replace `x.x.x` with your version of ElasticSearch:
-
-```scala
-libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-client-akka_2.13" % "x.x.x"
-```
-
-And then you can use the `AkkaHttpClient` in your code:
-
-```scala
-val client = ElasticClient(AkkaHttpClient("http://host1:9200"))
-```
 
 ## Create Index
 
