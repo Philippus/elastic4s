@@ -82,6 +82,7 @@ trait SearchHandlers {
       request.control.routing.map(_.toString).foreach(params.put("routing", _))
       request.control.pref.foreach(params.put("preference", _))
       request.keepAlive.foreach(params.put("scroll", _))
+      request.seqNoPrimaryTerm.map(_.toString).foreach(params.put("seq_no_primary_term", _))
 
       request.indicesOptions.foreach { opts =>
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
