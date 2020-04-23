@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.searches
 import com.sksamuel.elastic4s.HitReader
 import org.elasticsearch.action.search.MultiSearchResponse
 
+import scala.reflect.ClassTag
+
 case class RichMultiSearchResponse(original: MultiSearchResponse) {
 
   def size: Int = responses.size
@@ -12,7 +14,7 @@ case class RichMultiSearchResponse(original: MultiSearchResponse) {
   // returns all the matches as a single sequence, dropping errors.
   // if you wish to retain errors use safeTo
   // if you wish to return the seq of seq, then use responses and map individually
-  def to[T: HitReader]: Seq[T] = responses.flatMap(_.to[T])
+  def to[T: HitReader](implicit c: ClassTag[T]): Seq[T] = responses.flatMap(_.to[T])
 
   // returns all the matches as a single sequence
   // if you wish to return the seq of seq, then use responses and map individually

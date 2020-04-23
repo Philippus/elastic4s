@@ -11,22 +11,22 @@ object Build extends AutoPlugin {
 
   object autoImport {
     val org = "com.sksamuel.elastic4s"
-    val AkkaVersion = "2.4.17"
-    val CatsVersion = "0.9.0"
-    val CirceVersion = "0.7.1"
+    val AkkaVersion = "2.5.27"
+    val CatsVersion = "2.0.0"
+    val CirceVersion = "0.12.0-M3"
     val CommonsIoVersion = "2.4"
     val ElasticsearchVersion = "5.6.2"
-    val ExtsVersion = "1.44.0"
-    val JacksonVersion = "2.8.8"
-    val Json4sVersion = "3.5.1"
-    val SprayJsonVersion = "1.3.3"
+    val ExtsVersion = "1.61.1"
+    val JacksonVersion = "2.10.0"
+    val Json4sVersion = "3.5.5"
+    val SprayJsonVersion = "1.3.5"
     val Log4jVersion = "2.6.2"
     val LuceneVersion = "6.6.1"
     val MockitoVersion = "1.9.5"
-    val PlayJsonVersion = "2.6.0-M6"
+    val PlayJsonVersion = "2.7.4"
     val ReactiveStreamsVersion = "1.0.0"
-    val ScalaVersion = "2.12.2"
-    val ScalatestVersion = "3.0.1"
+    val ScalaVersion = "2.13.1"
+    val ScalatestVersion = "3.0.8"
     val Slf4jVersion = "1.7.12"
   }
 
@@ -39,7 +39,7 @@ object Build extends AutoPlugin {
     // appending everything from 'compileonly' to unmanagedClasspath
     unmanagedClasspath in Compile ++= update.value.select(configurationFilter("compileonly")),
     scalaVersion := ScalaVersion,
-    crossScalaVersions := Seq("2.11.8", scalaVersion.value),
+    crossScalaVersions := Seq("2.11.12", "2.12.10", scalaVersion.value),
     publishMavenStyle := true,
     resolvers += Resolver.mavenLocal,
     fork in Test := true,
@@ -55,7 +55,7 @@ object Build extends AutoPlugin {
     javacOptions := Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
       "com.sksamuel.exts"                     %% "exts"                     % ExtsVersion,
-      "org.typelevel"                         %% "cats"                     % CatsVersion,
+      "org.typelevel"                         %% "cats-core"                % CatsVersion,
       "org.slf4j"                             % "slf4j-api"                 % Slf4jVersion,
       "org.elasticsearch"                     % "elasticsearch"             % ElasticsearchVersion,
       "org.mockito"                           % "mockito-all"               % MockitoVersion        % "test",

@@ -150,7 +150,7 @@ class PublishActor(client: HttpClient,
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
     case Success(resp: SearchResponse) =>
       scrollId = resp.scrollId.getOrElse("Query didn't return a scroll id")
-      queue.enqueue(resp.hits.hits: _*)
+      resp.hits.hits.foreach(h => queue.enqueue(h))
       context become ready
       unstashAll()
   }

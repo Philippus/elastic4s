@@ -6,6 +6,8 @@ import com.sksamuel.elastic4s.http.{Shards, SourceAsContentBuilder}
 import com.sksamuel.elastic4s.http.explain.Explanation
 import com.sksamuel.elastic4s.{Hit, HitReader}
 
+import scala.reflect.ClassTag
+
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
                      @JsonProperty("_type") `type`: String,
@@ -52,7 +54,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
           )
         }
       )
-  }
+  }.toMap
 }
 
 case class SearchHits(total: Long,
@@ -195,11 +197,11 @@ case class SearchResponse(took: Int,
 
   private def suggestion(name: String): Map[String, SuggestionResult] = suggest(name).map { result => result.text -> result }.toMap
 
-  def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
-  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
-  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
+  def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm).toMap
+  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion).toMap
+  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase).toMap
 
-  def to[T: HitReader]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
+  def to[T: HitReader](implicit c: ClassTag[T]): IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Either[Throwable, T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
 case class AvgAggregationResult(name: String, value: Double)

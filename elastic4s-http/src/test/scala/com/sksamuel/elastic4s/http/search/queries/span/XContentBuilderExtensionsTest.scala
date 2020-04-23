@@ -5,8 +5,6 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory}
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 
-import scala.util.parsing.json.JSON
-
 class XContentBuilderExtensionsTest extends FunSuite {
 
   test("RichXContentBuilder.addArray should not write bytes for empty array") {
@@ -15,9 +13,7 @@ class XContentBuilderExtensionsTest extends FunSuite {
     builder.addArray("arrayField", Seq())
     builder.endObject()
 
-    val actual = JSON.parseRaw(builder.string())
-    val expected = JSON.parseRaw("""{"arrayField": []}""")
-    assert(actual === expected)
+    assert(builder.string() === """{"arrayField":[]}""")
   }
 
   test("RichXContentBuilder.addArray should write bytes array with one element") {
@@ -26,9 +22,7 @@ class XContentBuilderExtensionsTest extends FunSuite {
     builder.addArray("arrayField", Seq(buildSimpleObject("f1", "v1")))
     builder.endObject()
 
-    val actual = JSON.parseRaw(builder.string())
-    val expected = JSON.parseRaw("""{"arrayField": [{"f1": "v1"}]}""")
-    assert(actual === expected)
+    assert(builder.string === """{"arrayField":[{"f1":"v1"}]}""")
   }
 
   test("RichXContentBuilder.addArray should write bytes array with many elements") {
@@ -41,15 +35,8 @@ class XContentBuilderExtensionsTest extends FunSuite {
     ))
     builder.endObject()
 
-    val actual = JSON.parseRaw(builder.string())
-    val expected = JSON.parseRaw(
-      """{
-        |  "arrayField": [
-        |    {"f1": "v1"},
-        |    {"f2": "v2"},
-        |    {"f3": "v3"}
-        |  ]
-        |}""".stripMargin)
+    val actual = builder.string()
+    val expected ="""{"arrayField":[{"f1":"v1"},{"f2":"v2"},{"f3":"v3"}]}"""
     assert(actual === expected)
   }
 

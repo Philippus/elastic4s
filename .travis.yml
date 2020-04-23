@@ -9,8 +9,9 @@ before_cache:
 before_script:
 - sudo chmod +x /usr/local/bin/sbt
 scala:
-- 2.11.11
-- 2.12.2
+- 2.11.12
+- 2.12.10
+- 2.13.1
 script:
 - sbt clean test
 jdk:

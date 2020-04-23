@@ -35,7 +35,7 @@ trait HttpExecutable[T, U] extends Logging {
               params: Map[String, Any],
               handler: ResponseHandler[U]): Future[U] = {
       logger.debug(s"Executing elastic request $method:$endpoint?${params.map { case (k, v) => k + "=" + v }.mkString("&")}")
-      val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, _: ResponseListener)
+      val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).toMap.asJava, _: ResponseListener)
       future(callback, handler)
     }
 
@@ -53,7 +53,7 @@ trait HttpExecutable[T, U] extends Logging {
         logger.debug(bodyLogged)
       }
 
-      val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).asJava, entity, _: ResponseListener)
+      val callback = client.performRequestAsync(method, endpoint, params.mapValues(_.toString).toMap.asJava, entity, _: ResponseListener)
       future(callback, handler)
     }
   }
