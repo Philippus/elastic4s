@@ -39,6 +39,7 @@ object QueryBuilderFn {
     case q: NestedQuery         => NestedQueryBodyFn(q)
     case NoopQuery              => XContentFactory.jsonBuilder()
     case q: ParentIdQuery       => ParentIdQueryBodyFn(q)
+    case q: PercolateQuery      => PercolateQueryBodyFn(q)
     case q: PinnedQuery         => PinnedQueryBuilderFn(q)
     case q: PrefixQuery         => PrefixQueryBodyFn(q)
     case q: QueryStringQuery    => QueryStringBodyFn(q)
