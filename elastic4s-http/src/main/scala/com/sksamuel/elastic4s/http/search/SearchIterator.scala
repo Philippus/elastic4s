@@ -26,15 +26,15 @@ object SearchIterator {
 
     import com.sksamuel.elastic4s.http.ElasticDsl._
 
-    private var iterator: Iterator[SearchHit] = Iterator.empty
+    private var _iterator: Iterator[SearchHit] = Iterator.empty
     private var scrollId: Option[String] = None
 
-    override def hasNext: Boolean = iterator.hasNext || {
-      iterator = fetchNext()
-      iterator.hasNext
+    override def hasNext: Boolean = _iterator.hasNext || {
+      _iterator = fetchNext()
+      _iterator.hasNext
     }
 
-    override def next(): SearchHit = iterator.next()
+    override def next(): SearchHit = _iterator.next()
 
     def fetchNext(): Iterator[SearchHit] = {
 
@@ -47,7 +47,7 @@ object SearchIterator {
       val response = Await.result(future, timeout)
       // in a search scroll we must always use the last returned scrollId
       scrollId = response.scrollId
-      response.hits.hits.iterator
+      response.hits.hits.toIndexedSeq.iterator
     }
   }
 

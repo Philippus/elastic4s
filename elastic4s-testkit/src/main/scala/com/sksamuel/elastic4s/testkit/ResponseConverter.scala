@@ -126,8 +126,8 @@ object ResponseConverterImplicits {
             None,
             None, // TODO
             x.sourceAsMap.asScalaNested,
-            x.fields.mapValues(_.value),
-            x.highlightFields.mapValues(_.fragments.map(_.string)),
+            x.fields.mapValues(_.value).toMap,
+            x.highlightFields.mapValues(_.fragments.map(_.string).toIndexedSeq).toMap,
             inner_hits = Map.empty,// TODO: Set properly
             x.version
           )
@@ -236,7 +236,7 @@ object ResponseConverterImplicits {
       response.`type`,
       response.version,
       response.exists,
-      response.original.getFields.asScala.toMap.mapValues(_.getValues.asScala),
+      response.original.getFields.asScala.toMap.mapValues(_.getValues.asScala).toMap,
       response.sourceAsMap.asScalaNested
     )
   }
@@ -273,7 +273,7 @@ object ResponseConverterImplicits {
         response.getFailedShards,
         response.getSuccessfulShards
       ),
-      response.getQueryExplanation.asScala.map(x => Explanation(x.getIndex, x.isValid, x.getError))
+      response.getQueryExplanation.asScala.map(x => Explanation(x.getIndex, x.isValid, x.getError)).toIndexedSeq
     )
   }
 
@@ -331,7 +331,7 @@ object ResponseConverterImplicits {
         case other => other
       }
 
-      self.mapValues(toScala)
+      self.mapValues(toScala).toMap
     }
   }
 

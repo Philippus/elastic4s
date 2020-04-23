@@ -8,6 +8,6 @@ import scala.collection.JavaConverters._
 case class GetAliasResult(response: GetAliasesResponse) {
 
   def aliases: Map[String, Seq[AliasMetaData]] = {
-    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala).toMap
+    response.getAliases.keysIt().asScala.map(key => key -> response.getAliases.get(key).asScala.toIndexedSeq).toMap
   }
 }

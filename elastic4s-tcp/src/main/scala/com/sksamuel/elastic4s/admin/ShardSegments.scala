@@ -8,6 +8,6 @@ case class ShardSegments(original: org.elasticsearch.action.admin.indices.segmen
 
   def numberOfCommitted: Integer = original.getNumberOfCommitted
   def numberOfSearch: Integer = original.getNumberOfSearch
-  def segments: Seq[Segment] = Option(original.getSegments).map(_.asScala).getOrElse(Nil)
+  def segments: Seq[Segment] = Option(original.getSegments).map(_.asScala).getOrElse(Nil).toIndexedSeq
   def shardRouting = original.getShardRouting
 }

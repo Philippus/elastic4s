@@ -27,7 +27,7 @@ case class RichSearchHit(java: SearchHit) extends Hit {
   def explanation: Option[Explanation] = Option(java.getExplanation)
 
   def fields: Map[String, RichSearchHitField] =
-    Option(java.getFields).map(_.asScala.toMap).getOrElse(Map.empty).mapValues(RichSearchHitField)
+    Option(java.getFields).map(_.asScala.toMap).getOrElse(Map.empty).mapValues(RichSearchHitField).toMap
 
   def stringValue(fieldName: String): String = field(fieldName).value.toString
 

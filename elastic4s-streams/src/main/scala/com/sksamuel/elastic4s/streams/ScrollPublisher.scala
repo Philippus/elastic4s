@@ -149,7 +149,7 @@ class PublishActor(client: TcpClient,
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
     case Success(resp: RichSearchResponse) =>
       scrollId = resp.scrollId
-      queue.enqueue(resp.hits: _*)
+      resp.hits.foreach(h=>queue.enqueue(h))
       context become ready
       unstashAll()
   }

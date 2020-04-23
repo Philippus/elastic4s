@@ -8,7 +8,7 @@ case class RichGetField(original: GetField) extends HitField {
 
   override def name: String = original.getName
   override def value: AnyRef = original.getValue
-  override def values: Seq[AnyRef] = original.getValues.asScala
+  override def values: Seq[AnyRef] = original.getValues.asScala.toIndexedSeq
   override def isMetadataField: Boolean = original.isMetadataField
 
   def iterator: Iterator[AnyRef] = original.iterator.asScala

@@ -44,19 +44,19 @@ object SuggestionResult {
 case class TermSuggestionResult(suggestion: TermSuggestion) extends SuggestionResult {
   type R = TermSuggestion
   type E = TermSuggestionEntry
-  def entries: Seq[TermSuggestionEntry] = suggestion.getEntries.asScala.map(TermSuggestionEntry)
+  def entries: Seq[TermSuggestionEntry] = suggestion.getEntries.asScala.map(TermSuggestionEntry).toIndexedSeq
 }
 
 case class PhraseSuggestionResult(suggestion: PhraseSuggestion) extends SuggestionResult {
   type R = PhraseSuggestion
   type E = PhraseSuggestionEntry
-  def entries: Seq[PhraseSuggestionEntry] = suggestion.getEntries.asScala.map(PhraseSuggestionEntry)
+  def entries: Seq[PhraseSuggestionEntry] = suggestion.getEntries.asScala.map(PhraseSuggestionEntry).toIndexedSeq
 }
 
 case class CompletionSuggestionResult(suggestion: CompletionSuggestion) extends SuggestionResult {
   type R = CompletionSuggestion
   type E = CompletionSuggestionEntry
-  def entries: Seq[CompletionSuggestionEntry] = suggestion.getEntries.asScala.map(CompletionSuggestionEntry)
+  def entries: Seq[CompletionSuggestionEntry] = suggestion.getEntries.asScala.map(CompletionSuggestionEntry).toIndexedSeq
 }
 
 // scala version of Suggest.Suggestion.Entry
@@ -72,7 +72,7 @@ trait SuggestionEntry {
   def options: Seq[SuggestionOption] = entry
     .getOptions
     .asScala
-    .map(arg => SuggestionOption.apply(arg.asInstanceOf[Suggestion.Entry.Option]))
+    .map(arg => SuggestionOption.apply(arg.asInstanceOf[Suggestion.Entry.Option])).toIndexedSeq
 }
 
 case class TermSuggestionEntry(entry: TermSuggestion.Entry) extends SuggestionEntry {
