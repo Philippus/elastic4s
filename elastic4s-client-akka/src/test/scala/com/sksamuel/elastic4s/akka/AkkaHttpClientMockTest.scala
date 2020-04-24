@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.akka
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
-import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity ⇒ ElasticEntity, HttpResponse ⇒ ElasticResponse}
+import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
 import org.scalamock.function.MockFunction1
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.BeforeAndAfterAll

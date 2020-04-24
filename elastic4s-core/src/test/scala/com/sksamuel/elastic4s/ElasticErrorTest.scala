@@ -28,7 +28,7 @@ class ElasticErrorTest extends AnyFlatSpec with Matchers with ElasticDsl {
     assert(error.failedShards.size == 7)
     assert(error.rootCause.size == 7)
 
-    val failedShard = error.failedShards.find(p ⇒ p.node.contains("X6_5FwQsQOSTMc-4wEjLCA")).get
+    val failedShard = error.failedShards.find(p => p.node.contains("X6_5FwQsQOSTMc-4wEjLCA")).get
     assert(failedShard.shard == 0)
     assert(failedShard.index contains "items_landsat_20190129_0")
     assert(failedShard.node.contains("X6_5FwQsQOSTMc-4wEjLCA"))
