@@ -56,7 +56,9 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
                          source: Option[String] = None,
                          trackHits: Option[Boolean] = None,
                          typedKeys: Option[Boolean] = None,
-                         restTotalHitsAsInt: Option[Boolean] = None) {
+                         restTotalHitsAsInt: Option[Boolean] = None,
+                         seqNoPrimaryTerm:Option[Boolean] = None
+                        ) {
 
   /** Adds a single string query to this search
     *
@@ -303,4 +305,6 @@ case class SearchRequest(indexesTypes: IndexesAndTypes,
   def typedKeys(enabled: Boolean): SearchRequest = copy(typedKeys = enabled.some)
 
   def restTotalHitsAsInt(restTotalHitsAsInt: Boolean): SearchRequest = copy(restTotalHitsAsInt = restTotalHitsAsInt.some)
+
+  def seqNoPrimaryTerm(enabled: Boolean) = copy(seqNoPrimaryTerm = enabled.some)
 }

@@ -11,6 +11,8 @@ case class DeleteByIdRequest(indexType: IndexAndType,
                              refresh: Option[RefreshPolicy] = None,
                              waitForActiveShards: Option[Int] = None,
                              version: Option[Long] = None,
+                             ifSeqNo: Option[Long] = None,
+                             ifPrimaryTerm: Option[Long] = None,
                              versionType: Option[VersionType] = None)
     extends BulkCompatibleRequest {
 
@@ -24,6 +26,8 @@ case class DeleteByIdRequest(indexType: IndexAndType,
   def waitForActiveShards(waitForActiveShards: Int): DeleteByIdRequest =
     copy(waitForActiveShards = waitForActiveShards.some)
   def version(version: Long): DeleteByIdRequest                = copy(version = version.some)
+  def ifSeqNo(ifSeqNo: Long): DeleteByIdRequest                = copy(ifSeqNo = ifSeqNo.some)
+  def ifPrimaryTerm(ifPrimaryTerm: Long): DeleteByIdRequest    = copy(ifPrimaryTerm = ifPrimaryTerm.some)
   def versionType(versionType: String): DeleteByIdRequest      = copy(versionType = VersionType.valueOf(versionType).some)
   def versionType(versionType: VersionType): DeleteByIdRequest = copy(versionType = versionType.some)
 }

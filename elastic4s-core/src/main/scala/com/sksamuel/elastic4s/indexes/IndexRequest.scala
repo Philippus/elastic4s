@@ -15,6 +15,8 @@ case class IndexRequest(indexAndType: IndexAndType,
                         routing: Option[String] = None,
                         timeout: Option[String] = None,
                         version: Option[Long] = None,
+                        ifSeqNo: Option[Long] = None,
+                        ifPrimaryTerm: Option[Long] = None,
                         versionType: Option[VersionType] = None,
                         fields: Seq[FieldValue] = Nil,
                         source: Option[String] = None)
@@ -43,6 +45,8 @@ case class IndexRequest(indexAndType: IndexAndType,
 
   def version(version: Long): IndexRequest                = copy(version = version.some)
   def versionType(versionType: VersionType): IndexRequest = copy(versionType = versionType.some)
+  def ifSeqNo(ifSeqNo: Long): IndexRequest                = copy(ifSeqNo = ifSeqNo.some)
+  def ifPrimaryTerm(ifPrimaryTerm: Long): IndexRequest    = copy(ifPrimaryTerm = ifPrimaryTerm.some)
 
   def timeout(timeout: String): IndexRequest          = copy(timeout = timeout.some)
   def timeout(duration: FiniteDuration): IndexRequest = copy(timeout = (s"${duration.toSeconds}s").some)
