@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.cats.effect.instances
 
 import cats.effect.Async
-import cats.{Functor ⇒ CatsFunctor}
+import cats.{Functor => CatsFunctor}
 import com.sksamuel.elastic4s.cats.effect.CatsEffectExecutor
 import com.sksamuel.elastic4s.{Executor, Functor}
 

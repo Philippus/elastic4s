@@ -10,7 +10,7 @@ class ClusterInfoTest extends AnyWordSpec with Matchers with DockerTests with Be
 
   override protected def afterAll(): Unit = {
     client.execute {
-      addRemoteClusterRequest(Map("search.remote.cluster_one.seeds" → null, "search.remote.cluster_two.seeds" → null))
+      addRemoteClusterRequest(Map("search.remote.cluster_one.seeds" -> null, "search.remote.cluster_two.seeds" -> null))
     }.await
   }
 

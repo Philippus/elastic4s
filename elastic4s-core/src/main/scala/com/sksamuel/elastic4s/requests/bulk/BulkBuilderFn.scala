@@ -21,7 +21,7 @@ object BulkBuilderFn {
         index.version.foreach(builder.field("version", _))
         index.ifPrimaryTerm.foreach(builder.field("if_primary_term", _))
         index.ifSeqNo.foreach(builder.field("if_seq_no", _))
-        index.versionType.foreach(versionType ⇒ builder.field("version_type", VersionTypeHttpString(versionType)))
+        index.versionType.foreach(versionType => builder.field("version_type", VersionTypeHttpString(versionType)))
         index.pipeline.foreach(builder.field("pipeline", _))
         builder.endObject()
         builder.endObject()
@@ -39,7 +39,7 @@ object BulkBuilderFn {
         delete.version.foreach(builder.field("version", _))
         delete.ifPrimaryTerm.foreach(builder.field("if_primary_term", _))
         delete.ifSeqNo.foreach(builder.field("if_seq_no", _))
-        delete.versionType.foreach(versionType ⇒ builder.field("version_type", VersionTypeHttpString(versionType)))
+        delete.versionType.foreach(versionType => builder.field("version_type", VersionTypeHttpString(versionType)))
         builder.endObject()
         builder.endObject()
 

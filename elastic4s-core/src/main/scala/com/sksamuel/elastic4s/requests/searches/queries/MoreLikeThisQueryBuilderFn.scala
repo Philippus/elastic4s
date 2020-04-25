@@ -17,7 +17,7 @@ object MoreLikeThisQueryBuilderFn {
       builder.startObject()
       builder.field("_index", doc.ref.index.name)
       builder.field("_id", doc.ref.id)
-      doc.routing.foreach { r ⇒
+      doc.routing.foreach { r =>
         builder.field("routing", r)
       }
       builder.endObject()
@@ -26,7 +26,7 @@ object MoreLikeThisQueryBuilderFn {
       builder.startObject()
       builder.field("_index", doc.index)
       builder.rawField("doc", doc.doc)
-      doc.routing.foreach { r ⇒
+      doc.routing.foreach { r =>
         builder.field("routing", r)
       }
       builder.endObject()
@@ -40,7 +40,7 @@ object MoreLikeThisQueryBuilderFn {
         builder.startObject()
         builder.field("_index", doc.ref.index.name)
         builder.field("_id", doc.ref.id)
-        doc.routing.foreach { r ⇒
+        doc.routing.foreach { r =>
           builder.field("routing", r)
         }
         builder.endObject()
