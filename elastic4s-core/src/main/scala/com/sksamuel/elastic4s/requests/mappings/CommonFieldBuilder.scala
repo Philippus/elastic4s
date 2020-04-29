@@ -145,6 +145,8 @@ object FieldBuilderFn {
         range.coerce.foreach(builder.field("coerce", _))
         range.format.foreach(builder.field("format", _))
         range.similarity.foreach(builder.field("similarity", _))
+      case denseVector: DenseVectorField =>
+        builder.field("dims", denseVector.dims)
     }
     builder.endObject()
     builder

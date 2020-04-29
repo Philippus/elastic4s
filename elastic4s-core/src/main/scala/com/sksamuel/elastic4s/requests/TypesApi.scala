@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests
 
-import com.sksamuel.elastic4s.requests.mappings.{BasicField, CompletionField, GeoshapeField, JoinField, KeywordField, NestedField, ObjectField, RangeField, SearchAsYouTypeField, TextField}
+import com.sksamuel.elastic4s.requests.mappings.{BasicField, CompletionField, DenseVectorField, GeoshapeField, JoinField, KeywordField, NestedField, ObjectField, RangeField, SearchAsYouTypeField, TextField}
 import com.sksamuel.elastic4s.requests.script.{Script, ScriptField}
 
 trait TypesApi {
@@ -53,6 +53,8 @@ trait TypesApi {
   def tokenCountField(name: String): BasicField      = BasicField(name, "token_count")
   def percolatorField(name: String): BasicField      = BasicField(name, "percolator")
   def joinField(name: String): JoinField             = JoinField(name)
+
+  def denseVectorField(name: String, dims: Int): DenseVectorField = DenseVectorField(name, dims)
 
   def scriptField(name: String, script: String): ScriptField = ScriptField(name, script)
   def scriptField(name: String, script: Script): ScriptField = ScriptField(name, script)
