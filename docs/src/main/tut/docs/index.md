@@ -34,7 +34,7 @@ To create an instance of the HTTP client, use the `ElasticClient` companion obje
 Requests are created using the elastic4s DSL. For example to create a search request, you would do:
 
 ```scala
-searchIndex("index").query("findthistext")
+search("index").query("findthistext")
 ```
 
 The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended.
