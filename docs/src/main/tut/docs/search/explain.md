@@ -13,7 +13,7 @@ The format is simple. Specify the index, type and id of the document, and attach
 
 ```scala
 val resp = client.execute {
-  explain id 8 in "beer/lager" query termQuery("name","budweiser")
+  explain id 8 in "beer" query termQuery("name","budweiser")
 }
 ```
 

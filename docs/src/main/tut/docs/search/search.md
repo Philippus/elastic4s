@@ -11,27 +11,27 @@ in the higher complexity of the search DSL.
 
 To do a simple string query search, where the search query is parsed from a single string
 ```scala
-search in "places"->"cities" query "London"
+search("cities") query "London"
 ```
 
 We can search for everything by not specifying a query at all.
 ```scala
-search in "places"->"cities"
+search("cities")
 ```
 
 We might want to limit the number of results and / or set the offset.
 ```scala
-search in "places"->"cities" query "paris" start 5 limit 10
+search("cities") query "paris" start 5 limit 10
 ```
 
-One of the great features of Elasticsearch is the number of queries it provides. Here we can use the term query to limit the search to just the state of Georgia rather than the country of Georgia.
+One of the great features of Elasticsearch is the number of queries it provides. Here we can use the match query to limit the search to just the state of Georgia rather than the country of Georgia.
 ```scala
-search in "places"->"cities" query { termQuery("state", "georgia") }
+search("cities") matchQuery("state", "georgia")
 ```
 
 We wouldn't be able to do very much if we couldn't combine queries. So here we combine three queries, 2 "musts" that must match the documents and 1 "not" that must not match the documents. This is what ElasticSearch calls a [boolean query](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html). You'll see in this example that I don't like to vacation anywhere that is too hot, and I want to only vacation somewhere that is awesome and that where the name ends with 'cester' like Gloucester or Leicester.
 ```scala
-search in "places"->"cities" query {
+search("cities") query {
    bool {
        must(
            regexQuery("name", ".*cester"),
@@ -45,14 +45,14 @@ search in "places"->"cities" query {
 
 It is also possible to use raw json queries. This provides more flexibility (i.e when the DSL is not complete) and enables storing queries in a separate environment (DB, cache, etc.).
 ```scala
-search in "*" types("users", "tweets") limit 5 rawQuery {
+search("*") limit 5 rawQuery {
   """{ "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } }"""
 } searchType SearchType.Scan
 ```
 
 Or initialize the entire SearchRequestBuilder from a json string. This provides more flexibility (i.e when the DSL is not complete) and enables storing queries in a separate environment (DB, cache, etc.).
 ```scala
-search in "*" types("users", "tweets") limit 5 extraSource {
+search("*") limit 5 extraSource {
   """{ "query": { "prefix": { "bands": { "prefix": "coldplay", "boost": 5.0, "rewrite": "yes" } } } }"""
 } searchType SearchType.Scan
 ```
@@ -60,7 +60,7 @@ search in "*" types("users", "tweets") limit 5 extraSource {
 Elasticsearch provides [sorting](http://www.elasticsearch.org/guide/reference/api/search/facets/) of course. So does elastic4s. You can even include multiple sorts - rather like multiple order clauses in an SQL query.
 
 ```scala
-search in "places"->"cities" query "europe" sort (
+search("cities") query "europe" sort (
     field sort "name",
     field sort "status"
 )
@@ -72,10 +72,14 @@ search in "places"->"cities" query "europe" sort (
 
 ```scala
 client.execute {
-  search in "index" / "type" query <somequery> aggregations(
-    aggregation terms "agg1" field "field1" size 20,
-    aggregation avg "agg2" field "field2"
-  )
+  search("sass_customers")
+    .matchQuery("is_active", "true")
+    .aggs {
+      termsAgg("my_agg_statuses", "payment_status")
+        .subaggs {
+          termsAgg("my_agg_customers", "tenant_id")
+        }
+    }
 }
 ```
 
@@ -90,7 +94,7 @@ methods. This is useful functionality to trim down large documents from being se
 
 ```scala
 client.execute {
-  search in "places/cities" query "europe" sourceInclude("gps", "populat*") sourceExclude("denonymn", "capit*")
+  search("cities") query "europe" sourceInclude("gps", "populat*") sourceExclude("denonymn", "capit*")
 }
 ```
 
@@ -106,7 +110,7 @@ Since version 1.5.0, Elasticsearch has supported [inner hits](http://www.elastic
 To do top level inner hits in elastic4s we can do:
 
 ```scala
-search in "index" / "type" inner (
+search("index") inner (
   inner hit "name" path "path",
   inner hit "name" `type` "type"
 )
@@ -115,7 +119,7 @@ search in "index" / "type" inner (
 And to use inner hits on nested queries we can do:
 
 ```scala
-search in "index" / "type" query {
+search("index") query {
   nestedQuery("somepath") inner {
     inner hits "name" from 2 size 10
   }
@@ -129,7 +133,7 @@ We can use script fields to evaluate a field for each hit. Script fields can eve
 We can specify the script fields in a search query through the use of the `scriptfields` method:
 
 ```scala
-search in "tubestops" query "wimbledon" scriptfields (
+search("tubestops") query "wimbledon" scriptfields (
   script field "fare_cost" script "doc['zone'] * fare_per_zone" params Map("fare_per_zone" -> 3.00)
 )
 ```
