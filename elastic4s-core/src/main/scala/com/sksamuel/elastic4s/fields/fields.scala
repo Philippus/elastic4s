@@ -1,93 +1,112 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.requests.mappings.{Analysis, ContextField, FielddataFrequencyFilter, Ignores, Nulls}
+import com.sksamuel.elastic4s.requests.mappings.{ContextField, FielddataFrequencyFilter}
 
-sealed trait ElasticField
+sealed trait ElasticField {
+  def name: String
+  def `type`: String // defines the elasticsearch constant used for this type, eg "integer" or "geo_shape"
+}
 
-case class TextField(name: String,
-                     analysis: Analysis = Analysis(),
+case class TextField(override val name: String,
+                     analyzer: Option[String] = None,
                      boost: Option[Double] = None,
                      copyTo: Seq[String] = Nil,
-                     docValues: Option[Boolean] = None,
-                     enabled: Option[Boolean] = None,
                      eagerGlobalOrdinals: Option[Boolean] = None,
-                     fielddata: Option[Boolean] = None,
+                     fields: List[ElasticField] = Nil,
+                     fielddata: Option[Boolean] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html
                      fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
-                     ignoreAbove: Option[Int] = None,
-                     index: Option[String] = None,
+                     ignoreAbove: Option[Int] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/ignore-above.html
+                     index: Option[Boolean] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-index.html
                      indexPrefixes: Option[IndexPrefixes] = None,
+                     indexPhrases: Option[Boolean] = None,
                      indexOptions: Option[String] = None,
-                     maxInputLength: Option[Int] = None,
                      norms: Option[Boolean] = None,
-                     nulls: Nulls = Nulls(),
                      positionIncrementGap: Option[Int] = None,
+                     searchAnalyzer: Option[String] = None,
                      searchQuoteAnalyzer: Option[String] = None,
                      similarity: Option[String] = None,
                      store: Option[Boolean] = None,
                      termVector: Option[String] = None,
-                     meta: Map[String, String] = Map.empty) extends ElasticField
+                     meta: Map[String, String] = Map.empty) extends ElasticField {
+  override def `type`: String = "text"
+}
+
+case class SearchAsYouTypeField(name: String,
+                                analyzer: Option[String] = None,
+                                boost: Option[Double] = None,
+                                copyTo: Seq[String] = Nil,
+                                docValues: Option[Boolean] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/doc-values.html
+                                fielddata: Option[Boolean] = None,
+                                ignoreAbove: Option[Int] = None,
+                                index: Option[Boolean] = None,
+                                indexOptions: Option[String] = None,
+                                maxShingleSize: Option[Int] = None,
+                                norms: Option[Boolean] = None,
+                                similarity: Option[String] = None,
+                                store: Option[Boolean] = None,
+                                termVector: Option[String] = None,
+                                meta: Map[String, String] = Map.empty) extends ElasticField {
+  override def `type`: String = "search_as_you_type"
+}
 
 case class FlattenedField(name: String,
-                          analysis: Analysis = Analysis(),
                           boost: Option[Double] = None,
-                          copyTo: Seq[String] = Nil,
                           docValues: Option[Boolean] = None,
                           depthLimit: Option[Int] = None,
-                          enabled: Option[Boolean] = None,
                           eagerGlobalOrdinals: Option[Boolean] = None,
                           ignoreAbove: Option[Int] = None,
-                          index: Option[String] = None,
-                          nulls: Nulls = Nulls(),
-                          store: Option[Boolean] = None,
-                          meta: Map[String, String] = Map.empty) extends ElasticField
+                          index: Option[Boolean] = None,
+                          indexOptions: Option[String] = None,
+                          nullValue: Option[String] = None,
+                          similarity: Option[String] = None,
+                          splitQueriesOnWhitespace: Option[Boolean] = None,
+                          meta: Map[String, String] = Map.empty) extends ElasticField {
+  override def `type`: String = "flattened"
+}
 
 case class KeywordField(name: String,
-                        analysis: Analysis = Analysis(),
                         boost: Option[Double] = None,
                         copyTo: Seq[String] = Nil,
                         docValues: Option[Boolean] = None,
-                        enabled: Option[Boolean] = None,
                         eagerGlobalOrdinals: Option[Boolean] = None,
+                        fields: List[ElasticField] = Nil,
                         ignoreAbove: Option[Int] = None,
-                        index: Option[String] = None,
+                        index: Option[Boolean] = None,
                         indexOptions: Option[String] = None,
                         norms: Option[Boolean] = None,
-                        nulls: Nulls = Nulls(),
-                        searchQuoteAnalyzer: Option[String] = None,
+                        normalizer: Option[String] = None,
+                        nullValue: Option[String] = None,
                         similarity: Option[String] = None,
                         splitQueriesOnWhitespace: Option[Boolean] = None,
                         store: Option[Boolean] = None,
                         termVector: Option[String] = None,
-                        meta: Map[String, String] = Map.empty) extends ElasticField
+                        meta: Map[String, String] = Map.empty) extends ElasticField {
+  override def `type`: String = "keyword"
+}
 
 case class GeoPointField(name: String,
-                         analysis: Analysis = Analysis(),
                          boost: Option[Double] = None,
-                         coerce: Option[Boolean] = None,
                          copyTo: Seq[String] = Nil,
                          docValues: Option[Boolean] = None,
-                         enabled: Option[Boolean] = None,
                          ignoreMalformed: Option[Boolean] = None,
                          ignoreZValue: Option[Boolean] = None,
-                         index: Option[String] = None,
+                         index: Option[Boolean] = None,
                          norms: Option[Boolean] = None,
-                         nulls: Nulls = Nulls(),
+                         nullValue: Option[String] = None,
                          store: Option[Boolean] = None,
-                         meta: Map[String, Any] = Map.empty) extends ElasticField
+                         meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "geo_point"
+}
 
 case class GeoShapeField(name: String,
-                         analysis: Analysis = Analysis(),
                          boost: Option[Double] = None,
-                         coerce: Option[Boolean] = None,
                          copyTo: Seq[String] = Nil,
                          docValues: Option[Boolean] = None,
-                         enabled: Option[Boolean] = None,
                          ignoreMalformed: Option[Boolean] = None,
                          ignoreZValue: Option[Boolean] = None,
-                         index: Option[String] = None,
+                         index: Option[Boolean] = None,
                          norms: Option[Boolean] = None,
-                         nulls: Nulls = Nulls(),
-                         similarity: Option[String] = None,
+                         nullValue: Option[String] = None,
                          store: Option[Boolean] = None,
                          tree: Option[String] = None,
                          precision: Option[String] = None,
@@ -96,88 +115,87 @@ case class GeoShapeField(name: String,
                          orientation: Option[String] = None,
                          pointsOnly: Option[Boolean] = None,
                          treeLevels: Option[String] = None,
-                         meta: Map[String, Any] = Map.empty) extends ElasticField
+                         meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "geo_shape"
+}
 
 case class ShapeField(name: String,
-                      analysis: Analysis = Analysis(),
                       boost: Option[Double] = None,
                       coerce: Option[Boolean] = None,
                       copyTo: Seq[String] = Nil,
-                      enabled: Option[Boolean] = None,
                       ignoreMalformed: Option[Boolean] = None,
                       ignoreZValue: Option[Boolean] = None,
-                      index: Option[String] = None,
+                      index: Option[Boolean] = None,
                       norms: Option[Boolean] = None,
-                      nulls: Nulls = Nulls(),
+                      nullValue: Option[String] = None,
                       store: Option[Boolean] = None,
                       orientation: Option[String] = None,
-                      meta: Map[String, Any] = Map.empty) extends ElasticField
+                      meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "shape"
+}
 
 case class CompletionField(name: String,
-                           analysis: Analysis = Analysis(),
+                           analyzer: Option[String] = None,
                            boost: Option[Double] = None,
-                           coerce: Option[Boolean] = None,
                            copyTo: Seq[String] = Nil,
-                           docValues: Option[Boolean] = None,
-                           enabled: Option[Boolean] = None,
-                           fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
-                           ignores: Ignores = Ignores(),
-                           index: Option[String] = None,
+                           index: Option[Boolean] = None,
                            indexOptions: Option[String] = None,
+                           ignoreAbove: Option[Int] = None,
+                           ignoreMalformed: Option[Boolean] = None,
                            maxInputLength: Option[Int] = None,
                            norms: Option[Boolean] = None,
-                           nulls: Nulls = Nulls(),
+                           nullValue: Option[String] = None,
                            preserveSeparators: Option[Boolean] = None,
                            preservePositionIncrements: Option[Boolean] = None,
                            similarity: Option[String] = None,
+                           searchAnalyzer: Option[String] = None,
                            store: Option[Boolean] = None,
                            termVector: Option[String] = None,
                            contexts: Seq[ContextField] = Nil,
-                           meta: Map[String, Any] = Map.empty) extends ElasticField
+                           meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "completion"
+}
 
-case class TokenCountFielkd(name: String,
-                            analysis: Analysis = Analysis(),
-                            boost: Option[Double] = None,
-                            copyTo: Seq[String] = Nil,
-                            docValues: Option[Boolean] = None,
-                            enabled: Option[Boolean] = None,
-                            enablePositionIncrements: Option[Boolean] = None,
-                            index: Option[String] = None,
-                            nulls: Nulls = Nulls(),
-                            store: Option[Boolean] = None,
-                            meta: Map[String, Any] = Map.empty) extends ElasticField
+case class TokenCountField(name: String,
+                           analyzer: Option[String] = None,
+                           boost: Option[Double] = None,
+                           copyTo: Seq[String] = Nil,
+                           docValues: Option[Boolean] = None,
+                           enablePositionIncrements: Option[Boolean] = None,
+                           index: Option[Boolean] = None,
+                           nullValue: Option[String] = None,
+                           store: Option[Boolean] = None,
+                           meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "token_count"
+}
 
 
 case class AliasField(name: String,
-                      path: String) extends ElasticField
+                      path: String) extends ElasticField {
+  override def `type`: String = "alias"
+}
 
-case class DenseField(name: String,
-                      dims: Int) extends ElasticField
+case class DenseVectorField(name: String,
+                            dims: Int) extends ElasticField {
+  override def `type`: String = "dense_vector"
+}
 
 case class JoinField(name: String,
-                     analysis: Analysis = Analysis(),
-                     boost: Option[Double] = None,
-                     copyTo: Seq[String] = Nil,
-                     docValues: Option[Boolean] = None,
-                     dynamic: Option[String] = None,
-                     enabled: Option[Boolean] = None,
-                     index: Option[String] = None,
-                     indexOptions: Option[String] = None,
-                     fields: Seq[ElasticField] = Nil,
-                     norms: Option[Boolean] = None,
-                     nulls: Nulls = Nulls(),
-                     store: Option[Boolean] = None,
-                     termVector: Option[String] = None,
+                     eagerGlobalOrdinals: Option[Boolean] = None,
                      relations: Map[String, Any] = Map.empty,
-                     meta: Map[String, Any] = Map.empty) extends ElasticField
+                     meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "join"
+}
 
-sealed trait NumberField extends ElasticField {
+sealed trait NumberField[T] extends ElasticField {
   def boost: Option[Double]
   def coerce: Option[Boolean]
   def ignoreMalformed: Option[Boolean]
-  def index: Option[String]
+  def index: Option[Boolean]
   def store: Option[Boolean]
   def docValues: Option[Boolean]
+  def nullValue: Option[T]
+  def copyTo: Seq[String]
 }
 
 case class LongField(name: String,
@@ -185,48 +203,79 @@ case class LongField(name: String,
                      coerce: Option[Boolean] = None,
                      copyTo: Seq[String] = Nil,
                      docValues: Option[Boolean] = None,
-                     enabled: Option[Boolean] = None,
                      ignoreMalformed: Option[Boolean] = None,
-                     index: Option[String] = None,
-                     nulls: Nulls = Nulls(),
+                     index: Option[Boolean] = None,
                      store: Option[Boolean] = None,
-                     meta: Map[String, Any] = Map.empty) extends NumberField
+                     nullValue: Option[Long] = None,
+                     meta: Map[String, Any] = Map.empty) extends NumberField[Long] {
+  override def `type`: String = "long"
+}
 
 case class IntegerField(name: String,
                         boost: Option[Double] = None,
                         coerce: Option[Boolean] = None,
                         copyTo: Seq[String] = Nil,
                         docValues: Option[Boolean] = None,
-                        enabled: Option[Boolean] = None,
                         ignoreMalformed: Option[Boolean] = None,
-                        index: Option[String] = None,
-                        nulls: Nulls = Nulls(),
+                        index: Option[Boolean] = None,
+                        nullValue: Option[Int] = None,
                         store: Option[Boolean] = None,
-                        meta: Map[String, Any] = Map.empty) extends NumberField
+                        meta: Map[String, Any] = Map.empty) extends NumberField[Int] {
+  override def `type`: String = "integer"
+}
 
 case class DoubleField(name: String,
                        boost: Option[Double] = None,
                        coerce: Option[Boolean] = None,
                        copyTo: Seq[String] = Nil,
                        docValues: Option[Boolean] = None,
-                       enabled: Option[Boolean] = None,
                        ignoreMalformed: Option[Boolean] = None,
-                       index: Option[String] = None,
-                       nulls: Nulls = Nulls(),
+                       index: Option[Boolean] = None,
+                       nullValue: Option[Double] = None,
                        store: Option[Boolean] = None,
-                       meta: Map[String, Any] = Map.empty) extends NumberField
+                       meta: Map[String, Any] = Map.empty) extends NumberField[Double] {
+  override def `type`: String = "double"
+}
 
 case class FloatField(name: String,
                       boost: Option[Double] = None,
                       coerce: Option[Boolean] = None,
                       copyTo: Seq[String] = Nil,
                       docValues: Option[Boolean] = None,
-                      enabled: Option[Boolean] = None,
                       ignoreMalformed: Option[Boolean] = None,
-                      index: Option[String] = None,
-                      nulls: Nulls = Nulls(),
+                      index: Option[Boolean] = None,
+                      nullValue: Option[Float] = None,
                       store: Option[Boolean] = None,
-                      meta: Map[String, Any] = Map.empty) extends NumberField
+                      meta: Map[String, Any] = Map.empty) extends NumberField[Float] {
+  override def `type`: String = "float"
+}
+
+case class HalfFloatField(name: String,
+                          boost: Option[Double] = None,
+                          coerce: Option[Boolean] = None,
+                          copyTo: Seq[String] = Nil,
+                          docValues: Option[Boolean] = None,
+                          ignoreMalformed: Option[Boolean] = None,
+                          index: Option[Boolean] = None,
+                          nullValue: Option[Float] = None,
+                          store: Option[Boolean] = None,
+                          meta: Map[String, Any] = Map.empty) extends NumberField[Float] {
+  override def `type`: String = "half_float"
+}
+
+case class ScaledFloatField(name: String,
+                            boost: Option[Double] = None,
+                            coerce: Option[Boolean] = None,
+                            copyTo: Seq[String] = Nil,
+                            docValues: Option[Boolean] = None,
+                            ignoreMalformed: Option[Boolean] = None,
+                            scalingFactor: Option[Int] = None,
+                            index: Option[Boolean] = None,
+                            nullValue: Option[Float] = None,
+                            store: Option[Boolean] = None,
+                            meta: Map[String, Any] = Map.empty) extends NumberField[Float] {
+  override def `type`: String = "scaled_float"
+}
 
 case class ShortField(name: String,
                       boost: Option[Double] = None,
@@ -235,160 +284,137 @@ case class ShortField(name: String,
                       docValues: Option[Boolean] = None,
                       enabled: Option[Boolean] = None,
                       ignoreMalformed: Option[Boolean] = None,
-                      index: Option[String] = None,
-                      nulls: Nulls = Nulls(),
+                      index: Option[Boolean] = None,
+                      nullValue: Option[Short] = None,
                       store: Option[Boolean] = None,
-                      meta: Map[String, Any] = Map.empty) extends NumberField
+                      meta: Map[String, Any] = Map.empty) extends NumberField[Short] {
+  override def `type`: String = "short"
+}
 
 case class ByteField(name: String,
                      boost: Option[Double] = None,
                      coerce: Option[Boolean] = None,
                      copyTo: Seq[String] = Nil,
                      docValues: Option[Boolean] = None,
-                     enabled: Option[Boolean] = None,
                      ignoreMalformed: Option[Boolean] = None,
-                     index: Option[String] = None,
-                     nulls: Nulls = Nulls(),
+                     index: Option[Boolean] = None,
+                     nullValue: Option[Byte] = None,
                      store: Option[Boolean] = None,
-                     meta: Map[String, Any] = Map.empty) extends NumberField
+                     meta: Map[String, Any] = Map.empty) extends NumberField[Byte] {
+  override def `type`: String = "byte"
+}
 
 case class BooleanField(name: String,
                         boost: Option[Double] = None,
-                        copyTo: Seq[String] = Nil,
+                        copyTo: Seq[String] = Nil, // https://www.elastic.co/guide/en/elasticsearch/reference/current/copy-to.html
                         docValues: Option[Boolean] = None,
-                        enabled: Option[Boolean] = None,
-                        index: Option[String] = None,
-                        nulls: Nulls = Nulls(),
+                        index: Option[Boolean] = None,
+                        nullValue: Option[Boolean] = None,
                         store: Option[Boolean] = None,
-                        meta: Map[String, Any] = Map.empty) extends ElasticField
+                        meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "boolean"
+}
 
 case class DateField(name: String,
                      boost: Option[Double] = None,
                      copyTo: Seq[String] = Nil,
                      docValues: Option[Boolean] = None,
-                     enabled: Option[Boolean] = None,
                      format: Option[String] = None,
-                     locate: Option[String] = None,
+                     locale: Option[String] = None,
                      ignoreMalformed: Option[Boolean] = None,
-                     index: Option[String] = None,
-                     nulls: Nulls = Nulls(),
+                     index: Option[Boolean] = None,
+                     nullValue: Option[String] = None,
                      store: Option[Boolean] = None,
-                     meta: Map[String, Any] = Map.empty) extends ElasticField
+                     meta: Map[String, Any] = Map.empty) extends ElasticField {
+  override def `type`: String = "date"
+}
+
+trait RangeField extends ElasticField {
+  def boost: Option[Double]
+  def coerce: Option[Boolean]
+  def index: Option[Boolean]
+  def store: Option[Boolean]
+}
 
 case class LongRangeField(name: String,
-                          analysis: Analysis = Analysis(),
                           boost: Option[Double] = None,
                           coerce: Option[Boolean] = None,
-                          copyTo: Seq[String] = Nil,
-                          docValues: Option[Boolean] = None,
-                          enabled: Option[Boolean] = None,
-                          ignoreMalformed: Option[Boolean] = None,
-                          index: Option[String] = None,
-                          nulls: Nulls = Nulls(),
-                          store: Option[Boolean] = None) extends ElasticField
+                          index: Option[Boolean] = None,
+                          store: Option[Boolean] = None) extends RangeField {
+  override def `type`: String = "long_range"
+}
 
 case class IntegerRangeField(name: String,
-                             analysis: Analysis = Analysis(),
                              boost: Option[Double] = None,
                              coerce: Option[Boolean] = None,
-                             copyTo: Seq[String] = Nil,
-                             docValues: Option[Boolean] = None,
-                             enabled: Option[Boolean] = None,
-                             ignoreMalformed: Option[Boolean] = None,
-                             index: Option[String] = None,
-                             nulls: Nulls = Nulls(),
-                             store: Option[Boolean] = None) extends ElasticField
+                             index: Option[Boolean] = None,
+                             store: Option[Boolean] = None) extends RangeField {
+  override def `type`: String = "integer_range"
+}
 
 case class DoubleRangeField(name: String,
-                            analysis: Analysis = Analysis(),
                             boost: Option[Double] = None,
                             coerce: Option[Boolean] = None,
-                            copyTo: Seq[String] = Nil,
-                            docValues: Option[Boolean] = None,
-                            enabled: Option[Boolean] = None,
-                            ignoreMalformed: Option[Boolean] = None,
-                            index: Option[String] = None,
-                            nulls: Nulls = Nulls(),
-                            store: Option[Boolean] = None) extends ElasticField
+                            index: Option[Boolean] = None,
+                            store: Option[Boolean] = None) extends RangeField {
+  override def `type`: String = "double_range"
+}
 
 case class FloatRangeField(name: String,
-                           analysis: Analysis = Analysis(),
                            boost: Option[Double] = None,
                            coerce: Option[Boolean] = None,
-                           copyTo: Seq[String] = Nil,
-                           docValues: Option[Boolean] = None,
-                           enabled: Option[Boolean] = None,
-                           ignoreMalformed: Option[Boolean] = None,
-                           index: Option[String] = None,
-                           nulls: Nulls = Nulls(),
-                           store: Option[Boolean] = None) extends ElasticField
+                           index: Option[Boolean] = None,
+                           store: Option[Boolean] = None) extends RangeField {
+  override def `type`: String = "float_range"
+}
 
 case class DateRangeField(name: String,
-                          analysis: Analysis = Analysis(),
                           boost: Option[Double] = None,
                           coerce: Option[Boolean] = None,
-                          copyTo: Seq[String] = Nil,
-                          docValues: Option[Boolean] = None,
-                          enabled: Option[Boolean] = None,
+                          index: Option[Boolean] = None,
                           format: Option[String] = None,
-                          ignoreMalformed: Option[Boolean] = None,
-                          index: Option[String] = None,
-                          nulls: Nulls = Nulls(),
-                          store: Option[Boolean] = None) extends ElasticField
+                          store: Option[Boolean] = None) extends RangeField {
+  override def `type`: String = "date_range"
+}
+
+case class IpRangeField(name: String,
+                        boost: Option[Double] = None,
+                        coerce: Option[Boolean] = None,
+                        index: Option[Boolean] = None,
+                        format: Option[String] = None,
+                        store: Option[Boolean] = None) extends RangeField {
+  override def `type`: String = "ip_range"
+}
 
 case class BinaryField(name: String,
                        docValues: Option[Boolean] = None,
-                       enabled: Option[Boolean] = None,
-                       index: Option[String] = None,
-                       nulls: Nulls = Nulls(),
-                       store: Option[Boolean] = None) extends ElasticField
+                       store: Option[Boolean] = None) extends ElasticField {
+  override def `type`: String = "binary"
+}
 
 case class ObjectField(name: String,
-                       analysis: Analysis = Analysis(),
                        dynamic: Option[String] = None,
                        enabled: Option[Boolean] = None,
-                       properties: Seq[ElasticField] = Nil) extends ElasticField
+                       properties: Seq[ElasticField] = Nil) extends ElasticField {
+  override def `type`: String = "object"
+}
 
 case class NestedField(name: String,
-                       analysis: Analysis = Analysis(),
                        dynamic: Option[String] = None,
                        enabled: Option[Boolean] = None,
                        properties: Seq[ElasticField] = Nil,
                        includeInParent: Option[Boolean] = None,
-                       includeInRoot: Option[Boolean] = None) extends ElasticField
+                       includeInRoot: Option[Boolean] = None) extends ElasticField {
+  override def `type`: String = "nested"
+}
 
 case class IpField(name: String,
                    boost: Option[Double] = None,
                    copyTo: Seq[String] = Nil,
                    docValues: Option[Boolean] = None,
-                   enabled: Option[Boolean] = None,
-                   index: Option[String] = None,
-                   nulls: Nulls = Nulls(),
+                   index: Option[Boolean] = None,
                    properties: Seq[ElasticField] = Nil,
-                   store: Option[Boolean] = None) extends ElasticField
-
-case class DenseVectorField(name: String,
-                            dims: Int,
-                            analysis: Analysis = Analysis(),
-                            boost: Option[Double] = None,
-                            coerce: Option[Boolean] = None,
-                            copyTo: Seq[String] = Nil,
-                            docValues: Option[Boolean] = None,
-                            enabled: Option[Boolean] = None,
-                            fielddata: Option[Boolean] = None,
-                            fields: Seq[ElasticField] = Nil,
-                            format: Option[String] = None,
-                            includeInAll: Option[Boolean] = None,
-                            ignoreAbove: Option[Int] = None,
-                            ignoreMalformed: Option[Boolean] = None,
-                            index: Option[String] = None,
-                            indexOptions: Option[String] = None,
-                            norms: Option[Boolean] = None,
-                            nulls: Nulls = Nulls(),
-                            scalingFactor: Option[Double] = None,
-                            similarity: Option[String] = None,
-                            store: Option[Boolean] = None,
-                            termVector: Option[String] = None)
-  extends ElasticField
-
+                   store: Option[Boolean] = None) extends ElasticField {
+  override def `type`: String = "ip"
+}
 case class IndexPrefixes(minChars: Int, maxChars: Int)

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.index
 
-import com.sksamuel.elastic4s.requests.analysis.{Analysis, CustomNormalizer, PatternReplaceCharFilter, TruncateTokenFilter, UniqueTokenFilter}
+import com.sksamuel.elastic4s.analysis.{Analysis, CustomNormalizer, PatternReplaceCharFilter, TruncateTokenFilter, UniqueTokenFilter}
 import com.sksamuel.elastic4s.requests.indexes.{CreateIndexContentBuilder, CreateIndexRequest, IndexAliasRequest}
 import com.sksamuel.elastic4s.requests.searches.queries.PrefixQuery
 import org.scalatest.funsuite.AnyFunSuite

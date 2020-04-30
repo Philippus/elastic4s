@@ -5,12 +5,10 @@ import com.sksamuel.elastic4s.requests.script.{Script, ScriptField}
 
 trait TypesApi {
 
-  // string datatypes
   def keywordField(name: String): KeywordField            = KeywordField(name)
   def textField(name: String): TextField                  = TextField(name)
   def searchAsYouType(name: String): SearchAsYouTypeField = SearchAsYouTypeField(name)
 
-  // numeric datatypes
   def byteField(name: String): BasicField        = BasicField(name, "byte")
   def doubleField(name: String): BasicField      = BasicField(name, "double")
   def floatField(name: String): BasicField       = BasicField(name, "float")
@@ -20,16 +18,12 @@ trait TypesApi {
   def scaledFloatField(name: String): BasicField = BasicField(name, "scaled_float")
   def shortField(name: String): BasicField       = BasicField(name, "short")
 
-  // booleans
   def booleanField(name: String): BasicField = BasicField(name, "boolean")
 
-  // binaries
   def binaryField(name: String): BasicField = BasicField(name, "binary")
 
-  // dates
   def dateField(name: String): BasicField = BasicField(name, "date")
 
-  // geo
   def geopointField(name: String): BasicField    = BasicField(name, "geo_point")
   def geoshapeField(name: String): GeoshapeField = GeoshapeField(name)
 

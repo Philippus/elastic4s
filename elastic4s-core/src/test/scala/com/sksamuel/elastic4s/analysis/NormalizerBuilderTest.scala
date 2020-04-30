@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.analysis
+package com.sksamuel.elastic4s.analysis
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

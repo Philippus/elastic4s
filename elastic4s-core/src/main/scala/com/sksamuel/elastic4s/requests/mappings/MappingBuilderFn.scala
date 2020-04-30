@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
+import com.sksamuel.elastic4s.fields.builders.ElasticFieldBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
 
 object MappingBuilderFn {
 
@@ -70,15 +71,25 @@ object MappingBuilderFn {
       builder.endObject() // end properties
     }
 
+    if (d.properties.map(_.name).distinct.size != d.properties.size)
+      throw new RuntimeException("Mapping contained properties with the same name")
+
+    if (d.properties.nonEmpty) {
+      builder.startObject("properties")
+      for (property <- d.properties)
+        builder.rawField(property.name, ElasticFieldBuilderFn(property))
+      builder.endObject() // end properties
+    }
+
     if (d.meta.nonEmpty) {
       builder.startObject("_meta")
       for (meta <- d.meta)
         meta match {
-          case (name, s: String)  => builder.field(name, s)
-          case (name, s: Double)  => builder.field(name, s)
+          case (name, s: String) => builder.field(name, s)
+          case (name, s: Double) => builder.field(name, s)
           case (name, s: Boolean) => builder.field(name, s)
-          case (name, s: Long)    => builder.field(name, s)
-          case (name, s: Float)   => builder.field(name, s)
+          case (name, s: Long) => builder.field(name, s)
+          case (name, s: Float) => builder.field(name, s)
           case (name, s: Int)     => builder.field(name, s)
         }
       builder.endObject()

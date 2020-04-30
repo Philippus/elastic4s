@@ -15,6 +15,7 @@ trait MappingDefinitionLike {
   def size: Option[Boolean]
   def dynamicDateFormats: Seq[String]
   def fields: Seq[FieldDefinition]
+  def properties: Seq[ElasticField]
   def analyzer: Option[String]
   def boostName: Option[String]
   def boostNullValue: Option[Double]
@@ -108,7 +109,8 @@ object MappingDefinition {
   def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition(None, fields = fields)
 }
 
-case class MappingDefinition(`type`: Option[String] = None, // type is now deprecated and can largely be ignored, it will be removed completely in 8.0
+case class MappingDefinition(@deprecated("types are deprecated in elasticsearch", "7.6.2")
+                             `type`: Option[String] = None, // type is now deprecated and can largely be ignored, it will be removed completely in 8.0
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
                              sourceExcludes: Seq[String] = Nil,
@@ -116,7 +118,9 @@ case class MappingDefinition(`type`: Option[String] = None, // type is now depre
                              numericDetection: Option[Boolean] = None,
                              size: Option[Boolean] = None,
                              dynamicDateFormats: Seq[String] = Nil,
+                             //@deprecated("use properties with instances of ElasticField", "7.6.2")
                              fields: Seq[FieldDefinition] = Nil, // fields maps to the properties object in the json
+                             properties: Seq[ElasticField] = Nil,
                              analyzer: Option[String] = None,
                              boostName: Option[String] = None,
                              boostNullValue: Option[Double] = None,

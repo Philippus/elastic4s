@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.index
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.requests.analysis.{Analysis, CustomNormalizer}
+import com.sksamuel.elastic4s.analysis.{Analysis, CustomNormalizer}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

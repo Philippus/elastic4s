@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.analysis
+package com.sksamuel.elastic4s.analysis
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.exts.OptionImplicits._

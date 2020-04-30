@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
+//@deprecated("deprecated in favour of ElasticField", "7.6.2")
 object CommonFieldBuilder {
 
   def apply(field: FieldDefinition): XContentBuilder = {
@@ -48,6 +49,7 @@ object CommonFieldBuilder {
   }
 }
 
+//@deprecated("deprecated in favour of ElasticField", "7.6.2")
 object FieldBuilderFn {
 
   def apply(field: FieldDefinition): XContentBuilder = {

@@ -12,7 +12,7 @@ case class IndexAliasRequest(name: String, filter: Option[Query] = None, routing
 case class CreateIndexRequest(name: String,
                               @deprecated("use the new analysis package", "7.0.1")
                               _analysis: Option[AnalysisDefinition] = None,
-                              analysis: Option[com.sksamuel.elastic4s.requests.analysis.Analysis] = None,
+                              analysis: Option[com.sksamuel.elastic4s.analysis.Analysis] = None,
                               mapping: Option[MappingDefinition] = None,
                               rawSource: Option[String] = None,
                               waitForActiveShards: Option[Int] = None,
@@ -52,7 +52,7 @@ case class CreateIndexRequest(name: String,
   @deprecated("use the new analysis package", "7.0.1")
   def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexRequest              = analysis(analyzers, Nil)
 
-  def analysis(analysis: com.sksamuel.elastic4s.requests.analysis.Analysis): CreateIndexRequest = copy(analysis = analysis.some)
+  def analysis(analysis: com.sksamuel.elastic4s.analysis.Analysis): CreateIndexRequest = copy(analysis = analysis.some)
 
   @deprecated("use the new analysis package", "7.0.1")
   def analysis(analyzers: Iterable[AnalyzerDefinition],
