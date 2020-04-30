@@ -32,7 +32,9 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
           textField("a") stored true analyzer WhitespaceAnalyzer,
           keywordField("b") normalizer "my_normalizer",
           joinField("c") relation("parent", Seq("bar", "foo"))
-        )
+        )).meta(Map(
+          "meta_key" -> "meta_value",
+        ))
       ) analysis {
         CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
       } normalizers {
@@ -74,8 +76,10 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
       val c = properties("c").asInstanceOf[Map[String, Any]]
       c("type") shouldBe "join"
       c("relations") shouldEqual Map("parent" -> Seq("bar", "foo"))
-    }
 
+      val meta = mappings.find(_.index == "index").get.meta
+      meta("meta_key") shouldBe "meta_value"
+    }
     "handle properly mapping without properties" in {
 
       val mappings = client.execute {
