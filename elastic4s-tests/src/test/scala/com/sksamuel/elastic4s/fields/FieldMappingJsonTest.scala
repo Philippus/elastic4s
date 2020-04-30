@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.mappings.{MappingBuilderFn, MappingDefini
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class FieldMappingTest extends AnyFunSuite with Matchers {
+class FieldMappingJsonTest extends AnyFunSuite with Matchers {
 
   test("adding ElasticFields to mapping def") {
 
