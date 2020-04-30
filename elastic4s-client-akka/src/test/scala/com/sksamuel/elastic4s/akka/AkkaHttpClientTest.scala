@@ -33,7 +33,7 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
     }
   }
 
-  private lazy val akkaClient = AkkaHttpClient(AkkaHttpClientSettings(List("localhost:9200")))
+  private lazy val akkaClient = AkkaHttpClient(AkkaHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
   override val client = ElasticClient(akkaClient)
 

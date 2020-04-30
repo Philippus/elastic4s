@@ -45,8 +45,8 @@
 //  override def getNode: LocalNode =
 //    try {
 //
-//      // assume the local node is running on 9200
-//      val client = ElasticClient("elasticsearch://localhost:9200")
+//      // assume the local node is running on 39227
+//      val client = ElasticClient("elasticsearch://localhost:39227")
 //      import com.sksamuel.elastic4s.http.ElasticDsl._
 //      val nodeinfo   = client.execute(nodeInfo()).await.result
 //      val (id, node) = nodeinfo.nodes.head
