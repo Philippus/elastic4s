@@ -17,13 +17,13 @@ object CompositeAggregationBuilder {
       s.field.foreach(builder.field("field", _))
       s.script.foreach(s => builder.rawField("script", ScriptBuilderFn(s)))
       s.order.foreach(builder.field("order", _))
+      if(s.missingBucket){ builder.field("missing_bucket", true) }
       s match {
-        case HistogramValueSource(_, interval, _, _, _) => builder.field("interval", interval)
-        case DateHistogramValueSource(_, interval, _, _, _, timeZone, format, missingBucket) => {
+        case HistogramValueSource(_, interval, _, _, _, _) => builder.field("interval", interval)
+        case DateHistogramValueSource(_, interval, _, _, _, timeZone, format, _) => {
           builder.field("interval", interval)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-          if(missingBucket){ builder.field("missing_bucket", true) }
         }
         case _ =>
       }

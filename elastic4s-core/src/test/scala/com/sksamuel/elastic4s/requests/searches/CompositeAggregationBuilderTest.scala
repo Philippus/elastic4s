@@ -44,18 +44,18 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
   test("CompositeAggregationBuilder should respect all possible value types and attributes") {
     val search = SearchRequest("myindex").aggs(
       CompositeAggregation("comp", sources = Seq(
-        TermsValueSource("s1", field = Some("f1"), order = Some("desc")),
-        HistogramValueSource("s2", 5, field = Some("f2"), order = Some("desc")),
-        DateHistogramValueSource("s3", "5d", field = Some("f3"), order = Some("desc"), timeZone = Some("+01:00"))
+        TermsValueSource("s1", field = Some("f1"), order = Some("desc"), missingBucket = true),
+        HistogramValueSource("s2", 5, field = Some("f2"), order = Some("desc"), missingBucket = true),
+        DateHistogramValueSource("s3", "5d", field = Some("f3"), order = Some("desc"), timeZone = Some("+01:00"), missingBucket = true)
       ))
     )
 
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1","order":"desc"}}},{"s2":{"histogram":{"field":"f2","order":"desc","interval":5}}},{"s3":{"date_histogram":{"field":"f3","order":"desc","interval":"5d","time_zone":"+01:00"}}}]}}}}"""
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1","order":"desc","missing_bucket":true}}},{"s2":{"histogram":{"field":"f2","order":"desc","missing_bucket":true,"interval":5}}},{"s3":{"date_histogram":{"field":"f3","order":"desc","missing_bucket":true,"interval":"5d","time_zone":"+01:00"}}}]}}}}"""
 
   }
 
-  test("CompositeAggregationBuilder should build simple terms-valued composites with after paramters") {
+  test("CompositeAggregationBuilder should build simple terms-valued composites with after parameters") {
     val search = SearchRequest("myindex").aggs(
       CompositeAggregation("comp", sources = Seq(
         TermsValueSource("s1", field = Some("f1"))),
