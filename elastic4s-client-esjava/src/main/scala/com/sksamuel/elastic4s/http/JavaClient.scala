@@ -97,7 +97,22 @@ object JavaClient extends Logging {
     * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client
     * as the underlying client. Optional callbacks can be passed in to configure the client.
     */
-  def apply(props: ElasticProperties): JavaClient = apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback)
+  def apply(props: ElasticProperties): JavaClient =
+    apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback)
+
+  /**
+    * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client
+    * as the underlying client. Optional callbacks can be passed in to configure the client.
+    */
+  def apply(props: ElasticProperties, requestConfigCallback: RequestConfigCallback): JavaClient =
+    apply(props, requestConfigCallback, NoOpHttpClientConfigCallback)
+
+  /**
+    * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client
+    * as the underlying client. Optional callbacks can be passed in to configure the client.
+    */
+  def apply(props: ElasticProperties, httpClientConfigCallback: HttpClientConfigCallback): JavaClient =
+    apply(props, NoOpRequestConfigCallback, httpClientConfigCallback)
 
   /**
     * Creates a new [[ElasticClient]] using the elasticsearch Java API rest client

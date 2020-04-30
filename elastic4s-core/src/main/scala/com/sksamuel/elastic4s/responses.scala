@@ -20,6 +20,7 @@ sealed trait Response[+U] {
   final def foreach[V](f: U => V): Unit          = if (!isError) f(result)
 
   final def toOption: Option[U] = if (isError) None else Some(result)
+  final def toEither: Either[ElasticError, U] = if (isError) Left(error) else Right(result)
 }
 
 case class RequestSuccess[U](override val status: Int, // the http status code of the response
