@@ -723,7 +723,7 @@ And to test
 sbt test
 ```
 
-For the tests to work you will need to run a local elastic instance on port 9200, _with security enabled_. One easy way of doing this is to use docker (via docker-compose):
+For the tests to work you will need to run a local elastic instance on port 39227, _with security enabled_. One easy way of doing this is to use docker (via docker-compose):
 `docker-compose up`
 
 ## Used By

@@ -8,7 +8,8 @@ services:
       network.host: 0.0.0.0
       path.repo: /tmp/elastic4s
     ports:
-      - 9200:9200
-      - 9300:9300
+      # use obscure ports for the tests to reduce the risk of interfering with existing elastic installations/containers
+      - 39227:9200
+      - 39337:9300
     volumes:
       - "./elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
