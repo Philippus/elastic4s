@@ -18,8 +18,8 @@ class PutMappingHttpTest extends AnyFunSuite with Matchers with DockerTests {
     }
 
     client.execute {
-      createIndex("putmaptest").mappings(
-        mapping().fields(
+      createIndex("putmaptest").mapping(
+        properties().fields(
           keywordField("foo")
         )
       )
@@ -47,8 +47,8 @@ class PutMappingHttpTest extends AnyFunSuite with Matchers with DockerTests {
     }
 
     client.execute {
-      createIndex("putrawtest").mappings(
-        mapping().fields(
+      createIndex("putrawtest").mapping(
+        properties().fields(
           keywordField("foo")
         )
       )

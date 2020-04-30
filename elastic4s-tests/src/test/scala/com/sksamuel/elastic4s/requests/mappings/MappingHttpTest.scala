@@ -27,8 +27,8 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
     }
 
     client.execute {
-      createIndex("index").mappings(
-        mapping() as Seq(
+      createIndex("index").mapping(
+        (properties() as Seq(
           textField("a") stored true analyzer WhitespaceAnalyzer,
           keywordField("b") normalizer "my_normalizer",
           joinField("c") relation("parent", Seq("bar", "foo"))
@@ -44,14 +44,14 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
 
 
     client.execute {
-      createIndex("indexnoprops").mappings(
-        mapping().dynamic(DynamicMapping.Strict)
+      createIndex("indexnoprops").mapping(
+        properties().dynamic(DynamicMapping.Strict)
       )
     }.await
 
     client.execute {
-      createIndex("indexnopropsempty").mappings(
-        mapping()
+      createIndex("indexnopropsempty").mapping(
+        properties()
       )
     }.await
   }
