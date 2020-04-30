@@ -19,9 +19,9 @@ Then to issue multiple get requests we can do something like the following:
 
 ```tut:book
 multiget(
-  get(3) from "coldplay/albums",
-  get(5) from "coldplay/albums",
-  get(7) from "coldplay/albums"
+  get(3) from "albums",
+  get(5) from "albums",
+  get(7) from "albums"
 )
 ```
 
@@ -30,8 +30,8 @@ block. Routing, version and fetched fields options can be specified in the same 
 
 ```tut:book
 multiget(
-  get(3) from "coldplay/albums" routing "2" storedFields("name", "year"),
-  get(5) from "coldplay/albums" routing "1",
-  get(7) from "coldplay/albums" version 5
+  get(3) from "albums" routing "2" storedFields("name", "year"),
+  get(5) from "albums" routing "1",
+  get(7) from "albums" version 5
 )
 ```

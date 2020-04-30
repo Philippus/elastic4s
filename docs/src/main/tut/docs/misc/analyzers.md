@@ -30,10 +30,10 @@ You can use these by simply using the case object for each analyzer. Eg, SimpleA
 Here is an example of using a WhitespaceAnalyzer to split up a field on whitespace.
 
 ```scala
-create.index("people").mappings(
-  "scientists" as {
-    "name" analyzer WhitespaceAnalyzer
-  }
+createIndex("people").mapping(
+  properties(
+    textField("name") analyzer WhitespaceAnalyzer
+  )
 )
 ```
 
@@ -44,10 +44,10 @@ Sometimes the built in analyzers aren't suitable for your particular use case an
 To use a shortcut, the DSL makes it very easy. For example, lets create a mapping for "myindex/users", and we want to index each user's name by splitting up on commas. In this index we will register a pattern analyzer that will split up tokens on commas.
 
 ```scala
-create.index("people").mappings(
-  "scientists" as {
-    "name" analyzer "pat1"
-  }
+createIndex("people").mapping(
+  properties(
+    textField("name") analyzer "pat1"
+  )
 ).analysis(
   PatternAnalyzerDefinition("pat1", regex = ",")
 )
@@ -60,10 +60,10 @@ If the shortcut definitions are still not cutting it, then we can create a fully
 Here is an example of registering a custom analyzer that uses a whitespace tokenizer, with lowercase and reverse token filters (just for fun).
 
 ```scala
-create.index("people").mappings(
-  "scientists" as {
-    "name" analyzer "custom1"
-  }
+createIndex("people").mapping(
+  properties(
+    textField("name") analyzer "custom1"
+  )
 ).analysis(
   CustomAnalyzerDefinition(
     "custom1",
@@ -77,19 +77,14 @@ create.index("people").mappings(
 We can of course use as many analyzers as we want. Here is a nonsense but technically valid example used in one of the unit tests.
 
 ```scala
-create.index("users").mappings(
-  "tweets" as(
-    id typed StringType analyzer KeywordAnalyzer store true includeInAll true,
-    "name" typed GeoPointType analyzer SimpleAnalyzer boost 4 index "not_analyzed",
-    "content" typed DateType analyzer "myAnalyzer3" nullValue "no content"
-  ),
-  map("users").as(
-    "name" typed IpType analyzer WhitespaceAnalyzer omitNorms true,
-    "location" typed IntegerType analyzer "myAnalyzer2" ignoreAbove 50,
-    "email" typed BinaryType analyzer StandardAnalyzer,
-    "picture" typed AttachmentType,
-    "age" typed FloatType,
-    "area" typed GeoShapeType
+createIndex("users").mapping(
+  properties(
+    ipField("name") analyzer WhitespaceAnalyzer omitNorms true,
+    intField("location") analyzer "myAnalyzer2" ignoreAbove 50,
+    binaryField("email") analyzer StandardAnalyzer,
+    attachmentField("picture") analyzer StandardAnalyzer,
+    floatField("age"),
+    geoshapeField("area")
   )
 ).analysis(
   PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),

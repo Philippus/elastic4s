@@ -84,7 +84,7 @@ To create an instance of the HTTP client, use the `ElasticClient` companion obje
 Requests are created using the elastic4s DSL. For example to create a search request, you would do:
 
 ```scala
-search("index" / "type").query("findthistext")
+search("index").query("findthistext")
 ```
 
 The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended.
@@ -152,10 +152,10 @@ object ArtistIndex extends App {
   // You would normally avoid doing this in a real program as it will block
   // the calling thread but is useful when testing
   client.execute {
-    createIndex("artists").mappings(
-      mapping("modern").fields(
-        textField("name")
-      )
+    createIndex("artists").mapping(
+        properties(
+          textField("name")
+        )
     )
   }.await
 
@@ -163,7 +163,7 @@ object ArtistIndex extends App {
   // The RefreshPolicy.Immediate means that we want this document to flush to the disk immediately.
   // see the section on Eventual Consistency.
   client.execute {
-    indexInto("artists" / "modern").fields("name" -> "L.S. Lowry").refresh(RefreshPolicy.Immediate)
+    indexInto("artists").fields("name" -> "L.S. Lowry").refresh(RefreshPolicy.Immediate)
   }.await
 
   // now we can search for the document we just indexed
@@ -247,13 +247,16 @@ import com.sksamuel.elastic4s.mappings.FieldType._
 import com.sksamuel.elastic4s.analyzers.StopAnalyzer
 
 client.execute {
-  createIndex("places") mappings (
-    mapping("cities") as (
-      keywordField("id"),
-      textField("name") boost 4,
-      textField("content") analyzer StopAnalyzer
+    createIndex("cities").mapping(
+        properties(
+            keywordField("id"),
+            textField("name") boost 4,
+            textField("content") analyzer StopAnalyzer,
+            keywordField("country"),
+            keywordField("continent"),
+            keywordField("status")
+        )
     )
-  )
 }
 ```
 
@@ -277,7 +280,7 @@ We must also include at least one field. Fields are specified as standard tuples
 
 ```scala
 client.execute {
-  indexInto("places" / "cities") id "uk" fields (
+  indexInto("cities") id "123" fields (
     "name" -> "London",
     "country" -> "United Kingdom",
     "continent" -> "Europe",
@@ -308,7 +311,7 @@ implicit object CharacterIndexable extends Indexable[Character] {
 // now the index request reads much cleaner
 val jonsnow = Character("jon snow", "the wall")
 client.execute {
-  indexInto("gameofthrones" / "characters").doc(jonsnow)
+  indexInto("gameofthrones").doc(jonsnow)
 }
 ```
 
@@ -335,40 +338,40 @@ in the higher complexity of the query DSL.
 
 To do a simple text search, where the query is parsed from a single string
 ```scala
-search("places" / "cities").query("London")
+search("cities").query("London")
 ```
 
 That is actually an example of a SimpleStringQueryDefinition. The string is implicitly converted to that type of query.
 It is the same as specifying the query type directly:
 
 ```scala
-search("places" / "cities").query(simpleStringQuery("London"))
+search("cities").query(simpleStringQuery("London"))
 ```
 
 The simple string example is the only time we don't need to specify the query type.
 We can search for everything by not specifying a query at all.
 ```scala
-search("places" / "cities")
+search("cities")
 ```
 
 We might want to limit the number of results and / or set the offset.
 ```scala
-search("places" / "cities") query "paris" start 5 limit 10
+search("cities") query "paris" start 5 limit 10
 ```
 
 We can search against certain fields only:
 ```scala
-search("places" / "cities") query termQuery("country", "France")
+search("cities") query termQuery("country", "France")
 ```
 
 Or by a prefix:
 ```scala
-search("places" / "cities") query prefixQuery("country", "France")
+search("cities") query prefixQuery("country", "France")
 ```
 
 Or by a regular expression (slow, but handy sometimes!):
 ```scala
-search("places" / "cities") query regexQuery("country", "France")
+search("cities") query regexQuery("country", "France")
 ```
 
 There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
@@ -421,7 +424,7 @@ Just think when you're in google and you see the snippets underneath your result
 We can use this very easily, just add a highlighting definition to your search request, where you set the field or fields to be highlighted. Viz:
 
 ```scala
-search in "music" / "bios" query "kate bush" highlighting (
+search in "music" query "kate bush" highlighting (
   highlight field "body" fragmentSize 20
 )
 ```
@@ -436,7 +439,7 @@ In this example we are retrieving the document with id 'coldplay' from the bands
 
 ```scala
 client.execute {
- get("coldplay").from("bands" / "rock")
+ get("coldplay").from("bands")
 }
 ```
 
@@ -445,8 +448,8 @@ We can get multiple documents at once too. Notice the following multiget wrappin
 ```scala
 client.execute {
   multiget(
-    get("coldplay").from("bands" / "rock"),
-    get("keane").from("bands" / "rock")
+    get("coldplay").from("bands"),
+    get("keane").from("bands")
   )
 }
 ```
@@ -460,7 +463,7 @@ We think they're a little past their best (controversial). This operation assume
 
 ```scala
 client.execute {
-  delete("u2").from("bands/rock")
+  delete("u2").from("bands")
 }
 ```
 
@@ -481,7 +484,7 @@ We can update existing documents without having to do a full index, by updating 
 
 ```scala
 client.execute {
-  update("25").in("scifi" / "starwars").docAsUpsert (
+  update("25").in("starwars_characters").docAsUpsert (
     "character" -> "chewie",
     "race" -> "wookie"
   )
@@ -496,7 +499,7 @@ If you want to return documents that are "similar" to  a current document we can
 
 ```scala
 client.execute {
-  search("drinks" / "beer") query {
+  search("drinks") query {
     moreLikeThisQuery("name").likeTexts("coors", "beer", "molson") minTermFreq 1 minDocFreq 1
   }
 }
@@ -513,9 +516,9 @@ wrap index, delete and update requests using the `bulk` keyword and pass to the 
 ```scala
 client.execute {
   bulk (
-    indexInto("bands" / "rock") fields "name"->"coldplay",
-    indexInto("bands" / "rock") fields "name"->"kings of leon",
-    indexInto("bands" / "pop") fields (
+    indexInto("bands") fields "name"->"coldplay",
+    indexInto("bands") fields "name"->"kings of leon",
+    indexInto("bands") fields (
       "name" -> "elton john",
       "best_album" -> "tumbleweed connection"
     )
@@ -528,7 +531,7 @@ by combinging inserts or using aggressive caching.
 The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
 See more information on the [Bulk].
 
-## Json Output
+## Show Query JSON
 
 It can be useful to see the json output of requests in case you wish to tinker with the request in a REST client or your browser. It can be much easier to tweak a complicated query when you have the instant feedback of the HTTP interface.
 
@@ -536,7 +539,7 @@ Elastic4s makes it easy to get this json where possible. Simply invoke the `show
 
 ```scala
 val json = client.show {
-  search("music" / "bands") query "coldplay"
+  search("music") query "coldplay"
 }
 println(json)
 ```
@@ -551,7 +554,7 @@ All operations are normally asynchronous. Sometimes though you might want to blo
 
 ```scala
 val resp = client.execute {
-  index("bands" / "rock") fields ("name"->"coldplay", "debut"->"parachutes")
+  index("bands") fields ("name"->"coldplay", "debut"->"parachutes")
 }.await
 ```
 

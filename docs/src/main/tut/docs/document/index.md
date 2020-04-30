@@ -18,7 +18,7 @@ import com.sksamuel.elastic4s.ElasticDsl._
 Lets index a very simple document that has a single field, a name.
 
 ```tut:silent
-indexInto("family" / "soprano") fields {
+indexInto("family") fields {
   "head" -> "tony"
 }
 ```
@@ -26,7 +26,7 @@ indexInto("family" / "soprano") fields {
 Very SQL like as you can see. We can also specify the id.
 
 ```tut:silent
-indexInto("family" / "soprano") fields {
+indexInto("family") fields {
   "boss" -> "tony"
 } id 1234
 ```
@@ -35,7 +35,7 @@ The id can be any object, it will be converted to a string using toString().
 Multiple fields? Easy.
 
 ```tut:silent
-indexInto("family" / "soprano") fields (
+indexInto("family") fields (
   "boss" -> "tony",
   "consigliere" -> "silvio",
   "underboss" -> "bobby"
@@ -45,7 +45,7 @@ indexInto("family" / "soprano") fields (
 If we have a nested structure, we can specifiy nested fields using nested `Map`s:
 
 ```tut:silent
-indexInto("family" / "soprano") fields (
+indexInto("family") fields (
   "boss" -> Map(
     "name" -> "tony",
     "age" -> "56"
@@ -56,7 +56,7 @@ indexInto("family" / "soprano") fields (
 Similarly arrays can be specified using `Array`s or `Seq`s:
 
 ```tut:silent
-indexInto("family" / "soprano") fields (
+indexInto("family") fields (
   "boss" -> "tony",
   "members" -> Array(
     "tony",
@@ -82,7 +82,7 @@ Sometimes it is necessary to be able to explicitly specify fields, this can be d
 ```tut:silent
 import com.sksamuel.elastic4s._
 
-indexInto("family" / "soprano") fieldValues (
+indexInto("family") fieldValues (
   SimpleFieldValue("boss", "tony"),
   ArrayFieldValue("members", Array(
     SimpleFieldValue("tony"),
@@ -119,7 +119,7 @@ case class CustomDateFieldValue(name: String, date: Date) extends FieldValue {
 This can then be used when indexing:
 
 ```tut:silent
-indexInto("twitter/tweets") fieldValues (
+indexInto("tweets") fieldValues (
   SimpleFieldValue("user", "tony.soprano"),
   CustomDateFieldValue("post_date", new Date()),
   SimpleFieldValue("message", "Spending time with the family")

@@ -6,43 +6,50 @@ section: "docs"
 
 # Getting Started
 
+We have created sample projects in both sbt, maven and gradle. Check them out here:
+https://github.com/sksamuel/elastic4s/tree/master/samples
 
-To get started you will need to add a dependency to either
+To get started you will need to add a dependency:
 
-* [elastic4s-http](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-http)
-* [elastic4s-tcp](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-tcp) 
+* [elastic4s-client-esjava](https://mvnrepository.com/artifact/com.sksamuel.elastic4s/a:elastic4s-client-esjava)
 
-depending on which client you intend you use(or both).
+```scala
+// major.minor are in sync with the elasticsearch releases
+val elastic4sVersion = "x.x.x"
+libraryDependencies ++= Seq(
+  // recommended client for beginners
+  "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % elastic4sVersion,
+  // test kit
+  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test"
+)
+```
 
 The basic usage is that you create an instance of a client and then invoke the `execute` method with the requests you
-want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]` where T is the response
+want to perform. The execute method is asynchronous and will return a standard Scala `Future[T]`
+(or use one of the [Alternative executors](#alternative-executors)) where T is the response
 type appropriate for your request type. For example a _search_ request will return a response of type `SearchResponse`
 which contains the results of the search.
 
-To create an instance of the HTTP client, use the `HttpClient` companion object methods. To create an instance of the 
-TCP client, use the `TcpClient` companion object methods. Requests are the same for either client, but response classes
-may vary slightly as the HTTP response classes model the returned JSON whereas the TCP response classes wrap the Java 
-client classes.
-
-Requests, such as inserting a document, searching, creating an index, and so on, are created using the DSL syntax that 
-is similar in style to SQL queries. For example to create a search request, you would do:
+To create an instance of the HTTP client, use the `ElasticClient` companion object methods.
+Requests are created using the elastic4s DSL. For example to create a search request, you would do:
 
 ```scala
-search("index" / "type") query "findthistext"`
+search("index").query("findthistext")
 ```
 
-The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended. Although the syntax is 
-identical whether you use the HTTP or TCP client, you must import the appropriate trait
-(`com.sksamuel.elastic4s.ElasticDSL` for TCP or `com.sksamuel.elastic4s.http.ElasticDSL` for HTTP) depending on which
-client you are using.
+The DSL methods are located in the `ElasticDsl` trait which needs to be imported or extended.
+
+```scala
+import com.sksamuel.elastic4s.ElasticDsl._
+```
 
 One final import is required if you are using the HTTP client. The API needs a way to unmarshall the JSON response from
 the elastic server into the strongly typed case classes used by the API. Rather than bringing in a JSON library of our
 choosing and potentially causing dependency issues (or simply bloat), the client expects an implicit `JsonFormat`
-implementation. 
+implementation.
 
 Elastic4s provides several out of the box (or you can roll your own) JSON serializers and deserializers. The provided
-implementations are 
+implementations are
 
 - [elastic4s-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-circe)
 - [elastic4s-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-jackson)
@@ -53,160 +60,98 @@ implementations are
 For example, to use the jackson implementation, add the module to your build and then add this import:
 
 
-## SBT Setup
+### Connecting to a Cluster
+
+To connect to a standalone ElasticSearch cluster, pass a `JavaClient` to an `ElasticClient`. You can specify protocol,
+host, and port in a single string.
 
 ```scala
-// major.minor are in sync with the elasticsearch releases
-val elastic4sVersion = "x.x.x"
-libraryDependencies ++= Seq(
-  "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
-  // for the tcp client
-  "com.sksamuel.elastic4s" %% "elastic4s-tcp" % elastic4sVersion,
-  
-  // for the http client
-  "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
-  
-  // if you want to use reactive streams
-  "com.sksamuel.elastic4s" %% "elastic4s-streams" % elastic4sVersion,
-  
-  // a json library
-  "com.sksamuel.elastic4s" %% "elastic4s-jackson" % elastic4sVersion,
-  "com.sksamuel.elastic4s" %% "elastic4s-play-json" % elastic4sVersion,
-  "com.sksamuel.elastic4s" %% "elastic4s-spray-json" % elastic4sVersion,
-  "com.sksamuel.elastic4s" %% "elastic4s-circe" % elastic4sVersion,
-  "com.sksamuel.elastic4s" %% "elastic4s-json4s" % elastic4sVersion,
-  
-  // testing
-  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
-  "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion % "test"
-)
+val client = ElasticClient(JavaClient(ElasticProperties("http://host1:9200")))
 ```
 
-## Your first request
+For multiple nodes you can pass a comma-separated list of endpoints in a single string:
 
-```tut:invisible
-import java.io.IOException
-import java.nio.file._
-import java.nio.file.attribute.BasicFileAttributes
-
-// setup a home directory
-val clusterName: String = "getting-started-with-elastic4s"
-val homePath: Path = Files.createTempDirectory(clusterName)
+```scala
+val nodes ="http://host1:9200,http://host2:9200,http://host3:9200"
+val client = ElasticClient(JavaClient(ElasticProperties(nodes)))
 ```
 
-All examples use a local node for demonstration purpose. You can start an embedded node with
+### Using different clients
 
-```tut:silent
-import com.sksamuel.elastic4s.embedded.LocalNode
+It is possible to use [alternative clients](https://search.maven.org/search?q=g:com.sksamuel.elastic4s%20elastic4s-client)
+in order to connect to a cluster, such as Akka HTTP:
 
-import scala.concurrent.Await
-import scala.concurrent.duration._
+Add the following to your `built.sbt`, replace `x.x.x` with your version of ElasticSearch:
 
-val localNode = LocalNode(clusterName, homePath.toAbsolutePath.toString)
-val client = localNode.elastic4sclient()
+```scala
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-client-akka_2.13" % "x.x.x"
 ```
 
-You can import the DSL and a default execution context with and execute a simple cluster state request with
+And then pass `AkkaHttpClient` to the object `ElasticClient.apply` method:
 
-```tut:book
-import com.sksamuel.elastic4s.ElasticDsl._
-
-// await is a helper method to make this operation synchronous instead of async
-// You would normally avoid doing this in a real program as it will block your thread
-val response = client.execute {
-  clusterState()
-}.await
-
-response.getClusterName().value
-
-localNode.close()
+```scala
+val client = ElasticClient(AkkaHttpClient("http://host1:9200"))
 ```
 
 ## Example Application
 
-An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create and
+An example is worth 1000 characters so here is a quick example of how to connect to a node with a client, create an
 index and index a one field document. Then we will search for that document using a simple text query.
 
-For this example we will use the `elastic4s-circe` json serializer.
+**Note:** As of version `0.7.x` the `LocalNode` functionality has been removed. It is recommended that you stand up
+a local ElasticSearch Docker container for development. This is the same strategy used in the [tests](https://github.com/sksamuel/elastic4s/blob/master/elastic4s-testkit/src/main/scala/com/sksamuel/elastic4s/testkit/DockerTests.scala).
 
-
-```tut:silent
-import com.sksamuel.elastic4s.{ElasticsearchClientUri, TcpClient}
-import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.searches.RichSearchResponse
-import org.elasticsearch.action.support.WriteRequest.RefreshPolicy
-import org.elasticsearch.common.settings.Settings
-
-// circe
-import com.sksamuel.elastic4s.circe._
-import io.circe.generic.auto._ 
-
-case class Artist(name: String)
+```scala
+import com.sksamuel.elastic4s.http.JavaClient
+import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, ElasticProperties}
 
 object ArtistIndex extends App {
 
-    // spawn an embedded node
-    val localNode = LocalNode(clusterName, homePath.toAbsolutePath.toString)
-    val client = localNode.elastic4sclient()
+  // in this example we create a client to a local Docker container at localhost:9200
+  val client = ElasticClient(JavaClient(ElasticProperties(s"http://${sys.env.getOrElse("ES_HOST", "127.0.0.1")}:${sys.env.getOrElse("ES_PORT", "9200")}")))
 
-  // This creates a TcpClient. We don't actually use it in our little demo,
-  // because elasticsearch 5.x dropped embedded node support and we use the
-  // elastic4s embedded node that don't suppot connecting via tcp
-  def tcpClient(): TcpClient = TcpClient.transport(
-    Settings.builder().put("cluster.name", clusterName).build(),
-    ElasticsearchClientUri(s"elasticsearch://${localNode.ipAndPort}")
-  )
-  
+  // we must import the dsl
+  import com.sksamuel.elastic4s.ElasticDsl._
+
+  // Next we create an index in advance ready to receive documents.
   // await is a helper method to make this operation synchronous instead of async
-  // You would normally avoid doing this in a real program as it will block your thread
+  // You would normally avoid doing this in a real program as it will block
+  // the calling thread but is useful when testing
   client.execute {
-    createIndex("bands").mappings(
-       mapping("artist") as(
-          stringField("name")
-       )
+    createIndex("artists").mapping(
+        properties(
+          textField("name")
+        )
     )
   }.await
 
-  client.execute { 
-  	indexInto("bands" / "artists") doc Artist("Coldplay") refresh(RefreshPolicy.IMMEDIATE)
+  // Next we index a single document which is just the name of an Artist.
+  // The RefreshPolicy.Immediate means that we want this document to flush to the disk immediately.
+  // see the section on Eventual Consistency.
+  client.execute {
+    indexInto("artists").fields("name" -> "L.S. Lowry").refresh(RefreshPolicy.Immediate)
   }.await
 
   // now we can search for the document we just indexed
-  val resp: RichSearchResponse = client.execute { 
-    search("bands" / "artists") query "coldplay" 
+  val resp = client.execute {
+    search("artists") query "lowry"
   }.await
-  
-  println("---- Search Hit Parsed ----")
-  resp.to[Artist].foreach(println)
-  
-  // pretty print the complete response
-  import io.circe.Json
-  import io.circe.parser._
-  println("---- Response as JSON ----")
-  println(decode[Json](resp.original.toString).right.get.spaces2)
-  
-  localNode.close()
+
+  // resp is a Response[+U] ADT consisting of either a RequestFailure containing the
+  // Elasticsearch error details, or a RequestSuccess[U] that depends on the type of request.
+  // In this case it is a RequestSuccess[SearchResponse]
+
+  println("---- Search Results ----")
+  resp match {
+    case failure: RequestFailure => println("We failed " + failure.error)
+    case results: RequestSuccess[SearchResponse] => println(results.result.hits.hits.toList)
+    case results: RequestSuccess[_] => println(results.result)
+  }
+
+  // Response also supports familiar combinators like map / flatMap / foreach:
+  resp foreach (search => println(s"There were ${search.totalHits} total hits"))
+
+  client.close()
 }
-
 ```
 
-Now lets run our App on our embedded node.
-
-```tut:book
-ArtistIndex.main(Array())
-```
-
-
-```tut:invisible
-// clean up cluster
-Files.walkFileTree(homePath, new SimpleFileVisitor[Path] {
-  override def visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult = {
-    Files.delete(file)
-    FileVisitResult.CONTINUE
-  }
-  override def postVisitDirectory(dir: Path, exc: IOException): FileVisitResult = {
-    Files.delete(dir)
-    FileVisitResult.CONTINUE
-  }
-})
-```

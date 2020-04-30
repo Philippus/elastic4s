@@ -14,7 +14,7 @@ Note that creating a mapping does not stop Elasticsearch from dynamically creati
 
 ## Building a Basic Mapping
 
-Lets start by defining an index called `places` that has a single type (`city`) which has a single field (`year_founded`):
+Lets start by defining an index called `cities` which has a single field (`year_founded`):
 
 ```scala
 // imports - will be omitted for other examples
@@ -22,9 +22,9 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.mappings.FieldType._
 
 client.execute {
-  create index "places" mappings (
-    "city" as (
-      "year_founded" typed IntegerType
+  createIndex("cities").mapping(
+    properties(
+      intField("year_founded")
     )
   )
 }
@@ -35,47 +35,11 @@ Lets enhance this by adding a `location` field of type `GeoPointType`. This fiel
 
 ```scala
 client.execute {
-  create index "places" mappings (
-    "city" as (
-      "year_founded" typed IntegerType,
-      "location" typed GeoPointType
+  createIndex("cities").mapping(
+    properties(
+      intField("year_founded"),
+      geopointField("location")
     )
-  )
-}
-```
-
-**Sidenote:** You might wonder why the DSL keyword is called `typed`. This is because `type` is a keyword in Scala and `"location" typed GeoPointType` looks better than ```"location" `type` GeoPointType```.
-
-Now some places have names that include common stop words such as _"The Congo"_ or _"Bay of Biscay"_, if we let Elasticsearch use its defaults these stop words would be removed when searching. This is not what we want so we'll use a `SimpleAnalyzer` which only lowercases the text and splits on non-letters.
-
-In this next example we'll add a new type, called country, and we'll change the analyzer as mentioned:
-
-```scala
-client.execute {
-  create index "places" mappings (
-    "city" as (
-      "year_founded" typed IntegerType,
-      "location" typed GeoPointType
-    ), // note trailing comma as this is a var-args invocation
-    "country" as (
-      "name" typed StringType analyzer SimpleAnalyzer
-    )
-  )
-}
-```
-
-Elasticsearch is a clever beast. One small example is that it can detect dates automatically in fields instead of us setting the `DateType` in mappings. This is useful when you don't know all the fields in advance. To set the formats that Elasticsearch will recognize, we can use `date_detection` at the mapping level. Going back to our places example we'll let Elasticsearch detect our dates from two different formats (you can set as many as you need):
-
-```scala
-client.execute {
-  create index "places" mappings (
-    "city" as (
-      "year_founded" typed IntegerType,
-      "location" typed GeoPointType
-    ),
-    "country" as (
-      "name" typed StringType analyzer SimpleAnalyzer
-    ) dateDetection true dynamicDateFormats("dd/MM/yyyy", "dd-MM-yyyy")
   )
 }
 ```
@@ -84,15 +48,12 @@ Wrapping up our introduction, we finally want to add a field called [demonym](ht
 
 ```scala
 client.execute {
-  create index "places" mappings (
-    "city" as (
-      "year_founded" typed IntegerType,
-      "location" typed GeoPointType,
-      "demonym" typed StringType nullValue "citizen" analyzer KeywordAnalyzer
-    ),
-    "country" as (
-      "name" typed StringType analyzer SimpleAnalyzer
-    ) dateDetection true dynamicDateFormats("dd/MM/yyyy", "dd-MM-yyyy")
+  createIndex("cities").mapping(
+    properties(
+      intField("year_founded"),
+      geopointField("location"),
+      textField("demonym") nullValue "citizen" analyzer KeywordAnalyzer
+    )
   )
 }
 ```
@@ -106,9 +67,9 @@ store [different geojson formats](http://www.elasticsearch.org/guide/en/elastics
 
 ```scala
 client.execute {
-  create index "areas" mappings (
-    "parks" as (
-      "location" typed GeoShapeType
+  createIndex("areas").mapping(
+    properties(
+      geoshapeField("location")
     )
   )
 }
@@ -118,9 +79,9 @@ Sometimes you want to be more precise about the settings for your `GeoShapeType`
 
 ```scala
 client.execute {
-  create index "areas" mappings (
-    "parks" as (
-      "location" typed GeoShapeType tree PrefixTree.Quadtree precision "1m"
+  createIndex("areas").mapping(
+    properties(
+      geoshapeField("location") tree PrefixTree.Quadtree precision "1m"
     )
   )
 }
@@ -154,9 +115,9 @@ Analyzers can be specified on a per-field basis:
 
 ```scala
 client.execute {
-  create index "places" mappings (
-    "country" as (
-      "name" typed StringType analyzer SimpleAnalyzer
+  createIndex("countries").mapping(
+    properties(
+      textField("year_founded") analyzer SimpleAnalyzer
     )
   )
 }
@@ -171,21 +132,5 @@ The available built-in analyzers are:
 * [KeywordAnalyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-keyword-analyzer.html)
 * [PatternAnalyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-pattern-analyzer.html)
 * [SnowballAnalyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-snowball-analyzer.html)
-
-In addition you can define your own analyzers (they are really just combinations of filters and tokenizers). These can be
-used by referencing them by name:
-
-```scala
-client.execute {
-  (create index "places" mappings (
-    "country" as (
-      "name" typed StringType analyzer SimpleAnalyzer,
-      "country_code" typed StringType analyzer "country_code_analyzer"
-    )
-  ) analysis (
-     PatternAnalyzerDefinition("country_code_analyzer", regex = ",")
-  ))
-}
-```
 
 More information on custom analyzers can be found in the [Analyzers guide](../misc/analyzers.md).
