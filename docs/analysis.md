@@ -64,7 +64,7 @@ Finally, this example uses separate analyzers for indexing and [searching](https
 ```
 
 
-### Custom Analzyers
+## Custom Analzyers
 
 Elasticsearch allows you to create a [custom analyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-custom-analyzer.html) which gives you full control over how an analyzer is specified.
 
@@ -72,7 +72,7 @@ Also, there are shortcuts that allow you to use one of the built-in analyzers bu
 (for example, if you wanted to use the "stop analzyer" but with your own list of stop words).
 Not all built-in analyzers can be modified, eg the WhitespaceAnalyzer has no options.
 
-#### Shortcuts
+### Shortcuts
 
 To use a shortcut, elastic4s makes it very easy.
 For example, lets create a mapping for `myindex`, and we want to index each user's name by splitting up on commas.
@@ -94,7 +94,7 @@ Notice that we gave the analyzer the name `pat1` in the analysis section. This i
 You can use the same definition in multiple mappings for the same index, and you only need to specify the definition once.
 It's also possible to use the same name as one of the built in analyzers. If you do this, then you will override the built-in analyzer.
 
-#### Custom
+### Custom
 
 If the shortcut definitions are still not cutting it, then we can create a fully custom analyzer.
 
