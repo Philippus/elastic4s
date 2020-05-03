@@ -183,21 +183,10 @@ object ArtistIndex extends App {
 
 ## Alternative Executors
 
-The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
-adding appropriate imports. The imports will create an implicit `Executor[F]` and a `Functor[F]`,
-where `F` is some effect type.
+By default, elastic4s uses scala `Future`s when returning responses, but any effect type can be supported.
 
-### Cats-Effect IO
-`import com.sksamuel.elastic4s.cats.effect.instances._` will provide implicit instances for `cats.effect.IO`
+If you wish to use ZIO, Cats-Effect, Monix or Scalaz, then read this page on [alternative effects](docs/effects.md).
 
-### Monix Task
-`import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
-
-### Scalaz Task
-`import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task`
-
-### ZIO Task
-`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task`
 
 
 ## Near Real-time search results
@@ -342,7 +331,9 @@ One way to do this is to invoke `search` and pass in the index name. From there,
 For example, to perform a simple text search, where the query is parsed from a single string we can do:
 
 ```scala
-search("cities").query("London")
+client.execute {
+  search("cities").query("London")
+}
 ```
 
 For full details on creating queries and other search capabilities, such as multisearch, source filtering and aggregations, please read [this](docs/search.md).
