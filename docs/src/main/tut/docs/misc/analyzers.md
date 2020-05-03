@@ -1,9 +1,3 @@
----
-layout: docs
-title:  "Analyzers"
-section: "docs"
----
-
 # Analyzers
 
 Analyzers are created from a single Tokenizer, zero or more TokenFilters and zero or more CharFilters and have a name that is used to refer to them.

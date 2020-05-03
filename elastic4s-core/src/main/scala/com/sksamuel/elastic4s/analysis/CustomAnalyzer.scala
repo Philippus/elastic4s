@@ -14,8 +14,8 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
   */
 case class CustomAnalyzer(override val name: String,
                           tokenizer: String,
-                          charFilters: List[String],
-                          tokenFilters: List[String],
+                          charFilters: List[String] = Nil,
+                          tokenFilters: List[String] = Nil,
                           positionIncrementGap: Int = 100) extends Analyzer {
   override def build: XContentBuilder = CustomAnalyzerBuilder.build(this)
 }

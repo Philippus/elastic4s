@@ -251,7 +251,7 @@ More examples on the create index syntax can be [found here](https://sksamuel.gi
 Analyzers control how Elasticsearch parses the fields for indexing. For example, you might decide that you want
 whitespace to be important, so that "band of brothers" is indexed as a single "word" rather than the default which is
 to split on whitespace. There are many advanced options available in analayzers. Elasticsearch also allows us to create
-custom analyzers. For more details [read about the DSL support for analyzers](https://sksamuel.github.io/elastic4s/docs/misc/analyzers.html).
+custom analyzers. For more details [see the documentation on analyzers](docs/analysis.md).
 
 ## Indexing
 
