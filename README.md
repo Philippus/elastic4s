@@ -230,13 +230,17 @@ will look like (eg what fields it will contain) as Elasticsearch will adapt the 
 To create an index called "places" that is fully dynamic we can simply use:
 
 ```scala
-client.execute { createIndex("places") }
+client.execute {
+  createIndex("places")
+}
 ```
 
-We can optionally set the number of shards and / or replicas
+We can optionally set the number of shards and/or replicas
 
 ```scala
-client.execute { createIndex("places") shards 3 replicas 2 }
+client.execute {
+  createIndex("places").shards(3).replicas(2)
+}
 ```
 
 Sometimes we want to specify the properties of the fields in the index in advance.
@@ -263,7 +267,7 @@ client.execute {
 }
 ```
 
-Then Elasticsearch is configured with those mappings for those fields only.
+Then Elasticsearch is preconfigured with those mappings for those fields.
 It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will have their type preset.
 
 More examples on the create index syntax can be [found here](https://sksamuel.github.io/elastic4s/docs/indices/createindex.html).
@@ -513,26 +517,25 @@ For all the options see [here](http://www.elasticsearch.org/guide/reference/quer
 ## Bulk Operations
 
 Elasticsearch is fast. Roundtrips are not. Sometimes we want to wrestle every last inch of performance and a useful way
-to do this is to batch up requests. Elastic has guessed our wishes and created the bulk API. To do this we simply
-wrap index, delete and update requests using the `bulk` keyword and pass to the `execute` method in the client.
+to do this is to batch up requests. We can do this in elasticsearch via the bulk API. A bulk request wraps index,
+delete and update requests in a single request.
 
 ```scala
 client.execute {
-  bulk (
-    indexInto("bands") fields "name"->"coldplay",
-    indexInto("bands") fields "name"->"kings of leon",
-    indexInto("bands") fields (
+  bulk(
+    indexInto("bands").fields("name" -> "coldplay"), // one index request
+    deleteById("bands", "123"), // a delete by id request
+    indexInto("bands").fields( // second index request
       "name" -> "elton john",
       "best_album" -> "tumbleweed connection"
     )
   )
 }
 ```
-A single HTTP or TCP request is now needed for 4 operations. In addition Elasticsearch can now optimize the requests,
-by combinging inserts or using aggressive caching.
+A single HTTP or TCP request is now needed for 3 operations. In addition Elasticsearch can now optimize the requests,
+by combining inserts or using aggressive caching.
 
-The example above uses simple documents just for clarity of reading; the usual optional settings can still be used.
-See more information on the [Bulk].
+For full details see the [docs on bulk operations](docs/bulk.md).
 
 ## Show Query JSON
 
@@ -609,7 +612,7 @@ using Akka. To use this, you need to add a dependency on the elastic4s-streams m
 There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
 stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.
 
-### Integrate
+### Dependencies
 
 First you have to add an additional dependency to your `build.sbt`
 
@@ -689,7 +692,7 @@ publisher.subscribe(subscriber)
 
 ## Using Elastic4s in your project
 
-For gradle users, add (replace 2.12 with 2.11 for Scala 2.11):
+For gradle users, add (replace 2.12 with 2.13 for Scala 2.13):
 
 ```groovy
 compile 'com.sksamuel.elastic4s:elastic4s-core_2.12:x.x.x'
@@ -701,7 +704,7 @@ For SBT users simply add:
 libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "x.x.x"
 ```
 
-For Maven users simply add (replace 2.12 with 2.11 for Scala 2.11):
+For Maven users simply add (replace 2.12 with 2.13 for Scala 2.13):
 
 ```xml
 <dependency>
