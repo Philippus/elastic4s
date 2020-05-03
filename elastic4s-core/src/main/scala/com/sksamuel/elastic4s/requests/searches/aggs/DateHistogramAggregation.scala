@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
+import java.util.TimeZone
+
 import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAgg
 import com.sksamuel.exts.OptionImplicits._
-import org.joda.time.DateTimeZone
 
 import scala.concurrent.duration.{FiniteDuration, _}
 
@@ -22,7 +23,7 @@ case class DateHistogramAggregation(name: String,
                                     fixedInterval: Option[DateHistogramInterval] = None,
                                     interval: Option[DateHistogramInterval] = None,
                                     minDocCount: Option[Long] = None,
-                                    timeZone: Option[DateTimeZone] = None,
+                                    timeZone: Option[TimeZone] = None,
                                     order: Option[HistogramOrder] = None,
                                     keyed: Option[Boolean] = None,
                                     offset: Option[String] = None,
@@ -44,8 +45,10 @@ case class DateHistogramAggregation(name: String,
 
   @deprecated("use fixedInterval", "7.2.0")
   def interval(seconds: Long): DateHistogramAggregation                   = interval(seconds.seconds)
+
   @deprecated("use fixedInterval", "7.2.0")
   def interval(dur: FiniteDuration): DateHistogramAggregation             = interval(DateHistogramInterval.seconds(dur.toSeconds))
+
   @deprecated("use calendarInterval or fixedInterval", "7.2.0")
   def interval(interval: DateHistogramInterval): DateHistogramAggregation = copy(interval = interval.some)
 
@@ -57,7 +60,7 @@ case class DateHistogramAggregation(name: String,
 
   def minDocCount(min: Long): DateHistogramAggregation = copy(minDocCount = min.some)
 
-  def timeZone(timeZone: DateTimeZone): DateHistogramAggregation = copy(timeZone = timeZone.some)
+  def timeZone(timeZone: TimeZone): DateHistogramAggregation = copy(timeZone = timeZone.some)
   def offset(offset: String): DateHistogramAggregation           = copy(offset = offset.some)
   def keyed(keyed: Boolean): T                                   = copy(keyed = keyed.some)
 

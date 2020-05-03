@@ -2,7 +2,7 @@
     "aggs": {
         "years": {
             "date_histogram": {
-                "interval": "1y",
+                "fixed_interval": "1y",
                 "min_doc_count": 0,
                 "field": "date"
             }

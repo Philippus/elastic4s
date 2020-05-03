@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.search
 
+import java.util.TimeZone
+
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
@@ -11,7 +13,6 @@ import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQuery
 import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
-import org.joda.time.DateTimeZone
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatestplus.mockito.MockitoSugar
@@ -604,7 +605,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for datehistogram aggregation" in {
     val req = search("music") aggs {
-      dateHistogramAggregation("years") field "date" interval DateHistogramInterval.Year minDocCount 0
+      dateHistogramAggregation("years").field("date").fixedInterval(DateHistogramInterval.Year).minDocCount(0)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
   }
@@ -618,7 +619,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for date range aggregation" in {
     val req = search("music") aggs {
-      dateRangeAgg("daterange_agg", "date").range("now-1Y", "now").unboundedFrom(ElasticDate("now-3m")).missing("wibble").timeZone(DateTimeZone.UTC)
+      dateRangeAgg("daterange_agg", "date").range("now-1Y", "now").unboundedFrom(ElasticDate("now-3m")).missing("wibble").timeZone(TimeZone.getTimeZone("UTC"))
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_daterange.json")
   }

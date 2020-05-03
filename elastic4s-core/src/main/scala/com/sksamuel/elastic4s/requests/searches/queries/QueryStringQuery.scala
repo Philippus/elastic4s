@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import java.util.TimeZone
+
 import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType
 import com.sksamuel.exts.OptionImplicits._
-import org.joda.time.DateTimeZone
 
 case class QueryStringQuery(query: String,
                             allowLeadingWildcard: Option[Boolean] = None,
@@ -37,6 +38,8 @@ case class QueryStringQuery(query: String,
   def boost(boost: Double): QueryStringQuery     = copy(boost = boost.some)
 
   def analyzer(a: String): QueryStringQuery   = copy(analyzer = a.some)
+
+  @deprecated("use the string version with the name of an analyzer", "7.7.0")
   def analyzer(a: Analyzer): QueryStringQuery = analyzer(a.name)
 
   def defaultOperator(op: String): QueryStringQuery = copy(defaultOperator = op.some)
@@ -104,5 +107,5 @@ case class QueryStringQuery(query: String,
   def matchType(t: MultiMatchQueryBuilderType): QueryStringQuery = copy(`type` = t.some)
 
   def timeZone(t: String): QueryStringQuery = copy(timeZone = t.some)
-  def timeZone(t: DateTimeZone): QueryStringQuery = timeZone(EnumConversions.timeZone(t))
+  def timeZone(t: TimeZone): QueryStringQuery = timeZone(EnumConversions.timeZone(t))
 }

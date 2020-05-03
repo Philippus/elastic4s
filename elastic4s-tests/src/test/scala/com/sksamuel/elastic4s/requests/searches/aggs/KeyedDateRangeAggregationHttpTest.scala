@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 import com.sksamuel.elastic4s.requests.searches.DateRangeBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -27,45 +28,45 @@ class KeyedDateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests wit
     )
   }.await
 
-  val dateFormatter: DateTimeFormatter = DateTimeFormat.forPattern("dd/MM/yyyy")
+  val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
   client.execute(
     bulk(
       indexInto("daterangeaggs").fields("name" -> "Breaking Bad",
-        "premiere_date" -> DateTime
+        "premiere_date" -> LocalDateTime
           .now()
           .minusYears(10)
-          .toString(dateFormatter)),
+          .format(dateFormatter)),
       indexInto("daterangeaggs").fields("name" -> "Better Call Saul",
-        "premiere_date" -> DateTime
+        "premiere_date" -> LocalDateTime
           .now()
           .minusYears(5)
           .minusMonths(1)
-          .toString(dateFormatter)),
+          .format(dateFormatter)),
       indexInto("daterangeaggs").fields("name" -> "Star Trek Discovery",
-        "premiere_date" -> DateTime
+        "premiere_date" -> LocalDateTime
           .now()
           .minusYears(2)
           .minusMonths(6)
-          .toString(dateFormatter)),
+          .format(dateFormatter)),
       indexInto("daterangeaggs").fields("name" -> "Game of Thrones",
-        "premiere_date" -> DateTime
+        "premiere_date" -> LocalDateTime
           .now()
           .minusYears(9)
           .minusMonths(6)
-          .toString(dateFormatter)),
+          .format(dateFormatter)),
       indexInto("daterangeaggs").fields("name" -> "Designated Survivor",
-        "premiere_date" -> DateTime
+        "premiere_date" -> LocalDateTime
           .now()
           .minusYears(3)
           .minusMonths(1)
-          .toString(dateFormatter)),
+          .format(dateFormatter)),
       indexInto("daterangeaggs").fields("name" -> "Walking Dead",
-        "premiere_date" -> DateTime
+        "premiere_date" -> LocalDateTime
           .now()
           .minusYears(8)
           .minusMonths(3)
-          .toString(dateFormatter))
+          .format(dateFormatter))
     ).refreshImmediately
   ).await
 

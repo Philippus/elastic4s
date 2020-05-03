@@ -10,7 +10,7 @@ class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
   test("cumulative sum agg should match the basic spec"){
     val search = SearchRequest("myIndex").aggs(
       dateHistogramAgg("sales_per_month", "date")
-        .interval(DateHistogramInterval.Month)
+        .fixedInterval(DateHistogramInterval.Month)
         .subaggs(
           Seq(
             sumAggregation("sales").field("price"),
@@ -23,7 +23,7 @@ class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
         )
     )
     SearchBodyBuilderFn(search).string() shouldBe
-      """{"aggs":{"sales_per_month":{"date_histogram":{"interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"cumulative_sales":{"cumulative_sum":{"buckets_path":"sales","format":"$"},"meta":{"color":"blue"}}}}}}"""
+      """{"aggs":{"sales_per_month":{"date_histogram":{"fixed_interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"cumulative_sales":{"cumulative_sum":{"buckets_path":"sales","format":"$"},"meta":{"color":"blue"}}}}}}"""
   }
 
 }

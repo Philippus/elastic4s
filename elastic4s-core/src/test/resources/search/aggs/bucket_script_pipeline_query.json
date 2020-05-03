@@ -2,7 +2,7 @@
     "aggs": {
         "sales_per_month": {
             "date_histogram": {
-                "interval": "1M",
+                "fixed_interval": "1M",
                 "field": "date"
             },
             "aggs": {
