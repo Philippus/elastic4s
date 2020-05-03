@@ -138,7 +138,9 @@ a local ElasticSearch Docker container for development. This is the same strateg
 
 ```scala
 import com.sksamuel.elastic4s.http.JavaClient
-import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, ElasticProperties}
+import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.searches.SearchResponse
+import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties, RequestFailure, RequestSuccess}
 
 object ArtistIndex extends App {
 
