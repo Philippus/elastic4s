@@ -12,10 +12,10 @@ import scala.concurrent.duration.{FiniteDuration, _}
 
 case class HistogramOrder(name: String, asc: Boolean)
 object HistogramOrder {
-  val KEY_ASC: HistogramOrder = HistogramOrder("_key", asc = true)
-  val KEY_DESC: HistogramOrder = HistogramOrder("_key", asc = false)
-  val COUNT_ASC: HistogramOrder = HistogramOrder("_count", asc = true)
-  val COUNT_DESC: HistogramOrder = HistogramOrder("_count", asc = false)
+  val KEY_ASC    = HistogramOrder("_key", asc = true)
+  val KEY_DESC   = HistogramOrder("_key", asc = false)
+  val COUNT_ASC  = HistogramOrder("_count", asc = true)
+  val COUNT_DESC = HistogramOrder("_count", asc = false)
 }
 
 case class DateHistogramAggregation(name: String,
@@ -42,6 +42,15 @@ case class DateHistogramAggregation(name: String,
   def extendedBounds(bounds: ExtendedBounds): DateHistogramAggregation = copy(extendedBounds = bounds.some)
   def extendedBounds(min: ElasticDate, max: ElasticDate): DateHistogramAggregation =
     copy(extendedBounds = ExtendedBounds(min, max).some)
+
+  @deprecated("use fixedInterval", "7.2.0")
+  def interval(seconds: Long): DateHistogramAggregation                   = interval(seconds.seconds)
+
+  @deprecated("use fixedInterval", "7.2.0")
+  def interval(dur: FiniteDuration): DateHistogramAggregation             = interval(DateHistogramInterval.seconds(dur.toSeconds))
+
+  @deprecated("use calendarInterval or fixedInterval", "7.2.0")
+  def interval(interval: DateHistogramInterval): DateHistogramAggregation = copy(interval = interval.some)
 
   def calendarInterval(calendarInterval: DateHistogramInterval): DateHistogramAggregation = copy(calendarInterval = calendarInterval.some)
 

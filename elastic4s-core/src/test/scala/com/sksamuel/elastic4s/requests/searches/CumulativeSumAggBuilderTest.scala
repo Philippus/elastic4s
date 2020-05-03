@@ -10,7 +10,7 @@ class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
   test("cumulative sum agg should match the basic spec"){
     val search = SearchRequest("myIndex").aggs(
       dateHistogramAgg("sales_per_month", "date")
-        .interval(DateHistogramInterval.Month)
+        .fixedInterval(DateHistogramInterval.Month)
         .subaggs(
           Seq(
             sumAggregation("sales").field("price"),
