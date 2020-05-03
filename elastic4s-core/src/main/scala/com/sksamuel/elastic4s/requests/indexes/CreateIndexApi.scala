@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes
 
+import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, TokenFilter, Tokenizer}
 import com.sksamuel.elastic4s.requests.mappings.{FieldDefinition, MappingDefinition}
 
@@ -23,6 +24,8 @@ trait CreateIndexApi {
 
   def properties(field: FieldDefinition, tail: FieldDefinition*): MappingDefinition = mapping(field +: tail)
   def properties(fields: Seq[FieldDefinition] = Nil): MappingDefinition = MappingDefinition(fields)
+
+  def properties(field: ElasticField, tail: ElasticField*): MappingDefinition = MappingDefinition(properties = field +: tail)
 
   @deprecated("This method is now called properties as types are deprecated in 7.0", "7.0.0")
   def mapping(field: FieldDefinition, tail: FieldDefinition*): MappingDefinition = mapping(field +: tail)

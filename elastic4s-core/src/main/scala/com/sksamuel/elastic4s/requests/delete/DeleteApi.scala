@@ -15,7 +15,7 @@ trait DeleteApi {
     def by(query: Query): DeleteByQueryRequest = DeleteByQueryRequest(indexesAndTypes, query)
   }
 
-  @deprecated("use deleteById(id, index)"
+  @deprecated("use deleteById(id, index)")
   def delete(id: String): DeleteByIdExpectsFrom = new DeleteByIdExpectsFrom(id)
   class DeleteByIdExpectsFrom(id: String) {
     def from(index: Index): DeleteByIdRequest = DeleteByIdRequest(index, id)

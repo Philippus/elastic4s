@@ -9,13 +9,13 @@ trait UpdateApi {
 
   def updateByQuery(index: Index, query: Query): UpdateByQueryRequest = UpdateByQueryRequest(index.name, query)
 
-  @deprecated("use updateById")
+  @deprecated("use updateById", "7.7")
   def update(id: String): UpdateExpectsIn = new UpdateExpectsIn(id)
   class UpdateExpectsIn(id: String) {
     def in(index: Index): UpdateRequest = UpdateRequest(index, id)
   }
 
-  @deprecated("use updateByQuery")
+  @deprecated("use updateByQuery", "7.7")
   def updateIn(indexes: Indexes): UpdateExpectsQuery = new UpdateExpectsQuery(indexes)
 
   class UpdateExpectsQuery(indexes: Indexes) {

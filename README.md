@@ -130,10 +130,10 @@ index and index a one field document. Then we will search for that document usin
 a local ElasticSearch Docker container for development. This is the same strategy used in the [tests](https://github.com/sksamuel/elastic4s/blob/master/elastic4s-testkit/src/main/scala/com/sksamuel/elastic4s/testkit/DockerTests.scala).
 
 ```scala
+import com.sksamuel.elastic4s.fields.TextField
 import com.sksamuel.elastic4s.http.JavaClient
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.SearchResponse
-import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties, RequestFailure, RequestSuccess}
 
 object ArtistIndex extends App {
 
@@ -149,9 +149,9 @@ object ArtistIndex extends App {
   // the calling thread but is useful when testing
   client.execute {
     createIndex("artists").mapping(
-        properties(
-          textField("name")
-        )
+      properties(
+        TextField("name")
+      )
     )
   }.await
 
@@ -164,7 +164,7 @@ object ArtistIndex extends App {
 
   // now we can search for the document we just indexed
   val resp = client.execute {
-    search("artists") query "lowry"
+    search("artists").query("lowry")
   }.await
 
   // resp is a Response[+U] ADT consisting of either a RequestFailure containing the
@@ -183,6 +183,7 @@ object ArtistIndex extends App {
 
   client.close()
 }
+
 ```
 
 
@@ -243,18 +244,14 @@ or multiple other options
 To do this we add mappings:
 
 ```scala
-import com.sksamuel.elastic4s.mappings.FieldType._
-import com.sksamuel.elastic4s.analyzers.StopAnalyzer
-
 client.execute {
     createIndex("cities").mapping(
         properties(
             keywordField("id"),
-            textField("name") boost 4,
-            textField("content") analyzer StopAnalyzer,
+            textField("name").boost(4),
+            textField("content"),
             keywordField("country"),
-            keywordField("continent"),
-            keywordField("status")
+            keywordField("continent")
         )
     )
 }
@@ -356,22 +353,22 @@ search("cities")
 
 We might want to limit the number of results and / or set the offset.
 ```scala
-search("cities") query "paris" start 5 limit 10
+search("cities").query("paris").start(5).limit(10)
 ```
 
 We can search against certain fields only:
 ```scala
-search("cities") query termQuery("country", "France")
+search("cities").query (ermQuery("country", "France"))
 ```
 
 Or by a prefix:
 ```scala
-search("cities") query prefixQuery("country", "France")
+search("cities").query(prefixQuery("country", "France"))
 ```
 
 Or by a regular expression (slow, but handy sometimes!):
 ```scala
-search("cities") query regexQuery("country", "France")
+search("cities").query(regexQuery("country", "France"))
 ```
 
 There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
@@ -402,7 +399,7 @@ implicit object CharacterHitReader extends HitReader[Character] {
 }
 
 val resp = client.execute {
-  search("gameofthrones" / "characters").query("kings landing")
+  search("gameofthrones").query("kings landing")
 }.await // don't block in real code
 
 // .to[Character] will look for an implicit HitReader[Character] in scope
@@ -484,8 +481,8 @@ We can update existing documents without having to do a full index, by updating 
 
 ```scala
 client.execute {
-  update("25").in("starwars_characters").docAsUpsert (
-    "character" -> "chewie",
+  updateById("starwars", "chewie").docAsUpsert (
+    "name" -> "chewbacca",
     "race" -> "wookie"
   )
 }
@@ -499,8 +496,8 @@ If you want to return documents that are "similar" to  a current document we can
 
 ```scala
 client.execute {
-  search("drinks") query {
-    moreLikeThisQuery("name").likeTexts("coors", "beer", "molson") minTermFreq 1 minDocFreq 1
+  search("drinks").query {
+    moreLikeThisQuery("name").likeTexts("coors", "beer", "molson").minTermFreq(1).minDocFreq(1)
   }
 }
 ```
@@ -538,7 +535,7 @@ Elastic4s makes it easy to get this json where possible. Simply invoke the `show
 
 ```scala
 val json = client.show {
-  search("music") query "coldplay"
+  search("music").query("coldplay")
 }
 println(json)
 ```
@@ -553,7 +550,7 @@ All operations are normally asynchronous. Sometimes though you might want to blo
 
 ```scala
 val resp = client.execute {
-  index("bands") fields ("name"->"coldplay", "debut"->"parachutes")
+  indexInto("bands").fields("name" -> "coldplay", "debut" -> "parachutes")
 }.await
 ```
 
