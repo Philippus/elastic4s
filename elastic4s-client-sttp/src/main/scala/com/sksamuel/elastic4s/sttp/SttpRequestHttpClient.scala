@@ -100,5 +100,4 @@ object SttpRequestHttpClient {
   /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
   def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(
     defaultEc, defaultSttpBackend)
-
 }
