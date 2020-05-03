@@ -16,7 +16,6 @@ val ElasticsearchVersion   = "7.6.2"
 val ExtsVersion            = "1.61.1"
 val JacksonVersion         = "2.10.3"
 val Json4sVersion          = "3.6.7"
-val AWSJavaSdkVersion      = "2.7.1"
 val Log4jVersion           = "2.13.2"
 val MockitoVersion         = "3.3.3"
 val MonixVersion           = "3.1.0"
@@ -165,7 +164,6 @@ lazy val core = (project in file("elastic4s-core"))
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "joda-time" % "joda-time" % "2.10.6",
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
@@ -274,8 +272,7 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
   .settings(
     libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
     libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library"),
-    libraryDependencies += "com.fasterxml.jackson.datatype" % "jackson-datatype-joda" % JacksonVersion
+    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
   )
 
 lazy val circe = (project in file("elastic4s-json-circe"))

@@ -14,5 +14,4 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.12.6'
     compile 'com.sksamuel.elastic4s:elastic4s-http_2.12:6.3.3'
     compile 'org.apache.lucene:lucene-core:6.5.1'
-    compile 'joda-time:joda-time:2.9.9'
 }

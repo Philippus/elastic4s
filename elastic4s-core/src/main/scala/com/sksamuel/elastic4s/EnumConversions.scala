@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import java.util.TimeZone
+
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
@@ -13,7 +15,6 @@ import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{Fuzziness, SortBy, StringDistance, SuggestMode}
 import com.sksamuel.elastic4s.requests.searches.{DateHistogramInterval, QueryRescoreMode, ScoreMode}
-import org.joda.time.DateTimeZone
 
 object EnumConversions {
 
@@ -69,7 +70,7 @@ object EnumConversions {
     builder.endObject()
   }
 
-  def timeZone(zone: DateTimeZone): String = zone.getID
+  def timeZone(zone: TimeZone): String = zone.getID
 
   def interval(interval: DateHistogramInterval): String = interval.interval
 

@@ -1,16 +1,17 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
+import java.util.TimeZone
+
 import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.exts.OptionImplicits._
-import org.joda.time.DateTimeZone
 
 case class DateRangeAggregation(name: String,
                                 field: Option[String] = None,
                                 script: Option[Script] = None,
                                 missing: Option[AnyRef] = None,
                                 format: Option[String] = None,
-                                timeZone: Option[DateTimeZone] = None,
+                                timeZone: Option[TimeZone] = None,
                                 keyed: Option[Boolean] = None,
                                 ranges: Seq[(Option[String], ElasticDate, ElasticDate)] = Nil,
                                 unboundedFrom: List[(Option[String], ElasticDate)] = Nil,
@@ -21,7 +22,7 @@ case class DateRangeAggregation(name: String,
 
   type T = DateRangeAggregation
 
-  def timeZone(timeZone: DateTimeZone): DateRangeAggregation = copy(timeZone = timeZone.some)
+  def timeZone(timeZone: TimeZone): DateRangeAggregation = copy(timeZone = timeZone.some)
   def keyed(keyed: Boolean): DateRangeAggregation            = copy(keyed = keyed.some)
   def field(field: String): DateRangeAggregation             = copy(field = field.some)
   def script(script: Script): DateRangeAggregation           = copy(script = script.some)
