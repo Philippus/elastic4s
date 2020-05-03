@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.analysis.tokenizers
 
+import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.analysis.EdgeNGramTokenizer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class EdgeNGramTokenizerBuilderTest extends AnyWordSpec with Matchers {
+class EdgeNGramTokenizerBuilderTest extends AnyWordSpec with Matchers with ElasticDsl {
 
   "EdgeNGramTokenizer" should {
     "build json" in {

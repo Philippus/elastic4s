@@ -29,6 +29,7 @@ case class TextField(override val name: String,
                      termVector: Option[String] = None,
                      meta: Map[String, String] = Map.empty) extends ElasticField {
   override def `type`: String = "text"
+  def analyzer(name:String): TextField = copy(analyzer = Option(name))
 }
 
 case class SearchAsYouTypeField(name: String,

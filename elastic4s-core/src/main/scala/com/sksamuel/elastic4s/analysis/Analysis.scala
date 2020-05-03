@@ -8,6 +8,10 @@ case class Analysis(analyzers: List[Analyzer],
                     charFilters: List[CharFilter] = Nil,
                     normalizers: List[Normalizer] = Nil)
 
+object Analysis {
+  def apply(analyzer: Analyzer): Analysis = Analysis(analyzers = List(analyzer))
+}
+
 object AnalysisBuilder extends Builder[Analysis] {
   override def build(a: Analysis): XContentBuilder = {
 

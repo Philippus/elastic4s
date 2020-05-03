@@ -137,7 +137,7 @@ case class PathHierarchyTokenizer(override val name: String,
 }
 
 case class WhitespaceTokenizer(override val name: String,
-                               maxTokenLength: Char = '/') extends Tokenizer {
+                               maxTokenLength: Int) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -148,7 +148,7 @@ case class WhitespaceTokenizer(override val name: String,
 }
 
 case class ClassicTokenizer(override val name: String,
-                            maxTokenLength: Char = '/') extends Tokenizer {
+                            maxTokenLength: Int) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
