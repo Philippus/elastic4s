@@ -491,7 +491,7 @@ client.execute {
   )
 }
 ```
-A single HTTP or TCP request is now needed for 3 operations. In addition Elasticsearch can now optimize the requests,
+A single HTTP request is now needed for 3 operations. In addition Elasticsearch can now optimize the requests,
 by combining inserts or using aggressive caching.
 
 For full details see the [docs on bulk operations](docs/bulk.md).
