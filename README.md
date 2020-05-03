@@ -280,7 +280,7 @@ We must also include at least one field. Fields are specified as standard tuples
 
 ```scala
 client.execute {
-  indexInto("cities") id "123" fields (
+  indexInto("cities").id("123").fields(
     "name" -> "London",
     "country" -> "United Kingdom",
     "continent" -> "Europe",
@@ -424,32 +424,32 @@ Just think when you're in google and you see the snippets underneath your result
 We can use this very easily, just add a highlighting definition to your search request, where you set the field or fields to be highlighted. Viz:
 
 ```scala
-search in "music" query "kate bush" highlighting (
-  highlight field "body" fragmentSize 20
+search("music").query("kate bush").highlighting (
+  highlight("body").fragmentSize(20)
 )
 ```
 
 All very straightforward. There are many options you can use to tweak the results. In the example above I have
 simply set the snippets to be taken from the field called "body" and to have max length 20. You can set the number of fragments to return, seperate queries to generate them and other things. See the elasticsearch page on [highlighting](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-highlighting.html) for more info.
 
-## Get
+## Get / Multiget
 
 Sometimes we don't want to search and want to retrieve a document directly from the index by id.
-In this example we are retrieving the document with id 'coldplay' from the bands/rock index and type.
+In this example we are retrieving the document with id 'coldplay' from the `bands` index.
 
 ```scala
 client.execute {
- get("coldplay").from("bands")
+  get("bands", "coldplay")
 }
 ```
 
-We can get multiple documents at once too. Notice the following multiget wrapping block.
+We can fetch multiple documents at once using the `multiget` wrapper.
 
 ```scala
 client.execute {
   multiget(
-    get("coldplay").from("bands"),
-    get("keane").from("bands")
+    get("bands", "coldplay"),
+    get("bands", "marillion")
   )
 }
 ```
@@ -458,21 +458,21 @@ See more [get examples] and usage of [Multiget] here.
 
 ## Deleting
 
-In the rare case that we become tired of a band we might want to remove them. Naturally we wouldn't want to remove Chris Martin and boys so we're going to remove U2 instead.
-We think they're a little past their best (controversial). This operation assumes the id of the document is "u2".
+We can remove documents using the `deleteById` request.
+We're going to remove the "u2" document from the "bands" index.
 
 ```scala
 client.execute {
-  delete("u2").from("bands")
+  deleteById("bands", "u2")
 }
 ```
 
-We can take this a step further by deleting by a query rather than id.
+We can take this a step further by deleting using a query rather than directly by id.
 In this example we're deleting all bands where their type is pop.
 
 ```scala
 client.execute {
-  deleteIn("bands").by(termQuery("type", "pop"))
+  deleteByQuery("bands", termQuery("type", "pop"))
 }
 ```
 
