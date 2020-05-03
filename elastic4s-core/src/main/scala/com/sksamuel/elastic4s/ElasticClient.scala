@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s
 
 import com.sksamuel.exts.Logging
 
+import scala.concurrent.duration.{Duration, _}
 import scala.language.higherKinds
 
 /**
@@ -29,9 +30,23 @@ case class ElasticClient(client: HttpClient) extends Logging {
                                 executor: Executor[F],
                                 functor: Functor[F],
                                 handler: Handler[T, U],
-                                manifest: Manifest[U]): F[Response[U]] = {
+                                manifest: Manifest[U],
+                                options: CommonRequestOptions): F[Response[U]] = {
     val request = handler.build(t)
-    val f = executor.exec(client, request)
+
+    val request2 = if (options.timeout.toMillis > 0) {
+      request.addParameter("timeout", options.timeout.toMillis + "ms")
+    } else {
+      request
+    }
+
+    val request3 = if (options.masterNodeTimeout.toMillis > 0) {
+      request2.addParameter("master_timeout", options.masterNodeTimeout.toMillis + "ms")
+    } else {
+      request2
+    }
+
+    val f = executor.exec(client, request3)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {
         case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
@@ -40,5 +55,12 @@ case class ElasticClient(client: HttpClient) extends Logging {
     }
   }
 
+
   def close(): Unit = client.close()
+}
+
+case class CommonRequestOptions(timeout: Duration, masterNodeTimeout: Duration)
+
+object CommonRequestOptions {
+  implicit val defaults: CommonRequestOptions = CommonRequestOptions(0.seconds, 0.seconds)
 }

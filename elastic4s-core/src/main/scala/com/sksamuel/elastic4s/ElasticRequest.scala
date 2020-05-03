@@ -5,7 +5,10 @@ package com.sksamuel.elastic4s
   * sent to Elasticsearch. Request types such as [[com.sksamuel.elastic4s.requests.searches.SearchRequest]],
   * etc, are ultimately converted into this class by means of a [[Handler]] typeclass instance.
   */
-case class ElasticRequest(method: String, endpoint: String, params: Map[String, String], entity: Option[HttpEntity])
+case class ElasticRequest(method: String, endpoint: String, params: Map[String, String], entity: Option[HttpEntity]) {
+  def addParameter(name: String, value: String): ElasticRequest = copy(params = params + (name, value))
+}
+
 object ElasticRequest {
 
   def apply(method: String, endpoint: String): ElasticRequest = apply(method, endpoint, Map.empty[String, Any])
