@@ -52,9 +52,13 @@ trait TypesApi {
 
   def scriptField(name: String, script: String): ScriptField = ScriptField(name, script)
   def scriptField(name: String, script: Script): ScriptField = ScriptField(name, script)
+
+  @deprecated("use scriptField(name script)")
   def scriptField(name: String): ExpectsScript               = ExpectsScript(name)
   case class ExpectsScript(name: String) {
+    @deprecated("use scriptField(name script)")
     def script(script: String): ScriptField = ScriptField(name, script)
+    @deprecated("use scriptField(name script)")
     def script(script: Script): ScriptField = ScriptField(name, script)
   }
 }

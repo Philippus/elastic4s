@@ -284,22 +284,29 @@ There are many additional options we can set such as routing, version, parent, t
 See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options, all of
 which exist in the DSL as keywords that reflect their name in the official API.
 
-## Indexing Typeclass
 
-Sometimes it is useful to index directly from your domain model, and not have to create maps of fields inline. For this
-elastic4s provides the `Indexable` typeclass. Simply provide an implicit instance of `Indexable[T]` in scope for any
-class T that you wish to index, and then you can use `doc(t)` on the index request. For example:
+
+
+## Indexable Typeclass
+
+Sometimes it is useful to create documents directly from your domain model instead of manually creating maps of fields.
+To achieve this, elastic4s provides the `Indexable` typeclass.
+
+If you provide an implicit instance of `Indexable[T]` in scope for any
+class T that you wish to index, and then you can invoke `doc(t)` on the `IndexRequest`.
+
+For example:
 
 ```scala
 // a simple example of a domain model
 case class Character(name: String, location: String)
 
-// how you turn the type into json is up to you
+// turn instances of characters into json
 implicit object CharacterIndexable extends Indexable[Character] {
   override def json(t: Character): String = s""" { "name" : "${t.name}", "location" : "${t.location}" } """
 }
 
-// now the index request reads much cleaner
+// now index requests can directly use characters as docs
 val jonsnow = Character("jon snow", "the wall")
 client.execute {
   indexInto("gameofthrones").doc(jonsnow)
@@ -307,11 +314,11 @@ client.execute {
 ```
 
 Some people prefer to write typeclasses manually for the types they need to support. Other people like to just have
-it done automagically. For those people, elastic4s provides extensions for the well known Scala Json libraries that
+it done automagically. For the latter, elastic4s provides extensions for the well known Scala Json libraries that
 can be used to generate Json generically.
 
-Simply add the import for your chosen library below and then with those implicits in scope, you can now pass any type
- you like to `doc` and an Indexable will be derived automatically.
+To use this, add the import for your chosen library below and bring the implicits into scope. Then you can pass any case class
+instance to `doc` and an `Indexable` will be derived automatically.
 
 | Library | Elastic4s Module | Import |
 |---------|------------------|--------|
@@ -321,55 +328,27 @@ Simply add the import for your chosen library below and then with those implicit
 |[PlayJson](https://github.com/playframework/play-json)|[elastic4s-json-play](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-play)|import com.sksamuel.elastic4s.playjson._|
 |[Spray Json](https://github.com/spray/spray-json)|[elastic4s-json-spray](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)|import com.sksamuel.elastic4s.sprayjson._|
 
+
+
+
+
 ## Searching
 
-Searching is naturally the most involved operation.
-There are many ways to do [searching in Elasticsearch](http://www.elasticsearch.org/guide/reference/api/search/) and that is reflected
-in the higher complexity of the query DSL.
+To execute a [search](http://www.elasticsearch.org/guide/reference/api/search/) in elastic4s, we need to pass an instance of `SearchRequest` to our client.
 
-To do a simple text search, where the query is parsed from a single string
+One way to do this is to invoke `search` and pass in the index name. From there, you can call
+`query` and pass in the type of query you want to perform.
+
+For example, to perform a simple text search, where the query is parsed from a single string we can do:
+
 ```scala
 search("cities").query("London")
 ```
 
-That is actually an example of a SimpleStringQueryDefinition. The string is implicitly converted to that type of query.
-It is the same as specifying the query type directly:
+For full details on creating queries and other search capabilities, such as multisearch, source filtering and aggregations, please read [this](docs/search.md).
 
-```scala
-search("cities").query(simpleStringQuery("London"))
-```
 
-The simple string example is the only time we don't need to specify the query type.
-We can search for everything by not specifying a query at all.
-```scala
-search("cities")
-```
 
-We might want to limit the number of results and / or set the offset.
-```scala
-search("cities").query("paris").start(5).limit(10)
-```
-
-We can search against certain fields only:
-```scala
-search("cities").query (ermQuery("country", "France"))
-```
-
-Or by a prefix:
-```scala
-search("cities").query(prefixQuery("country", "France"))
-```
-
-Or by a regular expression (slow, but handy sometimes!):
-```scala
-search("cities").query(regexQuery("country", "France"))
-```
-
-There are many other types, such as range for numeric fields, wildcards, distance, geo shapes, matching.
-
-Read more about search syntax: [Search]
-Read about [Multisearch].
-Read about [Suggestions].
 
 ## HitReader Typeclass
 
@@ -378,7 +357,7 @@ index, type, version, etc as well as the document source as a string or map. Ela
 back to meaningful domain types quite easily using the `HitReader[T]` typeclass.
 
 Provide an implementation of this typeclass, as an in scope implicit, for whatever type you wish to marshall search responses into, and then you can call `to[T]` or `safeTo[T]` on the response.
-The difference between to and safeTo is that to will drop any errors and just return successful conversions, whereas safeTo returns
+The difference between `to` and `safeTo` is that `to` will drop any errors and just return successful conversions, whereas safeTo returns
 a sequence of `Either[Throwable, T]`.
 
 A full example:
@@ -388,7 +367,8 @@ case class Character(name: String, location: String)
 
 implicit object CharacterHitReader extends HitReader[Character] {
   override def read(hit: Hit): Either[Throwable, Character] = {
-    Right(Character(hit.sourceAsMap("name").toString, hit.sourceAsMap("location").toString))
+    val source = hit.sourceAsMap
+    Right(Character(source("name").toString, source("location").toString))
   }
 }
 
@@ -406,6 +386,9 @@ out of the box for any types. The imports are the same as for the Indexable type
 
 As a bonus feature of the Jackson implementation, if your domain object has fields called `_timestamp`, `_id`, `_type`, `_index`, or
 `_version` then those special fields will be automatically populated as well.
+
+
+
 
 ## Highlighting
 
@@ -572,22 +555,6 @@ batch have been iterated on, the `SearchIterator` will then execute another quer
 So if you are looking for a pure non blocking solution, consider the reactive streams implementation. However, if you just want a
 quick and simple way to iterate over some data without bringing back all the results at once `SearchIterator` is perfect.
 
-## DSL Completeness
-
-As it stands the Scala DSL covers all of the common operations - index, create, delete, delete by query, search, validate, percolate, update, explain, get, and bulk operations.
-There is good support for the various settings for each of these - more so than the Java client provides in the sense that more settings are provided in a type safe manner.
-
-However there are settings and operations (mostly admin / cluster related) that the DSL does not yet cover (pull requests welcome!).
-In these cases it is necessary to drop back to the Java API.
-This can be done by calling .java on the client object to get the underlying java elastic client,
-
-```scala
-client.java.admin.cluster.prepareHealth.setWaitForEvents(Priority.LANGUID).setWaitForGreenStatus().execute().actionGet
-```
-
-This way you can still access everything the normal Java client covers in the cases
-where the Scala DSL is missing a construct, or where there is no need to provide a DSL.
-
 ## Elastic Reactive Streams
 
 Elastic4s has an implementation of the [reactive streams](http://www.reactive-streams.org) api for both publishing and subscribing that is built
@@ -596,83 +563,7 @@ using Akka. To use this, you need to add a dependency on the elastic4s-streams m
 There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
 stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.
 
-### Dependencies
-
-First you have to add an additional dependency to your `build.sbt`
-
-```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "x.x.x"
-```
-
-or
-
-```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % "x.x.x"
-```
-
-Import the new API with
-
-```scala
-import com.sksamuel.elastic4s.streams.ReactiveElastic._
-```
-
-### Publisher
-
-An elastic publisher can be created for any arbitrary query you wish, and then using the efficient search scroll API, the entire dataset that matches your query is streamed out to subscribers.
-
-And make sure you have an Akka Actor System in implicit scope
-
-`implicit val system = ActorSystem()`
-
-Then create a publisher from the client using any query you want. You must specify the scroll parameter, as the publisher
-uses the scroll API.
-
-`val publisher = client.publisher(search in "myindex" query "sometext" scroll "1m")`
-
-Now you can add subscribers to this publisher. They can of course be any type that adheres to the reactive-streams api,
-so you could stream out to a mongo database, or a filesystem, or whatever custom type you want.
-
-`publisher.subscribe(someSubscriber)`
-
-If you just want to stream out an entire index then you can use the overloaded form:
-
-`val publisher = client.publisher("index1", keepAlive = "1m")`
-
-### Subscription
-
-An elastic subcriber can be created that will stream a request to elasticsearch for each item produced by a publisher.
-The subscriber can create index, update, or delete requests, so is a good way to synchronize datasets.
-
-`import ReactiveElastic._`
-
-And make sure you have an Akka Actor System in implicit scope.
-
-`implicit val system = ActorSystem()`
-
-Then create a subscriber, specifying the following parameters:
-
-* A type parameter that is the type of object that the publisher will provide
-* How many documents should be included per index batch (10-100 is usually good)
-* How many concurrent batches should be in flight (usually around the number of cores)
-* An optional `ResponseListener` that will be notified for each item that was successfully acknowledged by the es cluster
-* An optional function that will be called once the subscriber has received all data. Defaults to a no-op
-* An optional function to call if the subscriber encouters an error. Defaults to a no-op.
-
-In addition there should be a further implicit in scope of type `RequestBuilder[T]` that will accept objects of T (the type produced by your publisher) and build an index, update, or delete request suitable for dispatchin to elasticsearch.
-
-```scala
-implicit val builder = new RequestBuilder[SomeType] {
-  import ElasticDsl._
-  // the request returned doesn't have to be an index - it can be anything supported by the bulk api
-  def request(t: T): BulkCompatibleRequest =  index into "index" / "type" fields ....
-}
-```
-Then the subscriber can be created, and attached to a publisher:
-
-```scala
-val subscriber = client.subscriber[SomeType](batchSize, concurrentBatches, () => println "all done")
-publisher.subscribe(subscriber)
-```
+For full details read the [streams documentation](docs/streams.md)
 
 ## Using Elastic4s in your project
 
