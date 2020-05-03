@@ -43,13 +43,14 @@ case class FingerprintAnalyzer(override val name: String,
                                maxOutputSize: Int = 255) extends Analyzer {
   def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
-    b.field("type", "standard")
+    b.field("type", "fingerprint")
     separator.foreach(b.field("separator", _))
     b.array("stopwords", stopwords.toArray)
     b.field("max_output_size", maxOutputSize)
     b.endObject()
   }
 
+  def separator(separator: String): FingerprintAnalyzer = copy(separator = Option(separator))
   def stopwords(stopwords: Iterable[String]): FingerprintAnalyzer = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): FingerprintAnalyzer = copy(stopwords = stopwords +: rest)
   def maxOutputSize(maxOutputSize: Int): FingerprintAnalyzer = copy(maxOutputSize = maxOutputSize)
