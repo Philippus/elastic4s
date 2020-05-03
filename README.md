@@ -511,7 +511,7 @@ println(json)
 
 Not all requests have a json body. For example _get-by-id_ is modelled purely by http query parameters, there is no json body to output. And some requests aren't supported by the show method - you will get an implicit not found error during compliation if that is the case
 
-Also, as a reminder, the TCP client does not send JSON to the nodes, it uses a binary protocol, so the provided JSON should be used as a debugging tool only. For the HTTP client the output is exactly what is sent.
+
 
 ## Synchronous Operations
 
@@ -522,6 +522,8 @@ val resp = client.execute {
   indexInto("bands").fields("name" -> "coldplay", "debut" -> "parachutes")
 }.await
 ```
+
+
 
 ## Search Iterator
 
