@@ -6,7 +6,7 @@ package com.sksamuel.elastic4s
   * etc, are ultimately converted into this class by means of a [[Handler]] typeclass instance.
   */
 case class ElasticRequest(method: String, endpoint: String, params: Map[String, String], entity: Option[HttpEntity]) {
-  def addParameter(name: String, value: String): ElasticRequest = copy(params = params + (name, value))
+  def addParameter(name: String, value: String): ElasticRequest = copy(params = params + (name -> value))
 }
 
 object ElasticRequest {
