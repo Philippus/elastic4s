@@ -189,14 +189,15 @@ If you wish to use ZIO, Cats-Effect, Monix or Scalaz, then read this page on [al
 
 
 
-## Near Real-time search results
+## Index Refreshing
 
-When you index a document in Elasticsearch, it is not normally immediately available to be searched, as a refresh has to happen to make it available for the search API. By default a refresh occurs every second but this can be increased if needed. Note that this impacts only the visibility of newly indexed documents when using the search API and has nothing
+When you index a document in Elasticsearch, usually it is not immediately available to be searched, as a _refresh_ has to happen to make it visible to the search API.
+
+By default a refresh occurs every second but this can be changed if needed.
+Note that this only impacts the visibility of newly indexed documents and has nothing
 to do with data consistency and durability.
-Another option, which you saw in the quick start guide, was to set the refresh policy to `IMMEDIATE` which will force a refresh straight after the index operation.
-You shouldn't use IMMEDIATE for heavy loads as you'll cause contention with Elasticsearch refreshing too often. It is also possible to use `WAIT_UNTIL` so that no refresh is forced, but the index request will return only after the new document is available for search.
 
-For more in depth examples keep reading.
+This setting can be [controlled](docs/refresh.md) when creating an index or when indexed documents.
 
 
 ## Create Index
