@@ -15,16 +15,15 @@ case class GeoDistanceSort(field: String,
                            order: Option[SortOrder] = None,
                            unit: Option[DistanceUnit] = None,
                            validation: Option[GeoValidationMethod] = None,
-                           geoDistance: Option[GeoDistance] = None)
-    extends Sort {
+                           geoDistance: Option[GeoDistance] = None) extends Sort {
 
-  def mode(mode: String): GeoDistanceSort   = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def mode(mode: String): GeoDistanceSort = sortMode(SortMode.valueOf(mode.toUpperCase))
   def mode(mode: SortMode): GeoDistanceSort = copy(sortMode = mode.some)
 
-  def sortMode(mode: String): GeoDistanceSort   = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def sortMode(mode: String): GeoDistanceSort = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): GeoDistanceSort = copy(sortMode = mode.some)
 
-  def nestedPath(path: String): GeoDistanceSort   = copy(nestedPath = path.some)
+  def nestedPath(path: String): GeoDistanceSort = copy(nestedPath = path.some)
   def nestedFilter(query: Query): GeoDistanceSort = copy(nestedFilter = query.some)
 
   def order(order: SortOrder): GeoDistanceSort     = copy(order = order.some)

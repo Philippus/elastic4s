@@ -42,16 +42,15 @@ case class FieldSort(field: String,
                      nestedFilter: Option[Query] = None,
                      nestedPath: Option[String] = None,
                      sortMode: Option[SortMode] = None,
-                     order: SortOrder = SortOrder.Asc)
-    extends Sort {
+                     order: SortOrder = SortOrder.Asc) extends Sort {
 
-  def missing(missing: AnyRef): FieldSort     = copy(missing = missing.some)
+  def missing(missing: AnyRef): FieldSort = copy(missing = missing.some)
   def unmappedType(`type`: String): FieldSort = copy(unmappedType = `type`.some)
 
-  def mode(mode: String): FieldSort   = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def mode(mode: String): FieldSort = sortMode(SortMode.valueOf(mode.toUpperCase))
   def mode(mode: SortMode): FieldSort = copy(sortMode = mode.some)
 
-  def sortMode(mode: String): FieldSort   = sortMode(SortMode.valueOf(mode.toUpperCase))
+  def sortMode(mode: String): FieldSort = sortMode(SortMode.valueOf(mode.toUpperCase))
   def sortMode(mode: SortMode): FieldSort = copy(sortMode = mode.some)
 
   def nestedPath(path: String): FieldSort   = copy(nestedPath = path.some)

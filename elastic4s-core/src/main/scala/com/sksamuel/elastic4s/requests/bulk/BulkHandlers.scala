@@ -12,7 +12,7 @@ trait BulkHandlers {
 
     override def build(bulk: BulkRequest): ElasticRequest = {
       val httpBody: String = buildBulkHttpBody(bulk)
-      val entity = HttpEntity(httpBody, "application/json")
+      val entity = HttpEntity(httpBody, "application/x-ndjson")
       if (logger.isDebugEnabled()) {
         logger.debug("Sending bulk request")
         logger.debug(httpBody)
