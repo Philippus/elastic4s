@@ -1,8 +1,9 @@
-package com.sksamuel.elastic4s.requests.searches.aggs
+package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
+import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, DateHistogramAggregation, ExtendedBoundsBuilderFn, SubAggsBuilderFn}
 
 object DateHistogramAggregationBuilder {
   def apply(agg: DateHistogramAggregation): XContentBuilder = {

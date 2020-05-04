@@ -2,13 +2,15 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder}
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
     val builder = agg match {
 
-      case agg: AvgAggregation            => AvgAggregationBuilder(agg)
+      case agg: AutoDateHistogramAggregation => AutoDateHistogramAggregationBuilder(agg)
+      case agg: AvgAggregation => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregation    => CardinalityAggregationBuilder(agg)
       case agg: ChildrenAggregation       => ChildrenAggregationBuilder(agg)
       case agg: CompositeAggregation      => CompositeAggregationBuilder(agg)

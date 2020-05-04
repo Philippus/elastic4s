@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.requests.searches.aggs
+package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.searches.aggs.{ChildrenAggregation, SubAggsBuilderFn}
 
 object ChildrenAggregationBuilder {
   def apply(agg: ChildrenAggregation): XContentBuilder = {
