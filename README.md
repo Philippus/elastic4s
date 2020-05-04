@@ -496,6 +496,11 @@ by combining inserts or using aggressive caching.
 
 For full details see the [docs on bulk operations](docs/bulk.md).
 
+
+
+
+
+
 ## Show Query JSON
 
 It can be useful to see the json output of requests in case you wish to tinker with the request in a REST client or your browser. It can be much easier to tweak a complicated query when you have the instant feedback of the HTTP interface.
@@ -513,6 +518,15 @@ Not all requests have a json body. For example _get-by-id_ is modelled purely by
 
 
 
+
+## Aliases
+
+An [index alias](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-aliases.html) is a logical name used to reference one or more indices. Most Elasticsearch APIs accept an index alias in place of an index name.
+
+For elastic4s syntax for aliases [click here](docs/alias.md).
+
+
+
 ## Synchronous Operations
 
 All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots or when creating the initial index. You can call `.await` on any operation to block until the result is ready. This is especially useful when testing.
@@ -522,6 +536,9 @@ val resp = client.execute {
   indexInto("bands").fields("name" -> "coldplay", "debut" -> "parachutes")
 }.await
 ```
+
+
+
 
 
 
@@ -548,6 +565,10 @@ Note: Whenever the results in a particular
 batch have been iterated on, the `SearchIterator` will then execute another query for the next batch and block waiting on that query.
 So if you are looking for a pure non blocking solution, consider the reactive streams implementation. However, if you just want a
 quick and simple way to iterate over some data without bringing back all the results at once `SearchIterator` is perfect.
+
+
+
+
 
 ## Elastic Reactive Streams
 

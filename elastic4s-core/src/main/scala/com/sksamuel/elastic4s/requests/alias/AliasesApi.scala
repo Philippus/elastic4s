@@ -6,19 +6,25 @@ import scala.language.implicitConversions
 
 trait AliasesApi {
 
-  def aliases(first: AliasAction, rest: AliasAction*): IndicesAliasesRequest =
-    aliases(first +: rest)
+  def aliases(first: AliasAction, rest: AliasAction*): IndicesAliasesRequest = aliases(first +: rest)
   def aliases(actions: Iterable[AliasAction]) = IndicesAliasesRequest(actions.toSeq)
 
   def addAlias(alias: String, index: String) = AddAliasActionRequest(alias, index)
+
+  @deprecated("use addAlias(alias, index)", "7.7.0")
   def addAlias(alias: String)                = new AddAliasExpectsOn(alias)
+  @deprecated("use addAlias(alias, index)", "7.7.0")
   class AddAliasExpectsOn(alias: String) {
+    @deprecated("use addAlias(alias, index)", "7.7.0")
     def on(index: String) = AddAliasActionRequest(alias, index)
   }
 
   def removeAlias(alias: String, index: String) = RemoveAliasAction(alias, index)
+  @deprecated("use removeAlias(alias, index)", "7.7.0")
   def removeAlias(alias: String)                = new RemoveAliasExpectsOn(alias)
+  @deprecated("use removeAlias(alias, index)", "7.7.0")
   class RemoveAliasExpectsOn(alias: String) {
+    @deprecated("use removeAlias(alias, index)", "7.7.0")
     def on(index: String) = RemoveAliasAction(alias, index)
   }
 
