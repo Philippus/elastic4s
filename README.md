@@ -352,8 +352,13 @@ client.execute {
 }
 ```
 
-For full details on creating queries and other search capabilities, such as multisearch, source filtering and aggregations, please read [this](docs/search.md).
+For full details on creating queries and other search capabilities such source filtering and aggregations, please read [this](docs/search.md).
 
+
+
+## Multisearch
+
+Multiple search requests can be executed in a single call using the [multisearch](docs/multisearch.md) request type. This is the search equivilent of the bulk request.
 
 
 
@@ -429,11 +434,16 @@ client.execute {
 
 We can fetch multiple documents at once using the [multiget](docs/multiget.md) request.
 
+
+
+
 ## Deleting
 
 In elasticsearch we can delete based on an id, or based on a query (which can match multiple documents).
 
 See more about [delete](docs/delete.md).
+
+
 
 ## Updates
 

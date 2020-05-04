@@ -182,27 +182,6 @@ See the [script fields](http://www.elasticsearch.org/guide/en/elasticsearch/refe
 
 
 
-### Multi Search
-
-The multisearch request type allows us to execute multiple searches in the a single request.
-The format is simple, wrap a list of search requests in a multi block, like this:
-
-```scala
-client.execute (
-  multi(
-    search("jtull").query("mylo"),
-    search("jtull").query("viva")
-  )
-)
-```
-
-The resp value is of type `MultiSearchResponse`, which contains an `MultisearchResponseItem` for each
-individual search.
-
-Note, the scala client has no distinction in the syntax between multisearch and standard single search.
-You simply choose to either invoke with a single search and get back a `SearchResponse` or
-invoke a multisearch and get back a `MultiSearchResponse`.
-
 
 
 

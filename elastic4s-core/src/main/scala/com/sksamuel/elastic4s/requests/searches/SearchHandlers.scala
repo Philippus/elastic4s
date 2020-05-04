@@ -43,7 +43,7 @@ trait SearchHandlers {
 
       val body = MultiSearchBuilderFn(request)
       logger.debug("Executing msearch: " + body)
-      val entity = HttpEntity(body, "application/json")
+      val entity = HttpEntity(body, "application/x-ndjson")
       ElasticRequest("POST", "/_msearch", params.toMap, entity)
     }
   }
