@@ -1,19 +1,13 @@
----
-layout: docs
-title:  "Explain API"
-section: "docs"
----
+## Explain
 
-# Explain
-
-The explain request allows us to see why a document would or would not be included in a query.
+The [explain request](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html) allows us to see why a document would or would not be included in a query.
 This is useful to see why queries are not performing as expected.
 
-The format is simple. Specify the index, type and id of the document, and attach a query from the queryDSL.
+The format is simple. Specify the index and id of the document, and attach a query from the queryDSL.
 
 ```scala
 val resp = client.execute {
-  explain id 8 in "beer" query termQuery("name","budweiser")
+  explain("beer", "8").query(termQuery("name","budweiser"))
 }
 ```
 

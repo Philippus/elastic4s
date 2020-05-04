@@ -510,6 +510,14 @@ For elastic4s syntax for aliases [click here](docs/alias.md).
 
 
 
+
+## Explain
+
+An [explain request](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-explain.html) computes a score explanation for a query and a specific document. This can give useful feedback whether a document matches or didn’t match a specific query.
+
+For elastic4s syntax for explain [click here](docs/explain.md).
+
+
 ## Synchronous Operations
 
 All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots or when creating the initial index. You can call `.await` on any operation to block until the result is ready. This is especially useful when testing.
