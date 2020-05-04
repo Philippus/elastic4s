@@ -531,6 +531,15 @@ val resp = client.execute {
 
 
 
+## Force Merge
+
+Merging reduces the number of segments in each shard by merging some of them together, and also frees up the space used by deleted documents. Merging normally happens automatically, but sometimes it is useful to trigger a merge manually.
+
+See the syntax [here](docs/force_merge.md).
+
+
+
+
 
 
 ## Search Iterator
