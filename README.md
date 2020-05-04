@@ -438,17 +438,9 @@ See more about [delete](docs/delete.md).
 ## Updates
 
 We can update existing documents without having to do a full index, by updating a partial set of fields.
+We can _update-by-id_ or _update-by-query_.
 
-```scala
-client.execute {
-  updateById("starwars", "chewie").docAsUpsert (
-    "name" -> "chewbacca",
-    "race" -> "wookie"
-  )
-}
-```
-
-For more examples see the [Update] page.
+For more details see the [update](docs/update.md) page.
 
 ## More like this
 
