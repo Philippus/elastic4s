@@ -420,7 +420,7 @@ client.execute {
 }
 ```
 
-See more [get examples] and usage of [Multiget] here.
+See [more](docs/get.md) and usage of [Multiget] here.
 
 ## Deleting
 

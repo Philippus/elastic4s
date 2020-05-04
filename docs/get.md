@@ -1,31 +1,20 @@
----
-layout: docs
-title:  "Get API"
-section: "docs"
----
-
-# Get
+## Get
 
 The get request allows us to retrieve a document from an index by id.
 
-First, import the ElasticDSL
+In this example we are retrieving the document with id 'coldplay' from the `bands` index.
 
-```tut:silent
-import com.sksamuel.elastic4s.ElasticDsl._
+```scala
+client.execute {
+  get("bands", "coldplay")
+}
 ```
-
-The format is simple.
-
-```tut:book
-get(8) from "beer"
-```
-
-Which would return the document with id 8 from the beer index with type lager.
-
 You can specify a version, which means the GET will only succeed if the version matches.
 
-```tut:book
-get(8) from "beer" version 12
+```scala
+client.execute {
+  get("bands", "coldplay").version(12)
+}
 ```
 
 If the document exists with version 12 then this will return a result, otherwise it will return no results.

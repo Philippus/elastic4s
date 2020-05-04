@@ -1,4 +1,4 @@
-# Deleting
+## Deleting
 
 A [delete request](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete.html) allows us to delete document(s) from an index based on an id or query.
 
