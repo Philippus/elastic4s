@@ -51,6 +51,7 @@ abstract class CustomizedTokenizer(override val name: String) extends Tokenizer(
 @deprecated("use new analysis package", "7.0.1")
 case class PredefinedTokenizer(override val name: String) extends Tokenizer(name)
 
+@deprecated("use new analysis package", "7.7.0")
 case class UaxUrlEmailTokenizer(override val name: String, maxTokenLength: Int = 255)
     extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
@@ -83,8 +84,13 @@ case class PatternTokenizer(override val name: String, pattern: String = "\\W+",
       source.field("group", group)
   }
 
+  @deprecated("use new analysis package", "7.7.0")
   def pattern(pattern: String): PatternTokenizer = copy(pattern = pattern)
+
+  @deprecated("use new analysis package", "7.7.0")
   def flags(flags: String): PatternTokenizer     = copy(flags = flags)
+
+  @deprecated("use new analysis package", "7.7.0")
   def group(group: Int): PatternTokenizer        = copy(group = group)
 }
 
@@ -95,6 +101,7 @@ case class KeywordTokenizer(override val name: String, bufferSize: Int = 256) ex
     source.field("bufferSize", bufferSize)
   }
 
+  @deprecated("use new analysis package", "7.7.0")
   def bufferSize(bufferSize: Int): KeywordTokenizer = copy(bufferSize = bufferSize)
 }
 

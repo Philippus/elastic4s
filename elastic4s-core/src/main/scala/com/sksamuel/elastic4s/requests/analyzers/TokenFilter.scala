@@ -3,50 +3,63 @@ package com.sksamuel.elastic4s.requests.analyzers
 import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.exts.OptionImplicits._
 
+@deprecated("use new analysis package", "7.7.0")
 trait TokenFilter extends AnalyzerFilter
 
+@deprecated("use new analysis package", "7.7.0")
 trait TokenFilterDefinition extends TokenFilter with AnalyzerFilterDefinition
 
+@deprecated("use new analysis package", "7.7.0")
 case object ReverseTokenFilter extends TokenFilter {
   val name = "reverse"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object ApostropheTokenFilter extends TokenFilter {
   val name = "apostrophe"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object TrimTokenFilter extends TokenFilter {
   val name = "trim"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object StandardTokenFilter extends TokenFilter {
   val name = "standard"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object AsciiFoldingTokenFilter extends TokenFilter {
   val name = "asciifolding"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object LowercaseTokenFilter extends TokenFilter {
   val name = "lowercase"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object UppercaseTokenFilter extends TokenFilter {
   val name = "uppercase"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object KStemTokenFilter extends TokenFilter {
   val name = "kstem"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object PorterStemTokenFilter extends TokenFilter {
   val name = "porter_stem"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object UniqueTokenFilter extends TokenFilter {
   val name = "unique"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class SynonymTokenFilter(name: String,
                               path: Option[String] = None,
                               synonyms: Set[String] = Set.empty,
@@ -68,15 +81,21 @@ case class SynonymTokenFilter(name: String,
     expand.foreach(source.field("expand", _))
     tokenizer.foreach(t => source.field("tokenizer", t.name))
   }
-
+  @deprecated("use new analysis package", "7.7.0")
   def path(path: String): SynonymTokenFilter                   = copy(path = Some(path))
+  @deprecated("use new analysis package", "7.7.0")
   def synonyms(synonyms: Iterable[String]): SynonymTokenFilter = copy(synonyms = synonyms.toSet)
+  @deprecated("use new analysis package", "7.7.0")
   def tokenizer(tokenizer: Tokenizer): SynonymTokenFilter      = copy(tokenizer = Some(tokenizer))
+  @deprecated("use new analysis package", "7.7.0")
   def format(format: String): SynonymTokenFilter               = copy(format = Some(format))
+  @deprecated("use new analysis package", "7.7.0")
   def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter      = copy(ignoreCase = Some(ignoreCase))
+  @deprecated("use new analysis package", "7.7.0")
   def expand(expand: Boolean): SynonymTokenFilter              = copy(expand = Some(expand))
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class SynonymGraphTokenFilter(name: String,
                                    path: Option[String] = None,
                                    synonyms: Set[String] = Set.empty,
@@ -107,6 +126,7 @@ case class SynonymGraphTokenFilter(name: String,
   def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = Some(expand))
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class TruncateTokenFilter(name: String, length: Option[Int] = None) extends TokenFilterDefinition {
 
   val filterType = "truncate"
@@ -117,6 +137,7 @@ case class TruncateTokenFilter(name: String, length: Option[Int] = None) extends
   def length(length: Int): TruncateTokenFilter = copy(length = length.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[Int] = None)
     extends TokenFilterDefinition {
 
@@ -131,6 +152,7 @@ case class LengthTokenFilter(name: String, min: Option[Int] = None, max: Option[
   def max(max: Int): LengthTokenFilter = copy(max = max.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class UniqueTokenFilter(name: String, onlyOnSamePosition: Option[Boolean] = None) extends TokenFilterDefinition {
 
   val filterType = "unique"
@@ -142,6 +164,7 @@ case class UniqueTokenFilter(name: String, onlyOnSamePosition: Option[Boolean] =
     copy(onlyOnSamePosition = onlyOnSamePosition.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class KeywordMarkerTokenFilter(name: String,
                                     keywords: Seq[String] = Nil,
                                     keywordsPath: Option[String] = None,
@@ -167,6 +190,7 @@ case class KeywordMarkerTokenFilter(name: String,
   def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter        = copy(ignoreCase = ignoreCase.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil) extends TokenFilterDefinition {
 
   val filterType = "elision"
@@ -178,6 +202,7 @@ case class ElisionTokenFilter(name: String, articles: Seq[String] = Nil) extends
   def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class LimitTokenCountTokenFilter(name: String,
                                       maxTokenCount: Option[Int] = None,
                                       consumeAllTokens: Option[Boolean] = None)
@@ -195,6 +220,7 @@ case class LimitTokenCountTokenFilter(name: String,
     copy(consumeAllTokens = consumeAllTokens.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class StopTokenFilter(name: String,
                            language: Option[String] = None,
                            stopwords: Iterable[String] = Nil,
@@ -225,6 +251,7 @@ case class StopTokenFilter(name: String,
   def stopwordsPath(path: String): StopTokenFilter                 = copy(stopwordsPath = path.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 object NamedStopTokenFilter {
   val Arabic     = "_arabic_"
   val Armenian   = "_armenian_"
@@ -255,6 +282,7 @@ object NamedStopTokenFilter {
   val Turkish    = "_turkish_"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class PatternCaptureTokenFilter(name: String, patterns: Seq[String] = Nil, preserveOriginal: Boolean = true)
     extends TokenFilterDefinition {
 
@@ -271,6 +299,7 @@ case class PatternCaptureTokenFilter(name: String, patterns: Seq[String] = Nil, 
   def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class PatternReplaceTokenFilter(name: String, pattern: String, replacement: String) extends TokenFilterDefinition {
 
   val filterType = "pattern_replace"
@@ -284,6 +313,7 @@ case class PatternReplaceTokenFilter(name: String, pattern: String, replacement:
   def replacement(r: String): PatternReplaceTokenFilter = copy(replacement = r)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class CommonGramsTokenFilter(name: String,
                                   commonWords: Iterable[String] = Nil,
                                   commonWordsPath: Option[String] = None,
@@ -309,6 +339,7 @@ case class CommonGramsTokenFilter(name: String,
   def commonWordsPath(path: String): CommonGramsTokenFilter             = copy(commonWordsPath = path.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class EdgeNGramTokenFilter(name: String,
                                 minGram: Option[Int] = None,
                                 maxGram: Option[Int] = None,
@@ -329,6 +360,7 @@ case class EdgeNGramTokenFilter(name: String,
   def side(side: String): EdgeNGramTokenFilter              = copy(side = side.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class NGramTokenFilter(name: String, minGram: Option[Int] = None, maxGram: Option[Int] = None)
     extends TokenFilterDefinition {
 
@@ -344,6 +376,7 @@ case class NGramTokenFilter(name: String, minGram: Option[Int] = None, maxGram: 
   def maxGram(max: Int): NGramTokenFilter               = copy(maxGram = max.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class SnowballTokenFilter(name: String, language: String) extends TokenFilterDefinition {
 
   val filterType = "snowball"
@@ -354,6 +387,7 @@ case class SnowballTokenFilter(name: String, language: String) extends TokenFilt
   def lang(l: String): SnowballTokenFilter = copy(language = l)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class StemmerTokenFilter(name: String, lang: String) extends TokenFilterDefinition {
 
   val filterType = "stemmer"
@@ -364,6 +398,7 @@ case class StemmerTokenFilter(name: String, lang: String) extends TokenFilterDef
   def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil, rulesPath: Option[String] = None)
     extends TokenFilterDefinition {
 
@@ -380,6 +415,7 @@ case class StemmerOverrideTokenFilter(name: String, rules: Seq[String] = Nil, ru
   def rulesPath(path: String): StemmerOverrideTokenFilter     = copy(rulesPath = path.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class WordDelimiterTokenFilter(name: String,
                                     generateWordParts: Option[Boolean] = None,
                                     generateNumberParts: Option[Boolean] = None,
@@ -417,6 +453,7 @@ case class WordDelimiterTokenFilter(name: String,
   def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class ShingleTokenFilter(name: String,
                               maxShingleSize: Option[Int] = None,
                               minShingleSize: Option[Int] = None,
@@ -445,17 +482,22 @@ case class ShingleTokenFilter(name: String,
   def fillerToken(filler: String): ShingleTokenFilter            = copy(fillerToken = filler.some)
 }
 
+@deprecated("use new analysis package", "7.7.0")
 sealed trait CompoundWordTokenFilterType {
   def name: String
 }
+
+@deprecated("use new analysis package", "7.7.0")
 case object HyphenationDecompounder extends CompoundWordTokenFilterType {
   override def name = "hyphenation_decompounder"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case object DictionaryDecompounder extends CompoundWordTokenFilterType {
   override def name = "dictionary_decompounder"
 }
 
+@deprecated("use new analysis package", "7.7.0")
 case class CompoundWordTokenFilter(name: String,
                                    `type`: CompoundWordTokenFilterType,
                                    wordList: Iterable[String] = Nil,

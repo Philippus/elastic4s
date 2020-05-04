@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
+@deprecated("use new analysis package", "7.7.0")
 trait NormalizerApi {
 
   @deprecated("use new analysis package", "7.0.1")
