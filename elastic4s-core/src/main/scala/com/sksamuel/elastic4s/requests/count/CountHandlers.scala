@@ -20,7 +20,17 @@ trait CountHandlers {
       val builder = CountBodyBuilderFn(request)
       val body    = builder.string()
 
-      ElasticRequest("GET", endpoint, HttpEntity(body, "application/json"))
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.allowNoIndices.map(_.toString).foreach(params.put("allow_no_indices", _))
+      request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
+      request.ignoreThrottled.map(_.toString).foreach(params.put("ignore_throttled", _))
+      request.analyzeWildcard.map(_.toString).foreach(params.put("analyze_wildcard", _))
+      request.expandWildcards.map(_.toString).foreach(params.put("expand_wildcards", _))
+      request.lenient.map(_.toString).foreach(params.put("lenient", _))
+      request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
+      request.minScore.map(_.toString).foreach(params.put("min_score", _))
+
+      ElasticRequest("GET", endpoint, params, HttpEntity(body, "application/json"))
     }
   }
 }

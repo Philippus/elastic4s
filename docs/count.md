@@ -1,27 +1,13 @@
----
-layout: docs
-title:  "Count API"
-section: "docs"
----
+## Count
 
-# Counting
-
-A count request executes a query and returns a count of the number of matching documents for that query.
+A [count request](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html) executes a query and returns a count of the number of matching documents for that query.
 It can be executed across one or more indices. The query can be omitted for a total count across the indexes.
 
 To count all documents in an index regardless of type, we can do this.
 
 ```scala
 client.execute {
-  count from "places"
-}
-```
-
-Or then narrow it down by a type.
-
-```scala
-client.execute {
-  count from "places"->"london"
+  count("places")
 }
 ```
 
@@ -29,7 +15,7 @@ We can do multiple indexes at once.
 
 ```scala
 client.execute {
-  count from Seq("places", "movies")
+  count(Seq("places", "movies"))
 }
 ```
 
@@ -37,16 +23,9 @@ We can include a query to narrow down the results.
 
 ```scala
 client.execute {
-  count from "places" -> "london" where "borough" -> "westminster"
+  count("places").query(termQuery("borough", "westminster"))
 }
 ```
 
-Also `where` is a synonym for `query`, so you could do
-
-```scala
-client.execute {
-  count from "places" -> "london" query "borough" -> "westminster"
-}
-```
-
-You can include any part of the QueryDSL inside the where clause.
+There are multiple options on count, such as _expand wilcards_, _ignore throttled_, and so on.
+See the [official docs](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-count.html) for a full list.

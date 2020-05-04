@@ -466,6 +466,15 @@ client.execute {
 
 For all the options see [here](http://www.elasticsearch.org/guide/reference/query-dsl/mlt-query/).
 
+
+
+## Count
+
+A [count request](docs/count.md) executes a query and returns a count of the number of matching documents for that query.
+
+
+
+
 ## Bulk Operations
 
 Elasticsearch is fast. Roundtrips are not. Sometimes we want to wrestle every last inch of performance and a useful way
