@@ -424,25 +424,9 @@ See more [get examples] and usage of [Multiget] here.
 
 ## Deleting
 
-We can remove documents using the `deleteById` request.
-We're going to remove the "u2" document from the "bands" index.
+In elasticsearch we can delete based on an id, or based on a query (which can match multiple documents).
 
-```scala
-client.execute {
-  deleteById("bands", "u2")
-}
-```
-
-We can take this a step further by deleting using a query rather than directly by id.
-In this example we're deleting all bands where their type is pop.
-
-```scala
-client.execute {
-  deleteByQuery("bands", termQuery("type", "pop"))
-}
-```
-
-See more about delete on the [delete page]
+See more about [delete](docs/delete.md).
 
 ## Updates
 
@@ -680,11 +664,6 @@ the License.
 [Create Index]: https://sksamuel.github.io/elastic4s/docs/indices/createindex.html
 [Create Repository]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
 [Create Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Delete by id]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
-[Delete index]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
-[Delete index]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
-[delete page]: https://sksamuel.github.io/elastic4s/docs/document/delete.html
-[Delete Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
 [Explain]: https://sksamuel.github.io/elastic4s/docs/search/explain.html
 [Get]: https://sksamuel.github.io/elastic4s/docs/document/get.html
 [get examples]: https://sksamuel.github.io/elastic4s/docs/document/get.html
