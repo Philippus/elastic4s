@@ -29,6 +29,3 @@ esdata
 *.sublime-workspace
 *.metals
 *.bloop
-
-# Generated via microsite
-/docs/src/main/tut/index.md

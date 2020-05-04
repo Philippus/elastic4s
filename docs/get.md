@@ -20,3 +20,7 @@ client.execute {
 If the document exists with version 12 then this will return a result, otherwise it will return no results.
 
 Other options are realtime, routing, preference, versionType, fetchSourceContext. For more details on what these do, consult the official elasticsearch documents [here](http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/docs-get.html).
+
+### Multiget
+
+Get requests can be wrapped in a multiget query. Read more [here](multiget.md).

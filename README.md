@@ -189,6 +189,8 @@ If you wish to use ZIO, Cats-Effect, Monix or Scalaz, then read this page on [al
 
 
 
+
+
 ## Index Refreshing
 
 When you index a document in Elasticsearch, usually it is not immediately available to be searched, as a _refresh_ has to happen to make it visible to the search API.
@@ -198,6 +200,9 @@ Note that this only impacts the visibility of newly indexed documents and has no
 to do with data consistency and durability.
 
 This setting can be [controlled](docs/refresh.md) when creating an index or when indexed documents.
+
+
+
 
 
 ## Create Index
@@ -246,12 +251,21 @@ It is still fully dynamic and other fields will be created as needed with defaul
 
 More examples on the create index syntax can be [found here](https://sksamuel.github.io/elastic4s/docs/indices/createindex.html).
 
+
+
+
+
+
 ## Analyzers
 
 Analyzers control how Elasticsearch parses the fields for indexing. For example, you might decide that you want
 whitespace to be important, so that "band of brothers" is indexed as a single "word" rather than the default which is
 to split on whitespace. There are many advanced options available in analayzers. Elasticsearch also allows us to create
 custom analyzers. For more details [see the documentation on analyzers](docs/analysis.md).
+
+
+
+
 
 ## Indexing
 
@@ -273,6 +287,7 @@ client.execute {
 There are many additional options we can set such as routing, version, parent, timestamp and op type.
 See [official documentation](http://www.elasticsearch.org/guide/reference/api/index_/) for additional options, all of
 which exist in the DSL as keywords that reflect their name in the official API.
+
 
 
 
@@ -398,10 +413,13 @@ search("music").query("kate bush").highlighting (
 All very straightforward. There are many options you can use to tweak the results. In the example above I have
 simply set the snippets to be taken from the field called "body" and to have max length 20. You can set the number of fragments to return, seperate queries to generate them and other things. See the elasticsearch page on [highlighting](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-highlighting.html) for more info.
 
+
+
+
+
 ## Get / Multiget
 
-Sometimes we don't want to search and want to retrieve a document directly from the index by id.
-In this example we are retrieving the document with id 'coldplay' from the `bands` index.
+A [get](docs/get.md) request allows us to retrieve a document directly by id.
 
 ```scala
 client.execute {
@@ -409,18 +427,7 @@ client.execute {
 }
 ```
 
-We can fetch multiple documents at once using the `multiget` wrapper.
-
-```scala
-client.execute {
-  multiget(
-    get("bands", "coldplay"),
-    get("bands", "marillion")
-  )
-}
-```
-
-See [more](docs/get.md) and usage of [Multiget] here.
+We can fetch multiple documents at once using the [multiget](docs/multiget.md) request.
 
 ## Deleting
 
@@ -658,22 +665,3 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 ```
-
-[Add Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
-[Bulk]: https://sksamuel.github.io/elastic4s/docs/document/bulk.html
-[Create Index]: https://sksamuel.github.io/elastic4s/docs/indices/createindex.html
-[Create Repository]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Create Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Explain]: https://sksamuel.github.io/elastic4s/docs/search/explain.html
-[Get]: https://sksamuel.github.io/elastic4s/docs/document/get.html
-[get examples]: https://sksamuel.github.io/elastic4s/docs/document/get.html
-[Index]: https://sksamuel.github.io/elastic4s/docs/document/index.html
-[Multiget]: https://sksamuel.github.io/elastic4s/docs/document/multiget.html
-[Multisearch]: https://sksamuel.github.io/elastic4s/docs/search/multisearch.html
-[Force Merge]: https://sksamuel.github.io/elastic4s/docs/indices/optimize.html
-[Remove Alias]: https://sksamuel.github.io/elastic4s/docs/indices/aliases.html
-[Restore Snapshot]: https://sksamuel.github.io/elastic4s/docs/misc/snapshot.html
-[Search]: https://sksamuel.github.io/elastic4s/docs/search/search.html
-[Suggestions]: https://sksamuel.github.io/elastic4s/docs/search/suggestions.html
-[Update]: https://sksamuel.github.io/elastic4s/docs/document/update.html
-[Validate]: https://sksamuel.github.io/elastic4s/docs/search/validate.html
