@@ -531,6 +531,18 @@ val resp = client.execute {
 
 
 
+## Validate Query
+
+The validate query request type allows you to check a query is valid before executing it.
+
+See the syntax [here](docs/validate.md).
+
+
+
+
+
+
+
 ## Force Merge
 
 Merging reduces the number of segments in each shard by merging some of them together, and also frees up the space used by deleted documents. Merging normally happens automatically, but sometimes it is useful to trigger a merge manually.

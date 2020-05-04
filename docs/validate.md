@@ -1,33 +1,25 @@
----
-layout: docs
-title:  "Validate API"
-section: "docs"
----
+## Validate
 
-# Validate
-
-The validate API allows us to validate that a query is valid before we execute it. This is an interesting addition
- to elastic4s, because in theory the DSL should not allow you to create invalid queries.
- However the API is here should you need to use it for whatever reason.
-
-An example of validating a simple query
+The validate request allows a (potentially) expensive query to be validated before it is executed.
 
 ```scala
 client.execute {
-  validateIn("index") query {
-      termQuery("name", "sammy")
-  }
+  validateIn("index").query(
+    termQuery("name", "sammy")
+  )
 }
 ```
 
-Simply replace termQuery with whatever query you wish to validate.
+Replace the termQuery above with whatever query you wish to validate.
 
-You can also get an explaination of errors by using the explain param
+You can also get an explaination of errors by using the `explain` param.
 
 ```scala
 client.execute {
-  validateIn("index") query {
-      termQuery("name", "sammy")
-  } explain true
+  validateIn("index").query(
+    termQuery("name", "sammy")
+  ).explain(true)
 }
 ```
+
+Read the [official docs](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-validate.html) for the various flags.
