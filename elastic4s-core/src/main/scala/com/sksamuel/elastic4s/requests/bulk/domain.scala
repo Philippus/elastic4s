@@ -18,7 +18,9 @@ case class BulkResponseItem(itemId: Int,
                             error: Option[BulkError],
                             @JsonProperty("_shards") shards: Option[Shards])
 
-case class BulkError(`type`: String, reason: String, index_uuid: String, shard: Int, index: String)
+case class CausedBy(`type`: String, reason: String)
+
+case class BulkError(`type`: String, reason: String, index_uuid: String, shard: Int, index: String, caused_by: Option[CausedBy])
 
 case class BulkResponseItems(index: Option[BulkResponseItem],
                              delete: Option[BulkResponseItem],
