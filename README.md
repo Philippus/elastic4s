@@ -537,17 +537,6 @@ An [explain request](https://www.elastic.co/guide/en/elasticsearch/reference/cur
 For elastic4s syntax for explain [click here](docs/explain.md).
 
 
-## Synchronous Operations
-
-All operations are normally asynchronous. Sometimes though you might want to block - for example when doing snapshots or when creating the initial index. You can call `.await` on any operation to block until the result is ready. This is especially useful when testing.
-
-```scala
-val resp = client.execute {
-  indexInto("bands").fields("name" -> "coldplay", "debut" -> "parachutes")
-}.await
-```
-
-
 
 
 ## Validate Query
