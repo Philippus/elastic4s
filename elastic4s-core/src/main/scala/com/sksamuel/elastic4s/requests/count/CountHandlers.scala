@@ -30,7 +30,7 @@ trait CountHandlers {
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
       request.minScore.map(_.toString).foreach(params.put("min_score", _))
 
-      ElasticRequest("GET", endpoint, params, HttpEntity(body, "application/json"))
+      ElasticRequest("GET", endpoint, params.toMap, HttpEntity(body, "application/json"))
     }
   }
 }
