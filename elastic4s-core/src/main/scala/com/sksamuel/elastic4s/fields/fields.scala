@@ -419,3 +419,12 @@ case class IpField(name: String,
   override def `type`: String = "ip"
 }
 case class IndexPrefixes(minChars: Int, maxChars: Int)
+
+case class RankFeatureField(name: String,
+                            positiveScoreImpact: Option[Boolean] = None) extends ElasticField {
+  override def `type`: String = "rank_feature"
+}
+
+case class RankFeaturesField(name: String) extends ElasticField {
+  override def `type`: String = "rank_features"
+}
