@@ -44,6 +44,7 @@ object QueryBuilderFn {
     case q: PrefixQuery         => PrefixQueryBodyFn(q)
     case q: QueryStringQuery    => QueryStringBodyFn(q)
     case r: RangeQuery          => RangeQueryBodyFn(r)
+    case r: RankFeatureQuery    => RankFeatureQueryBuilderFn(r)
     case q: RawQuery            => RawQueryBodyFn(q)
     case q: RegexQuery          => RegexQueryBodyFn(q)
     case q: ScriptQuery         => ScriptQueryBodyFn(q)

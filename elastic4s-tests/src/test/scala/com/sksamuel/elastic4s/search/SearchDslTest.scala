@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, Snowba
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
 import com.sksamuel.elastic4s.requests.searches._
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
+import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.Sigmoid
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.MultiValueMode
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
@@ -84,6 +85,13 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       rangeQuery("coldplay") gte 4 lt 10 boost 1.2
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_range.json")
+  }
+
+  it should "generate json for a rank feature query" in {
+    val req = search("*") limit 5 query {
+      rankFeatureQuery("pagerank").boost(0.5).withSigmoid(Sigmoid(7, 0.6))
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_rank_feature.json")
   }
 
   it should "generate json for a wildcard query" in {

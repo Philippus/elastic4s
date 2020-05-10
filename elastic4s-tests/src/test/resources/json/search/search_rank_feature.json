@@ -1,0 +1,13 @@
+{
+    "size": 5,
+    "query": {
+        "rank_feature": {
+            "field": "pagerank",
+            "boost": 0.5,
+            "sigmoid": {
+                "pivot": 7,
+                "exponent": 0.6
+            }
+        }
+    }
+}

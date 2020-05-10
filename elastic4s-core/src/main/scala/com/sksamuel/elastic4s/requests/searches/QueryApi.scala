@@ -180,6 +180,8 @@ trait QueryApi {
 
   def rangeQuery(field: String): RangeQuery = RangeQuery(field)
 
+  def rankFeatureQuery(field: String) = RankFeatureQuery(field)
+
   def rawQuery(json: String): RawQuery = RawQuery(json)
 
   def regexQuery(field: String, value: String): RegexQuery = RegexQuery(field, value)
