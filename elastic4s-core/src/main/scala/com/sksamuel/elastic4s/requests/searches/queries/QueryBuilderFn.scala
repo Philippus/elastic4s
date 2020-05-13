@@ -28,6 +28,7 @@ object QueryBuilderFn {
     case q: HasChildQuery       => HasChildBodyFn(q)
     case q: HasParentQuery      => HasParentBodyFn(q)
     case q: IdQuery             => IdQueryBodyFn(q)
+    case q: IntervalsQuery      => IntervalsQueryBuilderFn(q)
     case q: MatchAllQuery       => MatchAllBodyFn(q)
     case q: MatchNoneQuery      => MatchNoneBodyFn(q)
     case q: MatchQuery          => MatchQueryBuilderFn(q)

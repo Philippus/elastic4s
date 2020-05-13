@@ -108,6 +108,8 @@ trait QueryApi {
 
   def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit = com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
 
+  def intervalsQuery(field: String, rule: IntervalsRule): IntervalsQuery = IntervalsQuery(field, rule)
+
   def matchQuery(field: String, value: Any): MatchQuery = MatchQuery(field, value)
 
   def matchPhraseQuery(field: String, value: Any): MatchPhrase = MatchPhrase(field, value)
