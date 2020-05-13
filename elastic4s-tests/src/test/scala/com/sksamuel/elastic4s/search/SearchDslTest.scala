@@ -11,7 +11,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.Sigmoid
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.MultiValueMode
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
+import com.sksamuel.elastic4s.requests.searches.queries.{AllOf, AnyOf, IntervalsQuery, Match, RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
 import org.scalatest.OneInstancePerTest
@@ -92,6 +92,19 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       rankFeatureQuery("pagerank").boost(0.5).withSigmoid(Sigmoid(7, 0.6))
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_rank_feature.json")
+  }
+
+  it should "generate json for an intervals query" in {
+    val req = search("*") limit 5 query {
+      IntervalsQuery("my_text", AllOf(List(
+        Match(query = "my favorite food").maxGaps(0).ordered(true),
+        AnyOf(intervals = List(
+          Match(query = "hot water"),
+          Match(query = "cold porridge")
+        ))
+      )).ordered(true))
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_intervals.json")
   }
 
   it should "generate json for a wildcard query" in {
