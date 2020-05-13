@@ -39,7 +39,7 @@ val callback = new HttpClientConfigCallback {
 }
 
 val props = ElasticProperties("http://host1:9200")
-val client = ElasticClient(JavaClient(props, httpClientConfigCallback = callback))
+val client = ElasticClient(JavaClient(props, requestConfigCallback = NoOpRequestConfigCallback, httpClientConfigCallback = callback))
 ```
 
 
