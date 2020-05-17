@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.WildcardQuery
 
 object WildcardQueryBodyFn {
   def apply(q: WildcardQuery): XContentBuilder = {

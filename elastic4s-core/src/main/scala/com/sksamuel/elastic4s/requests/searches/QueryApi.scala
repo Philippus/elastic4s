@@ -20,28 +20,30 @@ trait QueryApi {
   def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
     BoostingQuery(positiveQuery, negativeQuery)
 
+  @deprecated("use commonTermsQuery(field, text)", "7.7.0")
   def commonTermsQuery(field: String) = new CommonQueryExpectsText(field)
 
+  @deprecated("use commonTermsQuery(field, text)", "7.7.0")
   class CommonQueryExpectsText(name: String) {
     def text(q: String): CommonTermsQuery  = CommonTermsQuery(name, q)
     def query(q: String): CommonTermsQuery = text(q)
   }
 
-  def commonTermsQuery(field: String, text: String) = CommonTermsQuery(field, text)
+  def commonTermsQuery(field: String, text: String): CommonTermsQuery = CommonTermsQuery(field, text)
 
   def constantScoreQuery(query: Query): ConstantScore = ConstantScore(query)
 
   def dismax(first: Query, rest: Query*): DisMaxQuery = dismax(first +: rest)
   def dismax(queries: Iterable[Query]): DisMaxQuery   = DisMaxQuery(queries.toSeq)
 
-  def existsQuery(field: String) = ExistsQuery(field)
+  def existsQuery(field: String): ExistsQuery = ExistsQuery(field)
 
   def fuzzyQuery(field: String, value: String): FuzzyQuery = FuzzyQuery(field, value)
 
   def functionScoreQuery(): FunctionScoreQuery             = FunctionScoreQuery()
   def functionScoreQuery(query: Query): FunctionScoreQuery = functionScoreQuery().query(query)
 
-  def geoBoxQuery(field: String) = GeoBoundingBoxQuery(field)
+  def geoBoxQuery(field: String): GeoBoundingBoxQuery = GeoBoundingBoxQuery(field)
   def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQuery =
     GeoBoundingBoxQuery(field).withGeohash(topleft, bottomright)
 
@@ -94,7 +96,7 @@ trait QueryApi {
   @deprecated("use hasParentQuery(`type`: String, query: Query, score: Boolean)", "6.3.0")
   def hasParentQuery(`type`: String) = new HasParentQueryExpectsQuery(`type`)
 
-  def hasParentQuery(parentType: String, query: Query, score: Boolean) =
+  def hasParentQuery(parentType: String, query: Query, score: Boolean): HasParentQuery =
     HasParentQuery(parentType, query, score)
 
   class HasParentQueryExpectsQuery(`type`: String) {
@@ -110,13 +112,13 @@ trait QueryApi {
 
   def matchPhraseQuery(field: String, value: Any): MatchPhrase = MatchPhrase(field, value)
 
-  def matchPhrasePrefixQuery(field: String, value: Any) = MatchPhrasePrefix(field, value)
-  def matchBoolPrefixQuery(field: String, value: Any) = MatchBoolPrefix(field, value)
+  def matchPhrasePrefixQuery(field: String, value: Any): MatchPhrasePrefix = MatchPhrasePrefix(field, value)
+  def matchBoolPrefixQuery(field: String, value: Any): MatchBoolPrefix = MatchBoolPrefix(field, value)
 
-  def multiMatchQuery(text: String) = MultiMatchQuery(text)
+  def multiMatchQuery(text: String): MultiMatchQuery = MultiMatchQuery(text)
 
-  def matchNoneQuery() = MatchNoneQuery()
-  def matchAllQuery()  = MatchAllQuery()
+  def matchNoneQuery(): MatchNoneQuery = MatchNoneQuery()
+  def matchAllQuery(): MatchAllQuery = MatchAllQuery()
 
   def moreLikeThisQuery(field: String, fields: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(field +: fields)
   def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(fields.toSeq)
@@ -149,9 +151,9 @@ trait QueryApi {
       MoreLikeThisQuery(fields).copy(artificialDocs = docs.toSeq)
   }
 
+  @deprecated("use nestedQuery(path, query)", "7.7.0")
   def nestedQuery(path: String) = new NestedQueryExpectsQuery(path)
   class NestedQueryExpectsQuery(path: String) {
-    class NestedQueryExpectsScoreMode(query: Query)
     def query(query: Query): NestedQuery = nestedQuery(path, query)
   }
   def nestedQuery(path: String, query: Query): NestedQuery = NestedQuery(path, query)
@@ -163,6 +165,8 @@ trait QueryApi {
 
   @deprecated("types are going away", "7.2.0")
   class PercolateExpectsUsing(`type`: String, field: String) {
+
+    @deprecated("types are going away", "7.7.0")
     def usingId(index: String, `type`: String, id: Any): PercolateQuery =
       usingId(DocumentRef(index, `type`, id.toString))
 
@@ -180,7 +184,7 @@ trait QueryApi {
 
   def rangeQuery(field: String): RangeQuery = RangeQuery(field)
 
-  def rankFeatureQuery(field: String) = RankFeatureQuery(field)
+  def rankFeatureQuery(field: String): RankFeatureQuery = RankFeatureQuery(field)
 
   def rawQuery(json: String): RawQuery = RawQuery(json)
 
@@ -192,20 +196,21 @@ trait QueryApi {
   def scriptQuery(script: String): ScriptQuery = ScriptQuery(script)
 
   def simpleStringQuery(q: String): SimpleStringQuery = SimpleStringQuery(q)
-  def stringQuery(q: String): QueryStringQuery        = QueryStringQuery(q)
+  def stringQuery(q: String): QueryStringQuery = QueryStringQuery(q)
 
+  @deprecated("use spanFirstQuery(query, end)", "7.7.0")
   def spanFirstQuery(query: SpanQuery) = new SpanFirstExpectsEnd(query)
   class SpanFirstExpectsEnd(query: SpanQuery) {
-    def end(end: Int) = SpanFirstQuery(query, end)
+    def end(end: Int): SpanFirstQuery = SpanFirstQuery(query, end)
   }
+
+  def spanFirstQuery(query: SpanQuery, end: Int) = SpanFirstQuery(query, end)
 
   def spanNearQuery(defs: Iterable[SpanQuery], slop: Int): SpanNearQuery =
     SpanNearQuery(defs.toSeq, slop)
 
-  def spanOrQuery(iterable: Iterable[SpanQuery]): SpanOrQuery =
-    SpanOrQuery(iterable.toSeq)
-  def spanOrQuery(first: SpanQuery, rest: SpanQuery*): SpanOrQuery =
-    spanOrQuery(first +: rest)
+  def spanOrQuery(iterable: Iterable[SpanQuery]): SpanOrQuery = SpanOrQuery(iterable.toSeq)
+  def spanOrQuery(first: SpanQuery, rest: SpanQuery*): SpanOrQuery = spanOrQuery(first +: rest)
 
   def spanContainingQuery(big: SpanQuery, little: SpanQuery): SpanContainingQuery =
     SpanContainingQuery(big, little)
@@ -218,17 +223,17 @@ trait QueryApi {
   def spanNotQuery(include: SpanQuery, exclude: SpanQuery): SpanNotQuery =
     SpanNotQuery(include, exclude)
 
-  def spanMultiTermQuery(query: MultiTermQuery) = SpanMultiTermQuery(query)
+  def spanMultiTermQuery(query: MultiTermQuery): SpanMultiTermQuery = SpanMultiTermQuery(query)
 
   def termQuery(field: String, value: Any): TermQuery = TermQuery(field, value)
 
   def termsQuery[T](field: String, first: T, rest: T*): TermsQuery[T] =
     termsQuery(field, first +: rest)
 
-  def termsQuery[T](field: String, values: Iterable[T]) =
+  def termsQuery[T](field: String, values: Iterable[T]): TermsQuery[T] =
     TermsQuery(field, values)
 
-  def termsLookupQuery(field: String, path: String, ref: DocumentRef) =
+  def termsLookupQuery(field: String, path: String, ref: DocumentRef): TermsLookupQuery =
     TermsLookupQuery(field, TermsLookup(ref, path))
 
   // Either minimumShouldMatchField or minimumShouldMatchScript should be specified, that's why they appear as mandatory parameters
@@ -244,7 +249,7 @@ trait QueryApi {
 
   def wildcardQuery(field: String, value: Any): WildcardQuery = WildcardQuery(field, value)
 
-  def typeQuery(`type`: String) = TypeQuery(`type`)
+  def typeQuery(`type`: String): TypeQuery = TypeQuery(`type`)
 
   def idsQuery(ids: Iterable[Any]): IdQuery  = IdQuery(ids.toSeq)
   def idsQuery(id: Any, rest: Any*): IdQuery = IdQuery(id +: rest)

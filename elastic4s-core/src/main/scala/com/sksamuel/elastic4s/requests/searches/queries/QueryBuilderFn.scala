@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefix, MatchNoneQuery, MatchPhrase, MatchPhrasePrefix, MatchQuery, MultiMatchQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanContainingQuery, SpanContainingQueryBodyFn, SpanFirstQuery, SpanFirstQueryBodyFn, SpanMultiTermQuery, SpanMultiTermQueryBodyFn, SpanNearQuery, SpanNearQueryBodyFn, SpanNotQuery, SpanNotQueryBodyFn, SpanOrQuery, SpanOrQueryBodyFn, SpanTermQuery, SpanTermQueryBodyFn, SpanWithinQuery, SpanWithinQueryBodyFn}
-import com.sksamuel.elastic4s.requests.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQuery, TermQueryBodyFn, TermsLookupQuery, TermsLookupQueryBodyFn, TermsQuery, TermsQueryBodyFn, TermsSetQuery, TermsSetQueryBodyFn, TypeQueryBodyFn, WildcardQueryBodyFn}
+import com.sksamuel.elastic4s.requests.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQuery, TermQueryBodyFn, TermsLookupQuery, TermsLookupQueryBodyFn, TermsQuery, TermsQueryBodyFn, TermsSetQuery, TermsSetQueryBodyFn, TypeQueryBodyFn, WildcardQuery, WildcardQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.text.{CommonTermsQueryBodyFn, MatchBoolPrefixBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
 
 object QueryBuilderFn {
