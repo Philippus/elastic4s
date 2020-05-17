@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields.builders
 
-import com.sksamuel.elastic4s.fields.{AliasField, BinaryField, BooleanField, CompletionField, DateField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, JoinField, KeywordField, NestedField, NumberField, ObjectField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField}
+import com.sksamuel.elastic4s.fields.{AliasField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, JoinField, KeywordField, NestedField, NumberField, ObjectField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
@@ -10,6 +10,7 @@ object ElasticFieldBuilderFn {
       case f: AliasField => AliasFieldBuilderFn.build(f)
       case f: BinaryField => BinaryFieldBuilderFn.build(f)
       case f: BooleanField => BooleanFieldBuilderFn.build(f)
+      case f: ConstantKeywordField => ConstantKeywordFieldBuilderFn.build(f)
       case f: CompletionField => CompletionFieldBuilderFn.build(f)
       case f: DateField => DateFieldBuilderFn.build(f)
       case f: DenseVectorField => DenseVectorFieldBuilderFn.build(f)

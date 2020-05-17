@@ -7,6 +7,10 @@ sealed trait ElasticField {
   def `type`: String // defines the elasticsearch constant used for this type, eg "integer" or "geo_shape"
 }
 
+case class ConstantKeywordField(override val name: String, value: String) extends ElasticField {
+  override def `type`: String = "constant_keyword"
+}
+
 case class TextField(override val name: String,
                      analyzer: Option[String] = None,
                      boost: Option[Double] = None,
