@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.HistogramBucket
+import com.sksamuel.elastic4s.fields.KeywordField
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.HistogramBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -16,12 +17,12 @@ class HistogramAggregationHttpTest extends AnyFreeSpec with Matchers with Docker
   }
 
   client.execute {
-    createIndex("histogram") mappings {
-      mapping("breakingbad") fields(
-        keywordField("job"),
-        keywordField("actor")
+    createIndex("histogram").mapping(
+      properties(
+        KeywordField("job"),
+        KeywordField("actor")
       )
-    }
+    )
   }.await
 
   client.execute(

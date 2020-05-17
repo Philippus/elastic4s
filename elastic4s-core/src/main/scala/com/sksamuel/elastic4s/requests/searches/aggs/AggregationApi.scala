@@ -6,34 +6,38 @@ import com.sksamuel.exts.OptionImplicits._
 
 trait AggregationApi {
 
-  def avgAgg(name: String, field: String): AvgAggregation = AvgAggregation(name).field(field)
+  @deprecated("use avgAgg", "7.7")
   def avgAggregation(name: String): AvgAggregation        = AvgAggregation(name)
+  def avgAgg(name: String, field: String): AvgAggregation = AvgAggregation(name).field(field)
 
+  @deprecated("use cardinalityAgg", "7.7")
+  def cardinalityAggregation(name: String): CardinalityAggregation = CardinalityAggregation(name)
   def cardinalityAgg(name: String, field: String): CardinalityAggregation =
     CardinalityAggregation(name).field(field)
-  def cardinalityAggregation(name: String): CardinalityAggregation = CardinalityAggregation(name)
 
   def childrenAggregation(name: String, childType: String): ChildrenAggregation =
     ChildrenAggregation(name, childType)
 
-  def dateHistogramAgg(name: String, field: String): DateHistogramAggregation = dateHistogramAggregation(name).field(field)
+  @deprecated("use dateHistogramAgg", "7.7")
   def dateHistogramAggregation(name: String): DateHistogramAggregation = DateHistogramAggregation(name)
+  def dateHistogramAgg(name: String, field: String): DateHistogramAggregation = dateHistogramAggregation(name).field(field)
 
   def autoDateHistogramAgg(name: String, field: String): AutoDateHistogramAggregation = AutoDateHistogramAggregation(name, field)
 
-  def dateRangeAgg(name: String, field: String): DateRangeAggregation = dateRangeAggregation(name).field(field)
+  @deprecated("use dateRangeAgg", "7.7")
   def dateRangeAggregation(name: String): DateRangeAggregation        = DateRangeAggregation(name)
+  def dateRangeAgg(name: String, field: String): DateRangeAggregation = dateRangeAggregation(name).field(field)
 
-  def extendedStatsAggregation(name: String): ExtendedStatsAggregation =
-    ExtendedStatsAggregation(name)
+  @deprecated("use extendedStatsAgg", "7.7")
+  def extendedStatsAggregation(name: String): ExtendedStatsAggregation = ExtendedStatsAggregation(name)
+  def extendedStatsAgg(name: String, field: String): ExtendedStatsAggregation = ExtendedStatsAggregation(name, field = field.some)
 
-  def extendedStatsAgg(name: String, field: String) = ExtendedStatsAggregation(name, field = field.some)
-
-  def filterAgg(name: String, query: Query) = FilterAggregation(name, query)
+  @deprecated("use filterAgg", "7.7")
   def filterAggregation(name: String)       = new FilterAggregationExpectsQuery(name)
   class FilterAggregationExpectsQuery(name: String) {
-    def query(query: Query) = FilterAggregation(name, query)
+    def query(query: Query): FilterAggregation = FilterAggregation(name, query)
   }
+  def filterAgg(name: String, query: Query): FilterAggregation = FilterAggregation(name, query)
 
   def filtersAggregation(name: String) = new FiltersAggregationExpectsQueries(name)
   class FiltersAggregationExpectsQueries(name: String) {
@@ -59,26 +63,29 @@ trait AggregationApi {
   def histogramAggregation(name: String): HistogramAggregation     = HistogramAggregation(name)
   def ipRangeAggregation(name: String): IpRangeAggregation         = IpRangeAggregation(name)
 
-  def maxAgg(name: String, field: String): MaxAggregation = MaxAggregation(name).field(field)
+  @deprecated("use maxAgg", "7.7")
   def maxAggregation(name: String): MaxAggregation        = MaxAggregation(name)
+  def maxAgg(name: String, field: String): MaxAggregation = MaxAggregation(name).field(field)
 
-  def minAgg(name: String, field: String): MinAggregation = MinAggregation(name).field(field)
+  @deprecated("use minAgg", "7.7")
   def minAggregation(name: String): MinAggregation        = MinAggregation(name)
+  def minAgg(name: String, field: String): MinAggregation = MinAggregation(name).field(field)
 
-  def missingAgg(name: String, field: String): MissingAggregation =
-    MissingAggregation(name).field(field)
+  @deprecated("use missingAgg", "7.7")
   def missingAggregation(name: String): MissingAggregation = MissingAggregation(name)
+  def missingAgg(name: String, field: String): MissingAggregation = MissingAggregation(name).field(field)
 
-  def nestedAggregation(name: String, path: String): NestedAggregation =
-    NestedAggregation(name, path)
+  def nestedAggregation(name: String, path: String): NestedAggregation = NestedAggregation(name, path)
 
-  def percentilesAgg(name: String, field: String) = PercentilesAggregation(name).field(field)
-  def percentilesAggregation(name: String)        = PercentilesAggregation(name)
+  @deprecated("use percentilesAgg", "7.7")
+  def percentilesAggregation(name: String): PercentilesAggregation = PercentilesAggregation(name)
+  def percentilesAgg(name: String, field: String): PercentilesAggregation = PercentilesAggregation(name).field(field)
 
-  def percentileRanksAggregation(name: String): PercentileRanksAggregation =
-    PercentileRanksAggregation(name)
+  def percentileRanksAggregation(name: String): PercentileRanksAggregation = PercentileRanksAggregation(name)
 
   def rangeAgg(name: String, field: String): RangeAggregation = RangeAggregation(name).field(field)
+
+  @deprecated("use rangeAgg", "7.7")
   def rangeAggregation(name: String): RangeAggregation        = RangeAggregation(name)
 
   def reverseNestedAggregation(name: String): ReverseNestedAggregation =
@@ -90,19 +97,26 @@ trait AggregationApi {
   def sigTermsAggregation(name: String): SigTermsAggregation = SigTermsAggregation(name)
   def statsAggregation(name: String): StatsAggregation       = StatsAggregation(name)
 
+  @deprecated("use sumAgg", "7.7")
   def sumAggregation(name: String): SumAggregation        = SumAggregation(name)
   def sumAgg(name: String, field: String): SumAggregation = SumAggregation(name).field(field)
 
+  @deprecated("use termsAgg", "7.7")
   def termsAggregation(name: String): TermsAggregation        = TermsAggregation(name)
   def termsAgg(name: String, field: String): TermsAggregation = TermsAggregation(name).field(field)
 
-  def topHitsAgg(name: String): TopHitsAggregation         = TopHitsAggregation(name)
+  @deprecated("use topHitsAgg", "7.7")
   def topHitsAggregation(name: String): TopHitsAggregation = TopHitsAggregation(name)
+  def topHitsAgg(name: String): TopHitsAggregation         = TopHitsAggregation(name)
 
+  def topMetricsAgg(name: String): TopMetricsAggregation         = TopMetricsAggregation(name)
+
+  @deprecated("use valueCountAgg", "7.7")
+  def valueCountAggregation(name: String): ValueCountAggregation = ValueCountAggregation(name)
   def valueCountAgg(name: String, field: String): ValueCountAggregation =
     ValueCountAggregation(name).field(field)
-  def valueCountAggregation(name: String): ValueCountAggregation = ValueCountAggregation(name)
 
-  def samplerAgg(name: String): SamplerAggregation         = SamplerAggregation(name)
+  @deprecated("use samplerAgg", "7.7")
   def samplerAggregation(name: String): SamplerAggregation = SamplerAggregation(name)
+  def samplerAgg(name: String): SamplerAggregation         = SamplerAggregation(name)
 }

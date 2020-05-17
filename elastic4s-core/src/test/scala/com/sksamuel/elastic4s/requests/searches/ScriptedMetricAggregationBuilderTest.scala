@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.requests.searches.aggs.{ScriptedMetricAggregation, ScriptedMetricAggregationBuilder}
+import com.sksamuel.elastic4s.requests.searches.aggs.ScriptedMetricAggregation
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.ScriptedMetricAggregationBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

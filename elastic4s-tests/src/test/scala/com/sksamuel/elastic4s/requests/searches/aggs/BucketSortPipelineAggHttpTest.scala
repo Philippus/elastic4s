@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.Aggregations
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.DateHistogram
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, SortOrder}
-import com.sksamuel.elastic4s.requests.searches.{Aggregations, DateHistogramInterval}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -18,12 +20,12 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
   }
 
   client.execute {
-    createIndex("bucketsortagg") mappings {
-      mapping("sales") fields(
+    createIndex("bucketsortagg").mapping(
+      properties(
         dateField("date"),
         doubleField("value").stored(true)
       )
-    }
+    )
   }.await
 
   client.execute(
@@ -44,7 +46,7 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
         search("bucketsortagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
             .interval(DateHistogramInterval.Month)
-            .subaggs (
+            .subaggs(
               sumAgg("sales", "value"),
               bucketSortAggregation("sales_bucket_sort",
                 Seq(FieldSort("sales").order(SortOrder.DESC)))
@@ -54,7 +56,7 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
 
       resp.totalHits shouldBe 6
 
-      val buckets = resp.aggs.dateHistogram("sales_per_month").buckets
+      val buckets = resp.aggs.result[DateHistogram]("sales_per_month").buckets
 
       buckets.size shouldBe 3
       Aggregations(buckets.head.data).sum("sales").value shouldBe 6000.0
@@ -81,7 +83,7 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
 
     resp.totalHits shouldBe 6
 
-    val buckets = resp.aggs.dateHistogram("sales_per_month").buckets
+    val buckets = resp.aggs.result[DateHistogram]("sales_per_month").buckets
 
     buckets.size shouldBe 1
     Aggregations(buckets.head.data).sum("sales").value shouldBe 4000.0

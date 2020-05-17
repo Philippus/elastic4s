@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.RangeBucket
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.RangeBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.freespec.AnyFreeSpec

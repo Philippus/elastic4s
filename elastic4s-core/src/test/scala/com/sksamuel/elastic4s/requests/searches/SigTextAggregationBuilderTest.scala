@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.requests.searches.aggs.{SigTextAggregation, SigTextAggregationBuilder}
+import com.sksamuel.elastic4s.requests.searches.aggs.{SigTextAggregation, builders}
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.SigTextAggregationBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -23,7 +24,7 @@ class SigTextAggregationBuilderTest extends AnyFunSuite with Matchers {
           "background_is_superset" -> false
         )
       )
-    SigTextAggregationBuilder(agg).string() shouldBe
+    builders.SigTextAggregationBuilder(agg).string() shouldBe
       """{"significant_text":{"field":"field","mutual_information":{"include_negatives":true,"background_is_superset":false}}}"""
   }
 }

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.requests.searches.aggs.{TopHitsAggregation, TopHitsAggregationBuilder}
+import com.sksamuel.elastic4s.requests.searches.aggs.TopHitsAggregation
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.TopHitsAggregationBuilder
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, SortMode}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

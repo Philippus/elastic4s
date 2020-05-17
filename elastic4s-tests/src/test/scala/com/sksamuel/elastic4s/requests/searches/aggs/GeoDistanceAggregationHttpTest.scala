@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
-import com.sksamuel.elastic4s.requests.searches.{GeoDistanceBucket, GeoPoint}
+import com.sksamuel.elastic4s.requests.searches.GeoPoint
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.GeoDistanceBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers

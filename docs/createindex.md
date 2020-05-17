@@ -1,30 +1,24 @@
----
-layout: docs
-title:  "Create Index API"
-section: "docs"
----
+## Creating Indexes
 
-# Creating Indexes
+By default Elasticsearch does not require us to define indexes or their fields before we use them.
+Indexes and types are created when they are first accessed, then updated with extra fields as more data is indexed.
 
-By default Elasticsearch does not require us to define indexes or their fields before we use them. Indexes and types are created when they are first accessed, then updated with extra fields as more data is indexed.
-
-Elasticsearch does a good job of guessing what we want but sometimes we need to override the defaults to better match our requirements (providing default values for fields or changing the way fields are analyzed). This is achieved by providing Elasticsearch with a [mapping](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) before we start indexing data.
+Elasticsearch does a good job of guessing what we want but sometimes we need to override the defaults to better match our requirements (providing default values for fields or changing the way fields are analyzed).
+This is achieved by providing Elasticsearch with a [mapping](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) before we start indexing data.
 
 Note that creating a mapping does not stop Elasticsearch from dynamically creating or updating types - anything that is not found in the mapping will still be dynamically updated.
 
-## Building a Basic Mapping
+### Building a Basic Mapping
 
 Lets start by defining an index called `cities` which has a single field (`year_founded`):
 
 ```scala
-// imports - will be omitted for other examples
 import com.sksamuel.elastic4s.ElasticDsl._
-import com.sksamuel.elastic4s.mappings.FieldType._
 
 client.execute {
   createIndex("cities").mapping(
     properties(
-      intField("year_founded")
+      IntegerField("year_founded")
     )
   )
 }
@@ -37,22 +31,25 @@ Lets enhance this by adding a `location` field of type `GeoPointType`. This fiel
 client.execute {
   createIndex("cities").mapping(
     properties(
-      intField("year_founded"),
-      geopointField("location")
+      IntegerField("year_founded"),
+      GeoPointField("location")
     )
   )
 }
 ```
 
-Wrapping up our introduction, we finally want to add a field called [demonym](http://en.wikipedia.org/wiki/Demonym) to the city. If there is no demonym (ie, the field is empty / null when indexing) we'll tell Elasticsearch to use a default of "citizen". We definitely don't want any stemming on these words. If you're from Brussels, you are a Bruxellois. We don't want the `s` to be removed. Therefore we'll also tell Elasticsearch to index the whole word as a single token.
+Wrapping up our introduction, we finally want to add a field called [demonym](http://en.wikipedia.org/wiki/Demonym) to the city.
+If there is no demonym (ie, the field is empty / null when indexing) we'll tell Elasticsearch to use a default of "citizen".
+We definitely don't want any stemming on these words. If you're from Brussels, you are a Bruxellois. We don't want the `s` to be removed.
+Therefore we'll also tell Elasticsearch to index the whole word as a single token by using the `KeywordAnalyzer`
 
 ```scala
 client.execute {
   createIndex("cities").mapping(
     properties(
-      intField("year_founded"),
-      geopointField("location"),
-      textField("demonym") nullValue "citizen" analyzer KeywordAnalyzer
+      IntegerField("year_founded"),
+      GeopointField("location"),
+      TextField("demonym").nullValue("citizen").analyzer(KeywordAnalyzer)
     )
   )
 }
@@ -60,7 +57,7 @@ client.execute {
 
 There are many options that can be specified a field or type. The [reference](#create_index_reference) section below describes how many of these features can be used. For a full list, see the methods in the DSL or see the official documentation on [mapping](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) (the DSL keywords will be the same or very close to the name of the optional in the REST API).
 
-## Create Geo Shape Index
+### Create Geo Shape Index
 
 In the first example we created a `type` of `GeoPointType`. Elasticsearch also offers a `GeoShapeType` type, which allows you to
 store [different geojson formats](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping-geo-shape-type.html#_input_structure_2) like _LineString_, _Polygon_ or _Point_. Create a mapping for a `GeoShapeType` like this

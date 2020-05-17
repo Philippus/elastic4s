@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.requests.searches.aggs.SigTermsAggregationBuilder
+import com.sksamuel.elastic4s.requests.searches.aggs.builders
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.SigTermsAggregationBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -13,7 +14,7 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
       .field("field")
       .backgroundFilter(termQuery("text", "test"))
 
-    SigTermsAggregationBuilder(agg).string() shouldBe
+    builders.SigTermsAggregationBuilder(agg).string() shouldBe
       """{"significant_terms":{"field":"field","background_filter":{"term":{"text":{"value":"test"}}}}}"""
   }
 
@@ -21,7 +22,7 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
     val agg = sigTermsAggregation("name")
       .field("field")
       .significanceHeuristic("percentage")
-    SigTermsAggregationBuilder(agg).string() shouldBe
+    builders.SigTermsAggregationBuilder(agg).string() shouldBe
       """{"significant_terms":{"field":"field","percentage":{}}}"""
   }
 
@@ -35,7 +36,7 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
           "background_is_superset" -> false
         )
       )
-    SigTermsAggregationBuilder(agg).string() shouldBe
+    builders.SigTermsAggregationBuilder(agg).string() shouldBe
       """{"significant_terms":{"field":"field","mutual_information":{"include_negatives":true,"background_is_superset":false}}}"""
   }
 

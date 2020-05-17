@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.GeoHashGridBucket
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.{GeoHashGrid, GeoHashGridBucket}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -16,9 +16,9 @@ class GeoHashGridAggregationHttpTest extends AnyFreeSpec with DockerTests with M
   }
 
   client.execute {
-    createIndex("geohashgridagg") mappings {
-      mapping() fields geopointField("location")
-    }
+    createIndex("geohashgridagg").mapping(
+      properties(geopointField("location"))
+    )
   }.await
 
   client.execute(
@@ -44,7 +44,7 @@ class GeoHashGridAggregationHttpTest extends AnyFreeSpec with DockerTests with M
 
       resp.totalHits shouldBe 6
 
-      val agg = resp.aggs.geoHashGrid("geo_grid")
+      val agg = resp.aggs.result[GeoHashGrid]("geo_grid")
 
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
         GeoHashGridBucket("u173z", 3, Map.empty),

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder}
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder, DateRangeAggregationBuilder, ExtendedStatsAggregationBuilder, FilterAggregationBuilder, FiltersAggregationBuilder, GeoBoundsAggregationBuilder, GeoCentroidAggregationBuilder, GeoDistanceAggregationBuilder, GeoHashGridAggregationBuilder, GlobalAggregationBuilder, HistogramAggregationBuilder, IpRangeAggregationBuilder, KeyedFiltersAggregationBuilder, MaxAggregationBuilder, MinAggregationBuilder, MissingAggregationBuilder, NestedAggregationBuilder, PercentilesAggregationBuilder, RangeAggregationBuilder, ReverseNestedAggregationBuilder, SamplerAggregationBuilder, ScriptedMetricAggregationBuilder, SigTermsAggregationBuilder, SigTextAggregationBuilder, StatsAggregationBuilder, SumAggregationBuilder, TermsAggregationBuilder, TopHitsAggregationBuilder, TopMetricsAggregationBuilder, ValueCountAggregationBuilder}
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
 
 object AggregationBuilderFn {
@@ -38,10 +38,10 @@ object AggregationBuilderFn {
       case agg: SigTextAggregation        => SigTextAggregationBuilder(agg)
       case agg: StatsAggregation          => StatsAggregationBuilder(agg)
       case agg: SumAggregation            => SumAggregationBuilder(agg)
-      case agg: TopHitsAggregation        => TopHitsAggregationBuilder(agg)
       case agg: TermsAggregation          => TermsAggregationBuilder(agg)
-      case agg: ValueCountAggregation     => ValueCountAggregationBuilder(agg)
-
+      case agg: TopHitsAggregation        => TopHitsAggregationBuilder(agg)
+      case agg: TopMetricsAggregation => TopMetricsAggregationBuilder(agg)
+      case agg: ValueCountAggregation => ValueCountAggregationBuilder(agg)
       case agg: RangeAggregation     => RangeAggregationBuilder(agg)
       case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
 

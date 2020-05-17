@@ -334,7 +334,7 @@ class XContentBuilder(root: JsonNode) {
     require(current.isInstanceOf[ArrayNode])
 
   def endObject(): XContentBuilder = {
-    require(current.isInstanceOf[ObjectNode])
+    require(current.isInstanceOf[ObjectNode], "Cannot call endObject here, not inside an object")
     stack.pop()
     this
   }

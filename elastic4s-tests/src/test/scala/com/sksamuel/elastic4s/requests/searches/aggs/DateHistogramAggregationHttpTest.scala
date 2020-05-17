@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.requests.searches.{DateHistogramBucket, DateHistogramInterval}
+import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.{DateHistogram, DateHistogramBucket}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -48,7 +49,7 @@ class DateHistogramAggregationHttpTest extends AnyFreeSpec with DockerTests with
 
       resp.totalHits shouldBe 6
 
-      val agg = resp.aggs.dateHistogram("agg1")
+      val agg = resp.aggs.result[DateHistogram]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
         DateHistogramBucket("01/12/2007", 1196467200000L, 0, Map.empty),
         DateHistogramBucket("01/01/2008", 1199145600000L, 3, Map.empty),
@@ -73,7 +74,7 @@ class DateHistogramAggregationHttpTest extends AnyFreeSpec with DockerTests with
 
       resp.totalHits shouldBe 6
 
-      val agg = resp.aggs.dateHistogram("agg1")
+      val agg = resp.aggs.result[DateHistogram]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)).sortBy(_.timestamp) shouldBe Seq(
         DateHistogramBucket("01/12/2007", 1196467200000L, 0, Map.empty),
         DateHistogramBucket("01/01/2008", 1199145600000L, 3, Map.empty),

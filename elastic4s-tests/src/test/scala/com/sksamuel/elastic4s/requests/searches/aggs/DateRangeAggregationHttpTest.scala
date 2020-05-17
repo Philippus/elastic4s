@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.DateRangeBucket
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.DateRangeBucket
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
 import org.scalatest.freespec.AnyFreeSpec
