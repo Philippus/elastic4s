@@ -9,6 +9,7 @@ case class MatchPhrasePrefix(field: String,
                              analyzer: Option[String] = None,
                              queryName: Option[String] = None,
                              boost: Option[Double] = None,
+                            // Maximum number of terms to which the last provided term of the query value will expand. Defaults to 50.
                              maxExpansions: Option[Int] = None,
                              slop: Option[Int] = None)
     extends Query {

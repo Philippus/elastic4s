@@ -8,12 +8,16 @@ import com.sksamuel.exts.OptionImplicits._
 case class MatchQuery(field: String,
                       value: Any,
                       analyzer: Option[String] = None,
+                     //  If true, match phrase queries are automatically created for multi-term synonyms. Defaults to true.
+                      autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
                       boost: Option[Double] = None,
                       cutoffFrequency: Option[Double] = None,
                       fuzziness: Option[String] = None,
                       fuzzyRewrite: Option[String] = None,
+                      // Fuzzy transpositions (ab → ba) are allowed by default but can be disabled by setting fuzzy_transpositions to false.
                       fuzzyTranspositions: Option[Boolean] = None,
                       lenient: Option[Boolean] = None,
+                      // (Optional, integer) Maximum number of terms to which the query will expand. Defaults to 50.
                       maxExpansions: Option[Int] = None,
                       minimumShouldMatch: Option[String] = None,
                       operator: Option[Operator] = None,
@@ -31,6 +35,9 @@ case class MatchQuery(field: String,
   def fuzziness(fuzziness: String): MatchQuery       = copy(fuzziness = fuzziness.some)
   def fuzzyRewrite(fuzzyRewrite: String): MatchQuery = copy(fuzzyRewrite = fuzzyRewrite.some)
   def prefixLength(prefixLength: Int): MatchQuery    = copy(prefixLength = prefixLength.some)
+
+  def autoGenerateSynonymsPhraseQuery(auto: Boolean): MatchQuery =
+    copy(autoGenerateSynonymsPhraseQuery = auto.some)
 
   @deprecated("use lenient(Boolean)", "5.0.0")
   def setLenient(l: Boolean): MatchQuery = lenient(l)
