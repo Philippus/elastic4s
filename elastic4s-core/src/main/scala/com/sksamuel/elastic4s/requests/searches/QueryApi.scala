@@ -36,6 +36,8 @@ trait QueryApi {
   def dismax(first: Query, rest: Query*): DisMaxQuery = dismax(first +: rest)
   def dismax(queries: Iterable[Query]): DisMaxQuery   = DisMaxQuery(queries.toSeq)
 
+  def distanceFeatureQuery(field: String, origin: String, pivot: String) = DistanceFeatureQuery(field, origin, pivot)
+
   def existsQuery(field: String): ExistsQuery = ExistsQuery(field)
 
   def fuzzyQuery(field: String, value: String): FuzzyQuery = FuzzyQuery(field, value)
