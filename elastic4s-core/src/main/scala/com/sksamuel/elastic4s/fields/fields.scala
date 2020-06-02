@@ -432,3 +432,7 @@ case class RankFeatureField(name: String,
 case class RankFeaturesField(name: String) extends ElasticField {
   override def `type`: String = "rank_features"
 }
+
+case class HistogramField(name: String) extends ElasticField {
+  override def `type`: String = "histogram"
+}
