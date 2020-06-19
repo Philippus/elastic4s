@@ -87,6 +87,13 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     req.request.entity.get.get should matchJsonResource("/json/search/search_range.json")
   }
 
+  it should "generate json for a distance feature query" in {
+    val req = search("*") limit 5 query {
+      distanceFeatureQuery("production_date", origin = "now", pivot = "7d").boost(0.5)
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_distance_feature.json")
+  }
+
   it should "generate json for a rank feature query" in {
     val req = search("*") limit 5 query {
       rankFeatureQuery("pagerank").boost(0.5).withSigmoid(Sigmoid(7, 0.6))

@@ -1,0 +1,11 @@
+{
+    "size": 5,
+    "query": {
+        "distance_feature": {
+            "field": "production_date",
+            "boost": 0.5,
+            "origin": "now",
+            "pivot": "7d"
+        }
+    }
+}
