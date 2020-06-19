@@ -1,5 +1,5 @@
 package com.sksamuel.elastic4s.fields.builders
-import com.sksamuel.elastic4s.fields.{AliasField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, JoinField, KeywordField, NestedField, NumberField, ObjectField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField}
+import com.sksamuel.elastic4s.fields.{AliasField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
@@ -20,6 +20,7 @@ object ElasticFieldBuilderFn {
       case f: HistogramField => HistogramFieldBuilderFn.build(f)
       case f: JoinField => JoinFieldBuilderFn.build(f)
       case f: KeywordField => KeywordFieldBuilderFn.build(f)
+      case f: Murmur3Field => Murmur3FieldBuilderFn.build(f)
       case f: NestedField => NestedFieldBuilderFn.build(f)
       case f: NumberField[_] => NumberFieldBuilderFn.build(f)
       case f: ObjectField => ObjectFieldBuilderFn.build(f)

@@ -30,8 +30,10 @@ object RandomScoreFunctionBuilderFn {
   def apply(r: RandomScoreFunction): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("random_score")
-    builder.field("seed", r.seed)
-    builder.field("field", r.fieldName)
+    r.seedAndField.foreach { seedAndField =>
+      builder.field("seed", seedAndField.seed)
+      builder.field("field", seedAndField.fieldName)
+    }
     builder.endObject()
     r.weight.foreach(builder.field("weight", _))
     r.filter.foreach(filter =>
