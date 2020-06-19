@@ -109,7 +109,7 @@ object MappingDefinition {
   def apply(fields: Seq[FieldDefinition]): MappingDefinition = MappingDefinition(None, fields = fields)
 }
 
-case class MappingDefinition(@deprecated("types are deprecated in elasticsearch", "7.7.0")
+case class MappingDefinition(@deprecated("types are deprecated in elasticsearch", "7.8.0")
                              `type`: Option[String] = None, // type is now deprecated and can largely be ignored, it will be removed completely in 8.0
                              all: Option[Boolean] = None,
                              source: Option[Boolean] = None,
