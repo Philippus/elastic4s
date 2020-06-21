@@ -563,6 +563,13 @@ See the syntax [here](docs/force_merge.md).
 
 
 
+## Cluster APIs
+
+Elasticsearch supports querying the state of the cluster itself, to find out information on nodes, shards, indices, tasks and so on. See the range of cluster APIs [here](docs/cluster.md).
+
+
+
+
 
 ## Search Iterator
 
