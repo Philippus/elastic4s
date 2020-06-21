@@ -88,7 +88,7 @@ trait ElasticSugar extends ElasticDsl {
     blockUntil(s"Expected to find document $id") { () =>
       client
         .execute {
-          get(id).from(index)
+          get(index, id)
         }
         .await
         .result

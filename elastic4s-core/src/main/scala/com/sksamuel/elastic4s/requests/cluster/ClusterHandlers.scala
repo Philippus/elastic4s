@@ -32,6 +32,7 @@ trait ClusterHandlers {
     }
   }
 
+  implicit val nodeUsageHandler: NodeUsageHandler.type = NodeUsageHandler
 
   implicit object ClusterHealthHandler extends Handler[ClusterHealthRequest, ClusterHealthResponse] {
 
