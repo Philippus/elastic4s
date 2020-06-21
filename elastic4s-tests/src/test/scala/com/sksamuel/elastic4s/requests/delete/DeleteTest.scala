@@ -36,7 +36,7 @@ class DeleteTest extends AnyFlatSpec with DockerTests with Matchers {
   "a delete by id query" should "return success but with result = not_found when a document does not exist" in {
 
     client.execute {
-      deleteById("141212", "places") refresh RefreshPolicy.Immediate
+      deleteById("places", "141212") refresh RefreshPolicy.Immediate
     }.await.result.result shouldBe "not_found"
 
     client.execute {
@@ -47,7 +47,7 @@ class DeleteTest extends AnyFlatSpec with DockerTests with Matchers {
   it should "return an error when the index does not exist" in {
 
     client.execute {
-      deleteById("141212", "wooop") refresh RefreshPolicy.Immediate
+      deleteById("wooop", "141212") refresh RefreshPolicy.Immediate
     }.await.error.`type` shouldBe "index_not_found_exception"
 
     client.execute {
@@ -57,7 +57,7 @@ class DeleteTest extends AnyFlatSpec with DockerTests with Matchers {
 
   it should "remove a document when deleting by id" in {
     client.execute {
-      deleteById("99", "places") refresh RefreshPolicy.Immediate
+      deleteById("places", "99") refresh RefreshPolicy.Immediate
     }.await.result.result shouldBe "deleted"
 
     client.execute {
