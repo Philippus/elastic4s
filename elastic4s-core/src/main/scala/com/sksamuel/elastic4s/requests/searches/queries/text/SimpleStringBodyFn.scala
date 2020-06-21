@@ -7,7 +7,8 @@ import com.sksamuel.elastic4s.requests.searches.queries.SimpleStringQuery
 object SimpleStringBodyFn {
   def apply(s: SimpleStringQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("simple_query_string")
-    s.operator.map(_.toString).foreach(builder.field("default_operator", _))
+    s.queryName.foreach(builder.field("_name", _))
+    s.operator.map(identity).foreach(builder.field("default_operator", _))
     s.analyzer.map(_.toString).foreach(builder.field("analyzer", _))
     s.analyzeWildcard.map(_.toString).foreach(builder.field("analyze_wildcard", _))
     s.lenient.map(_.toString).foreach(builder.field("lenient", _))
