@@ -13,8 +13,8 @@ class CatAliasTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     aliases(
-      addAlias("ally1").on("catalias"),
-      addAlias("ally2").on("catalias")
+      addAlias("ally1", "catalias"),
+      addAlias("ally2", "catalias")
     )
   }.await
 

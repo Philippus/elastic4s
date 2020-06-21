@@ -6,6 +6,7 @@ trait ClusterApi {
   def clusterStats()                      = new ClusterStatsRequest
 
   def nodeUsage(): NodeUsageRequest = NodeUsageRequest()
+  def nodeHotThreads(): NodeHotThreadsRequest = NodeHotThreadsRequest()
 
   def clusterPersistentSettings(settings: Map[String, String]): ClusterSettingsRequest =
     ClusterSettingsRequest(settings, Map.empty)
