@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.bulk
 
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.common.VersionType.Internal
 import com.sksamuel.elastic4s.testkit.DockerTests
@@ -37,21 +38,21 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
     }.await.result.errors shouldBe false
 
     client.execute {
-      get("2").from(indexname)
+      get(Index(indexname), "2")
     }.await.result.found shouldBe true
 
     client.execute {
-      get("4").from(indexname)
+      get(Index(indexname), "4")
     }.await.result.found shouldBe true
   }
 
   it should "return details of which items succeeded and failed" in {
     val result = client.execute {
       bulk(
-        update("2").in(indexname).doc("atomicweight" -> 2, "name" -> "helium"),
+        updateById(Index(indexname), "2").doc("atomicweight" -> 2, "name" -> "helium"),
         indexInto(indexname).fields("atomicweight" -> 8, "name" -> "oxygen") id "8",
-        update("6").in(indexname).doc("atomicweight" -> 4, "name" -> "lithium"),
-        delete("10").from(indexname)
+        updateById(Index(indexname), "6").doc("atomicweight" -> 4, "name" -> "lithium"),
+        deleteById(Index(indexname), "10")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -64,20 +65,25 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   it should "handle multiple update operations" in {
-
-    client.execute {
+    val result = client.execute {
       bulk(
-        update("2").in(indexname) doc("atomicweight" -> 6, "name" -> "carbon"),
-        update("4").in(indexname) doc("atomicweight" -> 8, "name" -> "oxygen")
+        updateById(Index(indexname), "2") doc("atomicweight" -> 6, "name" -> "carbon"),
+        updateById(Index(indexname), "4") doc("atomicweight" -> 8, "name" -> "oxygen") fetchSource (true)
       ).refresh(RefreshPolicy.Immediate)
-    }.await.result.errors shouldBe false
+    }.await.result
+
+    result.errors shouldBe false
+    result.items.head.asInstanceOf[UpdateBulkResponseItem].source shouldBe None
+    result.items.last.asInstanceOf[UpdateBulkResponseItem].source shouldBe Some {
+      Map("atomicweight" -> 8, "name" -> "oxygen")
+    }
 
     client.execute {
-      get("2").from(indexname).storedFields("name")
+      get(Index(indexname), "2").storedFields("name")
     }.await.result.storedField("name").value shouldBe "carbon"
 
     client.execute {
-      get("4").from(indexname).storedFields("name")
+      get(Index(indexname), "4").storedFields("name")
     }.await.result.storedField("name").value shouldBe "oxygen"
   }
 
@@ -91,11 +97,11 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
     }.await.result.errors shouldBe false
 
     client.execute {
-      get("10").from(indexname).storedFields("name")
+      get(Index(indexname), "10").storedFields("name")
     }.await.result.storedField("name").value shouldBe "carbon"
 
     client.execute {
-      get("11").from(indexname).storedFields("name")
+      get(Index(indexname), "11").storedFields("name")
     }.await.result.storedField("name").value shouldBe "oxygen"
 
     val result = client.execute {
@@ -114,8 +120,8 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        deleteById(indexname,"2"),
-        deleteById(indexname,"4")
+        deleteById(indexname, "2"),
+        deleteById(indexname, "4")
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
@@ -125,7 +131,7 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
     client.execute {
       get(indexname, "4")
-      get("4").from(indexname)
+      get(Index(indexname), "4")
     }.await.result.found shouldBe false
   }
 
@@ -140,30 +146,33 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
     val wrongPrimaryTermResult = client.execute {
       bulk(
         result.items.map {
-          responseItem => delete(responseItem.id).from(indexname)
-            .ifPrimaryTerm(responseItem.primaryTerm + 1)
-            .ifSeqNo(responseItem.seqNo)
-            .versionType(Internal)
+          responseItem =>
+            deleteById(Index(indexname), responseItem.id)
+              .ifPrimaryTerm(responseItem.primaryTerm + 1)
+              .ifSeqNo(responseItem.seqNo)
+              .versionType(Internal)
         }
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe true
     val wrongSeqNoResult = client.execute {
       bulk(
         result.items.map {
-          responseItem => delete(responseItem.id).from(indexname)
-            .ifPrimaryTerm(responseItem.primaryTerm)
-            .ifSeqNo(responseItem.seqNo + 1)
-            .versionType(Internal)
+          responseItem =>
+            deleteById(Index(indexname), responseItem.id)
+              .ifPrimaryTerm(responseItem.primaryTerm)
+              .ifSeqNo(responseItem.seqNo + 1)
+              .versionType(Internal)
         }
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe true
     val successfulUpdateResult = client.execute {
       bulk(
         result.items.map {
-          responseItem => delete(responseItem.id).from(indexname)
-            .ifPrimaryTerm(responseItem.primaryTerm)
-            .ifSeqNo(responseItem.seqNo)
-            .versionType(Internal)
+          responseItem =>
+            deleteById(Index(indexname), responseItem.id)
+              .ifPrimaryTerm(responseItem.primaryTerm)
+              .ifSeqNo(responseItem.seqNo)
+              .versionType(Internal)
         }
       ).refresh(RefreshPolicy.Immediate)
     }.await

@@ -10,10 +10,10 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("bulk content builder should support mixed requests") {
     val req = bulk(
-      update("2").in("chemistry").doc("atomicweight" -> 2, "name" -> "helium"),
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium"),
       indexInto("chemistry").fields("atomicweight" -> 8, "name" -> "oxygen").withId("8"),
-      update("6").in("chemistry").doc("atomicweight" -> 4, "name" -> "lithium"),
-      delete("10").from("chemistry"),
+      updateById("chemistry", "6").doc("atomicweight" -> 4, "name" -> "lithium"),
+      deleteById("chemistry", "10"),
       indexInto("chemistry").fields("atomicweight" -> 81, "name" -> "thallium").withId("14").pipeline("periodic-table")
     ).refresh(RefreshPolicy.Immediate)
 
@@ -46,11 +46,44 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("bulk content builder should support retry_on_conflict in UpdateRequest") {
     val req = bulk(
-      update("2").in("chemistry").doc("atomicweight" -> 2, "name" -> "helium").retryOnConflict(3)
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium").retryOnConflict(3)
     )
 
     BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","retry_on_conflict":3}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
+
+  test("bulk content builder should support _source in UpdateRequest") {
+    val req = bulk(
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium").fetchSource(true)
+    )
+
+    BulkBuilderFn(req).mkString("\n") shouldBe
+      """{"update":{"_index":"chemistry","_id":"2","_source":true}}
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
+  }
+
+  test("bulk content builder should support _source_includes in UpdateRequest") {
+    val req = bulk(
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
+        .fetchSource(includes = Set("atomicweight","name"), excludes = Set.empty)
+    )
+
+    BulkBuilderFn(req).mkString("\n") shouldBe
+      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_includes":["atomicweight","name"]}}
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
+  }
+
+  test("bulk content builder should support _source_excludes in UpdateRequest") {
+    val req = bulk(
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
+        .fetchSource(includes = Set.empty, excludes = Set("atomicweight","name"))
+    )
+
+    BulkBuilderFn(req).mkString("\n") shouldBe
+      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_excludes":["atomicweight","name"]}}
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
+  }
+
 }
