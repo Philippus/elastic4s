@@ -3,32 +3,41 @@ package com.sksamuel.elastic4s.akka
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers.BasicHttpCredentials
 import akka.stream.scaladsl.{FileIO, Keep, Sink, Source, StreamConverters}
-import akka.stream.{ActorMaterializer, OverflowStrategy, QueueOfferResult}
+import akka.stream.{Materializer, OverflowStrategy, QueueOfferResult}
 import akka.util.ByteString
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
-import com.sksamuel.elastic4s.{ElasticRequest, HttpClient => ElasticHttpClient, HttpEntity => ElasticHttpEntity, HttpResponse => ElasticHttpResponse}
+import com.sksamuel.elastic4s.{
+  ElasticRequest,
+  HttpClient => ElasticHttpClient,
+  HttpEntity => ElasticHttpEntity,
+  HttpResponse => ElasticHttpResponse
+}
 
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success, Try}
 
 class AkkaHttpClient private[akka] (
-    settings: AkkaHttpClientSettings,
-    blacklist: Blacklist,
-    httpPoolFactory: HttpPoolFactory)(implicit system: ActorSystem)
+  settings: AkkaHttpClientSettings,
+  blacklist: Blacklist,
+  httpPoolFactory: HttpPoolFactory
+)(implicit system: ActorSystem)
     extends ElasticHttpClient {
 
   import AkkaHttpClient._
   import system.dispatcher
 
-  private implicit val materializer: ActorMaterializer = ActorMaterializer()
+  private implicit val materializer: Materializer = Materializer(system)
 
   private val scheme = if (settings.https) "https" else "http"
 
   private val queue =
     Source
-      .queue[(ElasticRequest, RequestState)](settings.queueSize,
-                                             OverflowStrategy.backpressure)
+      .queue[(ElasticRequest, RequestState)](
+        settings.queueSize,
+        OverflowStrategy.backpressure
+      )
       .statefulMapConcat { () =>
         val hosts = iterateHosts
 
@@ -58,9 +67,12 @@ class AkkaHttpClient private[akka] (
       .via(httpPoolFactory.create[RequestState]())
       .flatMapMerge(
         settings.poolSettings.maxConnections, {
-          case (request, Success(response), state) if request.method == HttpMethods.HEAD =>
+          case (request, Success(response), state)
+              if request.method == HttpMethods.HEAD =>
             response.discardEntityBytes()
-            Source.single((Success(toResponse(response, ByteString.empty)), state))
+            Source.single(
+              (Success(toResponse(response, ByteString.empty)), state)
+            )
           case (_, Success(r), s) =>
             r.entity.dataBytes
               .fold(ByteString())(_ ++ _)
@@ -101,19 +113,24 @@ class AkkaHttpClient private[akka] (
         Future.failed(new Exception("Queue overflowed. Try again later."))
       case QueueOfferResult.Failure(ex) => Future.failed(ex)
       case QueueOfferResult.QueueClosed =>
-        Future.failed(new Exception(
-          "Queue was closed (pool shut down) while running the request. Try again later."))
+        Future.failed(
+          new Exception(
+            "Queue was closed (pool shut down) while running the request. Try again later."
+          )
+        )
     }
   }
 
   private def queueRequestWithRetry(
-      request: ElasticRequest,
-      startTimeNanos: Long = System.nanoTime): Future[ElasticHttpResponse] = {
+    request: ElasticRequest,
+    startTimeNanos: Long = System.nanoTime
+  ): Future[ElasticHttpResponse] = {
 
     val state = RequestState()
 
-    def retryIfPossible(notPossible: => Either[Throwable, ElasticHttpResponse])
-      : Future[ElasticHttpResponse] = {
+    def retryIfPossible(
+      notPossible: => Either[Throwable, ElasticHttpResponse]
+    ): Future[ElasticHttpResponse] = {
       val timePassed = System.nanoTime - startTimeNanos
       if (timePassed < settings.maxRetryTimeout.toNanos) {
         logger.trace(s"Retrying a request: ${request.endpoint}")
@@ -121,9 +138,12 @@ class AkkaHttpClient private[akka] (
       } else {
         notPossible match {
           case Left(exc) =>
-            Future.failed(new Exception(
-              s"Request retries exceeded max retry timeout [${settings.maxRetryTimeout}]",
-              exc))
+            Future.failed(
+              new Exception(
+                s"Request retries exceeded max retry timeout [${settings.maxRetryTimeout}]",
+                exc
+              )
+            )
           case Right(resp) =>
             Future.successful(resp)
         }
@@ -166,7 +186,8 @@ class AkkaHttpClient private[akka] (
       }
       .recoverWith {
         case err @ AllHostsBlacklistedException => retryIfPossible(Left(err))
-        case err: Throwable => markDead().flatMap(_ => retryIfPossible(Left(err)))
+        case err: Throwable =>
+          markDead().flatMap(_ => retryIfPossible(Left(err)))
       }
   }
 
@@ -180,13 +201,15 @@ class AkkaHttpClient private[akka] (
   }
 
   private[akka] def sendAsync(
-      request: ElasticRequest): Future[ElasticHttpResponse] = {
+    request: ElasticRequest
+  ): Future[ElasticHttpResponse] = {
     queueRequestWithRetry(request)
   }
 
   override def send(
-      request: ElasticRequest,
-      callback: Either[Throwable, ElasticHttpResponse] => Unit): Unit = {
+    request: ElasticRequest,
+    callback: Either[Throwable, ElasticHttpResponse] => Unit
+  ): Unit = {
     sendAsync(request).onComplete {
       case Success(r) => callback(Right(r))
       case Failure(e) => callback(Left(e))
@@ -204,13 +227,22 @@ class AkkaHttpClient private[akka] (
   private def toRequest(request: ElasticRequest,
                         host: String): Try[HttpRequest] = Try {
     val httpRequest = HttpRequest(
-      method = HttpMethods.getForKeyCaseInsensitive(request.method).getOrElse(HttpMethod.custom(request.method)),
+      method = HttpMethods
+        .getForKeyCaseInsensitive(request.method)
+        .getOrElse(HttpMethod.custom(request.method)),
       uri = Uri(request.endpoint)
         .withQuery(Query(request.params))
         .withAuthority(Uri.Authority.parse(host))
         .withScheme(scheme),
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
+
+    if (settings.hasCredentialsDefined) {
+      httpRequest.addCredentials(
+        BasicHttpCredentials(settings.username.get, settings.password.get)
+      )
+    }
+
     settings.requestCallback(httpRequest)
   }
 
@@ -253,11 +285,14 @@ class AkkaHttpClient private[akka] (
 
 object AkkaHttpClient {
 
-  def apply(settings: AkkaHttpClientSettings)(
-      implicit system: ActorSystem): AkkaHttpClient = {
+  def apply(
+    settings: AkkaHttpClientSettings
+  )(implicit system: ActorSystem): AkkaHttpClient = {
 
-    val blacklist = new DefaultBlacklist(settings.blacklistMinDuration,
-                                         settings.blacklistMaxDuration)
+    val blacklist = new DefaultBlacklist(
+      settings.blacklistMinDuration,
+      settings.blacklistMaxDuration
+    )
 
     val httpPoolFactory = new DefaultHttpPoolFactory(settings.poolSettings)
 
