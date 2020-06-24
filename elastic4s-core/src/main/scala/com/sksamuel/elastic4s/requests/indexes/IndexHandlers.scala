@@ -73,7 +73,7 @@ trait IndexHandlers {
 case class Mapping(properties: Map[String, Field],
                    @JsonProperty("_meta") meta: Map[String, String] = Map.empty)
 
-case class Field(`type`: String)
+case class Field(`type`: Option[String], properties: Option[Map[String, Field]] = None)
 
 case class GetIndexResponse(aliases: Map[String, Map[String, Any]],
                             mappings: Mapping,
