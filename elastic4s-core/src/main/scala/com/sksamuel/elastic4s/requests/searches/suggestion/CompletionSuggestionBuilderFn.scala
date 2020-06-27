@@ -24,7 +24,6 @@ object CompletionSuggestionBuilderFn {
     completion.skipDuplicates.foreach(builder.field("skip_duplicates", _))
 
     completion.regex.foreach { regex =>
-      ??? // should use regex here ??
       builder.startObject("regex")
       completion.maxDeterminizedStates.foreach(builder.field("max_determinized_states", _))
       if (completion.regexFlags.nonEmpty)
