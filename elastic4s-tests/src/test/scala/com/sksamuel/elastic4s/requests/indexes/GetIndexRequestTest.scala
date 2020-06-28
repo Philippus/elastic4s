@@ -19,10 +19,13 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
       properties(
         textField("a"),
         keywordField("b"),
-        longField("c")
+        longField("c"),
+        objectField("d")
       )
     ).settings(Map("number_of_replicas" -> 2))
   }.await
+  val indexableObject = Map("foo" -> Map("bar" -> "baz"), "quux" -> "quuux")
+  client.execute(indexInto("getindextest").fields("a" -> "A", "b" -> "B", "c" -> 3L, "d" -> indexableObject)).await
 
   "get index" should {
 
@@ -30,7 +33,12 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
       val resp = client.execute {
         getIndex("getindextest")
       }.await.result
-      resp("getindextest").mappings shouldBe Mapping(Map("a" -> Field("text"), "b" -> Field("keyword"), "c" -> Field("long")))
+      resp("getindextest").mappings shouldBe Mapping(Map(
+        "a" -> Field(Some("text")),
+        "b" -> Field(Some("keyword")),
+        "c" -> Field(Some("long")),
+        "d" -> Field(None, Some(Map("foo" -> Field(None, Some(Map("bar" -> Field(Some("text"))))), "quux" -> Field(Some("text")))))
+      ))
     }
 
     "return settings" in {
