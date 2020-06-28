@@ -51,12 +51,46 @@ Other [alternative clients](https://search.maven.org/search?q=g:com.sksamuel.ela
 
 To use these, add the appropriate module to your build, and then pass an instance of that `HttpClient` to `ElasticClient`.
 
-For example, for akka-http, we use `AkkaHttpClient`:
+#### Akka HTTP
+For Akka HTTP, we use `AkkaHttpClient`:
 
 ```scala
-val client = ElasticClient(AkkaHttpClient("http://host1:9200"))
+val client = ElasticClient(AkkaHttpClient(AkkaHttpClientSettings(List("http://host1:9200"))))
 ```
 
+It's possible to create the `AkkaHttpClientSettings` from Typesafe configuration using `AkkaHttpClientSettings.defaults` or by passing in a `Config` instance using `AkkaHttpClientSettings(config)`.
+
+The default configuration:
+
+```
+com.sksamuel.elastic4s.akka {
+  hosts: []
+  https: false
+  queue-size: 1000
+  blacklist {
+    min-duration = 1m
+    max-duration = 30m
+  }
+  max-retry-timeout = 30s
+  akka.http {
+    // akka-http settings specific for elastic4s
+    // can be overwritten in this section
+  }
+}
+```
+
+Using `AkkaHttpClientSettings.defaults` you can still override any of these settings by defining the right keys in your own `application.conf`
+
+The Akka HTTP client supports basic authentication by specifying a username and password:
+
+```
+com.sksamuel.elastic4s.akka {
+  username = user
+  password = pass
+}
+```
+
+#### STTP
 For sttp, we use `SttpRequestHttpClient`:
 
 ```scala
