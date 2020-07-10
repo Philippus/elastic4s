@@ -58,6 +58,7 @@ trait AggregationApi {
   }
 
   def geoHashGridAggregation(name: String): GeoHashGridAggregation = GeoHashGridAggregation(name)
+  def geoTileGridAggregation(name: String): GeoTileGridAggregation = GeoTileGridAggregation(name)
   def geoCentroidAggregation(name: String): GeoCentroidAggregation = GeoCentroidAggregation(name)
   def globalAggregation(name: String): GlobalAggregation           = GlobalAggregation(name)
   def histogramAggregation(name: String): HistogramAggregation     = HistogramAggregation(name)
