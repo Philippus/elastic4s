@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder, DateRangeAggregationBuilder, ExtendedStatsAggregationBuilder, FilterAggregationBuilder, FiltersAggregationBuilder, GeoBoundsAggregationBuilder, GeoCentroidAggregationBuilder, GeoDistanceAggregationBuilder, GeoHashGridAggregationBuilder, GlobalAggregationBuilder, HistogramAggregationBuilder, IpRangeAggregationBuilder, KeyedFiltersAggregationBuilder, MaxAggregationBuilder, MinAggregationBuilder, MissingAggregationBuilder, NestedAggregationBuilder, PercentilesAggregationBuilder, RangeAggregationBuilder, ReverseNestedAggregationBuilder, SamplerAggregationBuilder, ScriptedMetricAggregationBuilder, SigTermsAggregationBuilder, SigTextAggregationBuilder, StatsAggregationBuilder, SumAggregationBuilder, TermsAggregationBuilder, TopHitsAggregationBuilder, TopMetricsAggregationBuilder, ValueCountAggregationBuilder}
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder, DateRangeAggregationBuilder, ExtendedStatsAggregationBuilder, FilterAggregationBuilder, FiltersAggregationBuilder, GeoBoundsAggregationBuilder, GeoCentroidAggregationBuilder, GeoDistanceAggregationBuilder, GeoHashGridAggregationBuilder, GeoTileGridAggregationBuilder, GlobalAggregationBuilder, HistogramAggregationBuilder, IpRangeAggregationBuilder, KeyedFiltersAggregationBuilder, MaxAggregationBuilder, MinAggregationBuilder, MissingAggregationBuilder, NestedAggregationBuilder, PercentilesAggregationBuilder, RangeAggregationBuilder, ReverseNestedAggregationBuilder, SamplerAggregationBuilder, ScriptedMetricAggregationBuilder, SigTermsAggregationBuilder, SigTextAggregationBuilder, StatsAggregationBuilder, SumAggregationBuilder, TermsAggregationBuilder, TopHitsAggregationBuilder, TopMetricsAggregationBuilder, ValueCountAggregationBuilder}
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
 
 object AggregationBuilderFn {
@@ -23,6 +23,7 @@ object AggregationBuilderFn {
       case agg: GeoBoundsAggregation      => GeoBoundsAggregationBuilder(agg)
       case agg: GeoDistanceAggregation    => GeoDistanceAggregationBuilder(agg)
       case agg: GeoHashGridAggregation    => GeoHashGridAggregationBuilder(agg)
+      case agg: GeoTileGridAggregation    => GeoTileGridAggregationBuilder(agg)
       case agg: GlobalAggregation         => GlobalAggregationBuilder(agg)
       case agg: HistogramAggregation      => HistogramAggregationBuilder(agg)
       case agg: IpRangeAggregation        => IpRangeAggregationBuilder(agg)
