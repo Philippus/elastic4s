@@ -454,3 +454,7 @@ case class HistogramField(name: String) extends ElasticField {
 case class Murmur3Field(name: String) extends ElasticField {
   override def `type`: String = "murmur3"
 }
+
+case class AnnotatedTextField(name: String) extends ElasticField {
+  override def `type`: String = "annotated_text"
+}
