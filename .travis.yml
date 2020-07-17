@@ -23,8 +23,8 @@ before_script:
 - sudo chmod +x /usr/local/bin/sbt
 
 scala:
-- 2.12.10
-- 2.13.1
+- 2.12.12
+- 2.13.3
 
 script:
 - sbt clean test
