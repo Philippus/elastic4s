@@ -1,5 +1,5 @@
 package com.sksamuel.elastic4s.fields.builders
-import com.sksamuel.elastic4s.fields.{AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField}
+import com.sksamuel.elastic4s.fields.{AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
@@ -25,6 +25,7 @@ object ElasticFieldBuilderFn {
       case f: NestedField => NestedFieldBuilderFn.build(f)
       case f: NumberField[_] => NumberFieldBuilderFn.build(f)
       case f: ObjectField => ObjectFieldBuilderFn.build(f)
+      case f: PercolatorField => PercolatorFieldBuilderFn.build(f)
       case f: RangeField => RangeFieldBuilderFn.build(f)
       case f: RankFeatureField => RankFeatureFieldBuilderFn.build(f)
       case f: RankFeaturesField => RankFeaturesFieldBuilderFn.build(f)

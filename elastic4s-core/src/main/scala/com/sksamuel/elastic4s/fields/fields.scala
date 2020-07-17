@@ -458,3 +458,7 @@ case class Murmur3Field(name: String) extends ElasticField {
 case class AnnotatedTextField(name: String) extends ElasticField {
   override def `type`: String = "annotated_text"
 }
+
+case class PercolatorField(name: String) extends ElasticField {
+  override def `type`: String = "percolator"
+}
