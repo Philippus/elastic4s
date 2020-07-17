@@ -32,8 +32,8 @@ val Slf4jVersion           = "1.7.30"
 val ScalatestPlusMockitoArtifactId = "mockito-3-2"
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.11",
-  crossScalaVersions := Seq("2.12.11", "2.13.1")
+  scalaVersion := "2.12.12",
+  crossScalaVersions := Seq("2.12.12", "2.13.3")
 )
 
 lazy val warnUnusedImport = Seq(
