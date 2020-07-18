@@ -30,6 +30,7 @@ object AggregationBuilderFn {
       case agg: MinAggregation            => MinAggregationBuilder(agg)
       case agg: MissingAggregation        => MissingAggregationBuilder(agg)
       case agg: NestedAggregation         => NestedAggregationBuilder(agg)
+      case agg: ParentAggregation         => ParentAggregationBuilder(agg)
       case agg: PercentilesAggregation    => PercentilesAggregationBuilder(agg)
       case agg: ReverseNestedAggregation  => ReverseNestedAggregationBuilder(agg)
       case agg: SamplerAggregation        => SamplerAggregationBuilder(agg)

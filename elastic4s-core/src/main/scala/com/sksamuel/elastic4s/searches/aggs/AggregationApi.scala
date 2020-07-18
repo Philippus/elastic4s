@@ -15,6 +15,8 @@ trait AggregationApi {
 
   def childrenAggregation(name: String, childType: String): ChildrenAggregation =
     ChildrenAggregation(name, childType)
+  def parentAggregation(name: String, parentType: String): ParentAggregation =
+    ParentAggregation(name, parentType)
 
   def dateHistogramAgg(name: String, field: String): DateHistogramAggregation =
     dateHistogramAggregation(name).field(field)
