@@ -9,7 +9,7 @@
                 "type": "number",
                 "order": "desc",
                 "mode": "min",
-                "nested_path": "a.b.c"
+                "path": "a.b.c"
             }
         }
     ]
