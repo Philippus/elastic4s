@@ -25,7 +25,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers {
       .nestedPath("foo.bar")
       .nestedFilter(matchQuery("foo.bar", "foo"))
     SortBuilderFn(request).string() shouldBe
-      """{"_script":{"script":{"source":"dummy script","lang":"painless","params":{"nump":10.2,"stringp":"ciao","boolp":true}},"type":"number","order":"desc","nested_path":"foo.bar","nested_filter":{"match":{"foo.bar":{"query":"foo"}}}}}"""
+      """{"_script":{"script":{"source":"dummy script","lang":"painless","params":{"nump":10.2,"stringp":"ciao","boolp":true}},"type":"number","order":"desc","path":"foo.bar","filter":{"match":{"foo.bar":{"query":"foo"}}}}}"""
   }
 
   test("geo distance sort does not generate unit field by default") {
