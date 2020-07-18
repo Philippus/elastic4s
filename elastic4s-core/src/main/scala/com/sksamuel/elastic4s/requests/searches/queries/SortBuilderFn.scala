@@ -22,8 +22,8 @@ object FieldSortBuilderFn {
     fs.missing.foreach(builder.autofield("missing", _))
     fs.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     builder.field("order", EnumConversions.order(fs.order))
-    fs.nestedPath.foreach(builder.field("nested_path", _))
-    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
+    fs.nestedPath.foreach(builder.field("path", _))
+    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
 
     builder.endObject().endObject()
   }
@@ -63,8 +63,8 @@ object GeoDistanceSortBuilderFn {
       EnumConversions.unit(unit)
     }
     geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
-    geo.nestedPath.foreach(builder.field("nested_path", _))
-    geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
+    geo.nestedPath.foreach(builder.field("path", _))
+    geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
 
     builder
   }
@@ -87,8 +87,8 @@ object ScriptSortBuilderFn {
 
     scriptSort.order.map(a => builder.field("order", EnumConversions.order(a)))
     scriptSort.sortMode.map(a => builder.field("mode", EnumConversions.sortMode(a)))
-    scriptSort.nestedPath.map(a => builder.field("nested_path", a))
-    scriptSort.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("nested_filter", _))
+    scriptSort.nestedPath.map(a => builder.field("path", a))
+    scriptSort.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
 
     builder.endObject()
   }
