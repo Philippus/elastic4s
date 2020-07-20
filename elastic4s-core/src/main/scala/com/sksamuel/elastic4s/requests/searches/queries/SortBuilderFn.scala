@@ -22,8 +22,8 @@ object FieldSortBuilderFn {
     fs.missing.foreach(builder.autofield("missing", _))
     fs.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     builder.field("order", EnumConversions.order(fs.order))
-    fs.nestedPath.foreach(builder.field("path", _))
-    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
+    fs.nestedPath.foreach(builder.startObject("nested").field("path", _).endObject())
+    fs.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.startObject("nested").rawField("filter", _).endObject())
 
     builder.endObject().endObject()
   }
