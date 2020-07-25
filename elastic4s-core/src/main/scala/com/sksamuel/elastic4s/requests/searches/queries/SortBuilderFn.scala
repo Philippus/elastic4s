@@ -80,8 +80,16 @@ object GeoDistanceSortBuilderFn {
     geo.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     geo.order.map(o => builder.field("order", EnumConversions.order(o)))
     geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
-    geo.nestedPath.foreach(builder.field("path", _))
-    geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
+
+    if (geo.nested.nonEmpty) {
+      geo.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
+    } else if (geo.nestedPath.nonEmpty || geo.nestedFilter.nonEmpty) {
+      builder.startObject("nested")
+      geo.nestedPath.foreach(builder.field("path", _))
+      geo.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      builder.endObject()
+    }
+
     geo.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
 
     builder
