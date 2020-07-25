@@ -22,10 +22,9 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers {
     val request = scriptSort(scr)
       .typed(ScriptSortType.Number)
       .order(SortOrder.Desc)
-      .nestedPath("foo.bar")
-      .nestedFilter(matchQuery("foo.bar", "foo"))
+      .nested(nestedSort().path("foo.bar").filter(matchQuery("foo.bar", "foo")))
     SortBuilderFn(request).string() shouldBe
-      """{"_script":{"script":{"source":"dummy script","lang":"painless","params":{"nump":10.2,"stringp":"ciao","boolp":true}},"type":"number","order":"desc","path":"foo.bar","filter":{"match":{"foo.bar":{"query":"foo"}}}}}"""
+      """{"_script":{"script":{"source":"dummy script","lang":"painless","params":{"nump":10.2,"stringp":"ciao","boolp":true}},"type":"number","order":"desc","nested":{"path":"foo.bar","filter":{"match":{"foo.bar":{"query":"foo"}}}}}}"""
   }
 
   test("geo distance sort does not generate unit field by default") {

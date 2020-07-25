@@ -105,10 +105,16 @@ object ScriptSortBuilderFn {
 
     scriptSort.order.map(a => builder.field("order", EnumConversions.order(a)))
     scriptSort.sortMode.map(a => builder.field("mode", EnumConversions.sortMode(a)))
-    scriptSort.nestedPath.map(a => builder.field("path", a))
-    scriptSort.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
+
+    if (scriptSort.nested.nonEmpty) {
+      scriptSort.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
+    } else if (scriptSort.nestedPath.nonEmpty || scriptSort.nestedFilter.nonEmpty) {
+      builder.startObject("nested")
+      scriptSort.nestedPath.foreach(builder.field("path", _))
+      scriptSort.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      builder.endObject()
+    }
 
     builder.endObject()
   }
-
 }

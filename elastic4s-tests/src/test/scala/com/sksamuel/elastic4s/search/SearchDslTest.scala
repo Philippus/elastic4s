@@ -450,7 +450,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   it should "generate correct json for script sort" in {
     val req = search("music") sortBy {
       scriptSort(script("document.score").lang("java")) typed "number" order SortOrder
-        .DESC nestedPath "a.b.c" sortMode "min"
+        .DESC nested { nestedSort() path "a.b.c" } sortMode "min"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script.json")
   }
