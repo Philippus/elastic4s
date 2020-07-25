@@ -3,39 +3,6 @@ package com.sksamuel.elastic4s.requests.searches.sort
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._
 
-sealed trait SortMode
-object SortMode {
-
-  def valueOf(str: String): SortMode = str.toLowerCase match {
-    case "avg"    => Avg
-    case "max"    => Max
-    case "min"    => Min
-    case "median" => Median
-    case "sum"    => Sum
-  }
-
-  case object Avg    extends SortMode
-  case object Median extends SortMode
-  case object Min    extends SortMode
-  case object Max    extends SortMode
-  case object Sum    extends SortMode
-
-  def AVG    = Avg
-  def MEDIAN = Median
-  def MIN    = Min
-  def MAX    = Max
-  def SUM    = Sum
-}
-
-sealed trait SortOrder
-object SortOrder {
-  case object Asc  extends SortOrder
-  case object Desc extends SortOrder
-
-  def DESC = Desc
-  def ASC  = Asc
-}
-
 case class FieldSort(field: String,
                      missing: Option[Any] = None,
                      unmappedType: Option[String] = None,
