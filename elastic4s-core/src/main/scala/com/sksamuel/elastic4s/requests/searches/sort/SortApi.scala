@@ -43,4 +43,6 @@ trait SortApi {
     def points(points: Iterable[GeoPoint]): GeoDistanceSort =
       GeoDistanceSort(field, Nil, points.toSeq)
   }
+
+  def nestedSort() = NestedSort()
 }

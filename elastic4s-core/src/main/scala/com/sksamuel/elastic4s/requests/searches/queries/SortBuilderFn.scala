@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, ScoreSort, ScriptSort, Sort}
+import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, ScoreSort, ScriptSort, Sort}
 
 object SortBuilderFn {
   def apply(sort: Sort): XContentBuilder = sort match {
@@ -10,6 +10,17 @@ object SortBuilderFn {
     case gs: GeoDistanceSort => GeoDistanceSortBuilderFn(gs)
     case ss: ScoreSort => ScoreSortBuilderFn(ss)
     case scrs: ScriptSort => ScriptSortBuilderFn(scrs)
+  }
+}
+
+object NestedSortBuilderFn {
+  def apply(nested: NestedSort): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder()
+    nested.path.foreach(builder.field("path", _))
+    nested.filter.foreach(f => builder.rawField("filter", QueryBuilderFn.apply(f)))
+    nested.maxChildren.foreach(builder.field("max_children", _))
+    nested.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
+    builder
   }
 }
 
@@ -22,12 +33,16 @@ object FieldSortBuilderFn {
     fs.missing.foreach(builder.autofield("missing", _))
     fs.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     builder.field("order", EnumConversions.order(fs.order))
-    if (fs.nestedPath.nonEmpty || fs.nestedFilter.nonEmpty) {
+
+    if (fs.nested.nonEmpty) {
+      fs.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
+    } else if (fs.nestedPath.nonEmpty || fs.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       fs.nestedPath.foreach(builder.field("path", _))
       fs.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
+
     fs.numericType.foreach(builder.field("numeric_type", _))
 
     builder.endObject().endObject()

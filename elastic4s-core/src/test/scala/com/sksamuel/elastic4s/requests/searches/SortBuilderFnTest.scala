@@ -1,13 +1,15 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
 import com.sksamuel.elastic4s.requests.searches.queries.{FieldSortBuilderFn, GeoDistanceSortBuilderFn, RangeQuery}
-import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort}
+import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort}
 import com.sksamuel.elastic4s.requests.searches.sort.SortMode.{Avg, Min}
 import com.sksamuel.elastic4s.requests.searches.sort.SortOrder.Asc
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class SortBuilderFnTest extends AnyFunSuite with Matchers {
+class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
 
   test("field sort builder should support defining both nested path and nested filter") {
     val fieldSort = FieldSort(
@@ -20,6 +22,40 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers {
 
     FieldSortBuilderFn(fieldSort).string() shouldBe
       """{"parent.child.age":{"mode":"min","order":"asc","nested":{"path":"parent","filter":{"range":{"parent.child":{"gte":21}}}}}}"""
+  }
+
+  test("field sort builder should correctly build nested option") {
+    val fieldSort = FieldSort("parent.child.age").order(Asc).mode(Min).nested(
+      NestedSort(
+        path = Some("parent"),
+        filter = Some(RangeQuery("parent.age", gte = Some(21L))),
+        nested = Some(NestedSort(
+          path = Some("parent.child"),
+          filter = Some(MatchQuery("parent.child.name", "matt"))))))
+
+    FieldSortBuilderFn(fieldSort).string() should matchJson(
+      """{
+        |         "parent.child.age" : {
+        |            "mode" :  "min",
+        |            "order" : "asc",
+        |            "nested": {
+        |               "path": "parent",
+        |               "filter": {
+        |                  "range": {"parent.age": {"gte": 21}}
+        |               },
+        |               "nested": {
+        |                  "path": "parent.child",
+        |                  "filter": {
+        |                     "match": {
+        |                        "parent.child.name": {
+        |                           "query": "matt"
+        |                        }
+        |                     }
+        |                  }
+        |               }
+        |            }
+        |         }
+        |     }""".stripMargin)
   }
 
   test("field sort builder should support numeric_type option") {
