@@ -15,7 +15,8 @@ case class GeoDistanceSort(field: String,
                            order: Option[SortOrder] = None,
                            unit: Option[DistanceUnit] = None,
                            validation: Option[GeoValidationMethod] = None,
-                           geoDistance: Option[GeoDistance] = None) extends Sort {
+                           geoDistance: Option[GeoDistance] = None,
+                           ignoreUnmapped: Option[Boolean] = None) extends Sort {
 
   def mode(mode: String): GeoDistanceSort = sortMode(SortMode.valueOf(mode.toUpperCase))
   def mode(mode: SortMode): GeoDistanceSort = copy(sortMode = mode.some)
@@ -33,4 +34,6 @@ case class GeoDistanceSort(field: String,
 
   def unit(unit: DistanceUnit): GeoDistanceSort           = copy(unit = unit.some)
   def geoDistance(distance: GeoDistance): GeoDistanceSort = copy(geoDistance = distance.some)
+
+  def ignoreUnmapped(ignoreUnmapped: Boolean): GeoDistanceSort = copy(ignoreUnmapped = ignoreUnmapped.some)
 }

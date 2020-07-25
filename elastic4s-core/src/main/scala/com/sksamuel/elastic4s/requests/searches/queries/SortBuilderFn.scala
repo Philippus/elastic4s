@@ -70,6 +70,7 @@ object GeoDistanceSortBuilderFn {
     geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
     geo.nestedPath.foreach(builder.field("path", _))
     geo.nestedFilter.map(QueryBuilderFn.apply).map(_.string).foreach(builder.rawField("filter", _))
+    geo.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
 
     builder
   }

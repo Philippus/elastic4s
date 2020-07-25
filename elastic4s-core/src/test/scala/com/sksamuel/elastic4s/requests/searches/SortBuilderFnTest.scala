@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.requests.searches.queries.{FieldSortBuilderFn, RangeQuery}
-import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
+import com.sksamuel.elastic4s.requests.searches.queries.{FieldSortBuilderFn, GeoDistanceSortBuilderFn, RangeQuery}
+import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort}
 import com.sksamuel.elastic4s.requests.searches.sort.SortMode.{Avg, Min}
 import com.sksamuel.elastic4s.requests.searches.sort.SortOrder.Asc
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class FieldSortBuilderFnTest extends AnyFunSuite with Matchers {
+class SortBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("field sort builder should support defining both nested path and nested filter") {
     val fieldSort = FieldSort(
@@ -27,5 +27,13 @@ class FieldSortBuilderFnTest extends AnyFunSuite with Matchers {
 
     FieldSortBuilderFn(fieldSort).string() shouldBe
       """{"field":{"order":"asc","numeric_type":"double"}}""".stripMargin
+  }
+
+  test("geo distance sort builder should support ignore_unmapped option") {
+    val geoDistanceSort = GeoDistanceSort(field = "pin.location", points = Seq(GeoPoint(40D, -70D)))
+      .ignoreUnmapped(true)
+
+    GeoDistanceSortBuilderFn(geoDistanceSort).string() shouldBe
+      """{"_geo_distance":{"pin.location":[[-70.0,40.0]],"ignore_unmapped":true}}"""
   }
 }
