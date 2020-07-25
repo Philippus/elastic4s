@@ -20,6 +20,12 @@ class FieldSortBuilderFnTest extends AnyFunSuite with Matchers {
 
     FieldSortBuilderFn(fieldSort).string() shouldBe
       """{"parent.child.age":{"mode":"min","order":"asc","nested":{"path":"parent","filter":{"range":{"parent.child":{"gte":21}}}}}}"""
+  }
 
+  test("field sort builder should support numeric_type option") {
+    val fieldSort = FieldSort("field").numericType("double")
+
+    FieldSortBuilderFn(fieldSort).string() shouldBe
+      """{"field":{"order":"asc","numeric_type":"double"}}""".stripMargin
   }
 }

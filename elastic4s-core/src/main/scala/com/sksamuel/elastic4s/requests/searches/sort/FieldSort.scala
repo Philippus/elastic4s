@@ -42,7 +42,8 @@ case class FieldSort(field: String,
                      nestedFilter: Option[Query] = None,
                      nestedPath: Option[String] = None,
                      sortMode: Option[SortMode] = None,
-                     order: SortOrder = SortOrder.Asc) extends Sort {
+                     order: SortOrder = SortOrder.Asc,
+                     numericType: Option[String] = None) extends Sort {
 
   def missing(missing: AnyRef): FieldSort = copy(missing = missing.some)
   def unmappedType(`type`: String): FieldSort = copy(unmappedType = `type`.some)
@@ -55,6 +56,8 @@ case class FieldSort(field: String,
 
   def nestedPath(path: String): FieldSort   = copy(nestedPath = path.some)
   def nestedFilter(query: Query): FieldSort = copy(nestedFilter = query.some)
+
+  def numericType(numericType: String): FieldSort = copy(numericType = numericType.some)
 
   def order(order: SortOrder): FieldSort     = copy(order = order)
   def sortOrder(order: SortOrder): FieldSort = copy(order = order)

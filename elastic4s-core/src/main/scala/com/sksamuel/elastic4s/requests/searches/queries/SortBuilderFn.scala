@@ -28,6 +28,7 @@ object FieldSortBuilderFn {
       fs.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
+    fs.numericType.foreach(builder.field("numeric_type", _))
 
     builder.endObject().endObject()
   }
