@@ -422,15 +422,19 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate json for field sort" in {
     val req = search("music") sortBy {
-      fieldSort("singer") missing "no-singer" order SortOrder.Desc mode SortMode.Avg nestedPath "nest"
+      fieldSort("singer") missing "no-singer" order SortOrder.Desc mode SortMode.Avg nested {
+        nestedSort() path "nest"
+      }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_field.json")
   }
 
   it should "generate json for nested field sort" in {
     val req = search("music") sortBy {
-      fieldSort("singer.weight") order SortOrder.Desc mode SortMode.Sum nestedFilter {
-        termQuery("singer.name", "coldplay")
+      fieldSort("singer.weight") order SortOrder.Desc mode SortMode.Sum nested {
+        nestedSort() filter {
+          termQuery("singer.name", "coldplay")
+        }
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_nested_field.json")
@@ -446,7 +450,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   it should "generate correct json for script sort" in {
     val req = search("music") sortBy {
       scriptSort(script("document.score").lang("java")) typed "number" order SortOrder
-        .DESC nestedPath "a.b.c" sortMode "min"
+        .DESC nested { nestedSort() path "a.b.c" } sortMode "min"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script.json")
   }
