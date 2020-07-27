@@ -94,5 +94,6 @@ com.sksamuel.elastic4s.akka {
 For sttp, we use `SttpRequestHttpClient`:
 
 ```scala
-val client = ElasticClient(SttpRequestHttpClient("http://host1:9200"))
+val elasticNodeEndpoint = ElasticNodeEndpoint("http", "host1", 9200, None)
+val client = ElasticClient(SttpRequestHttpClient(elasticNodeEndpoint))
 ```
