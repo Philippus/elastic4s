@@ -393,7 +393,7 @@ val resp = client.execute {
 
 // .to[Character] will look for an implicit HitReader[Character] in scope
 // and then convert all the hits into Characters for us.
-val characters: Seq[Character] = resp.to[Character]
+val characters: Seq[Character] = resp.result.to[Character]
 ```
 
 This is basically the inverse of the `Indexable` typeclass. And just like Indexable, the json modules provide implementations
