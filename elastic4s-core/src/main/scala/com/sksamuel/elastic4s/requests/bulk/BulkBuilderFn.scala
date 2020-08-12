@@ -61,8 +61,8 @@ object BulkBuilderFn {
         update.fetchSource.foreach {
           case FetchSourceContext(fetchSource, includes, excludes) =>
             builder.field("_source", fetchSource)
-            if (includes.nonEmpty) builder.array("_source_includes", includes.toList)
-            if (excludes.nonEmpty) builder.array("_source_excludes", excludes.toList)
+            if (includes.nonEmpty) builder.field("_source_includes", includes.mkString(","))
+            if (excludes.nonEmpty) builder.field("_source_excludes", excludes.mkString(","))
         }
         builder.endObject()
         builder.endObject()

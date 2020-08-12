@@ -71,7 +71,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
     )
 
     BulkBuilderFn(req).mkString("\n") shouldBe
-      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_includes":["atomicweight","name"]}}
+      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_includes":"atomicweight,name"}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
@@ -82,7 +82,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
     )
 
     BulkBuilderFn(req).mkString("\n") shouldBe
-      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_excludes":["atomicweight","name"]}}
+      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_excludes":"atomicweight,name"}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
