@@ -77,6 +77,8 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
     result.items.last.asInstanceOf[UpdateBulkResponseItem].source shouldBe Some {
       Map("atomicweight" -> 8, "name" -> "oxygen")
     }
+    result.items.last.asInstanceOf[UpdateBulkResponseItem].sourceAsString shouldBe
+      Some("{\"atomicweight\":8,\"name\":\"oxygen\"}")
 
     client.execute {
       get(Index(indexname), "2").storedFields("name")

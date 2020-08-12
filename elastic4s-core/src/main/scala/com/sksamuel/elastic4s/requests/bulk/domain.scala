@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.bulk
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.json.SourceAsContentBuilder
 import com.sksamuel.elastic4s.requests.common.Shards
 import com.sksamuel.elastic4s.requests.update.UpdateGet
 
@@ -96,7 +97,9 @@ case class UpdateBulkResponseItem(itemId: Int,
 
   override def withItemId(itemId: Int): UpdateBulkResponseItem = this.copy(itemId)
 
-  def source: Option[Map[String, Any]] = get.flatMap(get => Option(get._source))
+  def source: Option[Map[String, Any]] = get.map(_._source)
+
+  def sourceAsString: Option[String] = source.map(SourceAsContentBuilder(_).string())
 }
 
 case class CreateBulkResponseItem(itemId: Int,
