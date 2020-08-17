@@ -237,13 +237,13 @@ class AkkaHttpClient private[akka] (
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
 
-    if (settings.hasCredentialsDefined) {
-      httpRequest.addCredentials(
-        BasicHttpCredentials(settings.username.get, settings.password.get)
-      )
-    }
-
-    settings.requestCallback(httpRequest)
+    settings.requestCallback(
+      if (settings.hasCredentialsDefined) {
+        httpRequest.addCredentials(BasicHttpCredentials(settings.username.get, settings.password.get))
+      } else {
+        httpRequest
+      }
+    )
   }
 
   private def toResponse(response: HttpResponse,
