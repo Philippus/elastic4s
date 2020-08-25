@@ -24,6 +24,9 @@ trait PipelineAggregationApi {
   def cumulativeSumAggregation(name: String, bucketsPath: String): CumulativeSumPipelineAgg =
     CumulativeSumPipelineAgg(name, bucketsPath)
 
+  def cumulativeCardinalityAggregation(name: String, bucketsPath: String): CumulativeCardinalityPipelineAgg =
+    CumulativeCardinalityPipelineAgg(name, bucketsPath)
+
   def derivativeAggregation(name: String, bucketsPath: String): DerivativePipelineAgg =
     DerivativePipelineAgg(name, bucketsPath)
 

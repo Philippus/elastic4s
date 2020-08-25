@@ -52,6 +52,7 @@ object AggregationBuilderFn {
       case agg: BucketSelectorPipelineAgg      => BucketSelectorPipelineBuilder(agg)
       case agg: BucketSortPipelineAgg          => BucketSortPipelineAggBuilder(agg)
       case agg: CumulativeSumPipelineAgg       => CumulativeSumPipelineAggBuilder(agg)
+      case agg: CumulativeCardinalityPipelineAgg => CumulativeCardinalityPipelineAggBuilder(agg)
       case agg: DerivativePipelineAgg          => DerivativePipelineAggBuilder(agg)
       case agg: DiffPipelineAgg                => SerialDiffPipelineAggBuilder(agg)
       case agg: ExtendedStatsBucketPipelineAgg => ExtendedStatsBucketPipelineAggBuilder(agg)
@@ -88,6 +89,17 @@ object DerivativePipelineAggBuilder {
 object CumulativeSumPipelineAggBuilder {
   def apply(agg: CumulativeSumPipelineAgg): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("cumulative_sum")
+    builder.field("buckets_path", agg.bucketsPath)
+    agg.format.foreach(f => builder.field("format", f))
+    builder.endObject()
+    AggMetaDataFn(agg, builder)
+    builder.endObject()
+  }
+}
+
+object CumulativeCardinalityPipelineAggBuilder {
+  def apply(agg: CumulativeCardinalityPipelineAgg): XContentBuilder = {
+    val builder = XContentFactory.jsonBuilder().startObject("cumulative_cardinality")
     builder.field("buckets_path", agg.bucketsPath)
     agg.format.foreach(f => builder.field("format", f))
     builder.endObject()
