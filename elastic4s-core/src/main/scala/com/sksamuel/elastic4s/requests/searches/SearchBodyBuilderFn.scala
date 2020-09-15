@@ -18,6 +18,7 @@ object SearchBodyBuilderFn {
     request.timeout.map(_.toMillis + "ms").foreach(builder.field("timeout", _))
     request.terminateAfter.map(_.toString).foreach(builder.field("terminate_after", _))
     request.version.map(_.toString).foreach(builder.field("version", _))
+    request.seqNoPrimaryTerm.map(_.toString).foreach(builder.field("seq_no_primary_term", _))
 
     request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))

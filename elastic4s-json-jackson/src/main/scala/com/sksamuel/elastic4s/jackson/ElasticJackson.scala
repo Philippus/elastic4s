@@ -27,6 +27,8 @@ object ElasticJackson {
         if (!node.has("_index")) node.put("_index", hit.index)
         //  if (!node.has("_score")) node.put("_score", hit.score)
         if (!node.has("_version")) node.put("_version", hit.version)
+        if (!node.has("_seq_no")) node.put("_seq_no", hit.seqNo)
+        if (!node.has("_primary_term")) node.put("_primary_term", hit.primaryTerm)
         if (!node.has("_timestamp"))
           hit
             .sourceFieldOpt("_timestamp")

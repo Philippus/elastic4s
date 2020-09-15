@@ -18,6 +18,8 @@ trait Hit {
   def index: String
   def `type`: String
   def version: Long
+  def seqNo: Long
+  def primaryTerm: Long
 
   final def ref: DocumentRef = DocumentRef(index, `type`, id)
 
