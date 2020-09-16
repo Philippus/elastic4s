@@ -48,6 +48,7 @@ case class SearchRequest(indexes: Indexes,
                          searchType: Option[SearchType] = None,
                          searchAfter: Seq[Any] = Nil,
                          version: Option[Boolean] = None,
+                         seqNoPrimaryTerm: Option[Boolean] = None,
                          profile: Option[Boolean] = None,
                          source: Option[String] = None,
                          trackHits: Option[Boolean] = None,
@@ -226,6 +227,8 @@ case class SearchRequest(indexes: Indexes,
   def searchType(searchType: SearchType): SearchRequest = copy(searchType = searchType.some)
 
   def version(version: Boolean): SearchRequest = copy(version = version.some)
+
+  def seqNoPrimaryTerm(seqNoPrimaryTerm: Boolean): SearchRequest = copy(seqNoPrimaryTerm = seqNoPrimaryTerm.some)
 
   /**
     * The maximum number of documents to collect for each shard,

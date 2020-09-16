@@ -216,6 +216,15 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
           ).indicesOptions(IndicesOptionsRequest(ignoreUnavailable = true))
       }.await.result.totalHits shouldBe 1
     }
+    "return version numbers when request asks for it" in {
+      val searchResult = client.execute {
+        search("chess")
+          .query(termQuery("name", "pawn"))
+          .seqNoPrimaryTerm(true)
+      }.await.result.hits.hits(0)
+      searchResult.seqNo > 0 shouldBe true
+      searchResult.primaryTerm > 0 shouldBe true
+    }
   }
 }
 
