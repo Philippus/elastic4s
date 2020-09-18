@@ -11,6 +11,11 @@ case class ConstantKeywordField(override val name: String, value: String) extend
   override def `type`: String = "constant_keyword"
 }
 
+case class WildcardField(override val name: String,
+                         ignoreAbove: Option[Int] = None) extends ElasticField {
+  override def `type`: String = "wildcard"
+}
+
 case class TextField(override val name: String,
                      analyzer: Option[String] = None,
                      boost: Option[Double] = None,
