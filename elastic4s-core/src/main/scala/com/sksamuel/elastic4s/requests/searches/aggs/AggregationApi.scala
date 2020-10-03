@@ -66,6 +66,7 @@ trait AggregationApi {
 
   @deprecated("use maxAgg", "7.7")
   def maxAggregation(name: String): MaxAggregation        = MaxAggregation(name)
+  def maxAgg(name: String): MaxAggregation = MaxAggregation(name)
   def maxAgg(name: String, field: String): MaxAggregation = MaxAggregation(name).field(field)
 
   @deprecated("use minAgg", "7.7")
