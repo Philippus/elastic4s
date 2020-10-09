@@ -6,7 +6,7 @@ val travisBuildNumber = settingKey[String]("Value of the travis build number")
 travisBuildNumber in Global := sys.env.getOrElse("TRAVIS_BUILD_NUMBER", "0")
 
 val org                    = "com.sksamuel.elastic4s"
-val AkkaVersion            = "2.6.9"
+val AkkaVersion            = "2.6.10"
 val AkkaHttpVersion        = "10.1.12"
 val CatsVersion            = "2.0.0"
 val CatsEffectVersion      = "2.1.4"
