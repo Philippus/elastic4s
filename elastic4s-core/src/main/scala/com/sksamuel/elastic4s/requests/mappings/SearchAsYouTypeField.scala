@@ -29,7 +29,7 @@ case class SearchAsYouTypeField(name: String,
 
   type T = SearchAsYouTypeField
 
-  override def `type` = "text"
+  override def `type` = "search_as_you_type"
 
   override def boost(boost: Double): T = copy(boost = boost.some)
 
