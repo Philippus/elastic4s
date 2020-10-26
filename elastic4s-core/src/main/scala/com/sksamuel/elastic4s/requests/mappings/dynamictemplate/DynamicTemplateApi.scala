@@ -39,4 +39,5 @@ trait DynamicTemplateApi {
   def dynamicTextField(): TextField                       = TextField("")
   def dynamicSearchAsYouTypeField(): SearchAsYouTypeField = SearchAsYouTypeField("")
   def dynamicTokenCountField(): BasicField                = BasicField("", "token_count")
+  def dynamicWildcardField(): WildcardField               = WildcardField("")
 }
