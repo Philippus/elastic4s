@@ -671,6 +671,7 @@ For the tests to work you will need to run a local elastic instance on port 3922
 * Soundcloud
 * Rostelecom-Solar
 * Shoprunner
+* Twitter
 
 _Raise a PR to add your company here_
 
