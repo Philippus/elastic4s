@@ -275,4 +275,15 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
     val req = createIndex("tweets").source(source)
     CreateIndexContentBuilder(req)
   }
+
+  it should "support wildcard fields" in {
+    val req = createIndex("logs").mapping(
+      properties(
+        wildcardField("message")
+          .ignoreAbove(100)
+          .nullValue("<empty message>")
+      )
+    )
+    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_wildcard.json")
+  }
 }

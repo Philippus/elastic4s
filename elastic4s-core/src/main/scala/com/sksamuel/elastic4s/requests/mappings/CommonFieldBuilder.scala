@@ -139,6 +139,9 @@ object FieldBuilderFn {
         keyword.similarity.foreach(builder.field("similarity", _))
         keyword.indexOptions.foreach(builder.field("index_options", _))
 
+      case wildcard: WildcardField =>
+        wildcard.ignoreAbove.foreach(builder.field("ignore_above", _))
+
       case range: RangeField =>
         range.ignoreAbove.foreach(builder.field("ignore_above", _))
         range.ignoreMalformed.foreach(builder.field("ignore_malformed", _))

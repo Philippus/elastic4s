@@ -1,0 +1,11 @@
+{
+    "mappings": {
+        "properties": {
+            "message": {
+                "type": "wildcard",
+                "ignore_above": 100,
+                "null_value": "<empty message>"
+            }
+        }
+    }
+}
