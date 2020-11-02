@@ -35,4 +35,20 @@ class ScriptBuilderFnTest extends AnyFunSuite with Matchers {
     ScriptBuilderFn(Script("convert_currency", scriptType = ScriptType.Stored, params = Map("field" -> "price", "conversion_rate" -> 0.835526591))).string shouldBe
       """{"id":"convert_currency","params":{"field":"price","conversion_rate":0.835526591}}"""
   }
+
+  test("should handle a mix of parameters and raw parameters") {
+
+    case class TestParam(x:Double)
+    implicit object TestParamSerializer extends ParamSerializer[TestParam] {
+      override def json(t: TestParam): String = s"""{"x":${t.x}}"""
+    }
+
+    ScriptBuilderFn(
+      Script("mix_script")
+        .params("testParam" -> 100)
+        .paramsRaw("testRawParam" -> """{"abc":"def"}""")
+        .paramsObject("testObjectParam" -> TestParam(4.5d))
+    ).string shouldBe
+      """{"source":"mix_script","params":{"testParam":100,"testRawParam":{"abc":"def"},"testObjectParam":{"x":4.5}}}"""
+  }
 }

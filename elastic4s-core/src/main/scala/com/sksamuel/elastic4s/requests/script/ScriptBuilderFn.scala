@@ -15,8 +15,12 @@ object ScriptBuilderFn {
       case ScriptType.Stored => builder.field("id", script.script)
     }
 
-    if (script.params.nonEmpty)
-      builder.autofield("params", script.params)
+    if (script.params.nonEmpty || script.paramsRaw.nonEmpty) {
+      builder.startObject("params")
+      script.params.foreach { case (k, v) => builder.autofield(k, v) }
+      script.paramsRaw.foreach { case (k, v) => builder.rawField(k, v) }
+      builder.endObject()
+    }
 
     if (script.options.nonEmpty) {
       builder.startObject("options")
