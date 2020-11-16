@@ -26,9 +26,9 @@ object MultiSearchBuilderFn {
       }
       header.endObject()
 
-      val body = SearchBodyBuilderFn(search)
+      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
 
-      Seq(header.string(), body.string())
+      Seq(header.string(), body)
 
     }.mkString("\n") + "\n"
   }
