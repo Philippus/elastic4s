@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.requests
 
-import com.sksamuel.elastic4s.requests.mappings.{BasicField, CompletionField, DenseVectorField, GeoshapeField, JoinField, KeywordField, NestedField, ObjectField, RangeField, SearchAsYouTypeField, TextField}
+import com.sksamuel.elastic4s.requests.mappings._
 import com.sksamuel.elastic4s.requests.script.{Script, ScriptField}
 
 trait TypesApi {
 
   def keywordField(name: String): KeywordField            = KeywordField(name)
   def textField(name: String): TextField                  = TextField(name)
+  def wildcardField(name: String): WildcardField          = WildcardField(name)
   def searchAsYouType(name: String): SearchAsYouTypeField = SearchAsYouTypeField(name)
 
   def byteField(name: String): BasicField        = BasicField(name, "byte")
