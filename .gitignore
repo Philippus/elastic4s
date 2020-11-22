@@ -29,3 +29,4 @@ esdata
 *.sublime-workspace
 *.metals
 *.bloop
+.bsp
