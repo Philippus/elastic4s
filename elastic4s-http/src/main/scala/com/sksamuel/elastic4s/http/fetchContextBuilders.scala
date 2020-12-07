@@ -11,11 +11,11 @@ object FetchSourceContextBuilderFn {
       if (context.includes.nonEmpty || context.excludes.nonEmpty) {
         builder.startObject("_source")
         context.includes.toList match {
-          case Nil      =>
+          case Nil =>
           case includes => builder.array("includes", includes.toArray)
         }
         context.excludes.toList match {
-          case Nil      =>
+          case Nil =>
           case excludes => builder.array("excludes", excludes.toArray)
         }
         builder.endObject()
@@ -33,9 +33,9 @@ object FetchSourceContextQueryParameterFn {
     if (context.fetchSource) {
       map.put("_source", "true")
       if (context.includes.nonEmpty)
-        map.put("_source_include", context.includes.mkString(","))
+        map.put("_source_includes", context.includes.mkString(","))
       if (context.excludes.nonEmpty)
-        map.put("_source_exclude", context.excludes.mkString(","))
+        map.put("_source_excludes", context.excludes.mkString(","))
     } else
       map.put("_source", "false")
     map.toMap
