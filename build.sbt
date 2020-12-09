@@ -7,7 +7,7 @@ travisBuildNumber in Global := sys.env.getOrElse("TRAVIS_BUILD_NUMBER", "0")
 
 val org                    = "com.sksamuel.elastic4s"
 val AkkaVersion            = "2.6.10"
-val AkkaHttpVersion        = "10.1.13"
+val AkkaHttpVersion        = "10.2.2"
 val CatsVersion            = "2.0.0"
 val CatsEffectVersion      = "2.1.4"
 val CirceVersion           = "0.13.0"
