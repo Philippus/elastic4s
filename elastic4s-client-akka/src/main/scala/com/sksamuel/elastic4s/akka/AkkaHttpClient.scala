@@ -46,9 +46,9 @@ class AkkaHttpClient private[akka] (
             (in, hosts.next()) match {
               case ((r, s), Some(host)) =>
                 // if host is resolved - send request forward
-                s.host.success(host)
                 toRequest(r, host) match {
                   case Success(req) =>
+                    s.host.success(host)
                     (req, s) :: Nil
                   case Failure(e) =>
                     s.host.failure(e)
