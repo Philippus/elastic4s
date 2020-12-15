@@ -19,7 +19,7 @@ trait IngestHandlers {
             GetPipelineResponse(
               id,
               types("description").asInstanceOf[String],
-              types("version").asInstanceOf[Int],
+              types.get("version").asInstanceOf[Option[Int]],
               types("processors").asInstanceOf[Seq[Map[String, Map[String, Any]]]].map { processor =>
                 val name = processor.keys.head
                 name match {
