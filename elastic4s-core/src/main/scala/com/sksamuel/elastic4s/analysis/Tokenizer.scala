@@ -84,7 +84,7 @@ case class NGramTokenizer(override val name: String,
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
-    b.field("type", "nGram")
+    b.field("type", "ngram")
     b.field("min_gram", minGram)
     b.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
