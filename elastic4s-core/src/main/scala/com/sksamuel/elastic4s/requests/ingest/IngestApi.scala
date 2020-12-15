@@ -4,8 +4,8 @@ trait IngestApi {
 
   def getPipeline(id: String): GetPipelineRequest = GetPipelineRequest(id)
 
-  def putPipeline(id: String, description: String, processors: Seq[Processor]): PutPipelineRequest =
-    PutPipelineRequest(id, description, processors)
+  def putPipeline(id: String, description: String, processors: Seq[Processor], version: Option[Int] = None): PutPipelineRequest =
+    PutPipelineRequest(id, description, processors, version)
 
   def deletePipeline(id: String): DeletePipelineRequest = DeletePipelineRequest(id)
 

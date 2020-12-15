@@ -61,6 +61,7 @@ trait IngestHandlers {
     override def build(request: PutPipelineRequest): ElasticRequest = {
       val xcb = XContentFactory.jsonBuilder()
       xcb.field("description", request.description)
+      request.version.map(xcb.field("version", _))
       xcb.array("processors", request.processors.map(processorToXContent).toArray)
       xcb.endObject()
       ElasticRequest("PUT", s"_ingest/pipeline/${request.id}", HttpEntity(xcb.string()))
