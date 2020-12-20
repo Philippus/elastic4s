@@ -1,14 +1,15 @@
-name: release
+name: master
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "The release version"
-        required: true
-      branch:
-        description: "The branch to release from"
-        required: true
+  push:
+    paths-ignore:
+      - 'doc/**'
+      - 'docs/**'
+      - '*.md'
+      - '*.yml'
+    branches:
+      - master
+      - release/*
 
 jobs:
   scala-2_12:
@@ -41,10 +42,9 @@ jobs:
           echo "name:        ${{ steps.import_gpg.outputs.name }}"
           echo "email:       ${{ steps.import_gpg.outputs.email }}"
 
-      - name: publish release
-        run: sbt ++2.12.12 publishSigned
+      - name: publish snapshot
+        run: sbt ++2.12.12 publish
         env:
-          RELEASE_VERSION: ${{ github.event.inputs.version }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 
@@ -78,9 +78,8 @@ jobs:
           echo "name:        ${{ steps.import_gpg.outputs.name }}"
           echo "email:       ${{ steps.import_gpg.outputs.email }}"
 
-      - name: publish release
-        run: sbt ++2.13.4 publishSigned
+      - name: publish snapshot
+        run: sbt ++2.13.4 publish
         env:
-          RELEASE_VERSION: ${{ github.event.inputs.version }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
