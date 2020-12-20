@@ -1,10 +1,3 @@
-
-val isTravis = settingKey[Boolean]("Flag indicating whether the current build is running under Travis")
-isTravis in Global := sys.env.get("TRAVIS").isDefined
-
-val travisBuildNumber = settingKey[String]("Value of the travis build number")
-travisBuildNumber in Global := sys.env.getOrElse("TRAVIS_BUILD_NUMBER", "0")
-
 val org                    = "com.sksamuel.elastic4s"
 val AkkaVersion            = "2.6.10"
 val AkkaHttpVersion        = "10.2.2"
@@ -31,6 +24,23 @@ val SttpVersion            = "1.7.2"
 val Slf4jVersion           = "1.7.30"
 val ScalatestPlusMockitoArtifactId = "mockito-3-2"
 
+def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
+
+// set by github actions when executing a release build
+def releaseVersion = sys.env.getOrElse("RELEASE_VERSION", "")
+def isRelease = releaseVersion != ""
+
+// the version to use to publish - either from release version or a snapshot run number
+def publishVersion = if (isRelease) releaseVersion else "7.10.0." + githubRunNumber + "-SNAPSHOT"
+
+// set by github actions and used as the snapshot build number
+def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
+
+// creds for release to maven central
+def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
+def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
+
+
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.12",
   crossScalaVersions := Seq("2.12.12", "2.13.3")
@@ -46,7 +56,7 @@ lazy val warnUnusedImport = Seq(
 
 lazy val commonSettings = Seq(
   organization := "com.sksamuel.elastic4s",
-  version := (if (isTravis.value) version.value.stripSuffix("-SNAPSHOT") + s".${travisBuildNumber.value}-SNAPSHOT" else version.value),
+  version := publishVersion,
   resolvers ++= Seq(Resolver.mavenLocal),
   parallelExecution in Test := false,
   scalacOptions in(Compile, doc) := (scalacOptions in(Compile, doc)).value.filter(_ != "-Xfatal-warnings"),
@@ -61,16 +71,16 @@ lazy val publishSettings = Seq(
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
-    if (isTravis.value)
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
+    if (isRelease)
       Some("releases" at nexus + "service/local/staging/deploy/maven2")
+    else
+      Some("snapshots" at nexus + "content/repositories/snapshots")
   }
 )
 
 lazy val commonJvmSettings = Seq(
   testOptions in Test += {
-    val flag = if ((isTravis in Global).value) "-oCI" else "-oDF"
+    val flag = if (isGithubActions) "-oCI" else "-oDF"
     Tests.Argument(TestFrameworks.ScalaTest, flag)
   },
   Test / fork := true,
@@ -103,17 +113,13 @@ lazy val pomSettings = Seq(
   </developers>
 )
 
-val travisCreds = Credentials(
-  "Sonatype Nexus Repository Manager",
-  "oss.sonatype.org",
-  sys.env.getOrElse("OSSRH_USERNAME", ""),
-  sys.env.getOrElse("OSSRH_PASSWORD", "")
-)
-
-val localCreds = Credentials(Path.userHome / ".sbt" / "credentials.sbt")
-
 lazy val credentialSettings = Seq(
-  credentials := (if (isTravis.value) Seq(travisCreds) else Seq(localCreds))
+  credentials := Seq(Credentials(
+    "Sonatype Nexus Repository Manager",
+    "oss.sonatype.org",
+    sys.env.getOrElse("OSSRH_USERNAME", ""),
+    sys.env.getOrElse("OSSRH_PASSWORD", "")
+  ))
 )
 
 lazy val noPublishSettings = Seq(
