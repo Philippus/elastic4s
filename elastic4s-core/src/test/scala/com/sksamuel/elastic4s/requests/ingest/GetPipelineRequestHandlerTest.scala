@@ -49,18 +49,39 @@ class GetPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
       GetPipelineResponse(
         "test-pipeline",
         "describe pipeline",
-        123,
+        Some(123),
         Seq(
           CustomProcessor("set", """{"field":"foo","value":"bar"}"""),
           GeoIPProcessor(
             "ip",
             Some("geo"),
             Some("GeoLite2-Country.mmdb"),
-            Some(Seq("continent_name","region_name","city_name")),
+            Some(Seq("continent_name", "region_name", "city_name")),
             Some(true),
             Some(false)
           )
         )
+      )
+  }
+
+  it should "parse a get pipeline response with minimal values" in {
+    val responseBody =
+      """
+        |{
+        |  "test-pipeline" : {
+        |    "description" : "describe pipeline",
+        |    "processors" : []
+        |  }
+        |}
+        |""".stripMargin
+    val response = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
+
+    responseHandler.handle(response).right.get shouldBe
+      GetPipelineResponse(
+        "test-pipeline",
+        "describe pipeline",
+        None,
+        Seq.empty
       )
   }
 }

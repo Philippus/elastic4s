@@ -10,6 +10,19 @@ class PutPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
   import PutPipelineRequestHandler._
 
   // Docs: https://www.elastic.co/guide/en/elasticsearch/reference/master/geoip-processor.html#geoip-processor
+  it should "build a pipeline request with a version and no processors" in {
+    val req = PutPipelineRequest("empty", "Do nothing", Seq.empty, Some(1))
+    val correctJson =
+      XContentFactory.parse("""
+        |{
+        |  "description" : "Do nothing",
+        |  "version": 1,
+        |  "processors" : []
+        |}
+        |""".stripMargin).string()
+    build(req) shouldBe ElasticRequest("PUT", "_ingest/pipeline/empty", HttpEntity(correctJson))
+  }
+
   it should "build a pipeline request with a geoip processor using the RawProcessor case class" in {
     val req = PutPipelineRequest("geoip", "Add geoip info", CustomProcessor("geoip", "{\"field\": \"ip\"}"))
     val correctJson =
