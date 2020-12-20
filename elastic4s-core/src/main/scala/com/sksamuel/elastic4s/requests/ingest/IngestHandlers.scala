@@ -19,7 +19,7 @@ trait IngestHandlers {
             GetPipelineResponse(
               id,
               types("description").asInstanceOf[String],
-              types("version").asInstanceOf[Int],
+              types.get("version").asInstanceOf[Option[Int]],
               types("processors").asInstanceOf[Seq[Map[String, Map[String, Any]]]].map { processor =>
                 val name = processor.keys.head
                 name match {
@@ -61,6 +61,7 @@ trait IngestHandlers {
     override def build(request: PutPipelineRequest): ElasticRequest = {
       val xcb = XContentFactory.jsonBuilder()
       xcb.field("description", request.description)
+      request.version.map(xcb.field("version", _))
       xcb.array("processors", request.processors.map(processorToXContent).toArray)
       xcb.endObject()
       ElasticRequest("PUT", s"_ingest/pipeline/${request.id}", HttpEntity(xcb.string()))
