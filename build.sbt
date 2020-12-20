@@ -165,7 +165,7 @@ lazy val core = (project in file("elastic4s-core"))
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "joda-time" % "joda-time" % "2.10.3",
+      "joda-time" % "joda-time" % "2.10.8",
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
