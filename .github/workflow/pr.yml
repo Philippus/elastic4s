@@ -1,0 +1,47 @@
+name: master
+
+on:
+  pull_request:
+    paths-ignore:
+      - 'doc/**'
+      - 'docs/**'
+      - '*.md'
+
+jobs:
+  scala-2_12:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Launch elastic docker
+        run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+
+      - name: run tests
+        run: sbt ++2.12.12 test
+
+  scala-2_13:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Launch elastic docker
+        run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+
+      - name: run tests
+        run: sbt ++2.13.4 test

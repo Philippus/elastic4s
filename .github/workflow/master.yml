@@ -25,7 +25,7 @@ jobs:
         with:
           java-version: 11
 
-      - name: Launch pulsar docker
+      - name: Launch elastic docker
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
 
       - name: Import GPG key
@@ -61,7 +61,7 @@ jobs:
         with:
           java-version: 11
 
-      - name: Launch pulsar docker
+      - name: Launch elastic docker
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.10.1
 
       - name: Import GPG key
