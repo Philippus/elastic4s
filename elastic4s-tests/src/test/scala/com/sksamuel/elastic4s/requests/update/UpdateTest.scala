@@ -127,7 +127,7 @@ class UpdateTest
 
   it should "return errors when the index does not exist" in {
     val resp = client.execute {
-      update("5").in("wowooasdsad").doc(
+      update("5").in(s"${UUID.randomUUID().toString}-wowooasdsad").doc(
         "name" -> "gladiator"
       )
     }.await
