@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import java.util.UUID
 import scala.concurrent.duration._
 import scala.util.Try
 
@@ -74,10 +73,9 @@ class ScrollTest extends AnyWordSpec with Matchers with DockerTests {
       }.await
       resp5.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("waking the watch")
     }
-    //TODO: need to check into this
-    "return an error if the scroll id doesn't parse" ignore {
+    "return an error if the scroll id doesn't parse" in {
       val resp = client.execute {
-        searchScroll(s"${UUID.randomUUID().toString}-wibble").keepAlive("1m")
+        searchScroll("wibble").keepAlive("1m")
       }.await
       resp.error.`type` shouldBe "illegal_argument_exception"
     }
@@ -170,7 +168,7 @@ class ScrollTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "return an error if the scroll id doesn't parse" in {
       client.execute {
-        clearScroll(s"${UUID.randomUUID().toString}-wibble")
+        clearScroll("wibble")
       }.await.error.`type` shouldBe "illegal_argument_exception"
     }
   }

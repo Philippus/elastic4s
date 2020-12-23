@@ -58,10 +58,10 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
     result.hasFailures shouldBe true
     result.hasSuccesses shouldBe true
-    result.errors shouldBe false
+    result.errors shouldBe true
 
-    result.failures.map(_.itemId).toSet shouldBe Set(3)
-    result.successes.map(_.itemId).toSet shouldBe Set(0, 1, 2)
+    result.failures.map(_.itemId).toSet shouldBe Set(2, 3)
+    result.successes.map(_.itemId).toSet shouldBe Set(0, 1)
   }
 
   it should "handle multiple update operations" in {

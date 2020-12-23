@@ -19,11 +19,11 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
     BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2"}}
-        |{"doc":{"atomicweight":2,"name":"helium"},"upsert":{}}
+        |{"doc":{"atomicweight":2,"name":"helium"}}
         |{"index":{"_index":"chemistry","_id":"8"}}
         |{"atomicweight":8,"name":"oxygen"}
         |{"update":{"_index":"chemistry","_id":"6"}}
-        |{"doc":{"atomicweight":4,"name":"lithium"},"upsert":{}}
+        |{"doc":{"atomicweight":4,"name":"lithium"}}
         |{"delete":{"_index":"chemistry","_id":"10"}}
         |{"index":{"_index":"chemistry","_id":"14","pipeline":"periodic-table"}}
         |{"atomicweight":81,"name":"thallium"}""".stripMargin
@@ -51,7 +51,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
     BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","retry_on_conflict":3}}
-        |{"doc":{"atomicweight":2,"name":"helium"},"upsert":{}}""".stripMargin
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
   test("bulk content builder should support _source in UpdateRequest") {
@@ -61,7 +61,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
     BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","_source":true}}
-        |{"doc":{"atomicweight":2,"name":"helium"},"upsert":{}}""".stripMargin
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
   test("bulk content builder should support _source_includes in UpdateRequest") {
@@ -72,7 +72,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
     BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_includes":"atomicweight,name"}}
-        |{"doc":{"atomicweight":2,"name":"helium"},"upsert":{}}""".stripMargin
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
   test("bulk content builder should support _source_excludes in UpdateRequest") {
@@ -83,7 +83,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
     BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_excludes":"atomicweight,name"}}
-        |{"doc":{"atomicweight":2,"name":"helium"},"upsert":{}}""".stripMargin
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
 }

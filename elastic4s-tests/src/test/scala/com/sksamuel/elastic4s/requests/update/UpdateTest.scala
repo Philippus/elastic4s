@@ -124,22 +124,22 @@ class UpdateTest
       )
     }.await.result.result shouldBe "created"
   }
-  //TODO: need to check into this
-  it should "return errors when the index does not exist" ignore {
+
+  it should "return errors when the index does not exist" in {
     val resp = client.execute {
-      update("5").in(s"${UUID.randomUUID().toString}-wowooasdsad").doc(
+      update("5").in("wowooasdsad").doc(
         "name" -> "gladiator"
-      ).docAsUpsert(false)
+      )
     }.await
     resp.error.`type` shouldBe "document_missing_exception"
     resp.error.reason should include("document missing")
   }
-  //TODO: need to check into this
-  it should "return errors when the id does not exist" ignore {
+
+  it should "return errors when the id does not exist" in {
     val resp = client.execute {
-      update(s"${UUID.randomUUID().toString}").in("hans").doc(
+      update("234234").in("hans").doc(
         "name" -> "gladiator"
-      ).docAsUpsert(false)
+      )
     }.await
     resp.error.`type` shouldBe "document_missing_exception"
     resp.error.reason should include("document missing")

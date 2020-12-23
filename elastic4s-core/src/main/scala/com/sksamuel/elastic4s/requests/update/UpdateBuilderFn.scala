@@ -30,14 +30,14 @@ object UpdateBuilderFn {
       builder.rawField("upsert", upsert)
     }
 
-    builder.startObject("upsert")
-    if (request.upsertFields.nonEmpty) {
+    if (request.upsertFields.nonEmpty || (request.docAsUpsert.isDefined && request.docAsUpsert.get)) {
+      builder.startObject("upsert")
       request.upsertFields.foreach {
         case (name, value) =>
           builder.autofield(name, FieldsMapper.mapper(value))
       }
+      builder.endObject()
     }
-    builder.endObject()
 
     request.docAsUpsert.foreach(_ => builder.field("doc_as_upsert", true))
     request.scriptedUpsert.foreach(_ => builder.field("scripted_upsert", true))
