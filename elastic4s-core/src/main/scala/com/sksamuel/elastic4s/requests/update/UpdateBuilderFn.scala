@@ -30,7 +30,7 @@ object UpdateBuilderFn {
       builder.rawField("upsert", upsert)
     }
 
-    if (request.upsertFields.nonEmpty) {
+    if (request.upsertFields.nonEmpty || (request.docAsUpsert.isDefined && request.docAsUpsert.get) || request.script.isDefined) {
       builder.startObject("upsert")
       request.upsertFields.foreach {
         case (name, value) =>
