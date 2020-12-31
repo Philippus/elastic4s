@@ -68,6 +68,24 @@ trait IndexHandlers {
       }
     }
   }
+
+  implicit object AnalyzeRequestHandler extends Handler[AnalyzeRequest,Map[String, AnalyzeResponse]] {
+    override def build(analyzeRequest: AnalyzeRequest): ElasticRequest = {
+      val utf8 = StandardCharsets.UTF_8.name()
+      val (method,endpoint) = analyzeRequest.index.map { index =>
+        "GET" -> s"/${URLEncoder.encode(index,utf8)}/_analyze"
+      }.getOrElse {
+        "GET" -> s"/_analyze"
+      }
+
+      val body   =  AnalyseRequestContentBuilder(analyzeRequest)
+      val entity = ByteArrayEntity(body.getBytes, Some("application/json"))
+
+      logger.debug(s"Endpoint=$endpoint")
+
+      ElasticRequest(method, endpoint, Map.empty[String,_], entity)
+    }
+  }
 }
 
 case class Mapping(properties: Map[String, Field],
