@@ -19,4 +19,10 @@ class AnalyzeResponseHandlerTests extends AnyFunSuite with Matchers {
     result mustBe explainAnalyzeResponse
   }
 
+  test("analyze response handler parse explain custom tokenfilter response") {
+    val result = AnalyzeResponseHandler.handle(create200HttpResponse(explainCustomTokenFilterResponseJson)).getOrElse(null)
+    result mustNot be(null)
+    result mustBe explainCustomTokenFilterResponse
+  }
+
 }

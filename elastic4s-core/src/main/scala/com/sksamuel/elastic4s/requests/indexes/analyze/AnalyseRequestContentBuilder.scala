@@ -20,6 +20,21 @@ object AnalyseRequestContentBuilder {
       simpleFieldValue("explain",true)
     }
 
+    request.tokenizer.foreach(simpleFieldValue("tokenizer",_))
+
+    if (request.filters.nonEmpty || request.filtersFromAnalyzers.nonEmpty) {
+      source.startArray("filter")
+      source.rawValue(request.filters.map("\"" + _ + "\"").mkString(","))
+      request.filtersFromAnalyzers.map(_.build)
+        .foreach(source.rawValue)
+      source.endArray()
+    }
+
+
+    if(request.charFilters.nonEmpty) {
+      simpleFieldValue("char_filter", request.charFilters)
+    }
+
     source.endObject().string()
   }
 
