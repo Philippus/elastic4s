@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.index
 
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.HttpResponse
-import com.sksamuel.elastic4s.requests.indexes.analyze.{ExplainAnalyzeDetail, ExplainAnalyzeResponse, ExplainAnalyzer, ExplainToken, NoExplainAnalyzeResponse, NoExplainToken, ExplainTokenFilters}
+import com.sksamuel.elastic4s.requests.indexes.analyze._
 
 import scala.io.Source
 
@@ -22,8 +22,8 @@ package object analyze {
   def noExplainResponseJson: String = readResource("/analyze_request/helloworld_response.json")
 
   def noExplainResponse: NoExplainAnalyzeResponse = NoExplainAnalyzeResponse(Seq(
-    NoExplainToken("hello", 0, 5, "<ALPHANUM>", 0),
-    NoExplainToken("world", 6, 11, "<ALPHANUM>", 1)
+    AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0),
+    AnalyseToken("world", 6, 11, "<ALPHANUM>", 1)
   ))
 
 
@@ -34,8 +34,8 @@ package object analyze {
       customAnalyzer = false,
       Some(
         ExplainAnalyzer("standard", Seq(
-          ExplainToken("hello", 0, 5, "<ALPHANUM>", 0, toHexBytes("hello"), 1, 1),
-          ExplainToken("world", 6, 11, "<ALPHANUM>", 1, toHexBytes("world"), 1, 1)
+          AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0,  Some(toHexBytes("hello")), Some(1),Some(1)),
+          AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, Some(toHexBytes("world")), Some(1),Some(1))
         ))
       ))
   )
@@ -49,8 +49,8 @@ package object analyze {
         ExplainTokenFilters(
           "snowball",
           Seq(
-            ExplainToken("hello", 0, 5, "<ALPHANUM>", 0, toHexBytes("hello"), 1, 1, Some(false)),
-            ExplainToken("world", 6, 11, "<ALPHANUM>", 1, toHexBytes("world"), 1, 1, Some(false))
+            AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0, Some(toHexBytes("hello")), Some(1), Some(1), Some(false)),
+            AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, Some(toHexBytes("world")), Some(1), Some(1), Some(false))
           )
         )
       ))

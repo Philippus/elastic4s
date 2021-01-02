@@ -25,8 +25,8 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
     }.await.result
 
     result shouldBe NoExplainAnalyzeResponse(Seq(
-      NoExplainToken("hello",0,5,"<ALPHANUM>",0),
-      NoExplainToken("world",6,11,"<ALPHANUM>",1)
+      AnalyseToken("hello",0,5,"<ALPHANUM>",0),
+      AnalyseToken("world",6,11,"<ALPHANUM>",1)
     ))
   }
 
@@ -53,8 +53,8 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
       Some(ExplainAnalyzer(
         "standard",
         Seq(
-          ExplainToken("hello",0,5,"<ALPHANUM>",0,toHexBytes("hello"),1,1),
-          ExplainToken("world",6,11,"<ALPHANUM>",1,toHexBytes("world"),1,1)
+          AnalyseToken("hello",0,5,"<ALPHANUM>",0, Some(toHexBytes("hello")),Some(1),Some(1)),
+          AnalyseToken("world",6,11,"<ALPHANUM>",1,Some(toHexBytes("world")),Some(1),Some(1))
         )
       ))
     ))
@@ -69,8 +69,8 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
     println(result)
     result shouldBe NoExplainAnalyzeResponse(
       List(
-        NoExplainToken("hello", 0, 5, "word", 0),
-        NoExplainToken("world", 6, 11, "word", 1))
+        AnalyseToken("hello", 0, 5, "word", 0),
+        AnalyseToken("world", 6, 11, "word", 1))
     )
 
   }
@@ -90,8 +90,8 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
         ExplainTokenFilters(
           "snowball",
           Seq(
-            ExplainToken("hello", 0, 5, "<ALPHANUM>", 0, toHexBytes("hello"), 1, 1, Some(false)),
-            ExplainToken("world", 6, 11, "<ALPHANUM>", 1, toHexBytes("world"), 1, 1, Some(false))
+            AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0, Some(toHexBytes("hello")), Some(1), Some(1), Some(false)),
+            AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, Some(toHexBytes("world")), Some(1), Some(1), Some(false))
           )
         )
       )))
@@ -105,7 +105,7 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
         .filters(StopAnalyzer("stop",List("a","is","this")))
     }.await.result
 
-    result shouldBe NoExplainAnalyzeResponse(List(NoExplainToken("HELLO WORLD",0,11,"word",0)))
+    result shouldBe NoExplainAnalyzeResponse(List(AnalyseToken("HELLO WORLD",0,11,"word",0)))
   }
 
   "analyze request custom charFilters" should "work well" in {
@@ -114,14 +114,28 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
         .charFilters("html_strip")
     }.await.result
 
-    result shouldBe NoExplainAnalyzeResponse(List(NoExplainToken("\nI'm so happy!\n",0,32,"word",0)))
+    result shouldBe NoExplainAnalyzeResponse(List(AnalyseToken("\nI'm so happy!\n",0,32,"word",0)))
   }
 
   "analyze request custom attributes" should "work well" in {
     val result = client.execute {
       analyze("hello","world")
-        .attributes("keywords")
+        .explain(true)
+        .tokenizer("standard")
+        .filters("snowball")
+        .attributes("keyword")
     }.await.result
-    println(result)
+
+    result shouldBe ExplainAnalyzeResponse(
+      ExplainAnalyzeDetail(customAnalyzer = true, None,
+        List(
+          ExplainTokenFilters("snowball",
+            List(
+              AnalyseToken("hello", 0, 5,  "<ALPHANUM>", 0, None, None, None, Some(false)),
+              AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, None, None, None, Some(false))
+            )
+          ))
+      )
+    )
   }
 }
