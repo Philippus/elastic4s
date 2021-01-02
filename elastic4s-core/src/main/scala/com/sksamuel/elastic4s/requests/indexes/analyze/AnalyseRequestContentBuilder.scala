@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.indexes
+package com.sksamuel.elastic4s.requests.indexes.analyze
 
 import com.sksamuel.elastic4s.SimpleFieldValue
 import com.sksamuel.elastic4s.json.{XContentFactory, XContentFieldValueWriter}
@@ -9,11 +9,17 @@ object AnalyseRequestContentBuilder {
 
     val source = XContentFactory.jsonBuilder()
 
-    def simpleFieldValue(name:String,value:String) = {
+    def simpleFieldValue(name:String,value:Any): Unit = {
       XContentFieldValueWriter(source,SimpleFieldValue(name,value))
     }
 
-    request.text.foreach(XContentFieldValueWriter(source, _))
+    simpleFieldValue("text",request.text)
+    request.analyzer.foreach(simpleFieldValue("analyzer",_))
+
+    if(request.explain) {
+      simpleFieldValue("explain",true)
+    }
+
     source.endObject().string()
   }
 
