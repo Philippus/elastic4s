@@ -62,4 +62,35 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
     content mustBe
       """{"text":["hello world"],"tokenizer":"keyword","filter":["lowercase","uppercase",{"type":"stop","stopwords":["a","is","this"]}]}""".stripMargin
   }
+
+  test("create analyse request content with normalizer") {
+    val content = AnalyseRequestContentBuilder(
+      AnalyzeRequest(Array("hello world"))
+        .normalizer("my_normalizer")
+    )
+    println(content)
+    content mustBe
+      """{"text":["hello world"],"normalizer":"my_normalizer"}""".stripMargin
+  }
+
+  test("create analyse request content with field") {
+    val content = AnalyseRequestContentBuilder(
+      AnalyzeRequest(Array("hello world"))
+        .field("obj1.field1")
+    )
+    println(content)
+    content mustBe
+      """{"text":["hello world"],"field":"obj1.field1"}""".stripMargin
+  }
+
+  test("create analyse request content with attributes") {
+    val content = AnalyseRequestContentBuilder(
+      AnalyzeRequest(Array("hello world"))
+        .attributes("keyword")
+    )
+    println(content)
+    content mustBe
+      """{"text":["hello world"],"attributes":["keyword"]}""".stripMargin
+  }
+
 }

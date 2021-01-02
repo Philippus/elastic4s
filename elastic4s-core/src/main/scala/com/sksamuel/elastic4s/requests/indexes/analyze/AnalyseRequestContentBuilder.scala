@@ -22,10 +22,10 @@ object AnalyseRequestContentBuilder {
 
     request.tokenizer.foreach(simpleFieldValue("tokenizer",_))
 
-    if (request.filters.nonEmpty || request.filtersFromAnalyzers.nonEmpty) {
+    if (request.filters.nonEmpty || request.rawFiltersFromAnalyzer.nonEmpty) {
       source.startArray("filter")
       source.rawValue(request.filters.map("\"" + _ + "\"").mkString(","))
-      request.filtersFromAnalyzers.map(_.build)
+      request.rawFiltersFromAnalyzer.map(_.build)
         .foreach(source.rawValue)
       source.endArray()
     }
@@ -33,6 +33,13 @@ object AnalyseRequestContentBuilder {
 
     if(request.charFilters.nonEmpty) {
       simpleFieldValue("char_filter", request.charFilters)
+    }
+
+    request.normalizer.foreach(simpleFieldValue("normalizer",_))
+    request.field.foreach(simpleFieldValue("field",_))
+
+    if(request.attributes.nonEmpty) {
+      simpleFieldValue("attributes",request.attributes)
     }
 
     source.endObject().string()
