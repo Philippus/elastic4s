@@ -11,6 +11,7 @@ import com.sksamuel.elastic4s.requests.delete.DeleteApi
 import com.sksamuel.elastic4s.requests.explain.ExplainApi
 import com.sksamuel.elastic4s.requests.get.GetApi
 import com.sksamuel.elastic4s.requests.indexes.admin.{ForceMergeApi, IndexRecoveryApi}
+import com.sksamuel.elastic4s.requests.indexes.analyze.AnalyzeApi
 import com.sksamuel.elastic4s.requests.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
 import com.sksamuel.elastic4s.requests.locks.LocksApi
 import com.sksamuel.elastic4s.requests.mappings.MappingApi
@@ -67,6 +68,7 @@ trait ElasticApi
     with HighlightApi
     with IndexApi
     with IndexAdminApi
+    with AnalyzeApi
     with IndexRecoveryApi
     with IndexTemplateApi
     with LocksApi

@@ -1,0 +1,30 @@
+{
+    "detail" : {
+        "custom_analyzer" : false,
+        "analyzer" : {
+            "name" : "standard",
+            "tokens" : [
+                {
+                    "token" : "hello",
+                    "start_offset" : 0,
+                    "end_offset" : 5,
+                    "type" : "<ALPHANUM>",
+                    "position" : 0,
+                    "bytes" : "[68 65 6c 6c 6f]",
+                    "positionLength" : 1,
+                    "termFrequency" : 1
+                },
+                {
+                    "token" : "world",
+                    "start_offset" : 6,
+                    "end_offset" : 11,
+                    "type" : "<ALPHANUM>",
+                    "position" : 1,
+                    "bytes" : "[77 6f 72 6c 64]",
+                    "positionLength" : 1,
+                    "termFrequency" : 1
+                }
+            ]
+        }
+    }
+}
