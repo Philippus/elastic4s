@@ -73,8 +73,7 @@ class ScrollTest extends AnyWordSpec with Matchers with DockerTests {
       }.await
       resp5.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("waking the watch")
     }
-    //TODO: this throws a security_exception
-    "return an error if the scroll id doesn't parse" ignore {
+    "return an error if the scroll id doesn't parse" in {
       val resp = client.execute {
         searchScroll("wibble").keepAlive("1m")
       }.await
