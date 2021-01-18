@@ -1,6 +1,6 @@
 val org                    = "com.sksamuel.elastic4s"
 val AkkaVersion            = "2.6.10"
-val AkkaHttpVersion        = "10.2.2"
+val AkkaHttpVersion        = "10.2.3"
 val CatsVersion            = "2.0.0"
 val CatsEffectVersion      = "2.3.1"
 val CirceVersion           = "0.13.0"
