@@ -9,7 +9,7 @@ case class CreateTaskResponse(nodeId: String, taskId: String)
 
 case class ListTaskResponse(nodes: Map[String, Node])
 
-case class GetTaskResponse(completed: Boolean, task: Task)
+case class GetTaskResponse(completed: Boolean, task: Task, error: Option[TaskError])
 
 case class Node(name: String,
                 @JsonProperty("transport_address") transportAddress: String,
@@ -30,6 +30,15 @@ case class Task(node: String,
   def startTimeInMillis: Long = start_time_in_millis
   def runningTime: FiniteDuration = running_time_in_nanos.nanos
 }
+
+case class Cause(`type`: String, reason: String)
+
+case class TaskError(`type`: String,
+                     reason: String,
+                     phase: String,
+                     grouped: Boolean,
+                     @JsonProperty("caused_by") causedBy: Option[Cause]
+)
 
 case class TaskStatus(total: Long, updated: Long, created: Long, deleted: Long, batches: Long)
 
