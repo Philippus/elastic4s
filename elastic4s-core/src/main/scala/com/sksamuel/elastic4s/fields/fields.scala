@@ -467,3 +467,7 @@ case class AnnotatedTextField(name: String) extends ElasticField {
 case class PercolatorField(name: String) extends ElasticField {
   override def `type`: String = "percolator"
 }
+
+case class VersionField(name: String) extends ElasticField {
+  override def `type`: String = "version"
+}
