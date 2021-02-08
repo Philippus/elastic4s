@@ -6,7 +6,9 @@ import com.sksamuel.exts.OptionImplicits._
 
 trait CatsApi {
 
-  def catAliases(): CatAliases       = CatAliases()
+  def catAliases(): CatAliases                      = CatAliases(None)
+  def catAliases(pattern: String): CatAliases       = CatAliases(pattern.some)
+
   def catAllocation(): CatAllocation = CatAllocation()
 
   def catCount(): CatCount                             = CatCount()
@@ -38,6 +40,6 @@ case class CatNodes()
 case class CatHealth()
 case class CatThreadPool()
 case class CatAllocation()
-case class CatAliases()
+case class CatAliases(pattern: Option[String])
 case class CatMaster()
 case class CatIndexes(health: Option[HealthStatus], indexPattern: Option[String])
