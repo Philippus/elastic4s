@@ -118,6 +118,8 @@ trait AggregationApi {
   def valueCountAgg(name: String, field: String): ValueCountAggregation =
     ValueCountAggregation(name).field(field)
 
+  def weightedAvgAgg(name: String, value: WeightedAvgField, weight: WeightedAvgField): WeightedAvgAggregation = WeightedAvgAggregation(name).value(value).weight(weight)
+
   @deprecated("use samplerAgg", "7.7")
   def samplerAggregation(name: String): SamplerAggregation = SamplerAggregation(name)
   def samplerAgg(name: String): SamplerAggregation         = SamplerAggregation(name)

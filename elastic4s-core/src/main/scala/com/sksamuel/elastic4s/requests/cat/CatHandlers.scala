@@ -111,8 +111,14 @@ trait CatHandlers {
   }
 
   implicit object CatAliasesHandler extends Handler[CatAliases, Seq[CatAliasResponse]] {
-    override def build(request: CatAliases): ElasticRequest =
-      ElasticRequest("GET", "/_cat/aliases", Map("v" -> "", "format" -> "json"))
+    override def build(request: CatAliases): ElasticRequest = {
+      val endPoint = request.pattern match {
+        case Some(pattern) => s"/_cat/aliases/$pattern"
+        case _ => "/_cat/aliases"
+      }
+
+      ElasticRequest("GET", endPoint, Map("v" -> "", "format" -> "json"))
+    }
   }
 
   implicit object CatIndexesHandler extends Handler[CatIndexes, Seq[CatIndicesResponse]] {
