@@ -83,5 +83,21 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
       result.nodeId should not be null
       result.taskId should not be null
     }
+
+    "apply targetType to dest index - not to the source index" in {
+      // although https://www.elastic.co/guide/en/elasticsearch/reference/7.11/docs-reindex.html#docs-reindex-api-request-body specifies
+      // that type under source is ignored (see explanation of type under dest in request body), the below test fails
+      // if the targetType is applied to the source index
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex(Seq("reindex"), "reindextarget").copy(targetType = Some("test")).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+
+      client.execute {
+        search("reindextarget")
+      }.await.result.size shouldBe 3
+    }
   }
 }
