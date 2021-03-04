@@ -1,5 +1,5 @@
 val org                    = "com.sksamuel.elastic4s"
-val AkkaVersion            = "2.6.12"
+val AkkaVersion            = "2.6.13"
 val AkkaHttpVersion        = "10.2.3"
 val CatsVersion            = "2.0.0"
 val CatsEffectVersion      = "2.3.3"
@@ -7,10 +7,10 @@ val CirceVersion           = "0.13.0"
 val CommonsIoVersion       = "2.8.0"
 val ElasticsearchVersion   = "7.11.1"
 val ExtsVersion            = "1.61.1"
-val JacksonVersion         = "2.11.4"
-val Json4sVersion          = "3.6.11"
+val JacksonVersion         = "2.12.2"
+val Json4sVersion          = "3.6.10"
 val Log4jVersion           = "2.14.0"
-val MockitoVersion         = "3.7.7"
+val MockitoVersion         = "3.8.0"
 val MonixVersion           = "3.1.0"
 val PlayJsonVersion        = "2.9.2"
 val ReactiveStreamsVersion = "1.0.3"
@@ -43,7 +43,7 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.12",
-  crossScalaVersions := Seq("2.12.12", "2.13.3")
+  crossScalaVersions := Seq("2.12.12", "2.13.5")
 )
 
 lazy val warnUnusedImport = Seq(
