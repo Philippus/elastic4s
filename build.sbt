@@ -3,6 +3,7 @@ val AkkaVersion            = "2.6.13"
 val AkkaHttpVersion        = "10.2.3"
 val CatsVersion            = "2.0.0"
 val CatsEffectVersion      = "3.0.0-RC2"
+val CatsEffect2Version     = "2.3.3"
 val CirceVersion           = "0.13.0"
 val CommonsIoVersion       = "2.8.0"
 val ElasticsearchVersion   = "7.11.1"
@@ -149,6 +150,7 @@ lazy val root = Project("elastic4s", file("."))
     clientesjava,
     clientsSniffed,
     cats_effect,
+    cats_effect_2,
     zio,
     scalaz,
     monix,
@@ -207,6 +209,16 @@ lazy val cats_effect = (project in file("elastic4s-effect-cats"))
   .settings(
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-effect" % CatsEffectVersion
+    )
+  )
+
+lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-effect-cats-2")
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-effect" % CatsEffect2Version
     )
   )
 
