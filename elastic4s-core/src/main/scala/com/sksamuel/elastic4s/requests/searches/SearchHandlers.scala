@@ -57,7 +57,7 @@ trait SearchHandlers {
           "/_all/_search"
         else
           "/" + request.indexes.values
-            .map(URLEncoder.encode(_, "UTF-8"))
+            .map(URLEncoder.encode(_, "UTF-8").replace("+", "%20"))
             .mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]

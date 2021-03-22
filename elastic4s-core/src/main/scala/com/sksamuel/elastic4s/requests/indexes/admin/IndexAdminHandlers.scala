@@ -185,7 +185,7 @@ trait IndexAdminHandlers {
 
     override def build(request: CreateIndexRequest): ElasticRequest = {
 
-      val endpoint = "/" + URLEncoder.encode(request.name, "UTF-8")
+      val endpoint = "/" + URLEncoder.encode(request.name, "UTF-8").replace("+", "%20")
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))

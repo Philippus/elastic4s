@@ -52,7 +52,7 @@ case class Indexes(values: Seq[String]) extends IndexesLike {
     if (values.isEmpty) {
       "_all"
     } else {
-      val indexNames = if (urlEncode) values.map(URLEncoder.encode(_, "UTF8")) else values
+      val indexNames = if (urlEncode) values.map(URLEncoder.encode(_, "UTF8").replace("+", "%20")) else values
       indexNames.mkString(",")
     }
   }

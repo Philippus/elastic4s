@@ -10,7 +10,7 @@ trait UserHandlers {
 	implicit object GetUserHandler extends Handler[GetUserRequest, Map[String,GetUserResponse]] {
 
 		override def build(request: GetUserRequest): ElasticRequest = {
-			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8").replace("+", "%20")
 			ElasticRequest("GET", endpoint)
 		}
 	}

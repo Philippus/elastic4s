@@ -61,7 +61,7 @@ trait UpdateHandlers {
     override def build(request: UpdateRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_update/${URLEncoder.encode(request.id, "UTF-8")}"
+        s"/${URLEncoder.encode(request.index.index, "UTF-8").replace("+", "%20")}/_update/${URLEncoder.encode(request.id, "UTF-8").replace("+", "%20")}"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>

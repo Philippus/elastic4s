@@ -18,7 +18,7 @@ trait RoleAdminHandlers {
 		}
 
 		override def build(request: CreateOrUpdateRoleRequest): ElasticRequest = {
-			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8").replace("+", "%20")
 
 			val body = CreateOrUpdateRoleContentBuilder(request).string()
 			val entity = HttpEntity(body, "application/json")
@@ -41,14 +41,14 @@ trait RoleAdminHandlers {
 		}
 
 		override def build(request: DeleteRoleRequest): ElasticRequest = {
-			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8").replace("+", "%20")
 			ElasticRequest("DELETE", endpoint)
 		}
 	}
 
 	implicit object ClearRolesCacheHandler extends Handler[ClearRolesCacheRequest, ClearRolesCacheResponse] {
 		override def build(request: ClearRolesCacheRequest): ElasticRequest = {
-			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8") + "/_clear_cache"
+			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8").replace("+", "%20") + "/_clear_cache"
 			ElasticRequest("POST", endpoint)
 		}
 

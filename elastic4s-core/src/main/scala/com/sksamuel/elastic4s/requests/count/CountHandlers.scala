@@ -15,7 +15,7 @@ trait CountHandlers {
       val endpoint = if(request.indexes.isEmpty)
           "/_all/_count"
         else
-          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
+          "/" + request.indexes.values.map(URLEncoder.encode(_, "UTF-8").replace("+", "%20")).mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)
       val body    = builder.string()
