@@ -10,6 +10,7 @@ object WildcardQueryBodyFn {
     q.rewrite.foreach(builder.field("rewrite", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
+    q.caseInsensitive.foreach(builder.field("case_insensitive",_))
     builder.endObject().endObject().endObject()
   }
 }
