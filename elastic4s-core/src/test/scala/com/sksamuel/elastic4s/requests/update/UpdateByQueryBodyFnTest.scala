@@ -24,4 +24,56 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
       }
     }
   }
+
+  "update by id" should {
+    "generate correct body" when {
+      "script update" in {
+        val q = updateById("test", "1234")
+          .script(Script("script", Some("painless")))
+
+        UpdateBuilderFn(q).string() should matchJson(
+          """{"script":{"lang":"painless","source":"script"}}"""
+        )
+      }
+
+      "script upsert" in {
+        val q = updateById("test", "1234")
+          .script(Script("script", Some("painless")))
+          .scriptedUpsert(true)
+
+        UpdateBuilderFn(q).string() should matchJson(
+          """{"script":{"lang":"painless","source":"script"},"upsert":{},"scripted_upsert":true}"""
+        )
+      }
+
+      "doc update" in {
+        val q = updateById("test", "1234")
+          .doc("foo" -> "bar")
+
+        UpdateBuilderFn(q).string() should matchJson(
+          """{"doc":{"foo":"bar"}}"""
+        )
+      }
+
+      "doc upsert" in {
+        val q = updateById("test", "1234")
+          .doc("foo" -> "bar")
+          .docAsUpsert(true)
+
+        UpdateBuilderFn(q).string() should matchJson(
+          """{"doc":{"foo":"bar"},"doc_as_upsert":true}"""
+        )
+      }
+
+      "doc update and upsert" in {
+        val q = updateById("test", "1234")
+          .doc("foo" -> "bar")
+          .upsert("foo" -> "baz")
+
+        UpdateBuilderFn(q).string() should matchJson(
+          """{"doc":{"foo":"bar"},"upsert":{"foo":"baz"}}"""
+        )
+      }
+    }
+  }
 }
