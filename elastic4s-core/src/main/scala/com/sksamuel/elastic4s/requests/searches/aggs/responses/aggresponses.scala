@@ -305,9 +305,9 @@ trait HasAggregations extends AggResult with Transformable {
     StatsBucketAggResult(
       name,
       count = agg(name)("count").toString.toLong,
-      min = agg(name).getOrElse("min", 0).toString.toDouble,
-      max = agg(name).getOrElse("max", 0).toString.toDouble,
-      avg = agg(name).getOrElse("avg", 0).toString.toDouble,
+      min = Option(agg(name).getOrElse("min", 0)).getOrElse(0).toString.toDouble,
+      max = Option(agg(name).getOrElse("max", 0)).getOrElse(0).toString.toDouble,
+      avg = Option(agg(name).getOrElse("avg", 0)).getOrElse(0).toString.toDouble,
       sum = agg(name).getOrElse("sum", 0).toString.toDouble
     )
 }

@@ -27,15 +27,16 @@ object ReindexBuilderFn {
 
     builder.array("index", request.sourceIndexes.array)
 
-    if (request.targetType.nonEmpty)
-      builder.field("type", request.targetType.get)
-
     request.filter.foreach(q => builder.rawField("query", QueryBuilderFn(q)))
     // end source
     builder.endObject()
 
     builder.startObject("dest")
     builder.field("index", request.targetIndex.name)
+
+    if (request.targetType.nonEmpty)
+      builder.field("type", request.targetType.get)
+
     // end dest
     builder.endObject()
   }
