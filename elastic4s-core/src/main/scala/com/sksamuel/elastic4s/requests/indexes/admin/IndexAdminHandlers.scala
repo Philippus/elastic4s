@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.requests.indexes.admin
 
-import java.net.URLEncoder
-
 import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 import com.sksamuel.elastic4s.requests.indexes._
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexShardStoreResponse.StoreStatusResponse
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentFactory, ElasticUrlEncoder}
 
 case class ShrinkIndexResponse()
 
@@ -185,7 +183,7 @@ trait IndexAdminHandlers {
 
     override def build(request: CreateIndexRequest): ElasticRequest = {
 
-      val endpoint = "/" + URLEncoder.encode(request.name, "UTF-8")
+      val endpoint = "/" + ElasticUrlEncoder.encodeUrlFragment(request.name)
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))

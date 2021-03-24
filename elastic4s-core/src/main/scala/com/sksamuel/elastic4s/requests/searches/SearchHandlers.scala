@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import java.net.URLEncoder
-
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
 
 trait SearchHandlers {
 
@@ -57,7 +55,7 @@ trait SearchHandlers {
           "/_all/_search"
         else
           "/" + request.indexes.values
-            .map(URLEncoder.encode(_, "UTF-8"))
+            .map(ElasticUrlEncoder.encodeUrlFragment)
             .mkString(",") + "/_search"
 
       val params = scala.collection.mutable.Map.empty[String, String]

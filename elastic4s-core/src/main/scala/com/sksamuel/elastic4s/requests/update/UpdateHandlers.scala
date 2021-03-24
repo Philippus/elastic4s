@@ -1,12 +1,10 @@
 package com.sksamuel.elastic4s.requests.update
 
-import java.net.URLEncoder
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, FetchSourceContextQueryParameterFn, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
 import com.sksamuel.exts.OptionImplicits._
 
 case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter
@@ -61,7 +59,7 @@ trait UpdateHandlers {
     override def build(request: UpdateRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_update/${URLEncoder.encode(request.id, "UTF-8")}"
+        s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.index)}/_update/${ElasticUrlEncoder.encodeUrlFragment(request.id)}"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>

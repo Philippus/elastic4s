@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.requests.count
 
-import java.net.URLEncoder
-
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
+import com.sksamuel.elastic4s.{ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity}
 
 case class CountResponse(count: Long)
 
@@ -15,7 +13,7 @@ trait CountHandlers {
       val endpoint = if(request.indexes.isEmpty)
           "/_all/_count"
         else
-          "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
+          "/" + request.indexes.values.map(ElasticUrlEncoder.encodeUrlFragment).mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)
       val body    = builder.string()

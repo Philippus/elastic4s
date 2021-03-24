@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.requests.delete
 
-import java.net.URLEncoder
-
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.indexes.VersionTypeHttpString
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler, XContentBuilder, XContentFactory}
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryRequest): XContentBuilder = {
@@ -30,7 +28,7 @@ trait DeleteHandlers {
 
     override def build(request: DeleteByQueryRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.indexes.values.map(URLEncoder.encode(_, "UTF-8")).mkString(",")}/_delete_by_query"
+      val endpoint = s"/${request.indexes.values.map(ElasticUrlEncoder.encodeUrlFragment).mkString(",")}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false))
@@ -75,7 +73,7 @@ trait DeleteHandlers {
     override def build(request: DeleteByIdRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_doc/${URLEncoder.encode(request.id.toString, "UTF-8")}"
+        s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.index)}/_doc/${ElasticUrlEncoder.encodeUrlFragment(request.id)}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.parent.foreach(params.put("parent", _))
