@@ -30,7 +30,6 @@ import com.sksamuel.exts.Logging
 trait ElasticDsl
     extends ElasticApi
     with Logging
-    with ElasticImplicits
     with BulkHandlers
     with CatHandlers
     with CountHandlers

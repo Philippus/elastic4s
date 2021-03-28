@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.{Index, Indexes}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 import scala.concurrent.duration.FiniteDuration
 
