@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseBuilderFn
@@ -109,7 +109,7 @@ object SearchBodyBuilderFn {
     }
 
     // source filtering
-    request.fetchContext.foreach(FetchSourceContextBuilderFn(builder, _))
+    request.fetchContext.foreach { it => builder.value(FetchSourceContextBuilderFn.toJson(it)) }
 
     if (request.docValues.nonEmpty)
       builder.array("docvalue_fields", request.docValues.toArray)

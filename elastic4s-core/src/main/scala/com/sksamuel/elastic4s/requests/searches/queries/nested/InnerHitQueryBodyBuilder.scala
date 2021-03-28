@@ -1,13 +1,14 @@
 package com.sksamuel.elastic4s.requests.searches.queries.nested
 
-import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.BodyBuilder
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.json.{JsonValue, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.{InnerHit, SortBuilderFn}
-import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
-object InnerHitQueryBodyFn {
+object InnerHitQueryBodyBuilder extends BodyBuilder[InnerHit] {
 
-  def apply(d: InnerHit): XContentBuilder = {
+  override def toJson(d: InnerHit): JsonValue = {
     val builder = XContentFactory.jsonBuilder()
     if (d.name.trim.nonEmpty)
       builder.field("name", d.name)
@@ -15,7 +16,7 @@ object InnerHitQueryBodyFn {
     d.explain.foreach(builder.field("explain", _))
 
     // source filtering
-    d.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
+    d.fetchSource.foreach { it => builder.value(FetchSourceContextBuilderFn.toJson(it)) }
 
     d.trackScores.foreach(builder.field("track_scores", _))
     d.version.foreach(builder.field("version", _))
@@ -36,5 +37,6 @@ object InnerHitQueryBodyFn {
       builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
     builder.endObject()
+    builder.value
   }
 }

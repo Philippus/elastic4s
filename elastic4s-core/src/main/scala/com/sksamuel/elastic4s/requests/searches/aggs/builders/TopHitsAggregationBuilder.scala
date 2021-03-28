@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.TopHitsAggregation
 import com.sksamuel.elastic4s.requests.searches.queries.SortBuilderFn
 
@@ -22,7 +22,7 @@ object TopHitsAggregationBuilder {
     }
 
     // source filtering
-    agg.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
+    agg.fetchSource.foreach { it => builder.value(FetchSourceContextBuilderFn.toJson(it)) }
 
     agg.explain.foreach(builder.field("explain", _))
     agg.version.foreach(builder.field("version", _))

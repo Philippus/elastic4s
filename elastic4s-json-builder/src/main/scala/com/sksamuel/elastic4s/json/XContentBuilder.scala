@@ -135,6 +135,11 @@ class XContentBuilder(root: JsonValue) {
     this
   }
 
+  def value(value: JsonValue): XContentBuilder = {
+    array.addValue(value)
+    this
+  }
+
   def rawValue(value: XContentBuilder): this.type = rawValue(value.string())
   def rawValue(value: String): this.type = {
     array.addValue(RawValue(value))
@@ -248,6 +253,12 @@ class XContentBuilder(root: JsonValue) {
       case null => obj.putNull(name)
       case other => field(name, other.toString)
     }
+    this
+  }
+
+  def field(name: String, value: JsonValue): XContentBuilder = {
+    // we can only insert fields into objects
+    obj.putValue(name, value)
     this
   }
 
