@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.json
 
+import com.fasterxml.jackson.databind.node.{BooleanNode, DoubleNode, FloatNode, IntNode, JsonNodeFactory, LongNode, NullNode, TextNode}
 import com.fasterxml.jackson.databind.{JsonNode, util}
-import com.fasterxml.jackson.databind.node.{BigIntegerNode, BooleanNode, DecimalNode, DoubleNode, FloatNode, IntNode, JsonNodeFactory, LongNode, NullNode, TextNode}
 import com.sksamuel.elastic4s.JacksonSupport
 
 trait JsonBuilder {
