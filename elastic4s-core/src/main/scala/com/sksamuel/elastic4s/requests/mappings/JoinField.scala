@@ -59,4 +59,4 @@ case class JoinField(name: String,
 
 case class Parent(parentType: String)
 
-case class Child(childType: String, parentId: String)
+case class Child(name: String, parent: String)

@@ -1,37 +1,39 @@
 package com.sksamuel.elastic4s.json
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
-import com.fasterxml.jackson.databind.util.RawValue
 import com.sksamuel.elastic4s.JacksonSupport
-import com.sksamuel.elastic4s.json.builder.{ContentBuilder, ContentFactory}
 
 import java.util
 
-object XContentFactory extends ContentFactory {
-  override def builder(): ContentBuilder = obj()
-  def jsonBuilder(): XContentBuilder          = obj()
-  def obj()                                   = new XContentBuilder(JacksonSupport.mapper.createObjectNode)
-  def array()                                 = new XContentBuilder(JacksonSupport.mapper.createArrayNode)
-  def parse(content: String): XContentBuilder = new XContentBuilder(JacksonSupport.mapper.readTree(content))
+object XContentFactory {
+  def jsonBuilder(): XContentBuilder = obj()
+  def obj() = new XContentBuilder(ObjectValue.empty)
+  def array() = new XContentBuilder(ArrayValue.empty)
+  def parse(content: String): XContentBuilder = ??? // new XContentBuilder(JacksonSupport.mapper.readTree(content))
 }
 
-class XContentBuilder(root: JsonNode) extends ContentBuilder {
+class XContentBuilder(root: JsonValue) {
 
-  private val stack = new util.ArrayDeque[JsonNode]
+  private val stack = new util.ArrayDeque[JsonValue]
   stack.push(root)
 
   private def current = stack.peek()
-  private def array   = current.asInstanceOf[ArrayNode]
-  private def obj     = current.asInstanceOf[ObjectNode]
+  private def array = current.asInstanceOf[ArrayValue]
+  private def obj = current.asInstanceOf[ObjectValue]
+  private def requireArray(): Unit = require(current.isInstanceOf[ArrayValue])
+  private def requireObject(): Unit = require(current.isInstanceOf[ObjectValue])
+
+  def value: JsonValue = root
 
   // generate a json string from the contents of the builder
-  override def string(): String   = JacksonSupport.mapper.writeValueAsString(root)
+  @deprecated("will be replaced with a pluggable system")
+  def string(): String = JacksonSupport.mapper.writeValueAsString(root)
+
+  @deprecated("will be replaced with a pluggable system")
   def bytes: Array[Byte] = JacksonSupport.mapper.writeValueAsBytes(root)
 
   def array(field: String, strings: Array[String]): XContentBuilder = {
     startArray(field)
-    strings.foreach(array.add)
+    strings.map(StringValue).foreach(array.addValue)
     endArray()
     this
   }
@@ -44,7 +46,7 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
         val thirdArray = secondArray.addArray()
         third.foreach { inner =>
           val value = thirdArray.addArray()
-          inner.foreach(value.add)
+          value.addAll(inner.map(DoubleValue).toList)
         }
       }
     }
@@ -58,7 +60,7 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
       val outer = array.addArray()
       nested.foreach { inner =>
         val value = outer.addArray()
-        inner.foreach(value.add)
+        value.addAll(inner.map(DoubleValue).toList)
       }
     }
     endArray()
@@ -69,7 +71,7 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
     startArray(field)
     doubles.foreach { nested =>
       val value = array.addArray()
-      nested.foreach(value.add)
+      value.addAll(nested.map(DoubleValue).toList)
     }
     endArray()
     this
@@ -77,42 +79,42 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
 
   def array(field: String, doubles: Array[Double]): XContentBuilder = {
     startArray(field)
-    doubles.foreach(array.add)
+    array.addAll(doubles.map(DoubleValue).toList)
     endArray()
     this
   }
 
   def array(field: String, strings: List[String]): XContentBuilder = {
     startArray(field)
-    strings.toArray.foreach(array.add)
+    array.addAll(strings.map(StringValue))
     endArray()
     this
   }
 
   def array(field: String, longs: Array[Long]): XContentBuilder = {
     startArray(field)
-    longs.foreach(array.add)
+    array.addAll(longs.map(LongValue).toList)
     endArray()
     this
   }
 
   def array(field: String, ints: Array[Int]): XContentBuilder = {
     startArray(field)
-    ints.foreach(array.add)
+    array.addAll(ints.map(IntValue).toList)
     endArray()
     this
   }
 
   def array(field: String, floats: Array[Float]): XContentBuilder = {
     startArray(field)
-    floats.foreach(array.add)
+    array.addAll(floats.map(FloatValue).toList)
     endArray()
     this
   }
 
   def array(field: String, booleans: Array[Boolean]): XContentBuilder = {
     startArray(field)
-    booleans.foreach(array.add)
+    array.addAll(booleans.map(BooleanValue).toList)
     endArray()
     this
   }
@@ -120,22 +122,24 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
   def array(field: String, builder: Array[XContentBuilder]): XContentBuilder = {
     startArray(field)
     builder.foreach { b =>
-      val raw = new RawValue(b.string())
-      array.addRawValue(raw)
+      val raw = RawValue(b.string())
+      array.addValue(raw)
     }
     endArray()
     this
   }
 
-  def rawField(name: String, builder: XContentBuilder): XContentBuilder = rawField(name, builder.string())
+  def rawField(name: String, builder: XContentBuilder): XContentBuilder =
+    rawField(name, builder.string())
+
   def rawField(name: String, content: String): XContentBuilder = {
-    obj.putRawValue(name, new RawValue(content))
+    obj.putValue(name, RawValue(content))
     this
   }
 
   def rawValue(value: XContentBuilder): this.type = rawValue(value.string())
   def rawValue(value: String): this.type = {
-    array.addRawValue(new RawValue(value))
+    array.addValue(RawValue(value))
     this
   }
 
@@ -144,63 +148,63 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
     this
   }
 
-  def field(name: String, int: Int): XContentBuilder = {
-    obj.put(name, int)
+  def field(name: String, value: Int): XContentBuilder = {
+    obj.putValue(name, IntValue(value))
     this
   }
 
-  def field(name: String, long: Long): XContentBuilder = {
-    obj.put(name, long)
+  def field(name: String, value: Long): XContentBuilder = {
+    obj.putValue(name, LongValue(value))
     this
   }
 
-  def field(name: String, bd: BigDecimal): XContentBuilder = {
-    obj.put(name, bd.underlying)
+  def field(name: String, value: BigDecimal): XContentBuilder = {
+    obj.putValue(name, BigDecimalValue(value.underlying))
     this
   }
 
-  def field(name: String, bi: BigInt): XContentBuilder = {
-    obj.put(name, bi.underlying())
+  def field(name: String, value: BigInt): XContentBuilder = {
+    obj.putValue(name, BigIntValue(value.underlying()))
     this
   }
 
-  def field(name: String, double: Double): XContentBuilder = {
-    obj.put(name, double)
+  def field(name: String, value: Double): XContentBuilder = {
+    obj.putValue(name, DoubleValue(value))
     this
   }
 
-  def autovalue(value: Any): XContentBuilder = {
+  def autovalue(_value: Any): XContentBuilder = {
     import scala.collection.JavaConverters._
     requireArray()
-    value match {
-      case v: String               => array.add(v)
-      case v: Double               => array.add(v)
-      case v: Float                => array.add(v)
-      case v: Int                  => array.add(v)
-      case v: Long                 => array.add(v)
-      case v: Boolean              => array.add(v)
-      case v: Short                => array.add(v)
-      case v: Byte                 => array.add(v)
-      case v: BigDecimal           => array.add(v.bigDecimal)
-      case v: java.math.BigDecimal => array.add(v)
-      case v: BigInt               => array.add(v.bigInteger)
-      case v: java.math.BigInteger => array.add(v)
-      case null                    => array.addNull()
+    _value match {
+      case v: String => value(v)
+      case v: Double => value(v)
+      case v: Float => value(v)
+      case v: Int => value(v)
+      case v: Long => value(v)
+      case v: Boolean => value(v)
+      case v: Short => value(v)
+      case v: Byte => value(v)
+      case v: BigDecimal => value(v)
+      case v: java.math.BigDecimal => value(v)
+      case v: BigInt => value(v)
+      case v: java.math.BigInteger => value(v)
+      case null => array.addNull()
       case values: Seq[_] =>
         startArray()
         values.foreach(autovalue)
         endArray()
-      case values: Array[_]                => autovalue(values.toSeq)
-      case values: Iterator[_]             => autovalue(values.toSeq)
+      case values: Array[_] => autovalue(values.toSeq)
+      case values: Iterator[_] => autovalue(values.toSeq)
       case values: java.util.Collection[_] => autovalue(values.asScala)
-      case values: java.util.Iterator[_]   => autovalue(values.asScala.toSeq)
-      case values: Product                 => autovalue(values.productIterator.toSeq)
+      case values: java.util.Iterator[_] => autovalue(values.asScala.toSeq)
+      case values: Product => autovalue(values.productIterator.toSeq)
       case map: Map[_, _] =>
         startObject()
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
       case map: java.util.Map[_, _] => autovalue(map.asScala.toMap)
-      case other                    => array.add(other.toString)
+      case other => value(other.toString)
     }
     this
   }
@@ -216,85 +220,83 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
     import scala.collection.JavaConverters._
 
     value match {
-      case v: String                       => obj.put(name, v)
-      case v: java.lang.Double             => obj.put(name, v)
-      case v: Double                       => obj.put(name, v)
-      case v: Float                        => obj.put(name, v)
-      case v: Int                          => obj.put(name, v)
-      case v: java.lang.Integer            => obj.put(name, v)
-      case v: java.lang.Long               => obj.put(name, v)
-      case v: Long                         => obj.put(name, v)
-      case v: Boolean                      => obj.put(name, v)
-      case v: java.lang.Boolean            => obj.put(name, v)
-      case v: Short                        => obj.put(name, v)
-      case v: Byte                         => obj.put(name, v)
-      case v: BigDecimal                   => obj.put(name, v.bigDecimal)
-      case v: java.math.BigDecimal         => obj.put(name, v)
-      case v: BigInt                       => obj.put(name, v.bigInteger)
-      case v: java.math.BigInteger         => obj.put(name, v)
-      case values: Array[_]                => autoarray(name, values)
-      case values: Seq[_]                  => autoarray(name, values)
-      case values: Iterator[_]             => autoarray(name, values.toSeq)
+      case v: String => field(name, v)
+      case v: java.lang.Double => field(name, v)
+      case v: Double => field(name, v)
+      case v: Float => field(name, v)
+      case v: Int => field(name, v)
+      case v: java.lang.Integer => field(name, v)
+      case v: java.lang.Long => field(name, v)
+      case v: Long => field(name, v)
+      case v: Boolean => field(name, v)
+      case v: java.lang.Boolean => field(name, v)
+      case v: Short => field(name, v)
+      case v: Byte => field(name, v)
+      case v: BigDecimal => field(name, v)
+      case v: java.math.BigDecimal => field(name, v)
+      case v: BigInt => field(name, v)
+      case v: java.math.BigInteger => field(name, v)
+      case values: Array[_] => autoarray(name, values)
+      case values: Seq[_] => autoarray(name, values)
+      case values: Iterator[_] => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
-      case values: java.util.Iterator[_]   => autoarray(name, values.asScala.toSeq)
-      case values: Product                 => autoarray(name, values.productIterator.toSeq)
+      case values: java.util.Iterator[_] => autoarray(name, values.asScala.toSeq)
+      case values: Product => autoarray(name, values.productIterator.toSeq)
       case map: Map[_, _] =>
         startObject(name)
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
       case map: java.util.Map[_, _] => autofield(name, map.asScala.toMap)
-      case null                     => obj.putNull(name)
-      case other                    => obj.put(name, other.toString)
+      case null => obj.putNull(name)
+      case other => field(name, other.toString)
     }
     this
   }
 
-  def field(name: String, str: String): XContentBuilder = {
-    require(current.isInstanceOf[ObjectNode])
+  def field(name: String, value: String): XContentBuilder = {
     // we can only insert fields into objects
-    current.asInstanceOf[ObjectNode].put(name, str)
+    obj.putValue(name, StringValue(value))
     this
   }
 
-  def field(name: String, boolean: Boolean): XContentBuilder = {
-    require(current.isInstanceOf[ObjectNode])
+  def field(name: String, value: Boolean): XContentBuilder = {
     // we can only insert fields into objects
-    obj.put(name, boolean)
+    obj.putValue(name, BooleanValue(value))
     this
   }
 
-  def value(str: String): XContentBuilder = {
-    array.add(str)
+  def value(value: String): XContentBuilder = {
+    array.addValue(StringValue(value))
     this
   }
 
-  def value(str: Double): XContentBuilder = {
-    array.add(str)
+  def value(value: Double): XContentBuilder = {
+    array.addValue(DoubleValue(value))
     this
   }
 
-  def value(str: Long): XContentBuilder = {
-    array.add(str)
+  def value(value: Long): XContentBuilder = {
+    array.addValue(LongValue(value))
     this
   }
 
-  def value(str: Float): XContentBuilder = {
-    array.add(str)
+  def value(value: Float): XContentBuilder = {
+    array.addValue(FloatValue(value))
     this
   }
 
   def value(bd: BigDecimal): XContentBuilder = {
-    array.add(bd.underlying)
+    array.addValue(BigDecimalValue(bd.underlying))
     this
   }
 
   def value(bi: BigInt): XContentBuilder = {
-    array.add(bi.underlying)
+    array.addValue(BigIntValue(bi.underlying))
     this
   }
 
-  def value(str: Boolean): XContentBuilder = {
-    array.add(str)
+  def value(value: Boolean): XContentBuilder = {
+    array.addValue(BooleanValue(value))
     this
   }
 
@@ -304,39 +306,36 @@ class XContentBuilder(root: JsonNode) extends ContentBuilder {
   }
 
   def startArray(): XContentBuilder = {
-    // can only start an anoynmous array inside another array
+    // can only start an anonymous array inside another array
     stack.push(array.addArray())
     this
   }
 
   def startArray(name: String): XContentBuilder = {
-    // can only add a named an anoynmous array inside an object
     stack.push(obj.putArray(name))
     this
   }
 
-  def endArray(): XContentBuilder = {
-    require(current.isInstanceOf[ArrayNode])
-    stack.pop()
-    this
-  }
-
   def startObject(): XContentBuilder = {
-    // can only start an object if inside an array
+    // can only start an anonymous object if inside an array
     stack.push(array.addObject())
     this
   }
 
   def startObject(name: String): XContentBuilder = {
-    stack.push(current.asInstanceOf[ObjectNode].putObject(name))
+    // can only start a named object if inside an array
+    stack.push(obj.putObject(name))
     this
   }
 
-  private def requireArray(): Unit =
-    require(current.isInstanceOf[ArrayNode])
+  def endArray(): XContentBuilder = {
+    requireArray()
+    stack.pop()
+    this
+  }
 
   def endObject(): XContentBuilder = {
-    require(current.isInstanceOf[ObjectNode], "Cannot call endObject here, not inside an object")
+    requireObject()
     stack.pop()
     this
   }

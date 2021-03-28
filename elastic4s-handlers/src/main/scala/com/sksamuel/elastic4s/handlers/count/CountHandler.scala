@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.handlers.count
 
-import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.count.{CountRequest, CountResponse}
-import com.sksamuel.elastic4s.{CountBodyBuilder, ElasticRequest, Handler, HttpEntity}
+import com.sksamuel.elastic4s.{CountBodyBuilder, ElasticRequest, Handler, HttpEntity, JacksonSupport}
 
 import java.net.URLEncoder
 
@@ -15,7 +14,8 @@ object CountHandler extends Handler[CountRequest, CountResponse] {
     else
       "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
 
-    val body = CountBodyBuilder.toJson(request, XContentFactory).string()
+    val body = CountBodyBuilder.toJson(request)
+    val json = JacksonSupport.mapper.writeValueAsString(body)
 
     val params = scala.collection.mutable.Map.empty[String, String]
     request.allowNoIndices.map(_.toString).foreach(params.put("allow_no_indices", _))
@@ -27,6 +27,6 @@ object CountHandler extends Handler[CountRequest, CountResponse] {
     request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
     request.minScore.map(_.toString).foreach(params.put("min_score", _))
 
-    ElasticRequest("GET", endpoint, params.toMap, HttpEntity(body, "application/json"))
+    ElasticRequest("GET", endpoint, params.toMap, HttpEntity(json, "application/json"))
   }
 }
