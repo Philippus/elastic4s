@@ -13,7 +13,7 @@ object GeoValidationMethod {
   case object IgnoreMalformed extends GeoValidationMethod
   case object Strict          extends GeoValidationMethod
 
-  def COERCE           = Coerce
-  def IGNORE_MALFORMED = IgnoreMalformed
-  def STRICT           = Strict
+  val COERCE: GeoValidationMethod             = Coerce
+  val IGNORE_MALFORMED: GeoValidationMethod   = IgnoreMalformed
+  val STRICT: GeoValidationMethod             = Strict
 }

@@ -74,8 +74,8 @@ case class GeoShapeQuery(field: String,
   def queryName(queryName: String): GeoShapeQuery        = copy(queryName = queryName.some)
   def strategy(strategy: SpatialStrategy): GeoShapeQuery = copy(strategy = strategy.some)
 
-  def inlineShape(shape: ShapeDefinition) = copy(shape = InlineShape(shape))
-  def preindexedShape(id: String, index: Index, path: String) =
+  def inlineShape(shape: ShapeDefinition): GeoShapeQuery = copy(shape = InlineShape(shape))
+  def preindexedShape(id: String, index: Index, path: String): GeoShapeQuery =
     copy(shape = PreindexedShape(id, index, path))
 
   def ignoreUnmapped(ignore: Boolean): GeoShapeQuery = copy(ignoreUnmapped = ignore.some)

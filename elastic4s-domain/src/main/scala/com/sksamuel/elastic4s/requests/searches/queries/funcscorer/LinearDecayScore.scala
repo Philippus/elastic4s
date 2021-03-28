@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class LinearDecayScore(field: String,
                             origin: String,
@@ -11,13 +11,13 @@ case class LinearDecayScore(field: String,
                             weight: Option[Double] = None,
                             multiValueMode: Option[MultiValueMode] = None,
                             override val filter: Option[Query] = None)
-    extends ScoreFunction {
+  extends ScoreFunction {
 
   def multiValueMode(multiValueMode: MultiValueMode): LinearDecayScore =
     copy(multiValueMode = multiValueMode.some)
 
   def weight(weight: Double): LinearDecayScore = copy(weight = weight.some)
-  def decay(decay: Double): LinearDecayScore   = copy(decay = decay.some)
-  def offset(offset: Any): LinearDecayScore    = copy(offset = offset.some)
-  def filter(filter: Query): LinearDecayScore  = copy(filter = filter.some)
+  def decay(decay: Double): LinearDecayScore = copy(decay = decay.some)
+  def offset(offset: Any): LinearDecayScore = copy(offset = offset.some)
+  def filter(filter: Query): LinearDecayScore = copy(filter = filter.some)
 }

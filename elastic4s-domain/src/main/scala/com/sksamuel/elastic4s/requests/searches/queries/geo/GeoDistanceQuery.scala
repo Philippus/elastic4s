@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.geo
 
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class GeoDistanceQuery(field: String,
                             geoDistance: Option[GeoDistance] = None,
@@ -14,14 +14,14 @@ case class GeoDistanceQuery(field: String,
                             validationMethod: Option[GeoValidationMethod] = None,
                             queryName: Option[String] = None,
                             point: Option[(Double, Double)] = None)
-    extends Query {
+  extends Query {
 
   def queryName(queryName: String): GeoDistanceQuery = copy(queryName = queryName.some)
-  def boost(boost: Double): GeoDistanceQuery         = copy(boost = boost.some)
+  def boost(boost: Double): GeoDistanceQuery = copy(boost = boost.some)
 
   // alias for geoDistance
   def distanceType(geod: GeoDistance): GeoDistanceQuery = geoDistance(geod)
-  def geoDistance(geod: GeoDistance): GeoDistanceQuery  = copy(geoDistance = geod.some)
+  def geoDistance(geod: GeoDistance): GeoDistanceQuery = copy(geoDistance = geod.some)
 
   def ignoreUnmapped(ignore: Boolean): GeoDistanceQuery = copy(ignoreUnmapped = ignore.some)
 
