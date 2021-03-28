@@ -13,8 +13,8 @@ object IndicesOptionsParams {
 
     Map(
       "ignore_unavailable" -> opts.ignoreUnavailable.toString,
-      "allow_no_indices"   -> opts.allowNoIndices.toString,
-      "expand_wildcards"   -> expand
+      "allow_no_indices" -> opts.allowNoIndices.toString,
+      "expand_wildcards" -> expand
     )
   }
 }
