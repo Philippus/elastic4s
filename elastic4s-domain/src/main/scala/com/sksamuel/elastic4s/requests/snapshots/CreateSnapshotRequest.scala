@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.snapshots
 
 import com.sksamuel.elastic4s.{Index, Indexes}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class CreateSnapshotRequest(snapshotName: String,
                                  repositoryName: String,
@@ -16,9 +16,9 @@ case class CreateSnapshotRequest(snapshotName: String,
   def partial(p: Boolean): CreateSnapshotRequest = copy(partial = p.some)
 
   def includeGlobalState(global: Boolean): CreateSnapshotRequest = copy(includeGlobalState = global.some)
-  def ignoreUnavailable(ignore: Boolean): CreateSnapshotRequest  = copy(ignoreUnavailable = ignore.some)
-  def waitForCompletion(w: Boolean): CreateSnapshotRequest       = copy(waitForCompletion = w.some)
+  def ignoreUnavailable(ignore: Boolean): CreateSnapshotRequest = copy(ignoreUnavailable = ignore.some)
+  def waitForCompletion(w: Boolean): CreateSnapshotRequest = copy(waitForCompletion = w.some)
 
-  def index(index: Index): CreateSnapshotRequest       = copy(indices = index.toIndexes)
+  def index(index: Index): CreateSnapshotRequest = copy(indices = index.toIndexes)
   def indices(indices: Indexes): CreateSnapshotRequest = copy(indices = indices)
 }

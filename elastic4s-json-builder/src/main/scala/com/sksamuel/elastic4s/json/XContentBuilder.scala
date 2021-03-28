@@ -1,13 +1,15 @@
 package com.sksamuel.elastic4s.json
 
-import java.util
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
 import com.fasterxml.jackson.databind.util.RawValue
 import com.sksamuel.elastic4s.JacksonSupport
-import com.sksamuel.elastic4s.json.builder.ContentBuilder
+import com.sksamuel.elastic4s.json.builder.{ContentBuilder, ContentFactory}
 
-object XContentFactory {
+import java.util
+
+object XContentFactory extends ContentFactory {
+  override def builder(): ContentBuilder = obj()
   def jsonBuilder(): XContentBuilder          = obj()
   def obj()                                   = new XContentBuilder(JacksonSupport.mapper.createObjectNode)
   def array()                                 = new XContentBuilder(JacksonSupport.mapper.createArrayNode)

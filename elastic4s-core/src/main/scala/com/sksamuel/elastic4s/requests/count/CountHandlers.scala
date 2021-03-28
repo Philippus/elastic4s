@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.count
 
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, handlers}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 import java.net.URLEncoder
 

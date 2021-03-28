@@ -175,6 +175,13 @@ lazy val domain = (project in file("elastic4s-domain"))
 lazy val json_builder = (project in file("elastic4s-json-builder"))
   .settings(name := "elastic4s-json-builder")
   .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
 
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")

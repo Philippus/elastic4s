@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import com.sksamuel.elastic4s.requests.searches.Total
 
 object JacksonSupport {
 
@@ -20,8 +19,16 @@ object JacksonSupport {
   mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
   mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
 
-  val module = new SimpleModule {
-    addDeserializer(classOf[Total], new Total.Deserializer(classOf[Total]))
-  }
-  mapper.registerModule(module)
+//  class Deserializer(vc: Class[_]) extends StdDeserializer[Total](vc) {
+//    override def deserialize(p: JsonParser, ctxt: DeserializationContext): Total = {
+//      val node: JsonNode = p.getCodec.readTree(p)
+//      if (node.isNumber) Total(node.toString.toLong, "eq")
+//      else Total(node.findValue("value").asLong, node.findValue("relation").asText())
+//    }
+//  }
+//
+//  val module = new SimpleModule {
+//    addDeserializer(classOf[Total], new Total.Deserializer(classOf[Total]))
+//  }
+//  mapper.registerModule(module)
 }

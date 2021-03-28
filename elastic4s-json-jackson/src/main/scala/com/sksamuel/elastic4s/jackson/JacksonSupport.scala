@@ -23,6 +23,6 @@ object JacksonSupport {
 
   val module = new SimpleModule {
     addSerializer(new NumberSerializers.DoubleSerializer(classOf[Double]))
-    addDeserializer(classOf[Total], new Total.Deserializer(classOf[Total]))
+//    addDeserializer(classOf[Total], new Total.Deserializer(classOf[Total]))
   }
 }

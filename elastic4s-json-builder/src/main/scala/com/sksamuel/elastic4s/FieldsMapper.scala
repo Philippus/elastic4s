@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.requests.mappings.Child
-
 /**
   * Converts between scala types and types that Elasticsearch understands.
   */
@@ -11,20 +9,20 @@ object FieldsMapper {
 
   def mapper(m: Map[String, Any]): Map[String, AnyRef] =
     m map {
-      case null                              => null
-      case (name: String, nest: Map[_, _])   => name -> mapper(nest.asInstanceOf[Map[String, Any]]).asJava
+      case null => null
+      case (name: String, nest: Map[_, _]) => name -> mapper(nest.asInstanceOf[Map[String, Any]]).asJava
       case (name: String, iter: Iterable[_]) => name -> iter.map(mapper).toArray
-      case (name: String, a: AnyRef)         => name -> a
-      case (name: String, a: Any)            => name -> a.toString
+      case (name: String, a: AnyRef) => name -> a
+      case (name: String, a: Any) => name -> a.toString
     }
 
   def mapper(a: Any): AnyRef =
     a match {
-      case map: Map[_, _]    => map.map { case (key, value) => key -> mapper(value) }.asJava
+      case map: Map[_, _] => map.map { case (key, value) => key -> mapper(value) }.asJava
       case iter: Iterable[_] => iter.map(mapper).toArray
-      case null              => null
-      case a: AnyRef         => a
-      case a: Any            => a.toString
+      case null => null
+      case a: AnyRef => a
+      case a: Any => a.toString
     }
 
   def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {
@@ -33,8 +31,8 @@ object FieldsMapper {
       case (name: String, null) =>
         NullFieldValue(name)
 
-      case (name: String, Child(childType, parentId)) =>
-        NestedFieldValue(name, Seq(SimpleFieldValue("name", childType), SimpleFieldValue("parent", parentId)))
+//      case (name: String, Child(childType, parentId)) =>
+//        NestedFieldValue(name, Seq(SimpleFieldValue("name", childType), SimpleFieldValue("parent", parentId)))
 
       case (name: String, nest: Map[_, _]) =>
         val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
