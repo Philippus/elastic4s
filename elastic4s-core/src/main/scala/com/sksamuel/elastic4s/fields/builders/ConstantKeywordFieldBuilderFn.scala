@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields.builders
 
-import com.sksamuel.elastic4s.fields.{ConstantKeywordField, DateField}
+import com.sksamuel.elastic4s.fields.ConstantKeywordField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ConstantKeywordFieldBuilderFn {

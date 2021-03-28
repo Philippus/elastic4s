@@ -27,7 +27,7 @@ val ScalatestPlusMockitoArtifactId = "mockito-3-2"
 def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
-def releaseVersion = sys.env.getOrElse("RELEASE_VERSION", "")
+def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
@@ -42,7 +42,7 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.12",
+  scalaVersion := "2.13.5",
   crossScalaVersions := Seq("2.12.12", "2.13.5")
 )
 
@@ -165,8 +165,13 @@ lazy val root = Project("elastic4s", file("."))
     akkastreams
   )
 
+lazy val domain = (project in file("elastic4s-domain"))
+  .settings(name := "elastic4s-domain")
+  .settings(allSettings)
+
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
+  .dependsOn(domain, clientcore, handlers)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -176,9 +181,31 @@ lazy val core = (project in file("elastic4s-core"))
     )
   )
 
+lazy val handlers = (project in file("elastic4s-handlers"))
+  .settings(name := "elastic4s-handlers")
+  .dependsOn(domain)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
+lazy val clientcore = (project in file("elastic4s-client-core"))
+  .settings(name := "elastic4s-client-core")
+  .dependsOn(handlers)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.apache.logging.log4j" % "log4j-api" % Log4jVersion % "test"
+    )
+  )
+
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
-  .dependsOn(core)
   .settings(name := "elastic4s-client-esjava")
+  .dependsOn(core)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -191,8 +218,8 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   )
 
 lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
-  .dependsOn(clientesjava)
   .settings(name := "elastic4s-client-sniffed")
+  .dependsOn(clientesjava)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(

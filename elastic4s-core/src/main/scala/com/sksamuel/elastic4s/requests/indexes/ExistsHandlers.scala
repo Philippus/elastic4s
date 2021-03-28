@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.requests.ExistsRequest
+import com.sksamuel.elastic4s.requests.exists.ExistsRequest
 
 trait ExistsHandlers {
 

@@ -129,4 +129,4 @@ case class BasicField(name: String,
   override def termVector(t: String): T = copy(termVector = t.some)
 }
 
-case class FielddataFrequencyFilter(min: Double, max: Double, minSegmentSize: Int)
+

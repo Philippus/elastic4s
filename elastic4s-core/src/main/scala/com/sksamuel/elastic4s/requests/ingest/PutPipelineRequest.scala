@@ -1,6 +1,9 @@
 package com.sksamuel.elastic4s.requests.ingest
 
-case class PutPipelineRequest(id: String, description: String, processors: Seq[Processor] = Seq.empty, version: Option[Int] = None)
+case class PutPipelineRequest(id: String,
+                              description: String,
+                              processors: Seq[Processor] = Seq.empty,
+                              version: Option[Int] = None)
 
 object PutPipelineRequest {
 

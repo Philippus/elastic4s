@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
+import com.sksamuel.elastic4s.fields.ContextField
 import com.sksamuel.exts.OptionImplicits._
 
 case class Analysis(analyzer: Option[String] = None,
@@ -74,12 +75,4 @@ case class CompletionField(name: String,
 
   def contexts(first: ContextField, rest: ContextField*): CompletionField = contexts(first +: rest)
   def contexts(contexts: Iterable[ContextField]): CompletionField         = copy(contexts = this.contexts ++ contexts)
-}
-
-case class ContextField(name: String, `type`: String, path: Option[String] = None, precision: Option[Int] = None) {
-  def path(path: String): ContextField =
-    copy(path = path.some)
-
-  def precision(precision: Int): ContextField =
-    copy(precision = precision.some)
 }

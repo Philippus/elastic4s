@@ -31,7 +31,7 @@ case class UpdateRequest(index: Index,
                          documentSource: Option[String] = None)
     extends BulkCompatibleRequest {
   require(index != null, "index must not be null or empty")
-  require(id.toString.nonEmpty, "id must not be null or empty")
+  require(id.nonEmpty, "id must not be null or empty")
 
   // detects if a doc has not change and if so will not perform any action
   def detectNoop(detectNoop: Boolean): UpdateRequest = copy(detectNoop = detectNoop.some)
@@ -100,7 +100,10 @@ case class UpdateRequest(index: Index,
   def upsert(map: Map[String, Any]): UpdateRequest = copy(upsertFields = map)
 
   // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
-  def upsert(fields: (String, Any)*): UpdateRequest = upsert(fields.toMap)
+  def upsert(first: (String, Any)): UpdateRequest = upsert(List(first).toMap)
+
+  // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
+  def upsert(first: (String, Any), rest: (String, Any)*): UpdateRequest = upsert((first +: rest).toMap)
 
   // If the document does not already exist, the contents of the upsert fields will be inserted as a new document.
   def upsert(iterable: Iterable[(String, Any)]): UpdateRequest = upsert(iterable.toMap)

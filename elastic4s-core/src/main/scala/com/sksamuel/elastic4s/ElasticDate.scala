@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 import com.sksamuel.elastic4s.ElasticDate.{ElasticDateMathShow, TimestampElasticDateShow, UnparsedElasticDateShow}
 import com.sksamuel.exts.OptionImplicits._
 
