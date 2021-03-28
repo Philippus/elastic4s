@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.annotation.{JsonAnySetter, JsonProperty}
+import com.sksamuel.elastic4s.handlers.JacksonSupport
 
 import scala.collection.mutable
 import scala.util.Try

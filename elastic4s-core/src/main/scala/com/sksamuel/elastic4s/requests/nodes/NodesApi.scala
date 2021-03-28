@@ -10,9 +10,3 @@ trait NodesApi {
   def nodeStats(nodes: Iterable[String]): NodeStatsRequest      = NodeStatsRequest(nodes.toSeq)
 
 }
-
-case class NodeStatsRequest(nodes: Seq[String], stats: Seq[String] = Seq.empty) {
-  def stats(stats: Seq[String]): NodeStatsRequest = copy(stats = stats)
-}
-
-case class NodeInfoRequest(nodes: Seq[String])

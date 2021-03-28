@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.delete
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -25,7 +25,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
     copy(proceedOnConflicts = proceedOnConflicts.some)
 
   def refresh(refresh: RefreshPolicy): DeleteByQueryRequest = copy(refresh = refresh.some)
-  def refreshImmediately: DeleteByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: DeleteByQueryRequest = refresh(RefreshPolicy.IMMEDIATE)
 
   def scrollSize(scrollSize: Int): DeleteByQueryRequest = copy(scrollSize = scrollSize.some)
 
@@ -37,7 +37,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
   def waitForActiveShards(waitForActiveShards: Int): DeleteByQueryRequest =
     copy(waitForActiveShards = waitForActiveShards.some)
 
-  def routing(r: String): DeleteByQueryRequest   = copy(routing = r.some)
+  def routing(r: String): DeleteByQueryRequest = copy(routing = r.some)
   def retryBackoffInitialTime(retryBackoffInitialTime: FiniteDuration): DeleteByQueryRequest =
     copy(retryBackoffInitialTime = retryBackoffInitialTime.some)
 

@@ -1,16 +1,14 @@
 package com.sksamuel.elastic4s
 
-import java.io.{File, InputStream}
-import java.nio.file.Files
-
 import com.sksamuel.exts.Logging
 
-import scala.io.Source
-
 /**
-  * A typeclass for an underlying http client so that it can be used by the [[ElasticClient]].
-  * The idea is that this trait can be used to wrap a HTTP library such as Apache HTTP commons, or
-  * Akka HTTP client or whatever. The wrapped client can then be passed into the ElasticClient.
+  * A typeclass that an underlying http client can implement, so that it can be used
+  * by the [[ElasticClient]] implementation by elastic4s.
+  *
+  * In other words, this is a wrapper trait so that HTTP libraries such as Apache HTTP commons,
+  * Akka HTTP client, STTP or whatever can be used with elasticsearch.
+  * The wrapped client can then be passed into the ElasticClient.
   */
 trait HttpClient extends Logging {
 
@@ -32,34 +30,4 @@ trait HttpClient extends Logging {
   def close(): Unit
 }
 
-case class HttpResponse(statusCode: Int, entity: Option[HttpEntity.StringEntity], headers: Map[String, String])
 
-sealed trait HttpEntity {
-  def contentCharset: Option[String]
-  def get: String
-}
-
-object HttpEntity {
-
-  def apply(content: String): HttpEntity                      = HttpEntity(content, "application/json; charset=utf-8")
-  def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
-
-  case class StringEntity(content: String, contentCharset: Option[String]) extends HttpEntity {
-    def get: String = content
-  }
-
-  case class InputStreamEntity(content: InputStream, contentCharset: Option[String]) extends HttpEntity {
-    def get: String = Source.fromInputStream(content).getLines().mkString("\n")
-  }
-
-  case class FileEntity(content: File, contentCharset: Option[String]) extends HttpEntity {
-
-    import scala.collection.JavaConverters._
-
-    def get: String = Files.readAllLines(content.toPath).asScala.mkString("\n")
-  }
-
-  case class ByteArrayEntity(content: Array[Byte], contentCharset: Option[String]) extends HttpEntity {
-    def get: String = new String(content, contentCharset.getOrElse("utf-8"))
-  }
-}

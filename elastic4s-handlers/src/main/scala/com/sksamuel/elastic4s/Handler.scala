@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s
 import com.sksamuel.exts.Logging
 
 /**
-  * A [[Handler]] is a typeclass used by the [[ElasticClient]] in order to
-  * create [[ElasticRequest]] instances which are sent to the elasticsearch
+  * A [[Handler]] is a typeclass used to create [[ElasticRequest]] instances
+  * from elastic4s models, which are the sent to the elasticsearch
   * server, as well as returning a [[ResponseHandler]] which handles the
   * response from the server.
   *

@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.json
 
 import java.util
-
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
 import com.fasterxml.jackson.databind.util.RawValue
 import com.sksamuel.elastic4s.JacksonSupport
+import com.sksamuel.elastic4s.handlers.ContentBuilder
 
 object XContentFactory {
   def jsonBuilder(): XContentBuilder          = obj()
@@ -14,7 +14,7 @@ object XContentFactory {
   def parse(content: String): XContentBuilder = new XContentBuilder(JacksonSupport.mapper.readTree(content))
 }
 
-class XContentBuilder(root: JsonNode) {
+class XContentBuilder(root: JsonNode) extends ContentBuilder {
 
   private val stack = new util.ArrayDeque[JsonNode]
   stack.push(root)
@@ -24,7 +24,7 @@ class XContentBuilder(root: JsonNode) {
   private def obj     = current.asInstanceOf[ObjectNode]
 
   // generate a json string from the contents of the builder
-  def string(): String   = JacksonSupport.mapper.writeValueAsString(root)
+  override def string(): String   = JacksonSupport.mapper.writeValueAsString(root)
   def bytes: Array[Byte] = JacksonSupport.mapper.writeValueAsBytes(root)
 
   def array(field: String, strings: Array[String]): XContentBuilder = {

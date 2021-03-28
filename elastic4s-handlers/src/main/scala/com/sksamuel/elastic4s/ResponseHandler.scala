@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.sksamuel.elastic4s.handlers.JacksonSupport
 import com.sksamuel.exts.Logging
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOption
 
 trait ResponseHandler[U] {
 

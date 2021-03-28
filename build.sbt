@@ -27,7 +27,7 @@ val ScalatestPlusMockitoArtifactId = "mockito-3-2"
 def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
-def releaseVersion = sys.env.getOrElse("RELEASE_VERSION", "")
+def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
@@ -171,6 +171,18 @@ lazy val messages = (project in file("elastic4s-messages"))
 
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
+  .dependsOn(messages, clientcore, handlers)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
+lazy val handlers = (project in file("elastic4s-handlers"))
+  .settings(name := "elastic4s-handlers")
   .dependsOn(messages)
   .settings(allSettings)
   .settings(
@@ -178,6 +190,16 @@ lazy val core = (project in file("elastic4s-core"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
+lazy val clientcore = (project in file("elastic4s-client-core"))
+  .settings(name := "elastic4s-client-core")
+  .dependsOn(handlers)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.apache.logging.log4j" % "log4j-api" % Log4jVersion % "test"
     )
   )
 
