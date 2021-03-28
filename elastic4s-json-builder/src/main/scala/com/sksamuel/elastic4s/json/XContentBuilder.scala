@@ -6,7 +6,7 @@ object XContentFactory {
   def jsonBuilder(): XContentBuilder = obj()
   def obj() = new XContentBuilder(ObjectValue.empty)
   def array() = new XContentBuilder(ArrayValue.empty)
-  def parse(content: String): XContentBuilder = ??? // new XContentBuilder(JacksonSupport.mapper.readTree(content))
+  def parse(content: String): XContentBuilder = new XContentBuilder(RawValue(content))
 }
 
 class XContentBuilder(root: JsonValue) {
