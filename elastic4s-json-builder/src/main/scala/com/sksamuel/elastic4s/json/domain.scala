@@ -42,7 +42,7 @@ case class ArrayValue(elements: scala.collection.mutable.ListBuffer[JsonValue]) 
 
   def addNull(): Unit = addValue(NullValue)
 
-  def addValue(element: JsonValue): ArrayValue = copy(elements = elements appended element)
+  def addValue(element: JsonValue): ArrayValue = copy(elements = elements append element)
 
   def addAll(values: List[JsonValue]): ArrayValue = copy(elements = elements.addAll(values))
 

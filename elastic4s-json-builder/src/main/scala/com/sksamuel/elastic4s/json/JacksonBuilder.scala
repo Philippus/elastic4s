@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.json
 
 import com.fasterxml.jackson.databind.{JsonNode, util}
-import com.fasterxml.jackson.databind.node.{BigIntegerNode, BooleanNode, DecimalNode, DoubleNode, FloatNode, IntNode, LongNode, NullNode, TextNode}
+import com.fasterxml.jackson.databind.node.{BigIntegerNode, BooleanNode, DecimalNode, DoubleNode, FloatNode, IntNode, JsonNodeFactory, LongNode, NullNode, TextNode}
 import com.sksamuel.elastic4s.JacksonSupport
 
 trait JsonBuilder {
@@ -44,8 +44,8 @@ object JacksonBuilder extends JsonBuilder {
       case FloatValue(value) => Left(FloatNode.valueOf(value))
       case DoubleValue(value) => Left(DoubleNode.valueOf(value))
       case BooleanValue(value) => Left(BooleanNode.valueOf(value))
-      case BigDecimalValue(value) => Left(DecimalNode.valueOf(value.underlying()))
-      case BigIntValue(value) => Left(BigIntegerNode.valueOf(value.underlying()))
+      case BigDecimalValue(value) => Left(JsonNodeFactory.instance.numberNode(value.underlying()))
+      case BigIntValue(value) => Left(JsonNodeFactory.instance.numberNode(value.underlying()))
       case RawValue(value) => Right(new com.fasterxml.jackson.databind.util.RawValue(value))
       case NullValue => Left(NullNode.instance)
     }
