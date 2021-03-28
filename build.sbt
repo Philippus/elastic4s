@@ -165,8 +165,13 @@ lazy val root = Project("elastic4s", file("."))
     akkastreams
   )
 
+lazy val messages = (project in file("elastic4s-messages"))
+  .settings(name := "elastic4s-messages")
+  .settings(allSettings)
+
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
+  .dependsOn(messages)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -177,8 +182,8 @@ lazy val core = (project in file("elastic4s-core"))
   )
 
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
-  .dependsOn(core)
   .settings(name := "elastic4s-client-esjava")
+  .dependsOn(core)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -191,8 +196,8 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   )
 
 lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
-  .dependsOn(clientesjava)
   .settings(name := "elastic4s-client-sniffed")
+  .dependsOn(clientesjava)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
 import java.net.URLEncoder
-
 import scala.language.implicitConversions
 
 trait IndexesLike {

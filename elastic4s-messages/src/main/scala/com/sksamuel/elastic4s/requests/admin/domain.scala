@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.admin
 
-import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.exts.OptionImplicits._
 
 case class OpenIndexRequest(indexes: Indexes,
