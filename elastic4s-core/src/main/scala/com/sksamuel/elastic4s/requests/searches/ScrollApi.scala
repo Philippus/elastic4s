@@ -13,10 +13,6 @@ trait ScrollApi {
   def clearScroll(ids: Iterable[String]): ClearScrollRequest        = ClearScrollRequest(ids.toSeq)
 }
 
-case class SearchScrollRequest(id: String, keepAlive: Option[String] = None) {
 
-  def keepAlive(keepAlive: String): SearchScrollRequest        = copy(keepAlive = keepAlive.some)
-  def keepAlive(duration: FiniteDuration): SearchScrollRequest = copy(keepAlive = Some(duration.toSeconds + "s"))
-}
 
-case class ClearScrollRequest(ids: Seq[String])
+

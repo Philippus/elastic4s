@@ -5,11 +5,7 @@ import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHa
 
 import scala.concurrent.duration._
 
-case class CreateTaskResponse(nodeId: String, taskId: String)
 
-case class ListTaskResponse(nodes: Map[String, Node])
-
-case class GetTaskResponse(completed: Boolean, task: Task, error: Option[TaskError])
 
 case class Node(name: String,
                 @JsonProperty("transport_address") transportAddress: String,

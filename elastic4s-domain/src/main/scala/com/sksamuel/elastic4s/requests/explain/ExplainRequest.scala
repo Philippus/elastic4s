@@ -11,13 +11,13 @@ case class ExplainRequest(index: Index,
                           lenient: Option[Boolean] = None,
                           preference: Option[String] = None,
                           routing: Option[String] = None)
-    extends Serializable {
+  extends Serializable {
 
-  def query(string: String): ExplainRequest             = query(QueryStringQuery(string))
-  def query(block: => Query): ExplainRequest            = copy(query = Option(block))
+  def query(string: String): ExplainRequest = query(QueryStringQuery(string))
+  def query(block: => Query): ExplainRequest = copy(query = Option(block))
   def fetchSource(fetchSource: Boolean): ExplainRequest = copy(fetchSource = Option(fetchSource))
-  def lenient(lenient: Boolean): ExplainRequest         = copy(lenient = Option(lenient))
-  def parent(parent: String): ExplainRequest            = copy(parent = Option(parent))
-  def preference(preference: String): ExplainRequest    = copy(preference = Option(preference))
-  def routing(routing: String): ExplainRequest          = copy(routing = Option(routing))
+  def lenient(lenient: Boolean): ExplainRequest = copy(lenient = Option(lenient))
+  def parent(parent: String): ExplainRequest = copy(parent = Option(parent))
+  def preference(preference: String): ExplainRequest = copy(preference = Option(preference))
+  def routing(routing: String): ExplainRequest = copy(routing = Option(routing))
 }
