@@ -16,7 +16,7 @@ object InnerHitQueryBodyBuilder extends BodyBuilder[InnerHit] {
     d.explain.foreach(builder.field("explain", _))
 
     // source filtering
-    d.fetchSource.foreach { it => builder.value(FetchSourceContextBuilderFn.toJson(it)) }
+    d.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
 
     d.trackScores.foreach(builder.field("track_scores", _))
     d.version.foreach(builder.field("version", _))

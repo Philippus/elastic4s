@@ -109,7 +109,7 @@ object SearchBodyBuilderFn {
     }
 
     // source filtering
-    request.fetchContext.foreach { it => builder.value(FetchSourceContextBuilderFn.toJson(it)) }
+    request.fetchContext.foreach(FetchSourceContextBuilderFn(builder, _))
 
     if (request.docValues.nonEmpty)
       builder.array("docvalue_fields", request.docValues.toArray)

@@ -22,7 +22,7 @@ object TopHitsAggregationBuilder {
     }
 
     // source filtering
-    agg.fetchSource.foreach { it => builder.value(FetchSourceContextBuilderFn.toJson(it)) }
+    agg.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
 
     agg.explain.foreach(builder.field("explain", _))
     agg.version.foreach(builder.field("version", _))
