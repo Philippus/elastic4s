@@ -1,16 +1,15 @@
 package com.sksamuel.elastic4s
 
-import java.nio.ByteBuffer
-
 import com.sksamuel.elastic4s.requests.common.DocumentRef
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
+import java.nio.ByteBuffer
 import scala.collection.mutable
 import scala.util.Try
 
 /**
-  * A common trait for Get, MultiGet, Search and MultiSearch API results so that
-  * the HitReader typeclass can unmarshall results from any of those.
+  * A common trait for Get, MultiGet, Search and MultiSearch results to provide common
+  * functionality for the [[HitReader]] typeclass.
   */
 trait Hit {
 
@@ -40,19 +39,19 @@ trait Hit {
     * Returns a Some(t) if the hit exists. It might not exist (an empty hit) if this was returned by a Get request
     * and the given id did not exist, in which case it will return None.
     */
-  final def toOpt[T: HitReader]: Option[T]                        = if (exists) to[T].some else None
+  final def toOpt[T: HitReader]: Option[T] = if (exists) to[T].some else None
   final def safeToOpt[T: HitReader]: Option[Try[T]] = if (exists) safeTo[T].some else None
 
-  final def sourceField(name: String): AnyRef            = sourceAsMap(name)
+  final def sourceField(name: String): AnyRef = sourceAsMap(name)
   final def sourceFieldOpt(name: String): Option[AnyRef] = sourceAsMap.get(name)
-  final def sourceAsBytes: Array[Byte]                   = sourceAsString.getBytes("UTF8")
+  final def sourceAsBytes: Array[Byte] = sourceAsString.getBytes("UTF8")
 
   def sourceAsString: String
   def sourceAsMap: Map[String, AnyRef]
 
   final def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq: _*)
-  final def sourceAsByteBuffer: ByteBuffer                  = ByteBuffer.wrap(sourceAsBytes)
-  final def isSourceEmpty: Boolean                          = sourceAsMap.isEmpty
+  final def sourceAsByteBuffer: ByteBuffer = ByteBuffer.wrap(sourceAsBytes)
+  final def isSourceEmpty: Boolean = sourceAsMap.isEmpty
 
   def exists: Boolean
   def score: Float
