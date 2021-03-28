@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.{ArrayNode, ObjectNode}
 import com.fasterxml.jackson.databind.util.RawValue
 import com.sksamuel.elastic4s.JacksonSupport
-import com.sksamuel.elastic4s.handlers.ContentBuilder
+import com.sksamuel.elastic4s.json.builder.ContentBuilder
 
 object XContentFactory {
   def jsonBuilder(): XContentBuilder          = obj()

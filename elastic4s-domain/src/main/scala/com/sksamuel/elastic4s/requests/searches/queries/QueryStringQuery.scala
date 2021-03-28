@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import java.util.TimeZone
-
-import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
+import java.util.TimeZone
 
 case class QueryStringQuery(query: String,
                             allowLeadingWildcard: Option[Boolean] = None,
@@ -32,18 +31,18 @@ case class QueryStringQuery(query: String,
                             tieBreaker: Option[Double] = None,
                             `type`: Option[MultiMatchQueryBuilderType] = None,
                             timeZone: Option[String] = None)
-    extends Query {
+  extends Query {
 
   def rewrite(rewrite: String): QueryStringQuery = copy(rewrite = rewrite.some)
-  def boost(boost: Double): QueryStringQuery     = copy(boost = boost.some)
+  def boost(boost: Double): QueryStringQuery = copy(boost = boost.some)
 
-  def analyzer(a: String): QueryStringQuery   = copy(analyzer = a.some)
+  def analyzer(a: String): QueryStringQuery = copy(analyzer = a.some)
 
   @deprecated("use the string version with the name of an analyzer", "7.7.0")
   def analyzer(a: Analyzer): QueryStringQuery = analyzer(a.name)
 
   def defaultOperator(op: String): QueryStringQuery = copy(defaultOperator = op.some)
-  def operator(op: String): QueryStringQuery        = defaultOperator(op)
+  def operator(op: String): QueryStringQuery = defaultOperator(op)
 
   def asfields(fields: String*): QueryStringQuery = copy(fields = fields.map(f => (f, None)))
 
@@ -107,5 +106,6 @@ case class QueryStringQuery(query: String,
   def matchType(t: MultiMatchQueryBuilderType): QueryStringQuery = copy(`type` = t.some)
 
   def timeZone(t: String): QueryStringQuery = copy(timeZone = t.some)
-  def timeZone(t: TimeZone): QueryStringQuery = timeZone(EnumConversions.timeZone(t))
+
+  def timeZone(t: TimeZone): QueryStringQuery = timeZone(t.getID)
 }

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.count
 
-import com.sksamuel.elastic4s.handlers.ContentBuilder
 import com.sksamuel.elastic4s.json.XContentFactory
+import com.sksamuel.elastic4s.json.builder.ContentBuilder
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 
 object CountBodyBuilderFn {

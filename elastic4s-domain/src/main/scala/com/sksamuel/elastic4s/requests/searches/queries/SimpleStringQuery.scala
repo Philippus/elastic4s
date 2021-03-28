@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 sealed trait SimpleQueryStringFlag
 object SimpleQueryStringFlag {

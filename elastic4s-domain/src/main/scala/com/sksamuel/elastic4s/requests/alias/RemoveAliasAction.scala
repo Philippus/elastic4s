@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.alias
 
 import com.sksamuel.elastic4s.requests.searches.queries.{Query, QueryStringQuery}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class RemoveAliasAction(alias: String,
                              index: String,
@@ -9,7 +9,7 @@ case class RemoveAliasAction(alias: String,
                              indexRouting: Option[String] = None,
                              searchRouting: Option[String] = None,
                              filter: Option[Query] = None)
-    extends AliasAction {
+  extends AliasAction {
   require(alias.nonEmpty, "alias must not be null or empty")
   require(index.nonEmpty, "index must not be null or empty")
 
@@ -19,5 +19,5 @@ case class RemoveAliasAction(alias: String,
   def withIndexRouting(indexRouting: String): RemoveAliasAction = copy(indexRouting = Option(indexRouting))
 
   def filter(query: String): RemoveAliasAction = filter(QueryStringQuery(query))
-  def filter(query: Query): RemoveAliasAction  = copy(filter = query.some)
+  def filter(query: Query): RemoveAliasAction = copy(filter = query.some)
 }
