@@ -42,7 +42,7 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.13.5",
+  scalaVersion := "2.12.12",
   crossScalaVersions := Seq("2.12.12", "2.13.5")
 )
 
@@ -145,6 +145,9 @@ lazy val root = Project("elastic4s", file("."))
   .settings(allSettings)
   .settings(noPublishSettings)
   .aggregate(
+    json_builder,
+    domain,
+    handlers,
     core,
     clientesjava,
     clientsSniffed,
@@ -169,9 +172,20 @@ lazy val domain = (project in file("elastic4s-domain"))
   .settings(name := "elastic4s-domain")
   .settings(allSettings)
 
+lazy val json_builder = (project in file("elastic4s-json-builder"))
+  .settings(name := "elastic4s-json-builder")
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
-  .dependsOn(domain, clientcore, handlers)
+  .dependsOn(domain, clientcore, handlers, json_builder)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -183,7 +197,7 @@ lazy val core = (project in file("elastic4s-core"))
 
 lazy val handlers = (project in file("elastic4s-handlers"))
   .settings(name := "elastic4s-handlers")
-  .dependsOn(domain)
+  .dependsOn(domain, json_builder)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(

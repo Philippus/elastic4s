@@ -85,17 +85,9 @@ case class SearchHit(@JsonProperty("_id") id: String,
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
 
-case class Total(value: Long, relation: String)
 
-object Total {
-  class Deserializer(vc: Class[_]) extends StdDeserializer[Total](vc) {
-    override def deserialize(p: JsonParser, ctxt: DeserializationContext): Total = {
-      val node: JsonNode = p.getCodec.readTree(p)
-      if(node.isNumber) Total(node.toString.toLong, "eq")
-      else Total(node.findValue("value").asLong, node.findValue("relation").asText())
-    }
-  }
-}
+
+
 
 case class SearchHits(total: Total,
                       @JsonProperty("max_score") maxScore: Double,

@@ -20,7 +20,7 @@ object MultiGetBodyBuilder {
             builder.array("exclude", context.excludes.toList)
           builder.endObject()
         } else
-          builder.field("_source", boolean = false)
+          builder.field("_source", value = false)
       }
       if (get.storedFields.nonEmpty)
         builder.array("stored_fields", get.storedFields.toArray)

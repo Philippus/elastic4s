@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.HttpEntity.StringEntity
+
 /**
   * An [[ElasticRequest]] models all the required fields for a request to be
   * sent to Elasticsearch.
@@ -26,9 +28,14 @@ object ElasticRequest {
 
   implicit val ElasticRequestShow: Show[ElasticRequest] = new Show[ElasticRequest] {
     override def show(t: ElasticRequest): String = {
-      val header = s"${t.method}:${t.endpoint}?${t.params.map { case (k, v) => k + "=" + v }.mkString("&")}"
+      val queryParams = t.params.map { case (k, v) => k + "=" + v }.mkString("&")
+      val header = s"${t.method} ${t.endpoint}?$queryParams".stripSuffix("?")
       t.entity.fold(header) { body =>
-        s"$header\n$body"
+        val content = body match {
+          case StringEntity(content, _) => content
+          case _ => body
+        }
+        s"$header\n$content"
       }
     }
   }

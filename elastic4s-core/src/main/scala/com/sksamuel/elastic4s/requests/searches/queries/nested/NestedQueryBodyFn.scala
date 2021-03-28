@@ -14,7 +14,7 @@ object NestedQueryBodyFn {
     q.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
     q.boost.foreach(builder.field("boost", _))
     q.queryName.foreach(builder.field("_name", _))
-    q.inner.foreach(inner => builder.rawField("inner_hits", InnerHitQueryBodyFn(inner)))
+    q.inner.foreach(inner => builder.field("inner_hits", InnerHitQueryBodyBuilder.toJson(inner)))
     builder.endObject()
     builder.endObject()
   }
