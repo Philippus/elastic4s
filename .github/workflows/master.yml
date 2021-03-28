@@ -28,6 +28,9 @@ jobs:
       - name: Launch elastic docker
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.12.0
 
+      - name: run tests
+        run: sbt ++2.12.12 test
+
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v3
@@ -63,6 +66,9 @@ jobs:
 
       - name: Launch elastic docker
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.12.0
+
+      - name: run tests
+        run: sbt ++2.13.4 test
 
       - name: Import GPG key
         id: import_gpg
