@@ -18,8 +18,8 @@ class MovAvgPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Matche
   }
 
   client.execute {
-    createIndex("movavgbucketagg") mappings {
-      mapping() fields(
+    createIndex("movavgbucketagg") mapping {
+      mapping(
         dateField("date"),
         doubleField("value").stored(true)
       )

@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.fields
 
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
 case class DateField(name: String,
                      boost: Option[Double] = None,
                      copyTo: Seq[String] = Nil,
@@ -12,4 +14,6 @@ case class DateField(name: String,
                      store: Option[Boolean] = None,
                      meta: Map[String, Any] = Map.empty) extends ElasticField {
   override def `type`: String = "date"
+  def format(format: String): DateField = copy(format = format.some)
+  def nullValue(nullValue: String): DateField = copy(nullValue = nullValue.some)
 }

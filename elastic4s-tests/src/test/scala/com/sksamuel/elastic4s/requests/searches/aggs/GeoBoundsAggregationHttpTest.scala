@@ -15,8 +15,8 @@ class GeoBoundsAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
   }
 
   client.execute {
-    createIndex("geoboundsagg") mappings {
-      mapping() fields geopointField("location")
+    createIndex("geoboundsagg") mapping {
+      mapping(geopointField("location"))
     }
   }.await
 

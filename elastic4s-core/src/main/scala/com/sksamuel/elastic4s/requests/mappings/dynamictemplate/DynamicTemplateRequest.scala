@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s.requests.mappings.dynamictemplate
 
-import com.sksamuel.elastic4s.requests.mappings.FieldDefinition
+import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.exts.OptionImplicits._
 
 case class DynamicTemplateRequest(
   name: String,
-  mapping: FieldDefinition, // definition of the field, elasticsearch calls this the mapping
+  mapping: ElasticField,
   `match`: Option[String] = None,
   unmatch: Option[String] = None,
   pathMatch: Option[String] = None,

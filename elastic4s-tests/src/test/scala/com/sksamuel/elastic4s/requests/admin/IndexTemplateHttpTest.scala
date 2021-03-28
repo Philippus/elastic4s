@@ -16,7 +16,7 @@ class IndexTemplateHttpTest
     "be stored" in {
       client.execute {
         createIndexTemplate("brewery_template", "brew*").mappings(
-          mapping().fields(
+          properties(
             textField("name"),
             doubleField("year_founded")
           )
@@ -33,9 +33,9 @@ class IndexTemplateHttpTest
     "return error if the template has invalid parameters" in {
       client.execute {
         createIndexTemplate("brewery_template", "brew*").mappings(
-          mapping().fields(
+          properties(
             textField("name"),
-            doubleField("year_founded") analyzer "test_analyzer"
+            doubleField("year_founded")// analyzer "test_analyzer"
           )
         )
       }.await.error.`type` shouldBe "mapper_parsing_exception"

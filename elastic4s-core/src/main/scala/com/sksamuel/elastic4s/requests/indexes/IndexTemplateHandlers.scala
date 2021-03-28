@@ -89,13 +89,6 @@ object CreateIndexTemplateBodyFn {
 
     if (create.mappings.length == 1) {
       builder.rawField("mappings", MappingBuilderFn.build(create.mappings.head))
-    } else if (create.mappings.nonEmpty) {
-      builder.startObject("mappings")
-      for (mapping <- create.mappings) {
-        require(mapping.`type`.nonEmpty)
-        builder.rawField(mapping.`type`.get, MappingBuilderFn.build(mapping))
-      }
-      builder.endObject()
     }
 
     if (create.aliases.nonEmpty) {

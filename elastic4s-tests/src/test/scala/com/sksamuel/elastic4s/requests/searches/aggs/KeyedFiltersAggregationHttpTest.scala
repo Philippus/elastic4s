@@ -17,7 +17,7 @@ class KeyedFiltersAggregationHttpTest extends AnyFreeSpec with DockerTests with 
 
   client.execute {
     createIndex("keyedfiltersagg") mappings {
-      mapping("buildings") fields(
+      mapping(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

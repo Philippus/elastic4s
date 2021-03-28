@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.indexes.admin
 
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.api.IndexRecoveryRequest
 
+import java.net.URLEncoder
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams

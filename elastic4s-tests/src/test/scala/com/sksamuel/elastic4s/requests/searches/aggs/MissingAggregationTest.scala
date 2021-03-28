@@ -16,8 +16,8 @@ class MissingAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
   }
 
   client.execute {
-    createIndex("missingagg") mappings {
-      mapping("buildings") fields(
+    createIndex("missingagg") mapping {
+      mapping(
         textField("name").fielddata(true),
         intField("height").stored(true),
         intField("floors").stored(true)

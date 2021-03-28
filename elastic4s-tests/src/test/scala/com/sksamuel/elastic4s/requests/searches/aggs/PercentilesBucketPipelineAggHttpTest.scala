@@ -17,8 +17,8 @@ class PercentilesBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests 
   }
 
   client.execute {
-    createIndex("percentilesbucketagg") mappings {
-      mapping() fields(
+    createIndex("percentilesbucketagg") mapping {
+      mapping(
         dateField("date"),
         doubleField("value").stored(true)
       )
