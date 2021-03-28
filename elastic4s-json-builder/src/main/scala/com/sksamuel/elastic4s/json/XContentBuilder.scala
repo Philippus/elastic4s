@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.json
 
-import com.sksamuel.elastic4s.JacksonSupport
-
 import java.util
 
 object XContentFactory {
@@ -26,10 +24,10 @@ class XContentBuilder(root: JsonValue) {
 
   // generate a json string from the contents of the builder
   @deprecated("will be replaced with a pluggable system")
-  def string(): String = JacksonSupport.mapper.writeValueAsString(root)
+  def string(): String = JacksonBuilder.writeAsString(root)
 
   @deprecated("will be replaced with a pluggable system")
-  def bytes: Array[Byte] = JacksonSupport.mapper.writeValueAsBytes(root)
+  def bytes: Array[Byte] = JacksonBuilder.writeAsString(root).getBytes
 
   def array(field: String, strings: Array[String]): XContentBuilder = {
     startArray(field)
