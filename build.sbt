@@ -42,7 +42,7 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.12",
+  scalaVersion := "2.13.5",
   crossScalaVersions := Seq("2.12.12", "2.13.5")
 )
 
