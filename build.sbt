@@ -165,13 +165,13 @@ lazy val root = Project("elastic4s", file("."))
     akkastreams
   )
 
-lazy val messages = (project in file("elastic4s-messages"))
-  .settings(name := "elastic4s-messages")
+lazy val domain = (project in file("elastic4s-domain"))
+  .settings(name := "elastic4s-domain")
   .settings(allSettings)
 
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
-  .dependsOn(messages, clientcore, handlers)
+  .dependsOn(domain, clientcore, handlers)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -183,7 +183,7 @@ lazy val core = (project in file("elastic4s-core"))
 
 lazy val handlers = (project in file("elastic4s-handlers"))
   .settings(name := "elastic4s-handlers")
-  .dependsOn(messages)
+  .dependsOn(domain)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
