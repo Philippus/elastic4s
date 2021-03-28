@@ -35,7 +35,7 @@ case class ObjectValue(map: scala.collection.mutable.Map[String, JsonValue]) ext
 }
 
 object ObjectValue {
-  def empty: ObjectValue = ObjectValue(scala.collection.mutable.Map.empty[String, JsonValue])
+  def empty: ObjectValue = ObjectValue(scala.collection.mutable.LinkedHashMap.empty[String, JsonValue])
 }
 
 case class ArrayValue(elements: scala.collection.mutable.ListBuffer[JsonValue]) extends JsonValue {
