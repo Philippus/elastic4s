@@ -7,7 +7,6 @@ import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 // https://www.elastic.co/guide/en/elasticsearch/reference/5.6/search-request-source-filtering.html
 object FetchSourceContextBuilderFn {
   def apply(builder: XContentBuilder, context: FetchSourceContext) {
-    val builder = XContentFactory.jsonBuilder()
     if (context.fetchSource)
       if (context.includes.nonEmpty || context.excludes.nonEmpty) {
         builder.startObject("_source")
