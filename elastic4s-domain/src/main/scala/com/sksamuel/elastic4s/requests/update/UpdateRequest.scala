@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.requests.update
 
-import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy}
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.{Index, Indexable}
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
@@ -29,7 +28,7 @@ case class UpdateRequest(index: Index,
                          upsertFields: Map[String, Any] = Map.empty,
                          documentFields: Map[String, Any] = Map.empty,
                          documentSource: Option[String] = None)
-    extends BulkCompatibleRequest {
+  extends BulkCompatibleRequest {
   require(index != null, "index must not be null or empty")
   require(id.nonEmpty, "id must not be null or empty")
 
@@ -38,7 +37,7 @@ case class UpdateRequest(index: Index,
 
   // Sets the object to use for updates when a script is not specified.
   def doc[T](t: T)(implicit indexable: Indexable[T]): UpdateRequest = doc(indexable.json(t))
-  def doc(doc: String): UpdateRequest                               = copy(documentSource = doc.some)
+  def doc(doc: String): UpdateRequest = copy(documentSource = doc.some)
 
   // Sets the fields to use for updates when a script is not specified.
   def doc(field: (String, Any)): UpdateRequest = doc(Map(field))
@@ -91,7 +90,7 @@ case class UpdateRequest(index: Index,
   // If the document does not already exist, the script will be executed instead.
   def scriptedUpsert(upsert: Boolean): UpdateRequest = copy(scriptedUpsert = upsert.some)
 
-  def source[T: Indexable](t: T): UpdateRequest         = doc(t)
+  def source[T: Indexable](t: T): UpdateRequest = doc(t)
   def sourceAsUpsert[T: Indexable](t: T): UpdateRequest = docAsUpsert(t)
 
   def timeout(duration: FiniteDuration): UpdateRequest = copy(timeout = duration.some)
@@ -109,11 +108,11 @@ case class UpdateRequest(index: Index,
   def upsert(iterable: Iterable[(String, Any)]): UpdateRequest = upsert(iterable.toMap)
 
   def upsert[T](t: T)(implicit indexable: Indexable[T]): UpdateRequest = upsert(indexable.json(t))
-  def upsert(doc: String): UpdateRequest                               = copy(upsertSource = doc.some)
+  def upsert(doc: String): UpdateRequest = copy(upsertSource = doc.some)
 
   def versionType(versionType: String): UpdateRequest = copy(versionType = versionType.some)
-  def version(version: Long): UpdateRequest           = copy(version = version.some)
-  def ifSeqNo(ifSeqNo: Long): UpdateRequest           = copy(ifSeqNo = ifSeqNo.some)
+  def version(version: Long): UpdateRequest = copy(version = version.some)
+  def ifSeqNo(ifSeqNo: Long): UpdateRequest = copy(ifSeqNo = ifSeqNo.some)
   def ifPrimaryTerm(ifPrimaryTerm: Long): UpdateRequest =
     copy(ifPrimaryTerm = ifPrimaryTerm.some)
   def waitForActiveShards(waitForActiveShards: Int): UpdateRequest =

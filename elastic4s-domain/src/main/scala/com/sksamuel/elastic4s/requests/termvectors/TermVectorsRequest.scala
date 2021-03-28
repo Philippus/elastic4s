@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.termvectors
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.exts.OptionImplicits._
 
 case class TermVectorsRequest(index: Index,
                               id: String,
@@ -31,25 +30,25 @@ case class TermVectorsRequest(index: Index,
   def fields(fields: String*): TermVectorsRequest = copy(fields = fields.toSeq)
 
   def fieldStatistics(boolean: Boolean): TermVectorsRequest = copy(fieldStatistics = Option(boolean))
-  def offsets(boolean: Boolean): TermVectorsRequest         = copy(offsets = Option(boolean))
-  def parent(str: String): TermVectorsRequest               = copy(parent = Option(str))
-  def payloads(boolean: Boolean): TermVectorsRequest        = copy(payloads = Option(boolean))
-  def positions(boolean: Boolean): TermVectorsRequest       = copy(positions = Option(boolean))
-  def preference(str: String): TermVectorsRequest           = copy(preference = Option(str))
-  def realtime(boolean: Boolean): TermVectorsRequest        = copy(realtime = Option(boolean))
-  def routing(str: String): TermVectorsRequest              = copy(routing = Option(str))
-  def termStatistics(boolean: Boolean): TermVectorsRequest  = copy(termStatistics = Option(boolean))
-  def version(version: Long): TermVectorsRequest            = copy(version = Option(version))
-  def versionType(versionType: String): TermVectorsRequest  = copy(versionType = versionType.some)
+  def offsets(boolean: Boolean): TermVectorsRequest = copy(offsets = Option(boolean))
+  def parent(str: String): TermVectorsRequest = copy(parent = Option(str))
+  def payloads(boolean: Boolean): TermVectorsRequest = copy(payloads = Option(boolean))
+  def positions(boolean: Boolean): TermVectorsRequest = copy(positions = Option(boolean))
+  def preference(str: String): TermVectorsRequest = copy(preference = Option(str))
+  def realtime(boolean: Boolean): TermVectorsRequest = copy(realtime = Option(boolean))
+  def routing(str: String): TermVectorsRequest = copy(routing = Option(str))
+  def termStatistics(boolean: Boolean): TermVectorsRequest = copy(termStatistics = Option(boolean))
+  def version(version: Long): TermVectorsRequest = copy(version = Option(version))
+  def versionType(versionType: String): TermVectorsRequest = copy(versionType = versionType.some)
 
   def perFieldAnalyzer(perFieldAnalyzer: Map[String, String]): TermVectorsRequest =
     copy(perFieldAnalyzer = perFieldAnalyzer)
 
-  def maxNumTerms(maxNumTerms: Int): TermVectorsRequest     = copy(maxNumTerms = Option(maxNumTerms))
-  def minTermFreq(minTermFreq: Int): TermVectorsRequest     = copy(minTermFreq = Option(minTermFreq))
-  def maxTermFreq(maxTermFreq: Int): TermVectorsRequest     = copy(maxTermFreq = Option(maxTermFreq))
-  def minDocFreq(minDocFreq: Int): TermVectorsRequest       = copy(minDocFreq = Option(minDocFreq))
-  def maxDocFreq(maxDocFreq: Int): TermVectorsRequest       = copy(maxDocFreq = Option(maxDocFreq))
+  def maxNumTerms(maxNumTerms: Int): TermVectorsRequest = copy(maxNumTerms = Option(maxNumTerms))
+  def minTermFreq(minTermFreq: Int): TermVectorsRequest = copy(minTermFreq = Option(minTermFreq))
+  def maxTermFreq(maxTermFreq: Int): TermVectorsRequest = copy(maxTermFreq = Option(maxTermFreq))
+  def minDocFreq(minDocFreq: Int): TermVectorsRequest = copy(minDocFreq = Option(minDocFreq))
+  def maxDocFreq(maxDocFreq: Int): TermVectorsRequest = copy(maxDocFreq = Option(maxDocFreq))
   def minWordLength(minWordLength: Int): TermVectorsRequest = copy(minWordLength = Option(minWordLength))
   def maxWordLength(maxWordLength: Int): TermVectorsRequest = copy(maxWordLength = Option(maxWordLength))
 }

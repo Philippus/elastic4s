@@ -1,4 +1,6 @@
-package com.sksamuel.elastic4s.requests.ingest
+package com.sksamuel.elastic4s.api
+
+import com.sksamuel.elastic4s.requests.ingest.{DeletePipelineRequest, GetPipelineRequest, Processor, PutPipelineRequest}
 
 trait IngestApi {
 
