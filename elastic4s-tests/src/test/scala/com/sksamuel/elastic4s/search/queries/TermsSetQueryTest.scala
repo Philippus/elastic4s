@@ -5,19 +5,29 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import scala.util.Try
+
 class TermsSetQueryTest
   extends AnyFlatSpec
     with DockerTests
     with Matchers {
 
-  client.execute {
-    createIndex("randompeople").mapping(
-      mapping(
-        textField("names"),
-        floatField("required_matches")
+  Try {
+    client.execute {
+      deleteIndex("randompeople")
+    }.await
+  }
+
+  Try {
+    client.execute {
+      createIndex("randompeople").mapping(
+        mapping(
+          textField("names"),
+          floatField("required_matches")
+        )
       )
-    )
-  }.await
+    }.await
+  }
 
   client.execute {
     bulk(
@@ -53,8 +63,8 @@ class TermsSetQueryTest
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson", "edmure", "john")
     resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
-    resp.hits.hits.apply(2).sourceAsMap("names") shouldBe List("umber", "rudolfus", "byron")
-    resp.hits.hits.apply(2).sourceAsMap("required_matches") shouldBe 1
+    resp.hits.hits.apply(1).sourceAsMap("names") shouldBe List("umber", "rudolfus", "byron")
+    resp.hits.hits.apply(1).sourceAsMap("required_matches") shouldBe 1
   }
 
   // Test: Satisfying the requirements of the 'minimum should match' script for one document (first one)
@@ -73,7 +83,7 @@ class TermsSetQueryTest
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson","edmure","john")
     resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
-    resp.hits.hits.apply(2).sourceAsMap("names") shouldBe List("umber","rudolfus","byron")
-    resp.hits.hits.apply(2).sourceAsMap("required_matches") shouldBe 1
+    resp.hits.hits.apply(1).sourceAsMap("names") shouldBe List("umber","rudolfus","byron")
+    resp.hits.hits.apply(1).sourceAsMap("required_matches") shouldBe 1
   }
 }
