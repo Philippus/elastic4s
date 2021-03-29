@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.requests.searches.queries.term.{WildcardQuery, WildcardQueryBodyFn}
+import com.sksamuel.elastic4s.requests.searches.queries.term.WildcardQueryBodyFn
+import com.sksamuel.elastic4s.requests.searches.term.WildcardQuery
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

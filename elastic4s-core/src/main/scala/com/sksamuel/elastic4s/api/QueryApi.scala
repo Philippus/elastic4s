@@ -7,9 +7,9 @@ import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScore
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery, Shape}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefix, MatchNoneQuery, MatchPhrase, MatchPhrasePrefix, MatchQuery, MultiMatchQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanContainingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoolQuery, BoostingQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery, TypeQuery}
-import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup}
+import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
+import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup, term}
 
 trait QueryApi {
 
@@ -237,17 +237,17 @@ trait QueryApi {
     TermsQuery(field, values)
 
   def termsLookupQuery(field: String, path: String, ref: DocumentRef): TermsLookupQuery =
-    TermsLookupQuery(field, TermsLookup(ref, path))
+    term.TermsLookupQuery(field, TermsLookup(ref, path))
 
   // Either minimumShouldMatchField or minimumShouldMatchScript should be specified, that's why they appear as mandatory parameters
   def termsSetQuery(field: String,
                     terms: Set[String],
-                    minimumShouldMatchField: String): com.sksamuel.elastic4s.requests.searches.queries.term.TermsSetQuery =
+                    minimumShouldMatchField: String): TermsSetQuery =
     TermsSetQuery(field, terms, minimumShouldMatchField = Some(minimumShouldMatchField))
 
   def termsSetQuery(field: String,
                     terms: Set[String],
-                    minimumShouldMatchScript: Script): com.sksamuel.elastic4s.requests.searches.queries.term.TermsSetQuery =
+                    minimumShouldMatchScript: Script): TermsSetQuery =
     TermsSetQuery(field, terms, minimumShouldMatchScript = Some(minimumShouldMatchScript))
 
   def wildcardQuery(field: String, value: Any): WildcardQuery = WildcardQuery(field, value)

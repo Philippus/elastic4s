@@ -8,9 +8,9 @@ import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseRequest
 import com.sksamuel.elastic4s.requests.searches.queries._
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.term.TermQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, Sort}
 import com.sksamuel.elastic4s.requests.searches.suggestion.Suggestion
+import com.sksamuel.elastic4s.requests.searches.term.TermQuery
 import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
