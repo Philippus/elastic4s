@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.template
 
-import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.PutSearchTemplateRequest
@@ -11,7 +10,7 @@ object PutSearchTemplateBuilderFn {
 
     val builder = XContentFactory.jsonBuilder().startObject("template")
     request.body.foreach(builder.rawField("query", _))
-    request.query.map(queries.QueryBuilderFn(_)).foreach(builder.rawField("query", _))
+    request.query.map(QueryBuilderFn(_)).foreach(builder.rawField("query", _))
     builder.endObject().endObject()
   }
 }

@@ -1,30 +1,8 @@
-package com.sksamuel.elastic4s.requests.snapshots
+package com.sksamuel.elastic4s.handlers.snapshot
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.json.XContentFactory
+import com.sksamuel.elastic4s.requests.snapshots.{CreateRepositoryRequest, CreateRepositoryResponse, CreateSnapshotRequest, CreateSnapshotResponse, DeleteSnapshotRequest, DeleteSnapshotResponse, GetSnapshotResponse, GetSnapshotsRequest, RestoreSnapshotRequest, RestoreSnapshotResponse}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
-
-import scala.concurrent.duration._
-
-case class CreateRepositoryResponse(acknowledged: Boolean)
-case class CreateSnapshotResponse(accepted: Boolean)
-case class GetSnapshotResponse(snapshots: Seq[Snapshot])
-case class Snapshot(snapshot: String,
-                    uuid: String,
-                    @JsonProperty("version_id") versionId: String,
-                    version: String,
-                    indices: Seq[String],
-                    state: String,
-                    @JsonProperty("start_time") startTime: String,
-                    @JsonProperty("start_time_in_millis") startTimeInMillis: Long,
-                    @JsonProperty("end_time") endTime: String,
-                    @JsonProperty("end_time_in_millis") endTimeInMillis: Long,
-                    @JsonProperty("duration_in_millis") durationInMillis: Long) {
-  def duration: Duration = durationInMillis.millis
-}
-
-case class DeleteSnapshotResponse(acknowledged: Boolean)
-case class RestoreSnapshotResponse(acknowledged: Boolean)
 
 trait SnapshotHandlers {
 
@@ -82,7 +60,7 @@ trait SnapshotHandlers {
   implicit object GetSnapshotHandler extends Handler[GetSnapshotsRequest, GetSnapshotResponse] {
     override def build(request: GetSnapshotsRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotNames.mkString(",")
-      val params   = scala.collection.mutable.Map.empty[String, String]
+      val params = scala.collection.mutable.Map.empty[String, String]
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
       request.verbose.map(_.toString).foreach(params.put("verbose", _))
       ElasticRequest("GET", endpoint, params.toMap)

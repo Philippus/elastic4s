@@ -11,6 +11,7 @@ import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
 import com.sksamuel.elastic4s.handlers.reindex.ReindexHandlers
 import com.sksamuel.elastic4s.handlers.settings.SettingsHandlers
+import com.sksamuel.elastic4s.handlers.snapshot.SnapshotHandlers
 import com.sksamuel.elastic4s.handlers.task.TaskHandlers
 import com.sksamuel.elastic4s.handlers.termvectors.TermVectorHandlers
 import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
@@ -24,7 +25,6 @@ import com.sksamuel.elastic4s.requests.security.roles.RoleHandlers
 import com.sksamuel.elastic4s.requests.security.roles.admin.RoleAdminHandlers
 import com.sksamuel.elastic4s.requests.security.users.UserHandlers
 import com.sksamuel.elastic4s.requests.security.users.admin.UserAdminHandlers
-import com.sksamuel.elastic4s.requests.snapshots.SnapshotHandlers
 import com.sksamuel.exts.Logging
 
 trait ElasticDsl
