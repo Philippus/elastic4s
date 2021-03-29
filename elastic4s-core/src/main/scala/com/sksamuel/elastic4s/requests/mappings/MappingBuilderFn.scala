@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.handlers.fields
 import com.sksamuel.elastic4s.handlers.fields.ElasticFieldBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
@@ -71,7 +70,7 @@ object MappingBuilderFn {
     if (d.properties.nonEmpty) {
       builder.startObject("properties")
       for (property <- d.properties)
-        builder.rawField(property.name, fields.ElasticFieldBuilderFn(property))
+        builder.rawField(property.name, ElasticFieldBuilderFn(property))
       builder.endObject() // end properties
     }
 
