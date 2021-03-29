@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.term
 
 import com.sksamuel.elastic4s.requests.common.DocumentRef
 import com.sksamuel.elastic4s.requests.searches.queries.Query
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class TermsQuery[T](field: String,
                          values: Iterable[T],

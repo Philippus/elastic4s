@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.searches.queries.span
+package com.sksamuel.elastic4s.requests.searches.span
 
 import com.sksamuel.elastic4s.requests.searches.queries.{MultiTermQuery, Query}
 import com.sksamuel.exts.OptionImplicits._

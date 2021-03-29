@@ -7,9 +7,10 @@ import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FunctionScor
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoBoundingBoxQueryBodyFn, GeoDistanceQuery, GeoDistanceQueryBodyFn, GeoPolygonQuery, GeoPolyonQueryBodyFn, GeoShapeQuery, GeoShapeQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefix, MatchNoneQuery, MatchPhrase, MatchPhrasePrefix, MatchQuery, MultiMatchQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
-import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanContainingQuery, SpanContainingQueryBodyFn, SpanFirstQuery, SpanFirstQueryBodyFn, SpanMultiTermQuery, SpanMultiTermQueryBodyFn, SpanNearQuery, SpanNearQueryBodyFn, SpanNotQuery, SpanNotQueryBodyFn, SpanOrQuery, SpanOrQueryBodyFn, SpanTermQuery, SpanTermQueryBodyFn, SpanWithinQuery, SpanWithinQueryBodyFn}
+import com.sksamuel.elastic4s.requests.searches.queries.span.{SpanContainingQueryBodyFn, SpanFirstQueryBodyFn, SpanMultiTermQueryBodyFn, SpanNearQueryBodyFn, SpanNotQueryBodyFn, SpanOrQueryBodyFn, SpanTermQueryBodyFn, SpanWithinQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQueryBodyFn, TermsLookupQueryBodyFn, TermsQueryBodyFn, TermsSetQueryBodyFn, TypeQueryBodyFn, WildcardQueryBodyFn}
 import com.sksamuel.elastic4s.requests.searches.queries.text.{CommonTermsQueryBodyFn, MatchBoolPrefixBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
+import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 
 object QueryBuilderFn {

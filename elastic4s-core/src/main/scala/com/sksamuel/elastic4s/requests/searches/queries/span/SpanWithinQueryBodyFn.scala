@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.span
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.requests.searches.span.SpanWithinQuery
 
 object SpanWithinQueryBodyFn {
   def apply(q: SpanWithinQuery): XContentBuilder = {
