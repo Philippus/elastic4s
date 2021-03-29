@@ -4,6 +4,7 @@ import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class SearchAsYouTypeField(name: String,
                                 analyzer: Option[String] = None,
+                                searchAnalyzer: Option[String] = None,
                                 boost: Option[Double] = None,
                                 copyTo: Seq[String] = Nil,
                                 docValues: Option[Boolean] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/doc-values.html
@@ -21,6 +22,7 @@ case class SearchAsYouTypeField(name: String,
   override def `type`: String = "search_as_you_type"
 
   def analyzer(name: String): SearchAsYouTypeField = copy(analyzer = Option(name))
+  def searchAnalyzer(name: String): SearchAsYouTypeField = copy(searchAnalyzer = Option(name))
   def copyTo(copyTo: String*): SearchAsYouTypeField = copy(copyTo = copyTo.toList)
   def copyTo(copyTo: Iterable[String]): SearchAsYouTypeField = copy(copyTo = copyTo.toList)
   def fielddata(fielddata: Boolean): SearchAsYouTypeField = copy(fielddata = fielddata.some)

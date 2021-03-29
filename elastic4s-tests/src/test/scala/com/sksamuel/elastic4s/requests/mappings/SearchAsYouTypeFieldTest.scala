@@ -9,6 +9,8 @@ class SearchAsYouTypeFieldTest extends AnyFlatSpec with Matchers with ElasticApi
 
   "search as you type def" should "support additional text properties" in {
     val field = searchAsYouType("myfield")
+      .analyzer("foo")
+      .searchAnalyzer("bar")
       .fielddata(true)
       .stored(true)
       .index(true)
@@ -20,6 +22,6 @@ class SearchAsYouTypeFieldTest extends AnyFlatSpec with Matchers with ElasticApi
       .similarity("classic")
       .maxShingleSize(4)
     SearchAsYouTypeFieldBuilderFn.build(field).string() shouldBe
-      """{"type":"search_as_you_type","boost":1.2,"copy_to":["copy1","copy2"],"index":true,"norms":true,"store":true,"fielddata":true,"ignore_above":30,"index_options":"freqs","similarity":"classic","max_shingle_size":4}"""
+      """{"type":"search_as_you_type","analyzer":"foo","search_analyzer":"bar","boost":1.2,"copy_to":["copy1","copy2"],"index":true,"norms":true,"store":true,"fielddata":true,"ignore_above":30,"index_options":"freqs","similarity":"classic","max_shingle_size":4}"""
   }
 }

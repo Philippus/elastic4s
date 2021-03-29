@@ -11,6 +11,7 @@ object SearchAsYouTypeFieldBuilderFn {
     builder.field("type", field.`type`)
 
     field.analyzer.foreach(builder.field("analyzer", _))
+    field.searchAnalyzer.foreach(builder.field("search_analyzer", _))
     field.boost.foreach(builder.field("boost", _))
     if (field.copyTo.nonEmpty) builder.array("copy_to", field.copyTo.toArray)
     field.index.foreach(builder.field("index", _))
