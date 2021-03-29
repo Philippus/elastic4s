@@ -1,42 +1,7 @@
-package com.sksamuel.elastic4s.requests.task
+package com.sksamuel.elastic4s.handlers.task
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.requests.task.{CancelTasksRequest, GetTask, GetTaskResponse, ListTaskResponse, ListTasks}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
-
-import scala.concurrent.duration._
-
-
-
-case class Node(name: String,
-                @JsonProperty("transport_address") transportAddress: String,
-                host: String,
-                ip: String,
-                roles: Seq[String],
-                tasks: Map[String, Task])
-
-case class Task(node: String,
-                id: String,
-                `type`: String,
-                action: String,
-                status: TaskStatus,
-                description: String,
-                @JsonProperty("start_time_in_millis") private val start_time_in_millis: Long,
-                @JsonProperty("running_time_in_nanos") private val running_time_in_nanos: Long,
-                cancellable: Boolean) {
-  def startTimeInMillis: Long = start_time_in_millis
-  def runningTime: FiniteDuration = running_time_in_nanos.nanos
-}
-
-case class Cause(`type`: String, reason: String)
-
-case class TaskError(`type`: String,
-                     reason: String,
-                     phase: String,
-                     grouped: Boolean,
-                     @JsonProperty("caused_by") causedBy: Option[Cause]
-)
-
-case class TaskStatus(total: Long, updated: Long, created: Long, deleted: Long, batches: Long)
 
 trait TaskHandlers {
 

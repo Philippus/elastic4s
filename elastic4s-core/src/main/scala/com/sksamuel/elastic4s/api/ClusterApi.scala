@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.cluster.{AddRemoteClusterSettingsRequest, ClusterHealthRequest, ClusterSettingsRequest, ClusterStateRequest, ClusterStatsRequest, NodeHotThreadsRequest, NodeUsageRequest, RemoteClusterInfoRequest}
+import com.sksamuel.elastic4s.handlers.cluster.NodeHotThreadsRequest
+import com.sksamuel.elastic4s.requests.cluster.{AddRemoteClusterSettingsRequest, ClusterHealthRequest, ClusterSettingsRequest, ClusterStateRequest, ClusterStatsRequest, NodeUsageRequest, RemoteClusterInfoRequest}
 
 trait ClusterApi {
 

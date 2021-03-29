@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.cluster
+package com.sksamuel.elastic4s.handlers.cluster
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpResponse, ResponseHandler}

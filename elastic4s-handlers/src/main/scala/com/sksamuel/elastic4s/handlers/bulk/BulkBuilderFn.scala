@@ -1,12 +1,15 @@
-package com.sksamuel.elastic4s.requests.bulk
+package com.sksamuel.elastic4s.handlers.bulk
 
 import com.sksamuel.elastic4s.handlers
 import com.sksamuel.elastic4s.handlers.VersionTypeHttpString
+import com.sksamuel.elastic4s.handlers.index.IndexContentBuilder
+import com.sksamuel.elastic4s.handlers.update.UpdateBuilderFn
 import com.sksamuel.elastic4s.json.XContentFactory
+import com.sksamuel.elastic4s.requests.bulk.BulkRequest
 import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 import com.sksamuel.elastic4s.requests.delete.DeleteByIdRequest
-import com.sksamuel.elastic4s.requests.indexes.{IndexContentBuilder, IndexRequest}
-import com.sksamuel.elastic4s.requests.update.{UpdateBuilderFn, UpdateRequest}
+import com.sksamuel.elastic4s.requests.indexes.IndexRequest
+import com.sksamuel.elastic4s.requests.update.UpdateRequest
 
 object BulkBuilderFn {
 

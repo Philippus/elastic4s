@@ -1,8 +1,8 @@
-package com.sksamuel.elastic4s.requests.update
+package com.sksamuel.elastic4s.handlers.update
 
-import com.sksamuel.elastic4s.{FieldsMapper, handlers}
-import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.update.UpdateRequest
+import com.sksamuel.elastic4s.{FieldsMapper, handlers}
 
 object UpdateBuilderFn {
   def apply(request: UpdateRequest): XContentBuilder = {

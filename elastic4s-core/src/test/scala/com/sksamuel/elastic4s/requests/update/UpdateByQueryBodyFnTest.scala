@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.handlers.update.{UpdateBuilderFn, UpdateByQueryBodyFn}
 import com.sksamuel.elastic4s.requests.script.Script
 import org.scalatest.wordspec.AnyWordSpec
 

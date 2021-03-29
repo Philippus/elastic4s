@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.HttpEntity.ByteArrayEntity
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.handlers.index.IndexContentBuilder
 import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.indexes.analyze.{AnalyseRequestContentBuilder, AnalyzeRequest, AnalyzeResponse, AnalyzeResponseHandler}

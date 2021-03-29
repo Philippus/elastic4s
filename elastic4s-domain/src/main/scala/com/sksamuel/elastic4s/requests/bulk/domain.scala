@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.bulk
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.json.SourceAsContentBuilder
 import com.sksamuel.elastic4s.requests.common.Shards
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.JacksonSupport
 import com.sksamuel.elastic4s.requests.update.UpdateGet
 
 sealed trait BulkResponseItem {
@@ -99,7 +99,7 @@ case class UpdateBulkResponseItem(itemId: Int,
 
   def source: Option[Map[String, Any]] = get.map(_._source)
 
-  def sourceAsString: Option[String] = source.map(SourceAsContentBuilder(_).string())
+  def sourceAsString: Option[String] = source.map(JacksonSupport.mapper.writeValueAsString)
 }
 
 case class CreateBulkResponseItem(itemId: Int,

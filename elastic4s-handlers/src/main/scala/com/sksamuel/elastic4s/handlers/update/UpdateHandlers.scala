@@ -1,31 +1,16 @@
-package com.sksamuel.elastic4s.requests.update
+package com.sksamuel.elastic4s.handlers.update
 
-import java.net.URLEncoder
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.requests.update.{UpdateByQueryRequest, UpdateByQueryResponse, UpdateRequest, UpdateResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.OptionImplicits._
 
-case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter
-
-case class UpdateResponse(@JsonProperty("_index") index: String,
-                          @JsonProperty("_id") id: String,
-                          @JsonProperty("_version") version: Long,
-                          @JsonProperty("_seq_no") seqNo: Long,
-                          @JsonProperty("_primary_term") primaryTerm: Long,
-                          result: String,
-                          @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
-                          @JsonProperty("_shards") shards: Shards,
-                          private val get: Option[UpdateGet]) {
-  def ref: DocumentRef = DocumentRef(index, id)
-  def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
-  def found: Boolean = get.forall(_.found)
-}
+import java.net.URLEncoder
 
 object UpdateByQueryBodyFn {
   def apply(request: UpdateByQueryRequest): XContentBuilder = {

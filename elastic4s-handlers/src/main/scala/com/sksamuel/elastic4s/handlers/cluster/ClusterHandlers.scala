@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.requests.cluster
+package com.sksamuel.elastic4s.handlers.cluster
 
-import com.sksamuel.elastic4s.handlers.cluster.ClusterSettingsBodyBuilderFn
+import com.sksamuel.elastic4s.requests.cluster.{AddRemoteClusterResponse, AddRemoteClusterSettingsRequest, ClusterHealthRequest, ClusterHealthResponse, ClusterSettingsRequest, ClusterSettingsResponse, ClusterStateRequest, ClusterStateResponse, ClusterStatsRequest, ClusterStatsResponse, RemoteClusterInfo, RemoteClusterInfoRequest}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait ClusterHandlers {
