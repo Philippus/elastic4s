@@ -19,6 +19,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_explanation") explanation: Option[Explanation],
                      @JsonProperty("sort") sort: Option[Seq[AnyRef]],
                      private val _source: Map[String, AnyRef],
+                     override val sourceAsString: String,
                      fields: Map[String, AnyRef],
                      @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
                      private val inner_hits: Map[String, Map[String, Any]],
@@ -45,9 +46,6 @@ case class SearchHit(@JsonProperty("_id") id: String,
 
   override def sourceAsMap: Map[String, AnyRef] = _source
 
-  // todo put back ?
-  override def sourceAsString: String = ??? // SourceAsContentBuilder(_source).string()
-
   override def exists: Boolean = true
 
   private def buildInnerHits(_hits: Map[String, Map[String, Any]]): Map[String, InnerHits] =
@@ -73,7 +71,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
           )
         }
       )
-    }.toMap
+    }
 
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
