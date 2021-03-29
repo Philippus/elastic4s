@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.HttpEntity.ByteArrayEntity
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.indexes.analyze.{AnalyseRequestContentBuilder, AnalyzeRequest, AnalyzeResponse, AnalyzeResponseHandler}
 import com.sksamuel.exts.collection.Maps
@@ -17,7 +17,7 @@ trait IndexHandlers {
     override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, IndexResponse] = response.statusCode match {
         case 201 | 200                   => Right(ResponseHandler.fromResponse[IndexResponse](response))
-        case 400 | 401 | 403 | 409 | 500 => Left(ElasticError.parse(response))
+        case 400 | 401 | 403 | 409 | 500 => Left(ElasticErrorParser.parse(response))
         case _                           => sys.error(response.toString)
       }
     }

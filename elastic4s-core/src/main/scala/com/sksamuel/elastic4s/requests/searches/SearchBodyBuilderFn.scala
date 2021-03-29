@@ -6,10 +6,10 @@ import com.sksamuel.elastic4s.handlers.script
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.{HighlightBuilderFn, queries}
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.AggregationBuilderFn
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.SortBuilderFn
 import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestion, TermSuggestionBuilderFn}
 
 object SearchBodyBuilderFn {
@@ -50,7 +50,7 @@ object SearchBodyBuilderFn {
       builder.startObject("script_fields")
       request.scriptFields.foreach { field =>
         builder.startObject(field.field)
-        builder.rawField("script", script.ScriptBuilderFn(field.script))
+        builder.rawField("script", ScriptBuilderFn(field.script))
         builder.endObject()
       }
       builder.endObject()
@@ -62,7 +62,7 @@ object SearchBodyBuilderFn {
         builder.startObject()
         rescore.windowSize.foreach(builder.field("window_size", _))
         builder.startObject("query")
-        builder.rawField("rescore_query", queries.QueryBuilderFn(rescore.query))
+        builder.rawField("rescore_query", QueryBuilderFn(rescore.query))
         rescore.rescoreQueryWeight.foreach(builder.field("rescore_query_weight", _))
         rescore.originalQueryWeight.foreach(builder.field("query_weight", _))
         rescore.scoreMode.map(EnumConversions.queryRescoreMode).foreach(builder.field("score_mode", _))

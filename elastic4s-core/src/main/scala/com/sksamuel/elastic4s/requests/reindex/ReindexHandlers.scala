@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
@@ -44,7 +45,7 @@ trait ReindexHandlers {
             case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
             case _ => Right(Left(ResponseHandler.fromResponse[ReindexResponse](response)))
           }
-        case _ => Left(ElasticError.parse(response))
+        case _ => Left(ElasticErrorParser.parse(response))
       }
     }
 

@@ -1,8 +1,11 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits.RichOption
+
+import scala.util.Try
 
 trait ResponseHandler[U] {
   self =>
@@ -52,7 +55,7 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
       val entity = response.entity.getOrError("No entity defined")
       Right(ResponseHandler.fromEntity[U](entity))
     case _ =>
-      Left(ElasticError.parse(response))
+      Left(ElasticErrorParser.parse(response))
   }
 }
 

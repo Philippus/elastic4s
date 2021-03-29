@@ -1,9 +1,12 @@
 package com.sksamuel.elastic4s.handlers.delete
 
+import com.sksamuel.elastic4s.handlers.VersionTypeHttpString
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.delete.{DeleteByIdRequest, DeleteByQueryRequest, DeleteByQueryResponse, DeleteResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 
 import java.net.URLEncoder
 
@@ -24,7 +27,7 @@ trait DeleteHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] =
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
-          case _         => Left(ElasticError.parse(response))
+          case _         => Left(ElasticErrorParser.parse(response))
         }
     }
 
@@ -59,7 +62,7 @@ trait DeleteHandlers {
 
         def right = Right(ResponseHandler.fromResponse[DeleteResponse](response))
 
-        def left = Left(ElasticError.parse(response))
+        def left = Left(ElasticErrorParser.parse(response))
 
         response.statusCode match {
           case 200 | 201 => right

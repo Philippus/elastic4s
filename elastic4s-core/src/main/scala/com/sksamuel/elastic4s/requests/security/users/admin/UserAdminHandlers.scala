@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.security.users.admin
 
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 
+import java.net.URLEncoder
 import com.sksamuel.elastic4s.requests.security.users.{CreateOrUpdateUserContentBuilder, CreateOrUpdateUserRequest, CreateUser, CreateUserResponse, DeleteUserRequest, UpdateUser}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
@@ -12,7 +13,7 @@ trait UserAdminHandlers {
 		override def responseHandler: ResponseHandler[CreateUserResponse] = new ResponseHandler[CreateUserResponse] {
 			override def handle(response: HttpResponse): Either[ElasticError, CreateUserResponse] = response.statusCode match {
 				case 200 | 201 => Right(ResponseHandler.fromResponse[CreateUserResponse](response))
-				case 400 | 500 => Left(ElasticError.parse(response))
+				case 400 | 500 => Left(ElasticErrorParser.parse(response))
 				case _ 				 => sys.error(response.toString)
 			}
 		}
@@ -47,7 +48,7 @@ trait UserAdminHandlers {
 		override def responseHandler: ResponseHandler[DeleteUserResponse] = new ResponseHandler[DeleteUserResponse] {
 			override def handle(response: HttpResponse): Either[ElasticError, DeleteUserResponse] = response.statusCode match {
 				case 200 | 201 | 404 => Right(ResponseHandler.fromResponse[DeleteUserResponse](response))
-				case 400 | 500 			 => Left(ElasticError.parse(response))
+				case 400 | 500 			 => Left(ElasticErrorParser.parse(response))
 				case _ 							 => sys.error(response.toString)
 			}
 		}

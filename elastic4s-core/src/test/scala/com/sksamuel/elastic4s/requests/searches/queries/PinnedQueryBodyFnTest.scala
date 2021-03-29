@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.PinnedQueryBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchAllQuery
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite

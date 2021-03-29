@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.handlers.searches.queries
 
+import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer._
 

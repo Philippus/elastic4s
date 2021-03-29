@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.cluster
 
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.OptionImplicits._
 
@@ -32,7 +33,7 @@ object NodeHotThreadsHandler extends Handler[NodeHotThreadsRequest, String] {
         val entity = response.entity.getOrError("No entity defined")
         Right(entity.content)
       case _ =>
-        Left(ElasticError.parse(response))
+        Left(ElasticErrorParser.parse(response))
     }
   }
 }

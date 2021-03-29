@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.handlers.delete.DeleteHandlers
+import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
 import com.sksamuel.elastic4s.requests.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.cat.CatHandlers
 import com.sksamuel.elastic4s.requests.cluster.ClusterHandlers
@@ -13,7 +14,6 @@ import com.sksamuel.elastic4s.requests.indexes.{ExistsHandlers, IndexHandlers, I
 import com.sksamuel.elastic4s.requests.locks.LocksHandlers
 import com.sksamuel.elastic4s.requests.nodes.NodesHandlers
 import com.sksamuel.elastic4s.requests.reindex.ReindexHandlers
-import com.sksamuel.elastic4s.requests.searches.queries.validate.ValidateHandlers
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
 import com.sksamuel.elastic4s.requests.security.roles.RoleHandlers

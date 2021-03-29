@@ -1,10 +1,9 @@
 package com.sksamuel.elastic4s.requests.get
 
 import java.net.URLEncoder
-
 import com.fasterxml.jackson.databind.JsonNode
+import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
 import com.sksamuel.elastic4s.requests.common.FetchSourceContextQueryParameterFn
-import com.sksamuel.elastic4s.requests.indexes.VersionTypeHttpString
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HitReader, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.Logging
 
@@ -51,7 +50,7 @@ trait GetHandlers {
         def bad(status: Int): Left[ElasticError, GetResponse] = {
           val node = ResponseHandler.fromResponse[JsonNode](response)
           if (node.has("error") && node.get("error").isObject)
-            Left(ElasticError.parse(response))
+            Left(ElasticErrorParser.parse(response))
           else
             Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil, None))
         }

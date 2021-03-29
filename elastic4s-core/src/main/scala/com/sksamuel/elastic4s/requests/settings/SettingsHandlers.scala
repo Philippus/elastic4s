@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.settings
 
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, JacksonSupport, ResponseHandler}
 import com.sksamuel.exts.collection.Maps
 
@@ -26,7 +27,7 @@ trait SettingsHandlers {
             }.toMap
             Right(IndexSettingsResponse(settings))
           case _ =>
-            Left(ElasticError.parse(response))
+            Left(ElasticErrorParser.parse(response))
         }
     }
 
@@ -44,7 +45,7 @@ trait SettingsHandlers {
           case 200 =>
             Right(ResponseHandler.fromResponse[IndexSettingsResponse](response))
           case _ =>
-            Left(ElasticError.parse(response))
+            Left(ElasticErrorParser.parse(response))
         }
     }
 

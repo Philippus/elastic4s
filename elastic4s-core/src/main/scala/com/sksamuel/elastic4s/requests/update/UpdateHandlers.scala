@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.requests.update
 
 import java.net.URLEncoder
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
-import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, FetchSourceContextQueryParameterFn, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
@@ -13,7 +13,6 @@ import com.sksamuel.exts.OptionImplicits._
 case class UpdateGet(found: Boolean, _source: Map[String, Any]) // contains the source if specified by the _source parameter
 
 case class UpdateResponse(@JsonProperty("_index") index: String,
-                          @JsonProperty("_type") `type`: String,
                           @JsonProperty("_id") id: String,
                           @JsonProperty("_version") version: Long,
                           @JsonProperty("_seq_no") seqNo: Long,
@@ -22,7 +21,7 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
                           @JsonProperty("forcedRefresh") forcedRefresh: Boolean,
                           @JsonProperty("_shards") shards: Shards,
                           private val get: Option[UpdateGet]) {
-  def ref = DocumentRef(index, `type`, id)
+  def ref: DocumentRef = DocumentRef(index, id)
   def source: Map[String, Any] = get.flatMap(get => Option(get._source)).getOrElse(Map.empty)
   def found: Boolean = get.forall(_.found)
 }
@@ -55,7 +54,7 @@ trait UpdateHandlers {
         case 200 | 201 =>
           val json = response.entity.getOrError("Update responses must include a body")
           Right(ResponseHandler.fromEntity[UpdateResponse](json))
-        case _ => Left(ElasticError.parse(response))
+        case _ => Left(ElasticErrorParser.parse(response))
       }
     }
 

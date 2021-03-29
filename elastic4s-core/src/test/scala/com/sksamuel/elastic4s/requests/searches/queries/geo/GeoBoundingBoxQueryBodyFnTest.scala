@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.geo
 
 import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.handlers.searches.queries.geo.GeoBoundingBoxQueryBodyFn
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

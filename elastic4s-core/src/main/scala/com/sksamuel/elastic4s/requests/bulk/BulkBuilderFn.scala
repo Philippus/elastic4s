@@ -1,9 +1,11 @@
 package com.sksamuel.elastic4s.requests.bulk
 
+import com.sksamuel.elastic4s.handlers
+import com.sksamuel.elastic4s.handlers.VersionTypeHttpString
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 import com.sksamuel.elastic4s.requests.delete.DeleteByIdRequest
-import com.sksamuel.elastic4s.requests.indexes.{IndexContentBuilder, IndexRequest, VersionTypeHttpString}
+import com.sksamuel.elastic4s.requests.indexes.{IndexContentBuilder, IndexRequest}
 import com.sksamuel.elastic4s.requests.update.{UpdateBuilderFn, UpdateRequest}
 
 object BulkBuilderFn {
@@ -40,7 +42,7 @@ object BulkBuilderFn {
         delete.version.foreach(builder.field("version", _))
         delete.ifPrimaryTerm.foreach(builder.field("if_primary_term", _))
         delete.ifSeqNo.foreach(builder.field("if_seq_no", _))
-        delete.versionType.foreach(versionType => builder.field("version_type", VersionTypeHttpString(versionType)))
+        delete.versionType.foreach(versionType => builder.field("version_type", handlers.VersionTypeHttpString(versionType)))
         builder.endObject()
         builder.endObject()
 

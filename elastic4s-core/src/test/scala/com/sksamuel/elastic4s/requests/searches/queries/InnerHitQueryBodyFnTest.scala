@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.nested.InnerHitQueryBodyBuilder
 import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.searches.HighlightField
-import com.sksamuel.elastic4s.requests.searches.queries.nested.InnerHitQueryBodyBuilder
 import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

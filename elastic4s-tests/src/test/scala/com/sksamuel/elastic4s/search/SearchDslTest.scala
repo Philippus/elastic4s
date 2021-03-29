@@ -406,13 +406,6 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     req.request.entity.get.get should matchJsonResource("/json/search/search_id_filter.json")
   }
 
-  it should "generate json for type filter" in {
-    val req = search("music") postFilter {
-      typeQuery("sometype")
-    }
-    req.request.entity.get.get should matchJsonResource("/json/search/search_type_filter.json")
-  }
-
   it should "generate json for range filter" in {
     val req = search("music") postFilter {
       rangeQuery("released") gte "2010-01-01" lte "2012-12-12"

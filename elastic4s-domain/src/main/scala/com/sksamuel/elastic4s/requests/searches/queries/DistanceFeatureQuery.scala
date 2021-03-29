@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
 case class DistanceFeatureQuery(field: String,
                                 origin: String,
                                 pivot: String,

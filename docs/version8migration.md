@@ -17,3 +17,7 @@ mapping dsl changes - no name required as one type per index, elastic fields cha
 fixed index templates
 
 removed boost from double field
+
+match queries renamed to include query suffix
+
+suggestion response classes moved to newpackage
