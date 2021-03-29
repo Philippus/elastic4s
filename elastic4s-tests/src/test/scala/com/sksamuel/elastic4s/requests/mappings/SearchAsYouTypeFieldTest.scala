@@ -20,6 +20,6 @@ class SearchAsYouTypeFieldTest extends AnyFlatSpec with Matchers with ElasticApi
       .similarity("classic")
       .maxShingleSize(4)
     SearchAsYouTypeFieldBuilderFn.build(field).string() shouldBe
-      """{"type":"search_as_you_type","analyzer":"armenian","boost":1.2,"copy_to":["copy1","copy2"],"doc_values":true,"index":"true","normalizer":"mynorm","norms":true,"null_value":"nully","search_analyzer":"english","store":true,"fielddata":true,"max_input_length":12,"ignore_above":30,"similarity":"classic","index_options":"freqs","max_shingle_size":4}"""
+      """{"type":"search_as_you_type","boost":1.2,"copy_to":["copy1","copy2"],"index":true,"norms":true,"store":true,"fielddata":true,"ignore_above":30,"index_options":"freqs","similarity":"classic","max_shingle_size":4}"""
   }
 }

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.termvectors
 
 import com.sksamuel.elastic4s.Index
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class TermVectorsRequest(index: Index,
                               id: String,

@@ -17,11 +17,11 @@ object SearchAsYouTypeFieldBuilderFn {
     field.norms.foreach(builder.field("norms", _))
     field.store.foreach(builder.field("store", _))
     field.fielddata.foreach(builder.field("fielddata", _))
-    field.fielddata.foreach(builder.field("fielddata", _))
     field.ignoreAbove.foreach(builder.field("ignore_above", _))
     field.indexOptions.foreach(builder.field("index_options", _))
     field.similarity.foreach(builder.field("similarity", _))
     field.termVector.foreach(builder.field("term_vector", _))
+    field.maxShingleSize.foreach(builder.field("max_shingle_size", _))
 
     builder.endObject()
   }

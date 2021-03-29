@@ -9,6 +9,7 @@ object WildcardFieldBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)
     field.ignoreAbove.foreach(builder.field("ignore_above", _))
+    field.nullValue.foreach(builder.field("null_value", _))
     builder.endObject()
   }
 }

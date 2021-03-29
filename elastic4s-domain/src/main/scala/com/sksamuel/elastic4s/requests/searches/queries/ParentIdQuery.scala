@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
 case class ParentIdQuery(`type`: String,
                          id: String,
                          ignoreUnmapped: Option[Boolean] = None,
