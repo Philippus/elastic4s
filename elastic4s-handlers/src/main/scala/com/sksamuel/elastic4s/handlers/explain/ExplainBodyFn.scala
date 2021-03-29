@@ -1,8 +1,8 @@
-package com.sksamuel.elastic4s.requests.explain
+package com.sksamuel.elastic4s.handlers.explain
 
 import com.sksamuel.elastic4s.handlers.searches.queries
-import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.explain.ExplainRequest
 
 object ExplainBodyFn {
   def apply(v: ExplainRequest): XContentBuilder = {

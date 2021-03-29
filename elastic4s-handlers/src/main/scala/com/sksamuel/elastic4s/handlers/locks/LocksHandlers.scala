@@ -1,5 +1,6 @@
-package com.sksamuel.elastic4s.requests.locks
+package com.sksamuel.elastic4s.handlers.locks
 
+import com.sksamuel.elastic4s.requests.locks.{AcquireGlobalLock, ReleaseGlobalLock}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait LocksHandlers {

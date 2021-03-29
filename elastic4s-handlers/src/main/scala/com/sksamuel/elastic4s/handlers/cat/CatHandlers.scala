@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.requests.cat
+package com.sksamuel.elastic4s.handlers.cat
 
-import com.sksamuel.elastic4s.api.{CatAliases, CatAllocation, CatCount, CatHealth, CatIndexes, CatMaster, CatNodes, CatPlugins, CatSegments, CatShards, CatThreadPool}
+import com.sksamuel.elastic4s.requests.cat.{CatAliasResponse, CatAliases, CatAllocation, CatAllocationResponse, CatCount, CatCountResponse, CatHealth, CatHealthResponse, CatIndexes, CatIndicesResponse, CatMaster, CatMasterResponse, CatNodes, CatNodesResponse, CatPluginResponse, CatPlugins, CatSegments, CatSegmentsResponse, CatShards, CatShardsResponse, CatThreadPool, CatThreadPoolResponse}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait CatHandlers {

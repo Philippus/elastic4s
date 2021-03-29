@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.requests.explain
+package com.sksamuel.elastic4s.handlers.explain
 
-import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.requests.explain.{ExplainRequest, ExplainResponse}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 trait ExplainHandlers {
 
@@ -10,7 +11,7 @@ trait ExplainHandlers {
       override def handle(response: HttpResponse): Right[Nothing, ExplainResponse] =
         response.statusCode match {
           case 404 | 200 => Right(ResponseHandler.fromResponse[ExplainResponse](response))
-          case _         => sys.error("Invalid response")
+          case _ => sys.error("Invalid response")
         }
     }
 
@@ -24,7 +25,7 @@ trait ExplainHandlers {
       request.preference.map(_.toString).foreach(params.put("preference", _))
       request.lenient.map(_.toString).foreach(params.put("lenient", _))
 
-      val body   = ExplainBodyFn(request).string()
+      val body = ExplainBodyFn(request).string()
       val entity = HttpEntity(body, "application/json")
 
       ElasticRequest("GET", endpoint, params.toMap, entity)
