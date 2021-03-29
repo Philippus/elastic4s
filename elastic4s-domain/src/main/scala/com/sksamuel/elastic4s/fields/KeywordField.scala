@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.fields
 
 import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html#keyword-field-type
 case class KeywordField(name: String,
                         boost: Option[Double] = None,
                         copyTo: Seq[String] = Nil,
