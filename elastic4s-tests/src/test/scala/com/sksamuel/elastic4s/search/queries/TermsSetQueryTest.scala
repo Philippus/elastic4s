@@ -21,49 +21,59 @@ class TermsSetQueryTest
 
   client.execute {
     bulk(
-      indexInto("randompeople") fields ("names" -> Seq("nelson","edmure","john"), "required_matches" -> 2),
-      indexInto("randompeople") fields ("names" -> Seq("umber","rudolfus","byron"), "required_matches" -> 1)
+      indexInto("randompeople") fields("names" -> Seq("nelson", "edmure", "john"), "required_matches" -> 2),
+      indexInto("randompeople") fields("names" -> Seq("umber", "rudolfus", "byron"), "required_matches" -> 1)
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-   // Test: Satisfying the requirements only one 'minimum should match' field (first one)
+  // Test: Satisfying the requirements only one 'minimum should match' field (first one)
   "a terms set query with minimum shoud match field" should "return any documents that match at least two or more terms" in {
     val resp = client.execute {
-      search("randompeople") query termsSetQuery("names", Set("nelson","edmure","pete"), "required_matches")
+      search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "pete"), "required_matches")
     }.await.result
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""")
+    val map = resp.hits.hits.head.sourceAsMap
+    map("names") shouldBe List("nelson", "edmure", "john")
+    map("required_matches") shouldBe 2
   }
 
   // Test: Satisfying the requirements only one 'minimum should match' field (second one)
   "a terms set query with minimum shoud match field" should "return any documents that match at least one term" in {
     val resp = client.execute {
-      search("randompeople") query termsSetQuery("names", Set("nelson","umber","sean"), "required_matches")
+      search("randompeople") query termsSetQuery("names", Set("nelson", "umber", "sean"), "required_matches")
     }.await.result
-
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["umber","rudolfus","byron"],"required_matches":1}""")
+    val map = resp.hits.hits.head.sourceAsMap
+    map("names") shouldBe List("umber", "rudolfus", "byron")
+    map("required_matches") shouldBe 1
   }
 
   // Test: Satisfying the requirements of both 'minimum should match' fields
   "a terms set query with minimum shoud match field" should "return any documents that match at least one or more terms" in {
     val resp = client.execute {
-      search("randompeople") query termsSetQuery("names", Set("nelson","edmure","rudolfus","christofer"), "required_matches")
+      search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "rudolfus", "christofer"), "required_matches")
     }.await.result
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""", """{"names":["umber","rudolfus","byron"],"required_matches":1}""")
+    resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson", "edmure", "john")
+    resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
+    resp.hits.hits.apply(2).sourceAsMap("names") shouldBe List("umber", "rudolfus", "byron")
+    resp.hits.hits.apply(2).sourceAsMap("required_matches") shouldBe 1
   }
 
   // Test: Satisfying the requirements of the 'minimum should match' script for one document (first one)
   "a terms set query with minimum shoud match script" should "return any documents that match at least two terms" in {
     val resp = client.execute {
-      search("randompeople") query termsSetQuery("names", Set("nelson","edmure","pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
+      search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
     }.await.result
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""")
+    resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson","edmure","john")
+    resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
   }
 
   // Test: Satisfying the requirements of the 'minimum should match' script for both documents
   "a terms set query with minimum shoud match script" should "return any documents that match at least one or more terms" in {
     val resp = client.execute {
-      search("randompeople") query termsSetQuery("names", Set("nelson","edmure","byron","pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
+      search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "byron", "pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
     }.await.result
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"names":["nelson","edmure","john"],"required_matches":2}""", """{"names":["umber","rudolfus","byron"],"required_matches":1}""")
+    resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson","edmure","john")
+    resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
+    resp.hits.hits.apply(2).sourceAsMap("names") shouldBe List("umber","rudolfus","byron")
+    resp.hits.hits.apply(2).sourceAsMap("required_matches") shouldBe 1
   }
 }

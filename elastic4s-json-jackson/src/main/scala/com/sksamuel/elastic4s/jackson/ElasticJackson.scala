@@ -20,8 +20,7 @@ object ElasticJackson {
     implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper with ScalaObjectMapper = JacksonSupport.mapper,
                                          manifest: Manifest[T]): HitReader[T] = new HitReader[T] {
       override def read(hit: Hit): Try[T] = Try {
-        require(hit.sourceAsString != null)
-        val node = mapper.readTree(hit.sourceAsString).asInstanceOf[ObjectNode]
+        val node = mapper.readTree(mapper.writeValueAsBytes(hit.sourceAsMap)).asInstanceOf[ObjectNode]
         if (!node.has("_id")) node.put("_id", hit.id)
         if (!node.has("_type")) node.put("_type", hit.`type`)
         if (!node.has("_index")) node.put("_index", hit.index)
