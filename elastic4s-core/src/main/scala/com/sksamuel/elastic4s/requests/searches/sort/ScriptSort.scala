@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.sort
 
-import com.sksamuel.elastic4s.api.ScriptSortType
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.exts.OptionImplicits._

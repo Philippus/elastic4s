@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoDistance, GeoValidationMethod}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class GeoDistanceSort(field: String,
                            geohashes: Seq[String] = Nil,
@@ -35,12 +35,12 @@ case class GeoDistanceSort(field: String,
 
   def nested(nested: NestedSort): GeoDistanceSort = copy(nested = nested.some, nestedPath = None, nestedFilter = None)
 
-  def order(order: SortOrder): GeoDistanceSort     = copy(order = order.some)
+  def order(order: SortOrder): GeoDistanceSort = copy(order = order.some)
   def sortOrder(order: SortOrder): GeoDistanceSort = copy(order = order.some)
 
   def validation(validation: GeoValidationMethod): GeoDistanceSort = copy(validation = validation.some)
 
-  def unit(unit: DistanceUnit): GeoDistanceSort           = copy(unit = unit.some)
+  def unit(unit: DistanceUnit): GeoDistanceSort = copy(unit = unit.some)
   def geoDistance(distance: GeoDistance): GeoDistanceSort = copy(geoDistance = distance.some)
 
   def ignoreUnmapped(ignoreUnmapped: Boolean): GeoDistanceSort = copy(ignoreUnmapped = ignoreUnmapped.some)

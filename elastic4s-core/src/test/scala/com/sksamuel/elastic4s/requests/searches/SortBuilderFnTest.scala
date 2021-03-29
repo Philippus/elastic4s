@@ -2,12 +2,11 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.ElasticDsl.{matchQuery, nestedSort, script, scriptSort}
 import com.sksamuel.elastic4s.JsonSugar
-import com.sksamuel.elastic4s.api.ScriptSortType
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.script.ScriptType
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
 import com.sksamuel.elastic4s.requests.searches.queries.{FieldSortBuilderFn, GeoDistanceSortBuilderFn, RangeQuery, SortBuilderFn}
-import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, SortOrder}
+import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, ScriptSortType, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.sort.SortMode.Min
 import com.sksamuel.elastic4s.requests.searches.sort.SortOrder.Asc
 import org.scalatest.funsuite.AnyFunSuite

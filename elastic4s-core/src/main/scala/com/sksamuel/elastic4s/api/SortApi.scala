@@ -2,20 +2,7 @@ package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
-import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, ScoreSort, ScriptSort, SortOrder}
-
-sealed trait ScriptSortType
-object ScriptSortType {
-  def valueOf(str: String): ScriptSortType = str.toLowerCase match {
-    case "string" => String
-    case "number" => Number
-  }
-  case object String extends ScriptSortType
-  case object Number extends ScriptSortType
-
-  def STRING = String
-  def NUMBER = Number
-}
+import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, ScoreSort, ScriptSort, ScriptSortType, SortOrder}
 
 trait SortApi {
 
@@ -32,7 +19,7 @@ trait SortApi {
     def typed(`type`: ScriptSortType): ScriptSort = ScriptSort(script, `type`)
   }
 
-  def fieldSort(field: String) = FieldSort(field)
+  def fieldSort(field: String): FieldSort = FieldSort(field)
 
   def geoSort(field: String): GeoSortExpectsPoints = new GeoSortExpectsPoints(field)
   class GeoSortExpectsPoints(field: String) {
@@ -45,5 +32,5 @@ trait SortApi {
       GeoDistanceSort(field, Nil, points.toSeq)
   }
 
-  def nestedSort() = NestedSort()
+  def nestedSort(): NestedSort = NestedSort()
 }

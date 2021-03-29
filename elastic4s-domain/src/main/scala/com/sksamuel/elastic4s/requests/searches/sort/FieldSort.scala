@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.sort
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class FieldSort(field: String,
                      missing: Option[Any] = None,
@@ -25,7 +25,7 @@ case class FieldSort(field: String,
   def sortMode(mode: SortMode): FieldSort = copy(sortMode = mode.some)
 
   @deprecated("use nested", "7.8.2")
-  def nestedPath(path: String): FieldSort   = copy(nestedPath = path.some, nested = None)
+  def nestedPath(path: String): FieldSort = copy(nestedPath = path.some, nested = None)
 
   @deprecated("use nested", "7.8.2")
   def nestedFilter(query: Query): FieldSort = copy(nestedFilter = query.some, nested = None)
@@ -34,8 +34,8 @@ case class FieldSort(field: String,
 
   def numericType(numericType: String): FieldSort = copy(numericType = numericType.some)
 
-  def order(order: SortOrder): FieldSort     = copy(order = order)
+  def order(order: SortOrder): FieldSort = copy(order = order)
   def sortOrder(order: SortOrder): FieldSort = copy(order = order)
-  def desc(): FieldSort                      = copy(order = SortOrder.Desc)
-  def asc(): FieldSort                       = copy(order = SortOrder.Asc)
+  def desc(): FieldSort = copy(order = SortOrder.Desc)
+  def asc(): FieldSort = copy(order = SortOrder.Asc)
 }

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 import scala.concurrent.duration.FiniteDuration
 
