@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.cluster
 
+import com.sksamuel.elastic4s.handlers.cluster.ClusterSettingsBodyBuilderFn
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait ClusterHandlers {

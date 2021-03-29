@@ -1,4 +1,6 @@
-package com.sksamuel.elastic4s.requests.common
+package com.sksamuel.elastic4s.handlers.common
+
+import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 
 object FetchSourceContextQueryParameterFn {
   def apply(context: FetchSourceContext): Map[String, String] = {

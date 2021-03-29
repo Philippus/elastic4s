@@ -1,13 +1,13 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.handlers.delete.DeleteHandlers
+import com.sksamuel.elastic4s.handlers.get.GetHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
 import com.sksamuel.elastic4s.requests.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.cat.CatHandlers
 import com.sksamuel.elastic4s.requests.cluster.ClusterHandlers
 import com.sksamuel.elastic4s.requests.count.CountHandlers
 import com.sksamuel.elastic4s.requests.explain.ExplainHandlers
-import com.sksamuel.elastic4s.requests.get.GetHandlers
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexAdminHandlers
 import com.sksamuel.elastic4s.requests.indexes.alias.IndexAliasHandlers
 import com.sksamuel.elastic4s.requests.indexes.{ExistsHandlers, IndexHandlers, IndexStatsHandlers, IndexTemplateHandlers, MappingHandlers, RolloverHandlers}

@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.requests.cluster
 
-import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-
 case class ClusterSettingsRequest(persistentSettings: Map[String, String], transientSettings: Map[String, String]) {
 
   def persistentSettings(settings: Map[String, String]): ClusterSettingsRequest =
@@ -16,20 +14,4 @@ case class ClusterSettingsResponse(persistent: Map[String, String], transient: M
 case class AddRemoteClusterSettingsRequest(settingsRequest: ClusterSettingsRequest)
 case class AddRemoteClusterResponse(persistent: Map[String, Any], transient: Map[String, Any])
 
-object ClusterSettingsBodyBuilderFn {
-  def apply(request: ClusterSettingsRequest): XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder()
-    if(request.persistentSettings.nonEmpty) {
-      builder.startObject("persistent")
-      request.persistentSettings.foreach(t => builder.field(t._1, t._2))
-      builder.endObject()
-    }
 
-    if(request.transientSettings.nonEmpty) {
-      builder.startObject("transient")
-      request.transientSettings.foreach(t => builder.field(t._1, t._2))
-      builder.endObject()
-    }
-    builder
-  }
-}

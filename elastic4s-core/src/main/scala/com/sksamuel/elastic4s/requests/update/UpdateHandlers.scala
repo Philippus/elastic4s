@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.requests.update
 import java.net.URLEncoder
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.{DocumentRef, FetchSourceContextQueryParameterFn, RefreshPolicyHttpValue, Shards}
+import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicyHttpValue, Shards}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.OptionImplicits._
 

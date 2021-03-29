@@ -328,7 +328,7 @@ trait Transformable {
   def to[T: AggReader]: T = safeTo[T].get
 
   def safeTo[T](implicit reader: AggReader[T]): Try[T] = {
-    val json = ??? // todo SourceAsContentBuilder(data).string()
+    val json = JacksonSupport.mapper.writeValueAsString(data)
     reader.read(json)
   }
 }

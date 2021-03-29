@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.requests.searches
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.Hit
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.JacksonSupport
 import com.sksamuel.elastic4s.requests.validate.Explanation
 
 case class SearchHit(@JsonProperty("_id") id: String,
@@ -19,7 +20,6 @@ case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_explanation") explanation: Option[Explanation],
                      @JsonProperty("sort") sort: Option[Seq[AnyRef]],
                      private val _source: Map[String, AnyRef],
-                     override val sourceAsString: String,
                      fields: Map[String, AnyRef],
                      @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
                      private val inner_hits: Map[String, Map[String, Any]],
@@ -45,6 +45,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
   }
 
   override def sourceAsMap: Map[String, AnyRef] = _source
+  override def sourceAsString: String = JacksonSupport.mapper.writeValueAsString(_source)
 
   override def exists: Boolean = true
 

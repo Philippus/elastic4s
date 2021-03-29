@@ -1,21 +1,13 @@
-package com.sksamuel.elastic4s.requests.get
+package com.sksamuel.elastic4s.handlers.get
 
-import java.net.URLEncoder
 import com.fasterxml.jackson.databind.JsonNode
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
-import com.sksamuel.elastic4s.requests.common.FetchSourceContextQueryParameterFn
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HitReader, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.requests.get.{GetRequest, GetResponse, MultiGetRequest, MultiGetResponse}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.Logging
 
-import scala.util.Try
-
-case class MultiGetResponse(docs: Seq[GetResponse]) {
-  def items: Seq[GetResponse] = docs
-  def size: Int               = docs.size
-
-  def to[T: HitReader]: IndexedSeq[T]                        = docs.map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Try[T]] = docs.map(_.safeTo[T]).toIndexedSeq
-}
+import java.net.URLEncoder
 
 trait GetHandlers {
 
