@@ -3,10 +3,11 @@ package com.sksamuel.elastic4s.api
 import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, DocumentRef}
 import com.sksamuel.elastic4s.requests.script.Script
+import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery, Shape}
-import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefix, MatchNoneQuery, MatchPhrase, MatchPhrasePrefix, MatchQuery, MultiMatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoolQuery, BoostingQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery, TypeQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhraseQuery, MatchPhrasePrefixQuery, MatchQuery, MultiMatchQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
 import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup, span, term}
@@ -113,10 +114,10 @@ trait QueryApi {
 
   def matchQuery(field: String, value: Any): MatchQuery = MatchQuery(field, value)
 
-  def matchPhraseQuery(field: String, value: Any): MatchPhrase = MatchPhrase(field, value)
+  def matchPhraseQuery(field: String, value: Any): MatchPhraseQuery = MatchPhraseQuery(field, value)
 
-  def matchPhrasePrefixQuery(field: String, value: Any): MatchPhrasePrefix = MatchPhrasePrefix(field, value)
-  def matchBoolPrefixQuery(field: String, value: Any): MatchBoolPrefix = MatchBoolPrefix(field, value)
+  def matchPhrasePrefixQuery(field: String, value: Any): MatchPhrasePrefixQuery = MatchPhrasePrefixQuery(field, value)
+  def matchBoolPrefixQuery(field: String, value: Any): MatchBoolPrefixQuery = MatchBoolPrefixQuery(field, value)
 
   def multiMatchQuery(text: String): MultiMatchQuery = MultiMatchQuery(text)
 
@@ -251,8 +252,6 @@ trait QueryApi {
     TermsSetQuery(field, terms, minimumShouldMatchScript = Some(minimumShouldMatchScript))
 
   def wildcardQuery(field: String, value: Any): WildcardQuery = WildcardQuery(field, value)
-
-  def typeQuery(`type`: String): TypeQuery = TypeQuery(`type`)
 
   def idsQuery(ids: Iterable[Any]): IdQuery = IdQuery(ids.toSeq)
   def idsQuery(id: Any, rest: Any*): IdQuery = IdQuery(id +: rest)

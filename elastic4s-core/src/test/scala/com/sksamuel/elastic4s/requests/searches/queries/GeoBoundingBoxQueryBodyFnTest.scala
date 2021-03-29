@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.geo.GeoBoundingBoxQueryBodyFn
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
-import com.sksamuel.elastic4s.requests.searches.queries.geo.{Corners, GeoBoundingBoxQuery, GeoBoundingBoxQueryBodyFn, GeoExecType}
+import com.sksamuel.elastic4s.requests.searches.queries.geo.{Corners, GeoBoundingBoxQuery, GeoExecType}
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

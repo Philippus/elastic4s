@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.span
 
+import com.sksamuel.elastic4s.handlers.searches.queries.span.SpanMultiTermQueryBodyFn
 import com.sksamuel.elastic4s.requests.searches.queries.PrefixQuery
 import com.sksamuel.elastic4s.requests.searches.span.SpanMultiTermQuery
 import org.scalatest.funsuite.AnyFunSuite

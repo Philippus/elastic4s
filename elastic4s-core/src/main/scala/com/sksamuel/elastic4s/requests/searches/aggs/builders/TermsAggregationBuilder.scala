@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
-import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.{EnumConversions, handlers}
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggsBuilderFn, TermsAggregation}
 
 object TermsAggregationBuilder {
@@ -16,7 +16,7 @@ object TermsAggregationBuilder {
     agg.collectMode.map(EnumConversions.collectMode).foreach(builder.field("collect_mode", _))
     agg.size.foreach(builder.field("size", _))
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
 
     if (agg.includeExactValues.nonEmpty)

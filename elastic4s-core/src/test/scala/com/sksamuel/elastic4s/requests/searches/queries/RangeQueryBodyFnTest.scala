@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.requests.searches.queries.term.RangeQueryBodyFn
+import com.sksamuel.elastic4s.handlers.searches.queries.term
+import com.sksamuel.elastic4s.handlers.searches.queries.term.RangeQueryBodyFn
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -16,7 +17,7 @@ class RangeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenThen 
     ).relation(RangeRelation.Within)
 
     When("Range query is built")
-    val queryBody = RangeQueryBodyFn(query)
+    val queryBody = term.RangeQueryBodyFn(query)
 
     Then("query should have right field and parameters")
     queryBody.string() shouldEqual rangeQueryWithRelation

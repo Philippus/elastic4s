@@ -2,8 +2,9 @@ package com.sksamuel.elastic4s.akka.streams
 
 import akka.stream.stage.{GraphStage, GraphStageLogic, InHandler}
 import akka.stream.{Attributes, Inlet, SinkShape}
+import com.sksamuel.elastic4s.handlers.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.bulk
-import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkHandlers, BulkRequest, BulkResponse}
+import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponse}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.{ElasticClient, Executor, Functor, RequestFailure, RequestSuccess, Response}
 
@@ -18,7 +19,7 @@ class ElasticSink[T](client: ElasticClient, settings: SinkSettings)
   private val in: Inlet[T] = Inlet.create("ElasticSink.out")
   override val shape: SinkShape[T] = SinkShape.of(in)
 
-  private implicit val bulkHandler: bulk.BulkHandlers.BulkHandler.type = BulkHandlers.BulkHandler
+  private implicit val bulkHandler: BulkHandlers.BulkHandler.type = BulkHandlers.BulkHandler
   private implicit val executor: Executor[Future] = Executor.FutureExecutor
   private implicit val functor: Functor[Future] = Functor.FutureFunctor
 

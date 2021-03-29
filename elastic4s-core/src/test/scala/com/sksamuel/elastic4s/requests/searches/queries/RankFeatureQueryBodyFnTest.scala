@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.RankFeatureQueryBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.{Log, Saturation, Sigmoid}
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite

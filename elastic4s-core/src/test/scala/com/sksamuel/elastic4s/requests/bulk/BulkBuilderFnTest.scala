@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.bulk
 
+import com.sksamuel.elastic4s.handlers
+import com.sksamuel.elastic4s.handlers.bulk.BulkBuilderFn
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -36,7 +38,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
       indexInto("chemistry").fields("atomicweight" -> 1, "name" -> "hydrogen").withId("1").createOnly(true)
     ).refresh(RefreshPolicy.Immediate)
 
-    BulkBuilderFn(req).mkString("\n") shouldBe
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
       """{"index":{"_index":"chemistry","_id":"8"}}
         |{"atomicweight":8,"name":"oxygen"}
         |{"create":{"_index":"chemistry","_id":"1"}}
@@ -49,7 +51,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
       updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium").retryOnConflict(3)
     )
 
-    BulkBuilderFn(req).mkString("\n") shouldBe
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","retry_on_conflict":3}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
@@ -59,7 +61,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
       updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium").fetchSource(true)
     )
 
-    BulkBuilderFn(req).mkString("\n") shouldBe
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","_source":true}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
@@ -70,7 +72,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
         .fetchSource(includes = Set("atomicweight","name"), excludes = Set.empty)
     )
 
-    BulkBuilderFn(req).mkString("\n") shouldBe
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_includes":"atomicweight,name"}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
@@ -81,7 +83,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
         .fetchSource(includes = Set.empty, excludes = Set("atomicweight","name"))
     )
 
-    BulkBuilderFn(req).mkString("\n") shouldBe
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
       """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_excludes":"atomicweight,name"}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }

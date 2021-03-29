@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.TopHitsAggregation
-import com.sksamuel.elastic4s.requests.searches.queries.SortBuilderFn
 
 object TopHitsAggregationBuilder {
 

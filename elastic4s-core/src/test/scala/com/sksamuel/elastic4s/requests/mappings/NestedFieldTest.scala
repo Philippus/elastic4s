@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.fields.NestedField
-import com.sksamuel.elastic4s.fields.builders.NestedFieldBuilderFn
+import com.sksamuel.elastic4s.handlers.fields.NestedFieldBuilderFn
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 

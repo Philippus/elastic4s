@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
-import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.{EnumConversions, handlers}
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, ExtendedBoundsBuilderFn, HistogramAggregation, SubAggsBuilderFn}
 
 object HistogramAggregationBuilder {
@@ -19,7 +19,7 @@ object HistogramAggregationBuilder {
     agg.field.foreach(builder.field("field", _))
     agg.keyed.foreach(builder.field("keyed", _))
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
     agg.missing.map(_.toString).foreach(builder.field("missing", _))
     agg.extendedBounds.foreach { bounds =>

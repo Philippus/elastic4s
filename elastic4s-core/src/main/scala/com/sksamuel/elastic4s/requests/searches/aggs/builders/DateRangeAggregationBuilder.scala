@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
-import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.{EnumConversions, handlers}
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, DateRangeAggregation, SubAggsBuilderFn}
 
 object DateRangeAggregationBuilder {
@@ -17,7 +17,7 @@ object DateRangeAggregationBuilder {
     agg.timeZone.map(EnumConversions.timeZone).foreach(builder.field("time_zone", _))
     agg.keyed.foreach(builder.field("keyed", _))
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
 
     builder.startArray("ranges")

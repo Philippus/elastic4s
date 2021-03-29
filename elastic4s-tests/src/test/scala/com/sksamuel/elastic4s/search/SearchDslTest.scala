@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.search
 
 import java.util.TimeZone
-
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.handlers.searches.suggestion.DirectGenerator
 import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
 import com.sksamuel.elastic4s.requests.searches._
@@ -13,7 +13,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{AllOf, AnyOf, IntervalsQuery, Match, RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
-import com.sksamuel.elastic4s.requests.searches.suggestion.{DirectGenerator, Fuzziness, SuggestMode}
+import com.sksamuel.elastic4s.requests.searches.suggestion.{Fuzziness, SuggestMode}
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatestplus.mockito.MockitoSugar
@@ -404,13 +404,6 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       idsQuery("a", "b", "c").types("x", "y", "z")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_id_filter.json")
-  }
-
-  it should "generate json for type filter" in {
-    val req = search("music") postFilter {
-      typeQuery("sometype")
-    }
-    req.request.entity.get.get should matchJsonResource("/json/search/search_type_filter.json")
   }
 
   it should "generate json for range filter" in {

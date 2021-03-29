@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.Indexes
+import com.sksamuel.elastic4s.requests.cat
+import com.sksamuel.elastic4s.requests.cat.{CatAliases, CatAllocation, CatCount, CatHealth, CatIndexes, CatMaster, CatNodes, CatPlugins, CatSegments, CatShards, CatThreadPool}
 import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.exts.OptionImplicits._
 
@@ -26,20 +28,8 @@ trait CatsApi {
 
   def catPlugins(): CatPlugins = CatPlugins()
 
-  def catSegments(indices: Indexes = Indexes.All): CatSegments = CatSegments(indices)
+  def catSegments(indices: Indexes = Indexes.All): CatSegments = cat.CatSegments(indices)
   def catShards(): CatShards                                   = CatShards()
 
   def catThreadPool(): CatThreadPool = CatThreadPool()
 }
-
-case class CatSegments(indices: Indexes)
-case class CatPlugins()
-case class CatShards()
-case class CatCount(indices: Seq[String] = Nil)
-case class CatNodes()
-case class CatHealth()
-case class CatThreadPool()
-case class CatAllocation()
-case class CatAliases(pattern: Option[String])
-case class CatMaster()
-case class CatIndexes(health: Option[HealthStatus], indexPattern: Option[String])

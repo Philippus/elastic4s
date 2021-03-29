@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, PhraseSuggestion, TermSuggestion}
+import com.sksamuel.elastic4s.handlers.searches.suggestion.PhraseSuggestion
+import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, TermSuggestion}
 
 import java.util.UUID
 

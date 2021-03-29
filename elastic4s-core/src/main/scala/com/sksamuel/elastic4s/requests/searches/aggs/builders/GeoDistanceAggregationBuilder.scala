@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
-import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.{EnumConversions, handlers}
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, GeoDistanceAggregation, SubAggsBuilderFn}
 
 object GeoDistanceAggregationBuilder {
@@ -26,7 +26,7 @@ object GeoDistanceAggregationBuilder {
     agg.unit.map { unit => EnumConversions.unit(unit) }.foreach { unit => builder.field("unit", unit) }
 
     agg.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
 
     builder.startArray("ranges")

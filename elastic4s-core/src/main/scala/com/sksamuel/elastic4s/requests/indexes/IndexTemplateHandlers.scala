@@ -3,8 +3,10 @@ package com.sksamuel.elastic4s.requests.indexes
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.analysis.AnalysisBuilder
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class CreateIndexTemplateResponse(acknowledged: Boolean)
@@ -33,7 +35,7 @@ trait IndexTemplateHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] =
         response.statusCode match {
           case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
-          case _ => Left(ElasticError.parse(response))
+          case _ => Left(ElasticErrorParser.parse(response))
         }
     }
 
@@ -60,7 +62,7 @@ trait IndexTemplateHandlers {
           println(response.entity)
           val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
           Right(templates)
-        case _ => Left(ElasticError.parse(response))
+        case _ => Left(ElasticErrorParser.parse(response))
       }
     }
 
@@ -103,7 +105,7 @@ object CreateIndexTemplateBodyFn {
           builder.startObject(a.name)
           a.routing.foreach(builder.field("routing", _))
           a.filter.foreach { filter =>
-            builder.rawField("filter", QueryBuilderFn(filter))
+            builder.rawField("filter", queries.QueryBuilderFn(filter))
           }
           builder.endObject()
         }
