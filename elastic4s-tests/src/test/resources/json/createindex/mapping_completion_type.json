@@ -1,27 +1,25 @@
 {
-  "mappings": {
-    "tweet": {
-      "numeric_detection": true,
-      "_boost": {
-        "name": "myboost",
-        "null_value": 1.2
-      },
-      "_size": {
-        "enabled": true
-      },
-      "properties": {
-        "name": {
-          "type": "text"
+    "mappings": {
+        "numeric_detection": true,
+        "_boost": {
+            "name": "myboost",
+            "null_value": 1.2
         },
-        "ac": {
-          "type": "completion",
-          "analyzer": "simple",
-          "search_analyzer": "simple",
-          "preserve_position_increments": false,
-          "preserve_separators": false,
-          "max_input_length": 10
+        "_size": {
+            "enabled": true
+        },
+        "properties": {
+            "name": {
+                "type": "text"
+            },
+            "ac": {
+                "type": "completion",
+                "analyzer": "simple",
+                "search_analyzer": "simple",
+                "preserve_position_increments": false,
+                "preserve_separators": false,
+                "max_input_length": 10
+            }
         }
-      }
     }
-  }
 }

@@ -16,8 +16,8 @@ class ExtendedStatsAggregationHttpTest extends AnyFreeSpec with DockerTests with
   }
 
   client.execute {
-    createIndex("extendedstatsagg") mappings {
-      mapping("sales_per_month") fields(
+    createIndex("extendedstatsagg") mapping {
+      mapping(
         dateField("month"),
         doubleField("sales").stored(true)
       )

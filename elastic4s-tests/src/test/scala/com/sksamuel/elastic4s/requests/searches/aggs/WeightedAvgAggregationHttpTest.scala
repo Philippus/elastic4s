@@ -15,12 +15,12 @@ class WeightedAvgAggregationHttpTest extends AnyFreeSpec with DockerTests with M
   }
 
   client.execute {
-    createIndex("weightedavgagg") mappings {
-      mapping("grades") fields(
-        doubleField("grade").fielddata(true),
+    createIndex("weightedavgagg").mapping(
+      properties(
+        doubleField("grade"),
         doubleField("weight").stored(true)
       )
-    }
+    )
   }.await
 
   client.execute(

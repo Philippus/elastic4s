@@ -35,10 +35,7 @@ object CreateIndexContentBuilder {
       }
 
       d.mapping.foreach { mapping =>
-        mapping.`type` match {
-          case Some(t) => builder.rawField("mappings", MappingBuilderFn.buildWithName(mapping, t))
-          case None => builder.rawField("mappings", MappingBuilderFn.build(mapping))
-        }
+        builder.rawField("mappings", MappingBuilderFn.build(mapping))
       }
 
       if (d.aliases.nonEmpty) {

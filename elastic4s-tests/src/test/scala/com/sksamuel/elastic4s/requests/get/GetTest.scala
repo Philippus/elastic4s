@@ -16,8 +16,8 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("beer").mappings {
-      mapping().fields(
+    createIndex("beer").mapping {
+      mapping(
         textField("name").stored(true),
         textField("brand").stored(true),
         textField("ingredients").stored(true)

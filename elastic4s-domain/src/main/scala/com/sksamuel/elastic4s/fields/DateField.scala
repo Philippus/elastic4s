@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html
 case class DateField(name: String,
                      boost: Option[Double] = None,
                      copyTo: Seq[String] = Nil,
@@ -12,4 +15,12 @@ case class DateField(name: String,
                      store: Option[Boolean] = None,
                      meta: Map[String, Any] = Map.empty) extends ElasticField {
   override def `type`: String = "date"
+  def format(format: String): DateField = copy(format = format.some)
+  def boost(boost: Double): DateField = copy(boost = boost.some)
+  def docValues(docValues: Boolean): DateField = copy(docValues = docValues.some)
+  def locale(locale: String): DateField = copy(locale = locale.some)
+  def ignoreMalformed(ignoreMalformed: Boolean): DateField = copy(ignoreMalformed = ignoreMalformed.some)
+  def index(index: Boolean): DateField = copy(index = index.some)
+  def nullValue(nullValue: String): DateField = copy(nullValue = nullValue.some)
+  def store(store: Boolean): DateField = copy(store = store.some)
 }

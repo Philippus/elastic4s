@@ -1,42 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.requests.admin.IndexAdminApi
-import com.sksamuel.elastic4s.requests.alias.AliasesApi
-import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerApi, NormalizerApi, TokenFilterApi, TokenizerApi}
-import com.sksamuel.elastic4s.requests.bulk.BulkApi
-import com.sksamuel.elastic4s.requests.cat.CatsApi
-import com.sksamuel.elastic4s.requests.cluster.ClusterApi
-import com.sksamuel.elastic4s.requests.count.CountApi
-import com.sksamuel.elastic4s.requests.delete.DeleteApi
-import com.sksamuel.elastic4s.requests.explain.ExplainApi
-import com.sksamuel.elastic4s.requests.get.GetApi
-import com.sksamuel.elastic4s.requests.indexes.admin.{ForceMergeApi, IndexRecoveryApi}
-import com.sksamuel.elastic4s.requests.indexes.analyze.AnalyzeApi
-import com.sksamuel.elastic4s.requests.indexes.{CreateIndexApi, DeleteIndexApi, IndexApi, IndexTemplateApi}
-import com.sksamuel.elastic4s.requests.locks.LocksApi
-import com.sksamuel.elastic4s.requests.mappings.MappingApi
-import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicTemplateApi
-import com.sksamuel.elastic4s.requests.nodes.NodesApi
-import com.sksamuel.elastic4s.requests.reindex.ReindexApi
-import com.sksamuel.elastic4s.requests.script.ScriptApi
-import com.sksamuel.elastic4s.requests.searches._
-import com.sksamuel.elastic4s.requests.searches.aggs.AggregationApi
-import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAggregationApi
-import com.sksamuel.elastic4s.requests.searches.collapse.CollapseApi
-import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.ScoreApi
-import com.sksamuel.elastic4s.requests.searches.sort.SortApi
-import com.sksamuel.elastic4s.requests.searches.suggestion.SuggestionApi
-import com.sksamuel.elastic4s.requests.security.roles.admin.ClearRolesCacheApi
-import com.sksamuel.elastic4s.requests.security.roles.{CreateRoleApi, DeleteRoleApi, RoleApi}
-import com.sksamuel.elastic4s.requests.security.users.admin.UserAdminApi
-import com.sksamuel.elastic4s.requests.security.users.{CreateUserApi, DeleteUserApi, UserApi}
-import com.sksamuel.elastic4s.requests.settings.SettingsApi
-import com.sksamuel.elastic4s.requests.snapshots.SnapshotApi
-import com.sksamuel.elastic4s.requests.task.TaskApi
-import com.sksamuel.elastic4s.requests.termvectors.TermVectorApi
-import com.sksamuel.elastic4s.requests.update.UpdateApi
-import com.sksamuel.elastic4s.requests.validate.ValidateApi
-import com.sksamuel.elastic4s.requests.{ExistsApi, TypesApi}
+import com.sksamuel.elastic4s.api.{AggregationApi, AliasesApi, AnalyzeApi, AnalyzerApi, BulkApi, CatsApi, ClearRolesCacheApi, ClusterApi, CollapseApi, CountApi, CreateIndexApi, CreateRoleApi, CreateUserApi, DeleteApi, DeleteIndexApi, DeleteRoleApi, DeleteUserApi, ExistsApi, ExplainApi, ForceMergeApi, GetApi, HighlightApi, IndexAdminApi, IndexApi, IndexRecoveryApi, IndexTemplateApi, IngestApi, LocksApi, MappingApi, NodesApi, NormalizerApi, PipelineAggregationApi, QueryApi, ReindexApi, RoleApi, ScoreApi, ScriptApi, ScrollApi, SearchApi, SearchTemplateApi, SettingsApi, SnapshotApi, SortApi, SuggestionApi, TaskApi, TermVectorApi, TokenFilterApi, TokenizerApi, TypesApi, UpdateApi, UserAdminApi, UserApi, ValidateApi}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -59,7 +23,6 @@ trait ElasticApi
     with DeleteIndexApi
     with DeleteRoleApi
     with DeleteUserApi
-    with DynamicTemplateApi
     with ExistsApi
     with ExplainApi
     with ForceMergeApi
@@ -70,6 +33,7 @@ trait ElasticApi
     with AnalyzeApi
     with IndexRecoveryApi
     with IndexTemplateApi
+    with IngestApi
     with LocksApi
     with MappingApi
     with NodesApi

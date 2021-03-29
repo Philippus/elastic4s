@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html#keyword-field-type
 case class KeywordField(name: String,
                         boost: Option[Double] = None,
                         copyTo: Seq[String] = Nil,
@@ -18,4 +21,5 @@ case class KeywordField(name: String,
                         termVector: Option[String] = None,
                         meta: Map[String, String] = Map.empty) extends ElasticField {
   override def `type`: String = "keyword"
+  def normalizer(normalizer: String): KeywordField = copy(normalizer = normalizer.some)
 }

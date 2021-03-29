@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.fields
 
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+
 case class CompletionField(name: String,
                            analyzer: Option[String] = None,
                            boost: Option[Double] = None,
@@ -20,4 +22,10 @@ case class CompletionField(name: String,
                            contexts: Seq[ContextField] = Nil,
                            meta: Map[String, Any] = Map.empty) extends ElasticField {
   override def `type`: String = "completion"
+
+  def analyzer(name: String): CompletionField = copy(analyzer = name.some)
+  def searchAnalyzer(name: String): CompletionField = copy(searchAnalyzer = name.some)
+  def preserveSeparators(preserveSeparators: Boolean): CompletionField = copy(preserveSeparators = preserveSeparators.some)
+  def preservePositionIncrements(preservePositionIncrements: Boolean): CompletionField = copy(preservePositionIncrements = preservePositionIncrements.some)
+  def maxInputLength(maxInputLength: Int): CompletionField = copy(maxInputLength = maxInputLength.some)
 }

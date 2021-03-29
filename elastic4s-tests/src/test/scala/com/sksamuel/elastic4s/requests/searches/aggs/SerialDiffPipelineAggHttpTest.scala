@@ -19,7 +19,7 @@ class SerialDiffPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
 
   client.execute {
     createIndex("serialdiffagg") mappings {
-      mapping("sales") fields(
+      mapping(
         dateField("date"),
         doubleField("value").stored(true)
       )

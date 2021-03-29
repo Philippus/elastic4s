@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.delete
 
+import com.sksamuel.elastic4s.fields.TextField
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
@@ -20,7 +21,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createIndex(indexname).mapping(
       properties(
-        textField("name")
+        TextField("name")
       )
     ).shards(1).waitForActiveShards(1)
   }.await

@@ -11,8 +11,8 @@ class TermsSetQueryTest
     with Matchers {
 
   client.execute {
-    createIndex("randompeople").mappings(
-      mapping("people").fields(
+    createIndex("randompeople").mapping(
+      mapping(
         textField("names"),
         floatField("required_matches")
       )

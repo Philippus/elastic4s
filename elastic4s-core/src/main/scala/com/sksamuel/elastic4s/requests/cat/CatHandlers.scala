@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.cat
 
+import com.sksamuel.elastic4s.api.{CatAliases, CatAllocation, CatCount, CatHealth, CatIndexes, CatMaster, CatNodes, CatPlugins, CatSegments, CatShards, CatThreadPool}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait CatHandlers {

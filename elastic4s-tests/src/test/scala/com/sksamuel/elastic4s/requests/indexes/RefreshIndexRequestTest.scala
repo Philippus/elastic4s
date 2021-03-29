@@ -16,8 +16,8 @@ class RefreshIndexRequestTest extends AnyWordSpec with Matchers with DockerTests
   }
 
   client.execute {
-    createIndex("refreshtest").mappings(
-      mapping("dday").fields(
+    createIndex("refreshtest").mapping(
+      mapping(
         textField("name")
       )
     ).shards(1).waitForActiveShards(1).refreshInterval(10.minutes)

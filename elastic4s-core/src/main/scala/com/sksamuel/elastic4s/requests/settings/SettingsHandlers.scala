@@ -5,10 +5,6 @@ import com.sksamuel.exts.collection.Maps
 
 import scala.collection.JavaConverters._
 
-case class IndexSettingsResponse(settings: Map[Index, Map[String, String]]) {
-  def settingsForIndex(index: Index): Map[String, String] = settings(index)
-}
-
 trait SettingsHandlers {
 
   implicit object GetSettingsHandler extends Handler[GetSettingsRequest, IndexSettingsResponse] {

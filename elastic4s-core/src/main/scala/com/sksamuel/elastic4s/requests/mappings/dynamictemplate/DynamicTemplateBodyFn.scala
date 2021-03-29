@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.mappings.dynamictemplate
 
-import com.sksamuel.elastic4s.requests.mappings.FieldBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object DynamicTemplateBodyFn {
@@ -17,7 +16,7 @@ object DynamicTemplateBodyFn {
     dyn.MatchPattern.foreach(builder.field("match_pattern", _))
     dyn.matchMappingType.foreach(builder.field("match_mapping_type", _))
 
-    builder.rawField("mapping", FieldBuilderFn(dyn.mapping))
+//    builder.rawField("mapping", FieldBuilderFn(dyn.mapping))
 
     builder.endObject()
   }

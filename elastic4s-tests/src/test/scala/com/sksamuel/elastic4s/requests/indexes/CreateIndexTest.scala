@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.indexes
 
-import com.sksamuel.elastic4s.requests.analyzers.PatternAnalyzer
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -31,7 +30,7 @@ class CreateIndexTest extends AnyWordSpec with Matchers with DockerTests {
     createIndex("foo").mapping(
       properties(
         textField("baz").fields(
-          textField("inner1") analyzer PatternAnalyzer,
+          textField("inner1"), //analyzer PatternAnalyzer,
           textField("inner2")
         )
       )

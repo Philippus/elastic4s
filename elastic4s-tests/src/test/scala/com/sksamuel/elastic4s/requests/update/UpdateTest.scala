@@ -17,8 +17,8 @@ class UpdateTest
     with DockerTests
     with OptionValues {
 
-  private val createMapping = createIndex("hans").mappings(
-    mapping().fields(
+  private val createMapping = createIndex("hans").mapping(
+    mapping(
       textField("name").stored(true)
     )
   )

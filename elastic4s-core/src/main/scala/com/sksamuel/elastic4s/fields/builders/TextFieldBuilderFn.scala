@@ -48,7 +48,6 @@ object TextFieldBuilderFn {
     field.positionIncrementGap.foreach(builder.field("position_increment_gap", _))
     field.fielddata.foreach(builder.field("fielddata", _))
     field.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
-    field.ignoreAbove.foreach(builder.field("ignore_above", _))
     field.indexOptions.foreach(builder.field("index_options", _))
     field.searchAnalyzer.foreach(builder.field("search_analyzer", _))
     field.searchQuoteAnalyzer.foreach(builder.field("search_quote_analyzer", _))

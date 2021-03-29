@@ -5,4 +5,5 @@ case class JoinField(name: String,
                      relations: Map[String, Any] = Map.empty,
                      meta: Map[String, Any] = Map.empty) extends ElasticField {
   override def `type`: String = "join"
+  def relation(name: String, value: Any): JoinField = copy(relations = relations + (name -> value))
 }

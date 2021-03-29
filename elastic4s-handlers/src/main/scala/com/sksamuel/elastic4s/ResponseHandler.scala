@@ -1,17 +1,21 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.sksamuel.elastic4s.handlers.JacksonSupport
 import com.sksamuel.exts.Logging
 import com.sksamuel.exts.OptionImplicits.RichOption
 
 trait ResponseHandler[U] {
+  self =>
 
   /**
     * Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request
     * as determined by the instance of this handler.
     */
   def handle(response: HttpResponse): Either[ElasticError, U]
+
+  def map[V](fn: U => V): ResponseHandler[V] = new ResponseHandler[V] {
+    override def handle(response: HttpResponse): Either[ElasticError, V] = self.handle(response).map(fn)
+  }
 }
 
 // a ResponseHandler that marshalls the body into the required type using Jackson
@@ -35,7 +39,7 @@ object ResponseHandler extends Logging {
     JacksonSupport.mapper.readValue[U](entity.content)
   }
 
-  def default[U: Manifest]    = new DefaultResponseHandler[U]
+  def default[U: Manifest] = new DefaultResponseHandler[U]
   def failure404[U: Manifest] = new NotFound404ResponseHandler[U]
 }
 
@@ -50,21 +54,12 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
     case _ =>
       Left(ElasticError.parse(response))
   }
-
-  def map[V](fn: U => V): ResponseHandler[V] = new ResponseHandler[V] {
-    override def handle(response: HttpResponse): Either[ElasticError, V] = {
-      self.handle(response) match {
-        case Left(error) => Left(error)
-        case Right(u) => Right(fn(u))
-      }
-    }
-  }
 }
 
 class NotFound404ResponseHandler[U: Manifest] extends DefaultResponseHandler[U] {
   override def handle(response: HttpResponse): Either[ElasticError, U] =
     response.statusCode match {
       case 404 | 500 => sys.error(response.toString)
-      case _         => super.handle(response)
+      case _ => super.handle(response)
     }
 }

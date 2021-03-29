@@ -11,16 +11,16 @@ class TermsQueryTest
     with Matchers {
 
   client.execute {
-    createIndex("lords").mappings(
-      mapping("people").fields(
+    createIndex("lords").mapping(
+      mapping(
         keywordField("name")
       )
     )
   }.await
 
   client.execute {
-    createIndex("lordsfanclub").mappings(
-      mapping("fans").fields(
+    createIndex("lordsfanclub").mapping(
+      mapping(
         keywordField("lordswelike")
       )
     )

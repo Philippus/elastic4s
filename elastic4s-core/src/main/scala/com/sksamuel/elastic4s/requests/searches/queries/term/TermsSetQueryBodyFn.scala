@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
+import com.sksamuel.elastic4s.requests.searches.term.TermsSetQuery
 
 object TermsSetQueryBodyFn {
   def apply(t: TermsSetQuery): XContentBuilder = {
