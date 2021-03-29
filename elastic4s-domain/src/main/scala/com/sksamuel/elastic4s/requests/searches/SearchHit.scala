@@ -72,7 +72,7 @@ case class SearchHit(@JsonProperty("_id") id: String,
           )
         }
       )
-    }
+    }.toMap
 
   def innerHits: Map[String, InnerHits] = buildInnerHits(inner_hits)
 }
