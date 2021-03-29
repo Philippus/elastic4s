@@ -11,7 +11,6 @@ case class TextField(override val name: String,
                      fields: List[ElasticField] = Nil,
                      fielddata: Option[Boolean] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html
                      fielddataFrequencyFilter: Option[FielddataFrequencyFilter] = None,
-                     ignoreAbove: Option[Int] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/ignore-above.html
                      index: Option[Boolean] = None, // https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-index.html
                      indexPrefixes: Option[IndexPrefixes] = None,
                      indexPhrases: Option[Boolean] = None,
@@ -41,7 +40,6 @@ case class TextField(override val name: String,
   def store(store: Boolean): TextField = copy(store = store.some)
   def similarity(similarity: String): TextField = copy(similarity = similarity.some)
   def boost(boost: Double): TextField = copy(boost = boost.some)
-  def ignoreAbove(ignoreAbove: Int): TextField = copy(ignoreAbove = ignoreAbove.some)
 }
 
 case class IndexPrefixes(minChars: Int, maxChars: Int)

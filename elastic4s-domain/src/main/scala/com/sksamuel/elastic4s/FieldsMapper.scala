@@ -31,8 +31,8 @@ object FieldsMapper {
       case (name: String, null) =>
         NullFieldValue(name)
 
-//      case (name: String, Child(childType, parentId)) =>
-//        NestedFieldValue(name, Seq(SimpleFieldValue("name", childType), SimpleFieldValue("parent", parentId)))
+      //      case (name: String, Child(childType, parentId)) =>
+      //        NestedFieldValue(name, Seq(SimpleFieldValue("name", childType), SimpleFieldValue("parent", parentId)))
 
       case (name: String, nest: Map[_, _]) =>
         val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])

@@ -15,4 +15,6 @@ case class DoubleField(name: String,
   override def `type`: String = "double"
   def coerce(coerce: Boolean): DoubleField = copy(coerce = coerce.some)
   def stored(store: Boolean): DoubleField = copy(store = store.some)
+  def ignoreMalformed(ignoreMalformed: Boolean): DoubleField = copy(ignoreMalformed = ignoreMalformed.some)
+  def boost(boost: Double): DoubleField = copy(boost = boost.some)
 }

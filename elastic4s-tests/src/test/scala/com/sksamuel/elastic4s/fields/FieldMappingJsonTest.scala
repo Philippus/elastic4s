@@ -21,7 +21,6 @@ class FieldMappingJsonTest extends AnyFunSuite with Matchers {
       name = "myfield2",
       analyzer = Some(LanguageAnalyzers.bengali),
       searchQuoteAnalyzer = Some(LanguageAnalyzers.english),
-      ignoreAbove = Some(4),
       similarity = Some("Classic1"),
       norms = Some(true)
     )

@@ -20,9 +20,8 @@ class TextFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       .copyTo("copy1", "copy2")
       .boost(1.2)
       .searchAnalyzer(EnglishLanguageAnalyzer.name)
-      .ignoreAbove(30)
       .similarity("classic")
     TextFieldBuilderFn.build(field).string() shouldBe
-      """{"type":"text","analyzer":"armenian","boost":1.2,"copy_to":["copy1","copy2"],"doc_values":true,"index":"true","normalizer":"mynorm","norms":true,"null_value":"nully","search_analyzer":"english","store":true,"fielddata":true,"max_input_length":12,"ignore_above":30,"similarity":"classic","index_options":"freqs"}"""
+      """{"type":"text","analyzer":"armenian","boost":1.2,"copy_to":["copy1","copy2"],"doc_values":true,"index":"true","normalizer":"mynorm","norms":true,"null_value":"nully","search_analyzer":"english","store":true,"fielddata":true,"max_input_length":12,"similarity":"classic","index_options":"freqs"}"""
   }
 }
