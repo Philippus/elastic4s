@@ -87,20 +87,6 @@ trait UpdateHandlers {
 
   implicit object UpdateByQueryHandler extends Handler[UpdateByQueryRequest, UpdateByQueryResponse] {
 
-    case class UpdateByQuerySnakeCase(
-                                       took: Long,
-                                       timed_out: Boolean,
-                                       total: Long,
-                                       updated: Long,
-                                       deleted: Long,
-                                       batches: Long,
-                                       version_conflicts: Long,
-                                       noops: Long,
-                                       throttled_millis: Long,
-                                       requests_per_second: Long,
-                                       throttled_until_millis: Long
-                                     )
-
     override def responseHandler: ResponseHandler[UpdateByQueryResponse] = ResponseHandler.default[UpdateByQuerySnakeCase].map { resp =>
       UpdateByQueryResponse(
         resp.took,
@@ -141,3 +127,17 @@ trait UpdateHandlers {
     }
   }
 }
+
+case class UpdateByQuerySnakeCase(
+                                   took: Long,
+                                   timed_out: Boolean,
+                                   total: Long,
+                                   updated: Long,
+                                   deleted: Long,
+                                   batches: Long,
+                                   version_conflicts: Long,
+                                   noops: Long,
+                                   throttled_millis: Long,
+                                   requests_per_second: Long,
+                                   throttled_until_millis: Long
+                                 )
