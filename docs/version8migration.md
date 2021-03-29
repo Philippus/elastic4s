@@ -13,3 +13,7 @@ put mapping / mapping definition
 mapping dsl changes - no name required as one type per index, elastic fields changed
 
 * I need to copy all the copy methods to fields *
+
+fixed index templates
+
+removed boost from double field
