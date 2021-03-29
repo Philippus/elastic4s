@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.requests.searches.queries
+package com.sksamuel.elastic4s.requests.searches.queries.compound
 
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.requests.searches.queries.Query
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
                      boost: Option[Double] = None,
@@ -10,7 +11,7 @@ case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
                      must: Seq[Query] = Nil,
                      not: Seq[Query] = Nil,
                      should: Seq[Query] = Nil)
-    extends Query {
+  extends Query {
 
   def adjustPureNegative(adjustPureNegative: Boolean): BoolQuery =
     copy(adjustPureNegative = adjustPureNegative.some)
@@ -19,9 +20,9 @@ case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
     copy(boost = boost.some)
 
   def filter(first: Query, rest: Query*): BoolQuery = filter(first +: rest)
-  def filter(queries: Iterable[Query]): BoolQuery   = copy(filters = queries.toSeq)
+  def filter(queries: Iterable[Query]): BoolQuery = copy(filters = queries.toSeq)
 
-  def minimumShouldMatch(min: Int): BoolQuery    = copy(minimumShouldMatch = min.toString.some)
+  def minimumShouldMatch(min: Int): BoolQuery = copy(minimumShouldMatch = min.toString.some)
   def minimumShouldMatch(min: String): BoolQuery = copy(minimumShouldMatch = min.some)
 
   /**

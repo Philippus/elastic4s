@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.requests.script.ScriptField
 import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseRequest
 import com.sksamuel.elastic4s.requests.searches.queries._
+import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchQuery}
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, Sort}
 import com.sksamuel.elastic4s.requests.searches.suggestion.Suggestion

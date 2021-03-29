@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.requests.script
+package com.sksamuel.elastic4s.handlers.script
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.script.{Script, ScriptType}
 
 object ScriptBuilderFn {
 

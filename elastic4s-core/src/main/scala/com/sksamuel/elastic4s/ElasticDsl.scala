@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
+import com.sksamuel.elastic4s.handlers.delete.DeleteHandlers
 import com.sksamuel.elastic4s.requests.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.cat.CatHandlers
 import com.sksamuel.elastic4s.requests.cluster.ClusterHandlers
 import com.sksamuel.elastic4s.requests.count.CountHandlers
-import com.sksamuel.elastic4s.requests.delete.DeleteHandlers
 import com.sksamuel.elastic4s.requests.explain.ExplainHandlers
 import com.sksamuel.elastic4s.requests.get.GetHandlers
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexAdminHandlers

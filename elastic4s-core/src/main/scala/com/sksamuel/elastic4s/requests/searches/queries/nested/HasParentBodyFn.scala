@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.nested
 
-import com.sksamuel.elastic4s.requests.searches.queries.{HasParentQuery, QueryBuilderFn}
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.requests.searches.queries.HasParentQuery
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object HasParentBodyFn {

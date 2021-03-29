@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.requests.reindex
 
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.handlers
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ReindexBuilderFn {
@@ -12,7 +14,7 @@ object ReindexBuilderFn {
     request.size.foreach(builder.field("size", _))
 
     request.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
 
     builder.startObject("source")
@@ -27,7 +29,7 @@ object ReindexBuilderFn {
 
     builder.array("index", request.sourceIndexes.array)
 
-    request.filter.foreach(q => builder.rawField("query", QueryBuilderFn(q)))
+    request.filter.foreach(q => builder.rawField("query", queries.QueryBuilderFn(q)))
     // end source
     builder.endObject()
 

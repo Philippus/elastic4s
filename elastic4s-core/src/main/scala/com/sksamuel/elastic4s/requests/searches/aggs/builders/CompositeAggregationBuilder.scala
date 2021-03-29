@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
+import com.sksamuel.elastic4s.handlers.script
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.{CompositeAggregation, DateHistogramValueSource, HistogramValueSource, SubAggsBuilderFn}
 
 object CompositeAggregationBuilder {
@@ -16,7 +17,7 @@ object CompositeAggregationBuilder {
       builder.startObject(s.name)
       builder.startObject(s.valueSourceType)
       s.field.foreach(builder.field("field", _))
-      s.script.foreach(s => builder.rawField("script", ScriptBuilderFn(s)))
+      s.script.foreach(s => builder.rawField("script", script.ScriptBuilderFn(s)))
       s.order.foreach(builder.field("order", _))
       if (s.missingBucket) builder.field("missing_bucket", true)
       s match {

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
+import com.sksamuel.elastic4s.handlers.script
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object BucketSelectorPipelineBuilder {
@@ -10,7 +11,7 @@ object BucketSelectorPipelineBuilder {
     builder.startObject("buckets_path")
     agg.bucketsPathMap.foreach(p => builder.field(p._1, p._2))
     builder.endObject()
-    builder.rawField("script", ScriptBuilderFn(agg.script))
+    builder.rawField("script", script.ScriptBuilderFn(agg.script))
     builder.endObject()
   }
 }

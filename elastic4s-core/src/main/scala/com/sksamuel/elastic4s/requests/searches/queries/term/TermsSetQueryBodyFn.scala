@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries.term
 
+import com.sksamuel.elastic4s.handlers
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.term.TermsSetQuery
 
 object TermsSetQueryBodyFn {
@@ -10,7 +11,7 @@ object TermsSetQueryBodyFn {
     builder.startObject(t.field)
     builder.array("terms", t.terms.map(_.toString).toArray[String])
     t.minimumShouldMatchField.foreach(builder.field("minimum_should_match_field", _))
-    t.minimumShouldMatchScript.foreach(script => builder.rawField("minimum_should_match_script", ScriptBuilderFn(script)))
+    t.minimumShouldMatchScript.foreach(script => builder.rawField("minimum_should_match_script", handlers.script.ScriptBuilderFn(script)))
     builder.endObject().endObject()
   }
 }

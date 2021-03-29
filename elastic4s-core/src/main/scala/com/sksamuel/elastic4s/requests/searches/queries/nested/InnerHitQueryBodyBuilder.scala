@@ -2,8 +2,9 @@ package com.sksamuel.elastic4s.requests.searches.queries.nested
 
 import com.sksamuel.elastic4s.BodyBuilder
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.handlers.searches
+import com.sksamuel.elastic4s.handlers.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.json.{JsonValue, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.{InnerHit, SortBuilderFn}
 
 object InnerHitQueryBodyBuilder extends BodyBuilder[InnerHit] {
@@ -34,7 +35,7 @@ object InnerHitQueryBodyBuilder extends BodyBuilder[InnerHit] {
       builder.array("stored_fields", d.storedFieldNames.toArray)
 
     d.highlight.foreach { highlight =>
-      builder.rawField("highlight", HighlightBuilderFn(highlight))
+      builder.rawField("highlight", searches.HighlightBuilderFn(highlight))
     }
     builder.endObject()
     builder.value

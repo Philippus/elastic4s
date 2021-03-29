@@ -1,15 +1,16 @@
 package com.sksamuel.elastic4s.requests.searches.queries.span
 
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.searches.span.SpanNotQuery
 
 object SpanNotQueryBodyFn {
   def apply(q: SpanNotQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("span_not")
-    builder.rawField("include", QueryBuilderFn(q.include))
-    builder.rawField("exclude", QueryBuilderFn(q.exclude))
+    builder.rawField("include", queries.QueryBuilderFn(q.include))
+    builder.rawField("exclude", queries.QueryBuilderFn(q.exclude))
 
     q.pre.foreach(builder.field("pre", _))
     q.post.foreach(builder.field("post", _))

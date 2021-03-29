@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.{ExponentialDecayScoreBuilderFn, FieldValueFactorBuilderFn, GaussianDecayScoreBuilderFn, LinearDecayScoreBuilderFn, RandomScoreFunctionBuilderFn, ScriptScoreBuilderFn, WeightBuilderFn}
 import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{ExponentialDecayScore, FieldValueFactor, GaussianDecayScore, LinearDecayScore, RandomScoreFunction, ScoreFunction, ScriptScore, WeightScore}
 

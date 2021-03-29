@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.requests.update
 
 import java.net.URLEncoder
-
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, FetchSourceContextQueryParameterFn, RefreshPolicyHttpValue, Shards}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.OptionImplicits._
 
@@ -30,7 +30,7 @@ case class UpdateResponse(@JsonProperty("_index") index: String,
 object UpdateByQueryBodyFn {
   def apply(request: UpdateByQueryRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    builder.rawField("query", QueryBuilderFn(request.query))
+    builder.rawField("query", queries.QueryBuilderFn(request.query))
     request.script.map(ScriptBuilderFn.apply).foreach(builder.rawField("script", _))
 
     request.slice.foreach { slice =>

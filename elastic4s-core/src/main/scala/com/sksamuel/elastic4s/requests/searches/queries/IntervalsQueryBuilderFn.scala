@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.script
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 
 object IntervalsFilterBuilderFn {
   def apply(f: IntervalsFilter): XContentBuilder = {
@@ -14,7 +15,7 @@ object IntervalsFilterBuilderFn {
     f.notContaining.foreach{ r => builder.rawField("not_containing", IntervalsRuleBuilderFn(r)) }
     f.notOverlapping.foreach{ r => builder.rawField("not_overlapping", IntervalsRuleBuilderFn(r)) }
     f.overlapping.foreach{ r => builder.rawField("overlapping", IntervalsRuleBuilderFn(r)) }
-    f.script.foreach{ s => builder.rawField("script", ScriptBuilderFn(s)) }
+    f.script.foreach{ s => builder.rawField("script", script.ScriptBuilderFn(s)) }
     builder
   }
 }

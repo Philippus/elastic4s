@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.searches.queries.term
+package com.sksamuel.elastic4s.handlers.searches.queries.term
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.FuzzyQuery

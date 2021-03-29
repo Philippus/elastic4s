@@ -1,7 +1,8 @@
-package com.sksamuel.elastic4s.requests.searches
+package com.sksamuel.elastic4s.handlers.searches
 
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.requests.searches.Highlight
 
 object HighlightBuilderFn {
 

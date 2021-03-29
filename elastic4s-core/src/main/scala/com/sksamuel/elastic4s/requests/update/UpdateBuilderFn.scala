@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.update
 
-import com.sksamuel.elastic4s.FieldsMapper
+import com.sksamuel.elastic4s.{FieldsMapper, handlers}
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 
 object UpdateBuilderFn {
   def apply(request: UpdateRequest): XContentBuilder = {
@@ -14,7 +14,7 @@ object UpdateBuilderFn {
     }
 
     request.script.foreach { script =>
-      builder.rawField("script", ScriptBuilderFn(script))
+      builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
 
     if (request.documentFields.nonEmpty) {

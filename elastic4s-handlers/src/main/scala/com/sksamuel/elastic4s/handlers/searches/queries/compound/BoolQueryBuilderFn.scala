@@ -1,7 +1,8 @@
-package com.sksamuel.elastic4s.requests.searches.queries.compound
+package com.sksamuel.elastic4s.handlers.searches.queries.compound
 
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.{BoolQuery, QueryBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 
 object BoolQueryBuilderFn {
 

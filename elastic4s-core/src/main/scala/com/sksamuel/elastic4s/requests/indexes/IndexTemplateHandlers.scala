@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s.requests.indexes
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.analysis.AnalysisBuilder
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class CreateIndexTemplateResponse(acknowledged: Boolean)
@@ -103,7 +104,7 @@ object CreateIndexTemplateBodyFn {
           builder.startObject(a.name)
           a.routing.foreach(builder.field("routing", _))
           a.filter.foreach { filter =>
-            builder.rawField("filter", QueryBuilderFn(filter))
+            builder.rawField("filter", queries.QueryBuilderFn(filter))
           }
           builder.endObject()
         }

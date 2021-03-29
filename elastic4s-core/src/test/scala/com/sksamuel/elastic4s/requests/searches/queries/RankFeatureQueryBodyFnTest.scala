@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches
+import com.sksamuel.elastic4s.handlers.searches.queries.RankFeatureQueryBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.{Log, Saturation, Sigmoid}
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
@@ -37,7 +39,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       val query = RankFeatureQuery(field = "pagerank").withLog(Log(3))
 
       When("Rank feature query is built")
-      val queryBody = RankFeatureQueryBuilderFn(query)
+      val queryBody = searches.queries.RankFeatureQueryBuilderFn(query)
 
       Then("query should have right fields")
       queryBody.string() shouldEqual rankFeatureQueryWithLog
@@ -62,7 +64,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       val query = RankFeatureQuery("pagerank").withSaturation(Saturation(Some(2)))
 
       When("Rank feature query is built")
-      val queryBody = RankFeatureQueryBuilderFn(query)
+      val queryBody = searches.queries.RankFeatureQueryBuilderFn(query)
 
       Then("query should have right fields")
       queryBody.string() shouldEqual rankFeatureQueryWithSaturation
@@ -84,7 +86,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
     val query = RankFeatureQuery("pagerank").withSaturation(Saturation(None))
 
     When("Rank feature query is built")
-    val queryBody = RankFeatureQueryBuilderFn(query)
+    val queryBody = searches.queries.RankFeatureQueryBuilderFn(query)
 
     Then("query should have right fields")
     queryBody.string() shouldEqual minimalRankFeatureQuery

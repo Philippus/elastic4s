@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, ScoreSort, ScriptSort, Sort}
 
@@ -39,7 +41,7 @@ object FieldSortBuilderFn {
     } else if (fs.nestedPath.nonEmpty || fs.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       fs.nestedPath.foreach(builder.field("path", _))
-      fs.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      fs.nestedFilter.map(f => queries.QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
 
@@ -86,7 +88,7 @@ object GeoDistanceSortBuilderFn {
     } else if (geo.nestedPath.nonEmpty || geo.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       geo.nestedPath.foreach(builder.field("path", _))
-      geo.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      geo.nestedFilter.map(f => queries.QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
 
@@ -119,7 +121,7 @@ object ScriptSortBuilderFn {
     } else if (scriptSort.nestedPath.nonEmpty || scriptSort.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       scriptSort.nestedPath.foreach(builder.field("path", _))
-      scriptSort.nestedFilter.map(f => QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      scriptSort.nestedFilter.map(f => queries.QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
 

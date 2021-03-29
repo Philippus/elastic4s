@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries.span
 
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.searches.span.SpanOrQuery
 
 object SpanOrQueryBodyFn {
@@ -10,7 +11,7 @@ object SpanOrQueryBodyFn {
     builder.startObject("span_or")
     builder.startArray("clauses")
     q.clauses.foreach { clause =>
-      builder.rawValue(QueryBuilderFn(clause))
+      builder.rawValue(queries.QueryBuilderFn(clause))
     }
     builder.endArray()
 
