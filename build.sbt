@@ -5,11 +5,11 @@ val CatsVersion            = "2.0.0"
 val CatsEffectVersion      = "2.3.3"
 val CirceVersion           = "0.13.0"
 val CommonsIoVersion       = "2.8.0"
-val ElasticsearchVersion   = "7.11.2"
+val ElasticsearchVersion   = "7.12.0"
 val ExtsVersion            = "1.61.1"
 val JacksonVersion         = "2.12.2"
 val Json4sVersion          = "3.6.11"
-val Log4jVersion           = "2.14.0"
+val Log4jVersion           = "2.14.1"
 val MockitoVersion         = "3.8.0"
 val MonixVersion           = "3.1.0"
 val PlayJsonVersion        = "2.9.2"
@@ -27,7 +27,7 @@ val ScalatestPlusMockitoArtifactId = "mockito-3-2"
 def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
-def releaseVersion = sys.env.getOrElse("RELEASE_VERSION", "")
+def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
@@ -145,6 +145,9 @@ lazy val root = Project("elastic4s", file("."))
   .settings(allSettings)
   .settings(noPublishSettings)
   .aggregate(
+    json_builder,
+    domain,
+    handlers,
     core,
     clientesjava,
     clientsSniffed,
@@ -165,8 +168,8 @@ lazy val root = Project("elastic4s", file("."))
     akkastreams
   )
 
-lazy val core = (project in file("elastic4s-core"))
-  .settings(name := "elastic4s-core")
+lazy val domain = (project in file("elastic4s-domain"))
+  .settings(name := "elastic4s-domain")
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -176,9 +179,55 @@ lazy val core = (project in file("elastic4s-core"))
     )
   )
 
+lazy val json_builder = (project in file("elastic4s-json-builder"))
+  .settings(name := "elastic4s-json-builder")
+  .dependsOn(domain)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
+lazy val core = (project in file("elastic4s-core"))
+  .settings(name := "elastic4s-core")
+  .dependsOn(domain, clientcore, handlers, json_builder)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
+lazy val handlers = (project in file("elastic4s-handlers"))
+  .settings(name := "elastic4s-handlers")
+  .dependsOn(domain, json_builder)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
+    )
+  )
+
+lazy val clientcore = (project in file("elastic4s-client-core"))
+  .settings(name := "elastic4s-client-core")
+  .dependsOn(handlers)
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.apache.logging.log4j" % "log4j-api" % Log4jVersion % "test"
+    )
+  )
+
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
-  .dependsOn(core)
   .settings(name := "elastic4s-client-esjava")
+  .dependsOn(core)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -191,8 +240,8 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   )
 
 lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
-  .dependsOn(clientesjava)
   .settings(name := "elastic4s-client-sniffed")
+  .dependsOn(clientesjava)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(

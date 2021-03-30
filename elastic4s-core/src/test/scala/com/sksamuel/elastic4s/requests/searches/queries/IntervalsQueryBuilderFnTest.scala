@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.IntervalsQueryBuilderFn
 import com.sksamuel.elastic4s.requests.script.Script
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
@@ -61,7 +63,7 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
     )))
 
     When("Intervals query is built")
-    val queryBody = IntervalsQueryBuilderFn(query)
+    val queryBody = queries.IntervalsQueryBuilderFn(query)
 
     println(queryBody.string())
     Then("query should have right fields")
@@ -99,7 +101,7 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
     ))
 
     When("Intervals query is built")
-    val queryBody = IntervalsQueryBuilderFn(query)
+    val queryBody = queries.IntervalsQueryBuilderFn(query)
 
     println(queryBody.string())
     Then("query should have right fields")

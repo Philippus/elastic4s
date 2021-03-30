@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.HttpEntity.StringEntity
+import HttpEntity.StringEntity
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -9,17 +10,17 @@ import scala.io.Source
 class ElasticErrorTest extends AnyFlatSpec with Matchers with ElasticDsl {
 
   "ElasticError" should "properly handle an error response with an invalid body" in {
-    val error = ElasticError.parse(HttpResponse(123, Some(StringEntity("{", None)), Map()))
+    val error = ElasticErrorParser.parse(HttpResponse(123, Some(StringEntity("{", None)), Map()))
     assert(error.reason == "123")
   }
 
   it should "properly handle an error response with a missing body" in {
-    val error = ElasticError.parse(HttpResponse(123, Some(StringEntity("", None)), Map()))
+    val error = ElasticErrorParser.parse(HttpResponse(123, Some(StringEntity("", None)), Map()))
     assert(error.reason == "123")
   }
 
   it must "parse a large error response including failed_shards" in {
-    val error = ElasticError.parse(HttpResponse(123, Some(StringEntity(Source.fromInputStream(getClass.getResourceAsStream("/error_response_with_failed_shards.json")).mkString, None)), Map()))
+    val error = ElasticErrorParser.parse(HttpResponse(123, Some(StringEntity(Source.fromInputStream(getClass.getResourceAsStream("/error_response_with_failed_shards.json")).mkString, None)), Map()))
 
     assert(error.`type` == "search_phase_execution_exception")
     assert(error.reason == "all shards failed")

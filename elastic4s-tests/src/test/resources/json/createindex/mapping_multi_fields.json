@@ -1,30 +1,28 @@
 {
-  "mappings": {
-    "tweet": {
-      "numeric_detection": true,
-      "_boost": {
-        "name": "myboost",
-        "null_value": 1.2
-      },
-      "_size": {
-        "enabled": true
-      },
-      "properties": {
-        "title": {
-          "type": "text",
-          "fields": {
-            "raw": {
-              "type": "text"
+    "mappings": {
+        "numeric_detection": true,
+        "_boost": {
+            "name": "myboost",
+            "null_value": 1.2
+        },
+        "_size": {
+            "enabled": true
+        },
+        "properties": {
+            "title": {
+                "type": "text",
+                "fields": {
+                    "raw": {
+                        "type": "text"
+                    }
+                }
+            },
+            "meta_data": {
+                "type": "text"
+            },
+            "article_info": {
+                "type": "text"
             }
-          }
-        },
-        "meta_data": {
-          "type": "text"
-        },
-        "article_info": {
-          "type": "text"
         }
-      }
     }
-  }
 }

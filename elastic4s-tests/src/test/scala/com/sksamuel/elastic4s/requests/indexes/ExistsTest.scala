@@ -15,8 +15,8 @@ class ExistsTest extends AnyWordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("exists").mappings {
-      mapping("flowers") fields textField("name")
+    createIndex("exists").mapping {
+      properties(textField("name"))
     }
   }.await
 

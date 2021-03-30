@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.search
+package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests

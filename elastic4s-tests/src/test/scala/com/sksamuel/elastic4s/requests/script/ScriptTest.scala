@@ -43,10 +43,8 @@ class ScriptTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
     "can use params" in {
       val result = client.execute {
         search("script") query "earls" scriptfields (
-          scriptField("a") script (
-            script("doc['zone'].value * params.fare") params Map("fare" -> 4.50)
-            )
-          )
+          scriptField("a", Script("doc['zone'].value * params.fare") params Map("fare" -> 4.50))
+        )
       }.await.result
       result.hits.hits.head.storedField("a").value shouldBe 9.0
     }

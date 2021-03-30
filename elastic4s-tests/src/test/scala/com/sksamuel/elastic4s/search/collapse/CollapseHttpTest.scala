@@ -18,8 +18,8 @@ class CollapseHttpTest extends AnyFreeSpec with Matchers with DockerTests with B
     }
 
     client.execute {
-      createIndex("collapse") mappings {
-        mapping() fields(
+      createIndex("collapse") mapping {
+        mapping(
           keywordField("name"),
           keywordField("board")
         )

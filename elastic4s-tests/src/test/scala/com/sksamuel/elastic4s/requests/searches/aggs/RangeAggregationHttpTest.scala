@@ -11,8 +11,8 @@ class RangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matcher
   deleteIdx("rangeaggs")
 
   client.execute {
-    createIndex("rangeaggs") mappings {
-      mapping() fields(
+    createIndex("rangeaggs") mapping {
+      mapping(
         textField("name").fielddata(true),
         intField("grade")
       )

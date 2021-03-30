@@ -14,8 +14,7 @@
         "properties": {
             "name": {
                 "type": "ip",
-                "boost": 1.0,
-                "null_value": "127.0.0.1"
+                "boost": 1.0
             },
             "location": {
                 "type": "integer",

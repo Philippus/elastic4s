@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.ingest
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 
 trait IngestHandlers {
 
@@ -46,7 +47,7 @@ trait IngestHandlers {
           }
           Right(resp.head)
         case _ =>
-          Left(ElasticError.parse(response))
+          Left(ElasticErrorParser.parse(response))
       }
     }
   }

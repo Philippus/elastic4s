@@ -19,8 +19,8 @@ class RangeQueryHttpTest
   }
 
   client.execute {
-    createIndex("rangequeryhttptest").mappings(
-      mapping("pieces").fields(
+    createIndex("rangequeryhttptest").mapping(
+      mapping(
         textField("name").fielddata(true)
       )
     )

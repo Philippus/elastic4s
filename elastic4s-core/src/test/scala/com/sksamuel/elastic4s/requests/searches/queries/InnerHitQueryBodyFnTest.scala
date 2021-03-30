@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.nested.InnerHitQueryBodyBuilder
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.searches.HighlightField
-import com.sksamuel.elastic4s.requests.searches.queries.nested.InnerHitQueryBodyFn
 import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -20,7 +21,7 @@ class InnerHitQueryBodyFnTest extends AnyFunSuite with Matchers {
       .storedFieldNames(List("field1", "field2"))
       .highlighting(HighlightField("hlField"))
 
-    InnerHitQueryBodyFn(q).string() shouldBe
+    new XContentBuilder(InnerHitQueryBodyBuilder.toJson(q)).string shouldBe
       """{"name":"inners","from":2,"explain":false,"track_scores":true,"version":true,"size":2,"docvalue_fields":["df1","df2"],"sort":[{"sortField":{"order":"asc"}}],"stored_fields":["field1","field2"],"highlight":{"fields":{"hlField":{}}}}"""
   }
 }

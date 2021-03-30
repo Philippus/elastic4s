@@ -1,8 +1,9 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, KeyedFiltersAggregation, SubAggsBuilderFn}
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 
 object KeyedFiltersAggregationBuilder {
   def apply(agg: KeyedFiltersAggregation): XContentBuilder = {
@@ -14,7 +15,7 @@ object KeyedFiltersAggregationBuilder {
     agg.otherBucketKey.foreach(builder.field("other_bucket_key", _))
 
     builder.startObject("filters")
-    agg.filters.map(map => builder.rawField(map._1, QueryBuilderFn(map._2)))
+    agg.filters.map(map => builder.rawField(map._1, queries.QueryBuilderFn(map._2)))
     builder.endObject()
 
     builder.endObject()

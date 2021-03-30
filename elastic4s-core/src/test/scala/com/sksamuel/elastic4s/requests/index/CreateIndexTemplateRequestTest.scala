@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Matchers {
 
-  test("testing if entity created by createIndexTemplate has proper form"){
+  test("testing if entity created by createIndexTemplate has proper form") {
 
     val lowerCaseNormalizer = CustomNormalizer("lowercase", Nil, List("lowercase"))
 
@@ -16,19 +16,21 @@ class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Ma
     val templateDef = createIndexTemplate(templateName, "index_pattern")
       .analysis(Analysis(Nil, normalizers = List(lowerCaseNormalizer)))
 
-    val expectedEntityContent = """{"index_patterns":["index_pattern"],"settings":{"analysis":{"normalizer":{"lowercase":{"type":"custom","filter":["lowercase"]}}}}}"""
-
-    CreateIndexTemplateHandler.build(templateDef).entity.get.get shouldBe expectedEntityContent
+    val req = CreateIndexTemplateHandler.build(templateDef)
+    req.endpoint shouldBe "/_index_template/test_template"
+    req.entity.get.get shouldBe """{"index_patterns":["index_pattern"],"template":{"settings":{"analysis":{"normalizer":{"lowercase":{"type":"custom","filter":["lowercase"]}}}}}}"""
   }
 
-  test("testing if entity created by createIndexTemplate without analysis"){
+  test("testing if entity created by createIndexTemplate without analysis") {
 
     val templateName = "test_template_without_analysis"
 
     val templateDef = createIndexTemplate(templateName, "index_pattern").settings(Map("number_of_shards" -> 1))
 
-    val expectedEntityContent = """{"index_patterns":["index_pattern"],"settings":{"number_of_shards":1}}"""
+    val expectedEntityContent = """"""
 
-    CreateIndexTemplateHandler.build(templateDef).entity.get.get shouldBe expectedEntityContent
+    val req = CreateIndexTemplateHandler.build(templateDef)
+    req.endpoint shouldBe "/_index_template/test_template_without_analysis"
+    req.entity.get.get shouldBe """{"index_patterns":["index_pattern"],"template":{"settings":{"number_of_shards":1}}}"""
   }
 }

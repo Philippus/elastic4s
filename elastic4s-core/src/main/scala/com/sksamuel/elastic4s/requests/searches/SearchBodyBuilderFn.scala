@@ -1,13 +1,17 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.EnumConversions
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.handlers.script
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.collapse.CollapseBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.{HighlightBuilderFn, queries}
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.suggestion.{CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestionBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.FetchSourceContextBuilderFn
-import com.sksamuel.elastic4s.requests.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.requests.searches.aggs.AggregationBuilderFn
-import com.sksamuel.elastic4s.requests.searches.collapse.CollapseBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.{QueryBuilderFn, SortBuilderFn}
-import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestion, TermSuggestionBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, TermSuggestion}
 
 object SearchBodyBuilderFn {
 

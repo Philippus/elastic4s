@@ -17,7 +17,7 @@ class AvgAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers 
 
   client.execute {
     createIndex("avgagg") mappings {
-      mapping("buildings") fields(
+      mapping(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

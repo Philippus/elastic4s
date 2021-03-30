@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.ElasticApi
-import com.sksamuel.elastic4s.requests.analyzers.{ArmenianLanguageAnalyzer, EnglishLanguageAnalyzer}
+import com.sksamuel.elastic4s.handlers.fields.SearchAsYouTypeFieldBuilderFn
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -9,25 +9,19 @@ class SearchAsYouTypeFieldTest extends AnyFlatSpec with Matchers with ElasticApi
 
   "search as you type def" should "support additional text properties" in {
     val field = searchAsYouType("myfield")
+      .analyzer("foo")
+      .searchAnalyzer("bar")
       .fielddata(true)
       .stored(true)
       .index(true)
       .indexOptions("freqs")
       .norms(true)
-      .normalizer("mynorm")
-      .analyzer(ArmenianLanguageAnalyzer)
       .copyTo("copy1", "copy2")
       .boost(1.2)
-      .searchAnalyzer(EnglishLanguageAnalyzer)
-      .includeInAll(false)
-      .docValues(true)
-      .maxInputLength(12)
       .ignoreAbove(30)
       .similarity("classic")
-      .nullable(false)
-      .nullValue("nully")
       .maxShingleSize(4)
-    FieldBuilderFn(field).string() shouldBe
-      """{"type":"search_as_you_type","analyzer":"armenian","boost":1.2,"copy_to":["copy1","copy2"],"doc_values":true,"index":"true","normalizer":"mynorm","norms":true,"null_value":"nully","search_analyzer":"english","store":true,"fielddata":true,"max_input_length":12,"ignore_above":30,"similarity":"classic","index_options":"freqs","max_shingle_size":4}"""
+    SearchAsYouTypeFieldBuilderFn.build(field).string() shouldBe
+      """{"type":"search_as_you_type","analyzer":"foo","search_analyzer":"bar","boost":1.2,"copy_to":["copy1","copy2"],"index":true,"norms":true,"store":true,"fielddata":true,"ignore_above":30,"index_options":"freqs","similarity":"classic","max_shingle_size":4}"""
   }
 }

@@ -17,8 +17,8 @@ class AvgBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Mat
   }
 
   client.execute {
-    createIndex("avgbucketagg") mappings {
-      mapping() fields(
+    createIndex("avgbucketagg") mapping {
+      properties(
         dateField("date"),
         doubleField("value").stored(true)
       )

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
 
 case class IndexMappings(index: String, mappings: Map[String, Any], meta: Map[String, Any] = Map.empty[String, Any])
@@ -19,14 +20,14 @@ trait MappingHandlers {
           val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Any]]]](response)
           val raw2 = raw.map {
             case (index, types) =>
-              val mappings = types("mappings").getOrElse("properties", Map.empty)
+              val properties = types("mappings").getOrElse("properties", Map.empty)
               val meta = types("mappings").getOrElse("_meta", Map.empty)
-              IndexMappings(index, mappings.asInstanceOf[Map[String, Any]], meta.asInstanceOf[Map[String, Any]])
+              IndexMappings(index, properties.asInstanceOf[Map[String, Any]], meta.asInstanceOf[Map[String, Any]])
           }.toSeq
           Right(raw2)
         case _              =>
           try {
-            Left(ElasticError.parse(response))
+            Left(ElasticErrorParser.parse(response))
           }catch{
             case _ : Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
           }
@@ -58,7 +59,7 @@ trait MappingHandlers {
           }.toSeq)
         case _              =>
           try {
-            Left(ElasticError.parse(response))
+            Left(ElasticErrorParser.parse(response))
           }catch{
             case _ : Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
           }

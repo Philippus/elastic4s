@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.requests.searches.queries.term.RegexQueryBodyFn
+import com.sksamuel.elastic4s.handlers.searches.queries.term
+import com.sksamuel.elastic4s.handlers.searches.queries.term.RegexQueryBodyFn
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -12,7 +13,7 @@ class RegexQueryBodyFnTest extends AnyFunSuite with Matchers {
       .boost(1.2)
       .queryName("myquery")
       .maxDeterminedStates(10000)
-    RegexQueryBodyFn(q).string() shouldBe
+    term.RegexQueryBodyFn(q).string() shouldBe
       """{"regexp":{"mysearch":{"value":".*","flags":"ANYSTRING|COMPLEMENT|EMPTY|INTERSECTION|INTERVAL","max_determinized_states":10000,"boost":1.2,"_name":"myquery"}}}"""
   }
 }

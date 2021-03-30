@@ -25,12 +25,12 @@ case class CreateIndexRequest(name: String,
     alias(IndexAliasRequest(name, Option(filter)))
   def alias(definition: IndexAliasRequest): CreateIndexRequest = copy(aliases = aliases + definition)
 
-  def singleShard(): CreateIndexRequest   = shards(1)
+  def singleShard(): CreateIndexRequest = shards(1)
   def singleReplica(): CreateIndexRequest = replicas(1)
 
   def waitForActiveShards(shards: Int): CreateIndexRequest = copy(waitForActiveShards = shards.some)
 
-  def shards(shds: Int): CreateIndexRequest    = copy(settings = settings.shards = shds)
+  def shards(shds: Int): CreateIndexRequest = copy(settings = settings.shards = shds)
   def replicas(repls: Int): CreateIndexRequest = copy(settings = settings.replicas = repls)
 
   /**
@@ -41,23 +41,22 @@ case class CreateIndexRequest(name: String,
   /**
     * Convenience method for setting the 'index.refresh_interval' property on this index.
     */
-  def refreshInterval(interval: String): CreateIndexRequest   = copy(settings = settings.refreshInterval = interval)
+  def refreshInterval(interval: String): CreateIndexRequest = copy(settings = settings.refreshInterval = interval)
 
   def settings(map: Map[String, Any]): CreateIndexRequest =
     copy(settings = map.foldLeft(new IndexSettings()) { case (setting, (key, value)) => setting.add(key, value) })
 
   def indexSetting(name: String, value: Any): CreateIndexRequest = copy(settings = settings.add(name, value))
 
-  def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
-
-  @deprecated("use mapping not mappings since creating an index only supports a single mapping now", "7.0.0")
+  @deprecated("use mapping", "8.0.0")
   def mappings(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
+  def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
 
   @deprecated("use the new analysis package", "7.0.1")
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)
 
   @deprecated("use the new analysis package", "7.0.1")
-  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexRequest              = analysis(analyzers, Nil)
+  def analysis(analyzers: Iterable[AnalyzerDefinition]): CreateIndexRequest = analysis(analyzers, Nil)
 
   def analysis(analysis: com.sksamuel.elastic4s.analysis.Analysis): CreateIndexRequest = copy(analysis = analysis.some)
 

@@ -11,16 +11,16 @@ class TermsQueryTest
     with Matchers {
 
   client.execute {
-    createIndex("lords").mappings(
-      mapping("people").fields(
+    createIndex("lords").mapping(
+      mapping(
         keywordField("name")
       )
     )
   }.await
 
   client.execute {
-    createIndex("lordsfanclub").mappings(
-      mapping("fans").fields(
+    createIndex("lordsfanclub").mapping(
+      mapping(
         keywordField("lordswelike")
       )
     )
@@ -42,7 +42,7 @@ class TermsQueryTest
       search("lords") query termsQuery("name", "nelson", "byron")
     }.await.result
 
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"byron"}""")
+    resp.hits.hits.map(_.sourceAsMap).map(_.apply("name")).toSet shouldBe Set("nelson", "byron")
   }
 
   it should "lookup terms to search from a document in another index" in {
@@ -52,7 +52,7 @@ class TermsQueryTest
         .path("lordswelike")
     }.await.result
 
-    resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set("""{"name":"nelson"}""", """{"name":"edmure"}""")
+    resp.hits.hits.map(_.sourceAsMap).map(_.apply("name")).toSet shouldBe Set("nelson", "edmure")
   }
 
   it should "return no results when an empty array is passed" in {

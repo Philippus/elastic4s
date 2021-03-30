@@ -16,8 +16,8 @@ class NestedQueryTest extends AnyWordSpec with DockerTests with Matchers {
   }
 
   client.execute {
-    createIndex("nested").mappings(
-      mapping().fields(
+    createIndex("nested").mapping(
+      mapping(
         keywordField("name"),
         nestedField("states")
       )
