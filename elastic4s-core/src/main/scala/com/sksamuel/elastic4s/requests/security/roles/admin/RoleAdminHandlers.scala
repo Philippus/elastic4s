@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.security.roles.admin
 
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 
+import java.net.URLEncoder
 import com.sksamuel.elastic4s.requests.security.roles.{CreateOrUpdateRoleContentBuilder, CreateOrUpdateRoleRequest, CreateRole, CreateRoleResponse, DeleteRoleRequest, UpdateRole}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
@@ -12,7 +13,7 @@ trait RoleAdminHandlers {
 		override def responseHandler: ResponseHandler[CreateRoleResponse] = new ResponseHandler[CreateRoleResponse] {
 			override def handle(response: HttpResponse): Either[ElasticError, CreateRoleResponse] = response.statusCode match {
 				case 200 | 201 => Right(ResponseHandler.fromResponse[CreateRoleResponse](response))
-				case 400 | 500 => Left(ElasticError.parse(response))
+				case 400 | 500 => Left(ElasticErrorParser.parse(response))
 				case _ 				 => sys.error(response.toString)
 			}
 		}
@@ -35,7 +36,7 @@ trait RoleAdminHandlers {
 		override def responseHandler: ResponseHandler[DeleteRoleResponse] = new ResponseHandler[DeleteRoleResponse] {
 			override def handle(response: HttpResponse): Either[ElasticError, DeleteRoleResponse] = response.statusCode match {
 				case 200 | 201 | 404 => Right(ResponseHandler.fromResponse[DeleteRoleResponse](response))
-				case 400 | 500 			 => Left(ElasticError.parse(response))
+				case 400 | 500 			 => Left(ElasticErrorParser.parse(response))
 				case _ 							 => sys.error(response.toString)
 			}
 		}
@@ -55,7 +56,7 @@ trait RoleAdminHandlers {
 		override def responseHandler: ResponseHandler[ClearRolesCacheResponse] = new ResponseHandler[ClearRolesCacheResponse] {
 			override def handle(response: HttpResponse): Either[ElasticError, ClearRolesCacheResponse] = response.statusCode match {
 				case 200 | 201 => Right(ResponseHandler.fromResponse[ClearRolesCacheResponse](response))
-				case 400 | 500 => Left(ElasticError.parse(response))
+				case 400 | 500 => Left(ElasticErrorParser.parse(response))
 				case _ 				 => sys.error(response.toString)
 			}
 		}

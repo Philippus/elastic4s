@@ -21,7 +21,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createIndex("mltq").mapping(
       properties(
-        textField("text") store true analyzer StandardAnalyzer
+        textField("text") store true analyzer StandardAnalyzer.name
       )
     ) shards 3
   }.await

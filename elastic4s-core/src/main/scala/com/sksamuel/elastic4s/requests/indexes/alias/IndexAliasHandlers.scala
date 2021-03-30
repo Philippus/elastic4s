@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes.alias
 
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, GetAliasesRequest, IndicesAliasesRequest, RemoveAliasAction}
 import com.sksamuel.elastic4s.requests.indexes.admin.AliasActionResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, ResponseHandler}
@@ -19,7 +20,7 @@ trait IndexAliasHandlers {
           }.toMap
           Right(IndexAliases(map))
         case 404 => Right(IndexAliases(Map.empty))
-        case _   => Left(ElasticError.parse(response))
+        case _   => Left(ElasticErrorParser.parse(response))
       }
     }
 

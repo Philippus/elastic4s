@@ -1,46 +1,58 @@
 package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.indexes.CreateIndexTemplateRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.concurrent.Eventually
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
+
+import scala.util.Try
 
 class IndexTemplateHttpTest
   extends AnyWordSpec
     with MockitoSugar
     with Matchers
+    with Eventually
     with DockerTests {
 
+  Try {
+    client.execute {
+      deleteIndex("brewers")
+    }.await
+    Thread.sleep(2000)
+  }
+
+  Try {
+    client.execute {
+      deleteIndexTemplate("brewery_template")
+    }.await
+    Thread.sleep(2000)
+  }
+
   "create template" should {
-    "be stored" in {
-      client.execute {
-        createIndexTemplate("brewery_template", "brew*").mappings(
-          mapping().fields(
-            textField("name"),
-            doubleField("year_founded")
+    "create template" in {
+
+      val result = client.execute {
+        CreateIndexTemplateRequest("brewery_template", "brew*").mappings(
+          properties(
+            textField("name").boost(123),
+            doubleField("year_founded").ignoreMalformed(true)
           )
         )
-      }.await.result.acknowledged shouldBe true
+      }.await.result
+      result.acknowledged shouldBe true
+
+      eventually {
+        val resp = client.execute {
+          getIndexTemplate("brewery_template")
+        }.await
+        resp.result.indexTemplates.find(_.name == "brewery_template").get.template.indexPatterns shouldBe Seq("brew*")
+        resp.result.indexTemplates.find(_.name == "brewery_template").get.template.order shouldBe 0
+      }
     }
-    "be retrievable" in {
-      val resp = client.execute {
-        getIndexTemplate("brewery_template")
-      }.await
-      resp.result.templateFor("brewery_template").indexPatterns shouldBe Seq("brew*")
-      resp.result.templateFor("brewery_template").order shouldBe 0
-    }
-    "return error if the template has invalid parameters" in {
-      client.execute {
-        createIndexTemplate("brewery_template", "brew*").mappings(
-          mapping().fields(
-            textField("name"),
-            doubleField("year_founded") analyzer "test_analyzer"
-          )
-        )
-      }.await.error.`type` shouldBe "mapper_parsing_exception"
-    }
-    "apply template to new indexes that match the pattern" ignore {
+    "apply template to new indexes that match the pattern" in {
 
       // this should match the earlier template of brew*
       client.execute {
@@ -60,15 +72,12 @@ class IndexTemplateHttpTest
       }.await.result.totalHits shouldBe 1
 
       // the mapping for this index should match the template
-      //   val properties = http.execute {
-      //     getMapping("brewers" / "brands")
-      //   }.await.propertiesFor("brewers" / "brands")
+      val properties = client.execute {
+        getMapping("brewers")
+      }.await
 
-      //   val year_founded = properties("year_founded").asInstanceOf[util.Map[String, Any]]
-
-      // note: this field would be long/int if the template wasn't applied, because we indexed an integer.
-      // but the template should be applied to override it to a double
-      //     year_founded.get("type") shouldBe "double"
+      properties.result.head.index shouldBe "brewers"
+      properties.result.head.mappings("year_founded") shouldBe Map("type" -> "double", "ignore_malformed" -> true)
     }
   }
 }

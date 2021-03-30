@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
@@ -17,7 +18,7 @@ trait SearchScrollHandlers {
           case 200 =>
             Right(ResponseHandler.fromResponse[ClearScrollResponse](response))
           case _ =>
-            Left(ElasticError.parse(response))
+            Left(ElasticErrorParser.parse(response))
         }
     }
 
@@ -38,7 +39,7 @@ trait SearchScrollHandlers {
     override def responseHandler: ResponseHandler[SearchResponse] = new ResponseHandler[SearchResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, SearchResponse] = response.statusCode match {
         case 200 => Right(ResponseHandler.fromResponse[SearchResponse](response))
-        case _   => Left(ElasticError.parse(response))
+        case _   => Left(ElasticErrorParser.parse(response))
       }
     }
 

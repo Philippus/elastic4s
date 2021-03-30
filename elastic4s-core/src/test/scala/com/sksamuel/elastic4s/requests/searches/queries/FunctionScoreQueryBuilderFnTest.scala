@@ -2,6 +2,8 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.ElasticDsl.matchPhraseQuery
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.FunctionScoreQueryBuilderFn
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{CombineFunction, FunctionScoreQuery, FunctionScoreQueryScoreMode, GaussianDecayScore}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -25,6 +27,6 @@ class FunctionScoreQueryBuilderFnTest extends AnyFunSuite with Matchers with Jso
       .functions(
         GaussianDecayScore("myfield", "now", "28d").offset(19).decay(1.2).filter(matchPhraseQuery("myfield", "foo"))
       )
-    FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/filter_scorer.json")
+    queries.FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/filter_scorer.json")
   }
 }

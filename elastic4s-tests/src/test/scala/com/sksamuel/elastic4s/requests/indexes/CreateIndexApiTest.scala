@@ -18,7 +18,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   "the index dsl" should "generate json to include mapping properties" in {
     val req = createIndex("users").mapping(
       properties(
-        ipField("name") nullValue "127.0.0.1" boost 1.0,
+        ipField("name") boost 1.0,
         intField("location") nullValue 0,
         binaryField("email"),
         floatField("age"),
@@ -145,8 +145,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   it should "supported nested fields" in {
     val req = createIndex("users").mapping(
       properties(
-        textField("_id") analyzer KeywordAnalyzer,
-        textField("name") analyzer KeywordAnalyzer,
+        textField("_id") analyzer KeywordAnalyzer.name,
+        textField("name") analyzer KeywordAnalyzer.name,
         geopointField("locations").docValues(true),
         dateField("date"),
         longField("size"),
@@ -158,7 +158,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
           nestedField("last").fields(
             dateField("lastLogin")
           )
-        ).includeInAll(true)
+        )
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_nested.json")
@@ -207,7 +207,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
 
   it should "support nested multi fields" in {
     val req = createIndex("tweets").mappings(
-      mapping("tweet").fields(
+      mapping(
         textField("name").fields(
           keywordField("username"),
           keywordField("principal")
@@ -218,8 +218,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   }
 
   it should "support copy to a single field" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
+    val req = createIndex("tweets").mapping(
+      mapping(
         textField("first_name") copyTo "full_name",
         textField("last_name") copyTo "full_name",
         textField("full_name")
@@ -229,8 +229,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   }
 
   it should "support copy to multiple fields" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
+    val req = createIndex("tweets").mapping(
+      mapping(
         textField("title") copyTo("meta_data", "article_info"),
         textField("meta_data"),
         textField("article_info")
@@ -240,8 +240,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   }
 
   it should "support multi fields" in {
-    val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
+    val req = createIndex("tweets").mapping(
+      mapping(
         textField("title") fields textField("raw"),
         textField("meta_data"),
         textField("article_info")
@@ -252,7 +252,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
 
   it should "support completion type" in {
     val req = createIndex("tweets").mappings(
-      mapping("tweet") as(
+      mapping(
         textField("name"),
         completionField("ac") analyzer "simple" searchAnalyzer "simple"
           preserveSeparators false preservePositionIncrements false maxInputLength 10
@@ -261,12 +261,14 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
     CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_completion_type.json")
   }
 
-  it should "support creating parent mappings" in {
-    val req = createIndex("docsAndTags").mappings(
-      mapping("tags") as textField("tag") parent "docs" source true all false dynamic DynamicMapping.Strict
-    )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/create_parent_mappings.json")
-  }
+//  it should "support creating parent mappings" in {
+//    val req = createIndex("docsAndTags").mappings(
+//      mapping(
+//        textField("tag") parent "docs" source true all false dynamic DynamicMapping.Strict
+//      )
+//    )
+//    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/create_parent_mappings.json")
+//  }
 
   it should "accept pre-built mapping JSON" in {
     val source = Source

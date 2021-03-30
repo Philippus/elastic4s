@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.fields.builders.ElasticFieldBuilderFn
+import com.sksamuel.elastic4s.handlers.fields.ElasticFieldBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
 
@@ -63,13 +63,6 @@ object MappingBuilderFn {
     d.analyzer.foreach(x => builder.startObject("_analyzer").field("path", x).endObject())
     d.parent.foreach(x => builder.startObject("_parent").field("type", x).endObject())
     d.size.foreach(x => builder.startObject("_size").field("enabled", x).endObject())
-
-    if (d.fields.nonEmpty) {
-      builder.startObject("properties")
-      for (field <- d.fields)
-        builder.rawField(field.name, FieldBuilderFn(field))
-      builder.endObject() // end properties
-    }
 
     if (d.properties.map(_.name).distinct.size != d.properties.size)
       throw new RuntimeException("Mapping contained properties with the same name")

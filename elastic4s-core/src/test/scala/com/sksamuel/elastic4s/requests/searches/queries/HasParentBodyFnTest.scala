@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.handlers.searches.queries.nested.HasParentBodyFn
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
-import com.sksamuel.elastic4s.requests.searches.queries.nested.HasParentBodyFn
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

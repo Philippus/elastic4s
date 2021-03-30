@@ -1,16 +1,14 @@
 {
     "mappings": {
-        "tweet": {
-            "properties": {
-                "name": {
-                    "type": "text",
-                    "fields": {
-                        "username": {
-                            "type": "keyword"
-                        },
-                        "principal": {
-                            "type": "keyword"
-                        }
+        "properties": {
+            "name": {
+                "type": "text",
+                "fields": {
+                    "username": {
+                        "type": "keyword"
+                    },
+                    "principal": {
+                        "type": "keyword"
                     }
                 }
             }

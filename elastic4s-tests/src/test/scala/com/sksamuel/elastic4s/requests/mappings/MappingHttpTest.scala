@@ -29,7 +29,7 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
     client.execute {
       createIndex("index").mapping(
         (properties() as Seq(
-          textField("a") stored true analyzer WhitespaceAnalyzer,
+          textField("a") stored true analyzer WhitespaceAnalyzer.name,
           keywordField("b") normalizer "my_normalizer",
           joinField("c") relation("parent", Seq("bar", "foo"))
         )).meta(Map(

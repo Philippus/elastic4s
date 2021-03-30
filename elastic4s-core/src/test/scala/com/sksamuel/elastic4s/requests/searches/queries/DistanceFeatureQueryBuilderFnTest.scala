@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.handlers.searches.queries.DistanceFeatureQueryBuilderFn
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

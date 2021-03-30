@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
+import com.sksamuel.elastic4s.api.AnalyzerApi
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

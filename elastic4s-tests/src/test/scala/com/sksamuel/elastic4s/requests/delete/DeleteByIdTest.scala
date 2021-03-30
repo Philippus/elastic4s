@@ -19,8 +19,8 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("lecarre").mappings(
-      mapping().fields(
+    createIndex("lecarre").mapping(
+      mapping(
         textField("name")
       )
     ).shards(1).waitForActiveShards(1)

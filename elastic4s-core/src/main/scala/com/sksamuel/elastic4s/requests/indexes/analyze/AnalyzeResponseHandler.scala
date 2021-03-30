@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes.analyze
 
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.{ElasticError, HttpResponse, ResponseHandler}
 
 object AnalyzeResponseHandler extends ResponseHandler[AnalyzeResponse] {
@@ -19,7 +20,7 @@ object AnalyzeResponseHandler extends ResponseHandler[AnalyzeResponse] {
             Right(ResponseHandler.fromNode[NoExplainAnalyzeResponse](jsonNode))
         }
       case _ =>
-        Left(ElasticError.parse(response))
+        Left(ElasticErrorParser.parse(response))
     }
   }
 }

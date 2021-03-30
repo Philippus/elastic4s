@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.analysis.AnalysisBuilder
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object CreateIndexContentBuilder {
@@ -35,10 +35,7 @@ object CreateIndexContentBuilder {
       }
 
       d.mapping.foreach { mapping =>
-        mapping.`type` match {
-          case Some(t) => builder.rawField("mappings", MappingBuilderFn.buildWithName(mapping, t))
-          case None => builder.rawField("mappings", MappingBuilderFn.build(mapping))
-        }
+        builder.rawField("mappings", MappingBuilderFn.build(mapping))
       }
 
       if (d.aliases.nonEmpty) {

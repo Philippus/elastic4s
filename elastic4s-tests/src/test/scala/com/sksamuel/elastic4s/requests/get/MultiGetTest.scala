@@ -17,8 +17,8 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
   }
 
   client.execute {
-    createIndex("coldplay").shards(2).mappings(
-      mapping().fields(
+    createIndex("coldplay").shards(2).mapping(
+      mapping(
         textField("name").stored(true),
         intField("year").stored(true)
       )

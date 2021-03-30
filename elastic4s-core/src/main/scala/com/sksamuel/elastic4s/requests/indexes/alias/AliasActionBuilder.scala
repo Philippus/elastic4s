@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.indexes.alias
 
+import com.sksamuel.elastic4s.handlers.searches.queries
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
-import com.sksamuel.elastic4s.requests.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object AliasActionBuilder {
@@ -27,7 +28,7 @@ object AliasActionBuilder {
     jsonBuilder.field("index", addAction.index)
     jsonBuilder.field("alias", addAction.alias)
 
-    addAction.filter.map(QueryBuilderFn(_)).foreach { queryBuilder =>
+    addAction.filter.map(queries.QueryBuilderFn(_)).foreach { queryBuilder =>
       jsonBuilder.rawField("filter", queryBuilder)
     }
     addAction.routing.foreach(jsonBuilder.field("routing", _))
@@ -44,7 +45,7 @@ object AliasActionBuilder {
     jsonBuilder.field("index", removeAction.index)
     jsonBuilder.field("alias", removeAction.alias)
 
-    removeAction.filter.map(QueryBuilderFn(_)).foreach { queryBuilder =>
+    removeAction.filter.map(queries.QueryBuilderFn(_)).foreach { queryBuilder =>
       jsonBuilder.rawField("filter", queryBuilder)
     }
     removeAction.routing.foreach(jsonBuilder.field("routing", _))

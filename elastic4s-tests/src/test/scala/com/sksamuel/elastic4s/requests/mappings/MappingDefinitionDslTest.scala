@@ -56,14 +56,14 @@ class MappingDefinitionDslTest extends AnyWordSpec with Matchers with JsonSugar 
       val output = MappingBuilderFn.build(mapping).string()
       output should include("""numeric_detection":false""")
     }
-    "include dynamic templates" in {
-      val req = createIndex("docsAndTags").mappings(
-        mapping("my_type") templates(
-          dynamicTemplate("es", textField("") analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
-          dynamicTemplate("en", textField("") analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
-          )
-      )
-      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
-    }
+//    "include dynamic templates" in {
+//      val req = createIndex("docsAndTags").mappings(
+//        mapping("my_type") templates(
+//          dynamicTemplate("es", textField("") analyzer SpanishLanguageAnalyzer) matchPattern "regex" matching "*_es" matchMappingType "string",
+//          dynamicTemplate("en", textField("") analyzer EnglishLanguageAnalyzer) matching "*" matchMappingType "string"
+//          )
+//      )
+//      CreateIndexContentBuilder(req).string() should matchJsonResource("/json/mappings/mappings_with_dyn_templates.json")
+//    }
   }
 }

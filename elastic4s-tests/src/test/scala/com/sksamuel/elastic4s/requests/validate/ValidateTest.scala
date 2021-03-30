@@ -16,8 +16,8 @@ class ValidateTest extends AnyWordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createIndex("food").mappings(
-      mapping().fields(
+    createIndex("food").mapping(
+      properties(
         textField("name"),
         textField("color"),
         dateField("sellbydate")

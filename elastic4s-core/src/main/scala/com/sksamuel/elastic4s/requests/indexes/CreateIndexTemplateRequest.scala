@@ -22,6 +22,7 @@ case class CreateIndexTemplateRequest(name: String,
                                       order: Option[Int] = None,
                                       version: Option[Int] = None,
                                       create: Option[Boolean] = None,
+                                      priority: Option[Int] = None,
                                       aliases: Seq[TemplateAlias] = Nil) {
   require(name.nonEmpty, "template name must not be null or empty")
   require(pattern.nonEmpty, "pattern must not be null or empty")
@@ -58,6 +59,7 @@ case class CreateIndexTemplateRequest(name: String,
   def mappings(mappings: Iterable[MappingDefinition]): CreateIndexTemplateRequest = copy(mappings = mappings.toSeq)
 
   def version(version: Int): CreateIndexTemplateRequest = copy(version = version.some)
+  def priority(priority: Int): CreateIndexTemplateRequest = copy(priority = priority.some)
 
   // replaces all settings with the given settings
   def settings(settings: Map[String, Any]): CreateIndexTemplateRequest = copy(settings = settings)

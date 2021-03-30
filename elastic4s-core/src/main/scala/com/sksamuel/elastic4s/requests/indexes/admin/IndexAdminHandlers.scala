@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.requests.indexes.admin
 
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.api.IndexRecoveryRequest
+import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 
+import java.net.URLEncoder
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
@@ -179,7 +181,7 @@ trait IndexAdminHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, CreateIndexResponse] =
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[CreateIndexResponse](response))
-          case 400 | 500 => Left(ElasticError.parse(response))
+          case 400 | 500 => Left(ElasticErrorParser.parse(response))
           case _         => sys.error(response.toString)
         }
     }

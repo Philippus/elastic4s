@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.get
 
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
+import com.sksamuel.elastic4s.handlers.get.GetHandlers
 import com.sksamuel.elastic4s.{ElasticError, HttpResponse}
 import org.scalatest.EitherValues
 import org.scalatest.flatspec.AnyFlatSpec
