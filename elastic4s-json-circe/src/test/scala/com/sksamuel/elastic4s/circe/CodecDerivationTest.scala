@@ -61,4 +61,21 @@ class CodecDerivationTest extends AnyWordSpec with Matchers with GivenWhenThen {
     }
   }
 
+  "A derived ParamSerializer instance" should {
+    "be implicitly found if circe.generic.auto is in imported" in {
+      """
+        import io.circe.generic.auto._
+        import com.sksamuel.elastic4s.ParamSerializer
+        implicitly[ParamSerializer[Cafe]]
+      """ should compile
+    }
+
+    "not compile if no decoder is in scope" in {
+      """
+        import com.sksamuel.elastic4s.ParamSerializer
+        implicitly[ParamSerializer[Cafe]]
+      """ shouldNot compile
+    }
+  }
+
 }
