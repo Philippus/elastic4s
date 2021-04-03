@@ -1,3 +1,3 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
-case class GetRoleRequest(name: String)
+case class DeleteRoleRequest(name: String)

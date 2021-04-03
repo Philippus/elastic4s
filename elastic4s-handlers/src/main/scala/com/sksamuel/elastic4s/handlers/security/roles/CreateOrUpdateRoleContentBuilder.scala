@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.requests.security.roles
+package com.sksamuel.elastic4s.handlers.security.roles
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.security.roles.{ApplicationPrivileges, CreateOrUpdateRoleRequest, GlobalPrivileges, IndexPrivileges}
 
 object CreateOrUpdateRoleContentBuilder {
 	def apply(c: CreateOrUpdateRoleRequest): XContentBuilder = {

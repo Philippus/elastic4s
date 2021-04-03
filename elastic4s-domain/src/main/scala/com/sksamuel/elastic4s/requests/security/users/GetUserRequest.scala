@@ -1,3 +1,3 @@
 package com.sksamuel.elastic4s.requests.security.users
 
-case class DeleteUserRequest(name: String)
+case class GetUserRequest(name: String)
