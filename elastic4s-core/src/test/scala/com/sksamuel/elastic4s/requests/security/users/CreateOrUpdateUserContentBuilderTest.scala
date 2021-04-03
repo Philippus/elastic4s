@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.security.users
 
+import com.sksamuel.elastic4s.handlers.security.users
+import com.sksamuel.elastic4s.handlers.security.users.CreateOrUpdateUserContentBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -22,7 +24,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = CreateOrUpdateUserContentBuilder(create).string 
+		val result = CreateOrUpdateUserContentBuilder(create).string
 		result shouldBe formattedJson
 	}
 
@@ -42,7 +44,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = CreateOrUpdateUserContentBuilder(create).string 
+		val result = users.CreateOrUpdateUserContentBuilder(create).string
 		result shouldBe formattedJson
 	}
 
@@ -68,7 +70,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = CreateOrUpdateUserContentBuilder(create).string 
+		val result = users.CreateOrUpdateUserContentBuilder(create).string
 		result shouldBe formattedJson
 	}
 
@@ -89,7 +91,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = CreateOrUpdateUserContentBuilder(create).string 
+		val result = users.CreateOrUpdateUserContentBuilder(create).string
 		result shouldBe formattedJson
 	}
 
@@ -100,6 +102,6 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 			password=None,
 			roles=Seq("test-role")
 		)
-		a [IllegalArgumentException] should be thrownBy CreateOrUpdateUserContentBuilder(create).string
+		a [IllegalArgumentException] should be thrownBy users.CreateOrUpdateUserContentBuilder(create).string
 	}
 }
