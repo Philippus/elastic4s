@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.indexes
+package com.sksamuel.elastic4s.handlers.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.json.XContentFactory

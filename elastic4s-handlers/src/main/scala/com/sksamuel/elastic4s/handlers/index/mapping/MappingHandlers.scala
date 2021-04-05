@@ -1,13 +1,9 @@
-package com.sksamuel.elastic4s.requests.indexes
+package com.sksamuel.elastic4s.handlers.index.mapping
 
-import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.requests.indexes.{FieldMapping, IndexFieldMapping, IndexMappings, PutMappingResponse}
 import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
-
-case class IndexMappings(index: String, mappings: Map[String, Any], meta: Map[String, Any] = Map.empty[String, Any])
-
-case class IndexFieldMapping(index: String, fieldMappings: Seq[FieldMapping])
-case class FieldMapping(fullName:String, mappings: Map[String, Any])
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Indexes, ResponseHandler}
 
 trait MappingHandlers {
 
@@ -15,8 +11,8 @@ trait MappingHandlers {
 
     override def responseHandler: ResponseHandler[Seq[IndexMappings]] = new ResponseHandler[Seq[IndexMappings]] {
 
-      override def handle(response: HttpResponse) : Either[ElasticError, Seq[IndexMappings]] = response.statusCode match {
-        case 201 | 200       =>
+      override def handle(response: HttpResponse): Either[ElasticError, Seq[IndexMappings]] = response.statusCode match {
+        case 201 | 200 =>
           val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Any]]]](response)
           val raw2 = raw.map {
             case (index, types) =>
@@ -25,19 +21,19 @@ trait MappingHandlers {
               IndexMappings(index, properties.asInstanceOf[Map[String, Any]], meta.asInstanceOf[Map[String, Any]])
           }.toSeq
           Right(raw2)
-        case _              =>
+        case _ =>
           try {
             Left(ElasticErrorParser.parse(response))
-          }catch{
-            case _ : Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
+          } catch {
+            case _: Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
           }
       }
     }
 
     override def build(request: GetMappingRequest): ElasticRequest = {
       val endpoint = request.indexes match {
-        case Indexes(Nil)       => "/_mapping"
-        case Indexes(indexes)   => s"/${indexes.mkString(",")}/_mapping"
+        case Indexes(Nil) => "/_mapping"
+        case Indexes(indexes) => s"/${indexes.mkString(",")}/_mapping"
       }
 
       ElasticRequest("GET", endpoint)
@@ -47,8 +43,8 @@ trait MappingHandlers {
   implicit object GetFieldMappingRequest extends Handler[GetFieldMappingRequest, Seq[IndexFieldMapping]] {
     override def responseHandler: ResponseHandler[Seq[IndexFieldMapping]] = new ResponseHandler[Seq[IndexFieldMapping]] {
 
-      override def handle(response: HttpResponse) : Either[ElasticError, Seq[IndexFieldMapping]] = response.statusCode match {
-        case 201 | 200       =>
+      override def handle(response: HttpResponse): Either[ElasticError, Seq[IndexFieldMapping]] = response.statusCode match {
+        case 201 | 200 =>
           val raw = ResponseHandler.fromResponse[Map[String, Map[String, Map[String, Map[String, Any]]]]](response)
           Right(raw.map {
             case (index, types) =>
@@ -57,19 +53,19 @@ trait MappingHandlers {
               }.toSeq
               IndexFieldMapping(index, mappings)
           }.toSeq)
-        case _              =>
+        case _ =>
           try {
             Left(ElasticErrorParser.parse(response))
-          }catch{
-            case _ : Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
+          } catch {
+            case _: Throwable => sys.error(s"""Failed to parse error response: \n${response.toString}""")
           }
       }
     }
 
     override def build(request: GetFieldMappingRequest): ElasticRequest = {
       val baseEndpoint = request.indexes match {
-        case Indexes(Nil)       => "/_mapping"
-        case Indexes(indexes)   => s"/${indexes.mkString(",")}/_mapping"
+        case Indexes(Nil) => "/_mapping"
+        case Indexes(indexes) => s"/${indexes.mkString(",")}/_mapping"
       }
 
       val endpoint = request.fields match {
@@ -94,14 +90,10 @@ trait MappingHandlers {
       request.expandWildcards.foreach(params.put("expand_wildcards", _))
       request.includeTypeName.foreach(params.put("include_type_name", _))
 
-      val body   = PutMappingBuilderFn(request).string()
+      val body = PutMappingBuilderFn(request).string()
       val entity = HttpEntity(body, "application/json")
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
   }
-}
-
-case class PutMappingResponse(acknowledged: Boolean) {
-  def success: Boolean = acknowledged
 }

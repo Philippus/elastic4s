@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
 import com.sksamuel.elastic4s.analysis.LanguageAnalyzers
-import com.sksamuel.elastic4s.requests.mappings.{MappingBuilderFn, MappingDefinition}
+import com.sksamuel.elastic4s.handlers.index.mapping.MappingBuilderFn
+import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

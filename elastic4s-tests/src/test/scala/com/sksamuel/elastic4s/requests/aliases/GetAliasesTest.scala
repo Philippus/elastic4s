@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.requests.aliases
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.requests.indexes.alias
-import com.sksamuel.elastic4s.requests.indexes.alias.Alias
+import com.sksamuel.elastic4s.handlers.alias.{Alias, IndexAliases}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -36,7 +35,7 @@ class GetAliasesTest extends AnyFunSuite with Matchers with DockerTests {
 
     client.execute {
       getAliases("feed*", Nil)
-    }.await.result shouldBe alias.IndexAliases(
+    }.await.result shouldBe IndexAliases(
       Map(
         Index("feed_1_22222223") -> Nil,
         Index("feed_1_2222222345") -> Nil,

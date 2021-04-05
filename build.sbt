@@ -172,6 +172,7 @@ lazy val root = Project("elastic4s", file("."))
 
 lazy val domain = (project in file("elastic4s-domain"))
   .settings(name := "elastic4s-domain")
+  .dependsOn(json_builder)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -183,7 +184,6 @@ lazy val domain = (project in file("elastic4s-domain"))
 
 lazy val json_builder = (project in file("elastic4s-json-builder"))
   .settings(name := "elastic4s-json-builder")
-  .dependsOn(domain)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(

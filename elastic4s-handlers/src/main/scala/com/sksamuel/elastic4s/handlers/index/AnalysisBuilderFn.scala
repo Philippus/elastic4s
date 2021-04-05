@@ -1,6 +1,7 @@
-package com.sksamuel.elastic4s.requests.indexes
+package com.sksamuel.elastic4s.handlers.index
 
 import com.sksamuel.elastic4s.json.XContentBuilder
+import com.sksamuel.elastic4s.requests.indexes.AnalysisDefinition
 
 @deprecated("use new analysis package", "7.0.1")
 object AnalysisBuilderFn {

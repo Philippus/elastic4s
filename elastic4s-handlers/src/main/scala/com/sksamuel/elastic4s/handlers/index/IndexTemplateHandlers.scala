@@ -1,12 +1,12 @@
-package com.sksamuel.elastic4s.requests.indexes
+package com.sksamuel.elastic4s.handlers.index
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.analysis.AnalysisBuilder
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.handlers.index.mapping.MappingBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
-import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.requests.mappings.MappingBuilderFn
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.indexes.{CreateIndexTemplateRequest, DeleteIndexTemplateRequest, GetIndexTemplateRequest, IndexTemplateExistsRequest}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class CreateIndexTemplateResponse(acknowledged: Boolean)

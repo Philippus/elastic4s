@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.requests.index.analyze
 
 import com.sksamuel.elastic4s.analysis.StopAnalyzer
-import com.sksamuel.elastic4s.requests.indexes.analyze.{AnalyseRequestContentBuilder, AnalyzeRequest}
+import com.sksamuel.elastic4s.handlers.index
+import com.sksamuel.elastic4s.handlers.index.AnalyseRequestContentBuilder
+import com.sksamuel.elastic4s.requests.indexes.analyze.AnalyzeRequest
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers
 
@@ -18,7 +20,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with explain") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .analyzer("smartcn")
         .explain(true)
@@ -29,7 +31,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with tokenizer") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .explain(true)
         .tokenizer("keyword")
@@ -40,7 +42,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with tokenizer,filters,charFilters  ") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .tokenizer("keyword")
         .filters("lowercase")
@@ -52,7 +54,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with custom filters  ") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .tokenizer("keyword")
         .filters("lowercase","uppercase")
@@ -64,7 +66,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with normalizer") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .normalizer("my_normalizer")
     )
@@ -74,7 +76,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with field") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .field("obj1.field1")
     )
@@ -84,7 +86,7 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("create analyse request content with attributes") {
-    val content = AnalyseRequestContentBuilder(
+    val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .attributes("keyword")
     )

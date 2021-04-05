@@ -1,7 +1,7 @@
-package com.sksamuel.elastic4s.requests.indexes
+package com.sksamuel.elastic4s.handlers.exists
 
-import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.exists.ExistsRequest
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait ExistsHandlers {
 
@@ -13,7 +13,7 @@ trait ExistsHandlers {
 
     override def build(request: ExistsRequest): ElasticRequest = {
       val endpoint = "/" + request.index.name + "/_doc/" + request.id
-      val method   = "HEAD"
+      val method = "HEAD"
       ElasticRequest(method, endpoint)
     }
   }

@@ -1,8 +1,9 @@
-package com.sksamuel.elastic4s.requests.mappings
+package com.sksamuel.elastic4s.handlers.index.mapping
 
 import com.sksamuel.elastic4s.handlers.fields.ElasticFieldBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateBodyFn}
+import com.sksamuel.elastic4s.requests.mappings.MappingDefinitionLike
+import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 
 object MappingBuilderFn {
 
@@ -37,8 +38,8 @@ object MappingBuilderFn {
     for (all <- d.all) builder.startObject("_all").field("enabled", all).endObject()
     (d.source, d.sourceExcludes) match {
       case (_, l) if l.nonEmpty => builder.startObject("_source").array("excludes", l.toArray).endObject()
-      case (Some(source), _)    => builder.startObject("_source").field("enabled", source).endObject()
-      case _                    =>
+      case (Some(source), _) => builder.startObject("_source").field("enabled", source).endObject()
+      case _ =>
     }
 
     if (d.dynamicDateFormats.nonEmpty)
@@ -51,8 +52,8 @@ object MappingBuilderFn {
       dynamic =>
         builder.field("dynamic", dynamic match {
           case DynamicMapping.Strict => "strict"
-          case DynamicMapping.False  => "false"
-          case _                     => "true"
+          case DynamicMapping.False => "false"
+          case _ => "true"
         })
     )
 
@@ -83,7 +84,7 @@ object MappingBuilderFn {
           case (name, s: Boolean) => builder.field(name, s)
           case (name, s: Long) => builder.field(name, s)
           case (name, s: Float) => builder.field(name, s)
-          case (name, s: Int)     => builder.field(name, s)
+          case (name, s: Int) => builder.field(name, s)
         }
       builder.endObject()
     }
