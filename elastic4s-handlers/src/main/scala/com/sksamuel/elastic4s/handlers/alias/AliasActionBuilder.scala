@@ -1,9 +1,8 @@
-package com.sksamuel.elastic4s.requests.indexes.alias
+package com.sksamuel.elastic4s.handlers.alias
 
 import com.sksamuel.elastic4s.handlers.searches.queries
-import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
-import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
 
 object AliasActionBuilder {
 
@@ -13,7 +12,7 @@ object AliasActionBuilder {
     val actionsArray = r.actions
       .map {
         case addAction: AddAliasActionRequest => buildAddAction(addAction).string()
-        case removeAction: RemoveAliasAction  => buildRemoveAction(removeAction).string()
+        case removeAction: RemoveAliasAction => buildRemoveAction(removeAction).string()
       }
       .mkString(",")
 

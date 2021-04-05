@@ -2,6 +2,8 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.handlers.index
+import com.sksamuel.elastic4s.handlers.index.CreateIndexContentBuilder
 import com.sksamuel.elastic4s.requests.analyzers._
 import com.sksamuel.elastic4s.requests.mappings.PrefixTree
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
@@ -31,7 +33,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   it should "allow provide mapping properties using rawSource" in {
     val tweetRawSource = """{"_all": {"enabled": false},"numeric_detection": true,"_boost": {"name": "myboost","null_value": 1.2},"_size": {"enabled": true},"properties": {"name": {"type": "geo_point"},"content": {"type": "date","null_value": "no content"}},"_meta": {"class": "com.sksamuel.User"}}"""
     val req = createIndex("users").source(tweetRawSource)
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_raw_source.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_raw_source.json")
   }
 
   it should "support override built in analyzers" in {
@@ -39,7 +41,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
       StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
       StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400)
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_analyis.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_analyis.json")
   }
 
   it should "support refresh interval" in {
@@ -93,7 +95,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         "myAnalyzer5",
         NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation")))
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_stop_path.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_stop_path.json")
   }
 
   it should "support custom analyzers, normalizers, tokenizers and filters" in {
@@ -161,7 +163,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         )
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_nested.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_nested.json")
   }
 
   it should "generate json to set index settings" in {
@@ -171,7 +173,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
       refreshInterval "5s"
       indexSetting("compound_on_flush", false)
       indexSetting("compound_format", 0.5))
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_settings2.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/createindex_settings2.json")
   }
 
   it should "support inner objects" ignore {
@@ -214,7 +216,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         )
       )
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
   }
 
   it should "support copy to a single field" in {
@@ -225,7 +227,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         textField("full_name")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Dynamic
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
   }
 
   it should "support copy to multiple fields" in {
@@ -236,7 +238,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         textField("article_info")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Strict
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
   }
 
   it should "support multi fields" in {
@@ -247,7 +249,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         textField("article_info")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_fields.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_multi_fields.json")
   }
 
   it should "support completion type" in {
@@ -258,7 +260,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
           preserveSeparators false preservePositionIncrements false maxInputLength 10
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_completion_type.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_completion_type.json")
   }
 
 //  it should "support creating parent mappings" in {
@@ -275,7 +277,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
       .fromInputStream(getClass.getResourceAsStream("/json/createindex/createindex_mappings.json"))
       .mkString
     val req = createIndex("tweets").source(source)
-    CreateIndexContentBuilder(req)
+    index.CreateIndexContentBuilder(req)
   }
 
   it should "support wildcard fields" in {
@@ -286,6 +288,6 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
           .nullValue("<empty message>")
       )
     )
-    CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_wildcard.json")
+    index.CreateIndexContentBuilder(req).string() should matchJsonResource("/json/createindex/mapping_wildcard.json")
   }
 }

@@ -1,15 +1,16 @@
-package com.sksamuel.elastic4s.requests.indexes.admin
+package com.sksamuel.elastic4s.handlers.index
 
-import com.sksamuel.elastic4s.api.IndexRecoveryRequest
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-
-import java.net.URLEncoder
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 import com.sksamuel.elastic4s.requests.indexes._
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexShardStoreResponse.StoreStatusResponse
+import com.sksamuel.elastic4s.requests.indexes.admin.recovery.IndexRecoveryRequest
+import com.sksamuel.elastic4s.requests.indexes.admin.{AliasExistsResponse, ClearCacheResponse, CloseIndexResponse, DeleteIndexResponse, FlushIndexResponse, ForceMergeRequest, ForceMergeResponse, GetSegmentsResponse, IndexExistsResponse, IndexRecoveryResponse, OpenIndexResponse, RefreshIndexResponse, TypeExistsResponse, UpdateIndexLevelSettingsResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+
+import java.net.URLEncoder
 
 case class ShrinkIndexResponse()
 

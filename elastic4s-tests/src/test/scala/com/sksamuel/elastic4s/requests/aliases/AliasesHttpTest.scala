@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.aliases
 
 import com.sksamuel.elastic4s.Index
+import com.sksamuel.elastic4s.handlers.alias.{Alias, IndexAliases}
 import com.sksamuel.elastic4s.requests.indexes.admin.{AliasActionResponse, AliasExistsResponse}
-import com.sksamuel.elastic4s.requests.indexes.alias.{Alias, IndexAliases}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

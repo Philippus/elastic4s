@@ -1,13 +1,14 @@
-package com.sksamuel.elastic4s.requests.indexes.analyze
+package com.sksamuel.elastic4s.handlers.index
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.requests.indexes.analyze.{AnalyzeResponse, ExplainAnalyzeResponse, NoExplainAnalyzeResponse}
 import com.sksamuel.elastic4s.{ElasticError, HttpResponse, ResponseHandler}
 
 object AnalyzeResponseHandler extends ResponseHandler[AnalyzeResponse] {
   /**
-   * Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request
-   * as determined by the instance of this handler.
-   */
+    * Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request
+    * as determined by the instance of this handler.
+    */
   override def handle(response: HttpResponse): Either[ElasticError, AnalyzeResponse] = {
     response.statusCode match {
       case 200 | 201 | 202 | 203 | 204 =>

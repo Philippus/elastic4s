@@ -2,15 +2,7 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
-import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
-
-case class TemplateAlias(name: String, filter: Option[Query] = None, routing: Option[String] = None) {
-  def filter(filter: Query): TemplateAlias    = copy(filter = filter.some)
-  def routing(routing: String): TemplateAlias = copy(routing = routing.some)
-}
-
-case class IndexTemplateExistsRequest()
+import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class CreateIndexTemplateRequest(name: String,
                                       pattern: String,
@@ -64,9 +56,9 @@ case class CreateIndexTemplateRequest(name: String,
   // replaces all settings with the given settings
   def settings(settings: Map[String, Any]): CreateIndexTemplateRequest = copy(settings = settings)
 
-  def order(order: Int): CreateIndexTemplateRequest       = copy(order = order.some)
+  def order(order: Int): CreateIndexTemplateRequest = copy(order = order.some)
   def create(create: Boolean): CreateIndexTemplateRequest = copy(create = create.some)
 
   def aliases(first: TemplateAlias, rest: TemplateAlias*): CreateIndexTemplateRequest = aliases(first +: rest)
-  def aliases(aliases: Iterable[TemplateAlias]): CreateIndexTemplateRequest           = copy(aliases = aliases.toSeq)
+  def aliases(aliases: Iterable[TemplateAlias]): CreateIndexTemplateRequest = copy(aliases = aliases.toSeq)
 }

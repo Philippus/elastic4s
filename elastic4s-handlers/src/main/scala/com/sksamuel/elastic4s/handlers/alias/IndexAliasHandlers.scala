@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.requests.indexes.alias
+package com.sksamuel.elastic4s.handlers.alias
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, GetAliasesRequest, IndicesAliasesRequest, RemoveAliasAction}
