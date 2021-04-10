@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.{NumberField, ScaledFloatField}
+import com.sksamuel.elastic4s.fields.{NumberField, ScaledFloatField, UnsignedLongField}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+
+import java.math.BigInteger
 
 object NumberFieldBuilderFn {
 
@@ -23,9 +25,14 @@ object NumberFieldBuilderFn {
       case v: Int => builder.field("null_value", v)
       case v: Byte => builder.field("null_value", v)
       case v: Short => builder.field("null_value", v)
+      case v: BigInteger => builder.field("null_value", v)
     }
     field.store.foreach(builder.field("store", _))
-    field.coerce.foreach(builder.field("coerce", _))
+    field match {
+      case _: UnsignedLongField =>
+      case _ =>
+        field.coerce.foreach(builder.field("coerce", _))
+    }
     field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
 
     field match {
