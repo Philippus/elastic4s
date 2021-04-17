@@ -3,12 +3,13 @@ package com.sksamuel.elastic4s.search
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.concurrent.Eventually
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
-class AsyncSearchTest extends AnyFlatSpec with Matchers with DockerTests {
+class AsyncSearchTest extends AnyFlatSpec with Matchers with Eventually with DockerTests {
 
   Try {
     client.execute {
@@ -32,9 +33,45 @@ class AsyncSearchTest extends AnyFlatSpec with Matchers with DockerTests {
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-  "an search query" should "find an indexed document that matches a term query" in {
-    client.execute {
-      asyncSearch("chess") query termQuery("name", "pawn")
-    }.await.result.totalHits shouldBe 1
+  "an async search query" should "find an indexed document that matches a term query immediately" in {
+    val asyncSearch = client.execute {
+      search("colors") query termQuery("name", "green") async()
+    }.await.result
+
+    asyncSearch.id shouldBe None
+    asyncSearch.response.totalHits shouldBe 1
+  }
+
+  it should "find an indexed document that matches a term query asynchronously and then delete the search" in {
+    val asyncSearch = client.execute {
+      search("colors") query termQuery("name", "red") async() keepOnCompletion(true)
+    }.await.result
+
+    val asyncSearchId = asyncSearch.id.getOrElse(fail("Id not found in async search"))
+
+    eventually {
+      client.execute {
+        fetchAsyncSearch(asyncSearchId)
+      }.await.result.response.totalHits shouldBe 1
+    }
+
+    val deleteResult = client.execute {
+      clearAsyncSearch(asyncSearchId)
+    }.await.result.acknowledged
+    deleteResult shouldBe true
+  }
+
+  it should "fetch status" in {
+    val asyncSearch = client.execute {
+      search("colors") query termQuery("name", "blue") async() keepOnCompletion(true)
+    }.await.result
+
+    val asyncSearchId = asyncSearch.id.getOrElse(fail("Id not found in async search"))
+
+    val isCompleted = client.execute {
+      asyncSearchStatus(asyncSearchId)
+    }.await.result.completionStatus
+
+    isCompleted shouldBe Some(200)
   }
 }

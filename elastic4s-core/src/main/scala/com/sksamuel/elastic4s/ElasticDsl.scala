@@ -23,7 +23,7 @@ import com.sksamuel.elastic4s.handlers.termvectors.TermVectorHandlers
 import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
-import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
+import com.sksamuel.elastic4s.requests.searches.{AsyncSearchHandlers, SearchHandlers, SearchScrollHandlers}
 import com.sksamuel.exts.Logging
 
 trait ElasticDsl
@@ -59,7 +59,8 @@ trait ElasticDsl
     with TermVectorHandlers
     with UserAdminHandlers
     with UserHandlers
-    with ValidateHandlers {
+    with ValidateHandlers
+    with AsyncSearchHandlers {
 
   implicit class RichRequest[T](t: T) {
     def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)

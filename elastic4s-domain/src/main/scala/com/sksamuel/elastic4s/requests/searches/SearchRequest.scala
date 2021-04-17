@@ -279,4 +279,6 @@ case class SearchRequest(indexes: Indexes,
   def collapse(collapse: CollapseRequest): SearchRequest = copy(collapse = collapse.some)
 
   def typedKeys(enabled: Boolean): SearchRequest = copy(typedKeys = enabled.some)
+
+  def async(): AsyncSearchRequest = AsyncSearchRequest(this)
 }

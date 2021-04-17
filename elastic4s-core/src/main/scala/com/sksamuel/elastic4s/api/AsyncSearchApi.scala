@@ -1,15 +1,12 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.searches.{AsyncSearchRequest, DeleteAsyncSearchRequest, FetchAsyncSearchRequest}
-import com.sksamuel.elastic4s.{Index, Indexes}
+import com.sksamuel.elastic4s.requests.searches.{AsyncSearchRequest, AsyncSearchStatusRequest, DeleteAsyncSearchRequest, FetchAsyncSearchRequest, SearchRequest}
 
 trait AsyncSearchApi {
 
-  def asyncSearch(index: String): AsyncSearchRequest = asyncSearch(Indexes(index))
-  def asyncSearch(first: String, rest: String*): AsyncSearchRequest = asyncSearch(first +: rest)
-  def asyncSearch(index: Index): AsyncSearchRequest = asyncSearch(index.name)
-  def asyncSearch(indexes: Iterable[String]): AsyncSearchRequest = asyncSearch(Indexes(indexes.toSeq))
-  def asyncSearch(indexes: Indexes): AsyncSearchRequest = AsyncSearchRequest(indexes)
+  def asyncSearch(searchRequest: SearchRequest): AsyncSearchRequest = AsyncSearchRequest(searchRequest)
+
+  def asyncSearchStatus(id: String): AsyncSearchStatusRequest = AsyncSearchStatusRequest(id)
 
   def fetchAsyncSearch(id: String): FetchAsyncSearchRequest = FetchAsyncSearchRequest(id)
 

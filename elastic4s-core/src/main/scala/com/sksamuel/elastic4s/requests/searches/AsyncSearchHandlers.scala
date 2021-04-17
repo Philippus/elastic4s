@@ -1,15 +1,16 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
-import com.sksamuel.elastic4s.requests.searches.template.AsyncSearchBodyBuilderFn
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 import java.net.URLEncoder
 
-class AsyncSearchHandlers {
+trait AsyncSearchHandlers {
 
   implicit object AsyncSearchHandler extends Handler[AsyncSearchRequest, AsyncSearchResponse] {
-    override def build(request: AsyncSearchRequest): ElasticRequest = {
+    override def build(asyncRequest: AsyncSearchRequest): ElasticRequest = {
+      val request = asyncRequest.innerRequest
+
       val endpoint =
         if (request.indexes.values.isEmpty)
           "/_all/_async_search"
@@ -24,7 +25,7 @@ class AsyncSearchHandlers {
         .filter(_ != SearchType.DEFAULT)
         .map(SearchTypeHttpParameters.convert)
         .foreach(params.put("search_type", _))
-      request.routing.map(_.toString).foreach(params.put("routing", _))
+      request.routing.foreach(params.put("routing", _))
       request.pref.foreach(params.put("preference", _))
       request.keepAlive.foreach(params.put("scroll", _))
       request.allowPartialSearchResults.map(_.toString).foreach(params.put("allow_partial_search_results", _))
@@ -36,14 +37,18 @@ class AsyncSearchHandlers {
 
       request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
-      val body = request.source.getOrElse(AsyncSearchBodyBuilderFn(request).string())
+      asyncRequest.keepOnCompletion.map(_.toString).foreach(params.put("keep_on_completion", _))
+      asyncRequest.waitForCompletionTimeout.map(_.toString).foreach(params.put("wait_for_completion_timeout", _))
+      asyncRequest.keepAlive.foreach(params.put("keep_live", _))
+
+      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
       ElasticRequest("POST", endpoint, params.toMap, HttpEntity(body, "application/json"))
     }
   }
 
   implicit object FetchAsyncSearchHandler extends Handler[FetchAsyncSearchRequest, AsyncSearchResponse] {
     override def build(request: FetchAsyncSearchRequest): ElasticRequest = {
-      logger.debug("Executing async search with id: " + request.id)
+      logger.debug("Fetching async search with id: " + request.id)
 
       ElasticRequest("GET", s"/_async_search/${request.id}")
     }
@@ -54,6 +59,14 @@ class AsyncSearchHandlers {
       logger.debug("Deleting async search with id: " + request.id)
 
       ElasticRequest("DELETE", s"/_async_search/${request.id}")
+    }
+  }
+
+  implicit object AsyncSearchStatusHandler extends Handler[AsyncSearchStatusRequest, AsyncSearchStatusResponse] {
+    override def build(request: AsyncSearchStatusRequest): ElasticRequest = {
+      logger.debug("Status of async search with id: " + request.id)
+
+      ElasticRequest("GET", s"/_async_search/status/${request.id}")
     }
   }
 }
