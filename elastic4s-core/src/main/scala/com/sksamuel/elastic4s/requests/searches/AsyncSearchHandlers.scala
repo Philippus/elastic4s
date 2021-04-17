@@ -27,7 +27,6 @@ trait AsyncSearchHandlers {
         .foreach(params.put("search_type", _))
       request.routing.foreach(params.put("routing", _))
       request.pref.foreach(params.put("preference", _))
-      request.keepAlive.foreach(params.put("scroll", _))
       request.allowPartialSearchResults.map(_.toString).foreach(params.put("allow_partial_search_results", _))
       request.batchedReduceSize.map(_.toString).foreach(params.put("batched_reduce_size", _))
 
