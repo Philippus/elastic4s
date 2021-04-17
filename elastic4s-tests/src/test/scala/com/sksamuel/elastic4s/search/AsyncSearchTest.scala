@@ -35,7 +35,7 @@ class AsyncSearchTest extends AnyFlatSpec with Matchers with Eventually with Doc
 
   "an async search query" should "find an indexed document that matches a term query immediately" in {
     val asyncSearch = client.execute {
-      search("colors") query termQuery("name", "green") async()
+      (search("colors") query termQuery("name", "green")).async()
     }.await.result
 
     asyncSearch.id shouldBe None
@@ -44,7 +44,7 @@ class AsyncSearchTest extends AnyFlatSpec with Matchers with Eventually with Doc
 
   it should "find an indexed document that matches a term query asynchronously and then delete the search" in {
     val asyncSearch = client.execute {
-      search("colors") query termQuery("name", "red") async() keepOnCompletion(true)
+      (search("colors") query termQuery("name", "red")).async() keepOnCompletion(true)
     }.await.result
 
     val asyncSearchId = asyncSearch.id.getOrElse(fail("Id not found in async search"))
@@ -63,7 +63,7 @@ class AsyncSearchTest extends AnyFlatSpec with Matchers with Eventually with Doc
 
   it should "fetch status" in {
     val asyncSearch = client.execute {
-      search("colors") query termQuery("name", "blue") async() keepOnCompletion(true)
+      (search("colors") query termQuery("name", "blue")).async() keepOnCompletion(true)
     }.await.result
 
     val asyncSearchId = asyncSearch.id.getOrElse(fail("Id not found in async search"))
