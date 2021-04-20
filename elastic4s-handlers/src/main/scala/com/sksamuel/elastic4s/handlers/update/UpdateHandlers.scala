@@ -105,7 +105,7 @@ trait UpdateHandlers {
       request.slices.foreach(params.put("slices", _))
 
       val body = UpdateByQueryBodyFn(request)
-      logger.debug(s"Delete by query ${body.string()}")
+      logger.debug(s"Update by query ${body.string()}")
       val entity = HttpEntity(body.string(), "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
