@@ -20,6 +20,7 @@ val ScalatestPlusVersion   = "3.1.2.0"
 val ScalamockVersion       = "5.1.0"
 val ScalazVersion          = "7.2.31"
 val ZIOVersion             = "1.0.7"
+val ZIOJsonVersion         = "0.1.4"
 val SprayJsonVersion       = "1.3.6"
 val SttpVersion            = "1.7.2"
 val Slf4jVersion           = "1.7.30"
@@ -164,6 +165,7 @@ lazy val root = Project("elastic4s", file("."))
     json4s,
     playjson,
     sprayjson,
+    ziojson,
     clientsttp,
     clientakka,
     httpstreams,
@@ -375,6 +377,14 @@ lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .settings(allSettings)
   .settings(
     libraryDependencies += "io.spray" %% "spray-json" % SprayJsonVersion
+  )
+
+lazy val ziojson = (project in file("elastic4s-json-zio"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-zio")
+  .settings(allSettings)
+  .settings(
+    libraryDependencies += "dev.zio" %% "zio-json" % ZIOJsonVersion
   )
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))
