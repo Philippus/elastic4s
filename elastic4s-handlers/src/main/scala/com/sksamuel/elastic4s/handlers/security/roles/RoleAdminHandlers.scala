@@ -3,9 +3,7 @@ package com.sksamuel.elastic4s.handlers.security.roles
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.security.roles.admin.{ClearRolesCacheRequest, ClearRolesCacheResponse, DeleteRoleResponse}
 import com.sksamuel.elastic4s.requests.security.roles.{CreateOrUpdateRoleRequest, CreateRole, CreateRoleResponse, DeleteRoleRequest, UpdateRole}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
-
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 trait RoleAdminHandlers {
   private val ROLE_BASE_PATH = "/_security/role/"
@@ -20,7 +18,7 @@ trait RoleAdminHandlers {
     }
 
     override def build(request: CreateOrUpdateRoleRequest): ElasticRequest = {
-      val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+      val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
 
       val body = CreateOrUpdateRoleContentBuilder(request).string()
       val entity = HttpEntity(body, "application/json")
@@ -43,14 +41,14 @@ trait RoleAdminHandlers {
     }
 
     override def build(request: DeleteRoleRequest): ElasticRequest = {
-      val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+      val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
       ElasticRequest("DELETE", endpoint)
     }
   }
 
   implicit object ClearRolesCacheHandler extends Handler[ClearRolesCacheRequest, ClearRolesCacheResponse] {
     override def build(request: ClearRolesCacheRequest): ElasticRequest = {
-      val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8") + "/_clear_cache"
+      val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name) + "/_clear_cache"
       ElasticRequest("POST", endpoint)
     }
 

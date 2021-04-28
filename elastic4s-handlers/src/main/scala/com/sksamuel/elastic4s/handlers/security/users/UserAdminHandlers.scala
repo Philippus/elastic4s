@@ -3,9 +3,7 @@ package com.sksamuel.elastic4s.handlers.security.users
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.security.users.admin.{ChangePasswordRequest, DeleteUserResponse, DisableUserRequest, EnableUserRequest}
 import com.sksamuel.elastic4s.requests.security.users.{CreateOrUpdateUserRequest, CreateUser, CreateUserResponse, DeleteUserRequest, UpdateUser}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
-
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 trait UserAdminHandlers {
   private val USER_BASE_PATH = "/_security/user/"
@@ -20,7 +18,7 @@ trait UserAdminHandlers {
     }
 
     override def build(request: CreateOrUpdateUserRequest): ElasticRequest = {
-      val endpoint = USER_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+      val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
 
       val body = CreateOrUpdateUserContentBuilder(request).string()
       val entity = HttpEntity(body, "application/json")
@@ -36,7 +34,7 @@ trait UserAdminHandlers {
   implicit object ChangePasswordHandler extends Handler[ChangePasswordRequest, Any] {
     override def build(request: ChangePasswordRequest): ElasticRequest = {
       val endpoint = request.name match {
-        case Some(n) => USER_BASE_PATH + URLEncoder.encode(n, "UTF-8") + "/_password"
+        case Some(n) => USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(n) + "/_password"
         case None => USER_BASE_PATH + "_password"
       }
       val body = ChangePasswordContentBuilder(request).string()
@@ -55,21 +53,21 @@ trait UserAdminHandlers {
     }
 
     override def build(request: DeleteUserRequest): ElasticRequest = {
-      val endpoint = USER_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+      val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
       ElasticRequest("DELETE", endpoint)
     }
   }
 
   implicit object DisableUserHandler extends Handler[DisableUserRequest, Any] {
     override def build(request: DisableUserRequest): ElasticRequest = {
-      val endpoint = USER_BASE_PATH + URLEncoder.encode(request.name, "UTF-8") + "/_disable"
+      val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name) + "/_disable"
       ElasticRequest("PUT", endpoint)
     }
   }
 
   implicit object EnableUserHandler extends Handler[EnableUserRequest, Any] {
     override def build(request: EnableUserRequest): ElasticRequest = {
-      val endpoint = USER_BASE_PATH + URLEncoder.encode(request.name, "UTF-8") + "/_enable"
+      val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name) + "/_enable"
       ElasticRequest("PUT", endpoint)
     }
   }
