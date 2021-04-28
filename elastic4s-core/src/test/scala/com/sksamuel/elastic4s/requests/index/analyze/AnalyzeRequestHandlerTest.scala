@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.index.analyze
 
 import com.sksamuel.elastic4s.HttpEntity
-import com.sksamuel.elastic4s.requests.indexes.IndexHandlers
-import com.sksamuel.elastic4s.requests.indexes.analyze.{AnalyseRequestContentBuilder, AnalyzeRequest}
+import com.sksamuel.elastic4s.handlers.index.{AnalyseRequestContentBuilder, IndexHandlers}
+import com.sksamuel.elastic4s.requests.indexes.analyze.AnalyzeRequest
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers
 

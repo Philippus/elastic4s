@@ -8,7 +8,7 @@ object AutoDateHistogramAggregationBuilder {
   def apply(agg: AutoDateHistogramAggregation): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
-    builder.startObject("date_histogram")
+    builder.startObject("auto_date_histogram")
 
     agg.timeZone.map(EnumConversions.timeZone).foreach(builder.field("time_zone", _))
     agg.minimumInterval.foreach(builder.field("minimum_interval", _))

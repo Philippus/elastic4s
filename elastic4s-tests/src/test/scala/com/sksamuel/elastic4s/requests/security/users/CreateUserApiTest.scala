@@ -2,6 +2,8 @@ package com.sksamuel.elastic4s.requests.security.users
 
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.handlers.security.users
+import com.sksamuel.elastic4s.handlers.security.users.CreateOrUpdateUserContentBuilder
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -27,6 +29,6 @@ class CreateUserApiTest extends AnyFlatSpec with JsonSugar with Matchers with On
 			enabled=Some(false),
 			metadata=Map("age" -> 100)
 		)
-		CreateOrUpdateUserContentBuilder(req).string() should matchJsonResource("/json/createuser/updateuser.json")
+		users.CreateOrUpdateUserContentBuilder(req).string() should matchJsonResource("/json/createuser/updateuser.json")
 	}
 }

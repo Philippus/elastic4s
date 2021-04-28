@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.index.analyze
 
-import com.sksamuel.elastic4s.requests.indexes.analyze.AnalyzeResponseHandler
+import com.sksamuel.elastic4s.handlers.index.AnalyzeResponseHandler
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers
 

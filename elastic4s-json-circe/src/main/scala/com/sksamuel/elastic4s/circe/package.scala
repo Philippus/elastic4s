@@ -4,7 +4,7 @@ import io.circe._
 import io.circe.jawn._
 
 import scala.annotation.implicitNotFound
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
   * Automatic HitAs and Indexable derivation
@@ -34,23 +34,26 @@ package object circe {
   @implicitNotFound(
     "No Decoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Decoder instance "
   )
-  implicit def hitReaderWithCirce[T](implicit decoder: Decoder[T]): HitReader[T] = new HitReader[T] {
-    override def read(hit: Hit): Try[T] = decode[T](hit.sourceAsString).fold(Failure(_), Success(_))
-  }
+  implicit def hitReaderWithCirce[T](implicit decoder: Decoder[T]): HitReader[T] =
+    (hit: Hit) => decode[T](hit.sourceAsString).fold(Failure(_), Success(_))
 
   @implicitNotFound(
     "No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance "
   )
   implicit def indexableWithCirce[T](implicit encoder: Encoder[T],
-                                     printer: Json => String = Printer.noSpaces.pretty): Indexable[T] =
-    new Indexable[T] {
-      override def json(t: T): String = printer(encoder(t))
-    }
+                                     printer: Json => String = Printer.noSpaces.print): Indexable[T] =
+    (t: T) => printer(encoder(t))
 
   @implicitNotFound(
     "No Decoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Decoder instance "
   )
-  implicit def aggReaderWithCirce[T](implicit encoder: Decoder[T]): AggReader[T] = new AggReader[T] {
-    override def read(json: String): Try[T] = decode[T](json).fold(Failure(_), Success(_))
-  }
+  implicit def aggReaderWithCirce[T](implicit encoder: Decoder[T]): AggReader[T] =
+    (json: String) => decode[T](json).fold(Failure(_), Success(_))
+
+  @implicitNotFound(
+    "No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance "
+  )
+  implicit def paramSerializerWithCirce[T](implicit encoder: Encoder[T],
+                                     printer: Json => String = Printer.noSpaces.print): ParamSerializer[T] =
+    (t: T) => printer(encoder(t))
 }

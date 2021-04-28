@@ -1,24 +1,26 @@
 val org                    = "com.sksamuel.elastic4s"
-val AkkaVersion            = "2.6.13"
+val AkkaVersion            = "2.6.14"
 val AkkaHttpVersion        = "10.2.3"
 val CatsVersion            = "2.0.0"
-val CatsEffectVersion      = "2.3.3"
+val CatsEffectVersion      = "3.1.0"
+val CatsEffect2Version     = "2.5.0"
 val CirceVersion           = "0.13.0"
 val CommonsIoVersion       = "2.8.0"
-val ElasticsearchVersion   = "7.12.0"
+val ElasticsearchVersion   = "7.12.1"
 val ExtsVersion            = "1.61.1"
-val JacksonVersion         = "2.12.2"
+val JacksonVersion         = "2.12.3"
 val Json4sVersion          = "3.6.11"
 val Log4jVersion           = "2.14.1"
-val MockitoVersion         = "3.8.0"
+val MockitoVersion         = "3.9.0"
 val MonixVersion           = "3.1.0"
 val PlayJsonVersion        = "2.9.2"
 val ReactiveStreamsVersion = "1.0.3"
-val ScalatestVersion       = "3.2.6"
+val ScalatestVersion       = "3.2.8"
 val ScalatestPlusVersion   = "3.1.2.0"
 val ScalamockVersion       = "5.1.0"
 val ScalazVersion          = "7.2.31"
-val ZIOVersion             = "1.0.5"
+val ZIOVersion             = "1.0.7"
+val ZIOJsonVersion         = "0.1.4"
 val SprayJsonVersion       = "1.3.6"
 val SttpVersion            = "1.7.2"
 val Slf4jVersion           = "1.7.30"
@@ -152,6 +154,7 @@ lazy val root = Project("elastic4s", file("."))
     clientesjava,
     clientsSniffed,
     cats_effect,
+    cats_effect_2,
     zio,
     scalaz,
     monix,
@@ -162,6 +165,7 @@ lazy val root = Project("elastic4s", file("."))
     json4s,
     playjson,
     sprayjson,
+    ziojson,
     clientsttp,
     clientakka,
     httpstreams,
@@ -170,6 +174,7 @@ lazy val root = Project("elastic4s", file("."))
 
 lazy val domain = (project in file("elastic4s-domain"))
   .settings(name := "elastic4s-domain")
+  .dependsOn(json_builder)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -181,7 +186,6 @@ lazy val domain = (project in file("elastic4s-domain"))
 
 lazy val json_builder = (project in file("elastic4s-json-builder"))
   .settings(name := "elastic4s-json-builder")
-  .dependsOn(domain)
   .settings(allSettings)
   .settings(
     libraryDependencies ++= Seq(
@@ -256,6 +260,16 @@ lazy val cats_effect = (project in file("elastic4s-effect-cats"))
   .settings(
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-effect" % CatsEffectVersion
+    )
+  )
+
+lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-effect-cats-2")
+  .settings(allSettings)
+  .settings(
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-effect" % CatsEffect2Version
     )
   )
 
@@ -363,6 +377,14 @@ lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .settings(allSettings)
   .settings(
     libraryDependencies += "io.spray" %% "spray-json" % SprayJsonVersion
+  )
+
+lazy val ziojson = (project in file("elastic4s-json-zio"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-zio")
+  .settings(allSettings)
+  .settings(
+    libraryDependencies += "dev.zio" %% "zio-json" % ZIOJsonVersion
   )
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))

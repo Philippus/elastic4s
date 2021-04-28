@@ -11,8 +11,9 @@ object IpFieldBuilderFn {
     builder.field("type", field.`type`)
     field.boost.foreach(builder.field("boost", _))
     field.docValues.foreach(builder.field("doc_values", _))
+    field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
     field.index.foreach(builder.field("index", _))
-    field.docValues.foreach(builder.field("doc_values", _))
+    field.nullValue.foreach(builder.field("null_value", _))
     field.store.foreach(builder.field("store", _))
     builder.endObject()
   }
