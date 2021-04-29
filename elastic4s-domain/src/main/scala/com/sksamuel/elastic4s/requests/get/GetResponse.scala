@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.get
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.JacksonSupport
 import com.sksamuel.elastic4s.Hit
 
 case class GetResponse(@JsonProperty("_id") id: String,
@@ -11,8 +12,7 @@ case class GetResponse(@JsonProperty("_id") id: String,
                        @JsonProperty("_primary_term") primaryTerm: Long,
                        found: Boolean,
                        @JsonProperty("fields") private val _fields: Map[String, AnyRef],
-                       private val _source: Map[String, AnyRef],
-                       override val sourceAsString: String
+                       private val _source: Map[String, AnyRef]
                       )
   extends Hit {
 
@@ -37,4 +37,5 @@ case class GetResponse(@JsonProperty("_id") id: String,
 
   def storedFieldsAsMap: Map[String, AnyRef] = Option(fields).getOrElse(Map.empty)
   override def sourceAsMap: Map[String, AnyRef] = Option(_source).getOrElse(Map.empty)
+  override def sourceAsString: String = JacksonSupport.mapper.writeValueAsString(_source)
 }
