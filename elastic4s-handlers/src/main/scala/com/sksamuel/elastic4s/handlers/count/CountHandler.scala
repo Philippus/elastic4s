@@ -1,9 +1,7 @@
 package com.sksamuel.elastic4s.handlers.count
 
 import com.sksamuel.elastic4s.requests.count.{CountRequest, CountResponse}
-import com.sksamuel.elastic4s.{CountBodyBuilder, ElasticRequest, Handler, HttpEntity, JacksonSupport}
-
-import java.net.URLEncoder
+import com.sksamuel.elastic4s.{CountBodyBuilder, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, JacksonSupport}
 
 object CountHandler extends Handler[CountRequest, CountResponse] {
 
@@ -12,7 +10,7 @@ object CountHandler extends Handler[CountRequest, CountResponse] {
     val endpoint = if (request.indexes.isEmpty)
       "/_all/_count"
     else
-      "/" + request.indexes.values.map(URLEncoder.encode).mkString(",") + "/_count"
+      "/" + request.indexes.values.map(ElasticUrlEncoder.encodeUrlFragment).mkString(",") + "/_count"
 
     val body = CountBodyBuilder.toJson(request)
     val json = JacksonSupport.mapper.writeValueAsString(body)

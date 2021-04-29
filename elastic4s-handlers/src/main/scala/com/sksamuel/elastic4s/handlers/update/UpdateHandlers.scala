@@ -7,10 +7,8 @@ import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.update.{UpdateByQueryRequest, UpdateByQueryResponse, UpdateRequest, UpdateResponse}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.OptionImplicits._
-
-import java.net.URLEncoder
 
 object UpdateByQueryBodyFn {
   def apply(request: UpdateByQueryRequest): XContentBuilder = {
@@ -47,7 +45,7 @@ trait UpdateHandlers {
     override def build(request: UpdateRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_update/${URLEncoder.encode(request.id, "UTF-8")}"
+        s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.index)}/_update/${ElasticUrlEncoder.encodeUrlFragment(request.id)}"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.fetchSource.foreach { context =>
