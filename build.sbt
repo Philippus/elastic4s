@@ -59,6 +59,7 @@ lazy val publishSettings = Seq(
   publishArtifact in Test := false,
   pomIncludeRepository := Function.const(false),
   releaseCrossBuild := true,
+  releaseIgnoreUntrackedFiles := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
