@@ -229,6 +229,7 @@ class XContentBuilder(root: JsonNode) {
       case v: java.math.BigDecimal         => obj.put(name, v)
       case v: BigInt                       => obj.put(name, v.bigInteger)
       case v: java.math.BigInteger         => obj.put(name, v)
+      case None                            => obj.putNull(name)
       case values: Array[_]                => autoarray(name, values)
       case values: Seq[_]                  => autoarray(name, values)
       case values: Iterator[_]             => autoarray(name, values.toSeq)
