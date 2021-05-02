@@ -239,6 +239,7 @@ class XContentBuilder(root: JsonValue) {
       case v: java.math.BigDecimal => field(name, v)
       case v: BigInt => field(name, v)
       case v: java.math.BigInteger => field(name, v)
+      case None => obj.putNull(name)
       case values: Array[_] => autoarray(name, values)
       case values: Seq[_] => autoarray(name, values)
       case values: Iterator[_] => autoarray(name, values.toSeq)
