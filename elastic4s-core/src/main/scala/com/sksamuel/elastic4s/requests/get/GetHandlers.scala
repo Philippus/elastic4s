@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s.requests.get
 
-import java.net.URLEncoder
-
 import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.requests.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.requests.indexes.VersionTypeHttpString
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HitReader, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HitReader, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.exts.Logging
 
 import scala.util.Try
@@ -72,7 +70,7 @@ trait GetHandlers {
     override def build(request: GetRequest): ElasticRequest = {
 
       val endpoint =
-        s"/${URLEncoder.encode(request.index.index, "UTF-8")}/_doc/${URLEncoder.encode(request.id, "UTF-8")}"
+        s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.index)}/_doc/${ElasticUrlEncoder.encodeUrlFragment(request.id)}"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.fetchSource.foreach { context =>

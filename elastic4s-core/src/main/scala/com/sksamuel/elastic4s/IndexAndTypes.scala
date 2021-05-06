@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s
 
-import java.net.URLEncoder
-
 import scala.language.implicitConversions
 
 trait IndexesLike {
@@ -52,7 +50,7 @@ case class Indexes(values: Seq[String]) extends IndexesLike {
     if (values.isEmpty) {
       "_all"
     } else {
-      val indexNames = if (urlEncode) values.map(URLEncoder.encode(_, "UTF8")) else values
+      val indexNames = if (urlEncode) values.map(ElasticUrlEncoder.encodeUrlFragment) else values
       indexNames.mkString(",")
     }
   }

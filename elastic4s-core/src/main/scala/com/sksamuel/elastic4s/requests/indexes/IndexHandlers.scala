@@ -1,8 +1,5 @@
 package com.sksamuel.elastic4s.requests.indexes
 
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.HttpEntity.ByteArrayEntity
 import com.sksamuel.elastic4s._
@@ -26,9 +23,9 @@ trait IndexHandlers {
 
       val (method, endpoint) = request.id match {
         case Some(id) =>
-          "PUT" -> s"/${URLEncoder.encode(request.index.name, StandardCharsets.UTF_8.name())}/_doc/${URLEncoder.encode(id.toString, StandardCharsets.UTF_8.name())}"
+          "PUT" -> s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc/${ElasticUrlEncoder.encodeUrlFragment(id)}"
         case None =>
-          "POST" -> s"/${URLEncoder.encode(request.index.name, StandardCharsets.UTF_8.name())}/_doc"
+          "POST" -> s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
@@ -75,9 +72,8 @@ trait IndexHandlers {
     override def responseHandler: ResponseHandler[AnalyzeResponse] = AnalyzeResponseHandler
 
     override def build(analyzeRequest: AnalyzeRequest): ElasticRequest = {
-      val utf8 = StandardCharsets.UTF_8.name()
       val (method, endpoint) = analyzeRequest.index.map { index =>
-        "GET" -> s"/${URLEncoder.encode(index, utf8)}/_analyze"
+        "GET" -> s"/${ElasticUrlEncoder.encodeUrlFragment(index)}/_analyze"
       }.getOrElse {
         "GET" -> s"/_analyze"
       }

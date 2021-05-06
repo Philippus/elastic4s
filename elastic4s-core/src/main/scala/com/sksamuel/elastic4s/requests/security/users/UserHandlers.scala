@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.requests.security.users
 
-import java.net.URLEncoder
-
-import com.sksamuel.elastic4s.{ElasticRequest, Handler}
+import com.sksamuel.elastic4s.{ElasticRequest, ElasticUrlEncoder, Handler}
 
 trait UserHandlers {
 	private val ROLE_BASE_PATH = "/_security/user/"
@@ -10,7 +8,7 @@ trait UserHandlers {
 	implicit object GetUserHandler extends Handler[GetUserRequest, Map[String,GetUserResponse]] {
 
 		override def build(request: GetUserRequest): ElasticRequest = {
-			val endpoint = ROLE_BASE_PATH + URLEncoder.encode(request.name, "UTF-8")
+			val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
 			ElasticRequest("GET", endpoint)
 		}
 	}
