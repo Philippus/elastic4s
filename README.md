@@ -114,7 +114,7 @@ val client = ElasticClient(JavaClient(props))
 For multiple nodes you can pass a comma-separated list of endpoints in a single string:
 
 ```scala
-val nodes = ElasticProperties("http://host1:9200,http://host2:9200,http://host3:9200")
+val nodes = ElasticProperties("http://host1:9200,host2:9200,host3:9200")
 val client = ElasticClient(JavaClient(nodes))
 ```
 
