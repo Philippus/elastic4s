@@ -68,7 +68,7 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
       "doc update and upsert" in {
         val q = updateById("test", "1234")
           .doc("foo" -> "bar")
-          .upsert("foo" -> "baz")
+          .upsert(Map("foo" -> "baz"))
 
         UpdateBuilderFn(q).string() should matchJson(
           """{"doc":{"foo":"bar"},"upsert":{"foo":"baz"}}"""
