@@ -22,6 +22,6 @@ case class Snapshot(snapshot: String,
 }
 
 case class DeleteSnapshotResponse(acknowledged: Boolean)
-case class RestoreSnapshotResponse(acknowledged: Boolean)
+case class RestoreSnapshotResponse(accepted: Boolean)
 
 

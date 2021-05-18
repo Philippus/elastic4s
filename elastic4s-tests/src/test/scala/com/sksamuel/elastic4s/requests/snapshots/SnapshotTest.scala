@@ -57,6 +57,24 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
     }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
+  "restore snapshot" should "be accepted" in {
+    client.execute {
+      restoreSnapshot("snap1", repoName)
+    }.await.result.accepted shouldEqual true
+  }
+
+  it should "error when the snapshot does not exist" in {
+    client.execute {
+      restoreSnapshot("missing_snapshot", repoName)
+    }.await.error.`type` shouldBe "snapshot_missing_exception"
+  }
+
+  it should "error when the repo does not exist" in {
+    client.execute {
+      restoreSnapshot("snap1", "missing_repo")
+    }.await.error.`type` shouldBe "repository_missing_exception"
+  }
+
   "deleteSnapshot" should "remove the named snapshot" in {
     client.execute {
       deleteSnapshot("snap1", repoName)

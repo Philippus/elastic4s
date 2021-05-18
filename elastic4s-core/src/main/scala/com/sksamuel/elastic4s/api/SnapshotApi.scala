@@ -44,7 +44,7 @@ trait SnapshotApi {
     def from(repo: String) = RestoreSnapshotRequest(name, repo)
   }
 
-  def createRepository(snapshotName: String, `type`: String) = CreateRepositoryRequest(snapshotName, `type`)
+  def createRepository(repositoryName: String, `type`: String) = CreateRepositoryRequest(repositoryName, `type`)
 
   @deprecated("use createRepository(name: String, repository: String)", "6.0.2")
   def createRepository(name: String) = new CreateRepositoryExpectsType(name)
