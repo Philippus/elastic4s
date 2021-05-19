@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.snapshots
 
 import java.util.UUID
 
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -72,23 +73,23 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   it should "succeed when request is correct" in {
-    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
+    client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName)
+      restoreSnapshot(snapshotName, repoName) index Index("tmpidx")
     }.await.result.succeeded shouldEqual true
   }
 
   it should "succeeded if waitForCompletion = false" in {
-    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
+    client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName) waitForCompletion false
+      restoreSnapshot(snapshotName, repoName) index Index("tmpidx") waitForCompletion false
     }.await.result.succeeded shouldEqual true
   }
 
   it should "succeeded if waitForCompletion = true" in {
-    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
+    client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName) waitForCompletion true
+      restoreSnapshot(snapshotName, repoName) index Index("tmpidx") waitForCompletion true
     }.await.result.succeeded shouldEqual true
   }
 
