@@ -74,7 +74,7 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "succeed when request is correct" in {
     client.execute(deleteIndex("*")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName)// waitForCompletion true
+      restoreSnapshot(snapshotName, repoName)
     }.await.result.succeeded shouldEqual true
   }
 
