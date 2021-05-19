@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.handlers.snapshot
 
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.requests.snapshots.{CreateRepositoryRequest, CreateRepositoryResponse, CreateSnapshotRequest, CreateSnapshotResponse, DeleteSnapshotRequest, DeleteSnapshotResponse, GetSnapshotResponse, GetSnapshotsRequest, RestoreSnapshotRequest, RestoreSnapshotResponse, RestoreSnapshotResponseAsync, RestoreSnapshotResponseAwait}
+import com.sksamuel.elastic4s.requests.snapshots.{CreateRepositoryRequest, CreateRepositoryResponse, CreateSnapshotRequest, CreateSnapshotResponse, DeleteSnapshotRequest, DeleteSnapshotResponse, GetSnapshotResponse, GetSnapshotsRequest, RestoreSnapshotRequest, RestoreSnapshotResponse}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait SnapshotHandlers {
