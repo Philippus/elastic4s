@@ -11,11 +11,6 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   private val repoName = "repotest_" + UUID.randomUUID().toString
   private val snapshotName = "snap1"
 
-  // To avoid unexpected index clashes when attempting to restore snapshots
-  "cleaning up old indices" should "succeed" in {
-    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
-  }
-
   "createRepository" should "create a new repo" in {
     val resp = client.execute {
       createRepository(repoName, "fs").settings(Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString)))
@@ -30,7 +25,7 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   "createSnapshot" should "create a new snapshot" in {
-    // create an index to restore, so that we can test some of the behaviour around that
+    // ensure there's at least one index to restore, so that we can test some of the behaviour around that
     createIdx("tmpidx").isSuccess shouldBe true
     client.execute {
       createSnapshot("snap0", repoName)
@@ -77,21 +72,21 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   it should "succeed when request is correct" in {
-    client.execute {deleteIndex("tmpidx")}.await.isSuccess shouldBe true
+    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
     client.execute {
       restoreSnapshot(snapshotName, repoName)// waitForCompletion true
     }.await.result.succeeded shouldEqual true
   }
 
   it should "succeeded if waitForCompletion = false" in {
-    client.execute { deleteIndex("tmpidx") }.await.isSuccess shouldBe true
+    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
     client.execute {
       restoreSnapshot(snapshotName, repoName) waitForCompletion false
     }.await.result.succeeded shouldEqual true
   }
 
   it should "succeeded if waitForCompletion = true" in {
-    client.execute { deleteIndex("tmpidx") }.await.isSuccess shouldBe true
+    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
     client.execute {
       restoreSnapshot(snapshotName, repoName) waitForCompletion true
     }.await.result.succeeded shouldEqual true
