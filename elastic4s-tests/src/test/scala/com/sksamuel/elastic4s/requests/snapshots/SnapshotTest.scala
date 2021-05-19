@@ -11,6 +11,11 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   private val repoName = "repotest_" + UUID.randomUUID().toString
   private val snapshotName = "snap1"
 
+  // To avoid unexpected index clashes when attempting to restore snapshots
+  "cleaning up old indices" should "succeed" in {
+    client.execute(deleteIndex("*")).await.isSuccess shouldBe true
+  }
+
   "createRepository" should "create a new repo" in {
     val resp = client.execute {
       createRepository(repoName, "fs").settings(Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString)))
