@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.common.Shards
 import scala.concurrent.duration._
 
 case class CreateRepositoryResponse(acknowledged: Boolean)
-@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION, property = "accepted")
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes(
   Array(
     new JsonSubTypes.Type(value = classOf[CreateSnapshotResponseAsync], name = "accepted"),
@@ -33,7 +33,7 @@ case class Snapshot(snapshot: String,
 }
 
 case class DeleteSnapshotResponse(acknowledged: Boolean)
-@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION, property = "accepted")
+@JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
 @JsonSubTypes(
   Array(
     new JsonSubTypes.Type(value = classOf[RestoreSnapshotResponseAsync], name = "accepted"),
