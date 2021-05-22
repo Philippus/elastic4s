@@ -2,7 +2,7 @@ val org                    = "com.sksamuel.elastic4s"
 val AkkaVersion            = "2.6.14"
 val AkkaHttpVersion        = "10.2.3"
 val CatsVersion            = "2.0.0"
-val CatsEffectVersion      = "3.1.0"
+val CatsEffectVersion      = "3.1.1"
 val CatsEffect2Version     = "2.5.0"
 val CirceVersion           = "0.13.0"
 val CommonsIoVersion       = "2.8.0"
@@ -15,12 +15,12 @@ val MockitoVersion         = "3.10.0"
 val MonixVersion           = "3.4.0"
 val PlayJsonVersion        = "2.9.2"
 val ReactiveStreamsVersion = "1.0.3"
-val ScalatestVersion       = "3.2.8"
+val ScalatestVersion       = "3.2.9"
 val ScalatestPlusVersion   = "3.1.2.0"
 val ScalamockVersion       = "5.1.0"
-val ScalazVersion          = "7.2.31"
 val ZIOVersion             = "1.0.8"
-val ZIOJsonVersion         = "0.1.4"
+val ScalazVersion          = "7.2.32"
+val ZIOJsonVersion         = "0.1.5"
 val SprayJsonVersion       = "1.3.6"
 val SttpVersion            = "1.7.2"
 val Slf4jVersion           = "1.7.30"
@@ -45,7 +45,7 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.12",
-  crossScalaVersions := Seq("2.12.12", "2.13.5")
+  crossScalaVersions := Seq("2.12.12", "2.13.6")
 )
 
 lazy val warnUnusedImport = Seq(
