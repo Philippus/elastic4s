@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.snapshots
 
 import java.util.UUID
 
+import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -9,6 +10,7 @@ import org.scalatest.matchers.should.Matchers
 class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
   private val repoName = "repotest_" + UUID.randomUUID().toString
+  private val snapshotName = "snap1"
 
   "createRepository" should "create a new repo" in {
     val resp = client.execute {
@@ -24,23 +26,30 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   "createSnapshot" should "create a new snapshot" in {
-    val resp = client.execute {
-      createSnapshot("snap1", repoName)
-    }.await
-    resp.result.accepted shouldBe true
+    // ensure there's at least one index to restore, so that we can test some of the behaviour around that
+    createIdx("tmpidx").isSuccess shouldBe true
+    client.execute {
+      createSnapshot("snap0", repoName)
+    }.await.result.succeeded shouldBe true
+  }
+
+  it should "deserialize when waitForCompletion = true" in {
+    client.execute {
+      createSnapshot(snapshotName, repoName) waitForCompletion true
+    }.await.result.succeeded shouldBe true
   }
 
   it should "error when the repo does not exist" in {
     client.execute {
-      createSnapshot("snap1", "abbbbc")
+      createSnapshot(snapshotName, "abbbbc")
     }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
   "getSnapshot" should "return the named snapshot" in {
     val resp = client.execute {
-      getSnapshot("snap1", repoName)
+      getSnapshot(snapshotName, repoName)
     }.await.result
-    resp.snapshots.head.snapshot shouldBe "snap1"
+    resp.snapshots.head.snapshot shouldBe snapshotName
     resp.snapshots.head.uuid should not be null
     resp.snapshots.head.version should not be null
   }
@@ -53,16 +62,55 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
   it should "error when the repo does not exist" in {
     client.execute {
-      getSnapshot("snap1", "bbbbb")
+      getSnapshot(snapshotName, "bbbbb")
+    }.await.error.`type` shouldBe "repository_missing_exception"
+  }
+
+  "restore snapshot" should "error when an index clashes" in {
+    client.execute {
+      restoreSnapshot(snapshotName, repoName) waitForCompletion true
+    }.await.error.`type` shouldBe "snapshot_restore_exception"
+  }
+
+  it should "succeed when request is correct" in {
+    client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
+    client.execute {
+      restoreSnapshot(snapshotName, repoName) index Index("tmpidx")
+    }.await.result.succeeded shouldEqual true
+  }
+
+  it should "succeeded if waitForCompletion = false" in {
+    client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
+    client.execute {
+      restoreSnapshot(snapshotName, repoName) index Index("tmpidx") waitForCompletion false
+    }.await.result.succeeded shouldEqual true
+  }
+
+  it should "succeeded if waitForCompletion = true" in {
+    client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
+    client.execute {
+      restoreSnapshot(snapshotName, repoName) index Index("tmpidx") waitForCompletion true
+    }.await.result.succeeded shouldEqual true
+  }
+
+  it should "error when the snapshot does not exist" in {
+    client.execute {
+      restoreSnapshot("missing_snapshot", repoName)
+    }.await.error.`type` shouldBe "snapshot_restore_exception"
+  }
+
+  it should "error when the repo does not exist" in {
+    client.execute {
+      restoreSnapshot(snapshotName, "missing_repo")
     }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
   "deleteSnapshot" should "remove the named snapshot" in {
     client.execute {
-      deleteSnapshot("snap1", repoName)
+      deleteSnapshot(snapshotName, repoName)
     }.await.result.acknowledged shouldBe true
     client.execute {
-      getSnapshot("snap1", repoName)
+      getSnapshot(snapshotName, repoName)
     }.await.error.`type` shouldBe "snapshot_missing_exception"
   }
 }
