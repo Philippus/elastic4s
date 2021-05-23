@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.{AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IpField, IpRangeField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField, VersionField, WildcardField}
+import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IpField, IpRangeField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField, VersionField, WildcardField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
 
   def apply(field: ElasticField): XContentBuilder = {
     field match {
+      case f: AggregateMetricField => AggregateMetricFieldBuilderFn.build(f)
       case f: AliasField => AliasFieldBuilderFn.build(f)
       case f: AnnotatedTextField => AnnotatedTextFieldBuilderFn.build(f)
       case f: BinaryField => BinaryFieldBuilderFn.build(f)
