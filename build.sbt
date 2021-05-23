@@ -151,6 +151,7 @@ lazy val root = Project("elastic4s", file("."))
     domain,
     handlers,
     core,
+    clientcore,
     clientesjava,
     clientsSniffed,
     cats_effect,
