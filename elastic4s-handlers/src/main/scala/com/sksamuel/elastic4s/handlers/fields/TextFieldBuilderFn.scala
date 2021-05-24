@@ -35,6 +35,7 @@ object TextFieldBuilderFn {
       builder.endObject()
     }
     field.indexPhrases.foreach(builder.field("index_phrases", _))
+    field.fielddata.foreach(builder.field("fielddata", _))
 
     field.fielddataFrequencyFilter.foreach { filter =>
       builder.startObject("fielddata_frequency_filter")
@@ -45,7 +46,6 @@ object TextFieldBuilderFn {
     }
 
     field.positionIncrementGap.foreach(builder.field("position_increment_gap", _))
-    field.fielddata.foreach(builder.field("fielddata", _))
     field.eagerGlobalOrdinals.foreach(builder.field("eager_global_ordinals", _))
     field.indexOptions.foreach(builder.field("index_options", _))
     field.searchAnalyzer.foreach(builder.field("search_analyzer", _))
