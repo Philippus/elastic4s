@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.analysis.LanguageAnalyzers
-import com.sksamuel.elastic4s.fields.TextField
+import com.sksamuel.elastic4s.fields.{DynamicField, TextField}
 import com.sksamuel.elastic4s.handlers.index.mapping.DynamicTemplateBodyFn
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicTemplateRequest
 import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
@@ -21,9 +21,9 @@ class DynamicTemplateApiTest extends AnyWordSpec with Matchers with JsonSugar wi
       ).matchMappingType("string").matchPattern("*_es")
       DynamicTemplateBodyFn.build(temp).string() should matchJsonResource("/json/mappings/dynamic_template_match_pattern.json")
     }
-//    "support dynamic type" in {
-//      val temp = dynamicTemplate("es", dynamicType.docValues(false)).matchPattern("*_es")
-//      DynamicTemplateBodyFn.build(temp).string() should matchJsonResource("/json/mappings/dynamic_template_dynamic_type.json")
-//    }
+    "support dynamic type" in {
+      val temp = DynamicTemplateRequest("es", DynamicField("", docValues = Some(false))).matchPattern("*_es")
+      DynamicTemplateBodyFn.build(temp).string() should matchJsonResource("/json/mappings/dynamic_template_dynamic_type.json")
+    }
   }
 }

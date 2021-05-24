@@ -35,7 +35,6 @@ object TextFieldBuilderFn {
       builder.endObject()
     }
     field.indexPhrases.foreach(builder.field("index_phrases", _))
-    field.fielddata.foreach(builder.field("fielddata", _))
 
     field.fielddataFrequencyFilter.foreach { filter =>
       builder.startObject("fielddata_frequency_filter")

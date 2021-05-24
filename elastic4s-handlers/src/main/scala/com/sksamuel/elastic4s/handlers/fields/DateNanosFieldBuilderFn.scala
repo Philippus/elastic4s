@@ -14,7 +14,7 @@ object DateNanosFieldBuilderFn {
     if (field.copyTo.nonEmpty) builder.array("copy_to", field.copyTo.toArray)
     field.docValues.foreach(builder.field("doc_values", _))
     field.format.foreach(builder.field("format", _))
-    field.locale.foreach(builder.field("locate", _))
+    field.locale.foreach(builder.field("locale", _))
     field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
     field.index.foreach(builder.field("index", _))
     field.nullValue.foreach(builder.field("null_value", _))
