@@ -23,7 +23,7 @@ case class DynamicField(override val name: String,
                         similarity: Option[String] = None,
                         store: Option[Boolean] = None,
                         termVector: Option[String] = None,
-               meta: Map[String, String] = Map.empty) extends ElasticField {
+                        meta: Map[String, String] = Map.empty) extends ElasticField {
   override def `type`: String = "{dynamic_type}"
   def analyzer(name: String): DynamicField = copy(analyzer = Option(name))
   def boost(boost: Double): DynamicField = copy(boost = boost.some)
