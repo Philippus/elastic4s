@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
 import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class CreateIndexTemplateRequest(name: String,
-                                      pattern: String,
+                                      pattern: Seq[String],
                                       settings: Map[String, Any] = Map.empty,
                                       mappings: Seq[MappingDefinition] = Nil,
                                       @deprecated("use the new analysis package", "7.0.1")
@@ -17,7 +17,8 @@ case class CreateIndexTemplateRequest(name: String,
                                       priority: Option[Int] = None,
                                       aliases: Seq[TemplateAlias] = Nil) {
   require(name.nonEmpty, "template name must not be null or empty")
-  require(pattern.nonEmpty, "pattern must not be null or empty")
+  require(pattern.nonEmpty, "pattern list must not be null or empty")
+  require(!pattern.exists(_.isEmpty), "patterns must not be null or empty")
 
   @deprecated("use new analysis package", "7.2.0")
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexTemplateRequest =

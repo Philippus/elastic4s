@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.indexes.{CreateIndexTemplateRequest, Dele
 
 trait IndexTemplateApi {
   def deleteIndexTemplate(name: String): DeleteIndexTemplateRequest = DeleteIndexTemplateRequest(name)
-  def createIndexTemplate(name: String, pattern: String): CreateIndexTemplateRequest =
+  def createIndexTemplate(name: String, pattern: Seq[String]): CreateIndexTemplateRequest =
     CreateIndexTemplateRequest(name, pattern)
   def getIndexTemplate(name: String): GetIndexTemplateRequest = GetIndexTemplateRequest(name)
 }
