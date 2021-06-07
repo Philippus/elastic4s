@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IpField, IpRangeField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField, VersionField, WildcardField}
+import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, DynamicField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IpField, IpRangeField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField, VersionField, WildcardField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
@@ -17,6 +17,7 @@ object ElasticFieldBuilderFn {
       case f: DateField => DateFieldBuilderFn.build(f)
       case f: DateNanosField => DateNanosFieldBuilderFn.build(f)
       case f: DenseVectorField => DenseVectorFieldBuilderFn.build(f)
+      case f: DynamicField => DynamicFieldBuilderFn.build(f)
       case f: FlattenedField => FlattenedFieldBuilderFn.build(f)
       case f: GeoPointField => GeoPointFieldBuilderFn.build(f)
       case f: GeoShapeField => GeoShapeFieldBuilderFn.build(f)
