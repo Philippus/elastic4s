@@ -18,5 +18,5 @@ case class RegexQuery(field: String,
   def rewrite(rewrite: String): RegexQuery = copy(rewrite = rewrite.some)
   def flags(flags: RegexpFlag*): RegexQuery = copy(flags = flags)
   def flags(flags: Iterable[RegexpFlag]): RegexQuery = copy(flags = flags.toSeq)
-  def caseInsensitive(caseInsensitive: Boolean): RegexQuery = copy(caseInsensitive = Option(caseInsensitive))
+  def caseInsensitive(caseInsensitive: Boolean): RegexQuery = copy(caseInsensitive = caseInsensitive.some)
 }
