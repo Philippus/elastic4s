@@ -13,7 +13,7 @@ class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Ma
 
     val templateName = "test_template"
 
-    val templateDef = createIndexTemplate(templateName, "index_pattern")
+    val templateDef = createIndexTemplate(templateName, Seq("index_pattern"))
       .analysis(Analysis(Nil, normalizers = List(lowerCaseNormalizer)))
 
     val req = CreateIndexTemplateHandler.build(templateDef)
@@ -25,7 +25,7 @@ class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Ma
 
     val templateName = "test_template_without_analysis"
 
-    val templateDef = createIndexTemplate(templateName, "index_pattern").settings(Map("number_of_shards" -> 1))
+    val templateDef = createIndexTemplate(templateName, Seq("index_pattern")).settings(Map("number_of_shards" -> 1))
 
     val expectedEntityContent = """"""
 

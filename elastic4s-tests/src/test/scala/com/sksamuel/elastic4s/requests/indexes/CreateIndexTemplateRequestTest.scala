@@ -24,7 +24,7 @@ class CreateIndexTemplateRequestTest
   "Create Index Template HTTP request" should {
     "create and use the template for an index" in {
       client.execute {
-        createIndexTemplate("matchme", "matchme.*").mappings(
+        createIndexTemplate("matchme", Seq("matchme.*")).mappings(
           mapping(
             keywordField("field1"),
             geopointField("field2"),
