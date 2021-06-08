@@ -10,6 +10,11 @@ object ReindexBuilderFn {
   def apply(request: ReindexRequest): XContentBuilder = {
     val builder = XContentFactory.obj()
 
+    request.proceedOnConflicts.foreach {
+      case true => builder.field("conflicts", "proceed")
+      case false => builder.field("conflicts", "abort")
+    }
+
     request.size.foreach(builder.field("size", _))
 
     request.script.foreach { script =>
@@ -37,11 +42,6 @@ object ReindexBuilderFn {
 
     if (request.targetType.nonEmpty)
       builder.field("type", request.targetType.get)
-
-    request.proceedOnConflicts.foreach {
-      case true => builder.field("conflicts", "proceed")
-      case false => builder.field("conflicts", "abort")
-    }
 
     // end dest
     builder.endObject()
