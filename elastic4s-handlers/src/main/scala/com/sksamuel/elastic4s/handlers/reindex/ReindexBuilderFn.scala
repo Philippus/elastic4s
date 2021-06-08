@@ -38,6 +38,11 @@ object ReindexBuilderFn {
     if (request.targetType.nonEmpty)
       builder.field("type", request.targetType.get)
 
+    request.proceedOnConflicts.foreach {
+      case true => builder.field("conflicts", "proceed")
+      case false => builder.field("conflicts", "abort")
+    }
+
     // end dest
     builder.endObject()
   }
