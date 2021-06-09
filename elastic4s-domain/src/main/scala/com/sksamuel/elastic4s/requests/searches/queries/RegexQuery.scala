@@ -8,7 +8,8 @@ case class RegexQuery(field: String,
                       boost: Option[Double] = None,
                       maxDeterminedStates: Option[Int] = None,
                       queryName: Option[String] = None,
-                      rewrite: Option[String] = None)
+                      rewrite: Option[String] = None,
+                      caseInsensitive: Option[Boolean] = None)
   extends MultiTermQuery {
 
   def maxDeterminedStates(max: Int): RegexQuery = copy(maxDeterminedStates = max.some)
@@ -17,4 +18,5 @@ case class RegexQuery(field: String,
   def rewrite(rewrite: String): RegexQuery = copy(rewrite = rewrite.some)
   def flags(flags: RegexpFlag*): RegexQuery = copy(flags = flags)
   def flags(flags: Iterable[RegexpFlag]): RegexQuery = copy(flags = flags.toSeq)
+  def caseInsensitive(caseInsensitive: Boolean): RegexQuery = copy(caseInsensitive = caseInsensitive.some)
 }
