@@ -58,6 +58,21 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
         search("reindextarget")
       }.await.result.hits.hits.flatMap(_.sourceAsMap.get("scripted")) shouldBe Array(42, 42, 42)
     }
+    "support proceed parameter" in {
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").proceedOnConflicts(true).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").proceedOnConflicts(false).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+    }
     "support multiple sources" in {
 
       deleteIdx("reindextarget")
