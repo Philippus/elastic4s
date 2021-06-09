@@ -21,6 +21,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           timeout: Option[FiniteDuration] = None,
                           retryBackoffInitialTime: Option[FiniteDuration] = None,
                           shouldStoreResult: Option[Boolean] = None,
+                          proceedOnConflicts: Option[Boolean] = None,
                           remoteHost: Option[String] = None,
                           remoteUser: Option[String] = None,
                           remotePass: Option[String] = None,
@@ -57,6 +58,9 @@ case class ReindexRequest(sourceIndexes: Indexes,
 
   def shouldStoreResult(shouldStoreResult: Boolean): ReindexRequest =
     copy(shouldStoreResult = shouldStoreResult.some)
+
+  def proceedOnConflicts(proceedOnConflicts: Boolean): ReindexRequest =
+    copy(proceedOnConflicts = proceedOnConflicts.some)
 
   def script(script: Script): ReindexRequest = copy(script = script.some)
 
