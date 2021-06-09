@@ -1,3 +1,4 @@
 -J-Xmx4G
 -J-XX:MaxMetaspaceSize=1G
 -J-XX:+CMSClassUnloadingEnabled
+-J-XX:+UseG1GC
