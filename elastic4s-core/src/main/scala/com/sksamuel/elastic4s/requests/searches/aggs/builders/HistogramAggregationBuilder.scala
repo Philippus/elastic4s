@@ -25,6 +25,9 @@ object HistogramAggregationBuilder {
     agg.extendedBounds.foreach { bounds =>
       builder.rawField("extended_bounds", ExtendedBoundsBuilderFn(bounds))
     }
+    agg.hardBounds.foreach { bounds =>
+      builder.rawField("hard_bounds", ExtendedBoundsBuilderFn(bounds))
+    }
     builder.endObject()
 
     SubAggsBuilderFn(agg, builder)
