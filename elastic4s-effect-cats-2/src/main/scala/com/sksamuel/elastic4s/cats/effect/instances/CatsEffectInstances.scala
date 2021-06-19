@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.cats.effect.instances
 
-import cats.effect.Async
+import cats.effect.{Async, IO}
 import cats.{Functor => CatsFunctor}
 import com.sksamuel.elastic4s.cats.effect.CatsEffectExecutor
 import com.sksamuel.elastic4s.{Executor, Functor}
@@ -12,6 +12,9 @@ trait CatsEffectInstances {
 
   implicit def catsEffectExecutor[F[_]: Async]: Executor[F] =
     new CatsEffectExecutor[F]
+
+  //this needs to be at the bottom
+  implicit val ioExecutor: Executor[IO] = new CatsEffectExecutor[IO]
 }
 
 @deprecated("Use CatsEffectInstances instead")
