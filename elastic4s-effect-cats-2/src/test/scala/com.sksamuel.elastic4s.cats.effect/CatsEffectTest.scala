@@ -16,7 +16,7 @@ class CatsEffectTest extends AnyFlatSpec {
   val client: ElasticClient = ElasticClient(JavaClient(ElasticProperties("http://dummy")))
   val index = "index"
 
-  "client#execute" should "compile and infer effect type as `IO`" in {
+  "ElasticClient#execute" should "compile and infer effect type as `IO`" in {
     for {
       r1 <- client.execute(createIndex(index))
       _ <- IO(println(r1))
@@ -27,9 +27,9 @@ class CatsEffectTest extends AnyFlatSpec {
 
   it should "still compile with other Cats `Async` instances with explicit type annotations" in {
     for {
-      r1 <- client.execute[CreateIndexRequest, CreateIndexResponse, OptionIO](createIndex("index"))
+      r1 <- client.execute[CreateIndexRequest, CreateIndexResponse, OptionIO](createIndex(index))
       _ <- IO(println(r1)).to[OptionIO]
-      r2 <- client.execute[DeleteIndexRequest, DeleteIndexResponse, OptionIO](deleteIndex("index"))
+      r2 <- client.execute[DeleteIndexRequest, DeleteIndexResponse, OptionIO](deleteIndex(index))
       _ <- IO(println(r2)).to[OptionIO]
     } yield (r1, r2)
   }
