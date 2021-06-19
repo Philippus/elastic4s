@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.cats.effect
 
 import cats.data.OptionT
-import cats.effect.{IO, Resource}
+import cats.effect.IO
 import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties}
 import com.sksamuel.elastic4s.ElasticDsl._
 import org.scalatest.flatspec.AnyFlatSpec
@@ -12,8 +12,6 @@ import com.sksamuel.elastic4s.requests.indexes.{CreateIndexRequest, CreateIndexR
 
 class CatsEffectTest extends AnyFlatSpec {
   type OptionIO[A] = OptionT[IO, A]
-
-  type ResourceIO[A] = Resource[IO, A]
 
   val client: ElasticClient = ElasticClient(JavaClient(ElasticProperties("http://dummy")))
   val index = "index"

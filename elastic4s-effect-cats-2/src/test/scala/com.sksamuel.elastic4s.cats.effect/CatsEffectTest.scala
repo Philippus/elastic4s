@@ -23,7 +23,6 @@ class CatsEffectTest extends AnyFlatSpec {
       r2 <- client.execute(deleteIndex(index))
       _ <- IO(println(r2))
     } yield (r1, r2)
-    println("t1")
   }
 
   it should "still compile with other Cats `Async` instances with explicit type annotations" in {
@@ -33,6 +32,5 @@ class CatsEffectTest extends AnyFlatSpec {
       r2 <- client.execute[DeleteIndexRequest, DeleteIndexResponse, OptionIO](deleteIndex("index"))
       _ <- IO(println(r2)).to[OptionIO]
     } yield (r1, r2)
-    println("t2")
   }
 }
