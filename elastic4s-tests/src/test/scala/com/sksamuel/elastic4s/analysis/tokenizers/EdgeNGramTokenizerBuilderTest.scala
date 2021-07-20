@@ -9,7 +9,7 @@ class EdgeNGramTokenizerBuilderTest extends AnyWordSpec with Matchers with Elast
 
   "EdgeNGramTokenizer" should {
     "build json" in {
-      EdgeNGramTokenizer("testy").minMaxGrams(2, 3).tokenChars("a", "z").build.string shouldBe """{"type":"edgeNGram","min_gram":2,"max_gram":3,"token_chars":["a","z"]}"""
+      EdgeNGramTokenizer("testy").minMaxGrams(2, 3).tokenChars("a", "z").build.string shouldBe """{"type":"edge_ngram","min_gram":2,"max_gram":3,"token_chars":["a","z"]}"""
     }
   }
 }

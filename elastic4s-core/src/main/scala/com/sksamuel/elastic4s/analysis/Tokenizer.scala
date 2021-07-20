@@ -104,7 +104,7 @@ case class EdgeNGramTokenizer(override val name: String,
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
-    b.field("type", "edgeNGram")
+    b.field("type", "edge_ngram")
     b.field("min_gram", minGram)
     b.field("max_gram", maxGram)
     if (tokenChars.nonEmpty)
