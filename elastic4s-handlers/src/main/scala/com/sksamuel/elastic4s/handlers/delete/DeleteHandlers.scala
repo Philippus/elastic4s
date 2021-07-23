@@ -43,6 +43,7 @@ trait DeleteHandlers {
       request.routing.map(_.toString).foreach(params.put("routing", _))
       request.size.map(_.toString).foreach(params.put("size", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
+      request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string()}")
