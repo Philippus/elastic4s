@@ -1,4 +1,4 @@
-package com.nt.streaming
+package com.sksamuel.elastic4s.akka.streams
 
 import akka.stream.stage.{ GraphStage, GraphStageLogic, InHandler }
 import akka.stream.{ Attributes, Inlet, SinkShape }
