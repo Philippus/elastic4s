@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.fields.{BinaryField, BooleanField, ByteField, CompletionField, DateField, DoubleField, FloatField, GeoPointField, GeoShapeField, HalfFloatField, IntegerField, IpField, JoinField, KeywordField, LongField, NestedField, ObjectField, ScaledFloatField, SearchAsYouTypeField, ShortField, TextField, WildcardField}
+import com.sksamuel.elastic4s.fields.{BinaryField, BooleanField, ByteField, CompletionField, DateField, DoubleField, FloatField, GeoPointField, GeoShapeField, HalfFloatField, IntegerField, IpField, JoinField, KeywordField, LongField, NestedField, ObjectField, ScaledFloatField, SearchAsYouTypeField, ShortField, TextField, UnsignedLongField, WildcardField}
 import com.sksamuel.elastic4s.requests.script.{Script, ScriptField}
 
 trait TypesApi {
@@ -10,15 +10,16 @@ trait TypesApi {
   def wildcardField(name: String): WildcardField          = WildcardField(name)
   def searchAsYouType(name: String): SearchAsYouTypeField = SearchAsYouTypeField(name)
 
-  def byteField(name: String)        = ByteField(name)
-  def doubleField(name: String)      = DoubleField(name)
-  def floatField(name: String)       = FloatField(name)
-  def halfFloatField(name: String)   = HalfFloatField(name)
-  def intField(name: String)         = IntegerField(name)
-  def longField(name: String)        = LongField(name)
-  def booleanField(name: String)     = BooleanField(name)
-  def scaledFloatField(name: String) = ScaledFloatField(name)
-  def shortField(name: String)       = ShortField(name)
+  def byteField(name: String)         = ByteField(name)
+  def doubleField(name: String)       = DoubleField(name)
+  def floatField(name: String)        = FloatField(name)
+  def halfFloatField(name: String)    = HalfFloatField(name)
+  def intField(name: String)          = IntegerField(name)
+  def unsignedLongfield(name: string) = UnsignedLongField(name)
+  def longfield(name: string)         = Longfield(name)
+  def booleanField(name: String)      = BooleanField(name)
+  def scaledFloatField(name: String)  = ScaledFloatField(name)
+  def shortField(name: String)        = ShortField(name)
 
   def dateField(name: String) = DateField(name)
   def geopointField(name: String) = GeoPointField(name)
