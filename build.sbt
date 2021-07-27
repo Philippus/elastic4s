@@ -60,7 +60,7 @@ lazy val publishSettings = Seq(
   releaseCrossBuild := true,
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := {
-    val nexus = "https://oss.sonatype.org/"
+    val nexus = "https://s01.oss.sonatype.org/"
     if (isTravis.value)
       Some("snapshots" at nexus + "content/repositories/snapshots")
     else
