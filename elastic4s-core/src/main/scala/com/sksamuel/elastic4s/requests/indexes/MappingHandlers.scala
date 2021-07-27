@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.indexes
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
 
-case class IndexMappings(index: String, mappings: Map[String, Any])
+case class IndexMappings(index: String, mappings: Map[String, Any], meta: Map[String, Any] = Map.empty[String, Any])
 
 case class IndexFieldMapping(index: String, fieldMappings: Seq[FieldMapping])
 case class FieldMapping(fullName:String, mappings: Map[String, Any])
@@ -20,7 +20,8 @@ trait MappingHandlers {
           val raw2 = raw.map {
             case (index, types) =>
               val mappings = types("mappings").getOrElse("properties", Map.empty)
-              IndexMappings(index, mappings.asInstanceOf[Map[String, Any]])
+              val meta = types("mappings").getOrElse("_meta", Map.empty)
+              IndexMappings(index, mappings.asInstanceOf[Map[String, Any]], meta.asInstanceOf[Map[String, Any]])
           }.toSeq
           Right(raw2)
         case _              =>
