@@ -341,7 +341,7 @@ case class EdgeNGramTokenFilter(override val name: String,
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
-    b.field("type", "edgeNGram")
+    b.field("type", "edge_ngram")
     b.field("min_gram", minGram)
     b.field("max_gram", maxGram)
     side.foreach(b.field("side", _))
@@ -361,7 +361,7 @@ case class NGramTokenFilter(override val name: String,
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
-    b.field("type", "nGram")
+    b.field("type", "ngram")
     minGram.foreach(b.field("min_gram", _))
     maxGram.foreach(b.field("max_gram", _))
     b
