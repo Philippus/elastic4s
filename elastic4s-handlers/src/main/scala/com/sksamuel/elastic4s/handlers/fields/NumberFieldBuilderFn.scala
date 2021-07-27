@@ -23,6 +23,7 @@ object NumberFieldBuilderFn {
       case v: Int => builder.field("null_value", v)
       case v: Byte => builder.field("null_value", v)
       case v: Short => builder.field("null_value", v)
+      case v: String => builder.field("null_value", v)
     }
     field.store.foreach(builder.field("store", _))
     field.coerce.foreach(builder.field("coerce", _))
