@@ -16,7 +16,7 @@ trait TypesApi {
   def halfFloatField(name: String)    = HalfFloatField(name)
   def intField(name: String)          = IntegerField(name)
   def unsignedLongfield(name: String) = UnsignedLongField(name)
-  def longfield(name: String)         = LongField(name)
+  def longField(name: String)         = LongField(name)
   def booleanField(name: String)      = BooleanField(name)
   def scaledFloatField(name: String)  = ScaledFloatField(name)
   def shortField(name: String)        = ShortField(name)
