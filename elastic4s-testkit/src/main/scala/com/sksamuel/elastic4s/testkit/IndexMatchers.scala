@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.testkit
 
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.{ElasticClient, HitReader}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
@@ -23,6 +23,27 @@ trait IndexMatchers extends Matchers {
         )
       }
     }
+
+  def haveDocument[T](expectedId: String, expectedDocument: T)(
+    implicit client: ElasticClient,
+    hitReader: HitReader[T],
+    timeout: FiniteDuration = 10.seconds
+  ): Matcher[String] = {
+    (left: String) => {
+      val resp = client.execute(get(left, expectedId)).await(timeout).result
+      val maybeActualDocument = resp.toOpt[T]
+      val exists = maybeActualDocument.contains(expectedDocument)
+      MatchResult(
+        exists,
+        maybeActualDocument.fold(
+          s"Index $left did not contain expected document $expectedId"
+        )(actualDocument =>
+          s"Index $left did not contain $expectedDocument but $actualDocument"
+        ),
+        s"Index $left contained unwanted $expectedDocument"
+      )
+    }
+  }
 
   def containDoc(expectedId: Any)(implicit client: ElasticClient,
                                   timeout: FiniteDuration = 10.seconds): Matcher[String] =
