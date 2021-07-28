@@ -21,3 +21,5 @@ removed boost from double field
 match queries renamed to include query suffix
 
 suggestion response classes moved to newpackage
+
+DeleteByQueryRequest returns Either[DeleteByQueryResponse, CreateTaskResponse] instead of DeleteByQueryResponse

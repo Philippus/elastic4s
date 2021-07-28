@@ -43,7 +43,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         deleteByQuery(indexname, matchQuery("name", "bumbles")).refresh(RefreshPolicy.Immediate)
-      }.await.result.deleted shouldBe 2
+      }.await.result.left.get.deleted shouldBe 2
 
       client.execute {
         search(indexname).matchAllQuery()
@@ -65,7 +65,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         deleteByQuery(indexname, matchAllQuery()).refresh(RefreshPolicy.Immediate).size(3)
-      }.await.result.deleted shouldBe 3
+      }.await.result.left.get.deleted shouldBe 3
 
       client.execute {
         search(indexname).matchAllQuery()
@@ -76,6 +76,14 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       client.execute {
         deleteByQuery(",", matchQuery("name", "bumbles"))
       }.await.error.`type` shouldBe "action_request_validation_exception"
+    }
+
+    "return a task when setting wait_for_completion to false" in {
+      val result = client.execute {
+        deleteByQuery(indexname, matchQuery("name",  "michael douglas")).waitForCompletion(false)
+      }.await.result.right.get
+      result.nodeId should not be null
+      result.taskId should not be null
     }
   }
 }
