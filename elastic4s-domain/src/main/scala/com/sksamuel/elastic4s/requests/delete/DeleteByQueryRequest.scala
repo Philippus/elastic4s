@@ -14,6 +14,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
                                 proceedOnConflicts: Option[Boolean] = None,
                                 refresh: Option[RefreshPolicy] = None,
                                 waitForActiveShards: Option[Int] = None,
+                                waitForCompletion: Option[Boolean] = None,
                                 retryBackoffInitialTime: Option[FiniteDuration] = None,
                                 timeout: Option[FiniteDuration] = None,
                                 scrollSize: Option[Int] = None,
@@ -36,6 +37,9 @@ case class DeleteByQueryRequest(indexes: Indexes,
 
   def waitForActiveShards(waitForActiveShards: Int): DeleteByQueryRequest =
     copy(waitForActiveShards = waitForActiveShards.some)
+
+  def waitForCompletion(waitForCompletion: Boolean): DeleteByQueryRequest =
+    copy(waitForCompletion = waitForCompletion.some)
 
   def routing(r: String): DeleteByQueryRequest = copy(routing = r.some)
   def retryBackoffInitialTime(retryBackoffInitialTime: FiniteDuration): DeleteByQueryRequest =

@@ -7,6 +7,8 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.delete.{DeleteByIdRequest, DeleteByQueryRequest, DeleteByQueryResponse, DeleteResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
+import com.sksamuel.exts.OptionImplicits.RichOption
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryRequest): XContentBuilder = {
@@ -19,13 +21,20 @@ object DeleteByQueryBodyFn {
 
 trait DeleteHandlers {
 
-  implicit object DeleteByQueryHandler extends Handler[DeleteByQueryRequest, DeleteByQueryResponse] {
+  implicit object DeleteByQueryHandler extends Handler[DeleteByQueryRequest, Either[DeleteByQueryResponse, CreateTaskResponse]] {
 
-    override def responseHandler: ResponseHandler[DeleteByQueryResponse] = new ResponseHandler[DeleteByQueryResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, DeleteByQueryResponse] =
+    private val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
+
+    override def responseHandler: ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] = new ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] {
+      override def handle(response: HttpResponse): Either[ElasticError, Either[DeleteByQueryResponse, CreateTaskResponse]] =
         response.statusCode match {
-          case 200 | 201 => Right(ResponseHandler.fromResponse[DeleteByQueryResponse](response))
-          case _         => Left(ElasticErrorParser.parse(response))
+          case 200 | 201 =>
+            val entity = response.entity.getOrError("No entity defined but was expected")
+            entity.get match {
+              case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
+              case _ => Right(Left(ResponseHandler.fromResponse[DeleteByQueryResponse](response)))
+            }
+          case _ => Left(ElasticErrorParser.parse(response))
         }
     }
 
@@ -43,6 +52,7 @@ trait DeleteHandlers {
       request.routing.map(_.toString).foreach(params.put("routing", _))
       request.size.map(_.toString).foreach(params.put("size", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
+      request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string()}")
