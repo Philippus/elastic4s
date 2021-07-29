@@ -294,7 +294,7 @@ object AkkaHttpClient {
       settings.blacklistMaxDuration
     )
 
-    val httpPoolFactory = new DefaultHttpPoolFactory(settings.poolSettings)
+    val httpPoolFactory = new DefaultHttpPoolFactory(settings.poolSettings, settings.verifySSLCertificate)
 
     new AkkaHttpClient(settings, blacklist, httpPoolFactory)
   }

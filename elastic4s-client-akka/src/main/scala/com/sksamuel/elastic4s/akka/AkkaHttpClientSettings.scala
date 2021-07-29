@@ -24,6 +24,7 @@ object AkkaHttpClientSettings {
     val password = Try(cfg.getString("password")).map(Some(_)).getOrElse(None)
     val queueSize = cfg.getInt("queue-size")
     val https = cfg.getBoolean("https")
+    val verifySslCertificate = Try(cfg.getBoolean("verify-ssl-certificate")).toOption.getOrElse(true)
     val blacklistMinDuration = Duration(
       cfg.getDuration("blacklist.min-duration", TimeUnit.MILLISECONDS),
       TimeUnit.MILLISECONDS
@@ -46,6 +47,7 @@ object AkkaHttpClientSettings {
       password,
       queueSize,
       poolSettings,
+      verifySslCertificate,
       blacklistMinDuration,
       blacklistMaxDuration,
       maxRetryTimeout
@@ -68,6 +70,7 @@ case class AkkaHttpClientSettings(
   password: Option[String],
   queueSize: Int,
   poolSettings: ConnectionPoolSettings,
+  verifySSLCertificate : Boolean,
   blacklistMinDuration: FiniteDuration =
     AkkaHttpClientSettings.default.blacklistMinDuration,
   blacklistMaxDuration: FiniteDuration =
