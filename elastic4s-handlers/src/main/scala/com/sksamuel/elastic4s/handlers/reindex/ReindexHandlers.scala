@@ -36,8 +36,6 @@ trait ReindexHandlers {
 
   implicit object ReindexHandler extends Handler[ReindexRequest, Either[ReindexResponse, CreateTaskResponse]] {
 
-    private val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
-
     override def responseHandler: ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] = new ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] {
       override def handle(response: HttpResponse): Either[ElasticError, Either[ReindexResponse, CreateTaskResponse]] = response.statusCode match {
         case 200 =>

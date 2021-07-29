@@ -23,8 +23,6 @@ trait DeleteHandlers {
 
   implicit object DeleteByQueryHandler extends Handler[DeleteByQueryRequest, Either[DeleteByQueryResponse, CreateTaskResponse]] {
 
-    private val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
-
     override def responseHandler: ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] = new ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] {
       override def handle(response: HttpResponse): Either[ElasticError, Either[DeleteByQueryResponse, CreateTaskResponse]] =
         response.statusCode match {
