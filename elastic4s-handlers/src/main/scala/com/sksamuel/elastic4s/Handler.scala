@@ -12,6 +12,9 @@ import com.sksamuel.exts.Logging
   * @tparam U the type of the response object returned by this handler
   */
 abstract class Handler[T, U: Manifest] extends Logging {
+
+  protected val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
+
   def responseHandler: ResponseHandler[U] = ResponseHandler.default[U]
   def build(t: T): ElasticRequest
 }
