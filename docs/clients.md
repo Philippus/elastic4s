@@ -55,7 +55,7 @@ To use these, add the appropriate module to your build, and then pass an instanc
 For Akka HTTP, we use `AkkaHttpClient`:
 
 ```scala
-val client = ElasticClient(AkkaHttpClient(AkkaHttpClientSettings(List("http://host1:9200"))))
+val client = ElasticClient(AkkaHttpClient(AkkaHttpClientSettings(List("host1:9200"))))
 ```
 
 It's possible to create the `AkkaHttpClientSettings` from Typesafe configuration using `AkkaHttpClientSettings.defaults` or by passing in a `Config` instance using `AkkaHttpClientSettings(config)`.
@@ -66,6 +66,7 @@ The default configuration:
 com.sksamuel.elastic4s.akka {
   hosts: []
   https: false
+  verify-ssl-certificate : true
   queue-size: 1000
   blacklist {
     min-duration = 1m
