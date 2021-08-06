@@ -56,6 +56,9 @@ object JavaClientSniffed extends Logging {
 
     val clientBuilder = RestClient
       .builder(hosts: _*)
+      .setPathPrefix(
+        props.endpoints.map(_.prefix).collectFirst { case Some(prefix) => prefix }.getOrElse("")
+      )
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
 

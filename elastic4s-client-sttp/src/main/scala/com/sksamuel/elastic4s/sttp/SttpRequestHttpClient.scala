@@ -30,7 +30,10 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
       None,
       nodeEndpoint.host,
       nodeEndpoint.port.some,
-      collection.immutable.Seq(endpoint.stripPrefix("/").split('/'): _*),
+      {
+        val path = collection.immutable.Seq(endpoint.stripPrefix("/").split('/'): _*)
+        nodeEndpoint.prefix.fold(path) { prefix => prefix +: path }
+      },
       collection.immutable.Seq(params.map{ case (k, v) => QueryFragment.KeyValue(k, v.toString) }.toSeq: _*),
       None
     )
