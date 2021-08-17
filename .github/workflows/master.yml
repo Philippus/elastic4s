@@ -108,7 +108,7 @@ jobs:
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:7.14.0
 
       - name: run tests
-        run: sbt ++3.0.1 `for i in json_builder domain handlers core clientcore clientesjava clientsSniffed cats_effect cats_effect_2 tests testkit jackson json4s; do echo $i/test; done | xargs`
+        run: sbt ++3.0.1 `for i in json_builder domain handlers core clientcore clientesjava clientsSniffed cats_effect cats_effect_2 zio tests testkit jackson json4s; do echo $i/test; done | xargs`
 
       - name: Import GPG key
         id: import_gpg
@@ -125,7 +125,7 @@ jobs:
           echo "email:       ${{ steps.import_gpg.outputs.email }}"
 
       - name: publish snapshot
-        run: sbt ++3.0.1 `for i in json_builder domain handlers core clientcore clientesjava clientsSniffed cats_effect cats_effect_2 tests testkit jackson json4s; do echo $i/publish; done | xargs`
+        run: sbt ++3.0.1 `for i in json_builder domain handlers core clientcore clientesjava clientsSniffed cats_effect cats_effect_2 zio tests testkit jackson json4s; do echo $i/publish; done | xargs`
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

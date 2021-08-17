@@ -207,7 +207,7 @@ lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
 lazy val zio = (project in file("elastic4s-effect-zio"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-effect-zio")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Dependencies.zio)
 
 lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
