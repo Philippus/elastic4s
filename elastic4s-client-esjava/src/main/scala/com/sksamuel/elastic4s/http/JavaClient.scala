@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.http
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
-
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
@@ -11,7 +10,7 @@ import org.apache.http.client.config.RequestConfig
 import org.apache.http.entity.{AbstractHttpEntity, ByteArrayEntity, ContentType, FileEntity, InputStreamEntity, StringEntity}
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
-import org.elasticsearch.client.{Request, ResponseException, ResponseListener, RestClient}
+import org.elasticsearch.client.{Request, ResponseException, ResponseListener, RestClient, RestClientBuilder}
 
 import scala.io.{Codec, Source}
 import scala.language.higherKinds
@@ -126,16 +125,32 @@ object JavaClient extends Logging {
     }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
 
-    val client = RestClient
+    val client: RestClient = RestClient
       .builder(hosts: _*)
-      .setPathPrefix(
-        props.endpoints.map(_.prefix).collectFirst { case Some(prefix) => prefix }.getOrElse("")
-      )
+      .setOrIgnorePath(props)
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
       .build()
 
     fromRestClient(client)
+  }
+
+  implicit class RestClientOps(builder: RestClientBuilder) {
+    def setOrIgnorePath(props: ElasticProperties): RestClientBuilder = {
+      val prefixes = props.endpoints.map(_.prefix)
+      prefixes.toList match {
+        case head :: tail =>
+          if (tail.forall(_ == head)){
+            head.fold(builder)(prefix =>
+              builder.setPathPrefix(prefix)
+            )
+          } else {
+            throw new IllegalArgumentException("all of the paths have to be the same")
+          }
+        case Nil =>
+          throw new IllegalArgumentException("the endpoints cannot be empty")
+      }
+    }
   }
 }
 

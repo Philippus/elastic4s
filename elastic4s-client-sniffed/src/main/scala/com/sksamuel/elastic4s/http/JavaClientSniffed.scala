@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.http.JavaClient.fromRestClient
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties}
 import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
-import org.elasticsearch.client.RestClient
+import org.elasticsearch.client.{RestClient, RestClientBuilder}
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 import org.elasticsearch.client.sniff.{NodesSniffer, SniffOnFailureListener, Sniffer}
 
@@ -56,9 +56,7 @@ object JavaClientSniffed extends Logging {
 
     val clientBuilder = RestClient
       .builder(hosts: _*)
-      .setPathPrefix(
-        props.endpoints.map(_.prefix).collectFirst { case Some(prefix) => prefix }.getOrElse("")
-      )
+      .setOrIgnorePath(props)
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
 
@@ -79,5 +77,23 @@ object JavaClientSniffed extends Logging {
     if (sniffAfterFailureInterval.isDefined) failureSniffer.setSniffer(sniffer)
 
     fromRestClient(client)
+  }
+
+  implicit class RestClientOps(builder: RestClientBuilder) {
+    def setOrIgnorePath(props: ElasticProperties): RestClientBuilder = {
+      val prefixes = props.endpoints.map(_.prefix)
+      prefixes.toList match {
+        case head :: tail =>
+          if (tail.forall(_ == head)){
+            head.fold(builder)(prefix => {
+              builder.setPathPrefix(prefix)
+            })
+          } else {
+            throw new IllegalArgumentException("all of the paths have to be the same")
+          }
+        case Nil =>
+          throw new IllegalArgumentException("the endpoints cannot be empty")
+      }
+    }
   }
 }
