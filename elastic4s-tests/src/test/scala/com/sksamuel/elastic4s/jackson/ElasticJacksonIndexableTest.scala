@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.jackson
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.{DeserializationContext, JsonDeserializer, JsonMappingException, ObjectMapper}
-import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.fasterxml.jackson.module.scala.ClassTagExtensions
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
@@ -46,7 +46,7 @@ class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerT
     }
     "support custom mapper" in {
 
-     implicit val custom: ObjectMapper with ScalaObjectMapper = new ObjectMapper with ScalaObjectMapper
+      implicit val custom: ObjectMapper with ClassTagExtensions = new ObjectMapper with ClassTagExtensions
 
       val module = new SimpleModule
       module.addDeserializer(classOf[String], new JsonDeserializer[String] {

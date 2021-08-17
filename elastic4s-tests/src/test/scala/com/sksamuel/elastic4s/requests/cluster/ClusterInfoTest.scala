@@ -28,18 +28,18 @@ class ClusterInfoTest extends AnyWordSpec with Matchers with DockerTests with Be
       }.await.result
 
       info.valueAt("cluster_one") should have(
-        'seeds (Seq("127.0.0.1:9300", "127.0.0.2:9300")),
-        'maxConnectionsPerCluster (3),
-        'initialConnectTimeout ("30s"),
-        'skipUnavailable (false)
+        Symbol("seeds") (Seq("127.0.0.1:9300", "127.0.0.2:9300")),
+        Symbol("maxConnectionsPerCluster") (3),
+        Symbol("initialConnectTimeout") ("30s"),
+        Symbol("skipUnavailable") (false)
       )
 
       info.valueAt("cluster_two") should have(
-      //  'connected (false),
-      //  'numNodesConnected (0),
-        'maxConnectionsPerCluster (3),
-        'initialConnectTimeout ("30s"),
-        'skipUnavailable (false))
+      //  Symbol("connected") (false),
+      //  Symbol("numNodesConnected") (0),
+        Symbol("maxConnectionsPerCluster") (3),
+        Symbol("initialConnectTimeout") ("30s"),
+        Symbol("skipUnavailable") (false))
     }
   }
 

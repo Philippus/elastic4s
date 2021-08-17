@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, GeoCentroid
 object GeoCentroidAggregationBuilder {
   def apply(agg: GeoCentroidAggregation): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("geo_centroid")
+    val builder = XContentFactory.obj().startObject("geo_centroid")
 
     agg.field.foreach(builder.field("field", _))
     agg.format.foreach(builder.field("format", _))

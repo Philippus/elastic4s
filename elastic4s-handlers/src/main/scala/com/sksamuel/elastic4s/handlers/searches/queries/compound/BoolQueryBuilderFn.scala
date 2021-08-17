@@ -11,28 +11,28 @@ object BoolQueryBuilderFn {
 
     if (bool.must.nonEmpty) {
       builder.startArray("must")
-      val musts = bool.must.map(QueryBuilderFn.apply).map(_.string).mkString(",")
+      val musts = bool.must.map(QueryBuilderFn.apply).map(_.string()).mkString(",")
       builder.rawValue(musts)
       builder.endArray()
     }
 
     if (bool.should.nonEmpty) {
       builder.startArray("should")
-      val should = bool.should.map(QueryBuilderFn.apply).map(_.string).mkString(",")
+      val should = bool.should.map(QueryBuilderFn.apply).map(_.string()).mkString(",")
       builder.rawValue(should)
       builder.endArray()
     }
 
     if (bool.not.nonEmpty) {
       builder.startArray("must_not")
-      val nots = bool.not.map(QueryBuilderFn.apply).map(_.string).mkString(",")
+      val nots = bool.not.map(QueryBuilderFn.apply).map(_.string()).mkString(",")
       builder.rawValue(nots)
       builder.endArray()
     }
 
     if (bool.filters.nonEmpty) {
       builder.startArray("filter")
-      val filters = bool.filters.map(QueryBuilderFn.apply).map(_.string).mkString(",")
+      val filters = bool.filters.map(QueryBuilderFn.apply).map(_.string()).mkString(",")
       builder.rawValue(filters)
       builder.endArray()
     }

@@ -8,7 +8,7 @@ class SnowballTokenFilterTest extends AnyWordSpec with TokenFilterApi with Match
 
   "SnowballTokenFilter builder" should {
     "set language" in {
-      snowballTokenFilter("testy", "vulcan").json.string shouldBe """{"type":"snowball","language":"vulcan"}"""
+      snowballTokenFilter("testy", "vulcan").json.string() shouldBe """{"type":"snowball","language":"vulcan"}"""
     }
   }
 }

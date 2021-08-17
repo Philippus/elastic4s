@@ -11,7 +11,7 @@ class ElisionTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matche
       elisionTokenFilter("testy")
         .articles("a", "b")
         .json
-        .string shouldBe
+        .string() shouldBe
         """{"type":"elision","articles":["a","b"]}"""
     }
   }

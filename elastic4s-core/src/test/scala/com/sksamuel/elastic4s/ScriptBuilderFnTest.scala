@@ -9,32 +9,32 @@ import org.scalatest.matchers.should.Matchers
 class ScriptBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("should handle recursive maps") {
-    ScriptBuilderFn(Script("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string shouldBe
+    ScriptBuilderFn(Script("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string() shouldBe
       """{"source":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
   }
 
   test("should handle lists of maps") {
-    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string shouldBe
+    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string() shouldBe
       """{"source":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
   }
 
   test("should handle recursive lists") {
-    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> List(List(List("foo")))))).string shouldBe
+    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> List(List(List("foo")))))).string() shouldBe
       """{"source":"myscript","params":{"a":[[["foo"]]]}}"""
   }
 
   test("should handle maps of lists") {
-    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> List(3, 2, 1)))).string shouldBe
+    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> List(3, 2, 1)))).string() shouldBe
       """{"source":"myscript","params":{"a":[3,2,1]}}"""
   }
 
   test("should handle mixed lists") {
-    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> List(List(true, 1.2, List("foo"), Map("w" -> "wibble")))))).string shouldBe
+    script.ScriptBuilderFn(Script("myscript", params = Map("a" -> List(List(true, 1.2, List("foo"), Map("w" -> "wibble")))))).string() shouldBe
       """{"source":"myscript","params":{"a":[[true,1.2,["foo"],{"w":"wibble"}]]}}"""
   }
 
   test("should handle stored scripts") {
-    script.ScriptBuilderFn(Script("convert_currency", scriptType = ScriptType.Stored, params = Map("field" -> "price", "conversion_rate" -> 0.835526591))).string shouldBe
+    script.ScriptBuilderFn(Script("convert_currency", scriptType = ScriptType.Stored, params = Map("field" -> "price", "conversion_rate" -> 0.835526591))).string() shouldBe
       """{"id":"convert_currency","params":{"field":"price","conversion_rate":0.835526591}}"""
   }
 
@@ -50,7 +50,7 @@ class ScriptBuilderFnTest extends AnyFunSuite with Matchers {
         .params("testParam" -> 100)
         .paramsRaw("testRawParam" -> """{"abc":"def"}""")
         .paramsObject("testObjectParam" -> TestParam(4.5d))
-    ).string shouldBe
+    ).string() shouldBe
       """{"source":"mix_script","params":{"testParam":100,"testRawParam":{"abc":"def"},"testObjectParam":{"x":4.5}}}"""
   }
 }

@@ -34,7 +34,7 @@ class ScriptSortTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
   "script sort" - {
     "sort by name length" in {
       val sorted = client.execute {
-        search("scriptsort") query matchAllQuery sortBy {
+        search("scriptsort") query matchAllQuery() sortBy {
           scriptSort(
             script(""" doc['name'].value.length() """)
           ) typed ScriptSortType.NUMBER

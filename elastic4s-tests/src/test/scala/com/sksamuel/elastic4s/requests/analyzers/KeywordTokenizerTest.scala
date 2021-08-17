@@ -9,7 +9,7 @@ class KeywordTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers w
 
   "KeywordTokenizer builder" should {
     "set buffer size" in {
-      keywordTokenizer("testy").bufferSize(123).json.string shouldBe """{"type":"keyword","bufferSize":123}"""
+      keywordTokenizer("testy").bufferSize(123).json.string() shouldBe """{"type":"keyword","bufferSize":123}"""
     }
   }
 }

@@ -30,7 +30,7 @@ trait IndexAdminHandlers {
         builder.endObject()
       }
 
-      val entity = HttpEntity(builder.string, "application/json")
+      val entity = HttpEntity(builder.string(), "application/json")
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }

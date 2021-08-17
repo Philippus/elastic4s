@@ -8,10 +8,10 @@ class UniqueTokenFilterTest extends AnyWordSpec with AnalyzerApi with Matchers w
 
   "UniqueTokenFilter builder" should {
     "not set any defaults" in {
-      uniqueTokenFilter("testy").json.string shouldBe """{"type":"unique"}"""
+      uniqueTokenFilter("testy").json.string() shouldBe """{"type":"unique"}"""
     }
     "set only same position" in {
-      uniqueTokenFilter("testy").onlyOnSamePosition(true).json.string shouldBe """{"type":"unique","only_on_same_position":true}"""
+      uniqueTokenFilter("testy").onlyOnSamePosition(true).json.string() shouldBe """{"type":"unique","only_on_same_position":true}"""
     }
   }
 }

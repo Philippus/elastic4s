@@ -11,13 +11,13 @@ class SnowballAnalyzerTest extends AnyWordSpec with AnalyzerApi with Matchers {
       standardAnalyzer("testy")
         .stopwords("a", "b")
         .json
-        .string shouldBe """{"type":"standard","stopwords":["a","b"],"max_token_length":255}"""
+        .string() shouldBe """{"type":"standard","stopwords":["a","b"],"max_token_length":255}"""
     }
     "set maxTokenLength" in {
       standardAnalyzer("testy")
         .maxTokenLength(34)
         .json
-        .string shouldBe """{"type":"standard","stopwords":[],"max_token_length":34}"""
+        .string() shouldBe """{"type":"standard","stopwords":[],"max_token_length":34}"""
     }
   }
 }

@@ -25,7 +25,7 @@ object ElasticProperties {
         val options = StringOption(query)
           .map(_.drop(1))
           .map(_.split('&'))
-          .getOrElse(Array.empty)
+          .getOrElse(Array.empty[String])
           .map(_.split('='))
           .collect {
             case Array(key, value) => (key, value)

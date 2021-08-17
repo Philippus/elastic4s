@@ -8,7 +8,7 @@ class ClassicTokenizerBuilderTest extends AnyWordSpec with Matchers {
 
   "ClassicTokenizer" should {
     "build json" in {
-      ClassicTokenizer("testy", 123).build.string shouldBe """{"type":"classic","max_token_length":123}"""
+      ClassicTokenizer("testy", 123).build.string() shouldBe """{"type":"classic","max_token_length":123}"""
     }
   }
 }

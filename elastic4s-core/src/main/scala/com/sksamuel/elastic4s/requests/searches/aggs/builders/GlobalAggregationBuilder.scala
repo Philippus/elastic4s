@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, GlobalAggre
 object GlobalAggregationBuilder {
   def apply(agg: GlobalAggregation): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("global")
+    val builder = XContentFactory.obj().startObject("global")
 
     builder.endObject()
 

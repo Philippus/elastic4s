@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.fasterxml.jackson.module.scala.JavaTypeable
 import com.sksamuel.exts.Logging
 
 /**
@@ -11,7 +12,7 @@ import com.sksamuel.exts.Logging
   * @tparam T the type of the request object handled by this handler
   * @tparam U the type of the response object returned by this handler
   */
-abstract class Handler[T, U: Manifest] extends Logging {
+abstract class Handler[T, U: JavaTypeable] extends Logging {
 
   protected val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
 

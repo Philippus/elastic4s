@@ -11,7 +11,7 @@ object FiltersAggregationBuilder {
 
     val filters = {
       builder.startArray("filters")
-      val filters = agg.filters.map(QueryBuilderFn.apply).map(_.string).mkString(",")
+      val filters = agg.filters.map(QueryBuilderFn.apply).map(_.string()).mkString(",")
       builder.rawValue(filters)
       builder.endArray()
     }

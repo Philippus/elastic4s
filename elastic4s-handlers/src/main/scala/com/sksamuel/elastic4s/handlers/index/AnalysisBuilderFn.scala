@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.indexes.AnalysisDefinition
 @deprecated("use new analysis package", "7.0.1")
 object AnalysisBuilderFn {
 
-  def build(ad: AnalysisDefinition, source: XContentBuilder) {
+  def build(ad: AnalysisDefinition, source: XContentBuilder) = {
     source.startObject("analysis")
 
     val charFilterDefinitions = ad.charFilterDefinitions

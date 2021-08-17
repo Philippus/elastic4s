@@ -8,7 +8,7 @@ class WhitespaceTokenizerBuilderTest extends AnyWordSpec with Matchers {
 
   "WhitespaceTokenizer" should {
     "build json" in {
-      WhitespaceTokenizer("testy", 123).build.string shouldBe """{"type":"whitespace","max_token_length":123}"""
+      WhitespaceTokenizer("testy", 123).build.string() shouldBe """{"type":"whitespace","max_token_length":123}"""
     }
   }
 }

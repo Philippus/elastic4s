@@ -24,9 +24,9 @@ object SearchBodyBuilderFn {
     request.version.map(_.toString).foreach(builder.field("version", _))
     request.seqNoPrimaryTerm.map(_.toString).foreach(builder.field("seq_no_primary_term", _))
 
-    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
-    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
-    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
+    request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string()))
+    request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string()))
+    request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string()))
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
@@ -75,7 +75,7 @@ object SearchBodyBuilderFn {
     if (request.sorts.nonEmpty) {
       builder.startArray("sort")
       // Workaround for bug where separator is not added with rawValues
-      val arrayBody = request.sorts.map(s => SortBuilderFn(s).string).mkString(",")
+      val arrayBody = request.sorts.map(s => SortBuilderFn(s).string()).mkString(",")
       builder.rawValue(arrayBody)
       builder.endArray()
     }

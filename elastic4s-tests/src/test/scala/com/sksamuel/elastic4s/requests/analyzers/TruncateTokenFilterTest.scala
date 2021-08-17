@@ -8,10 +8,10 @@ class TruncateTokenFilterTest extends AnyWordSpec with TokenFilterApi with Match
 
   "TruncateTokenFilter builder" should {
     "not set any defaults" in {
-      truncateTokenFilter("testy").json.string shouldBe """{"type":"truncate"}"""
+      truncateTokenFilter("testy").json.string() shouldBe """{"type":"truncate"}"""
     }
     "set length" in {
-      truncateTokenFilter("testy").length(5).json.string shouldBe """{"type":"truncate","length":5}"""
+      truncateTokenFilter("testy").length(5).json.string() shouldBe """{"type":"truncate","length":5}"""
     }
   }
 }

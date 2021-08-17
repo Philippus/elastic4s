@@ -14,7 +14,7 @@ class CustomAnalyzerTest extends AnyFlatSpec with Matchers {
       PredefinedTokenFilter("german_keywords"),
       PredefinedTokenFilter("german_normalization"),
       PredefinedTokenFilter("german_stemmer")
-    ).buildWithName().string shouldBe
+    ).buildWithName().string() shouldBe
       """{"mygerman":{"type":"custom","tokenizer":"standard","filter":["lowercase","german_stop","german_keywords","german_normalization","german_stemmer"]}}"""
   }
 }

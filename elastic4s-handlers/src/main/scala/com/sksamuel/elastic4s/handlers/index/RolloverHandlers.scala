@@ -32,7 +32,7 @@ trait RolloverHandlers {
       request.maxSize.foreach(builder.field("max_size", _))
       builder.endObject()
 
-      val entity = HttpEntity(builder.string, "application/json")
+      val entity = HttpEntity(builder.string(), "application/json")
       ElasticRequest("POST", endpoint2, params.toMap, entity)
     }
   }

@@ -24,7 +24,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = CreateOrUpdateUserContentBuilder(create).string
+		val result = CreateOrUpdateUserContentBuilder(create).string()
 		result shouldBe formattedJson
 	}
 
@@ -44,7 +44,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = users.CreateOrUpdateUserContentBuilder(create).string
+		val result = users.CreateOrUpdateUserContentBuilder(create).string()
 		result shouldBe formattedJson
 	}
 
@@ -70,7 +70,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = users.CreateOrUpdateUserContentBuilder(create).string
+		val result = users.CreateOrUpdateUserContentBuilder(create).string()
 		result shouldBe formattedJson
 	}
 
@@ -91,7 +91,7 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".replace("\n", "").replace("\t", "")
 		val formattedJson = spaceBetweenPunctuation.replaceAllIn(expectedJson, "$1$2")
-		val result = users.CreateOrUpdateUserContentBuilder(create).string
+		val result = users.CreateOrUpdateUserContentBuilder(create).string()
 		result shouldBe formattedJson
 	}
 
@@ -102,6 +102,6 @@ class CreateOrUpdateUserContentBuilderTest extends AnyFunSuite with Matchers {
 			password=None,
 			roles=Seq("test-role")
 		)
-		a [IllegalArgumentException] should be thrownBy users.CreateOrUpdateUserContentBuilder(create).string
+		a [IllegalArgumentException] should be thrownBy users.CreateOrUpdateUserContentBuilder(create).string()
 	}
 }

@@ -26,7 +26,7 @@ abstract class AnalyzerDefinition(val name: String) {
   def build(source: XContentBuilder): Unit
 
   def json: XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder
+    val builder = XContentFactory.jsonBuilder()
     build(builder)
     builder.endObject()
   }

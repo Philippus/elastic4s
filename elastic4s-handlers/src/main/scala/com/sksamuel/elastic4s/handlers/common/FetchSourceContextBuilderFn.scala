@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 // takes a FetchSourceContext and returns the appropriate json
 // https://www.elastic.co/guide/en/elasticsearch/reference/5.6/search-request-source-filtering.html
 object FetchSourceContextBuilderFn {
-  def apply(builder: XContentBuilder, context: FetchSourceContext) {
+  def apply(builder: XContentBuilder, context: FetchSourceContext) = {
     if (context.fetchSource)
       if (context.includes.nonEmpty || context.excludes.nonEmpty) {
         builder.startObject("_source")

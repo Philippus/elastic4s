@@ -8,7 +8,7 @@ class StandardTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers 
 
   "StandardTokenizer builder" should {
     "set max token length" in {
-      standardTokenizer("testy").maxTokenLength(14).json.string shouldBe """{"type":"standard","max_token_length":14}"""
+      standardTokenizer("testy").maxTokenLength(14).json.string() shouldBe """{"type":"standard","max_token_length":14}"""
     }
   }
 }

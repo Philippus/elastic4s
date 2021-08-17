@@ -19,8 +19,8 @@ object Dependencies {
   val PlayJsonVersion                = "2.9.2"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "5.1.0"
-  val ScalatestPlusMockitoArtifactId = "mockito-3-2"
-  val ScalatestPlusVersion           = "3.1.2.0"
+  val ScalatestPlusMockitoArtifactId = "mockito-3-4"
+  val ScalatestPlusVersion           = "3.2.9.0"
   val ScalatestVersion               = "3.2.10"
   val ScalazVersion                  = "7.2.32"
   val Slf4jVersion                   = "1.7.32"
@@ -75,7 +75,8 @@ object Dependencies {
   lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % "test"
   lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
   lazy val scalaMock             = "org.scalamock"           %% "scalamock"                    % ScalamockVersion       % "test"
-  lazy val scalaTest             = "org.scalatest"           %% "scalatest"                    % ScalatestVersion       % "test"
+  lazy val scalaTestMain             = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
+  lazy val scalaTest             = scalaTestMain       % "test"
   lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
   lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % "test"
 

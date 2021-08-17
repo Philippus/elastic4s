@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, GeoTileGrid
 object GeoTileGridAggregationBuilder {
   def apply(agg: GeoTileGridAggregation): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("geotile_grid")
+    val builder = XContentFactory.obj().startObject("geotile_grid")
 
     agg.field.foreach(builder.field("field", _))
     agg.precision.foreach(builder.field("precision", _))

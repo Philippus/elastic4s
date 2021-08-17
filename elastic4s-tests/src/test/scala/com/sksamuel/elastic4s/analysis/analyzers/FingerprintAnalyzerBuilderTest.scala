@@ -8,7 +8,7 @@ class FingerprintAnalyzerBuilderTest extends AnyWordSpec with Matchers {
 
   "FingerprintAnalyzer" should {
     "build json" in {
-      FingerprintAnalyzer("testy").separator("-").maxOutputSize(123).stopwords("a", "z").build.string shouldBe """{"type":"fingerprint","separator":"-","stopwords":["a","z"],"max_output_size":123}"""
+      FingerprintAnalyzer("testy").separator("-").maxOutputSize(123).stopwords("a", "z").build.string() shouldBe """{"type":"fingerprint","separator":"-","stopwords":["a","z"],"max_output_size":123}"""
     }
   }
 }

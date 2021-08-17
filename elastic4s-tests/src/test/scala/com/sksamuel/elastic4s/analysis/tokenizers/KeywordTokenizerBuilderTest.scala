@@ -8,7 +8,7 @@ class KeywordTokenizerBuilderTest extends AnyWordSpec with Matchers {
 
   "KeywordTokenizer" should {
     "build json" in {
-      KeywordTokenizer("testy").bufferSize(123).build.string shouldBe """{"type":"keyword","bufferSize":123}"""
+      KeywordTokenizer("testy").bufferSize(123).build.string() shouldBe """{"type":"keyword","bufferSize":123}"""
     }
   }
 }

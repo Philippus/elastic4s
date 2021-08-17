@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.jackson
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.fasterxml.jackson.module.scala.{ClassTagExtensions, JavaTypeable}
 import com.sksamuel.elastic4s._
 import com.sksamuel.exts.Logging
 
@@ -18,8 +18,8 @@ object ElasticJackson {
     implicit def JacksonJsonParamSerializer[T](implicit mapper: ObjectMapper = JacksonSupport.mapper): ParamSerializer[T] =
       (t: T) => mapper.writeValueAsString(t)
 
-    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper with ScalaObjectMapper = JacksonSupport.mapper,
-                                         manifest: Manifest[T]): HitReader[T] = (hit: Hit) => Try {
+    implicit def JacksonJsonHitReader[T](implicit mapper: ObjectMapper with ClassTagExtensions = JacksonSupport.mapper,
+                                         javaTypeable: JavaTypeable[T]): HitReader[T] = (hit: Hit) => Try {
       val node = mapper.readTree(mapper.writeValueAsBytes(hit.sourceAsMap)).asInstanceOf[ObjectNode]
       if (!node.has("_id")) node.put("_id", hit.id)
       if (!node.has("_type")) node.put("_type", hit.`type`)
