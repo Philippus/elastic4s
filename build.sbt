@@ -18,7 +18,8 @@ def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
-
+val scala2Versions = Seq("2.12.15", "2.13.6")
+val scalaAllVersions = scala2Versions :+ "3.0.1"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.15",
   crossScalaVersions := Seq("2.12.15", "2.13.6", "3.0.2")
@@ -107,6 +108,9 @@ lazy val allSettings = commonScalaVersionSettings ++
   warnUnusedImport ++
   publishSettings
 
+lazy val scala2Settings = allSettings :+ (crossScalaVersions := scala2Versions)
+lazy val scala3Settings = allSettings :+ (crossScalaVersions := scalaAllVersions)
+
 
 
 lazy val root = Project("elastic4s", file("."))
@@ -120,59 +124,59 @@ lazy val root = Project("elastic4s", file("."))
     core,
     clientcore,
     clientesjava,
-//    clientsSniffed,
+    clientsSniffed,
     cats_effect,
-//    cats_effect_2,
-//    zio,
-//    scalaz,
-//    monix,
+    cats_effect_2,
+    zio,
+    scalaz,
+    monix,
     tests,
     testkit,
     circe,
     jackson,
-//    json4s,
-//    playjson,
-//    sprayjson,
-//    ziojson,
-//    clientsttp,
-//    clientakka,
-//    httpstreams,
-//    akkastreams
+    json4s,
+    playjson,
+    sprayjson,
+    ziojson,
+    clientsttp,
+    clientakka,
+    httpstreams,
+    akkastreams
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
   .settings(name := "elastic4s-domain")
   .dependsOn(json_builder)
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= fasterXmlJacksonScala)
 
 lazy val json_builder = (project in file("elastic4s-json-builder"))
   .settings(name := "elastic4s-json-builder")
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= fasterXmlJacksonScala)
 
 lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .dependsOn(domain, clientcore, handlers, json_builder)
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= fasterXmlJacksonScala)
 
 lazy val handlers = (project in file("elastic4s-handlers"))
   .settings(name := "elastic4s-handlers")
   .dependsOn(domain, json_builder)
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= fasterXmlJacksonScala)
 
 lazy val clientcore = (project in file("elastic4s-client-core"))
   .settings(name := "elastic4s-client-core")
   .dependsOn(handlers)
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(log4jApi))
 
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   .settings(name := "elastic4s-client-esjava")
   .dependsOn(core)
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(
     libraryDependencies ++= Seq(elasticsearchRestClient,
       log4jApi,
@@ -185,68 +189,68 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
 lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .settings(name := "elastic4s-client-sniffed")
   .dependsOn(clientesjava)
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(elasticsearchRestClientSniffer))
 
 lazy val cats_effect = (project in file("elastic4s-effect-cats"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-effect-cats")
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies += cats)
 
-//lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
-//  .dependsOn(core, testkit % "test")
-//  .settings(name := "elastic4s-effect-cats-2")
-//  .settings(allSettings)
-//  .settings(libraryDependencies += cats2)
-//
-//lazy val zio = (project in file("elastic4s-effect-zio"))
-//  .dependsOn(core, testkit % "test")
-//  .settings(name := "elastic4s-effect-zio")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Dependencies.zio)
-//
-//lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-effect-scalaz")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Dependencies.scalaz)
-//
-//lazy val monix = (project in file("elastic4s-effect-monix"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-effect-monix")
-//  .settings(allSettings)
-//  .settings(libraryDependencies += Dependencies.monix)
+lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-effect-cats-2")
+  .settings(scala3Settings)
+  .settings(libraryDependencies += cats2)
+
+lazy val zio = (project in file("elastic4s-effect-zio"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-effect-zio")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Dependencies.zio)
+
+lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-effect-scalaz")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Dependencies.scalaz)
+
+lazy val monix = (project in file("elastic4s-effect-monix"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-effect-monix")
+  .settings(scala2Settings)
+  .settings(libraryDependencies += Dependencies.monix)
 
 lazy val testkit = (project in file("elastic4s-testkit"))
   .dependsOn(core, clientesjava)
   .settings(name := "elastic4s-testkit")
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain, scalaTestPlusMokito))
 
-//lazy val httpstreams = (project in file("elastic4s-http-streams"))
-//  .dependsOn(core, testkit % "test", jackson % "test")
-//  .settings(name := "elastic4s-http-streams")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++=
-//    Seq(
-//      Dependencies.akkaActor,
-//      Dependencies.akkaStream,
-//      Dependencies.reactiveStreamsTck,
-//      Dependencies.scalaTestPlusTestng67
-//    )
-//  )
-//
-//lazy val akkastreams = (project in file("elastic4s-streams-akka"))
-//  .dependsOn(core, testkit % "test", jackson % "test")
-//  .settings(name := "elastic4s-streams-akka")
-//  .settings(allSettings)
-//  .settings(libraryDependencies += Dependencies.akkaStream)
+lazy val httpstreams = (project in file("elastic4s-http-streams"))
+  .dependsOn(core, testkit % "test", jackson % "test")
+  .settings(name := "elastic4s-http-streams")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++=
+    Seq(
+      Dependencies.akkaActor,
+      Dependencies.akkaStream,
+      Dependencies.reactiveStreamsTck,
+      Dependencies.scalaTestPlusTestng67
+    )
+  )
+
+lazy val akkastreams = (project in file("elastic4s-streams-akka"))
+  .dependsOn(core, testkit % "test", jackson % "test")
+  .settings(name := "elastic4s-streams-akka")
+  .settings(scala2Settings)
+  .settings(libraryDependencies += Dependencies.akkaStream)
 
 lazy val jackson = (project in file("elastic4s-json-jackson"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-jackson")
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(
     libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
     libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
@@ -256,49 +260,49 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
 lazy val circe = (project in file("elastic4s-json-circe"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-circe")
-  .settings(allSettings)
+  .settings(scala2Settings)
   .settings(libraryDependencies ++= Dependencies.circe)
 
-//lazy val json4s = (project in file("elastic4s-json-json4s"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-json-json4s")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Dependencies.json4s)
-//
-//lazy val playjson = (project in file("elastic4s-json-play"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-json-play")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Dependencies.playJson)
-//
-//lazy val sprayjson = (project in file("elastic4s-json-spray"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-json-spray")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Dependencies.sprayJson)
-//
-//lazy val ziojson = (project in file("elastic4s-json-zio"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-json-zio")
-//  .settings(allSettings)
-//  .settings(libraryDependencies += Dependencies.zioJson)
-//
-//lazy val clientsttp = (project in file("elastic4s-client-sttp"))
-//  .dependsOn(core)
-//  .settings(name := "elastic4s-client-sttp")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Seq(sttp, asyncHttpClientBackendFuture))
-//
-//lazy val clientakka = (project in file("elastic4s-client-akka"))
-//  .dependsOn(core, testkit % "test")
-//  .settings(name := "elastic4s-client-akka")
-//  .settings(allSettings)
-//  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, scalaMock))
+lazy val json4s = (project in file("elastic4s-json-json4s"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-json4s")
+  .settings(scala3Settings)
+  .settings(libraryDependencies ++= Dependencies.json4s)
+
+lazy val playjson = (project in file("elastic4s-json-play"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-play")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Dependencies.playJson)
+
+lazy val sprayjson = (project in file("elastic4s-json-spray"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-spray")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Dependencies.sprayJson)
+
+lazy val ziojson = (project in file("elastic4s-json-zio"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-zio")
+  .settings(scala2Settings)
+  .settings(libraryDependencies += Dependencies.zioJson)
+
+lazy val clientsttp = (project in file("elastic4s-client-sttp"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-client-sttp")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Seq(sttp, asyncHttpClientBackendFuture))
+
+lazy val clientakka = (project in file("elastic4s-client-akka"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-client-akka")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, scalaMock))
 
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")
   .dependsOn(core, jackson, testkit % "test")
-  .settings(allSettings)
+  .settings(scala3Settings)
   .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= Seq(
