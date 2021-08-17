@@ -58,7 +58,7 @@ lazy val publishSettings = Seq(
 )
 
 lazy val commonJvmSettings = Seq(
-   Test / testOptions += {
+  Test / testOptions += {
     val flag = if (isGithubActions) "-oCI" else "-oDF"
     Tests.Argument(TestFrameworks.ScalaTest, flag)
   },

@@ -56,6 +56,13 @@ jobs:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 
+      - name: publish 3.0 release
+        run: sbt ++3.0.1 `for i in json_builder domain handlers core clientcore clientesjava clientsSniffed cats_effect cats_effect_2 tests testkit jackson json4s; do echo $i/publishSigned; done | xargs`
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.version }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+
       - name: tag release
         run: |
           git tag v${{ github.event.inputs.version }}

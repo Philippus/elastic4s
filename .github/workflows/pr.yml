@@ -45,3 +45,22 @@ jobs:
 
       - name: run tests
         run: sbt ++2.13.4 test
+
+  scala-3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Launch elastic docker
+        run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+
+      - name: run tests
+        run: sbt ++3.0.1 `for i in json_builder domain handlers core clientcore clientesjava clientsSniffed cats_effect cats_effect_2 tests testkit jackson json4s; do echo $i/test; done | xargs`
