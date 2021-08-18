@@ -65,7 +65,7 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
     }
 
     // check if the buffer has dropped below threshold (or is empty) and if so, trigger a fetch
-    private def maybeFetch() {
+    private def maybeFetch(): Unit = {
       if (buffer.isEmpty || buffer.size <= settings.fetchThreshold)
         fetch()
     }

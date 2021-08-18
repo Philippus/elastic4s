@@ -55,13 +55,13 @@ class AkkaHttpClientMockTest
       (blacklist.remove _).expects("host2").returns(false)
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host1/test")
         })
         .returns(Success(HttpResponse(StatusCodes.BadGateway)))
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host2/test")
         })
         .returns(Success(HttpResponse().withEntity("ok")))
@@ -95,7 +95,7 @@ class AkkaHttpClientMockTest
       (blacklist.add _).expects("host1").returns(true)
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host1/test")
         })
         .returns(Success(HttpResponse(StatusCodes.BadGateway)))
@@ -128,13 +128,13 @@ class AkkaHttpClientMockTest
       (blacklist.remove _).expects("host2").returns(false)
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host1/test")
         })
         .returns(Success(HttpResponse(StatusCodes.BadGateway)))
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host2/test")
         })
         .returns(Success(HttpResponse().withEntity("host2")))
@@ -164,13 +164,13 @@ class AkkaHttpClientMockTest
       (blacklist.remove _).expects("host2").returns(false)
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host1/test")
         })
         .returns(Failure(new Exception("Some exception")))
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host2/test")
         })
         .returns(Success(HttpResponse().withEntity("host2")))
@@ -200,7 +200,7 @@ class AkkaHttpClientMockTest
       (blacklist.remove _).expects("host2").returns(false)
 
       sendRequest
-        .expects(argThat { r: HttpRequest =>
+        .expects(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host2/test")
         })
         .returns(Success(HttpResponse().withEntity("host2")))

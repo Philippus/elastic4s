@@ -213,7 +213,7 @@ lazy val zio = (project in file("elastic4s-effect-zio"))
 lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
   .dependsOn(core)
   .settings(name := "elastic4s-effect-scalaz")
-  .settings(scala2Settings)
+  .settings(scala2Settings) // scalaz.concurrent has gone now, so this is probably never going to be portable to scala 3
   .settings(libraryDependencies ++= Dependencies.scalaz)
 
 lazy val monix = (project in file("elastic4s-effect-monix"))
@@ -231,7 +231,7 @@ lazy val testkit = (project in file("elastic4s-testkit"))
 lazy val httpstreams = (project in file("elastic4s-http-streams"))
   .dependsOn(core, testkit % "test", jackson % "test")
   .settings(name := "elastic4s-http-streams")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++=
     Seq(
       Dependencies.akkaActor,
@@ -244,7 +244,7 @@ lazy val httpstreams = (project in file("elastic4s-http-streams"))
 lazy val akkastreams = (project in file("elastic4s-streams-akka"))
   .dependsOn(core, testkit % "test", jackson % "test")
   .settings(name := "elastic4s-streams-akka")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.akkaStream)
 
 lazy val jackson = (project in file("elastic4s-json-jackson"))
@@ -260,7 +260,7 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
 lazy val circe = (project in file("elastic4s-json-circe"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-circe")
-  .settings(scala2Settings)
+  .settings(scala2Settings) // Just a couple of failing tests. Should be fixable
   .settings(libraryDependencies ++= Dependencies.circe)
 
 lazy val json4s = (project in file("elastic4s-json-json4s"))
@@ -272,31 +272,31 @@ lazy val json4s = (project in file("elastic4s-json-json4s"))
 lazy val playjson = (project in file("elastic4s-json-play"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-play")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Dependencies.playJson)
 
 lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-spray")
-  .settings(scala2Settings)
+  .settings(scala2Settings) // ProductFormats in spray json don't work with the cross-building mode, so this probably needs https://github.com/spray/spray-json/pull/342
   .settings(libraryDependencies ++= Dependencies.sprayJson)
 
 lazy val ziojson = (project in file("elastic4s-json-zio"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-zio")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.zioJson)
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))
   .dependsOn(core)
   .settings(name := "elastic4s-client-sttp")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(sttp, asyncHttpClientBackendFuture))
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-akka")
-  .settings(scala2Settings)
+  .settings(scala2Settings) // tests need re-writing to not use scalaMock, even granted that akka libs can be used with cross CrossVersion.for3Use2_13
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, scalaMock))
 
 lazy val tests = (project in file("elastic4s-tests"))

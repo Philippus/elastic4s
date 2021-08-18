@@ -19,7 +19,7 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
 
   /** Alternative constructor for backwards compatibility. */
   @deprecated("Use the constructor which takes an ElasticNodeEndpoint", "7.3.2")
-  def this(clientUri: ElasticsearchClientUri) {
+  def this(clientUri: ElasticsearchClientUri) = {
     this(ElasticNodeEndpoint("http", clientUri.hosts.head._1, clientUri.hosts.head._2, None))(
       SttpRequestHttpClient.defaultEc, SttpRequestHttpClient.defaultSttpBackend)
   }

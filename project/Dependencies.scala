@@ -16,7 +16,7 @@ object Dependencies {
   val Log4jVersion                   = "2.14.1"
   val MockitoVersion                 = "4.0.0"
   val MonixVersion                   = "3.4.0"
-  val PlayJsonVersion                = "2.9.2"
+  val PlayJsonVersion                = "2.10.0-RC5"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "5.1.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
@@ -26,7 +26,7 @@ object Dependencies {
   val Slf4jVersion                   = "1.7.32"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
-  val ZIOJsonVersion                 = "0.1.5"
+  val ZIOJsonVersion                 = "0.2.0-M1"
   val ZIOVersion                     = "1.0.12"
 
   lazy val commonDeps = Seq(
@@ -54,10 +54,10 @@ object Dependencies {
     "io.circe" %% "circe-generic" % CirceVersion,
     "io.circe" %% "circe-parser"  % CirceVersion)
 
-  lazy val akkaActor                    = "com.typesafe.akka"       %% "akka-actor"                       % AkkaVersion
-  lazy val akkaHTTP                     = "com.typesafe.akka"       %% "akka-http"                        % AkkaHttpVersion
-  lazy val akkaStream                   = "com.typesafe.akka"       %% "akka-stream"                      % AkkaVersion
-  lazy val asyncHttpClientBackendFuture = "com.softwaremill.sttp"   %% "async-http-client-backend-future" % SttpVersion
+  lazy val akkaActor                    = "com.typesafe.akka"       %% "akka-actor"                       % AkkaVersion cross CrossVersion.for3Use2_13
+  lazy val akkaHTTP                     = "com.typesafe.akka"       %% "akka-http"                        % AkkaHttpVersion cross CrossVersion.for3Use2_13
+  lazy val akkaStream                   = "com.typesafe.akka"       %% "akka-stream"                      % AkkaVersion cross CrossVersion.for3Use2_13
+  lazy val asyncHttpClientBackendFuture = "com.softwaremill.sttp"   %% "async-http-client-backend-future" % SttpVersion cross CrossVersion.for3Use2_13
   lazy val cats                         = "org.typelevel"           %% "cats-effect"                      % CatsEffectVersion
   lazy val cats2                        = "org.typelevel"           %% "cats-effect"                      % CatsEffect2Version
   lazy val elasticsearchRestClient      = "org.elasticsearch.client" % "elasticsearch-rest-client"        % ElasticsearchVersion
@@ -65,7 +65,7 @@ object Dependencies {
   lazy val monix                        = "io.monix"                %% "monix"                            % MonixVersion
   lazy val playJson                     = Seq("com.typesafe.play" %% "play-json" % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
-  lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion
+  lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion cross CrossVersion.for3Use2_13
   lazy val zioJson                      = "dev.zio"                 %% "zio-json"                         % ZIOJsonVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
