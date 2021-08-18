@@ -219,7 +219,7 @@ lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
 lazy val monix = (project in file("elastic4s-effect-monix"))
   .dependsOn(core)
   .settings(name := "elastic4s-effect-monix")
-  .settings(scala2Settings)
+  .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.monix)
 
 lazy val testkit = (project in file("elastic4s-testkit"))
