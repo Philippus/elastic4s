@@ -99,4 +99,11 @@ trait DeleteHandlers {
       ElasticRequest("DELETE", endpoint, params.toMap)
     }
   }
+  
+  implicit object DeleteIndexHandler extends Handler[DeleteIndexRequest, DeleteResponse] {
+    override def build(request: DeleteIndexRequest): ElasticRequest = {
+      val endpoint = s"/" + request.indexes.mkString(",")
+      ElasticRequest("DELETE", endpoint)
+    }
+  }
 }
