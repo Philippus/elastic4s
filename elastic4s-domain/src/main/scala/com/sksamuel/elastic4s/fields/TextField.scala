@@ -43,3 +43,7 @@ case class TextField(override val name: String,
 }
 
 case class IndexPrefixes(minChars: Int, maxChars: Int)
+
+case class MatchOnlyTextField(name: String, fields: List[ElasticField] = Nil) extends ElasticField {
+  override def `type`: String = "match_only_text"
+}
