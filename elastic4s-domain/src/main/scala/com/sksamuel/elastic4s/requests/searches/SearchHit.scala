@@ -2,9 +2,9 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.Hit
+import com.sksamuel.elastic4s.requests.explain.Explanation
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.JacksonSupport
-import com.sksamuel.elastic4s.requests.validate.Explanation
 
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
