@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.IndexesAndType
+import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
-case class PutMappingRequest(indexesAndType: IndexesAndType,
+case class PutMappingRequest(indexes: Indexes,
                              properties: Seq[ElasticField] = Nil,
                              updateAllTypes: Option[Boolean] = None,
                              ignoreUnavailable: Option[Boolean] = None,

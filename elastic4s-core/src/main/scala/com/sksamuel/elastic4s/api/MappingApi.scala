@@ -13,5 +13,5 @@ trait MappingApi {
 
   def getMapping(indexes: Indexes, fields: String*): GetFieldMappingRequest = GetFieldMappingRequest(indexes, fields)
 
-  def putMapping(indexes: Indexes): PutMappingRequest = PutMappingRequest(IndexesAndType(indexes))
+  def putMapping(indexes: Indexes): PutMappingRequest = PutMappingRequest(indexes)
 }
