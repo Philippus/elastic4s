@@ -3,7 +3,7 @@ import sbt._
 
 object Dependencies {
   val AkkaHttpVersion                = "10.2.6"
-  val AkkaVersion                    = "2.6.16"
+  val AkkaVersion                    = "2.6.17"
   val CatsEffect2Version             = "2.5.4"
   val CatsEffectVersion              = "3.2.8"
   val CatsVersion                    = "2.0.0"
