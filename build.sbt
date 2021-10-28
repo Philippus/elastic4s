@@ -260,7 +260,7 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
 lazy val circe = (project in file("elastic4s-json-circe"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-circe")
-  .settings(scala2Settings) // Just a couple of failing tests. Should be fixable
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Dependencies.circe)
 
 lazy val json4s = (project in file("elastic4s-json-json4s"))
