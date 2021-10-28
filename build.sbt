@@ -296,7 +296,7 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-akka")
-  .settings(scala2Settings) // tests need re-writing to not use scalaMock, even granted that akka libs can be used with cross CrossVersion.for3Use2_13
+  .settings(scala2Settings) // tests need re-writing to not use scalaMock. We also need akka-http to be crosspublished, which depends on spray-json and parboiled2
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, scalaMock))
 
 lazy val tests = (project in file("elastic4s-tests"))
