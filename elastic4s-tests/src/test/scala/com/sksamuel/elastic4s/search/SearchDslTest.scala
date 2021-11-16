@@ -824,7 +824,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   it should "generate correct json for highlighting" in {
     val req = search("music").highlighting(
       highlightOptions().tagsSchema("styled") boundaryChars "\\b" boundaryMaxScan 4 order "score" preTags
-        "<b>" postTags "</b>" encoder "html",
+        "<b>" postTags "</b>" encoder "html" maxAnalyzedOffset 900000,
       highlight("name") fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
       highlight("type") numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
     )

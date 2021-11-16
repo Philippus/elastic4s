@@ -10,6 +10,7 @@
         "pre_tags": [
             "<b>"
         ],
+        "max_analyzed_offset": 900000,
         "fields": {
             "name": {
                 "fragment_offset": 4,
