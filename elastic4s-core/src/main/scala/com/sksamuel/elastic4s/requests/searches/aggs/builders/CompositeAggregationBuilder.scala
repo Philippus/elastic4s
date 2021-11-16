@@ -22,8 +22,16 @@ object CompositeAggregationBuilder {
       if (s.missingBucket) builder.field("missing_bucket", true)
       s match {
         case HistogramValueSource(_, interval, _, _, _, _) => builder.field("interval", interval)
-        case DateHistogramValueSource(_, interval, _, _, _, timeZone, format, _) =>
-          builder.field("interval", interval)
+        case DateHistogramValueSource(_, None, None, interval, _, _, _, timeZone, format, _) =>
+          builder.field("interval", interval.get)
+          timeZone.foreach(builder.field("time_zone", _))
+          format.foreach(builder.field("format", _))
+        case DateHistogramValueSource(_, calendarInterval, None, None, _, _, _, timeZone, format, _) =>
+          builder.field("calendar_interval", calendarInterval.get.toString)
+          timeZone.foreach(builder.field("time_zone", _))
+          format.foreach(builder.field("format", _))
+        case DateHistogramValueSource(_, None, fixedInterval, None, _, _, _, timeZone, format, _) =>
+          builder.field("fixed_interval", fixedInterval.get.toString)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
         case _ =>

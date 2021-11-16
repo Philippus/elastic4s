@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.script.Script
+import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, BucketAggregation, HasAggregations}
 import com.sksamuel.exts.OptionImplicits._
 
@@ -26,7 +27,9 @@ case class HistogramValueSource(override val name: String,
   extends ValueSource("histogram", name, field, script, order, missingBucket)
 
 case class DateHistogramValueSource(override val name: String,
-                                    interval: String,
+                                    calendarInterval: Option[DateHistogramInterval] = None,
+                                    fixedInterval: Option[DateHistogramInterval] = None,
+                                    interval: Option[String] = None,
                                     override val field: Option[String] = None,
                                     override val script: Option[Script] = None,
                                     override val order: Option[String] = None,
@@ -35,6 +38,20 @@ case class DateHistogramValueSource(override val name: String,
                                     override val missingBucket: Boolean = false)
   extends ValueSource("date_histogram", name, field, script, order, missingBucket)
 
+object DateHistogramValueSource {
+  def apply(
+             name: String,
+             interval: String,
+             field: Option[String] = None,
+             script: Option[Script] = None,
+             order: Option[String] = None,
+             timeZone: Option[String] = None,
+             format: Option[String] = None,
+             missingBucket: Boolean = false
+           ): DateHistogramValueSource = {
+    DateHistogramValueSource(name, interval, field, script, order, timeZone, format, missingBucket)
+  }
+}
 
 case class CompositeAggregation(name: String,
                                 sources: Seq[ValueSource] = Nil,
