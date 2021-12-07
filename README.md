@@ -646,15 +646,20 @@ Check for the latest released versions on [maven central](http://search.maven.or
 
 ## Building and Testing
 
-This project is built with SBT. So to build
+This project is built with SBT. So to build with:
+
 ```scala
 sbt compile
 ```
 
-And to test
+And to test:
+
 ```scala
 sbt test
 ```
+The project is currently [cross-built](https://www.scala-sbt.org/1.x/docs/Cross-Build.html) against Scala 2.12 and
+2.13, when preparing a pull request the above commands should be run with the `sbt` `+` modifier to compile and test
+against both versions. For example: `sbt +compile`.
 
 For the tests to work you will need to run a local elastic instance on port 39227, _with security enabled_. One easy way of doing this is to use docker (via docker-compose):
 `docker-compose up`
