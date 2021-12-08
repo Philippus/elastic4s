@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScore
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery, Shape}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CombinedFieldsQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
-import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
+import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup, span, term}
 
@@ -218,6 +218,7 @@ trait QueryApi {
 
   def spanOrQuery(iterable: Iterable[SpanQuery]): SpanOrQuery = span.SpanOrQuery(iterable.toSeq)
   def spanOrQuery(first: SpanQuery, rest: SpanQuery*): SpanOrQuery = spanOrQuery(first +: rest)
+  def spanFieldMaskingQuery(fieldToMask: String, query: SpanQuery): SpanFieldMaskingQuery = span.SpanFieldMaskingQuery(fieldToMask, query)
 
   def spanContainingQuery(big: SpanQuery, little: SpanQuery): SpanContainingQuery =
     SpanContainingQuery(big, little)
