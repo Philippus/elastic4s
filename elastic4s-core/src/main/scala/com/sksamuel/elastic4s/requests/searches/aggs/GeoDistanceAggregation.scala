@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class GeoDistanceAggregation(name: String,
                                   origin: GeoPoint,

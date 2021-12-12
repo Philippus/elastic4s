@@ -1,11 +1,9 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-import com.sksamuel.exts.OptionImplicits.RichOption
 import org.slf4j.{Logger, LoggerFactory}
-
-import scala.util.Try
 
 trait ResponseHandler[U] {
   self =>

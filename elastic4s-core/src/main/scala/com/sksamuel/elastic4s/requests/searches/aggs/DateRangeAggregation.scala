@@ -4,7 +4,7 @@ import java.util.TimeZone
 
 import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class DateRangeAggregation(name: String,
                                 field: Option[String] = None,

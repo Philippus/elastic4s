@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.Index
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.requests.searches.queries.geo.Shapes.{Circle, Polygon}
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 sealed trait ShapeDefinition {
   def geoShapeType: GeoShapeType

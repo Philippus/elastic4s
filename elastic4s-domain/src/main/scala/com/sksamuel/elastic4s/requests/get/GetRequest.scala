@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.get
 
 import com.sksamuel.elastic4s.IndexLike
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, Preference, VersionType}
 
 case class GetRequest(index: IndexLike,

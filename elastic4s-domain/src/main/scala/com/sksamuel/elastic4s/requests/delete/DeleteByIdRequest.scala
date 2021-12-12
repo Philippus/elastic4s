@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.delete
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
 

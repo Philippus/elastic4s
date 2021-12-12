@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.mappings.FielddataFrequencyFilter
 
 case class TextField(override val name: String,

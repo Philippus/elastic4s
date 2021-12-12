@@ -5,7 +5,7 @@ import java.nio.file.Files
 
 import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.softwaremill.sttp.Uri.QueryFragment
 import com.softwaremill.sttp._
 import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits.{RichOptionImplicits, RichStringOptionImplicits}
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class CompletionField(name: String,
                            analyzer: Option[String] = None,

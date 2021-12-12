@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class DynamicField(override val name: String,
                         analyzer: Option[String] = None,

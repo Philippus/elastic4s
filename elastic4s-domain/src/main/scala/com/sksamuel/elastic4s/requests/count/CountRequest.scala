@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.count
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 
 case class CountRequest(indexes: Indexes,

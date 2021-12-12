@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistanceQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{GeoDistanceSort, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, SearchBodyBuilderFn}
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

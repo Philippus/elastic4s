@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.handlers.searches.suggestion
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.suggestion.Suggestion
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class DirectGenerator(field: String,
                            size: Option[Int] = None,

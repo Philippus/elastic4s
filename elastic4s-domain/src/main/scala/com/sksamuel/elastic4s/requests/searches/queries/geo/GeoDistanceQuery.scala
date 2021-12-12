@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.geo
 
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class GeoDistanceQuery(field: String,
                             geoDistance: Option[GeoDistance] = None,

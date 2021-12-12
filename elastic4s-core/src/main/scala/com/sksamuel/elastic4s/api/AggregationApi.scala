@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.api
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.aggs.{AutoDateHistogramAggregation, AvgAggregation, CardinalityAggregation, ChildrenAggregation, DateHistogramAggregation, DateRangeAggregation, ExtendedStatsAggregation, FilterAggregation, FiltersAggregation, GeoBoundsAggregation, GeoCentroidAggregation, GeoDistanceAggregation, GeoHashGridAggregation, GeoTileGridAggregation, GlobalAggregation, HistogramAggregation, IpRangeAggregation, KeyedFiltersAggregation, MaxAggregation, MinAggregation, MissingAggregation, NestedAggregation, PercentileRanksAggregation, PercentilesAggregation, RangeAggregation, ReverseNestedAggregation, SamplerAggregation, ScriptedMetricAggregation, SigTermsAggregation, StatsAggregation, SumAggregation, TermsAggregation, TopHitsAggregation, TopMetricsAggregation, ValueCountAggregation, WeightedAvgAggregation, WeightedAvgField}
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait AggregationApi {
 

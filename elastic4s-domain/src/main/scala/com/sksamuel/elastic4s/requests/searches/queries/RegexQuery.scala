@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class RegexQuery(field: String,
                       regex: String,

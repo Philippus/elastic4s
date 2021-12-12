@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.alias
 
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.{Query, QueryStringQuery}
 
 case class AddAliasActionRequest(alias: String,

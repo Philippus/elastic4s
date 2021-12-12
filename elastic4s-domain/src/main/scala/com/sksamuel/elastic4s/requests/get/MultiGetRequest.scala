@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.get
 
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class MultiGetRequest(gets: Seq[GetRequest],
                            preference: Option[String] = None,

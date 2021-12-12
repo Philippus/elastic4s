@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class PercentilesAggregation(name: String,
                                   field: Option[String] = None,

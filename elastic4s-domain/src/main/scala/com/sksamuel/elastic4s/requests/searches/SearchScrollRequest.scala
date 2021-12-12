@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 

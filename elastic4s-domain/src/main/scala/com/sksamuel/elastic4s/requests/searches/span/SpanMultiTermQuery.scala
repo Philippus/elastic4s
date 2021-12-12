@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.span
 
 import com.sksamuel.elastic4s.requests.searches.queries.{MultiTermQuery, Query}
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait SpanQuery extends Query
 

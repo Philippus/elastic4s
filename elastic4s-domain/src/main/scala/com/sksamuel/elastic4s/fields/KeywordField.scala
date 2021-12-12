@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/current/keyword.html#keyword-field-type
 case class KeywordField(name: String,

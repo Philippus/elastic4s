@@ -25,11 +25,9 @@ import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
-import com.sksamuel.exts.Logging
 
 trait ElasticDsl
     extends ElasticApi
-    with Logging
     with BulkHandlers
     with CatHandlers
     with CountHandlers

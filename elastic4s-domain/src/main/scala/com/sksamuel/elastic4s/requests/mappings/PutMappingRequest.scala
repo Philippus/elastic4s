@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}

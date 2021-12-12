@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class GaussianDecayScore(field: String,
                               origin: String,
