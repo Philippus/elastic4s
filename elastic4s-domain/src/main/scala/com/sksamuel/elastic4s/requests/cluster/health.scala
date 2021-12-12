@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.cluster
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.requests.common.{HealthStatus, Priority}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class ClusterHealthRequest(indices: Seq[String],
                                 timeout: Option[String] = None,

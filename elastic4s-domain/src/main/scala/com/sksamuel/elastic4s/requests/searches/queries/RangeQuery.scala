@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.ElasticDate
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 sealed trait RangeRelation
 object RangeRelation {

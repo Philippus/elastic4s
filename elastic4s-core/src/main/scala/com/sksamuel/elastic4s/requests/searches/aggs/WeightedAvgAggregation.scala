@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAgg
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class WeightedAvgAggregation(
                                    name: String,

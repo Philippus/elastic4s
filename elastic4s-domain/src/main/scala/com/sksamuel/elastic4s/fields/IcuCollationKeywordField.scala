@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
-
 // https://www.elastic.co/guide/en/elasticsearch/plugins/master/analysis-icu-collation-keyword-field.html
 case class IcuCollationKeywordField(name: String,
                         language: Option[String] = None,

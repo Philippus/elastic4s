@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.compound
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class BoolQuery(adjustPureNegative: Option[Boolean] = None,
                      boost: Option[Double] = None,

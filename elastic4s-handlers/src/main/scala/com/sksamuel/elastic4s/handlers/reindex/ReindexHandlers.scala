@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.handlers.reindex
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.reindex.ReindexRequest
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
-import com.sksamuel.exts.OptionImplicits._
 
 import scala.concurrent.duration._
 

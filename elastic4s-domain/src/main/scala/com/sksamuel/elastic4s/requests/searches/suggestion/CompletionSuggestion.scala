@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.suggestion
 
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.RegexpFlag
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 sealed trait Fuzziness
 object Fuzziness {

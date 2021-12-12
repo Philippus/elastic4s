@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.requests.common.DocumentRef
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 import java.nio.ByteBuffer
 import scala.collection.mutable

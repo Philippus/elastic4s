@@ -4,13 +4,13 @@ import java.io.InputStream
 import java.nio.charset.{Charset, StandardCharsets}
 import java.util.zip.GZIPInputStream
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
-import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.entity.{AbstractHttpEntity, ByteArrayEntity, ContentType, FileEntity, InputStreamEntity, StringEntity}
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 import org.elasticsearch.client.{Request, ResponseException, ResponseListener, RestClient}
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.io.{Codec, Source}
 import scala.language.higherKinds
@@ -84,7 +84,9 @@ class JavaClient(client: RestClient) extends HttpClient {
   }
 }
 
-object JavaClient extends Logging {
+object JavaClient {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   /**
     * Creates a new [[ElasticClient]] from an existing Elasticsearch Java API [[RestClient]].

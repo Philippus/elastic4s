@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 // As of version 7.9, Elasticsearch only supports the ignore_above and null_value
 // parameters on wildcard fields.

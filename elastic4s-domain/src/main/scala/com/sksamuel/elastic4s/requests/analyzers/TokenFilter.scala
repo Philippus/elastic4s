@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.analyzers
 
 import com.sksamuel.elastic4s.json.XContentBuilder
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 @deprecated("use new analysis package", "7.7.0")
 trait TokenFilter extends AnalyzerFilter

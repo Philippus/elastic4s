@@ -51,6 +51,7 @@ case class SearchResponse(
       }
       .toMap
 
+
   def termSuggestion(name: String): Map[String, TermSuggestionResult] =
     suggestion(name).mapValues(_.toTerm).toMap
   def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] =

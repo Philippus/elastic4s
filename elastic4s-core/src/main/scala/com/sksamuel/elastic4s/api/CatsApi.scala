@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.cat
 import com.sksamuel.elastic4s.requests.cat.{CatAliases, CatAllocation, CatCount, CatHealth, CatIndexes, CatMaster, CatNodes, CatPlugins, CatSegments, CatShards, CatThreadPool}
 import com.sksamuel.elastic4s.requests.common.HealthStatus
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait CatsApi {
 

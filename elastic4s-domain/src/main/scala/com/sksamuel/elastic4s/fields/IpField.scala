@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class IpField(name: String,
                    boost: Option[Double] = None,

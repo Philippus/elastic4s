@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.{Index, Indexable}
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 

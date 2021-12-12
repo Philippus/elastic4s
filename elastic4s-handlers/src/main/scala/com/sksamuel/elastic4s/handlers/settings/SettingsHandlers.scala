@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.handlers.settings
 
+import com.sksamuel.elastic4s.ext.Maps
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.settings.{GetSettingsRequest, IndexSettingsResponse, UpdateSettingsRequest}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, JacksonSupport, ResponseHandler}
-import com.sksamuel.exts.collection.Maps
 
 trait SettingsHandlers {
 

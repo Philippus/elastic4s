@@ -3,13 +3,12 @@ package com.sksamuel.elastic4s.handlers.bulk
 import com.sksamuel.elastic4s.requests.bulk.{BulkRequest, BulkResponse}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
-import com.sksamuel.exts.Logging
 
 object BulkHandlers extends BulkHandlers
 
 trait BulkHandlers {
 
-  implicit object BulkHandler extends Handler[BulkRequest, BulkResponse] with Logging {
+  implicit object BulkHandler extends Handler[BulkRequest, BulkResponse] {
 
     override def build(bulk: BulkRequest): ElasticRequest = {
       val httpBody: String = buildBulkHttpBody(bulk)

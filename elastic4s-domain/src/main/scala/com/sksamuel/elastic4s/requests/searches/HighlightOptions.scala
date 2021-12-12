@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class HighlightOptions(encoder: Option[String] = None,
                             tagsSchema: Option[String] = None,

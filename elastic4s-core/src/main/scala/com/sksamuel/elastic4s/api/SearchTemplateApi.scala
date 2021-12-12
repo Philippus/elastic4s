@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.api
 import com.sksamuel.elastic4s.IndexesAndTypes
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.requests.searches.{PutSearchTemplateRequest, TemplateSearchRequest}
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait SearchTemplateApi {
 

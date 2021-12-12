@@ -5,11 +5,10 @@ import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
 import com.sksamuel.elastic4s.requests.get.{GetRequest, GetResponse, MultiGetRequest, MultiGetResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
-import com.sksamuel.exts.Logging
 
 trait GetHandlers {
 
-  implicit object MultiGetHandler extends Handler[MultiGetRequest, MultiGetResponse] with Logging {
+  implicit object MultiGetHandler extends Handler[MultiGetRequest, MultiGetResponse] {
 
     override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
@@ -31,7 +30,7 @@ trait GetHandlers {
     }
   }
 
-  implicit object GetHandler extends Handler[GetRequest, GetResponse] with Logging {
+  implicit object GetHandler extends Handler[GetRequest, GetResponse] {
 
     override def responseHandler: ResponseHandler[GetResponse] = new ResponseHandler[GetResponse] {
 

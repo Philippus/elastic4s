@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, BucketAggregation, HasAggregations}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 sealed abstract class ValueSource(val valueSourceType: String, val name: String,
                                   val field: Option[String],

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.Indexes
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, Preference}
 import com.sksamuel.elastic4s.requests.script.ScriptField
@@ -8,11 +9,10 @@ import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseRequest
 import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{InnerHit, PrefixQuery, Query, QueryStringQuery, RawQuery, RegexQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{PrefixQuery, Query, QueryStringQuery, RawQuery, RegexQuery}
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, Sort}
 import com.sksamuel.elastic4s.requests.searches.suggestion.Suggestion
 import com.sksamuel.elastic4s.requests.searches.term.TermQuery
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.exts.Logging
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.duration.{Duration, _}
 import scala.language.higherKinds
@@ -15,7 +15,9 @@ import scala.language.higherKinds
   *
   * @param client the HTTP client library to use
   **/
-case class ElasticClient(client: HttpClient) extends Logging {
+case class ElasticClient(client: HttpClient) {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   /**
     * Returns a String containing the request details.
