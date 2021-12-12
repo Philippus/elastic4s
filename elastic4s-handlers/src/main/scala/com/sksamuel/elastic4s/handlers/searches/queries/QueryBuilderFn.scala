@@ -4,22 +4,23 @@ import com.sksamuel.elastic4s.handlers.searches.RawQueryBodyFn
 import com.sksamuel.elastic4s.handlers.searches.queries.compound.{BoolQueryBuilderFn, BoostingQueryBodyFn, ConstantScoreBodyFn, DisMaxQueryBodyFn}
 import com.sksamuel.elastic4s.handlers.searches.queries.geo.{GeoBoundingBoxQueryBodyFn, GeoDistanceQueryBodyFn, GeoPolyonQueryBodyFn, GeoShapeQueryBodyFn}
 import com.sksamuel.elastic4s.handlers.searches.queries.nested.{HasChildBodyFn, HasParentBodyFn, NestedQueryBodyFn, ParentIdQueryBodyFn}
-import com.sksamuel.elastic4s.handlers.searches.queries.span.{SpanContainingQueryBodyFn, SpanFirstQueryBodyFn, SpanMultiTermQueryBodyFn, SpanNearQueryBodyFn, SpanNotQueryBodyFn, SpanOrQueryBodyFn, SpanTermQueryBodyFn, SpanWithinQueryBodyFn}
+import com.sksamuel.elastic4s.handlers.searches.queries.span.{SpanContainingQueryBodyFn, SpanFieldMaskingQueryBodyFn, SpanFirstQueryBodyFn, SpanMultiTermQueryBodyFn, SpanNearQueryBodyFn, SpanNotQueryBodyFn, SpanOrQueryBodyFn, SpanTermQueryBodyFn, SpanWithinQueryBodyFn}
 import com.sksamuel.elastic4s.handlers.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQueryBodyFn, TermsLookupQueryBodyFn, TermsQueryBodyFn, TermsSetQueryBodyFn, WildcardQueryBodyFn}
-import com.sksamuel.elastic4s.handlers.searches.queries.text.{CommonTermsQueryBodyFn, MatchAllBodyFn, MatchBoolPrefixBodyFn, MatchNoneBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
+import com.sksamuel.elastic4s.handlers.searches.queries.text.{CombinedFieldsQueryBodyFn, CommonTermsQueryBodyFn, MatchAllBodyFn, MatchBoolPrefixBodyFn, MatchNoneBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FunctionScoreQuery, ScriptScore}
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, MoreLikeThisQuery, NestedQuery, NoopQuery, ParentIdQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
-import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanTermQuery, SpanWithinQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, CombinedFieldsQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, MoreLikeThisQuery, NestedQuery, NoopQuery, ParentIdQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
+import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 
 object QueryBuilderFn {
   def apply(q: Query): XContentBuilder = q match {
     case b: BoolQuery => BoolQueryBuilderFn(b)
     case b: BoostingQuery => BoostingQueryBodyFn(b)
+    case q: CombinedFieldsQuery => CombinedFieldsQueryBodyFn(q)
     case q: CommonTermsQuery => CommonTermsQueryBodyFn(q)
     case q: ConstantScore => ConstantScoreBodyFn(q)
     case q: DistanceFeatureQuery => DistanceFeatureQueryBuilderFn(q)
@@ -70,6 +71,7 @@ object QueryBuilderFn {
     case t: TermsLookupQuery => TermsLookupQueryBodyFn(t)
     case t: TermsSetQuery => TermsSetQueryBodyFn(t)
     case q: WildcardQuery => WildcardQueryBodyFn(q)
+    case q: SpanFieldMaskingQuery => SpanFieldMaskingQueryBodyFn(q)
 //    case c: CustomQuery => c.buildQueryBody()
 
     // Not implemented

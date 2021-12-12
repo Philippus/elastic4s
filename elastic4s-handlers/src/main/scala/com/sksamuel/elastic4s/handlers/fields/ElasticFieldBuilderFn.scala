@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, DynamicField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IpField, IpRangeField, JoinField, KeywordField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField, VersionField, WildcardField}
+import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, DynamicField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IcuCollationKeywordField, IpField, IpRangeField, JoinField, KeywordField, MatchOnlyTextField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, TextField, TokenCountField, VersionField, WildcardField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
@@ -22,10 +22,12 @@ object ElasticFieldBuilderFn {
       case f: GeoPointField => GeoPointFieldBuilderFn.build(f)
       case f: GeoShapeField => GeoShapeFieldBuilderFn.build(f)
       case f: HistogramField => HistogramFieldBuilderFn.build(f)
+      case f: IcuCollationKeywordField => IcuCollationKeywordFieldBuilderFn.build(f)
       case f: IpField => IpFieldBuilderFn.build(f)
       case f: IpRangeField => IpRangeFieldBuilderFn.build(f)
       case f: JoinField => JoinFieldBuilderFn.build(f)
       case f: KeywordField => KeywordFieldBuilderFn.build(f)
+      case f: MatchOnlyTextField => MatchOnlyTextFieldBuilderFn.build(f)
       case f: Murmur3Field => Murmur3FieldBuilderFn.build(f)
       case f: NestedField => NestedFieldBuilderFn.build(f)
       case f: NumberField[_] => NumberFieldBuilderFn.build(f)

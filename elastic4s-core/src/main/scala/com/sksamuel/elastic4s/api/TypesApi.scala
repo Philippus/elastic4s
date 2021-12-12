@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.fields.{BinaryField, BooleanField, ByteField, CompletionField, DateField, DoubleField, FloatField, GeoPointField, GeoShapeField, HalfFloatField, IntegerField, IpField, JoinField, KeywordField, LongField, NestedField, ObjectField, ScaledFloatField, SearchAsYouTypeField, ShortField, TextField, UnsignedLongField, WildcardField}
+import com.sksamuel.elastic4s.fields.{BinaryField, BooleanField, ByteField, CompletionField, DateField, DoubleField, FloatField, GeoPointField, GeoShapeField, HalfFloatField, IcuCollationKeywordField, IntegerField, IpField, JoinField, KeywordField, LongField, NestedField, ObjectField, ScaledFloatField, SearchAsYouTypeField, ShortField, TextField, UnsignedLongField, WildcardField}
 import com.sksamuel.elastic4s.requests.script.{Script, ScriptField}
 
 trait TypesApi {
@@ -32,4 +32,5 @@ trait TypesApi {
   def joinField(name: String) = JoinField(name)
   def binaryField(name: String) = BinaryField(name)
   def completionField(name: String) = CompletionField(name)
+  def icuCollationKeywordField(name: String) = IcuCollationKeywordField(name)
 }

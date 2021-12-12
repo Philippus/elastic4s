@@ -55,7 +55,8 @@ case class SearchRequest(indexes: Indexes,
                          trackHits: Option[Boolean] = None,
                          allowPartialSearchResults: Option[Boolean] = None,
                          batchedReduceSize: Option[Int] = None,
-                         typedKeys: Option[Boolean] = None) {
+                         typedKeys: Option[Boolean] = None,
+                         runtimeMappings: Seq[RuntimeMapping] = Nil) {
 
   /** Adds a single string query to this search
     *
@@ -279,4 +280,9 @@ case class SearchRequest(indexes: Indexes,
   def collapse(collapse: CollapseRequest): SearchRequest = copy(collapse = collapse.some)
 
   def typedKeys(enabled: Boolean): SearchRequest = copy(typedKeys = enabled.some)
+
+  def runtimeMappings(mappings: RuntimeMapping*): SearchRequest = runtimeMappings(mappings)
+
+  def runtimeMappings(mappings: Iterable[RuntimeMapping]): SearchRequest =
+    copy(runtimeMappings = mappings.toSeq)
 }

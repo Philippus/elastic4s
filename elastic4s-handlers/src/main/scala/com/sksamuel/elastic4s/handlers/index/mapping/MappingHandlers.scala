@@ -81,7 +81,7 @@ trait MappingHandlers {
 
     override def build(request: PutMappingRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.indexesAndType.indexes.mkString(",")}/_mapping${request.indexesAndType.`type`.map("/" + _).getOrElse("")}"
+      val endpoint = s"/${request.indexes.values.mkString(",")}/_mapping"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.updateAllTypes.foreach(params.put("update_all_types", _))

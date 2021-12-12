@@ -1,0 +1,17 @@
+{
+    "query": {
+        "term": {
+            "runtime_map": {
+                "value": "Tuesday"
+            }
+        }
+    },
+    "runtime_mappings": {
+        "runtime_map": {
+            "type": "keyword",
+            "script": {
+                "source": "emit(doc['@timestamp'].value.dayOfWeekEnum.toString())"
+            }
+        }
+    }
+}

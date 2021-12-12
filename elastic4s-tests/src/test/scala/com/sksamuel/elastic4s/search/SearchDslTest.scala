@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.handlers.searches.suggestion.DirectGenerator
 import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
+import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches._
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.Sigmoid
@@ -824,7 +825,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   it should "generate correct json for highlighting" in {
     val req = search("music").highlighting(
       highlightOptions().tagsSchema("styled") boundaryChars "\\b" boundaryMaxScan 4 order "score" preTags
-        "<b>" postTags "</b>" encoder "html",
+        "<b>" postTags "</b>" encoder "html" maxAnalyzedOffset 900000,
       highlight("name") fragmentSize 100 numberOfFragments 3 fragmentOffset 4,
       highlight("type") numberOfFragments 100 fragmentSize 44 highlighterType "some-type"
     )
@@ -858,6 +859,14 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
         scriptField("date", script("doc['date'].value") lang "groovy")
     )
     req.request.entity.get.get should matchJsonResource("/json/search/search_script_field_poc.json")
+  }
+
+  it should "generate correct json for runtime mappings" in {
+    val req =
+      search("sesportfolio") query termQuery("runtime_map", "Tuesday") runtimeMappings(
+        RuntimeMapping(field = "runtime_map", `type`="keyword", script = "emit(doc['@timestamp'].value.dayOfWeekEnum.toString())")
+      )
+    req.request.entity.get.get should matchJsonResource("/json/search/search_runtime_mapping.json")
   }
 
   it should "generate correct json for suggestions of multiple suggesters" in {

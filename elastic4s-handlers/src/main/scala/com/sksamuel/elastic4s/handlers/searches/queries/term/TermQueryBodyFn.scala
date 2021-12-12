@@ -13,6 +13,7 @@ object TermQueryBodyFn {
     t.boost.foreach(builder.field("boost", _))
     t.queryName.foreach(builder.field("_name", _))
     builder.autofield("value", t.value)
+    t.caseInsensitive.foreach(builder.field("case_insensitive", _))
 
     builder.endObject().endObject().endObject()
   }

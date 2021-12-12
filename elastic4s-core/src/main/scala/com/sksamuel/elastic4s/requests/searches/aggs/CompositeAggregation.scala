@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
-
 import com.sksamuel.elastic4s.requests.script.Script
+import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, BucketAggregation, HasAggregations}
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
@@ -9,14 +9,12 @@ sealed abstract class ValueSource(val valueSourceType: String, val name: String,
                                   val script: Option[Script],
                                   val order: Option[String],
                                   val missingBucket: Boolean)
-
 case class TermsValueSource(override val name: String,
                             override val field: Option[String] = None,
                             override val script: Option[Script] = None,
                             override val order: Option[String] = None,
                             override val missingBucket: Boolean = false)
   extends ValueSource("terms", name, field, script, order, missingBucket)
-
 case class HistogramValueSource(override val name: String,
                                 interval: Int,
                                 override val field: Option[String] = None,
@@ -26,7 +24,9 @@ case class HistogramValueSource(override val name: String,
   extends ValueSource("histogram", name, field, script, order, missingBucket)
 
 case class DateHistogramValueSource(override val name: String,
-                                    interval: String,
+                                    calendarInterval: Option[String] = None,
+                                    fixedInterval: Option[String] = None,
+                                    interval: Option[String] = None,
                                     override val field: Option[String] = None,
                                     override val script: Option[Script] = None,
                                     override val order: Option[String] = None,
@@ -34,8 +34,6 @@ case class DateHistogramValueSource(override val name: String,
                                     format: Option[String] = None,
                                     override val missingBucket: Boolean = false)
   extends ValueSource("date_histogram", name, field, script, order, missingBucket)
-
-
 case class CompositeAggregation(name: String,
                                 sources: Seq[ValueSource] = Nil,
                                 size: Option[Int] = None,
@@ -43,41 +41,33 @@ case class CompositeAggregation(name: String,
                                 metadata: Map[String, AnyRef] = Map.empty,
                                 after: Option[Map[String, Any]] = None)
   extends Aggregation {
-
   type T = CompositeAggregation
-
   def sources(sources: Seq[ValueSource]): CompositeAggregation = copy(sources = sources)
-
   def size(size: Int): CompositeAggregation = copy(size = size.some)
-
   def after(after: Map[String, Any]): CompositeAggregation = copy(after = after.some)
-
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T = copy(subaggs = aggs.toSeq)
-
   override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
 }
-
 /*
  * Responses
  */
 object CompositeAggregation {
 
   case class CompositeAggBucket(
-    key: Map[String,Any],
-    docCount: Long,
-    override val data: Map[String, Any]
-  ) extends AggBucket with HasAggregations
+                                 key: Map[String,Any],
+                                 docCount: Long,
+                                 override val data: Map[String, Any]
+                               ) extends AggBucket with HasAggregations
 
   case class CompositeAggregationResult(
-    name: String,
-    buckets: Seq[CompositeAggBucket],
-    afterKey: Option[Map[String, Any]],
-    private val data: Map[String, Any]
-  ) extends BucketAggregation
+                                         name: String,
+                                         buckets: Seq[CompositeAggBucket],
+                                         afterKey: Option[Map[String, Any]],
+                                         private val data: Map[String, Any]
+                                       ) extends BucketAggregation
 
   implicit class CompositeAggResult(aggs: HasAggregations){
     def compositeAgg(name: String) : CompositeAggregationResult = {
-
       val data = aggs.dataAsMap(name).asInstanceOf[Map[String,Any]]
       val buckets = data("buckets").asInstanceOf[Seq[Map[String, Any]]].map( v  =>
         CompositeAggBucket(
@@ -86,7 +76,6 @@ object CompositeAggregation {
           data = v
         )
       )
-
       CompositeAggregationResult(
         name = name,
         buckets = buckets,

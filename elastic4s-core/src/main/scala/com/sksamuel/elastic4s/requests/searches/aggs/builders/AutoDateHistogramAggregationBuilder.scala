@@ -9,12 +9,12 @@ object AutoDateHistogramAggregationBuilder {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("auto_date_histogram")
+    builder.field("field", agg.field)
 
     agg.timeZone.map(EnumConversions.timeZone).foreach(builder.field("time_zone", _))
     agg.minimumInterval.foreach(builder.field("minimum_interval", _))
     agg.buckets.foreach(builder.field("buckets", _))
     agg.format.foreach(builder.field("format", _))
-    agg.field.foreach(builder.field("field", _))
     agg.missing.map(_.toString).foreach(builder.field("missing", _))
     builder.endObject()
 

@@ -44,10 +44,12 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
   }
 
   private def processResponse(resp: Response[String]): HttpResponse = {
-    val entity = resp.body match {
-      case Left(e)     => None
-      case Right(body) => HttpEntity.StringEntity(body, resp.contentType).some
-    }
+    val strToHttpEntity = (body: String) => HttpEntity.StringEntity(body, resp.contentType).some
+    val entity = resp.body.fold(
+      strToHttpEntity,
+      strToHttpEntity
+    )
+
     HttpResponse(resp.code, entity, resp.headers.toMap)
   }
 

@@ -74,8 +74,12 @@ trait DeleteHandlers {
           case 200 | 201 => right
           // annoying, 404s can return different types of data for a delete
           case 404 =>
-            val node = ResponseHandler.json(response.entity.get)
-            if (node.has("error")) left else right
+            response.entity match {
+              case None => Left(ElasticErrorParser.parse(response))
+              case Some(e) =>
+                val node = ResponseHandler.json(e)
+                if (node.has("error")) left else right
+            }
           case _ => left
         }
       }

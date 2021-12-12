@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http
 
 import java.io.InputStream
-import java.nio.charset.Charset
+import java.nio.charset.{Charset, StandardCharsets}
 import java.util.zip.GZIPInputStream
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
 import org.apache.http.HttpHost
@@ -38,7 +38,9 @@ class JavaClient(client: RestClient) extends HttpClient {
 
   def fromResponse(r: org.elasticsearch.client.Response): HttpResponse = {
     val entity = Option(r.getEntity).map { entity =>
-      val contentCharset = Option(ContentType.get(entity)).fold(Charset.forName("UTF-8"))(_.getCharset)
+      val contentCharset = Option(
+          Option(ContentType.get(entity)).fold(StandardCharsets.UTF_8)(_.getCharset)
+        ).getOrElse(StandardCharsets.UTF_8)
       implicit val codec: Codec = Codec(contentCharset)
 
       val contentStream: InputStream = {

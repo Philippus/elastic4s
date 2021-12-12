@@ -20,16 +20,16 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.14",
-  crossScalaVersions := Seq("2.12.14", "2.13.6")
+  scalaVersion := "2.12.15",
+  crossScalaVersions := Seq("2.12.15", "2.13.7")
 )
 
 lazy val warnUnusedImport = Seq(
   scalacOptions ++= Seq("-Ywarn-unused:imports"),
-  scalacOptions in(Compile, console) ~= {
+  Compile / console / scalacOptions ~= {
     _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports"))
   },
-  scalacOptions in(Test, console) := (scalacOptions in(Compile, console)).value,
+  Test / console / scalacOptions := (Compile / console / scalacOptions).value,
 )
 
 lazy val commonSettings = Seq(
@@ -37,7 +37,7 @@ lazy val commonSettings = Seq(
   version := publishVersion,
   resolvers ++= Seq(Resolver.mavenLocal),
   Test / parallelExecution := false,
-  scalacOptions in(Compile, doc) := (scalacOptions in(Compile, doc)).value.filter(_ != "-Xfatal-warnings"),
+  Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 )
 
