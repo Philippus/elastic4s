@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.requests.indexes
 
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class CreateIndexTemplateRequest(name: String,
                                       pattern: Seq[String],

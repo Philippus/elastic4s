@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.bulk
 
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 import scala.concurrent.duration.Duration
 

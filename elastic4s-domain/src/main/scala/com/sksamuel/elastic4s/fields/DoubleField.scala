@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 case class DoubleField(name: String,
                        boost: Option[Double] = None,

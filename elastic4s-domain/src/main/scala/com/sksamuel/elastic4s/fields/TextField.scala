@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.fields
 
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 import com.sksamuel.elastic4s.requests.mappings.FielddataFrequencyFilter
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class TextField(override val name: String,
                      analyzer: Option[String] = None,

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings.dynamictemplate
 
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 import com.sksamuel.elastic4s.fields.ElasticField
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class DynamicTemplateRequest(
                                    name: String,

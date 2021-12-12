@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes.admin
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 case class ForceMergeRequest(indexes: Seq[String],
                              flush: Option[Boolean] = None,

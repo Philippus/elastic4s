@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/current/date.html
 case class DateField(name: String,
