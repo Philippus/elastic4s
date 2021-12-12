@@ -44,9 +44,9 @@ case class SearchResponse(took: Long,
       }
       .toMap
 
-  def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm).toMap
-  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion).toMap
-  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase).toMap
+  def termSuggestion(name: String): Map[String, TermSuggestionResult] = suggestion(name).mapValues(_.toTerm)
+  def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] = suggestion(name).mapValues(_.toCompletion)
+  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] = suggestion(name).mapValues(_.toPhrase)
 
   def to[T: HitReader : ClassTag]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Try[T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq

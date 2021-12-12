@@ -23,7 +23,7 @@ case class MappingDefinition(properties: Seq[ElasticField] = Nil,
                              rawSource: Option[String] = None)
   extends MappingDefinitionLike {
 
-  import com.sksamuel.exts.OptionImplicits._
+  import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
   def all(all: Boolean): MappingDefinition = copy(all = all.some)
   def source(source: Boolean): MappingDefinition = copy(source = source.some)

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.geo
 
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 case class Corners(top: Double, left: Double, bottom: Double, right: Double)
 

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.handlers.update
 
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
@@ -8,7 +9,6 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.update.{UpdateByQueryRequest, UpdateByQueryResponse, UpdateRequest, UpdateResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
-import com.sksamuel.exts.OptionImplicits._
 
 object UpdateByQueryBodyFn {
   def apply(request: UpdateByQueryRequest): XContentBuilder = {

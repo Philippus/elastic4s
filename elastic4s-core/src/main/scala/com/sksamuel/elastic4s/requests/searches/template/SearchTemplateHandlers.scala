@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.searches.template
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.requests.searches.{GetSearchTemplateRequest, PutSearchTemplateRequest, RemoveSearchTemplateRequest, SearchResponse, TemplateSearchRequest}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, IndexesAndTypes, ResponseHandler}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 trait SearchTemplateHandlers {
 

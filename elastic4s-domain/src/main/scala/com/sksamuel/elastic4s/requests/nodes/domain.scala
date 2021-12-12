@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.nodes
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.exts.collection.Maps
+import com.sksamuel.elastic4s.ext.Maps
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.duration._

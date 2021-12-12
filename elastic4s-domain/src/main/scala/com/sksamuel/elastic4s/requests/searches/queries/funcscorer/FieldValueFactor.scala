@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 case class FieldValueFactor(fieldName: String,
                             factor: Option[Double] = None,

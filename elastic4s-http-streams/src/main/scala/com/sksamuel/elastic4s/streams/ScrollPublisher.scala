@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, Searc
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.exts.Logging
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 
 import scala.collection.mutable
@@ -169,7 +169,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       unstashAll()
   }
 
-  override def postStop() = {
+  override def postStop(): Unit = {
     super.postStop()
     client.execute(clearScroll(scrollId))
   }

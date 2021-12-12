@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 case class DiffPipelineAgg(name: String,
                            bucketsPath: String,

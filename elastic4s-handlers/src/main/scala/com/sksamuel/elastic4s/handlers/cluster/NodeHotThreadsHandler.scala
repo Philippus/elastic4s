@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.handlers.cluster
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpResponse, ResponseHandler}
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.{RichOption, RichOptionImplicits}
 
 import scala.concurrent.duration.Duration
 

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.exts.Logging
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * A typeclass that an underlying http client can implement, so that it can be used
@@ -10,7 +10,9 @@ import com.sksamuel.exts.Logging
   * Akka HTTP client, STTP or whatever can be used with elasticsearch.
   * The wrapped client can then be passed into the ElasticClient.
   */
-trait HttpClient extends Logging {
+trait HttpClient {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   /**
     * Sends the given request to elasticsearch.

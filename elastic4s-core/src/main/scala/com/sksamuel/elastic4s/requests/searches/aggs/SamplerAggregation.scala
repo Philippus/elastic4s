@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 case class SamplerAggregation(name: String,
                               shardSize: Option[Int] = None,

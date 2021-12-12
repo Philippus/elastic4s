@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.ElasticDate
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAgg
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOptionImplicits
 
 import scala.concurrent.duration.{FiniteDuration, _}
 

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.exts.Logging
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * A [[Handler]] is a typeclass used to create [[ElasticRequest]] instances
@@ -11,7 +11,9 @@ import com.sksamuel.exts.Logging
   * @tparam T the type of the request object handled by this handler
   * @tparam U the type of the response object returned by this handler
   */
-abstract class Handler[T, U: Manifest] extends Logging {
+abstract class Handler[T, U: Manifest] {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   protected val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
 
