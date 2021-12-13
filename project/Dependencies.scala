@@ -31,7 +31,7 @@ object Dependencies {
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
-      "com.typesafe"       % "config"                       % "1.3.4",
+      "com.typesafe"       % "config"                       % "1.4.1",
       "org.slf4j"          % "slf4j-api"                    % Slf4jVersion,
       "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % "test",
       "org.mockito"        % "mockito-core"                 % MockitoVersion       % "test",
