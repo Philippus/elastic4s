@@ -4,6 +4,12 @@ import com.sksamuel.elastic4s.fields.WildcardField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object WildcardFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): WildcardField = WildcardField(
+    name,
+    values.get("ignore_above").map(_.asInstanceOf[Int]),
+    values.get("null_value").map(_.asInstanceOf[String])
+  )
+
 
   def build(field: WildcardField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()

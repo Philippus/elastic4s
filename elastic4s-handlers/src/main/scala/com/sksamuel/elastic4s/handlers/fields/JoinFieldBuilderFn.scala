@@ -4,6 +4,12 @@ import com.sksamuel.elastic4s.fields.JoinField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object JoinFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): JoinField = JoinField(
+    name,
+    values.get("eager_global_ordinals").map(_.asInstanceOf[Boolean]),
+    values.get("relations").map(_.asInstanceOf[Map[String, Any]]).getOrElse(Map.empty)
+  )
+
 
   def build(field: JoinField): XContentBuilder = {
 

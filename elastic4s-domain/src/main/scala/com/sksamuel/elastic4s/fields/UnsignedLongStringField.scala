@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object UnsignedLongStringField {
+  val `type`: String = "unsigned_long"
+}
 case class UnsignedLongStringField(name: String,
                                     boost: Option[Double] = None,
                                     coerce: Option[Boolean] = None,
@@ -10,5 +13,5 @@ case class UnsignedLongStringField(name: String,
                                     store: Option[Boolean] = None,
                                     nullValue: Option[String] = None,
                                     meta: Map[String, Any] = Map.empty) extends NumberField[String] {
-  override def `type`: String = "unsigned_long"
+  override def `type`: String = UnsignedLongStringField.`type`
 }

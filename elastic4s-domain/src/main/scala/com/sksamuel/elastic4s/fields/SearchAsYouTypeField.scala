@@ -2,6 +2,9 @@ package com.sksamuel.elastic4s.fields
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
+object SearchAsYouTypeField {
+  val `type`: String = "search_as_you_type"
+}
 case class SearchAsYouTypeField(name: String,
                                 analyzer: Option[String] = None,
                                 searchAnalyzer: Option[String] = None,
@@ -19,7 +22,7 @@ case class SearchAsYouTypeField(name: String,
                                 termVector: Option[String] = None,
                                 meta: Map[String, String] = Map.empty) extends ElasticField {
 
-  override def `type`: String = "search_as_you_type"
+  override def `type`: String = SearchAsYouTypeField.`type`
 
   def analyzer(name: String): SearchAsYouTypeField = copy(analyzer = Option(name))
   def searchAnalyzer(name: String): SearchAsYouTypeField = copy(searchAnalyzer = Option(name))

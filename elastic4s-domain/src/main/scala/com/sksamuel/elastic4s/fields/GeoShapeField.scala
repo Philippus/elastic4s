@@ -2,6 +2,9 @@ package com.sksamuel.elastic4s.fields
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
+object GeoShapeField {
+  val `type`: String = "geo_shape"
+}
 case class GeoShapeField(name: String,
                          boost: Option[Double] = None,
                          copyTo: Seq[String] = Nil,
@@ -20,7 +23,7 @@ case class GeoShapeField(name: String,
                          pointsOnly: Option[Boolean] = None,
                          treeLevels: Option[String] = None,
                          meta: Map[String, Any] = Map.empty) extends ElasticField {
-  override def `type`: String = "geo_shape"
+  override def `type`: String = GeoShapeField.`type`
 
   def tree(tree: String): GeoShapeField = copy(tree = tree.some)
   def precision(precision: String): GeoShapeField = copy(precision = precision.some)

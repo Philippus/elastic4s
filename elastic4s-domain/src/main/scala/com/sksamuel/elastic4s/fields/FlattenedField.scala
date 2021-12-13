@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object FlattenedField {
+  val `type`: String = "flattened"
+}
 case class FlattenedField(name: String,
                           boost: Option[Double] = None,
                           docValues: Option[Boolean] = None,
@@ -12,5 +15,5 @@ case class FlattenedField(name: String,
                           similarity: Option[String] = None,
                           splitQueriesOnWhitespace: Option[Boolean] = None,
                           meta: Map[String, String] = Map.empty) extends ElasticField {
-  override def `type`: String = "flattened"
+  override def `type`: String = FlattenedField.`type`
 }

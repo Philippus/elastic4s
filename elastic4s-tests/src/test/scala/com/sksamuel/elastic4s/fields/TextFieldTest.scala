@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ElasticApi
+import com.sksamuel.elastic4s.{ElasticApi, JacksonSupport}
 import com.sksamuel.elastic4s.analysis.LanguageAnalyzers
-import com.sksamuel.elastic4s.handlers.fields
 import com.sksamuel.elastic4s.handlers.fields.ElasticFieldBuilderFn
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -26,6 +25,8 @@ class TextFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       norms = Some(true)
     )
 
-    fields.ElasticFieldBuilderFn(field).string() shouldBe """{"type":"text","analyzer":"bengali","boost":1.2,"copy_to":["q","er"],"index":true,"norms":true,"store":true,"fielddata":true,"position_increment_gap":3,"index_options":"freqs","search_analyzer":"norwegian","search_quote_analyzer":"english","similarity":"Classic1"}"""
+    val jsonStringValue = """{"type":"text","analyzer":"bengali","boost":1.2,"copy_to":["q","er"],"index":true,"norms":true,"store":true,"fielddata":true,"position_increment_gap":3,"index_options":"freqs","search_analyzer":"norwegian","search_quote_analyzer":"english","similarity":"Classic1"}"""
+    ElasticFieldBuilderFn(field).string() shouldBe jsonStringValue
+    ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonStringValue)) shouldBe (field)
   }
 }
