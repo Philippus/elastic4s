@@ -14,19 +14,19 @@ class RangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matcher
     createIndex("rangeaggs") mapping {
       mapping(
         textField("name").fielddata(true),
-        intField("grade")
+        doubleField("grade")
       )
     }
   }.await
 
   client.execute(
     bulk(
-      indexInto("rangeaggs").fields("name" -> "Breaking Bad", "grade" -> 9),
-      indexInto("rangeaggs").fields("name" -> "Better Call Saul", "grade" -> 9),
-      indexInto("rangeaggs").fields("name" -> "Star Trek Discovery", "grade" -> 7),
-      indexInto("rangeaggs").fields("name" -> "Game of Thrones", "grade" -> 8),
-      indexInto("rangeaggs").fields("name" -> "Designated Survivor", "grade" -> 6),
-      indexInto("rangeaggs").fields("name" -> "Walking Dead", "grade" -> 5)
+      indexInto("rangeaggs").fields("name" -> "Breaking Bad", "grade" -> 9.0),
+      indexInto("rangeaggs").fields("name" -> "Better Call Saul", "grade" -> 9.0),
+      indexInto("rangeaggs").fields("name" -> "Star Trek Discovery", "grade" -> 7.0),
+      indexInto("rangeaggs").fields("name" -> "Game of Thrones", "grade" -> 8.0),
+      indexInto("rangeaggs").fields("name" -> "Designated Survivor", "grade" -> 6.0),
+      indexInto("rangeaggs").fields("name" -> "Walking Dead", "grade" -> 5.0)
     ).refreshImmediately
   ).await
 
