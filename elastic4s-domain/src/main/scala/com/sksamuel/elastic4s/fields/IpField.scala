@@ -2,6 +2,9 @@ package com.sksamuel.elastic4s.fields
 
 import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
+object IpField {
+  val `type`: String = "ip"
+}
 case class IpField(name: String,
                    boost: Option[Double] = None,
                    docValues: Option[Boolean] = None,
@@ -9,6 +12,7 @@ case class IpField(name: String,
                    index: Option[Boolean] = None,
                    nullValue: Option[String] = None,
                    store: Option[Boolean] = None) extends ElasticField {
-  override def `type`: String = "ip"
+  override def `type`: String = IpField.`type`
+
   def boost(boost: Double): IpField = copy(boost = boost.some)
 }

@@ -4,6 +4,19 @@ import com.sksamuel.elastic4s.fields.GeoPointField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object GeoPointFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): GeoPointField = GeoPointField(
+    name,
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("copy_to").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_z_value").map(_.asInstanceOf[Boolean]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("norms").map(_.asInstanceOf[Boolean]),
+    values.get("null_value").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean])
+  )
+
   def build(field: GeoPointField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)

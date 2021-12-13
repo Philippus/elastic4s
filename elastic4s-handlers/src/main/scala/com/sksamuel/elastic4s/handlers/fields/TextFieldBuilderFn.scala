@@ -1,9 +1,45 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.TextField
+import com.sksamuel.elastic4s.fields.{IndexPrefixes, TextField}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.requests.mappings.FielddataFrequencyFilter
 
 object TextFieldBuilderFn {
+  private def getFieldDataFrequencyFilter(values: Map[String, Any]) = FielddataFrequencyFilter(
+    values("min").asInstanceOf,
+    values("max").asInstanceOf,
+    values("min_segment_size").asInstanceOf
+  )
+
+  private def getIndexPrefixes(values: Map[String, Any]) = IndexPrefixes(values("min_chars").asInstanceOf, values("max_chars").asInstanceOf)
+
+  def toField(name: String, values: Map[String, Any]): TextField = TextField(
+    name,
+    values.get("analyzer").map(_.asInstanceOf[String]),
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("copy_to").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty),
+    values.get("eager_global_ordinals").map(_.asInstanceOf[Boolean]),
+    values
+      .get("fields")
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+        ElasticFieldBuilderFn.construct(key, value)
+      }.toList)
+      .getOrElse(List.empty),
+    values.get("fielddata").map(_.asInstanceOf[Boolean]),
+    values.get("fielddata_frequency_filter").map(_.asInstanceOf[Map[String, Any]]).map(getFieldDataFrequencyFilter),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("index_prefixes").map(_.asInstanceOf[Map[String, Any]]).map(getIndexPrefixes),
+    values.get("index_phrases").map(_.asInstanceOf[Boolean]),
+    values.get("index_options").map(_.asInstanceOf[String]),
+    values.get("norms").map(_.asInstanceOf[Boolean]),
+    values.get("position_increment_gap").map(_.asInstanceOf[Int]),
+    values.get("search_analyzer").map(_.asInstanceOf[String]),
+    values.get("search_quote_analyzer").map(_.asInstanceOf[String]),
+    values.get("similarity").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean]),
+    values.get("term_vector").map(_.asInstanceOf[String])
+  )
+
 
   def build(field: TextField): XContentBuilder = {
 

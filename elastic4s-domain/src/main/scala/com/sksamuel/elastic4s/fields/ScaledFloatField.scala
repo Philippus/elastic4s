@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object ScaledFloatField {
+  val `type`: String = "scaled_float"
+}
 case class ScaledFloatField(name: String,
                             boost: Option[Double] = None,
                             coerce: Option[Boolean] = None,

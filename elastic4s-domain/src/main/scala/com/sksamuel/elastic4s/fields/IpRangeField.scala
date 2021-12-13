@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object IpRangeField {
+  val `type`: String = "ip_range"
+}
 case class IpRangeField(name: String,
                         boost: Option[Double] = None,
                         coerce: Option[Boolean] = None,

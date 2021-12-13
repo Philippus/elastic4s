@@ -2,6 +2,9 @@ package com.sksamuel.elastic4s.fields
 
 import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
+object DoubleField {
+  val `type`: String = "double"
+}
 case class DoubleField(name: String,
                        boost: Option[Double] = None,
                        coerce: Option[Boolean] = None,
@@ -12,9 +15,13 @@ case class DoubleField(name: String,
                        nullValue: Option[Double] = None,
                        store: Option[Boolean] = None,
                        meta: Map[String, Any] = Map.empty) extends NumberField[Double] {
-  override def `type`: String = "double"
+  override def `type`: String = DoubleField.`type`
+
   def coerce(coerce: Boolean): DoubleField = copy(coerce = coerce.some)
+
   def stored(store: Boolean): DoubleField = copy(store = store.some)
+
   def ignoreMalformed(ignoreMalformed: Boolean): DoubleField = copy(ignoreMalformed = ignoreMalformed.some)
+
   def boost(boost: Double): DoubleField = copy(boost = boost.some)
 }

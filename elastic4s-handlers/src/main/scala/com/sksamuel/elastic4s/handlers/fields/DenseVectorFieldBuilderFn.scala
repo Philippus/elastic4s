@@ -4,6 +4,11 @@ import com.sksamuel.elastic4s.fields.DenseVectorField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object DenseVectorFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): DenseVectorField = DenseVectorField(
+    name,
+    values.get("dims").map(_.asInstanceOf[Int]).get
+  )
+
 
   def build(field: DenseVectorField): XContentBuilder = {
 

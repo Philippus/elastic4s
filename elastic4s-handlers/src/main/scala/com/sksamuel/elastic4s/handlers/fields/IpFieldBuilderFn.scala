@@ -4,6 +4,16 @@ import com.sksamuel.elastic4s.fields.{IpField, IpRangeField}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object IpFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): IpField = IpField(
+    name,
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("null_value").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean]),
+  )
+
 
   def build(field: IpField): XContentBuilder = {
 
@@ -20,6 +30,15 @@ object IpFieldBuilderFn {
 }
 
 object IpRangeFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): IpRangeField = IpRangeField(
+    name,
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("coerce").map(_.asInstanceOf[Boolean]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("format").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean])
+  )
+
 
   def build(field: IpRangeField): XContentBuilder = {
 

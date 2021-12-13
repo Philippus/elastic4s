@@ -4,6 +4,20 @@ import com.sksamuel.elastic4s.fields.FlattenedField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object FlattenedFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): FlattenedField = FlattenedField(
+    name,
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("depth_limit").map(_.asInstanceOf[Int]),
+    values.get("eager_global_ordinals").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_above").map(_.asInstanceOf[Int]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("index_options").map(_.asInstanceOf[String]),
+    values.get("null_value").map(_.asInstanceOf[String]),
+    values.get("similarity").map(_.asInstanceOf[String]),
+    values.get("split_queries_on_whitespace").map(_.asInstanceOf[Boolean])
+  )
+
   def build(field: FlattenedField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)

@@ -4,6 +4,16 @@ import com.sksamuel.elastic4s.fields.ObjectField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object ObjectFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): ObjectField = ObjectField(
+    name,
+    values.get("dynamic").map(_.asInstanceOf[String]),
+    values.get("enabled").map(_.asInstanceOf[Boolean]),
+    values
+      .get("properties")
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) => ElasticFieldBuilderFn.construct(key, value) }.toSeq)
+      .getOrElse(Seq.empty)
+  )
+
 
   def build(field: ObjectField): XContentBuilder = {
 

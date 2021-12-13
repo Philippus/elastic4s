@@ -4,6 +4,26 @@ import com.sksamuel.elastic4s.fields.GeoShapeField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object GeoShapeFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): GeoShapeField = GeoShapeField(
+    name,
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("copy_to").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_z_value").map(_.asInstanceOf[Boolean]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("norms").map(_.asInstanceOf[Boolean]),
+    values.get("null_value").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean]),
+    values.get("tree").map(_.asInstanceOf[String]),
+    values.get("precision").map(_.asInstanceOf[String]),
+    values.get("strategy").map(_.asInstanceOf[String]),
+    values.get("distance_error_pct").map(_.asInstanceOf[Double]),
+    values.get("orientation").map(_.asInstanceOf[String]),
+    values.get("points_only").map(_.asInstanceOf[Boolean]),
+    values.get("tree_levels").map(_.asInstanceOf[String])
+  )
+
   def build(field: GeoShapeField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)
