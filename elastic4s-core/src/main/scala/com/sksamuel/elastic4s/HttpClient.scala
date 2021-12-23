@@ -10,7 +10,7 @@ import org.slf4j.{Logger, LoggerFactory}
   * Akka HTTP client, STTP or whatever can be used with elasticsearch.
   * The wrapped client can then be passed into the ElasticClient.
   */
-trait HttpClient {
+trait HttpClient extends AutoCloseable {
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
