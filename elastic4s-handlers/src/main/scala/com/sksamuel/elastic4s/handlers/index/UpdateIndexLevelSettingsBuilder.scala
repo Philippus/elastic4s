@@ -13,6 +13,14 @@ object UpdateIndexLevelSettingsBuilder {
     d.refreshInterval.foreach(source.field("refresh_interval", _))
     d.maxResultWindow.foreach(source.field("max_result_window", _))
 
+    d.translog.foreach { t =>
+      val translog = source.startObject("translog")
+      translog.field("durability", t.durability)
+      t.syncInterval.foreach(si => translog.field("sync_interval", si))
+      t.flushThresholdSize.foreach(si => translog.field("flush_threshold_size", si))
+      translog.endObject()
+    }
+
     source.endObject().endObject()
     source
   }
