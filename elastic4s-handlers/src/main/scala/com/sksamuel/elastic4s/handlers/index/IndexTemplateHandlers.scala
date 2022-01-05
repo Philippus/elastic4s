@@ -59,7 +59,6 @@ trait IndexTemplateHandlers {
     override def responseHandler: ResponseHandler[GetIndexTemplatesResponse] = new ResponseHandler[GetIndexTemplatesResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplatesResponse] = response.statusCode match {
         case 200 =>
-          println(response.entity)
           val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
           Right(templates)
         case _ => Left(ElasticErrorParser.parse(response))
