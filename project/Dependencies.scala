@@ -21,7 +21,7 @@ object Dependencies {
   val ScalamockVersion               = "5.2.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-2"
   val ScalatestPlusVersion           = "3.1.2.0"
-  val ScalatestVersion               = "3.2.10"
+  val ScalatestVersion               = "3.2.11"
   val ScalazVersion                  = "7.2.32"
   val Slf4jVersion                   = "1.7.33"
   val SprayJsonVersion               = "1.3.6"
