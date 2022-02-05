@@ -9,21 +9,21 @@ object Dependencies {
   val CatsVersion                    = "2.0.0"
   val CirceVersion                   = "0.14.1"
   val CommonsIoVersion               = "2.11.0"
-  val ElasticsearchVersion           = "7.16.2"
+  val ElasticsearchVersion           = "7.16.3"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.13.1"
-  val Json4sVersion                  = "4.0.3"
+  val Json4sVersion                  = "4.0.4"
   val Log4jVersion                   = "2.15.0"
-  val MockitoVersion                 = "4.2.0"
+  val MockitoVersion                 = "4.3.1"
   val MonixVersion                   = "3.4.0"
   val PlayJsonVersion                = "2.9.2"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "5.2.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-2"
   val ScalatestPlusVersion           = "3.1.2.0"
-  val ScalatestVersion               = "3.2.10"
   val ScalazVersion                  = "7.2.34"
-  val Slf4jVersion                   = "1.7.33"
+  val ScalatestVersion               = "3.2.11"
+  val Slf4jVersion                   = "1.7.35"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
   val ZIOJsonVersion                 = "0.1.5"
@@ -31,7 +31,7 @@ object Dependencies {
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
-      "com.typesafe"       % "config"                       % "1.4.1",
+      "com.typesafe"       % "config"                       % "1.4.2",
       "org.slf4j"          % "slf4j-api"                    % Slf4jVersion,
       "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % "test",
       "org.mockito"        % "mockito-core"                 % MockitoVersion       % "test",
