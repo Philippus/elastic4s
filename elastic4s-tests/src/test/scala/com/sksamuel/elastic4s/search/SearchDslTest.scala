@@ -822,6 +822,15 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_nested.json")
   }
 
+  it should "generate correct json for variable width aggregation" in {
+    val req = search("music") aggs {
+      variableWidthHistogramAgg("score_histogram","score")
+        .shardSize(500)
+        .initialBuffer(100000)
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_variable_width_histogram.json")
+  }
+
   it should "generate correct json for highlighting" in {
     val req = search("music").highlighting(
       highlightOptions().tagsSchema("styled") boundaryChars "\\b" boundaryMaxScan 4 order "score" preTags

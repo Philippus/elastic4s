@@ -1,0 +1,11 @@
+{
+    "aggs": {
+        "score_histogram": {
+            "variable_width_histogram": {
+                "field": "score",
+                "shard_size":500,
+                "initial_buffer":100000
+            }
+        }
+    }
+}
