@@ -44,9 +44,13 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
                                          catenateAll: Option[Boolean] = None,
                                          generateWordParts: Option[Boolean] = None,
                                          generateNumberParts: Option[Boolean] = None,
+                                         protectedWords: Option[String] = None,
+                                         protectedWordsPath: Option[String] = None,
                                          splitOnCaseChange: Option[Boolean] = None,
                                          splitOnNumerics: Option[Boolean] = None,
-                                         stem_english_possessive: Option[Boolean] = None) extends TokenFilter {
+                                         stem_english_possessive: Option[Boolean] = None,
+                                         typeTable: Option[String] = None,
+                                         typeTablePath: Option[String] = None) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -57,10 +61,29 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
     catenateAll.foreach(b.field("catenate_all", _))
     generateWordParts.foreach(b.field("generate_word_parts", _))
     generateNumberParts.foreach(b.field("generate_number_parts", _))
+    protectedWords.foreach(b.field("protected_words", _))
+    protectedWordsPath.foreach(b.field("protected_words_path", _))
     splitOnCaseChange.foreach(b.field("split_on_case_change", _))
     splitOnNumerics.foreach(b.field("split_on_numerics", _))
+    stem_english_possessive.foreach(b.field("stem_english_possessive", _))
+    typeTable.foreach(b.field("type_table", _))
+    typeTablePath.foreach(b.field("type_table_path", _))
     b
   }
+
+  def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateAll = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter = copy(preserveOriginal = bool.some)
+  def protectedWords(words: String): WordDelimiterGraphTokenFilter = copy(protectedWords = words.some)
+  def protectedWordsPath(path: String): WordDelimiterGraphTokenFilter = copy(protectedWordsPath = path.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterGraphTokenFilter = copy(splitOnNumerics = bool.some)
+  def stemEnglishPossesive(bool: Boolean): WordDelimiterGraphTokenFilter = copy(stem_english_possessive = bool.some)
+  def typeTable(table: String): WordDelimiterGraphTokenFilter = copy(typeTable = table.some)
+  def typeTablePath(path: String): WordDelimiterGraphTokenFilter = copy(typeTablePath = path.some)
 }
 
 case class SynonymGraphTokenFilter(override val name: String,
@@ -425,9 +448,13 @@ case class WordDelimiterTokenFilter(override val name: String,
                                     catenateNumbers: Option[Boolean] = None,
                                     catenateAll: Option[Boolean] = None,
                                     splitOnCaseChange: Option[Boolean] = None,
+                                    protectedWords: Option[String] = None,
+                                    protectedWordsPath: Option[String] = None,
                                     preserveOriginal: Option[Boolean] = None,
                                     splitOnNumerics: Option[Boolean] = None,
-                                    stemEnglishPossesive: Option[Boolean] = None) extends TokenFilter {
+                                    stemEnglishPossesive: Option[Boolean] = None,
+                                    typeTable: Option[String] = None,
+                                    typeTablePath: Option[String] = None) extends TokenFilter {
 
 
   override def build: XContentBuilder = {
@@ -440,8 +467,12 @@ case class WordDelimiterTokenFilter(override val name: String,
     catenateAll.foreach(b.field("catenate_all", _))
     splitOnCaseChange.foreach(b.field("split_on_case_change", _))
     preserveOriginal.foreach(b.field("preserve_original", _))
+    protectedWords.foreach(b.field("protected_words", _))
+    protectedWordsPath.foreach(b.field("protected_words_path", _))
     splitOnNumerics.foreach(b.field("split_on_numerics", _))
     stemEnglishPossesive.foreach(b.field("stem_english_possessive", _))
+    typeTable.foreach(b.field("type_table", _))
+    typeTablePath.foreach(b.field("type_table_path", _))
     b
   }
 
@@ -452,8 +483,12 @@ case class WordDelimiterTokenFilter(override val name: String,
   def catenateAll(bool: Boolean): WordDelimiterTokenFilter = copy(catenateAll = bool.some)
   def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnCaseChange = bool.some)
   def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter = copy(preserveOriginal = bool.some)
+  def protectedWords(words: String): WordDelimiterTokenFilter = copy(protectedWords = words.some)
+  def protectedWordsPath(path: String): WordDelimiterTokenFilter = copy(protectedWordsPath = path.some)
   def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnNumerics = bool.some)
   def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
+  def typeTable(table: String): WordDelimiterTokenFilter = copy(typeTable = table.some)
+  def typeTablePath(path: String): WordDelimiterTokenFilter = copy(typeTablePath = path.some)
 }
 
 case class ShingleTokenFilter(override val name: String,
