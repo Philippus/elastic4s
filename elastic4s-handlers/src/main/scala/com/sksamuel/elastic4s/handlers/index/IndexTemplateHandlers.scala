@@ -82,7 +82,7 @@ object CreateIndexTemplateBodyFn {
     create.priority.foreach(builder.field("priority", _))
 
 
-    if (create.settings.nonEmpty || create.analysis.nonEmpty || create.mappings.nonEmpty) {
+    if (create.settings.nonEmpty || create.analysis.nonEmpty || create.mappings.nonEmpty || create.aliases.nonEmpty ) {
       val template = builder.startObject("template")
 
       if (create.settings.nonEmpty || create.analysis.nonEmpty) {
