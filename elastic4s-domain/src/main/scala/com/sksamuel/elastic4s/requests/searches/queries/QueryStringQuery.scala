@@ -22,8 +22,10 @@ case class QueryStringQuery(query: String,
                             fuzzyPrefixLength: Option[Int] = None,
                             fuzzyRewrite: Option[String] = None,
                             lenient: Option[Boolean] = None,
+                            maxDeterminizedStates: Option[Int] = None,
                             minimumShouldMatch: Option[String] = None,
                             phraseSlop: Option[Int] = None,
+                            quoteAnalyzer: Option[String] = None,
                             quoteFieldSuffix: Option[String] = None,
                             queryName: Option[String] = None,
                             rewrite: Option[String] = None,
@@ -73,11 +75,17 @@ case class QueryStringQuery(query: String,
   def lenient(lenient: Boolean): QueryStringQuery =
     copy(lenient = lenient.some)
 
+  def maxDeterminizedStates(maxDeterminizedStates: Int): QueryStringQuery =
+    copy(maxDeterminizedStates = maxDeterminizedStates.some)
+
   def minimumShouldMatch(minimumShouldMatch: String): QueryStringQuery =
     copy(minimumShouldMatch = minimumShouldMatch.some)
 
   def enablePositionIncrements(enablePositionIncrements: Boolean): QueryStringQuery =
     copy(enablePositionIncrements = enablePositionIncrements.some)
+
+  def quoteAnalyzer(quoteAnalyzer: String): QueryStringQuery =
+    copy(quoteAnalyzer = quoteAnalyzer.some)
 
   def quoteFieldSuffix(quoteFieldSuffix: String): QueryStringQuery =
     copy(quoteFieldSuffix = quoteFieldSuffix.some)
