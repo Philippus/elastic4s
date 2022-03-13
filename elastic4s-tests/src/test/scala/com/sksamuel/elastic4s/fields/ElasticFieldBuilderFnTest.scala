@@ -89,6 +89,14 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
 
     }
 
+    "support AnnotatedTextField" in {
+      val field = AnnotatedTextField("annotatedText", copyTo = Seq("a", "bc"))
+      val jsonString = """{"type":"annotated_text","copy_to":["a","bc"]}"""
+      ElasticFieldBuilderFn(field).string() shouldBe jsonString
+      ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
+
+    }
+
   }
 
 }
