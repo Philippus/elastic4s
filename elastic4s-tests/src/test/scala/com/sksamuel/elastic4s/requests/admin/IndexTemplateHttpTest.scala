@@ -37,7 +37,7 @@ class IndexTemplateHttpTest
       val result = client.execute {
         CreateIndexTemplateRequest("brewery_template", Seq("brew*")).mappings(
           properties(
-            textField("name").boost(123),
+            textField("name"),
             doubleField("year_founded").ignoreMalformed(true)
           )
         )
