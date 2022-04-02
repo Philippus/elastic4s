@@ -31,9 +31,9 @@ class IndexStatsRequestTest
       stats.map(_.store.sizeInBytes).sum > 0 shouldBe true
       stats.map(_.translog.operations).sum > 0 shouldBe true
       stats.map(_.segments.count).sum > 0 shouldBe true
-      stats.map(_.segments.memoryInBytes).sum > 0 shouldBe true
-      stats.map(_.segments.normsMemoryInBytes).sum > 0 shouldBe true
-      stats.map(_.segments.storedFieldsMemoryInBytes).sum > 0 shouldBe true
+      stats.map(_.segments.memoryInBytes).sum >= 0 shouldBe true
+      stats.map(_.segments.normsMemoryInBytes).sum >= 0 shouldBe true
+      stats.map(_.segments.storedFieldsMemoryInBytes).sum >= 0 shouldBe true
     }
 
     testStats(Seq(stats.all.primaries, stats.all.total))
