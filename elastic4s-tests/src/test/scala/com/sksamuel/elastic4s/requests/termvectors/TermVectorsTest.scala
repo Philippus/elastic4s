@@ -44,7 +44,6 @@ class TermVectorsTest extends AnyFlatSpec with Matchers with DockerTests {
     }.await.result
 
     response.index shouldBe "termvecs"
-    response.`type` shouldBe "_doc"
     response.id shouldBe "1"
     response.found shouldBe true
     response.termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
@@ -63,7 +62,6 @@ class TermVectorsTest extends AnyFlatSpec with Matchers with DockerTests {
     docs.size shouldBe 2
 
     docs.head.index shouldBe "termvecs"
-    docs.head.`type` shouldBe "_doc"
     docs.head.id shouldBe "1"
     docs.head.found shouldBe true
     docs.head.termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
