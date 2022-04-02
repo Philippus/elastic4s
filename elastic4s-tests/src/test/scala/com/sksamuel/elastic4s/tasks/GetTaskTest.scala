@@ -38,7 +38,7 @@ class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
       task.id shouldBe resp.taskId
       task.`type` shouldBe "transport"
       task.action shouldBe "indices:data/write/reindex"
-      task.description shouldBe "reindex from [get_task_a] to [get_task_b][_doc]"
+      task.description shouldBe "reindex from [get_task_a] to [get_task_b]"
       task.startTimeInMillis >= start shouldBe true
     }
   }
