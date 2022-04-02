@@ -20,7 +20,7 @@ class CatThreadPoolTest extends AnyFlatSpec with Matchers with DockerTests {
       catThreadPool()
     }.await.result.map(_.name).toSet
 
-    Set("refresh", "listener", "warmer", "generic", "fetch_shard_store", "snapshot").foreach { pool =>
+    Set("refresh", "warmer", "generic", "fetch_shard_store", "snapshot").foreach { pool =>
       pools.contains(pool) shouldBe true
     }
   }
