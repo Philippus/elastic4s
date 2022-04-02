@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery, Shape}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CombinedFieldsQuery, CommonTermsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CombinedFieldsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
 import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup, span, term}
@@ -22,17 +22,6 @@ trait QueryApi {
 
   def combinedFieldsQuery(query: String, fields: Seq[String]): CombinedFieldsQuery =
     CombinedFieldsQuery(query, fields.map(_ -> None))
-
-  @deprecated("use commonTermsQuery(field, text)", "7.7.0")
-  def commonTermsQuery(field: String) = new CommonQueryExpectsText(field)
-
-  @deprecated("use commonTermsQuery(field, text)", "7.7.0")
-  class CommonQueryExpectsText(name: String) {
-    def text(q: String): CommonTermsQuery = CommonTermsQuery(name, q)
-    def query(q: String): CommonTermsQuery = text(q)
-  }
-
-  def commonTermsQuery(field: String, text: String): CommonTermsQuery = CommonTermsQuery(field, text)
 
   def constantScoreQuery(query: Query): ConstantScore = ConstantScore(query)
 
