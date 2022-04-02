@@ -45,7 +45,7 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
       val resp = client.execute {
         search("bucketsortagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
-            .interval(DateHistogramInterval.Month)
+            .calendarInterval(DateHistogramInterval.Month)
             .subaggs(
               sumAgg("sales", "value"),
               bucketSortAggregation("sales_bucket_sort",
@@ -70,7 +70,7 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
     val resp = client.execute {
       search("bucketsortagg").matchAllQuery().aggs(
         dateHistogramAgg("sales_per_month", "date")
-          .interval(DateHistogramInterval.Month)
+          .calendarInterval(DateHistogramInterval.Month)
           .subaggs (
             sumAgg("sales", "value"),
             bucketSortAggregation("sales_bucket_sort",

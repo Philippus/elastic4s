@@ -42,7 +42,7 @@ class StatsBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests with M
       val resp = client.execute {
         search("statsbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
-            .interval(DateHistogramInterval.Month)
+            .calendarInterval(DateHistogramInterval.Month)
             .subaggs {
               sumAgg("sales", "value")
             },

@@ -722,7 +722,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for sub aggregation" in {
     val req = search("music") aggs {
-      dateHistogramAggregation("days") field "date" interval DateHistogramInterval.Day subAggregations(
+      dateHistogramAggregation("days") field "date" calendarInterval DateHistogramInterval.Day subAggregations(
         termsAggregation("keywords") field "keyword" size 5,
         termsAggregation("countries") field "country")
     }

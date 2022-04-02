@@ -43,7 +43,7 @@ class MovAvgPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Matche
       val resp = client.execute {
         search("movavgbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
-            .interval(DateHistogramInterval.Month)
+            .calendarInterval(DateHistogramInterval.Month)
             .subaggs (
               sumAgg("the_sum", "value"),
               movingAverageAggregation("the_movavg", "the_sum")
