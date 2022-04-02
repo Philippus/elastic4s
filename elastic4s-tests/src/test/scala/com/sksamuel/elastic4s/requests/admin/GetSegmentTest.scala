@@ -23,6 +23,6 @@ class GetSegmentTest extends AnyFlatSpec with Matchers with DockerTests {
     val segments = shards.shards.values.flatten.flatMap(_.segments.values).flatten
     segments.exists(_.search) shouldBe true
     segments.exists(_.sizeInBytes > 0) shouldBe true
-    segments.exists(_.memoryInBytes > 0) shouldBe true
+    segments.exists(_.memoryInBytes >= 0) shouldBe true
   }
 }
