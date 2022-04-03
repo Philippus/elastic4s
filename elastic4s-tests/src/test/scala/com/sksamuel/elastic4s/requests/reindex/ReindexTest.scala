@@ -40,7 +40,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
       createIdx("reindextarget")
 
       client.execute {
-        reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
+        reindex("reindex", "reindextarget").maxDocs(2).refresh(RefreshPolicy.IMMEDIATE)
       }.await.result.left.get.created shouldBe 2
 
       client.execute {
@@ -93,26 +93,10 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "return a task when setting wait_for_completion to false" in {
       val result = client.execute {
-        reindex("reindex", "reindextarget").size(2).waitForCompletion(false)
+        reindex("reindex", "reindextarget").maxDocs(2).waitForCompletion(false)
       }.await.result.right.get
       result.nodeId should not be null
       result.taskId should not be null
-    }
-
-    "apply targetType to dest index - not to the source index" in {
-      // although https://www.elastic.co/guide/en/elasticsearch/reference/7.11/docs-reindex.html#docs-reindex-api-request-body specifies
-      // that type under source is ignored (see explanation of type under dest in request body), the below test fails
-      // if the targetType is applied to the source index
-      deleteIdx("reindextarget")
-      createIdx("reindextarget")
-
-      client.execute {
-        reindex(Seq("reindex"), "reindextarget").copy(targetType = Some("test")).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
-
-      client.execute {
-        search("reindextarget")
-      }.await.result.size shouldBe 3
     }
   }
 }

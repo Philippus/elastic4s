@@ -10,8 +10,6 @@ import scala.concurrent.duration.FiniteDuration
 
 case class ReindexRequest(sourceIndexes: Indexes,
                           targetIndex: Index,
-                          @deprecated("types are deprecated in 7.0", "7.0")
-                          targetType: Option[String] = None,
                           filter: Option[Query] = None,
                           requestsPerSecond: Option[Float] = None,
                           refresh: Option[RefreshPolicy] = None,
@@ -26,7 +24,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           remoteUser: Option[String] = None,
                           remotePass: Option[String] = None,
                           // It’s also possible to limit the number of processed documents by setting size.
-                          size: Option[Int] = None,
+                          maxDocs: Option[Int] = None,
                           script: Option[Script] = None,
                           scroll: Option[String] = None) {
 
@@ -54,7 +52,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
   def retryBackoffInitialTime(retryBackoffInitialTime: FiniteDuration): ReindexRequest =
     copy(retryBackoffInitialTime = retryBackoffInitialTime.some)
 
-  def size(size: Int): ReindexRequest = copy(size = size.some)
+  def maxDocs(maxDocs: Int): ReindexRequest = copy(maxDocs = maxDocs.some)
 
   def shouldStoreResult(shouldStoreResult: Boolean): ReindexRequest =
     copy(shouldStoreResult = shouldStoreResult.some)
