@@ -67,7 +67,6 @@ class TermVectorsTest extends AnyFlatSpec with Matchers with DockerTests {
     docs.head.termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
 
     docs(1).index shouldBe "termvecs"
-    docs(1).`type` shouldBe "_doc"
     docs(1).id shouldBe "2"
     docs(1).found shouldBe true
     docs(1).termVectors("name").fieldStatistics shouldBe FieldStatistics(3, 2, 3)
