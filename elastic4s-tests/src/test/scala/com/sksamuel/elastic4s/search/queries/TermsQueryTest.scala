@@ -48,7 +48,7 @@ class TermsQueryTest
   it should "lookup terms to search from a document in another index" in {
     val resp = client.execute {
       search("lords") query termsQuery("name", List.empty[String])
-        .ref("lordsfanclub", "fans", "lordsAppreciationFanClub")
+        .ref("lordsfanclub", "lordsAppreciationFanClub")
         .path("lordswelike")
     }.await.result
 

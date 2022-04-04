@@ -12,7 +12,7 @@ case class TermsQuery[T](field: String,
                          path: Option[String] = None,
                          queryName: Option[String] = None) extends Query {
 
-  def ref(index: String, `type`: String, id: String): TermsQuery[T] = ref(DocumentRef(index, `type`, id))
+  def ref(index: String, id: String): TermsQuery[T] = ref(DocumentRef(index = index, id = id))
   def ref(ref: DocumentRef): TermsQuery[T] = copy(ref = ref.some)
   def routing(routing: String): TermsQuery[T] = copy(routing = routing.some)
   def path(path: String): TermsQuery[T] = copy(path = path.some)
