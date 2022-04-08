@@ -102,13 +102,13 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
         analyzer = Some("standard"),
         searchAnalyzer = Some("standard"),
         searchQuoteAnalyzer = Some("standard"))
-      val jsonString = """{"type":"annotated_text","analyzer":"standard","search_analyzer":"standard","search_quote_analyzer":"standard"]}"""
+      val jsonString = """{"type":"annotated_text","analyzer":"standard","search_analyzer":"standard","search_quote_analyzer":"standard"}"""
 
-      ElasticFieldBuilderFn(field) shouldBe(jsonString)
+      ElasticFieldBuilderFn(field).string() shouldBe(jsonString)
       ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe(field)
 
       val fieldSet = AnnotatedTextField("annotatedText").analyzer("standard").searchAnalyzer("standard").searchQuoteAnalyzer("standard")
-      ElasticFieldBuilderFn(fieldSet) shouldBe(jsonString)
+      ElasticFieldBuilderFn(fieldSet).string() shouldBe(jsonString)
       ElasticFieldBuilderFn.construct(fieldSet.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe(fieldSet)
     }
 
