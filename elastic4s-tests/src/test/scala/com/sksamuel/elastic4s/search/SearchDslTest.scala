@@ -513,13 +513,6 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     req.request.entity.get.get should matchJsonResource("/json/search/search_query_dismax.json")
   }
 
-  it should "generate correct json for common terms query" in {
-    val req = search("music") query {
-      commonTermsQuery("name") text "some text here" analyzer WhitespaceAnalyzer boost 12.3 cutoffFrequency 14.4 highFreqOperator "AND" lowFreqOperator "OR" lowFreqMinimumShouldMatch "3<80%" highFreqMinimumShouldMatch 2
-    }
-    req.request.entity.get.get should matchJsonResource("/json/search/search_query_commonterms.json")
-  }
-
   it should "generate correct json for constant score query" in {
     val req = search("music") query {
       constantScoreQuery {
@@ -722,7 +715,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for sub aggregation" in {
     val req = search("music") aggs {
-      dateHistogramAggregation("days") field "date" interval DateHistogramInterval.Day subAggregations(
+      dateHistogramAggregation("days") field "date" calendarInterval DateHistogramInterval.Day subAggregations(
         termsAggregation("keywords") field "keyword" size 5,
         termsAggregation("countries") field "country")
     }

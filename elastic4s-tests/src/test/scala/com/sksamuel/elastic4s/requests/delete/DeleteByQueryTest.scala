@@ -64,7 +64,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result.totalHits shouldBe 4
 
       client.execute {
-        deleteByQuery(indexname, matchAllQuery()).refresh(RefreshPolicy.Immediate).size(3)
+        deleteByQuery(indexname, matchAllQuery()).refresh(RefreshPolicy.Immediate).maxDocs(3)
       }.await.result.left.get.deleted shouldBe 3
 
       client.execute {

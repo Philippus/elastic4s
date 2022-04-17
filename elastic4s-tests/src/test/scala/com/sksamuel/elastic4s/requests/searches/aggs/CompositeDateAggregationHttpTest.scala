@@ -41,7 +41,7 @@ class CompositeDateAggregationHttpTest extends AnyFreeSpec with DockerTests with
             sources = Seq(
               DateHistogramValueSource(
                 name = "dateHist",
-                interval = Some(DateHistogramInterval.Month.interval),
+                calendarInterval = Some(DateHistogramInterval.Month.interval),
                 field = Some("premiere_date"),
                 script = None,
                 order = Some("ASC"),
@@ -104,7 +104,7 @@ class CompositeDateAggregationHttpTest extends AnyFreeSpec with DockerTests with
             sources = Seq(
               DateHistogramValueSource(
                 name = "dateHist",
-                interval = Some(DateHistogramInterval.Month.interval),
+                calendarInterval = Some(DateHistogramInterval.Month.interval),
                 field = Some("premiere_date"),
                 script = None,
                 order = Some("ASC"),

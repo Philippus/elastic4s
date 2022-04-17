@@ -60,7 +60,7 @@ object AggregationBuilderFn {
       case agg: ExtendedStatsBucketPipelineAgg => ExtendedStatsBucketPipelineAggBuilder(agg)
       case agg: MaxBucket                      => MaxBucketPipelineAggBuilder(agg)
       case agg: MinBucketPipelineAgg           => MinBucketPipelineAggBuilder(agg)
-      case agg: MovAvgPipelineAgg              => MovAvgPipelineAggBuilder(agg)
+      case agg: MovFnPipelineAgg              => MovFnPipelineAggBuilder(agg)
       case agg: PercentilesBucketPipelineAgg   => PercentilesBucketPipelineAggBuilder(agg)
       case agg: SumBucketPipelineAgg           => SumBucketPipelineAggBuilder(agg)
       case agg: StatsBucketPipelineAgg         => StatsBucketPipelineAggBuilder(agg)

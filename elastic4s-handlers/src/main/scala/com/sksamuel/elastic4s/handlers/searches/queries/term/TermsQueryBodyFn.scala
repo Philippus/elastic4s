@@ -12,7 +12,6 @@ object TermsQueryBodyFn {
       builder.startObject(t.field)
       t.ref.foreach { ref =>
         builder.field("index", ref.index.name)
-        builder.field("type", "_doc")
         builder.field("id", ref.id)
       }
       t.path.foreach(builder.field("path", _))

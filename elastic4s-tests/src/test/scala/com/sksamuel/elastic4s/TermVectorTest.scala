@@ -37,7 +37,6 @@ class TermVectorTest
       whenReady(f) { resp =>
         val result = resp.result
         result.index shouldBe "termvectortest"
-        result.`type` shouldBe "_doc"
         result.id shouldBe "5"
         result.termVectors("name").terms.size shouldBe 3 // geordie la forge
         result.termVectors("rank").terms.size shouldBe 2 // ltr cmdr

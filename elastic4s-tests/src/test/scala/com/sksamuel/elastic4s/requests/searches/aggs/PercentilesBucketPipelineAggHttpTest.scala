@@ -44,7 +44,7 @@ class PercentilesBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests 
       val resp = client.execute {
         search("percentilesbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
-            .interval(DateHistogramInterval.Month)
+            .calendarInterval(DateHistogramInterval.Month)
             .subaggs {
               sumAgg("sales", "value")
             },

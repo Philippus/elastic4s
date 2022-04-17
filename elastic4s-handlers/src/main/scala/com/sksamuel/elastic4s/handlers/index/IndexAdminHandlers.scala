@@ -119,7 +119,7 @@ trait IndexAdminHandlers {
   implicit object GetSegmentHandler extends Handler[GetSegmentsRequest, GetSegmentsResponse] {
     override def build(request: GetSegmentsRequest): ElasticRequest = {
       val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string(true)}/_segments"
-      ElasticRequest("GET", endpoint, Map("verbose" -> "true"))
+      ElasticRequest("GET", endpoint)
     }
   }
 

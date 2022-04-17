@@ -132,7 +132,7 @@ case class ExtendedStatsBucketAggResult(name: String,
                                         stdDeviationBoundsLower: Double)
   extends PipelineAggregation
 case class MinBucketAggResult(name: String, value: Double) extends PipelineAggregation
-case class MovAvgAggResult(name: String, value: Double) extends PipelineAggregation
+case class MovFnAggResult(name: String, value: Double) extends PipelineAggregation
 case class PercentilesBucketAggResult(name: String, values: Map[String, Double]) extends PipelineAggregation
 case class SerialDiffAggResult(name: String, value: Double) extends PipelineAggregation
 case class StatsBucketAggResult(name: String, count: Long, min: Double, max: Double, avg: Double, sum: Double)
@@ -296,7 +296,7 @@ trait HasAggregations extends AggResult with Transformable {
     )
   }
   def minBucket(name: String): MinBucketAggResult = MinBucketAggResult(name, agg(name)("value").toString.toDouble)
-  def movAvg(name: String): MovAvgAggResult = MovAvgAggResult(name, agg(name)("value").toString.toDouble)
+  def movFn(name: String): MovFnAggResult = MovFnAggResult(name, agg(name)("value").toString.toDouble)
   def percentilesBucket(name: String): PercentilesBucketAggResult =
     PercentilesBucketAggResult(name, agg(name)("values").asInstanceOf[Map[String, Double]])
   def serialDiff(name: String): SerialDiffAggResult = SerialDiffAggResult(name, agg(name)("value").toString.toDouble)

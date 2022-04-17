@@ -42,7 +42,7 @@ class DateHistogramAggregationHttpTest extends AnyFreeSpec with DockerTests with
 
       val resp = client.execute {
         search("datehistaggs").matchAllQuery().aggs {
-          dateHistogramAgg("agg1", "premiere_date").interval(DateHistogramInterval.Month)
+          dateHistogramAgg("agg1", "premiere_date").calendarInterval(DateHistogramInterval.Month)
             .extendedBounds(ExtendedBounds("01/12/2007", "01/07/2008"))
         }
       }.await.result
@@ -66,7 +66,7 @@ class DateHistogramAggregationHttpTest extends AnyFreeSpec with DockerTests with
 
       val resp = client.execute {
         search("datehistaggs").matchAllQuery().aggs {
-          dateHistogramAgg("agg1", "premiere_date").interval(DateHistogramInterval.Month)
+          dateHistogramAgg("agg1", "premiere_date").calendarInterval(DateHistogramInterval.Month)
             .extendedBounds(ExtendedBounds("01/12/2007", "01/07/2008"))
             .keyed(true)
         }
