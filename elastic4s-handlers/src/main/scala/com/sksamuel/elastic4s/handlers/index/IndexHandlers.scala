@@ -49,7 +49,7 @@ trait IndexHandlers {
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
 
       val body   = IndexContentBuilder(request)
-      val entity = ByteArrayEntity(body.getBytes, Some("application/json"))
+      val entity = ByteArrayEntity(body.getBytes(StandardCharsets.UTF_8), Some("application/json"))
 
       logger.debug(s"Endpoint=$endpoint")
       ElasticRequest(method, endpoint, params.toMap, entity)
@@ -84,7 +84,7 @@ trait IndexHandlers {
       }
 
       val body = AnalyseRequestContentBuilder(analyzeRequest)
-      val entity = ByteArrayEntity(body.getBytes, Some("application/json"))
+      val entity = ByteArrayEntity(body.getBytes(StandardCharsets.UTF_8), Some("application/json"))
 
       logger.debug(s"Endpoint=$endpoint")
 
