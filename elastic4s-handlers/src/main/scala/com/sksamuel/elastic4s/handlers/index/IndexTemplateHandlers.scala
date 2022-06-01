@@ -21,7 +21,8 @@ case class IndexTemplate(order: Int,
                          @JsonProperty("index_patterns") indexPatterns: Seq[String],
                          settings: Map[String, Any],
                          mappings: Map[String, Any],
-                         aliases: Map[String, Any])
+                         aliases: Map[String, Any],
+                         version: Option[Int])
 
 trait IndexTemplateHandlers {
 
