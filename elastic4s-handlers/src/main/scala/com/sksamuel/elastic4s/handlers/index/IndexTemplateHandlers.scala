@@ -77,7 +77,6 @@ object CreateIndexTemplateBodyFn {
 
     val builder = XContentFactory.jsonBuilder()
     builder.array("index_patterns", create.pattern.toArray)
-    create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))
     create.priority.foreach(builder.field("priority", _))
 
