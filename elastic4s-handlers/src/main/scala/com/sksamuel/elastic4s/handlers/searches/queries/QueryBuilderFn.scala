@@ -15,6 +15,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, 
 import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, CombinedFieldsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, MoreLikeThisQuery, NestedQuery, NoopQuery, ParentIdQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
 import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.CustomQuery
 
 object QueryBuilderFn {
   def apply(q: Query): XContentBuilder = q match {
@@ -71,7 +72,7 @@ object QueryBuilderFn {
     case t: TermsSetQuery => TermsSetQueryBodyFn(t)
     case q: WildcardQuery => WildcardQueryBodyFn(q)
     case q: SpanFieldMaskingQuery => SpanFieldMaskingQueryBodyFn(q)
-//    case c: CustomQuery => c.buildQueryBody()
+    case c: CustomQuery => c.buildQueryBody()
 
     // Not implemented
     case ni =>
