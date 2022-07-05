@@ -78,11 +78,18 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
         }.await
       }
 
+      val meta = Map(
+        "foo" -> "bar",
+        "intvalue" -> 1,
+        "mapvalue" -> Map[String, Any]("key" -> "value")
+      )
+
       client.execute {
         createIndex("getindexwithmeta").mapping(
           properties(
             textField("a")
-          ).meta(Map("foo" -> "bar"))
+          )
+          .meta(meta)
         )
       }.await
 
@@ -90,7 +97,7 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
         getIndex("getindexwithmeta")
       }.await.result
 
-      resp("getindexwithmeta").mappings.meta shouldBe Map("foo" -> "bar")
+      resp("getindexwithmeta").mappings.meta shouldBe meta
     }
   }
 }

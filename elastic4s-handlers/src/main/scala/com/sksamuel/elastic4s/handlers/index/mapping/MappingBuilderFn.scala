@@ -77,15 +77,7 @@ object MappingBuilderFn {
 
     if (d.meta.nonEmpty) {
       builder.startObject("_meta")
-      for (meta <- d.meta)
-        meta match {
-          case (name, s: String) => builder.field(name, s)
-          case (name, s: Double) => builder.field(name, s)
-          case (name, s: Boolean) => builder.field(name, s)
-          case (name, s: Long) => builder.field(name, s)
-          case (name, s: Float) => builder.field(name, s)
-          case (name, s: Int) => builder.field(name, s)
-        }
+      d.meta.foreach { case (k, v) => builder.autofield(k, v) }
       builder.endObject()
     }
 
