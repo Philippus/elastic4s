@@ -20,8 +20,8 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.15",
-  crossScalaVersions := Seq("2.12.15", "2.13.8")
+  scalaVersion := "2.12.16",
+  crossScalaVersions := Seq("2.12.16", "2.13.8")
 )
 
 lazy val warnUnusedImport = Seq(
@@ -307,9 +307,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.17.2" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.17.2" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.17.2" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.18.0" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.18.0" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.18.0" % "test"
     ),
     Test / fork := false,
     Test / parallelExecution := false,

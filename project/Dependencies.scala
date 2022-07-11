@@ -9,12 +9,12 @@ object Dependencies {
   val CatsVersion                    = "2.0.0"
   val CirceVersion                   = "0.14.2"
   val CommonsIoVersion               = "2.11.0"
-  val ElasticsearchVersion           = "8.2.1"
+  val ElasticsearchVersion           = "8.2.3"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.13.3"
   val Json4sVersion                  = "4.0.5"
   val Log4jVersion                   = "2.15.0"
-  val MockitoVersion                 = "4.5.1"
+  val MockitoVersion                 = "4.6.1"
   val MonixVersion                   = "3.4.1"
   val PlayJsonVersion                = "2.9.2"
   val ReactiveStreamsVersion         = "1.0.4"
@@ -27,7 +27,7 @@ object Dependencies {
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
   val ZIOJsonVersion                 = "0.1.5"
-  val ZIOVersion                     = "1.0.14"
+  val ZIOVersion                     = "1.0.15"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
