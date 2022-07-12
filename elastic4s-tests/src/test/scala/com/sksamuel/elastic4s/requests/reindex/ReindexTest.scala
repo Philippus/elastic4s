@@ -41,11 +41,11 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 2
+      }.await.result.left.get.created shouldBe 3
 
       client.execute {
         search("reindextarget")
-      }.await.result.size shouldBe 2
+      }.await.result.size shouldBe 3
     }
     "support script parameter" in {
       deleteIdx("reindextarget")
@@ -73,6 +73,19 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
         reindex("reindex", "reindextarget").proceedOnConflicts(false).refresh(RefreshPolicy.IMMEDIATE)
       }.await.result.left.get.created shouldBe 3
     }
+    "support maxDocs parameter" in {
+
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").maxDocs(2).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 2
+
+      client.execute {
+        search("reindextarget")
+      }.await.result.size shouldBe 2
+    }
     "support multiple sources" in {
 
       deleteIdx("reindextarget")
@@ -93,7 +106,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "return a task when setting wait_for_completion to false" in {
       val result = client.execute {
-        reindex("reindex", "reindextarget").size(2).waitForCompletion(false)
+        reindex("reindex", "reindextarget").maxDocs(2).waitForCompletion(false)
       }.await.result.right.get
       result.nodeId should not be null
       result.taskId should not be null
