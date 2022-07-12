@@ -34,7 +34,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
         search("reindextarget")
       }.await.result.size shouldBe 3
     }
-    "support size parameter" in {
+    "support maxDocs parameter" in {
 
       deleteIdx("reindextarget")
       createIdx("reindextarget")
@@ -72,6 +72,19 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
       client.execute {
         reindex("reindex", "reindextarget").proceedOnConflicts(false).refresh(RefreshPolicy.IMMEDIATE)
       }.await.result.left.get.created shouldBe 3
+    }
+    "support size parameter" in {
+
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+
+      client.execute {
+        search("reindextarget")
+      }.await.result.size shouldBe 3
     }
     "support multiple sources" in {
 

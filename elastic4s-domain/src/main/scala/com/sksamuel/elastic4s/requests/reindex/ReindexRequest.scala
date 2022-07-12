@@ -26,7 +26,8 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           // It’s also possible to limit the number of processed documents by setting size.
                           maxDocs: Option[Int] = None,
                           script: Option[Script] = None,
-                          scroll: Option[String] = None) {
+                          scroll: Option[String] = None,
+                          size: Option[Int] = None) {
 
   def remote(uri: String): ReindexRequest = copy(remoteHost = Option(uri))
   def remote(uri: String, user: String, pass: String): ReindexRequest =
@@ -64,4 +65,5 @@ case class ReindexRequest(sourceIndexes: Indexes,
 
   def scroll(scroll: String): ReindexRequest = copy(scroll = scroll.some)
   def scroll(duration: FiniteDuration): ReindexRequest = copy(scroll = Some(duration.toSeconds + "s"))
+  def size(size: Int): ReindexRequest = copy(size = size.some)
 }
