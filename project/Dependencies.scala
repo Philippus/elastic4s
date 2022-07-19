@@ -27,7 +27,7 @@ object Dependencies {
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
   val ZIOJsonVersion                 = "0.1.5"
-  val ZIOVersion                     = "2.0.0"
+  val ZIOVersion                     = "1.0.15"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
