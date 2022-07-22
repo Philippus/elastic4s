@@ -61,7 +61,7 @@ Current Elastic4s versions support Scala 2.12 and 2.13. Scala 2.10 support has b
 | 6.1.x           | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.1.svg?label=latest%206.1%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)   | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.1.svg?label=latest%206.1%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)   ||
 | 6.0.x           | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.11/6.0.svg?label=latest%206.0%20release%20for%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.11%22)   | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/6.0.svg?label=latest%206.0%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)   ||
 
-For release prior to 6.0 search maven central directly.
+For releases prior to 6.0 [search maven central](https://search.maven.org/search?q=elastic4s).
 
 ## Quick Start
 
