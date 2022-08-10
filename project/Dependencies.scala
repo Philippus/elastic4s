@@ -26,8 +26,10 @@ object Dependencies {
   val Slf4jVersion                   = "1.7.36"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
-  val ZIOJsonVersion                 = "0.1.5"
-  val ZIOVersion                     = "1.0.16"
+  val ZIOJson1Version                = "0.1.5"
+  val ZIO1Version                    = "1.0.16"
+  val ZIOJsonVersion                 = "0.3.0-RC10"
+  val ZIOVersion                     = "2.0.0"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
@@ -44,6 +46,7 @@ object Dependencies {
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
   )
 
+  lazy val zio1 = Seq("dev.zio" %% "zio" % ZIO1Version)
   lazy val zio = Seq("dev.zio" %% "zio" % ZIOVersion)
 
   lazy val scalaz =
@@ -66,6 +69,7 @@ object Dependencies {
   lazy val playJson                     = Seq("com.typesafe.play" %% "play-json" % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
   lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion
+  lazy val zioJson1                     = "dev.zio"                 %% "zio-json"                         % ZIOJson1Version
   lazy val zioJson                      = "dev.zio"                 %% "zio-json"                         % ZIOJsonVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion

@@ -347,7 +347,8 @@ instance to `doc` and an `Indexable` will be derived automatically.
 |[Circe](https://github.com/travisbrown/circe)|[elastic4s-json-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
 |[PlayJson](https://github.com/playframework/play-json)|[elastic4s-json-play](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-play)|import com.sksamuel.elastic4s.playjson._|
 |[Spray Json](https://github.com/spray/spray-json)|[elastic4s-json-spray](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)|import com.sksamuel.elastic4s.sprayjson._|
-|[ZIO Json](https://github.com/zio/zio-json)|[elastic4s-json-zio](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)|import com.sksamuel.elastic4s.ziojson._|
+|[ZIO 1.0 Json](https://github.com/zio/zio-json)|[elastic4s-json-zio-1](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-zio-1)|import com.sksamuel.elastic4s.ziojson._|
+|[ZIO 2.0 Json](https://github.com/zio/zio-json)|[elastic4s-json-zio](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-zio)|import com.sksamuel.elastic4s.ziojson._|
 
 
 
