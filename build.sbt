@@ -123,6 +123,7 @@ lazy val root = Project("elastic4s", file("."))
     clientsSniffed,
     cats_effect,
     cats_effect_2,
+    zio_1,
     zio,
     scalaz,
     monix,
@@ -133,6 +134,7 @@ lazy val root = Project("elastic4s", file("."))
     json4s,
     playjson,
     sprayjson,
+    ziojson_1,
     ziojson,
     clientsttp,
     clientakka,
@@ -199,6 +201,12 @@ lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
   .settings(name := "elastic4s-effect-cats-2")
   .settings(allSettings)
   .settings(libraryDependencies += cats2)
+
+lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-effect-zio-1")
+  .settings(allSettings)
+  .settings(libraryDependencies ++= Dependencies.zio1)
 
 lazy val zio = (project in file("elastic4s-effect-zio"))
   .dependsOn(core, testkit % "test")
@@ -276,6 +284,12 @@ lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .settings(name := "elastic4s-json-spray")
   .settings(allSettings)
   .settings(libraryDependencies ++= Dependencies.sprayJson)
+
+lazy val ziojson_1 = (project in file("elastic4s-json-zio-1"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-zio-1")
+  .settings(allSettings)
+  .settings(libraryDependencies += Dependencies.zioJson1)
 
 lazy val ziojson = (project in file("elastic4s-json-zio"))
   .dependsOn(core)
