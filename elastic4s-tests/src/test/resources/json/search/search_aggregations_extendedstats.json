@@ -4,8 +4,8 @@
             "extended_stats": {
                 "field": "grade",
                 "script": {
-                    "inline": "doc['grade'].value",
-                    "lang": "lua"
+                    "lang": "lua",
+                    "source": "doc['grade'].value"
                 }
             }
         }
