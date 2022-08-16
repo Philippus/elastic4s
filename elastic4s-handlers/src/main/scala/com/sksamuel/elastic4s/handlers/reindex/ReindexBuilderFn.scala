@@ -23,6 +23,8 @@ object ReindexBuilderFn {
 
     builder.startObject("source")
 
+    request.size.foreach(builder.field("size", _))
+
     request.remoteHost.foreach { host =>
       builder.startObject("remote")
       builder.field("host", host)
