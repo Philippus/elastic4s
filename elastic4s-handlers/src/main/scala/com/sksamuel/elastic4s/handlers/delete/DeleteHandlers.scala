@@ -50,6 +50,7 @@ trait DeleteHandlers {
       request.maxDocs.map(_.toString).foreach(params.put("max_docs", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
+      request.slices.map(_.toString).foreach(params.put("slices", _))
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string()}")
