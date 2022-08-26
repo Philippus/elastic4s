@@ -28,7 +28,7 @@ object Dependencies {
   val SttpVersion                    = "1.7.2"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.16"
-  val ZIOJsonVersion                 = "0.3.0-RC10"
+  val ZIOJsonVersion                 = "0.3.0-RC11"
   val ZIOVersion                     = "2.0.1"
 
   lazy val commonDeps = Seq(
