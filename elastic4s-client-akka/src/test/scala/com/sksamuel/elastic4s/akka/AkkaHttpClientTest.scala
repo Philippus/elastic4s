@@ -1,13 +1,16 @@
 package com.sksamuel.elastic4s.akka
 
 import akka.actor.ActorSystem
-import com.sksamuel.elastic4s.ElasticClient
+import com.sksamuel.elastic4s.{ElasticClient, ElasticRequest, Executor, HttpClient, HttpResponse}
 import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import java.nio.charset.StandardCharsets
+import java.util.Base64
+import scala.concurrent.Future
 import scala.util.Try
 
 class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
@@ -102,5 +105,17 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
     ).await.result
   }
 
+  it should "propagate headers if included" in {
+    implicit val executor: Executor[Future] = new Executor[Future] {
+      override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
+        val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
+        Executor.FutureExecutor.exec(client, request.copy(headers = Map("Authorization" -> s"Basic $cred")))
+      }
+    }
+
+    client.execute {
+      catHealth()
+    }.await.result.status shouldBe "401"
+  }
 }
 

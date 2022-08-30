@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.akka
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.BasicHttpCredentials
+import akka.http.scaladsl.model.headers.{BasicHttpCredentials, RawHeader}
 import akka.stream.scaladsl.{FileIO, Keep, Sink, Source, StreamConverters}
 import akka.stream.{Materializer, OverflowStrategy, QueueOfferResult}
 import akka.util.ByteString
@@ -234,6 +234,7 @@ class AkkaHttpClient private[akka] (
         .withQuery(Query(request.params))
         .withAuthority(Uri.Authority.parse(host))
         .withScheme(scheme),
+      headers = request.headers.map((RawHeader.apply _).tupled).toList,
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
 
