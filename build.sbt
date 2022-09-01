@@ -298,7 +298,7 @@ lazy val ziojson = (project in file("elastic4s-json-zio"))
   .settings(libraryDependencies += Dependencies.zioJson)
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))
-  .dependsOn(core)
+  .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-sttp")
   .settings(allSettings)
   .settings(libraryDependencies ++= Seq(sttp, asyncHttpClientBackendFuture))
