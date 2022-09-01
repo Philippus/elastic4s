@@ -74,6 +74,9 @@ class JavaClient(client: RestClient) extends HttpClient {
     val request = new Request(req.method, req.endpoint)
     req.params.foreach { case (key, value) => request.addParameter(key, value) }
     req.entity.map(apacheEntity).foreach(request.setEntity)
+    val optBuilder = request.getOptions.toBuilder
+    req.headers.foreach((optBuilder.addHeader _).tupled)
+    request.setOptions(optBuilder)
     client.performRequestAsync(request, l)
   }
 

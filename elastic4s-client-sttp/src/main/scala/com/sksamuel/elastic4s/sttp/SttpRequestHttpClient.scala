@@ -24,7 +24,7 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
       SttpRequestHttpClient.defaultEc, SttpRequestHttpClient.defaultSttpBackend)
   }
 
-  private def request(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] = {
+  private def request(method: String, endpoint: String, params: Map[String, Any], headers: Map[String, String]): Request[String, Nothing] = {
     val url = new Uri(
       nodeEndpoint.protocol,
       None,
@@ -34,13 +34,14 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
       collection.immutable.Seq(params.map{ case (k, v) => QueryFragment.KeyValue(k, v.toString) }.toSeq: _*),
       None
     )
-    method.toUpperCase match {
+    val req = method.toUpperCase match {
       case "GET"    => sttp.get(url)
       case "HEAD"   => sttp.head(url)
       case "POST"   => sttp.post(url)
       case "PUT"    => sttp.put(url)
       case "DELETE" => sttp.delete(url)
     }
+    req.headers(headers)
   }
 
   private def processResponse(resp: Response[String]): HttpResponse = {
@@ -53,14 +54,15 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
     HttpResponse(resp.code, entity, resp.headers.toMap)
   }
 
-  def async(method: String, endpoint: String, params: Map[String, Any]): Request[String, Nothing] =
-    request(method, endpoint, params)
+  def async(method: String, endpoint: String, params: Map[String, Any], headers: Map[String, String]): Request[String, Nothing] =
+    request(method, endpoint, params, headers)
 
   def async(method: String,
             endpoint: String,
             params: Map[String, Any],
+            headers: Map[String, String],
             entity: HttpEntity): Request[String, Nothing] = {
-    val r  = request(method, endpoint, params)
+    val r  = request(method, endpoint, params, headers)
     val r2 = entity.contentCharset.fold(r)(r.contentType)
     entity match {
       case StringEntity(content: String, _) => r2.body(content)
@@ -84,8 +86,8 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
     */
   override def send(request: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
     val f = request.entity match {
-      case Some(entity) => async(request.method, request.endpoint, request.params, entity).send()
-      case None         => async(request.method, request.endpoint, request.params).send()
+      case Some(entity) => async(request.method, request.endpoint, request.params, request.headers, entity).send()
+      case None         => async(request.method, request.endpoint, request.params, request.headers).send()
     }
     f.onComplete {
       case Success(resp) => callback(Right(processResponse(resp)))

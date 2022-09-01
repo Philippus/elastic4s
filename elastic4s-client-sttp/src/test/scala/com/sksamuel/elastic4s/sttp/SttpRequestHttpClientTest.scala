@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.http
+package com.sksamuel.elastic4s.sttp
 
-import com.sksamuel.elastic4s.{ElasticRequest, Executor, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticNodeEndpoint, ElasticRequest, Executor, HttpClient, HttpResponse}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -8,23 +8,12 @@ import org.scalatest.matchers.should.Matchers
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 import scala.concurrent.Future
-import scala.util.Try
 
-class ElasticClientTests extends AnyFlatSpec with Matchers with DockerTests {
+class SttpRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerTests {
+  private lazy val sttpClient = SttpRequestHttpClient(ElasticNodeEndpoint("http", elasticHost, elasticPort.toInt, None))
+  override val client = ElasticClient(sttpClient)
 
-  Try {
-    client.execute {
-      deleteIndex("testindex")
-    }.await
-  }
-
-  "DefaultHttpClient" should "support utf-8" in {
-    client.execute {
-      indexInto("testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")
-    }.await.result.result shouldBe "created"
-  }
-
-  it should "propagate headers if included" in {
+  "SttpRequestHttpClient" should "propagate headers if included" in {
     implicit val executor: Executor[Future] = new Executor[Future] {
       override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
         val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
