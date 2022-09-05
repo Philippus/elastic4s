@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.span
 
-import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class SpanNotQuery(include: SpanQuery,
@@ -10,7 +9,7 @@ case class SpanNotQuery(include: SpanQuery,
                         post: Option[Int] = None,
                         boost: Option[Double] = None,
                         queryName: Option[String] = None)
-  extends Query {
+  extends SpanQuery {
 
   def boost(boost: Double): SpanNotQuery = copy(boost = Option(boost))
   def queryName(queryName: String): SpanNotQuery = copy(queryName = queryName.some)
