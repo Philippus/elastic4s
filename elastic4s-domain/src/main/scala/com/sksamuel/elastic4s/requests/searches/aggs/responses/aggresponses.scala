@@ -142,7 +142,28 @@ case class NestedAggResult(name: String, private[elastic4s] val data: Map[String
 
 case class ReverseNestedAggResult(name: String, private[elastic4s] val data: Map[String, Any]) extends HasAggregations
 
+case class AdjacencyMatrixBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
+  extends AggBucket
 
+case class AdjacencyMatrix(name: String, buckets: Seq[AdjacencyMatrixBucket]) extends BucketAggregation
+
+object AdjacencyMatrix {
+
+  implicit object AdjacencyMatrixAggSerde extends AggSerde[AdjacencyMatrix] {
+    override def read(name: String, data: Map[String, Any]): AdjacencyMatrix = apply(name, data)
+  }
+
+  def apply(name: String, data: Map[String, Any]): AdjacencyMatrix = AdjacencyMatrix(
+    name,
+    data("buckets").asInstanceOf[Seq[Map[String, Any]]].map { map =>
+      AdjacencyMatrixBucket(
+        map("key").toString,
+        map("doc_count").toString.toLong,
+        map
+      )
+    }
+  )
+}
 
 // parent trait for any container of aggregations - which is the top level aggregations map you can find
 // in the search result, and any buckets that contain sub aggregations
@@ -309,6 +330,9 @@ trait HasAggregations extends AggResult with Transformable {
       avg = Option(agg(name).getOrElse("avg", 0)).getOrElse(0).toString.toDouble,
       sum = agg(name).getOrElse("sum", 0).toString.toDouble
     )
+
+  def adjacencyMatrixAgg(name: String): AdjacencyMatrix =
+    result[AdjacencyMatrix](name)
 }
 
 trait MetricAggregation extends AggResult {
