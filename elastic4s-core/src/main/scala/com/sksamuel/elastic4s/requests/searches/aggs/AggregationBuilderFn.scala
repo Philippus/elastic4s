@@ -1,12 +1,12 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
+import com.sksamuel.elastic4s.requests.searches.{DateHistogramInterval, defaultCustomAggregationHandler}
 import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AdjacencyMatrixAggregationBuilder, AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder, DateRangeAggregationBuilder, ExtendedStatsAggregationBuilder, FilterAggregationBuilder, FiltersAggregationBuilder, GeoBoundsAggregationBuilder, GeoCentroidAggregationBuilder, GeoDistanceAggregationBuilder, GeoHashGridAggregationBuilder, GeoTileGridAggregationBuilder, GlobalAggregationBuilder, HistogramAggregationBuilder, IpRangeAggregationBuilder, KeyedFiltersAggregationBuilder, MaxAggregationBuilder, MinAggregationBuilder, MissingAggregationBuilder, NestedAggregationBuilder, PercentilesAggregationBuilder, RangeAggregationBuilder, ReverseNestedAggregationBuilder, SamplerAggregationBuilder, ScriptedMetricAggregationBuilder, SigTermsAggregationBuilder, SigTextAggregationBuilder, StatsAggregationBuilder, SumAggregationBuilder, TermsAggregationBuilder, TopHitsAggregationBuilder, TopMetricsAggregationBuilder, ValueCountAggregationBuilder, VariableWidthAggregationBuilder, WeightedAvgAggregationBuilder}
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
 
 object AggregationBuilderFn {
-  def apply(agg: AbstractAggregation): XContentBuilder = {
+  def apply(agg: AbstractAggregation, customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
     val builder = agg match {
 
       case agg: AdjacencyMatrixAggregation => AdjacencyMatrixAggregationBuilder(agg)
@@ -66,11 +66,7 @@ object AggregationBuilderFn {
       case agg: SumBucketPipelineAgg           => SumBucketPipelineAggBuilder(agg)
       case agg: StatsBucketPipelineAgg         => StatsBucketPipelineAggBuilder(agg)
 
-      // Not implemented
-      case ni =>
-        throw new NotImplementedError(
-          s"Aggregation ${ni.getClass.getName} has not yet been implemented. Please add a PR!"
-        )
+      case other => customAggregationHandler(other)
     }
     builder
   }
@@ -137,11 +133,11 @@ object AggMetaDataFn {
 }
 
 object SubAggsBuilderFn {
-  def apply(agg: Aggregation, builder: XContentBuilder): Unit =
+  def apply(agg: Aggregation, builder: XContentBuilder, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler): Unit =
     if (agg.subaggs.nonEmpty) {
       builder.startObject("aggs")
       agg.subaggs.foreach { subagg =>
-        builder.rawField(subagg.name, AggregationBuilderFn(subagg))
+        builder.rawField(subagg.name, AggregationBuilderFn(subagg, customAggregations))
       }
       builder.endObject()
     }

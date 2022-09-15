@@ -1,6 +1,8 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
+import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
 
 trait SearchHandlers {
@@ -46,7 +48,7 @@ trait SearchHandlers {
     }
   }
 
-  implicit object SearchHandler extends Handler[SearchRequest, SearchResponse] {
+  class BaseSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) extends Handler[SearchRequest, SearchResponse] {
 
     override def build(request: SearchRequest): ElasticRequest = {
 
@@ -76,10 +78,11 @@ trait SearchHandlers {
 
       request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
-      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
+      val body = request.source.getOrElse(SearchBodyBuilderFn(request, customAggregationHandler).string())
       ElasticRequest("POST", endpoint, params.toMap, HttpEntity(body, "application/json"))
     }
   }
+  implicit object SearchHandler extends BaseSearchHandler(defaultCustomAggregationHandler)
 }
 
 object SearchHandlers extends SearchHandlers
