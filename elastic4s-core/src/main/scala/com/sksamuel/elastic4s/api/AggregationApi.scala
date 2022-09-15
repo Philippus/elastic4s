@@ -1,11 +1,14 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
-import com.sksamuel.elastic4s.requests.searches.aggs.{AutoDateHistogramAggregation, AvgAggregation, CardinalityAggregation, ChildrenAggregation, DateHistogramAggregation, DateRangeAggregation, ExtendedStatsAggregation, FilterAggregation, FiltersAggregation, GeoBoundsAggregation, GeoCentroidAggregation, GeoDistanceAggregation, GeoHashGridAggregation, GeoTileGridAggregation, GlobalAggregation, HistogramAggregation, IpRangeAggregation, KeyedFiltersAggregation, MaxAggregation, MinAggregation, MissingAggregation, NestedAggregation, PercentileRanksAggregation, PercentilesAggregation, RangeAggregation, ReverseNestedAggregation, SamplerAggregation, ScriptedMetricAggregation, SigTermsAggregation, StatsAggregation, SumAggregation, TermsAggregation, TopHitsAggregation, TopMetricsAggregation, ValueCountAggregation, VariableWidthAggregation, WeightedAvgAggregation, WeightedAvgField}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AdjacencyMatrixAggregation, AutoDateHistogramAggregation, AvgAggregation, CardinalityAggregation, ChildrenAggregation, DateHistogramAggregation, DateRangeAggregation, ExtendedStatsAggregation, FilterAggregation, FiltersAggregation, GeoBoundsAggregation, GeoCentroidAggregation, GeoDistanceAggregation, GeoHashGridAggregation, GeoTileGridAggregation, GlobalAggregation, HistogramAggregation, IpRangeAggregation, KeyedFiltersAggregation, MaxAggregation, MinAggregation, MissingAggregation, NestedAggregation, PercentileRanksAggregation, PercentilesAggregation, RangeAggregation, ReverseNestedAggregation, SamplerAggregation, ScriptedMetricAggregation, SigTermsAggregation, StatsAggregation, SumAggregation, TermsAggregation, TopHitsAggregation, TopMetricsAggregation, ValueCountAggregation, VariableWidthAggregation, WeightedAvgAggregation, WeightedAvgField}
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait AggregationApi {
+
+  def adjacencyMatrixAgg(name: String, filters: Iterable[(String, Query)]): AdjacencyMatrixAggregation =
+    AdjacencyMatrixAggregation(name, filters)
 
   @deprecated("use avgAgg", "7.7")
   def avgAggregation(name: String): AvgAggregation = AvgAggregation(name)

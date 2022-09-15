@@ -67,7 +67,7 @@ object TextFieldBuilderFn {
     field.indexPrefixes.foreach { prefix =>
       builder.startObject("index_prefixes")
       builder.field("min_chars", prefix.minChars)
-      builder.field("min_chars", prefix.maxChars)
+      builder.field("max_chars", prefix.maxChars)
       builder.endObject()
     }
     field.indexPhrases.foreach(builder.field("index_phrases", _))
