@@ -34,7 +34,7 @@ object GeoDistanceSortBuilderFn {
     } else if (geo.nestedPath.nonEmpty || geo.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       geo.nestedPath.foreach(builder.field("path", _))
-      geo.nestedFilter.map(f => queries.QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      geo.nestedFilter.map(f => queries.QueryBuilderFn(f).string).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
 

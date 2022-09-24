@@ -41,7 +41,7 @@ trait TermVectorHandlers {
       ElasticRequest("GET",
         endpoint,
         params.toMap,
-        HttpEntity(builder.string(), "application/json"))
+        HttpEntity(builder.string, "application/json"))
     }
   }
 
@@ -82,7 +82,7 @@ trait TermVectorHandlers {
 
         builder.endObject()
 
-        builder.string()
+        builder.string
       }.mkString(",")
       builder.rawValue(arrayBody)
 
@@ -95,7 +95,7 @@ trait TermVectorHandlers {
       ElasticRequest("POST",
         endpoint,
         params.toMap,
-        HttpEntity(builder.string(), "application/json"))
+        HttpEntity(builder.string, "application/json"))
     }
   }
 }

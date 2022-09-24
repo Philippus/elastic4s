@@ -15,12 +15,11 @@ trait Hit {
 
   def id: String
   def index: String
-  def `type`: String
   def version: Long
   def seqNo: Long
   def primaryTerm: Long
 
-  final def ref: DocumentRef = DocumentRef(index, `type`, id)
+  final def ref: DocumentRef = DocumentRef(index, id)
 
   /**
     * Uses a HitReader typeclass to convert the returned source into type T.

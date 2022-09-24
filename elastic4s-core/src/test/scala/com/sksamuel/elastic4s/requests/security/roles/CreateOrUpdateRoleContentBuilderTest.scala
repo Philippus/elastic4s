@@ -46,7 +46,7 @@ class CreateOrUpdateRoleContentBuilderTest extends AnyFunSuite with Matchers {
 		}
 		""".filterNot(c => c.isWhitespace)
 
-		val result = CreateOrUpdateRoleContentBuilder(create).string()
+		val result = CreateOrUpdateRoleContentBuilder(create).string
 		result shouldBe expected
 	}
 }

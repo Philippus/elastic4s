@@ -61,7 +61,7 @@ case class PhraseSuggestion(name: String,
       .field(s"{{$fieldVariable}}", s"{{$suggestionVariable}}")
       .endObject()
       .endObject()
-      .string()
+      .string
 
     val template = Script(collateQueryAsJson)
     collateQuery(template)

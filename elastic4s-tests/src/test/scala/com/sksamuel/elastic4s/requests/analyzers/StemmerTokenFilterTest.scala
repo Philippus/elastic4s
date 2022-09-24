@@ -8,7 +8,7 @@ class StemmerTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matche
 
   "StemmerTokenFilter builder" should {
     "set language" in {
-      stemmerTokenFilter("testy", "vulcan").json.string() shouldBe """{"type":"stemmer","name":"vulcan"}"""
+      stemmerTokenFilter("testy", "vulcan").json.string shouldBe """{"type":"stemmer","name":"vulcan"}"""
     }
   }
 }

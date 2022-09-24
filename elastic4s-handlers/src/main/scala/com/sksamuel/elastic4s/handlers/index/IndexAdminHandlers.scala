@@ -30,7 +30,7 @@ trait IndexAdminHandlers {
         builder.endObject()
       }
 
-      val entity = HttpEntity(builder.string(), "application/json")
+      val entity = HttpEntity(builder.string, "application/json")
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
@@ -119,7 +119,7 @@ trait IndexAdminHandlers {
   implicit object GetSegmentHandler extends Handler[GetSegmentsRequest, GetSegmentsResponse] {
     override def build(request: GetSegmentsRequest): ElasticRequest = {
       val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string(true)}/_segments"
-      ElasticRequest("GET", endpoint, Map("verbose" -> "true"))
+      ElasticRequest("GET", endpoint)
     }
   }
 
@@ -193,7 +193,7 @@ trait IndexAdminHandlers {
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
       request.includeTypeName.foreach(params.put("include_type_name", _))
 
-      val body   = CreateIndexContentBuilder(request).string()
+      val body   = CreateIndexContentBuilder(request).string
       val entity = HttpEntity(body, "application/json")
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)
@@ -213,7 +213,7 @@ trait IndexAdminHandlers {
     override def build(request: UpdateIndexLevelSettingsRequest): ElasticRequest = {
 
       val endpoint = "/" + request.indexes.mkString(",") + "/_settings"
-      val body     = UpdateIndexLevelSettingsBuilder(request).string()
+      val body     = UpdateIndexLevelSettingsBuilder(request).string
       val entity   = HttpEntity(body, "application/json")
 
       ElasticRequest("PUT", endpoint, entity)

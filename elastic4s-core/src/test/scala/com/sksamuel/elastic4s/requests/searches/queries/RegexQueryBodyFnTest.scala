@@ -14,7 +14,7 @@ class RegexQueryBodyFnTest extends AnyFunSuite with Matchers {
       .queryName("myquery")
       .maxDeterminedStates(10000)
       .caseInsensitive(true)
-    term.RegexQueryBodyFn(q).string() shouldBe
+    term.RegexQueryBodyFn(q).string shouldBe
       """{"regexp":{"mysearch":{"value":".*","flags":"ANYSTRING|COMPLEMENT|EMPTY|INTERSECTION|INTERVAL","max_determinized_states":10000,"boost":1.2,"_name":"myquery","case_insensitive":true}}}"""
   }
 }

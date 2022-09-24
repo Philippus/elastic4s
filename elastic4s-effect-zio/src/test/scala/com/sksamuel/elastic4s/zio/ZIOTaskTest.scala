@@ -5,13 +5,15 @@ import com.sksamuel.elastic4s.zio.instances._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import zio.Task
+import zio.{Task, Unsafe}
 
 class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   implicit class RichZIO[A](task: Task[A]) {
     def unsafeRun: Either[Throwable, A] = {
-      zio.Runtime.default.unsafeRun(task.either)
+      Unsafe.unsafeCompat { implicit u =>
+        zio.Runtime.default.unsafe.run(task).toEither
+      }
     }
   }
 

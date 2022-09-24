@@ -37,7 +37,7 @@ class FieldMappingJsonTest extends AnyFunSuite with Matchers {
     )
 
     val mapping = MappingDefinition(properties = List(field1, field2, field3))
-    MappingBuilderFn.build(mapping).string() shouldBe """{"properties":{"myfield1":{"type":"long","copy_to":["q","er"],"boost":1.2,"store":true,"ignore_malformed":true},"myfield2":{"type":"text","analyzer":"bengali","norms":true,"search_quote_analyzer":"english","similarity":"Classic1"},"myfield3":{"type":"keyword","copy_to":["q","er"],"ignore_above":4,"index_options":"freqs","norms":true,"normalizer":"foo","similarity":"Classic1"}}}"""
+    MappingBuilderFn.build(mapping).string shouldBe """{"properties":{"myfield1":{"type":"long","copy_to":["q","er"],"boost":1.2,"store":true,"ignore_malformed":true},"myfield2":{"type":"text","analyzer":"bengali","norms":true,"search_quote_analyzer":"english","similarity":"Classic1"},"myfield3":{"type":"keyword","copy_to":["q","er"],"ignore_above":4,"index_options":"freqs","norms":true,"normalizer":"foo","similarity":"Classic1"}}}"""
   }
 
   test("MappingBuilderFn should throw an exception if multiple properties with the same field name") {
@@ -54,7 +54,7 @@ class FieldMappingJsonTest extends AnyFunSuite with Matchers {
 
     val mapping = MappingDefinition(properties = List(field1, field2))
     intercept[RuntimeException] {
-      MappingBuilderFn.build(mapping).string()
+      MappingBuilderFn.build(mapping).string
     }
   }
 }

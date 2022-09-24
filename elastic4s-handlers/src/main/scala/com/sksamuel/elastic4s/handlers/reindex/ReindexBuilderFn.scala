@@ -15,13 +15,15 @@ object ReindexBuilderFn {
       case false => builder.field("conflicts", "abort")
     }
 
-    request.size.foreach(builder.field("size", _))
+    request.maxDocs.foreach(builder.field("max_docs", _))
 
     request.script.foreach { script =>
       builder.rawField("script", handlers.script.ScriptBuilderFn(script))
     }
 
     builder.startObject("source")
+
+    request.size.foreach(builder.field("size", _))
 
     request.remoteHost.foreach { host =>
       builder.startObject("remote")
@@ -39,9 +41,6 @@ object ReindexBuilderFn {
 
     builder.startObject("dest")
     builder.field("index", request.targetIndex.name)
-
-    if (request.targetType.nonEmpty)
-      builder.field("type", request.targetType.get)
 
     // end dest
     builder.endObject()

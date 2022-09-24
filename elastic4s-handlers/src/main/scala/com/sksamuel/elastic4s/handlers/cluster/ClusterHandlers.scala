@@ -34,7 +34,7 @@ trait ClusterHandlers {
   implicit object ClusterSettingsHandler extends Handler[ClusterSettingsRequest, ClusterSettingsResponse] {
     override def build(request: ClusterSettingsRequest): ElasticRequest = {
       val builder = ClusterSettingsBodyBuilderFn(request)
-      val entity = HttpEntity(builder.string(), "application/json")
+      val entity = HttpEntity(builder.string, "application/json")
       ElasticRequest("PUT", "/_cluster/settings", Map("flat_settings" -> true), entity)
     }
   }

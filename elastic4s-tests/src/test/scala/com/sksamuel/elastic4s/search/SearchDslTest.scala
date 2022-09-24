@@ -124,7 +124,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate json for a string query" in {
     val req = search("*") limit 5 query {
-      stringQuery("coldplay") allowLeadingWildcard true analyzeWildcard true analyzer WhitespaceAnalyzer autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyPrefixLength 3 lenient true phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer" timeZone "+02:00"
+      stringQuery("coldplay") allowLeadingWildcard true analyzeWildcard true analyzer WhitespaceAnalyzer quoteAnalyzer WhitespaceAnalyzer.name autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyPrefixLength 3 lenient true maxDeterminizedStates 42 phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer" timeZone "+02:00"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_string.json")
   }
@@ -513,13 +513,6 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     req.request.entity.get.get should matchJsonResource("/json/search/search_query_dismax.json")
   }
 
-  it should "generate correct json for common terms query" in {
-    val req = search("music") query {
-      commonTermsQuery("name") text "some text here" analyzer WhitespaceAnalyzer boost 12.3 cutoffFrequency 14.4 highFreqOperator "AND" lowFreqOperator "OR" lowFreqMinimumShouldMatch "3<80%" highFreqMinimumShouldMatch 2
-    }
-    req.request.entity.get.get should matchJsonResource("/json/search/search_query_commonterms.json")
-  }
-
   it should "generate correct json for constant score query" in {
     val req = search("music") query {
       constantScoreQuery {
@@ -722,7 +715,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for sub aggregation" in {
     val req = search("music") aggs {
-      dateHistogramAggregation("days") field "date" interval DateHistogramInterval.Day subAggregations(
+      dateHistogramAggregation("days") field "date" calendarInterval DateHistogramInterval.Day subAggregations(
         termsAggregation("keywords") field "keyword" size 5,
         termsAggregation("countries") field "country")
     }
@@ -820,6 +813,15 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_nested.json")
+  }
+
+  it should "generate correct json for variable width aggregation" in {
+    val req = search("music") aggs {
+      variableWidthHistogramAgg("score_histogram","score")
+        .shardSize(500)
+        .initialBuffer(100000)
+    }
+    req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_variable_width_histogram.json")
   }
 
   it should "generate correct json for highlighting" in {

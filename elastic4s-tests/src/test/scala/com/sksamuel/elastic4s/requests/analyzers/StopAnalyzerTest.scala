@@ -8,7 +8,7 @@ class StopAnalyzerTest extends AnyWordSpec with AnalyzerApi with Matchers {
 
   "StopAnalyzer builder" should {
     "set stopwords" in {
-      stopAnalyzer("testy").stopwords("a", "b").json.string() shouldBe """{"type":"stop","stopwords":["a","b"]}"""
+      stopAnalyzer("testy").stopwords("a", "b").json.string shouldBe """{"type":"stop","stopwords":["a","b"]}"""
     }
   }
 }

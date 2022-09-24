@@ -2,32 +2,37 @@ import sbt.Keys.libraryDependencies
 import sbt._
 
 object Dependencies {
-  val AkkaHttpVersion                = "10.2.7"
-  val AkkaVersion                    = "2.6.18"
-  val CatsEffect2Version             = "2.5.4"
+  val AkkaHttpVersion                = "10.2.10"
+  val AkkaVersion                    = "2.6.19"
+  val CatsEffect2Version             = "2.5.5"
   val CatsEffectVersion              = "3.2.8"
   val CatsVersion                    = "2.0.0"
   val CirceVersion                   = "0.14.3"
   val CommonsIoVersion               = "2.11.0"
-  val ElasticsearchVersion           = "7.17.0"
+  val ElasticsearchVersion           = "8.4.1"
   val ExtsVersion                    = "1.61.1"
-  val JacksonVersion                 = "2.13.1"
-  val Json4sVersion                  = "4.0.4"
+  val JacksonVersion                 = "2.13.4"
+  val Json4sVersion                  = "4.0.5"
   val Log4jVersion                   = "2.15.0"
-  val MockitoVersion                 = "4.3.1"
-  val MonixVersion                   = "3.4.0"
+  val MockitoVersion                 = "4.8.0"
+  val MonixVersion                   = "3.4.1"
+  //val PlayJsonVersion                = "2.9.3"
   val PlayJsonVersion                = "2.10.0-RC6"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "5.2.0"
+  //val ScalatestPlusMockitoArtifactId = "mockito-3-2"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
+  //val ScalatestPlusVersion           = "3.1.2.0"
   val ScalatestPlusVersion           = "3.2.9.0"
-  val ScalatestVersion               = "3.2.11"
   val ScalazVersion                  = "7.2.34"
-  val Slf4jVersion                   = "1.7.35"
+  val ScalatestVersion               = "3.2.13"
+  val Slf4jVersion                   = "2.0.1"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
-  val ZIOJsonVersion                 = "0.2.0"
-  val ZIOVersion                     = "1.0.13"
+  val ZIOJson1Version                = "0.1.5"
+  val ZIO1Version                    = "1.0.16"
+  val ZIOJsonVersion                 = "0.3.0"
+  val ZIOVersion                     = "2.0.2"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
@@ -45,6 +50,7 @@ object Dependencies {
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
   )
 
+  lazy val zio1 = Seq("dev.zio" %% "zio" % ZIO1Version)
   lazy val zio = Seq("dev.zio" %% "zio" % ZIOVersion)
 
   lazy val scalaz =
@@ -66,7 +72,8 @@ object Dependencies {
   lazy val monix                        = "io.monix"                %% "monix"                            % MonixVersion
   lazy val playJson                     = Seq("com.typesafe.play" %% "play-json" % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
-  lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion cross CrossVersion.for3Use2_13
+  lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion
+  lazy val zioJson1                     = "dev.zio"                 %% "zio-json"                         % ZIOJson1Version
   lazy val zioJson                      = "dev.zio"                 %% "zio-json"                         % ZIOJsonVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion

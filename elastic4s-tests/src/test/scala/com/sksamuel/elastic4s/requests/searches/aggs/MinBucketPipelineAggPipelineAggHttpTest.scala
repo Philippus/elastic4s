@@ -42,7 +42,7 @@ class MinBucketPipelineAggPipelineAggHttpTest extends AnyFreeSpec with DockerTes
       val resp = client.execute {
         search("minbucketagg").matchAllQuery().aggs(
           dateHistogramAgg("sales_per_month", "date")
-            .interval(DateHistogramInterval.Month)
+            .calendarInterval(DateHistogramInterval.Month)
             .subaggs {
               sumAgg("sales", "value")
             },

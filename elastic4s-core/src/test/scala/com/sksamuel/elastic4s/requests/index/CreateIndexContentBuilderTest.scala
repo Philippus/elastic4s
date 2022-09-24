@@ -11,7 +11,7 @@ class CreateIndexContentBuilderTest extends AnyFunSuite with Matchers {
 
   test("create index should include aliases when set") {
     val create = CreateIndexRequest("myindex", aliases = Set(IndexAliasRequest("alias1", None), IndexAliasRequest("alias2", Option(PrefixQuery("myfield", "pre")))))
-    CreateIndexContentBuilder(create).string() shouldBe
+    CreateIndexContentBuilder(create).string shouldBe
       """{"aliases":{"alias1":{},"alias2":{"filter":{"prefix":{"myfield":{"value":"pre"}}}}}}"""
   }
 
@@ -36,6 +36,6 @@ class CreateIndexContentBuilderTest extends AnyFunSuite with Matchers {
     )
 
     val create = CreateIndexRequest("myindex").analysis(analysis)
-    CreateIndexContentBuilder(create).string() shouldBe """{"settings":{"analysis":{"normalizer":{"my_normalizer":{"type":"custom","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}}}"""
+    CreateIndexContentBuilder(create).string shouldBe """{"settings":{"analysis":{"normalizer":{"my_normalizer":{"type":"custom","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}}}"""
   }
 }

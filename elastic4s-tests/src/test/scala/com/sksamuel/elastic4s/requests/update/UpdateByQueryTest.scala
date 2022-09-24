@@ -1,12 +1,15 @@
 package com.sksamuel.elastic4s.requests.update
 
+import com.sksamuel.elastic4s.Response
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.task.{GetTask, GetTaskResponse}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.OptionValues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Try
 
 class UpdateByQueryTest
@@ -70,5 +73,27 @@ class UpdateByQueryTest
     client.execute {
       count("pop").query(termQuery("foo", "c"))
     }.await.result.count shouldBe 0
+  }
+
+  it should "support asynchronous update" in {
+    client.execute {
+      bulk(
+        indexInto("pop").fields("name" -> "coca", "type" -> "cola", "foo" -> "g"),
+      ).refreshImmediately
+    }.await
+
+    val task = client.execute {
+      updateByQueryAsync("pop", termsQuery("name", "coca")).script(script("ctx._source.foo = 'h'").lang("painless")).refreshImmediately
+    }.await.result.task
+
+    // A bit ugly way to poll the task until it's complete
+    Stream.continually{
+      Thread.sleep(100)
+      client.execute(task).await.result.completed
+    }.takeWhile(!_)
+
+    client.execute {
+      count("pop").query(termQuery("foo", "h"))
+    }.await.result.count shouldBe 1
   }
 }

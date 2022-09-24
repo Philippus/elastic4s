@@ -11,7 +11,6 @@ case class CreateIndexTemplateRequest(name: String,
                                       @deprecated("use the new analysis package", "7.0.1")
                                       _analysis: Option[AnalysisDefinition] = None,
                                       analysis: Option[com.sksamuel.elastic4s.analysis.Analysis] = None,
-                                      order: Option[Int] = None,
                                       version: Option[Int] = None,
                                       create: Option[Boolean] = None,
                                       priority: Option[Int] = None,
@@ -57,7 +56,6 @@ case class CreateIndexTemplateRequest(name: String,
   // replaces all settings with the given settings
   def settings(settings: Map[String, Any]): CreateIndexTemplateRequest = copy(settings = settings)
 
-  def order(order: Int): CreateIndexTemplateRequest = copy(order = order.some)
   def create(create: Boolean): CreateIndexTemplateRequest = copy(create = create.some)
 
   def aliases(first: TemplateAlias, rest: TemplateAlias*): CreateIndexTemplateRequest = aliases(first +: rest)

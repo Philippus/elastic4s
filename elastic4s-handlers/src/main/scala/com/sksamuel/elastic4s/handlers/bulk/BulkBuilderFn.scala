@@ -32,7 +32,7 @@ object BulkBuilderFn {
         builder.endObject()
         builder.endObject()
 
-        rows += builder.string()
+        rows += builder.string
         rows += IndexContentBuilder(index)
 
       case delete: DeleteByIdRequest =>
@@ -49,7 +49,7 @@ object BulkBuilderFn {
         builder.endObject()
         builder.endObject()
 
-        rows += builder.string()
+        rows += builder.string
 
       case update: UpdateRequest =>
         val builder = XContentFactory.jsonBuilder()
@@ -72,8 +72,8 @@ object BulkBuilderFn {
         builder.endObject()
         builder.endObject()
 
-        rows += builder.string()
-        rows += UpdateBuilderFn(update).string()
+        rows += builder.string
+        rows += UpdateBuilderFn(update).string
     }
     rows.result()
   }

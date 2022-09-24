@@ -23,6 +23,7 @@ import com.sksamuel.elastic4s.handlers.task.TaskHandlers
 import com.sksamuel.elastic4s.handlers.termvectors.TermVectorHandlers
 import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
+import com.sksamuel.elastic4s.requests.ingest.IngestHandlers
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
 
@@ -41,6 +42,7 @@ trait ElasticDsl
     with IndexAliasHandlers
     with IndexStatsHandlers
     with IndexTemplateHandlers
+    with IngestHandlers
     with LocksHandlers
     with MappingHandlers
     with NodesHandlers

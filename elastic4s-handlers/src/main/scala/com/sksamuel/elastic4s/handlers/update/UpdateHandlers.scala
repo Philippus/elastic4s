@@ -7,11 +7,12 @@ import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
-import com.sksamuel.elastic4s.requests.update.{UpdateByQueryRequest, UpdateByQueryResponse, UpdateRequest, UpdateResponse}
+import com.sksamuel.elastic4s.requests.task.GetTask
+import com.sksamuel.elastic4s.requests.update.{BaseUpdateByQueryRequest, UpdateByQueryAsyncRequest, UpdateByQueryAsyncResponse, UpdateByQueryRequest, UpdateByQueryResponse, UpdateByQueryTask, UpdateRequest, UpdateResponse}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 object UpdateByQueryBodyFn {
-  def apply(request: UpdateByQueryRequest): XContentBuilder = {
+  def apply(request: BaseUpdateByQueryRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.rawField("query", queries.QueryBuilderFn(request.query))
     request.script.map(ScriptBuilderFn.apply).foreach(builder.rawField("script", _))
@@ -62,31 +63,17 @@ trait UpdateHandlers {
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body = UpdateBuilderFn(request)
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
 
-  implicit object UpdateByQueryHandler extends Handler[UpdateByQueryRequest, UpdateByQueryResponse] {
+  abstract class UpdateByQueryHandler[Q <: BaseUpdateByQueryRequest, R: Manifest] extends Handler[Q, R] {
 
-    override def responseHandler: ResponseHandler[UpdateByQueryResponse] = ResponseHandler.default[UpdateByQuerySnakeCase].map { resp =>
-      UpdateByQueryResponse(
-        resp.took,
-        resp.timed_out,
-        resp.total,
-        resp.updated,
-        resp.deleted,
-        resp.batches,
-        resp.version_conflicts,
-        resp.noops,
-        resp.throttled_millis,
-        resp.requests_per_second,
-        resp.throttled_until_millis
-      )
-    }
+    override def responseHandler: ResponseHandler[R] = ResponseHandler.default[R]
 
-    override def build(request: UpdateByQueryRequest): ElasticRequest = {
+    override def build(request: Q): ElasticRequest = {
 
       val endpoint = s"/${request.indexes.values.mkString(",")}/_update_by_query"
 
@@ -103,13 +90,45 @@ trait UpdateHandlers {
       request.slices.foreach(params.put("slices", _))
 
       val body = UpdateByQueryBodyFn(request)
-      logger.debug(s"Update by query ${body.string()}")
-      val entity = HttpEntity(body.string(), "application/json")
+      logger.debug(s"Update by query ${body.string}")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
+
+  implicit object SyncUpdateByQueryHandler extends UpdateByQueryHandler[UpdateByQueryRequest, UpdateByQueryResponse] {
+    override def responseHandler: ResponseHandler[UpdateByQueryResponse] = ResponseHandler.default[UpdateByQuerySnakeCase].map { resp =>
+      UpdateByQueryResponse(
+        resp.took,
+        resp.timed_out,
+        resp.total,
+        resp.updated,
+        resp.deleted,
+        resp.batches,
+        resp.version_conflicts,
+        resp.noops,
+        resp.throttled_millis,
+        resp.requests_per_second,
+        resp.throttled_until_millis
+      )
+    }
+  }
+
+  implicit object AsyncUpdateByQueryHandler extends UpdateByQueryHandler[UpdateByQueryAsyncRequest, UpdateByQueryTask] {
+    override def responseHandler: ResponseHandler[UpdateByQueryTask] =
+      ResponseHandler.default[UpdateByQueryAsyncResponse]
+        .map { case UpdateByQueryAsyncResponse(task) =>
+          task.split(":") match {
+            case Array(nodeId, taskId) => UpdateByQueryTask(GetTask(nodeId, taskId))
+
+            // Not the cleaner way to handle error, but this would mean a bigger refactoring
+            case _ => sys.error(s"Task id returned has an invalid format : $task")
+          }
+        }
+  }
 }
+
 
 case class UpdateByQuerySnakeCase(
                                    took: Long,

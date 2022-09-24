@@ -41,8 +41,8 @@ class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerT
       }.await.result
 
       // should populate _id, _index and _type for us from the search result
-      resp.safeTo[CharacterWithIdTypeAndIndex] shouldBe
-        List(Success(CharacterWithIdTypeAndIndex("2", "jacksontest", "_doc", "hank", "breaking bad")))
+      resp.safeTo[CharacterWithIdAndIndex] shouldBe
+        List(Success(CharacterWithIdAndIndex("2", "jacksontest", "hank", "breaking bad")))
     }
     "support custom mapper" in {
 
@@ -67,5 +67,5 @@ class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerT
 }
 
 case class Character(name: String, show: String)
-case class CharacterWithIdTypeAndIndex(_id: String, _index: String, _type: String, name: String, show: String)
+case class CharacterWithIdAndIndex(_id: String, _index: String, name: String, show: String)
 case class Location(name: String, show: String)

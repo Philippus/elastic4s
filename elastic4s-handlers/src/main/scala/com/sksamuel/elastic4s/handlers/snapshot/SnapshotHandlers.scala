@@ -23,7 +23,7 @@ trait SnapshotHandlers {
           body.field(key, value.toString)
       }
       body.endObject()
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
@@ -44,7 +44,7 @@ trait SnapshotHandlers {
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))
       request.includeGlobalState.foreach(body.field("include_global_state", _))
       request.partial.foreach(body.field("partial", _))
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
@@ -83,7 +83,7 @@ trait SnapshotHandlers {
       request.includeAliases.foreach(body.field("include_aliases", _))
       request.renamePattern.foreach(body.field("rename_pattern", _))
       request.renameReplacement.foreach(body.field("rename_replacement", _))
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }

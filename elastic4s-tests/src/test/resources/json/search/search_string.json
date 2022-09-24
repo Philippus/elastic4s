@@ -7,6 +7,8 @@
             "analyze_wildcard": "true",
             "lenient": "true",
             "fuzzy_max_expansions": "4",
+            "max_determinized_states": "42",
+            "quote_analyzer": "whitespace",
             "fuzzy_prefix_length": "3",
             "phrase_slop": "10",
             "auto_generate_phrase_queries": "true",

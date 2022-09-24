@@ -13,13 +13,13 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
     "generate correct body" when {
       "script is specified" in {
         val q = updateIn("test").query(matchQuery("field", 123)).script(Script("script", Some("painless")))
-        UpdateByQueryBodyFn(q).string() should matchJson(
+        UpdateByQueryBodyFn(q).string should matchJson(
           """{"query":{"match":{"field":{"query":123}}},"script":{"lang":"painless","source":"script"}}"""
         )
       }
       "script is not specified" in {
         val q = updateIn("test").query(matchQuery("field", 123))
-        UpdateByQueryBodyFn(q).string() should matchJson(
+        UpdateByQueryBodyFn(q).string should matchJson(
           """{"query":{"match":{"field":{"query":123}}}}"""
         )
       }
@@ -32,7 +32,7 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
         val q = updateById("test", "1234")
           .script(Script("script", Some("painless")))
 
-        UpdateBuilderFn(q).string() should matchJson(
+        UpdateBuilderFn(q).string should matchJson(
           """{"script":{"lang":"painless","source":"script"}}"""
         )
       }
@@ -42,7 +42,7 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
           .script(Script("script", Some("painless")))
           .scriptedUpsert(true)
 
-        UpdateBuilderFn(q).string() should matchJson(
+        UpdateBuilderFn(q).string should matchJson(
           """{"script":{"lang":"painless","source":"script"},"upsert":{},"scripted_upsert":true}"""
         )
       }
@@ -51,7 +51,7 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
         val q = updateById("test", "1234")
           .doc("foo" -> "bar")
 
-        UpdateBuilderFn(q).string() should matchJson(
+        UpdateBuilderFn(q).string should matchJson(
           """{"doc":{"foo":"bar"}}"""
         )
       }
@@ -61,7 +61,7 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
           .doc("foo" -> "bar")
           .docAsUpsert(true)
 
-        UpdateBuilderFn(q).string() should matchJson(
+        UpdateBuilderFn(q).string should matchJson(
           """{"doc":{"foo":"bar"},"doc_as_upsert":true}"""
         )
       }
@@ -71,7 +71,7 @@ class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
           .doc("foo" -> "bar")
           .upsert("foo" -> "baz")
 
-        UpdateBuilderFn(q).string() should matchJson(
+        UpdateBuilderFn(q).string should matchJson(
           """{"doc":{"foo":"bar"},"upsert":{"foo":"baz"}}"""
         )
       }

@@ -13,6 +13,6 @@ class SpanFieldMaskingQueryBodyFnTest extends AnyFunSuite with Matchers {
       boost = Some(2.0),
       queryName = Some("rootName")
     ))
-    builder.string() shouldBe """{"span_field_masking":{"field":"masked_field","boost":2.0,"_name":"rootName","query":{"span_term":{"field1":"value1","boost":4.0,"_name":"name1"}}}}"""
+    builder.string shouldBe """{"span_field_masking":{"field":"masked_field","boost":2.0,"_name":"rootName","query":{"span_term":{"field1":"value1","boost":4.0,"_name":"name1"}}}}"""
   }
 }

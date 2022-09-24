@@ -22,7 +22,7 @@ class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
           )
         )
     )
-    SearchBodyBuilderFn(search).string() shouldBe
+    SearchBodyBuilderFn(search).string shouldBe
       """{"aggs":{"sales_per_month":{"date_histogram":{"fixed_interval":"1M","field":"date"},"aggs":{"sales":{"sum":{"field":"price"}},"cumulative_sales":{"cumulative_sum":{"buckets_path":"sales","format":"$"},"meta":{"color":"blue"}}}}}}"""
   }
 

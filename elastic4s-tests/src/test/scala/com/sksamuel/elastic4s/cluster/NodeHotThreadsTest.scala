@@ -24,7 +24,6 @@ class NodeHotThreadsTest extends AnyFlatSpec with Matchers with DockerTests {
     result should include ("Hot threads at")
     result should include ("ignoreIdleThreads")
     result should include ("interval")
-    result should include ("max_open_jobs")
     result should include ("busiestThreads")
   }
 }

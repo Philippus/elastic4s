@@ -47,13 +47,14 @@ trait DeleteHandlers {
       request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
       request.routing.map(_.toString).foreach(params.put("routing", _))
-      request.size.map(_.toString).foreach(params.put("size", _))
+      request.maxDocs.map(_.toString).foreach(params.put("max_docs", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
+      request.slices.map(_.toString).foreach(params.put("slices", _))
 
       val body = DeleteByQueryBodyFn(request)
-      logger.debug(s"Delete by query ${body.string()}")
-      val entity = HttpEntity(body.string(), "application/json")
+      logger.debug(s"Delete by query ${body.string}")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }

@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.requests.searches
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
 
 case class InnerHit(index: String,
-                    `type`: String,
                     id: String,
                     nested: Map[String, AnyRef],
                     score: Option[Double],
@@ -28,5 +27,5 @@ case class InnerHit(index: String,
   }
 
   // todo put back ?
-//  def sourceAsString: String = SourceAsContentBuilder(source).string()
+//  def sourceAsString: String = SourceAsContentBuilder(source).string
 }

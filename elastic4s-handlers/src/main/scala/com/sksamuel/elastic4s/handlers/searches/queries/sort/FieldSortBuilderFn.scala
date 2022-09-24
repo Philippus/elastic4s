@@ -20,7 +20,7 @@ object FieldSortBuilderFn {
     } else if (fs.nestedPath.nonEmpty || fs.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       fs.nestedPath.foreach(builder.field("path", _))
-      fs.nestedFilter.map(f => queries.QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      fs.nestedFilter.map(f => queries.QueryBuilderFn(f).string).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
 

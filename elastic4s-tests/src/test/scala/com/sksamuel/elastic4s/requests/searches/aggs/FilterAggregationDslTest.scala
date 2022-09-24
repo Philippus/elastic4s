@@ -15,7 +15,7 @@ class FilterAggregationDslTest extends AnyFlatSpec with Matchers with ElasticApi
     ).addSubAggregation(
       dateHistogramAggregation("per_month")
         .field("some_date_field")
-        .interval(DateHistogramInterval.Month)
+        .calendarInterval(DateHistogramInterval.Month)
         .minDocCount(0L)
     )
   }

@@ -21,8 +21,8 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 val scala2Versions = Seq("2.12.15", "2.13.6")
 val scalaAllVersions = scala2Versions :+ "3.2.0"
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.15",
-  crossScalaVersions := Seq("2.12.15", "2.13.6", "3.0.2")
+  scalaVersion := "2.12.16",
+  crossScalaVersions := Seq("2.12.16", "2.13.8", "3.2.0")
 )
 
 lazy val warnUnusedImport = Seq(
@@ -109,8 +109,7 @@ lazy val allSettings = commonScalaVersionSettings ++
   publishSettings
 
 lazy val scala2Settings = allSettings :+ (crossScalaVersions := scala2Versions)
-lazy val scala3Settings = allSettings :+ (crossScalaVersions := scalaAllVersions)
-
+lazy val scala3Settings = allSettings ++ (scalacOptions ++= (if (scalaVersion.value startsWith "3") Seq("-Ytasty-reader") else Nil)) :+ (crossScalaVersions := scalaAllVersions)
 
 
 lazy val root = Project("elastic4s", file("."))
@@ -130,6 +129,7 @@ lazy val root = Project("elastic4s", file("."))
     clientsSniffed,
     cats_effect,
     cats_effect_2,
+    zio_1,
     zio,
     scalaz,
     monix,
@@ -140,6 +140,7 @@ lazy val root = Project("elastic4s", file("."))
     json4s,
     playjson,
     sprayjson,
+    ziojson_1,
     ziojson,
     clientsttp,
     clientakka,
@@ -206,6 +207,12 @@ lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
   .settings(name := "elastic4s-effect-cats-2")
   .settings(scala3Settings)
   .settings(libraryDependencies += cats2)
+
+lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-effect-zio-1")
+  .settings(scala2Settings)
+  .settings(libraryDependencies ++= Dependencies.zio1)
 
 lazy val zio = (project in file("elastic4s-effect-zio"))
   .dependsOn(core, testkit % "test")
@@ -284,6 +291,12 @@ lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .settings(scala2Settings) // ProductFormats in spray json don't work with the cross-building mode, so this probably needs https://github.com/spray/spray-json/pull/342
   .settings(libraryDependencies ++= Dependencies.sprayJson)
 
+lazy val ziojson_1 = (project in file("elastic4s-json-zio-1"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-json-zio-1")
+  .settings(scala2Settings)
+  .settings(libraryDependencies += Dependencies.zioJson1)
+
 lazy val ziojson = (project in file("elastic4s-json-zio"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-zio")
@@ -291,9 +304,9 @@ lazy val ziojson = (project in file("elastic4s-json-zio"))
   .settings(libraryDependencies += Dependencies.zioJson)
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))
-  .dependsOn(core)
+  .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-sttp")
-  .settings(scala3Settings)
+  .settings(scala2Settings)
   .settings(libraryDependencies ++= Seq(sttp, asyncHttpClientBackendFuture))
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
@@ -314,9 +327,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.17.1" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.17.1" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.17.1" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.18.0" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.18.0" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.18.0" % "test"
     ),
     Test / fork := false,
     Test / parallelExecution := false,

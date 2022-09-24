@@ -15,7 +15,7 @@ class HasChildBodyFnTest extends AnyFunSuite with Matchers {
       .ignoreUnmapped(true)
       .queryName("myquery")
       .innerHit(InnerHit("inners"))
-    HasChildBodyFn(q).string() shouldBe
+    HasChildBodyFn(q).string shouldBe
       """{"has_child":{"type":"blog_tag","min_children":2,"max_children":10,"score_mode":"min","query":{"match":{"tag":{"query":"something"}}},"ignore_unmapped":true,"boost":1.2,"_name":"myquery","inner_hits":{"name":"inners"}}}"""
   }
 }

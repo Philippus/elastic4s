@@ -10,7 +10,6 @@ object TermsLookupQueryBodyFn {
 
     builder.startObject(t.field)
     builder.field("index", t.termsLookup.ref.index.name)
-    builder.field("type", "_doc")
     builder.field("id", t.termsLookup.ref.id)
 
     builder.field("path", t.termsLookup.path)

@@ -32,6 +32,6 @@ class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar  {
       )
     )
 
-    SearchBodyBuilderFn(search).string() should matchJsonResource("/search/aggs/bucket_script_pipeline_query.json")
+    SearchBodyBuilderFn(search).string should matchJsonResource("/search/aggs/bucket_script_pipeline_query.json")
   }
 }

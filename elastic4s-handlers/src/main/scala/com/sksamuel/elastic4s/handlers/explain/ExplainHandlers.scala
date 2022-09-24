@@ -25,7 +25,7 @@ trait ExplainHandlers {
       request.preference.map(_.toString).foreach(params.put("preference", _))
       request.lenient.map(_.toString).foreach(params.put("lenient", _))
 
-      val body = ExplainBodyFn(request).string()
+      val body = ExplainBodyFn(request).string
       val entity = HttpEntity(body, "application/json")
 
       ElasticRequest("GET", endpoint, params.toMap, entity)

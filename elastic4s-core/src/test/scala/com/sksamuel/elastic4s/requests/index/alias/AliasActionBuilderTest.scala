@@ -16,7 +16,7 @@ class AliasActionBuilderTest extends AnyFunSuite with Matchers {
       AddAliasActionRequest("alias2", "test2", filter = Some(MatchAllQuery()), isWriteIndex = Some(true))
     ))
 
-    alias.AliasActionBuilder(actions).string() shouldBe
+    alias.AliasActionBuilder(actions).string shouldBe
       """{"actions":[{"add":{"index":"test","alias":"alias1"}},{"remove":{"index":"test1","alias":"alias1"}},{"add":{"index":"test2","alias":"alias2","filter":{"match_all":{}},"is_write_index":true}}]}"""
   }
 

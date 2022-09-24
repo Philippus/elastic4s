@@ -2,15 +2,16 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder, DateRangeAggregationBuilder, ExtendedStatsAggregationBuilder, FilterAggregationBuilder, FiltersAggregationBuilder, GeoBoundsAggregationBuilder, GeoCentroidAggregationBuilder, GeoDistanceAggregationBuilder, GeoHashGridAggregationBuilder, GeoTileGridAggregationBuilder, GlobalAggregationBuilder, HistogramAggregationBuilder, IpRangeAggregationBuilder, KeyedFiltersAggregationBuilder, MaxAggregationBuilder, MinAggregationBuilder, MissingAggregationBuilder, NestedAggregationBuilder, PercentilesAggregationBuilder, RangeAggregationBuilder, ReverseNestedAggregationBuilder, SamplerAggregationBuilder, ScriptedMetricAggregationBuilder, SigTermsAggregationBuilder, SigTextAggregationBuilder, StatsAggregationBuilder, SumAggregationBuilder, TermsAggregationBuilder, TopHitsAggregationBuilder, TopMetricsAggregationBuilder, ValueCountAggregationBuilder, WeightedAvgAggregationBuilder}
+import com.sksamuel.elastic4s.requests.searches.aggs.builders.{AdjacencyMatrixAggregationBuilder, AutoDateHistogramAggregationBuilder, AvgAggregationBuilder, CardinalityAggregationBuilder, ChildrenAggregationBuilder, CompositeAggregationBuilder, DateHistogramAggregationBuilder, DateRangeAggregationBuilder, ExtendedStatsAggregationBuilder, FilterAggregationBuilder, FiltersAggregationBuilder, GeoBoundsAggregationBuilder, GeoCentroidAggregationBuilder, GeoDistanceAggregationBuilder, GeoHashGridAggregationBuilder, GeoTileGridAggregationBuilder, GlobalAggregationBuilder, HistogramAggregationBuilder, IpRangeAggregationBuilder, KeyedFiltersAggregationBuilder, MaxAggregationBuilder, MinAggregationBuilder, MissingAggregationBuilder, NestedAggregationBuilder, PercentilesAggregationBuilder, RangeAggregationBuilder, ReverseNestedAggregationBuilder, SamplerAggregationBuilder, ScriptedMetricAggregationBuilder, SigTermsAggregationBuilder, SigTextAggregationBuilder, StatsAggregationBuilder, SumAggregationBuilder, TermsAggregationBuilder, TopHitsAggregationBuilder, TopMetricsAggregationBuilder, ValueCountAggregationBuilder, VariableWidthAggregationBuilder, WeightedAvgAggregationBuilder}
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
 
 object AggregationBuilderFn {
   def apply(agg: AbstractAggregation): XContentBuilder = {
     val builder = agg match {
 
+      case agg: AdjacencyMatrixAggregation => AdjacencyMatrixAggregationBuilder(agg)
       case agg: AutoDateHistogramAggregation => AutoDateHistogramAggregationBuilder(agg)
-      case agg: AvgAggregation => AvgAggregationBuilder(agg)
+      case agg: AvgAggregation            => AvgAggregationBuilder(agg)
       case agg: CardinalityAggregation    => CardinalityAggregationBuilder(agg)
       case agg: ChildrenAggregation       => ChildrenAggregationBuilder(agg)
       case agg: CompositeAggregation      => CompositeAggregationBuilder(agg)
@@ -41,11 +42,12 @@ object AggregationBuilderFn {
       case agg: SumAggregation            => SumAggregationBuilder(agg)
       case agg: TermsAggregation          => TermsAggregationBuilder(agg)
       case agg: TopHitsAggregation        => TopHitsAggregationBuilder(agg)
-      case agg: TopMetricsAggregation => TopMetricsAggregationBuilder(agg)
-      case agg: ValueCountAggregation => ValueCountAggregationBuilder(agg)
-      case agg: RangeAggregation     => RangeAggregationBuilder(agg)
-      case agg: DateRangeAggregation => DateRangeAggregationBuilder(agg)
-      case agg: WeightedAvgAggregation => WeightedAvgAggregationBuilder(agg)
+      case agg: TopMetricsAggregation     => TopMetricsAggregationBuilder(agg)
+      case agg: ValueCountAggregation     => ValueCountAggregationBuilder(agg)
+      case agg: RangeAggregation          => RangeAggregationBuilder(agg)
+      case agg: DateRangeAggregation      => DateRangeAggregationBuilder(agg)
+      case agg: WeightedAvgAggregation    => WeightedAvgAggregationBuilder(agg)
+      case agg: VariableWidthAggregation  => VariableWidthAggregationBuilder(agg)
 
       // pipeline aggs
       case agg: AvgBucketPipelineAgg           => AvgBucketPipelineAggBuilder(agg)
@@ -59,7 +61,7 @@ object AggregationBuilderFn {
       case agg: ExtendedStatsBucketPipelineAgg => ExtendedStatsBucketPipelineAggBuilder(agg)
       case agg: MaxBucket                      => MaxBucketPipelineAggBuilder(agg)
       case agg: MinBucketPipelineAgg           => MinBucketPipelineAggBuilder(agg)
-      case agg: MovAvgPipelineAgg              => MovAvgPipelineAggBuilder(agg)
+      case agg: MovFnPipelineAgg              => MovFnPipelineAggBuilder(agg)
       case agg: PercentilesBucketPipelineAgg   => PercentilesBucketPipelineAggBuilder(agg)
       case agg: SumBucketPipelineAgg           => SumBucketPipelineAggBuilder(agg)
       case agg: StatsBucketPipelineAgg         => StatsBucketPipelineAggBuilder(agg)

@@ -19,7 +19,7 @@ class PinnedQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenThen
     val queryBody = PinnedQueryBuilderFn(query)
 
     Then("query should have right fields")
-    queryBody.string() shouldEqual pinnedQuery
+    queryBody.string shouldEqual pinnedQuery
   }
 
   def pinnedQuery: String =

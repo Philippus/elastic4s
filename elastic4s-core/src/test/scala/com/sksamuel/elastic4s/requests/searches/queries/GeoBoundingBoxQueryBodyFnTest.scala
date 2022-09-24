@@ -21,7 +21,7 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with Given
     val queryBody = GeoBoundingBoxQueryBodyFn(geoQuery)
 
     Then("Should have right field and all corners specified")
-    queryBody.string() shouldEqual buildBasicGeoBoxQuery()
+    queryBody.string shouldEqual buildBasicGeoBoxQuery()
 
   }
 
@@ -39,7 +39,7 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with Given
     val queryBody = GeoBoundingBoxQueryBodyFn(geoQuery)
 
     Then("Should have right field and all corners specified")
-    queryBody.string() shouldEqual buildBasicGeoBoxQuery()
+    queryBody.string shouldEqual buildBasicGeoBoxQuery()
   }
 
   test("Should correctly build geo box search with corners") {
@@ -56,7 +56,7 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with Given
     val queryBody = GeoBoundingBoxQueryBodyFn(geoQuery)
 
     Then("Should have right field and all corners specified")
-    queryBody.string() shouldEqual buildBasicGeoBoxQuery()
+    queryBody.string shouldEqual buildBasicGeoBoxQuery()
   }
 
   test("Should correctly handle `type`") {
@@ -73,7 +73,7 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with Given
     val queryBody = GeoBoundingBoxQueryBodyFn(geoQuery)
 
     Then("Should have right field and all corners specified")
-    queryBody.string() shouldEqual """
+    queryBody.string shouldEqual """
                                      |{
                                      |  "geo_bounding_box": {
                                      |    "type": "memory",

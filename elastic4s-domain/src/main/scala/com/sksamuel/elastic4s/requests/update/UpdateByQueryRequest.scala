@@ -8,6 +8,43 @@ import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 import scala.concurrent.duration.FiniteDuration
 
+trait BaseUpdateByQueryRequest {
+  val indexes: Indexes
+
+  val query: Query
+
+  val requestsPerSecond: Option[Float]
+
+  val maxRetries: Option[Int]
+
+  val proceedOnConflicts: Option[Boolean]
+
+  val pipeline: Option[String]
+
+  val refresh: Option[RefreshPolicy]
+
+  val script: Option[Script]
+
+  val waitForActiveShards: Option[Int]
+
+  val retryBackoffInitialTime: Option[FiniteDuration]
+
+  val scroll: Option[String]
+
+  val scrollSize: Option[Int]
+
+  val slices: Option[Int]
+
+  val slice: Option[Slice]
+
+  val timeout: Option[FiniteDuration]
+
+  val shouldStoreResult: Option[Boolean]
+
+  val size: Option[Int]
+
+  val waitForCompletion: Option[Boolean]
+}
 case class UpdateByQueryRequest(indexes: Indexes,
                                 query: Query,
                                 requestsPerSecond: Option[Float] = None,
@@ -17,6 +54,7 @@ case class UpdateByQueryRequest(indexes: Indexes,
                                 refresh: Option[RefreshPolicy] = None,
                                 script: Option[Script] = None,
                                 waitForActiveShards: Option[Int] = None,
+                                @deprecated("This class is for synchronous updates. If you put false, use UpdateByQueryAsyncRequest instead", "8.4")
                                 waitForCompletion: Option[Boolean] = None,
                                 retryBackoffInitialTime: Option[FiniteDuration] = None,
                                 scroll: Option[String] = None,
@@ -25,7 +63,7 @@ case class UpdateByQueryRequest(indexes: Indexes,
                                 slice: Option[Slice] = None,
                                 timeout: Option[FiniteDuration] = None,
                                 shouldStoreResult: Option[Boolean] = None,
-                                size: Option[Int] = None) {
+                                size: Option[Int] = None) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
@@ -51,6 +89,7 @@ case class UpdateByQueryRequest(indexes: Indexes,
   def waitForActiveShards(waitForActiveShards: Int): UpdateByQueryRequest =
     copy(waitForActiveShards = waitForActiveShards.some)
 
+  @deprecated("This class is for synchronous updates. If you put false, use UpdateByQueryAsyncRequest instead", "8.4")
   def waitForCompletion(w: Boolean): UpdateByQueryRequest = copy(waitForCompletion = w.some)
 
   def retryBackoffInitialTime(retryBackoffInitialTime: FiniteDuration): UpdateByQueryRequest =

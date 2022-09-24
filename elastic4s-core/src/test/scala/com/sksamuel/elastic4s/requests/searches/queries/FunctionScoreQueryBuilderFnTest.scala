@@ -18,7 +18,7 @@ class FunctionScoreQueryBuilderFnTest extends AnyFunSuite with Matchers with Jso
       .scoreMode(FunctionScoreQueryScoreMode.Max)
       .boostMode(CombineFunction.Multiply)
 
-    FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/gauss_scorer.json")
+    FunctionScoreQueryBuilderFn(func).string should matchJsonResource("/gauss_scorer.json")
 
   }
 
@@ -27,6 +27,6 @@ class FunctionScoreQueryBuilderFnTest extends AnyFunSuite with Matchers with Jso
       .functions(
         GaussianDecayScore("myfield", "now", "28d").offset(19).decay(1.2).filter(matchPhraseQuery("myfield", "foo"))
       )
-    queries.FunctionScoreQueryBuilderFn(func).string() should matchJsonResource("/filter_scorer.json")
+    queries.FunctionScoreQueryBuilderFn(func).string should matchJsonResource("/filter_scorer.json")
   }
 }

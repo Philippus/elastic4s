@@ -17,7 +17,7 @@ trait SearchTemplateHandlers {
         case IndexesAndTypes(indexes, types) =>
           "/" + indexes.mkString(",") + "/" + types.mkString(",") + "/_search/template"
       }
-      val body = TemplateSearchBuilderFn(req).string()
+      val body = TemplateSearchBuilderFn(req).string
       ElasticRequest("POST", endpoint, HttpEntity(body, "application/json"))
     }
   }
@@ -35,7 +35,7 @@ trait SearchTemplateHandlers {
 
     override def build(req: PutSearchTemplateRequest): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name
-      val body     = PutSearchTemplateBuilderFn(req).string()
+      val body     = PutSearchTemplateBuilderFn(req).string
       val entity   = HttpEntity(body, "application/json")
       ElasticRequest("POST", endpoint, entity)
     }

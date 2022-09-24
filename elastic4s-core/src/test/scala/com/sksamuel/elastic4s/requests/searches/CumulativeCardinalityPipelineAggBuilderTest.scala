@@ -18,7 +18,7 @@ class CumulativeCardinalityPipelineAggBuilderTest extends AnyFunSuite with Match
           )
         )
     )
-    SearchBodyBuilderFn(search).string() shouldBe
+    SearchBodyBuilderFn(search).string shouldBe
       """{"aggs":{"users_per_day":{"date_histogram":{"fixed_interval":"1M","field":"date"},"aggs":{"distinct_users":{"cardinality":{"field":"user_id"}},"total_new_users":{"cumulative_cardinality":{"buckets_path":"distinct_users"}}}}}}"""
   }
 

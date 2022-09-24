@@ -90,7 +90,7 @@ trait MappingHandlers {
       request.expandWildcards.foreach(params.put("expand_wildcards", _))
       request.includeTypeName.foreach(params.put("include_type_name", _))
 
-      val body = PutMappingBuilderFn(request).string()
+      val body = PutMappingBuilderFn(request).string
       val entity = HttpEntity(body, "application/json")
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)

@@ -49,7 +49,7 @@ trait IndexAliasHandlers {
 
   implicit object IndexAliasesHandler extends Handler[IndicesAliasesRequest, AliasActionResponse] {
     override def build(request: IndicesAliasesRequest): ElasticRequest = {
-      val body   = AliasActionBuilder(request).string()
+      val body   = AliasActionBuilder(request).string
       val entity = HttpEntity(body, "application/json")
       ElasticRequest("POST", "/_aliases", entity)
     }

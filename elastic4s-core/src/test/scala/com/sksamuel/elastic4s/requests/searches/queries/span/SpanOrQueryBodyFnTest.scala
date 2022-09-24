@@ -16,6 +16,6 @@ class SpanOrQueryBodyFnTest extends AnyFunSuite with Matchers {
       boost = Some(2.0), queryName = Some("rootName")
     ))
 
-    builder.string() shouldBe """{"span_or":{"clauses":[{"span_term":{"field1":"value1","boost":4.0,"_name":"name1"}},{"span_term":{"field2":"value2","boost":7.0,"_name":"name2"}}],"boost":2.0,"_name":"rootName"}}"""
+    builder.string shouldBe """{"span_or":{"clauses":[{"span_term":{"field1":"value1","boost":4.0,"_name":"name1"}},{"span_term":{"field2":"value2","boost":7.0,"_name":"name2"}}],"boost":2.0,"_name":"rootName"}}"""
   }
 }

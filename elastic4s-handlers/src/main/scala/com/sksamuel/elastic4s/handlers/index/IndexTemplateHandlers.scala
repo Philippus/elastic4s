@@ -21,7 +21,8 @@ case class IndexTemplate(order: Int,
                          @JsonProperty("index_patterns") indexPatterns: Seq[String],
                          settings: Map[String, Any],
                          mappings: Map[String, Any],
-                         aliases: Map[String, Any])
+                         aliases: Map[String, Any],
+                         version: Option[Int])
 
 trait IndexTemplateHandlers {
 
@@ -42,7 +43,7 @@ trait IndexTemplateHandlers {
     override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = "/_index_template/" + request.name
       val body = CreateIndexTemplateBodyFn(request)
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
       ElasticRequest("PUT", endpoint, entity)
     }
   }
@@ -77,12 +78,11 @@ object CreateIndexTemplateBodyFn {
 
     val builder = XContentFactory.jsonBuilder()
     builder.array("index_patterns", create.pattern.toArray)
-    create.order.foreach(builder.field("order", _))
     create.version.foreach(builder.field("version", _))
     create.priority.foreach(builder.field("priority", _))
 
 
-    if (create.settings.nonEmpty || create.analysis.nonEmpty || create.mappings.nonEmpty) {
+    if (create.settings.nonEmpty || create.analysis.nonEmpty || create.mappings.nonEmpty || create.aliases.nonEmpty ) {
       val template = builder.startObject("template")
 
       if (create.settings.nonEmpty || create.analysis.nonEmpty) {

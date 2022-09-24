@@ -11,7 +11,7 @@ class UaxUrlEmailTokenizerTest extends AnyWordSpec with TokenizerApi with Matche
       uaxUrlEmailTokenizer("testy")
         .maxTokenLength(14)
         .json
-        .string() shouldBe """{"type":"uax_url_email","max_token_length":14}"""
+        .string shouldBe """{"type":"uax_url_email","max_token_length":14}"""
     }
   }
 }

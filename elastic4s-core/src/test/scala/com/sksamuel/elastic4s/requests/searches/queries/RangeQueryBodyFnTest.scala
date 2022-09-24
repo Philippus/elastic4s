@@ -20,7 +20,7 @@ class RangeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenThen 
     val queryBody = term.RangeQueryBodyFn(query)
 
     Then("query should have right field and parameters")
-    queryBody.string() shouldEqual rangeQueryWithRelation
+    queryBody.string shouldEqual rangeQueryWithRelation
   }
 
   def rangeQueryWithRelation: String =

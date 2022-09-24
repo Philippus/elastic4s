@@ -14,6 +14,6 @@ class SpanMultiTermQueryBodyFnTest extends AnyFunSuite with Matchers {
       boost = Some(2.0),
       queryName = Some("rootName")
     ))
-    builder.string() shouldBe """{"span_multi":{"match":{"prefix":{"user":{"value":"ki"}}},"boost":2.0,"_name":"rootName"}}"""
+    builder.string shouldBe """{"span_multi":{"match":{"prefix":{"user":{"value":"ki"}}},"boost":2.0,"_name":"rootName"}}"""
   }
 }

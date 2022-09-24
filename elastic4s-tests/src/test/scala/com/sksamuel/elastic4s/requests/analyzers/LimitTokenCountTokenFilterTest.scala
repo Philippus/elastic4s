@@ -8,13 +8,13 @@ class LimitTokenCountTokenFilterTest extends AnyWordSpec with TokenFilterApi wit
 
   "LimitTokenCountTokenFilter builder" should {
     "not set any defaults" in {
-      limitTokenCountTokenFilter("testy").json.string() shouldBe """{"type":"limit"}"""
+      limitTokenCountTokenFilter("testy").json.string shouldBe """{"type":"limit"}"""
     }
     "set max token count" in {
-      limitTokenCountTokenFilter("testy").maxTokenCount(7).json.string() shouldBe """{"type":"limit","max_token_count":7}"""
+      limitTokenCountTokenFilter("testy").maxTokenCount(7).json.string shouldBe """{"type":"limit","max_token_count":7}"""
     }
     "set consume all tokens" in {
-      limitTokenCountTokenFilter("testy").consumeAllTokens(true).json.string() shouldBe """{"type":"limit","consume_all_tokens":true}"""
+      limitTokenCountTokenFilter("testy").consumeAllTokens(true).json.string shouldBe """{"type":"limit","consume_all_tokens":true}"""
     }
   }
 }

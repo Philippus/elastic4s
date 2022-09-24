@@ -20,7 +20,9 @@ case class DeleteByQueryRequest(indexes: Indexes,
                                 scrollSize: Option[Int] = None,
                                 routing: Option[String] = None,
                                 shouldStoreResult: Option[Boolean] = None,
-                                size: Option[Int] = None) {
+                                maxDocs: Option[Int] = None,
+                                slices: Option[Int] = None,
+                               ) {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
@@ -46,9 +48,11 @@ case class DeleteByQueryRequest(indexes: Indexes,
     copy(retryBackoffInitialTime = retryBackoffInitialTime.some)
 
   def timeout(timeout: FiniteDuration): DeleteByQueryRequest = copy(timeout = timeout.some)
-  def size(size: Int): DeleteByQueryRequest = copy(size = size.some)
+  def maxDocs(maxDocs: Int): DeleteByQueryRequest = copy(maxDocs = maxDocs.some)
 
   def shouldStoreResult(shouldStoreResult: Boolean): DeleteByQueryRequest =
     copy(shouldStoreResult = shouldStoreResult.some)
+
+  def slices(slices: Int): DeleteByQueryRequest = copy(slices = slices.some)
 
 }

@@ -15,7 +15,7 @@ class DistanceFeatureQueryBuilderFnTest extends AnyFunSuite with Matchers with G
     val queryBody = DistanceFeatureQueryBuilderFn(query)
 
     Then("query should have right fields")
-    queryBody.string() should matchJson(distanceFeatureQuery)
+    queryBody.string should matchJson(distanceFeatureQuery)
   }
 
   val distanceFeatureQuery: String =

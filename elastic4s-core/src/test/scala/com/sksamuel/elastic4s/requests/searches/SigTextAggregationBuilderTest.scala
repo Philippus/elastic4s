@@ -10,7 +10,7 @@ class SigTextAggregationBuilderTest extends AnyFunSuite with Matchers {
     val agg = SigTextAggregation("name")
       .field("field")
       .significanceHeuristic("percentage")
-    SigTextAggregationBuilder(agg).string() shouldBe
+    SigTextAggregationBuilder(agg).string shouldBe
       """{"significant_text":{"field":"field","percentage":{}}}"""
   }
 
@@ -24,7 +24,7 @@ class SigTextAggregationBuilderTest extends AnyFunSuite with Matchers {
           "background_is_superset" -> false
         )
       )
-    builders.SigTextAggregationBuilder(agg).string() shouldBe
+    builders.SigTextAggregationBuilder(agg).string shouldBe
       """{"significant_text":{"field":"field","mutual_information":{"include_negatives":true,"background_is_superset":false}}}"""
   }
 }

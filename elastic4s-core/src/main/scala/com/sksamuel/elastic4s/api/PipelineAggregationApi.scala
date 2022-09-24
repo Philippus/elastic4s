@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.{AvgBucketPipelineAgg, BucketScriptPipelineAgg, BucketSelectorPipelineAgg, BucketSortPipelineAgg, CumulativeCardinalityPipelineAgg, CumulativeSumPipelineAgg, DerivativePipelineAgg, DiffPipelineAgg, ExtendedStatsBucketPipelineAgg, MaxBucket, MinBucketPipelineAgg, MovAvgPipelineAgg, PercentilesBucketPipelineAgg, StatsBucketPipelineAgg, SumBucketPipelineAgg}
+import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.{AvgBucketPipelineAgg, BucketScriptPipelineAgg, BucketSelectorPipelineAgg, BucketSortPipelineAgg, CumulativeCardinalityPipelineAgg, CumulativeSumPipelineAgg, DerivativePipelineAgg, DiffPipelineAgg, ExtendedStatsBucketPipelineAgg, MaxBucket, MinBucketPipelineAgg, MovFnPipelineAgg, PercentilesBucketPipelineAgg, StatsBucketPipelineAgg, SumBucketPipelineAgg}
 import com.sksamuel.elastic4s.requests.searches.sort.Sort
 
 trait PipelineAggregationApi {
@@ -42,8 +42,8 @@ trait PipelineAggregationApi {
   def minBucketAggregation(name: String, bucketsPath: String): MinBucketPipelineAgg =
     MinBucketPipelineAgg(name, bucketsPath)
 
-  def movingAverageAggregation(name: String, bucketsPath: String): MovAvgPipelineAgg =
-    MovAvgPipelineAgg(name, bucketsPath)
+  def movingFunctionAggregation(name: String, bucketsPath: String, script: String, window: Integer): MovFnPipelineAgg =
+    MovFnPipelineAgg(name, bucketsPath, script, window)
 
   def percentilesBucketAggregation(name: String, bucketsPath: String): PercentilesBucketPipelineAgg =
     PercentilesBucketPipelineAgg(name, bucketsPath)

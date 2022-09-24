@@ -8,7 +8,6 @@ import com.sksamuel.elastic4s.requests.searches.aggs.responses.JacksonSupport
 
 case class SearchHit(@JsonProperty("_id") id: String,
                      @JsonProperty("_index") index: String,
-                     @JsonProperty("_type") `type`: String,
                      @JsonProperty("_version") version: Long,
                      @JsonProperty("_seq_no") seqNo: Long,
                      @JsonProperty("_primary_term") primaryTerm: Long,
@@ -59,7 +58,6 @@ case class SearchHit(@JsonProperty("_id") id: String,
         hits = v("hits").asInstanceOf[Seq[Map[String, AnyRef]]].map { hits =>
           InnerHit(
             index = hits("_index").toString,
-            `type` = hits("_type").toString,
             id = hits("_id").toString,
             nested = hits.get("_nested").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
             score = Option(hits("_score")).map(_.toString.toDouble),

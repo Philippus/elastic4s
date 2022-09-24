@@ -59,7 +59,7 @@ trait ReindexHandlers {
         params.put("requests_per_second", request.requestsPerSecond.getOrElse(0).toString)
       request.scroll.foreach(params.put("scroll", _))
 
-      val body = ReindexBuilderFn(request).string()
+      val body = ReindexBuilderFn(request).string
 
       ElasticRequest("POST", "/_reindex", params.toMap, HttpEntity(body, "application/json"))
     }

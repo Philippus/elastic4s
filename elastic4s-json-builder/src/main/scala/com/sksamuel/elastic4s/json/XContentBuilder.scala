@@ -24,7 +24,7 @@ class XContentBuilder(root: JsonValue) {
 
   // generate a json string from the contents of the builder
   @deprecated("will be replaced with a pluggable system")
-  def string(): String = JacksonBuilder.writeAsString(root)
+  def string: String = JacksonBuilder.writeAsString(root)
 
   @deprecated("will be replaced with a pluggable system")
   def bytes: Array[Byte] = JacksonBuilder.writeAsString(root).getBytes
@@ -120,7 +120,7 @@ class XContentBuilder(root: JsonValue) {
   def array(field: String, builder: Array[XContentBuilder]): XContentBuilder = {
     startArray(field)
     builder.foreach { b =>
-      val raw = RawValue(b.string())
+      val raw = RawValue(b.string)
       array.addValue(raw)
     }
     endArray()
@@ -128,7 +128,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def rawField(name: String, builder: XContentBuilder): XContentBuilder =
-    rawField(name, builder.string())
+    rawField(name, builder.string)
 
   def rawField(name: String, content: String): XContentBuilder = {
     obj.putValue(name, RawValue(content))
@@ -140,7 +140,7 @@ class XContentBuilder(root: JsonValue) {
     this
   }
 
-  def rawValue(value: XContentBuilder): this.type = rawValue(value.string())
+  def rawValue(value: XContentBuilder): this.type = rawValue(value.string)
   def rawValue(value: String): this.type = {
     array.addValue(RawValue(value))
     this

@@ -8,7 +8,6 @@ trait AbstractAggregation {
 }
 
 trait Aggregation extends AbstractAggregation {
-
   def subaggs: Seq[AbstractAggregation]
 
   def addSubagg(agg: AbstractAggregation): T                             = subaggs(subaggs :+ agg)

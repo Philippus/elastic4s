@@ -40,7 +40,7 @@ trait IngestHandlers {
                       b.autofield(k, v)
                     }
                     b.endObject()
-                    CustomProcessor(name, b.string())
+                    CustomProcessor(name, b.string)
                 }
               }
             )
@@ -65,7 +65,7 @@ trait IngestHandlers {
       request.version.map(xcb.field("version", _))
       xcb.array("processors", request.processors.map(processorToXContent).toArray)
       xcb.endObject()
-      ElasticRequest("PUT", s"_ingest/pipeline/${request.id}", HttpEntity(xcb.string()))
+      ElasticRequest("PUT", s"/_ingest/pipeline/${request.id}", HttpEntity(xcb.string))
     }
   }
 
