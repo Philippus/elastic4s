@@ -1,8 +1,11 @@
 package com.sksamuel.elastic4s.fields
 
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.mappings.FielddataFrequencyFilter
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
+object TextField {
+  val `type`: String = "text"
+}
 case class TextField(override val name: String,
                      analyzer: Option[String] = None,
                      boost: Option[Double] = None,
@@ -23,15 +26,24 @@ case class TextField(override val name: String,
                      store: Option[Boolean] = None,
                      termVector: Option[String] = None,
                      meta: Map[String, String] = Map.empty) extends ElasticField {
-  override def `type`: String = "text"
+  override def `type`: String = TextField.`type`
+
   def analyzer(name: String): TextField = copy(analyzer = Option(name))
+
   def searchAnalyzer(name: String): TextField = copy(searchAnalyzer = Option(name))
+
   def searchQuoteAnalyzer(name: String): TextField = copy(searchQuoteAnalyzer = Option(name))
+
   def copyTo(copyTo: String*): TextField = copy(copyTo = copyTo.toList)
+
   def copyTo(copyTo: Iterable[String]): TextField = copy(copyTo = copyTo.toList)
+
   def fielddata(fielddata: Boolean): TextField = copy(fielddata = fielddata.some)
+
   def fields(fields: ElasticField*): TextField = copy(fields = fields.toList)
+
   def fields(fields: Iterable[ElasticField]): TextField = copy(fields = fields.toList)
+
   def stored(store: Boolean): TextField = copy(store = store.some)
   def index(index: Boolean): TextField = copy(index = index.some)
   def indexOptions(indexOptions: String): TextField = copy(indexOptions = indexOptions.some)
@@ -44,6 +56,9 @@ case class TextField(override val name: String,
 
 case class IndexPrefixes(minChars: Int, maxChars: Int)
 
+object MatchOnlyTextField {
+  val `type`: String = "match_only_text"
+}
 case class MatchOnlyTextField(name: String, fields: List[ElasticField] = Nil) extends ElasticField {
-  override def `type`: String = "match_only_text"
+  override def `type`: String = MatchOnlyTextField.`type`
 }

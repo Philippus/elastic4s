@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.http
 
 import com.sksamuel.elastic4s.http.JavaClient.fromRestClient
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties}
-import com.sksamuel.exts.Logging
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
 import org.elasticsearch.client.sniff.{NodesSniffer, SniffOnFailureListener, Sniffer}
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.duration.{FiniteDuration, _}
 
@@ -26,7 +26,9 @@ case class SniffingConfiguration(sniffIntervals: FiniteDuration = 5.minutes,
                                  sniffAfterFailureInterval: Option[FiniteDuration] = Some(1.minute),
                                  nodeSniffer: Option[NodesSniffer] = None)
 
-object JavaClientSniffed extends Logging {
+object JavaClientSniffed {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   /**
     * Creates a new [[com.sksamuel.elastic4s.ElasticClient]] using the elasticsearch Java API rest client

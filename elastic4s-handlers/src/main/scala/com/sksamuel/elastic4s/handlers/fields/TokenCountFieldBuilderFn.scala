@@ -4,6 +4,18 @@ import com.sksamuel.elastic4s.fields.TokenCountField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object TokenCountFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): TokenCountField = TokenCountField(
+    name,
+    values.get("analyzer").map(_.asInstanceOf[String]),
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("copy_to").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("enable_position_increments").map(_.asInstanceOf[Boolean]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("null_value").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean])
+  )
+
 
   def build(field: TokenCountField): XContentBuilder = {
 

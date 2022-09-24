@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.requests.delete
 
 import com.sksamuel.elastic4s.Index
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, VersionType}
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class DeleteByIdRequest(index: Index,
                              id: String,

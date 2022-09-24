@@ -19,7 +19,7 @@ class KeyedRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Ma
     createIndex("keyedrangeaggs") mapping {
       properties(
         textField("name").fielddata(true),
-        intField("grade")
+        doubleField("grade")
       )
     }
   }.await

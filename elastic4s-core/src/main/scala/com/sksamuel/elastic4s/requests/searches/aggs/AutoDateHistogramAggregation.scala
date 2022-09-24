@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import java.util.TimeZone
 
 import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAgg
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class AutoDateHistogramAggregation(name: String,
                                         field: String,

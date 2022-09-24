@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.module.scala.JavaTypeable
-import com.sksamuel.exts.Logging
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * A [[Handler]] is a typeclass used to create [[ElasticRequest]] instances
@@ -12,7 +12,9 @@ import com.sksamuel.exts.Logging
   * @tparam T the type of the request object handled by this handler
   * @tparam U the type of the response object returned by this handler
   */
-abstract class Handler[T, U: JavaTypeable] extends Logging {
+abstract class Handler[T, U: JavaTypeable] {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   protected val TaskRegex = """\{"task":"(.*):(.*)"\}""".r
 

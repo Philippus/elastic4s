@@ -4,13 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.scala.{ClassTagExtensions, JavaTypeable}
 import com.sksamuel.elastic4s._
-import com.sksamuel.exts.Logging
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.Try
 
 object ElasticJackson {
 
-  object Implicits extends Logging {
+  object Implicits {
+
+    protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
     implicit def JacksonJsonIndexable[T](implicit mapper: ObjectMapper = JacksonSupport.mapper): Indexable[T] =
       (t: T) => mapper.writeValueAsString(t)

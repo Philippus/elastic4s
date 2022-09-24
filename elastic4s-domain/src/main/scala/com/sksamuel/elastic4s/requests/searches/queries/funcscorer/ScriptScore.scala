@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class ScriptScore(script: Script, weight: Option[Double] = None, override val filter: Option[Query] = None)
   extends ScoreFunction {

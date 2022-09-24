@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.nodes
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.exts.collection.Maps
+import com.sksamuel.elastic4s.ext.Maps
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.duration._
@@ -21,11 +21,22 @@ case class OsStats(@JsonProperty("cpu_percent") cpuPercent: Int,
                    mem: MemoryStats,
                    swap: SwapStats)
 
+case class Docs(count: Long)
+
+case class Indices(docs: Docs)
+
+case class Jvm(@JsonProperty("uptime_in_millis") uptimeInMillis: Long) {
+  val uptime: java.time.Duration = java.time.Duration.ofMillis(uptimeInMillis)
+}
+
 case class NodeStats(name: String,
                      @JsonProperty("transport_address") transportAddress: String,
                      host: String,
                      ip: Seq[String],
-                     os: Option[OsStats])
+                     os: Option[OsStats],
+                     roles: Seq[String],
+                     indices: Indices,
+                     jvm: Jvm)
 
 case class NodesStatsResponse(@JsonProperty("cluster_name") clusterName: String, nodes: Map[String, NodeStats])
 

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class OpenIndexRequest(indexes: Indexes,
                             ignoreUnavailable: Option[Boolean] = None,
@@ -42,11 +42,16 @@ case class FlushIndexRequest(indexes: Seq[String],
 
 case class RefreshIndexRequest(indexes: Seq[String])
 
+case class TranslogRequest(durability: String,
+                           syncInterval: Option[String],
+                           flushThresholdSize: Option[String])
+
 case class UpdateIndexLevelSettingsRequest(indexes: Seq[String],
                                            numberOfReplicas: Option[Int] = None,
                                            autoExpandReplicas: Option[String] = None,
                                            refreshInterval: Option[String] = None,
-                                           maxResultWindow: Option[Int] = None) {
+                                           maxResultWindow: Option[Int] = None,
+                                           translog: Option[TranslogRequest] = None) {
 
   def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsRequest =
     copy(numberOfReplicas = numberOfReplicas.some)
@@ -56,6 +61,8 @@ case class UpdateIndexLevelSettingsRequest(indexes: Seq[String],
     copy(refreshInterval = refreshInterval.some)
   def maxResultWindow(maxResultWindow: Int): UpdateIndexLevelSettingsRequest =
     copy(maxResultWindow = maxResultWindow.some)
+  def translog(translog: TranslogRequest): UpdateIndexLevelSettingsRequest =
+    copy(translog = translog.some)
 
 }
 

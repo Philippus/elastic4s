@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class CommonTermsQuery(name: String,
                             text: String,

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.settings
 
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class UpdateSettingsRequest(indices: Indexes,
                                  preserveExisting: Option[Boolean] = None,

@@ -4,6 +4,24 @@ import com.sksamuel.elastic4s.fields.SearchAsYouTypeField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object SearchAsYouTypeFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): SearchAsYouTypeField = SearchAsYouTypeField(
+    name,
+    values.get("analyzer").map(_.asInstanceOf[String]),
+    values.get("search_analyzer").map(_.asInstanceOf[String]),
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("copy_to").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("fielddata").map(_.asInstanceOf[Boolean]),
+    values.get("ignore_above").map(_.asInstanceOf[Int]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("index_options").map(_.asInstanceOf[String]),
+    values.get("max_shingle_size").map(_.asInstanceOf[Int]),
+    values.get("norms").map(_.asInstanceOf[Boolean]),
+    values.get("similarity").map(_.asInstanceOf[String]),
+    values.get("store").map(_.asInstanceOf[Boolean]),
+    values.get("term_vector").map(_.asInstanceOf[String])
+  )
+
 
   def build(field: SearchAsYouTypeField): XContentBuilder = {
 

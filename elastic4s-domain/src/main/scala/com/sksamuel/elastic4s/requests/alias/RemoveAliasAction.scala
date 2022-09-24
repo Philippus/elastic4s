@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.alias
 
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.{Query, QueryStringQuery}
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class RemoveAliasAction(alias: String,
                              index: String,

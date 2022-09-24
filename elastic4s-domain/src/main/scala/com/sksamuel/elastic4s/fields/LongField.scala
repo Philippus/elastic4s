@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object LongField {
+  val `type`: String = "long"
+}
 case class LongField(name: String,
                      boost: Option[Double] = None,
                      coerce: Option[Boolean] = None,
@@ -10,5 +13,5 @@ case class LongField(name: String,
                      store: Option[Boolean] = None,
                      nullValue: Option[Long] = None,
                      meta: Map[String, Any] = Map.empty) extends NumberField[Long] {
-  override def `type`: String = "long"
+  override def `type`: String = LongField.`type`
 }

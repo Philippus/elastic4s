@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object ByteField {
+  val `type`: String = "byte"
+}
 case class ByteField(name: String,
                      boost: Option[Double] = None,
                      coerce: Option[Boolean] = None,
@@ -10,5 +13,5 @@ case class ByteField(name: String,
                      nullValue: Option[Byte] = None,
                      store: Option[Boolean] = None,
                      meta: Map[String, Any] = Map.empty) extends NumberField[Byte] {
-  override def `type`: String = "byte"
+  override def `type`: String = ByteField.`type`
 }

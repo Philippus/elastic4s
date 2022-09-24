@@ -4,9 +4,9 @@ import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
 import com.sksamuel.elastic4s.streams.PublishActor.Ready
 import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
-import com.sksamuel.exts.Logging
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable
 import scala.util.{Failure, Success}
@@ -68,11 +68,12 @@ object PublishActor {
 
 class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
     extends Actor
-    with Stash
-    with Logging {
+    with Stash {
 
   import com.sksamuel.elastic4s.ElasticDsl._
   import context.dispatcher
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   private var scrollId: String                = _
   private var processed: Long                 = 0
@@ -169,7 +170,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       unstashAll()
   }
 
-  override def postStop() = {
+  override def postStop(): Unit = {
     super.postStop()
     client.execute(clearScroll(scrollId))
   }

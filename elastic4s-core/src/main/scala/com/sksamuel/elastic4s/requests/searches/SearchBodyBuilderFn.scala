@@ -127,6 +127,19 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
+    if (request.runtimeMappings.nonEmpty) {
+      builder.startObject("runtime_mappings")
+      request.runtimeMappings.foreach { mapping =>
+        builder.startObject(mapping.field)
+        builder.field("type", mapping.`type`)
+        mapping.script.foreach {
+          script => builder.rawField("script", ScriptBuilderFn(script))
+        }
+        builder.endObject()
+      }
+      builder.endObject()
+    }
+
     request.trackHits.map(builder.field("track_total_hits", _))
 
     builder.endObject()

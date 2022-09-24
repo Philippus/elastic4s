@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.collapse
 
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class CollapseRequest(field: String,
                            inner: Option[InnerHit] = None,

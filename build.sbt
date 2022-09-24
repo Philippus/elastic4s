@@ -9,7 +9,7 @@ def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
-def publishVersion = if (isRelease) releaseVersion else "7.10.0." + githubRunNumber + "-SNAPSHOT"
+def publishVersion = if (isRelease) releaseVersion else "7.17.0." + githubRunNumber + "-SNAPSHOT"
 
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
@@ -19,7 +19,7 @@ def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 val scala2Versions = Seq("2.12.15", "2.13.6")
-val scalaAllVersions = scala2Versions :+ "3.0.2"
+val scalaAllVersions = scala2Versions :+ "3.2.0"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.15",
   crossScalaVersions := Seq("2.12.15", "2.13.6", "3.0.2")
@@ -27,10 +27,10 @@ lazy val commonScalaVersionSettings = Seq(
 
 lazy val warnUnusedImport = Seq(
   scalacOptions ++= Seq("-Ywarn-unused:imports"),
-  scalacOptions in(Compile, console) ~= {
+  Compile / console / scalacOptions ~= {
     _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports"))
   },
-  scalacOptions in(Test, console) := (scalacOptions in(Compile, console)).value,
+  Test / console / scalacOptions := (Compile / console / scalacOptions).value,
 )
 
 lazy val commonSettings = Seq(
@@ -38,7 +38,7 @@ lazy val commonSettings = Seq(
   version := publishVersion,
   resolvers ++= Seq(Resolver.mavenLocal),
   Test / parallelExecution := false,
-  scalacOptions in(Compile, doc) := (scalacOptions in(Compile, doc)).value.filter(_ != "-Xfatal-warnings"),
+  Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 )
 
@@ -116,7 +116,10 @@ lazy val scala3Settings = allSettings :+ (crossScalaVersions := scalaAllVersions
 lazy val root = Project("elastic4s", file("."))
   .settings(name := "elastic4s")
   .settings(allSettings)
-  .settings(noPublishSettings)
+  .settings(
+    noPublishSettings,
+    crossScalaVersions := Nil
+  )
   .aggregate(
     json_builder,
     domain,
@@ -311,9 +314,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.12.0" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.12.0" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.12.0" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.17.1" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.17.1" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.17.1" % "test"
     ),
     Test / fork := false,
     Test / parallelExecution := false,

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries.funcscorer
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 case class SeedAndField(seed: Long, fieldName: String = SeedAndField.DefaultFieldName)
 object SeedAndField {

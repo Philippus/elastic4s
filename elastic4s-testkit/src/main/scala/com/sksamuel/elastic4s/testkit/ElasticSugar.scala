@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.testkit
 import com.sksamuel.elastic4s.requests.indexes.admin.RefreshIndexResponse
 import com.sksamuel.elastic4s.{ElasticDsl, Indexes}
 import org.scalatest.Suite
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.Try
 
@@ -13,6 +14,8 @@ import scala.util.Try
   */
 trait ElasticSugar extends ElasticDsl {
   this: Suite with ClientProvider =>
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   // refresh all indexes
   def refreshAll(): RefreshIndexResponse = refresh(Indexes.All)

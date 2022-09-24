@@ -1,5 +1,8 @@
 package com.sksamuel.elastic4s.fields
 
+object HalfFloatField {
+  val `type`: String = "half_float"
+}
 case class HalfFloatField(name: String,
                           boost: Option[Double] = None,
                           coerce: Option[Boolean] = None,
@@ -10,5 +13,5 @@ case class HalfFloatField(name: String,
                           nullValue: Option[Float] = None,
                           store: Option[Boolean] = None,
                           meta: Map[String, Any] = Map.empty) extends NumberField[Float] {
-  override def `type`: String = "half_float"
+  override def `type`: String = HalfFloatField.`type`
 }

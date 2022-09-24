@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.requests.cluster
 
+case class GetClusterSettingsRequest()
+
 case class ClusterSettingsRequest(persistentSettings: Map[String, String], transientSettings: Map[String, String]) {
 
   def persistentSettings(settings: Map[String, String]): ClusterSettingsRequest =

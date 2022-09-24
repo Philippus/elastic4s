@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
 
 case class HighlightOptions(encoder: Option[String] = None,
                             tagsSchema: Option[String] = None,
@@ -20,6 +20,7 @@ case class HighlightOptions(encoder: Option[String] = None,
                             numOfFragments: Option[Int] = None,
                             order: Option[String] = None,
                             phraseLimit: Option[Int] = None,
+                            maxAnalyzedOffset: Option[Int] = None,
                             postTags: Seq[String] = Nil,
                             preTags: Seq[String] = Nil,
                             requireFieldMatch: Option[Boolean] = None,
@@ -54,6 +55,7 @@ case class HighlightOptions(encoder: Option[String] = None,
   def numOfFragments(numOfFragments: Int): HighlightOptions = copy(numOfFragments = numOfFragments.some)
   def order(order: String): HighlightOptions = copy(order = order.some)
   def phraseLimit(phraseLimit: Int): HighlightOptions = copy(phraseLimit = phraseLimit.some)
+  def maxAnalyzedOffset(maxAnalyzedOffset: Int): HighlightOptions = copy(maxAnalyzedOffset = maxAnalyzedOffset.some)
 
   def postTags(first: String, rest: String*): HighlightOptions = postTags(first +: rest)
   def preTags(first: String, rest: String*): HighlightOptions = preTags(first +: rest)

@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.`type`.TypeFactory
 import com.fasterxml.jackson.module.scala.JavaTypeable
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-import com.sksamuel.exts.Logging
-import com.sksamuel.exts.OptionImplicits.RichOption
-
-import scala.util.Try
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
+import org.slf4j.{Logger, LoggerFactory}
 
 trait ResponseHandler[U] {
   self =>
@@ -26,7 +24,9 @@ trait ResponseHandler[U] {
 // a ResponseHandler that marshalls the body into the required type using Jackson
 // the response body is converted into a string using a codec derived from the content encoding header
 // if the content encoding header is null, then UTF-8 is assumed
-object ResponseHandler extends Logging {
+object ResponseHandler {
+
+  protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   def json(entity: HttpEntity.StringEntity): JsonNode = fromEntity[JsonNode](entity)
 

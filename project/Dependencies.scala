@@ -2,35 +2,36 @@ import sbt.Keys.libraryDependencies
 import sbt._
 
 object Dependencies {
-  val AkkaHttpVersion                = "10.2.6"
-  val AkkaVersion                    = "2.6.17"
+  val AkkaHttpVersion                = "10.2.7"
+  val AkkaVersion                    = "2.6.18"
   val CatsEffect2Version             = "2.5.4"
   val CatsEffectVersion              = "3.2.8"
   val CatsVersion                    = "2.0.0"
-  val CirceVersion                   = "0.14.1"
+  val CirceVersion                   = "0.14.3"
   val CommonsIoVersion               = "2.11.0"
-  val ElasticsearchVersion           = "7.15.1"
+  val ElasticsearchVersion           = "7.17.0"
   val ExtsVersion                    = "1.61.1"
-  val JacksonVersion                 = "2.13.0"
-  val Json4sVersion                  = "4.0.3"
-  val Log4jVersion                   = "2.14.1"
-  val MockitoVersion                 = "4.0.0"
+  val JacksonVersion                 = "2.13.1"
+  val Json4sVersion                  = "4.0.4"
+  val Log4jVersion                   = "2.15.0"
+  val MockitoVersion                 = "4.3.1"
   val MonixVersion                   = "3.4.0"
-  val PlayJsonVersion                = "2.10.0-RC5"
+  val PlayJsonVersion                = "2.10.0-RC6"
   val ReactiveStreamsVersion         = "1.0.3"
-  val ScalamockVersion               = "5.1.0"
+  val ScalamockVersion               = "5.2.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
   val ScalatestPlusVersion           = "3.2.9.0"
-  val ScalatestVersion               = "3.2.10"
-  val ScalazVersion                  = "7.2.32"
-  val Slf4jVersion                   = "1.7.32"
+  val ScalatestVersion               = "3.2.11"
+  val ScalazVersion                  = "7.2.34"
+  val Slf4jVersion                   = "1.7.35"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
-  val ZIOJsonVersion                 = "0.2.0-M1"
-  val ZIOVersion                     = "1.0.12"
+  val ZIOJsonVersion                 = "0.2.0"
+  val ZIOVersion                     = "1.0.13"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
+      "com.typesafe"       % "config"                       % "1.4.2",
       "com.sksamuel.exts" %% "exts"                         % ExtsVersion cross CrossVersion.for3Use2_13,
       "org.slf4j"          % "slf4j-api"                    % Slf4jVersion,
       "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % "test",

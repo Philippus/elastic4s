@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.cluster
 
-import com.sksamuel.elastic4s.requests.cluster.{AddRemoteClusterResponse, AddRemoteClusterSettingsRequest, ClusterHealthRequest, ClusterHealthResponse, ClusterSettingsRequest, ClusterSettingsResponse, ClusterStateRequest, ClusterStateResponse, ClusterStatsRequest, ClusterStatsResponse, RemoteClusterInfo, RemoteClusterInfoRequest}
+import com.sksamuel.elastic4s.requests.cluster.{AddRemoteClusterResponse, AddRemoteClusterSettingsRequest, ClusterHealthRequest, ClusterHealthResponse, ClusterSettingsRequest, ClusterSettingsResponse, ClusterStateRequest, ClusterStateResponse, ClusterStatsRequest, ClusterStatsResponse, GetClusterSettingsRequest, RemoteClusterInfo, RemoteClusterInfoRequest}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait ClusterHandlers {
@@ -23,6 +23,12 @@ trait ClusterHandlers {
         ""
       else
         "/" + indices.mkString(",")
+  }
+
+  implicit object GetClusterSettingsHandler extends Handler[GetClusterSettingsRequest, ClusterSettingsResponse] {
+    override def build(request: GetClusterSettingsRequest): ElasticRequest = {
+      ElasticRequest("GET", "/_cluster/settings", Map("flat_settings" -> true))
+    }
   }
 
   implicit object ClusterSettingsHandler extends Handler[ClusterSettingsRequest, ClusterSettingsResponse] {

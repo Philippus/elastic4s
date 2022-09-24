@@ -14,6 +14,7 @@ import com.sksamuel.elastic4s.handlers.index.{IndexAdminHandlers, IndexHandlers,
 import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
 import com.sksamuel.elastic4s.handlers.reindex.ReindexHandlers
+import com.sksamuel.elastic4s.handlers.script.StoredScriptHandlers
 import com.sksamuel.elastic4s.handlers.security.roles.{RoleAdminHandlers, RoleHandlers}
 import com.sksamuel.elastic4s.handlers.security.users.{UserAdminHandlers, UserHandlers}
 import com.sksamuel.elastic4s.handlers.settings.SettingsHandlers
@@ -24,11 +25,9 @@ import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
-import com.sksamuel.exts.Logging
 
 trait ElasticDsl
     extends ElasticApi
-    with Logging
     with BulkHandlers
     with CatHandlers
     with CountHandlers
@@ -54,6 +53,7 @@ trait ElasticDsl
     with SearchScrollHandlers
     with SettingsHandlers
     with SnapshotHandlers
+    with StoredScriptHandlers
     with UpdateHandlers
     with TaskHandlers
     with TermVectorHandlers

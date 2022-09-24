@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.exts.StringOption
+import com.sksamuel.elastic4s.ext.StringOption
 
 import scala.language.implicitConversions
 

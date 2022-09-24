@@ -4,6 +4,27 @@ import com.sksamuel.elastic4s.fields.KeywordField
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object KeywordFieldBuilderFn {
+  def toField(name: String, values: Map[String, Any]): KeywordField = KeywordField(
+    name,
+    values.get("boost").map(_.asInstanceOf[Double]),
+    values.get("copy_to").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty),
+    values.get("doc_values").map(_.asInstanceOf[Boolean]),
+    values.get("eager_global_ordinals").map(_.asInstanceOf[Boolean]),
+    values
+      .get("fields")
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) => ElasticFieldBuilderFn.construct(key, value) }.toList).getOrElse(List.empty),
+    values.get("ignore_above").map(_.asInstanceOf[Int]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("index_options").map(_.asInstanceOf[String]),
+    values.get("norms").map(_.asInstanceOf[Boolean]),
+    values.get("normalizer").map(_.asInstanceOf[String]),
+    values.get("null_value").map(_.asInstanceOf[String]),
+    values.get("similarity").map(_.asInstanceOf[String]),
+    values.get("split_queries_on_whitespace").map(_.asInstanceOf[Boolean]),
+    values.get("store").map(_.asInstanceOf[Boolean]),
+    values.get("term_vector").map(_.asInstanceOf[String])
+  )
+
 
   def build(field: KeywordField): XContentBuilder = {
 

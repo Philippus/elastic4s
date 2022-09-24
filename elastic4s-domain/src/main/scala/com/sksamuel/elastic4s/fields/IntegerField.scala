@@ -1,7 +1,10 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.exts.OptionImplicits.RichOptionImplicits
+import com.sksamuel.elastic4s.ext.OptionImplicits._
 
+object IntegerField {
+  val `type`: String = "integer"
+}
 case class IntegerField(name: String,
                         boost: Option[Double] = None,
                         coerce: Option[Boolean] = None,
@@ -12,8 +15,11 @@ case class IntegerField(name: String,
                         nullValue: Option[Int] = None,
                         store: Option[Boolean] = None,
                         meta: Map[String, Any] = Map.empty) extends NumberField[Int] {
-  override def `type`: String = "integer"
+  override def `type`: String = IntegerField.`type`
+
   def coerce(coerce: Boolean): IntegerField = copy(coerce = coerce.some)
+
   def stored(store: Boolean): IntegerField = copy(store = store.some)
+
   def nullValue(nullValue: Int): IntegerField = copy(nullValue = nullValue.some)
 }
