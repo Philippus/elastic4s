@@ -16,13 +16,10 @@ object Dependencies {
   val Log4jVersion                   = "2.15.0"
   val MockitoVersion                 = "4.8.0"
   val MonixVersion                   = "3.4.1"
-  //val PlayJsonVersion                = "2.9.3"
-  val PlayJsonVersion                = "2.10.0-RC6"
+  val PlayJsonVersion                = "2.9.3"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "5.2.0"
-  //val ScalatestPlusMockitoArtifactId = "mockito-3-2"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
-  //val ScalatestPlusVersion           = "3.1.2.0"
   val ScalatestPlusVersion           = "3.2.9.0"
   val ScalazVersion                  = "7.2.34"
   val ScalatestVersion               = "3.2.13"
@@ -37,7 +34,6 @@ object Dependencies {
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
       "com.typesafe"       % "config"                       % "1.4.2",
-      "com.sksamuel.exts" %% "exts"                         % ExtsVersion cross CrossVersion.for3Use2_13,
       "org.slf4j"          % "slf4j-api"                    % Slf4jVersion,
       "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % "test",
       "org.mockito"        % "mockito-core"                 % MockitoVersion       % "test",
@@ -83,8 +79,8 @@ object Dependencies {
   lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % "test"
   lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
   lazy val scalaMock             = "org.scalamock"           %% "scalamock"                    % ScalamockVersion       % "test"
-  lazy val scalaTestMain             = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
-  lazy val scalaTest             = scalaTestMain       % "test"
+  lazy val scalaTestMain         = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
+  lazy val scalaTest             = scalaTestMain % "test"
   lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
   lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % "test"
 

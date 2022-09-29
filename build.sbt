@@ -22,7 +22,7 @@ val scala2Versions = Seq("2.12.16", "2.13.8")
 val scalaAllVersions = scala2Versions :+ "3.2.0"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.16",
-  crossScalaVersions := Seq("2.12.16", "2.13.8", "3.2.0")
+  crossScalaVersions := Nil
 )
 
 lazy val warnUnusedImport = Seq(
@@ -47,7 +47,6 @@ lazy val publishSettings = Seq(
   Test / publishArtifact := false,
   pomIncludeRepository := Function.const(false),
   releaseCrossBuild := true,
-  version := "7.17.0.1",
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
@@ -59,7 +58,7 @@ lazy val publishSettings = Seq(
 )
 
 lazy val commonJvmSettings = Seq(
-  Test / testOptions += {
+   Test / testOptions += {
     val flag = if (isGithubActions) "-oCI" else "-oDF"
     Tests.Argument(TestFrameworks.ScalaTest, flag)
   },
@@ -140,8 +139,7 @@ lazy val scala3_root = Project("elastic4s-scala3", file("scala3"))
   .settings(name := "elastic4s")
   .settings(allSettings)
   .settings(
-    noPublishSettings,
-    crossScalaVersions := Nil
+    noPublishSettings
   )
   .aggregate(
     scala3Projects: _*
@@ -150,8 +148,7 @@ lazy val root = Project("elastic4s", file("."))
   .settings(name := "elastic4s")
   .settings(allSettings)
   .settings(
-    noPublishSettings,
-    crossScalaVersions := Nil
+    noPublishSettings
   )
   .aggregate(
     Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka) ++ scala3Projects: _*
