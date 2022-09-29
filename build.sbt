@@ -18,7 +18,7 @@ def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
-val scala2Versions = Seq("2.12.15", "2.13.6")
+val scala2Versions = Seq("2.12.16", "2.13.8")
 val scalaAllVersions = scala2Versions :+ "3.2.0"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.16",
@@ -294,7 +294,7 @@ lazy val sprayjson = (project in file("elastic4s-json-spray"))
 lazy val ziojson_1 = (project in file("elastic4s-json-zio-1"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-zio-1")
-  .settings(scala3Settings)
+  .settings(scala2Settings)
   .settings(libraryDependencies += Dependencies.zioJson1)
 
 lazy val ziojson = (project in file("elastic4s-json-zio"))
