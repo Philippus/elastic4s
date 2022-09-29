@@ -57,7 +57,7 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
 
       - name: publish 3.0 release
-        run: sbt ++3.0.2 $(for i in $(cat scala3_modules); do echo $i/publishSigned; done | xargs)
+        run: sbt ++3.2.0 elastic4s-scala3/publishSigned
         env:
           RELEASE_VERSION: ${{ github.event.inputs.version }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}

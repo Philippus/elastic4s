@@ -47,6 +47,7 @@ lazy val publishSettings = Seq(
   Test / publishArtifact := false,
   pomIncludeRepository := Function.const(false),
   releaseCrossBuild := true,
+  version := "7.17.0.1",
   releasePublishArtifactsAction := PgpKeys.publishSigned.value,
   publishTo := {
     val nexus = "https://oss.sonatype.org/"
@@ -111,15 +112,7 @@ lazy val allSettings = commonScalaVersionSettings ++
 lazy val scala2Settings = allSettings :+ (crossScalaVersions := scala2Versions)
 lazy val scala3Settings = allSettings ++ (scalacOptions ++= (if (scalaVersion.value startsWith "3") Seq("-Ytasty-reader") else Nil)) :+ (crossScalaVersions := scalaAllVersions)
 
-
-lazy val root = Project("elastic4s", file("."))
-  .settings(name := "elastic4s")
-  .settings(allSettings)
-  .settings(
-    noPublishSettings,
-    crossScalaVersions := Nil
-  )
-  .aggregate(
+lazy val scala3Projects: Seq[ProjectReference] = Seq(
     json_builder,
     domain,
     handlers,
@@ -131,7 +124,6 @@ lazy val root = Project("elastic4s", file("."))
     cats_effect_2,
     zio_1,
     zio,
-    scalaz,
     monix,
     tests,
     testkit,
@@ -139,13 +131,30 @@ lazy val root = Project("elastic4s", file("."))
     jackson,
     json4s,
     playjson,
-    sprayjson,
-    ziojson_1,
     ziojson,
     clientsttp,
-    clientakka,
     httpstreams,
     akkastreams
+)
+lazy val scala3_root = Project("elastic4s-scala3", file("scala3"))
+  .settings(name := "elastic4s")
+  .settings(allSettings)
+  .settings(
+    noPublishSettings,
+    crossScalaVersions := Nil
+  )
+  .aggregate(
+    scala3Projects: _*
+  )
+lazy val root = Project("elastic4s", file("."))
+  .settings(name := "elastic4s")
+  .settings(allSettings)
+  .settings(
+    noPublishSettings,
+    crossScalaVersions := Nil
+  )
+  .aggregate(
+    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka) ++ scala3Projects: _*
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
