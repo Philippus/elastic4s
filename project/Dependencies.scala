@@ -28,7 +28,7 @@ object Dependencies {
   val ScalatestVersion               = "3.2.13"
   val Slf4jVersion                   = "2.0.1"
   val SprayJsonVersion               = "1.3.6"
-  val SttpVersion                    = "1.7.2"
+  val SttpVersion                    = "3.8.0"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.16"
   val ZIOJsonVersion                 = "0.3.0"
@@ -61,20 +61,20 @@ object Dependencies {
     "io.circe" %% "circe-generic" % CirceVersion,
     "io.circe" %% "circe-parser"  % CirceVersion)
 
-  lazy val akkaActor                    = "com.typesafe.akka"       %% "akka-actor"                       % AkkaVersion cross CrossVersion.for3Use2_13
-  lazy val akkaHTTP                     = "com.typesafe.akka"       %% "akka-http"                        % AkkaHttpVersion cross CrossVersion.for3Use2_13
-  lazy val akkaStream                   = "com.typesafe.akka"       %% "akka-stream"                      % AkkaVersion cross CrossVersion.for3Use2_13
-  lazy val asyncHttpClientBackendFuture = "com.softwaremill.sttp"   %% "async-http-client-backend-future" % SttpVersion cross CrossVersion.for3Use2_13
-  lazy val cats                         = "org.typelevel"           %% "cats-effect"                      % CatsEffectVersion
-  lazy val cats2                        = "org.typelevel"           %% "cats-effect"                      % CatsEffect2Version
-  lazy val elasticsearchRestClient      = "org.elasticsearch.client" % "elasticsearch-rest-client"        % ElasticsearchVersion
+  lazy val akkaActor                    = "com.typesafe.akka"             %% "akka-actor"                       % AkkaVersion
+  lazy val akkaHTTP                     = "com.typesafe.akka"             %% "akka-http"                        % AkkaHttpVersion
+  lazy val akkaStream                   = "com.typesafe.akka"             %% "akka-stream"                      % AkkaVersion
+  lazy val asyncHttpClientBackendFuture = "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % SttpVersion
+  lazy val cats                         = "org.typelevel"                 %% "cats-effect"                      % CatsEffectVersion
+  lazy val cats2                        = "org.typelevel"                 %% "cats-effect"                      % CatsEffect2Version
+  lazy val elasticsearchRestClient      = "org.elasticsearch.client"       % "elasticsearch-rest-client"        % ElasticsearchVersion
   lazy val json4s                       = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
-  lazy val monix                        = "io.monix"                %% "monix"                            % MonixVersion
-  lazy val playJson                     = Seq("com.typesafe.play" %% "play-json" % PlayJsonVersion)
-  lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
-  lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion
-  lazy val zioJson1                     = "dev.zio"                 %% "zio-json"                         % ZIOJson1Version
-  lazy val zioJson                      = "dev.zio"                 %% "zio-json"                         % ZIOJsonVersion
+  lazy val monix                        = "io.monix"                      %% "monix"      % MonixVersion
+  lazy val playJson                     = Seq("com.typesafe.play"         %% "play-json"  % PlayJsonVersion)
+  lazy val sprayJson                    = Seq("io.spray"                  %% "spray-json" % SprayJsonVersion)
+  lazy val sttp                         = "com.softwaremill.sttp.client3" %% "core"       % SttpVersion
+  lazy val zioJson1                     = "dev.zio"                       %% "zio-json"   % ZIOJson1Version
+  lazy val zioJson                      = "dev.zio"                       %% "zio-json"   % ZIOJsonVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 

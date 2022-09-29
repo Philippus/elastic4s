@@ -6,16 +6,16 @@ import java.nio.file.Files
 import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticRequest, ElasticsearchClientUri, HttpClient, HttpEntity, HttpResponse}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.softwaremill.sttp.Uri.QueryFragment
-import com.softwaremill.sttp._
-import com.softwaremill.sttp.asynchttpclient.future.AsyncHttpClientFutureBackend
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.util.{Failure, Success}
+import sttp.client3._
+import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
+import sttp.model.Uri
+import sttp.model.Uri.{PathSegments, QuerySegment}
 
 class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
-  implicit ec: ExecutionContext, sttpBackend: SttpBackend[Future, Nothing]) extends HttpClient {
+  implicit ec: ExecutionContext, sttpBackend: SttpBackend[Future, Any]) extends HttpClient {
 
   /** Alternative constructor for backwards compatibility. */
   @deprecated("Use the constructor which takes an ElasticNodeEndpoint", "7.3.2")
@@ -24,44 +24,39 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
       SttpRequestHttpClient.defaultEc, SttpRequestHttpClient.defaultSttpBackend)
   }
 
-  private def request(method: String, endpoint: String, params: Map[String, Any], headers: Map[String, String]): Request[String, Nothing] = {
+  private def request(method: String, endpoint: String, params: Map[String, Any], headers: Map[String, String]): Request[String, Any] = {
     val url = new Uri(
-      nodeEndpoint.protocol,
-      None,
-      nodeEndpoint.host,
-      nodeEndpoint.port.some,
-      collection.immutable.Seq(endpoint.stripPrefix("/").split('/'): _*),
-      collection.immutable.Seq(params.map{ case (k, v) => QueryFragment.KeyValue(k, v.toString) }.toSeq: _*),
-      None
-    )
+      scheme = Some(nodeEndpoint.protocol),
+      authority = None,
+      pathSegments = PathSegments.absoluteOrEmptyS(collection.immutable.Seq(endpoint.stripPrefix("/").split('/'): _*)),
+      querySegments = collection.immutable.Seq(params.map{ case (k, v) => QuerySegment.KeyValue(k, v.toString) }.toSeq: _*),
+      fragmentSegment = None
+    ).host(nodeEndpoint.host).port(nodeEndpoint.port)
     val req = method.toUpperCase match {
-      case "GET"    => sttp.get(url)
-      case "HEAD"   => sttp.head(url)
-      case "POST"   => sttp.post(url)
-      case "PUT"    => sttp.put(url)
-      case "DELETE" => sttp.delete(url)
+      case "GET"    => quickRequest.get(url)
+      case "HEAD"   => quickRequest.head(url)
+      case "POST"   => quickRequest.post(url)
+      case "PUT"    => quickRequest.put(url)
+      case "DELETE" => quickRequest.delete(url)
     }
     req.headers(headers)
   }
 
   private def processResponse(resp: Response[String]): HttpResponse = {
     val strToHttpEntity = (body: String) => HttpEntity.StringEntity(body, resp.contentType).some
-    val entity = resp.body.fold(
-      strToHttpEntity,
-      strToHttpEntity
-    )
+    val entity = strToHttpEntity(resp.body)
 
-    HttpResponse(resp.code, entity, resp.headers.toMap)
+    HttpResponse(resp.code.code, entity, resp.headers.map(h => h.name -> h.value).toMap)
   }
 
-  def async(method: String, endpoint: String, params: Map[String, Any], headers: Map[String, String]): Request[String, Nothing] =
+  def async(method: String, endpoint: String, params: Map[String, Any], headers: Map[String, String]): Request[String, Any] =
     request(method, endpoint, params, headers)
 
   def async(method: String,
             endpoint: String,
             params: Map[String, Any],
             headers: Map[String, String],
-            entity: HttpEntity): Request[String, Nothing] = {
+            entity: HttpEntity): Request[String, Any] = {
     val r  = request(method, endpoint, params, headers)
     val r2 = entity.contentCharset.fold(r)(r.contentType)
     entity match {
@@ -99,7 +94,7 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
 object SttpRequestHttpClient {
 
   private def defaultEc: ExecutionContext = ExecutionContext.global
-  private def defaultSttpBackend: SttpBackend[Future, Nothing] = AsyncHttpClientFutureBackend()
+  private def defaultSttpBackend: SttpBackend[Future, Any] = AsyncHttpClientFutureBackend()
 
   /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
   def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(
