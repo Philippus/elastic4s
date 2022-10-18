@@ -21,7 +21,7 @@ def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.16",
-  crossScalaVersions := Seq("2.12.16", "2.13.8")
+  crossScalaVersions := Seq("2.12.16", "2.13.10")
 )
 
 lazy val warnUnusedImport = Seq(
