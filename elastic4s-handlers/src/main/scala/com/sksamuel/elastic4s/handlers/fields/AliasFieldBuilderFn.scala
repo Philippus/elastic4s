@@ -11,7 +11,7 @@ object AliasFieldBuilderFn {
   def build(field: AliasField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)
-    field.path.foreach(builder.field("path", _))
+    builder.field("path", field.path)
     builder.endObject()
   }
 }
