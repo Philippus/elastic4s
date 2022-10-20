@@ -23,50 +23,61 @@ import com.sksamuel.elastic4s.handlers.task.TaskHandlers
 import com.sksamuel.elastic4s.handlers.termvectors.TermVectorHandlers
 import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.ingest.IngestHandlers
+import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
 
-trait ElasticDsl
-    extends ElasticApi
-    with BulkHandlers
-    with CatHandlers
-    with CountHandlers
-    with ClusterHandlers
-    with DeleteHandlers
-    with ExistsHandlers
-    with ExplainHandlers
-    with GetHandlers
-    with IndexHandlers
-    with IndexAdminHandlers
-    with IndexAliasHandlers
-    with IndexStatsHandlers
-    with IndexTemplateHandlers
-    with IngestHandlers
-    with LocksHandlers
-    with MappingHandlers
-    with NodesHandlers
-    with ReindexHandlers
-    with RoleAdminHandlers
-    with RoleHandlers
-    with RolloverHandlers
-    with SearchHandlers
-    with SearchTemplateHandlers
-    with SearchScrollHandlers
-    with SettingsHandlers
-    with SnapshotHandlers
-    with StoredScriptHandlers
-    with UpdateHandlers
-    with TaskHandlers
-    with TermVectorHandlers
-    with UserAdminHandlers
-    with UserHandlers
-    with ValidateHandlers {
+trait ElasticDslWithoutSearch extends
 
-  implicit class RichRequest[T](t: T) {
-    def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
-    def show(implicit handler: Handler[T, _]): String            = Show[ElasticRequest].show(handler.build(t))
-  }
+ElasticApi
+with BulkHandlers
+with CatHandlers
+with CountHandlers
+with ClusterHandlers
+with DeleteHandlers
+with ExistsHandlers
+with ExplainHandlers
+with GetHandlers
+with IndexHandlers
+with IndexAdminHandlers
+with IndexAliasHandlers
+with IndexStatsHandlers
+with IndexTemplateHandlers
+with IngestHandlers
+with LocksHandlers
+with MappingHandlers
+with NodesHandlers
+with ReindexHandlers
+with RoleAdminHandlers
+with RoleHandlers
+with RolloverHandlers
+with SearchTemplateHandlers
+with SearchScrollHandlers
+with SettingsHandlers
+with SnapshotHandlers
+with StoredScriptHandlers
+with UpdateHandlers
+with TaskHandlers
+with TermVectorHandlers
+with UserAdminHandlers
+with UserHandlers
+with ValidateHandlers {
+
+implicit class RichRequest[T](t: T) {
+  def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
+
+  def show(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
+}
 }
 
-object ElasticDsl extends ElasticDsl
+trait ElasticDsl
+    extends ElasticDslWithoutSearch
+    with SearchHandlers
+
+object ElasticDsl extends ElasticDsl {
+  def withCustomAggregationHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])= new ElasticDslWithoutSearch {
+    implicit val customBaseAggregationHandler = new BaseSearchHandler(customAggregationHandler)
+  }
+}
