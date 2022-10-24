@@ -27,7 +27,7 @@ import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.ingest.IngestHandlers
 import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
-import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers}
+import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers, defaultCustomAggregationHandler}
 
 trait ElasticDslWithoutSearch extends
 
@@ -78,6 +78,8 @@ trait ElasticDsl
 
 object ElasticDsl extends ElasticDsl {
   def withCustomAggregationHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])= new ElasticDslWithoutSearch {
-    implicit val customBaseAggregationHandler = new BaseSearchHandler(customAggregationHandler)
+    implicit val customBaseSearchHandler = new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+
+    implicit val customBaseMultiSearchHandler = new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
   }
 }

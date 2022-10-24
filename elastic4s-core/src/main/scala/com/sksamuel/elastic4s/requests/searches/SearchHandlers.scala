@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, 
 
 trait SearchHandlers {
 
-  implicit object MultiSearchHandler extends Handler[MultiSearchRequest, MultiSearchResponse] {
+  class BaseMultiSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])  extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
     import scala.collection.JavaConverters._
 
@@ -41,12 +41,14 @@ trait SearchHandlers {
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
       request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
-      val body = MultiSearchBuilderFn(request)
+      val body = MultiSearchBuilderFn(request, customAggregationHandler)
       logger.debug("Executing msearch: " + body)
       val entity = HttpEntity(body, "application/x-ndjson")
       ElasticRequest("POST", "/_msearch", params.toMap, entity)
     }
   }
+
+  implicit object MultiSearchHandler extends BaseMultiSearchHandler(defaultCustomAggregationHandler)
 
   class BaseSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) extends Handler[SearchRequest, SearchResponse] {
 

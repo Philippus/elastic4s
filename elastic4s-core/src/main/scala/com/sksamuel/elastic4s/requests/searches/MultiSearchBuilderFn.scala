@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.json.XContentFactory
+import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
+import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 
 object MultiSearchBuilderFn {
 
-  def apply(request: MultiSearchRequest): String = {
+  def apply(request: MultiSearchRequest, customAggregation: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler): String = {
 
     request.searches.flatMap { search =>
       val header = XContentFactory.jsonBuilder()
@@ -26,7 +27,7 @@ object MultiSearchBuilderFn {
       }
       header.endObject()
 
-      val body = search.source.getOrElse(SearchBodyBuilderFn(search).string())
+      val body = search.source.getOrElse(SearchBodyBuilderFn(search, customAggregation).string())
       Seq(header.string(), body)
 
     }.mkString("\n") + "\n"
