@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, FiltersAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, FiltersAggregation, SubAggsBuilderFn}
 
 object FiltersAggregationBuilder {
-  def apply(agg: FiltersAggregation): XContentBuilder = {
+  def apply(agg: FiltersAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 
@@ -18,7 +18,7 @@ object FiltersAggregationBuilder {
 
     builder.rawField("filters", filters)
 
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     AggMetaDataFn(agg, builder)
     builder
   }
