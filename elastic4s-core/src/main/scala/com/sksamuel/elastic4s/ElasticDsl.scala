@@ -78,8 +78,8 @@ trait ElasticDsl
 
 object ElasticDsl extends ElasticDsl {
   def withCustomAggregationHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])= new ElasticDslWithoutSearch {
-    implicit val customBaseSearchHandler = new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+    implicit val customBaseSearchHandler: BaseSearchHandler = new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
 
-    implicit val customBaseMultiSearchHandler = new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+    implicit val customBaseMultiSearchHandler: BaseMultiSearchHandler = new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
   }
 }
