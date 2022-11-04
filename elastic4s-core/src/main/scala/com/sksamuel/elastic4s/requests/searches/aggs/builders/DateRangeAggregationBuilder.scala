@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 import com.sksamuel.elastic4s.{EnumConversions, handlers}
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, DateRangeAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, DateRangeAggregation, SubAggsBuilderFn}
 
 object DateRangeAggregationBuilder {
 
-  def apply(agg: DateRangeAggregation): XContentBuilder = {
+  def apply(agg: DateRangeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
     val builder = XContentFactory.obj().startObject("date_range")
 
@@ -47,7 +47,7 @@ object DateRangeAggregationBuilder {
 
     builder.endObject()
 
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     AggMetaDataFn(agg, builder)
 
     builder

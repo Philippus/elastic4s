@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{SigTermsAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, SigTermsAggregation, SubAggsBuilderFn}
 
 object SigTermsAggregationBuilder {
-  def apply(agg: SigTermsAggregation): XContentBuilder = {
+  def apply(agg: SigTermsAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("significant_terms")
     agg.shardSize.foreach(builder.field("shard_size", _))
     agg.shardMinDocCount.foreach(builder.field("shard_min_doc_count", _))
@@ -38,7 +38,7 @@ object SigTermsAggregationBuilder {
     agg.filterDuplicateText.foreach(builder.field("filter_duplicate_text", _))
     builder.endObject()
 
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     builder.endObject()
   }
 }

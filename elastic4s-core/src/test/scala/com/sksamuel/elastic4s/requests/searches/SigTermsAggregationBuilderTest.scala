@@ -14,7 +14,7 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
       .field("field")
       .backgroundFilter(termQuery("text", "test"))
 
-    builders.SigTermsAggregationBuilder(agg).string shouldBe
+    builders.SigTermsAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"significant_terms":{"field":"field","background_filter":{"term":{"text":{"value":"test"}}}}}"""
   }
 
@@ -22,7 +22,7 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
     val agg = sigTermsAggregation("name")
       .field("field")
       .significanceHeuristic("percentage")
-    builders.SigTermsAggregationBuilder(agg).string shouldBe
+    builders.SigTermsAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"significant_terms":{"field":"field","percentage":{}}}"""
   }
 
@@ -36,7 +36,7 @@ class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
           "background_is_superset" -> false
         )
       )
-    builders.SigTermsAggregationBuilder(agg).string shouldBe
+    builders.SigTermsAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"significant_terms":{"field":"field","mutual_information":{"include_negatives":true,"background_is_superset":false}}}"""
   }
 

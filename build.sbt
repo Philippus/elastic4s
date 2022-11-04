@@ -9,7 +9,7 @@ def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
-def publishVersion = if (isRelease) releaseVersion else "7.17.0." + githubRunNumber + "-SNAPSHOT"
+def publishVersion = if (isRelease) releaseVersion else "8.4.3." + githubRunNumber + "-SNAPSHOT"
 
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
@@ -18,10 +18,10 @@ def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
-val scala2Versions = Seq("2.12.16", "2.13.8")
+val scala2Versions = Seq("2.12.17", "2.13.8")
 val scalaAllVersions = scala2Versions :+ "3.2.0"
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.16",
+  scalaVersion := "2.12.17",
   crossScalaVersions := Nil
 )
 
@@ -333,9 +333,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.18.0" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.18.0" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.18.0" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.19.0" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.19.0" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.19.0" % "test"
     ),
     Test / fork := false,
     Test / parallelExecution := false,

@@ -2,20 +2,19 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
-import com.sksamuel.elastic4s.handlers.script
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.collapse.CollapseBuilderFn
-import com.sksamuel.elastic4s.handlers.searches.{HighlightBuilderFn, queries}
+import com.sksamuel.elastic4s.handlers.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.suggestion.{CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestionBuilderFn}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.AggregationBuilderFn
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggregationBuilderFn}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, TermSuggestion}
 
 object SearchBodyBuilderFn {
 
-  def apply(request: SearchRequest): XContentBuilder = {
+  def apply(request: SearchRequest, customAggregation: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 
@@ -122,7 +121,7 @@ object SearchBodyBuilderFn {
     if (request.aggs.nonEmpty) {
       builder.startObject("aggs")
       request.aggs.foreach { agg =>
-        builder.rawField(agg.name, AggregationBuilderFn(agg))
+        builder.rawField(agg.name, AggregationBuilderFn(agg, customAggregation))
       }
       builder.endObject()
     }
