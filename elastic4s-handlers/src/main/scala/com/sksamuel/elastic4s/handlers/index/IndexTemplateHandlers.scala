@@ -43,7 +43,7 @@ trait IndexTemplateHandlers {
     override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = "/_index_template/" + request.name
       val body = CreateIndexTemplateBodyFn(request)
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
       ElasticRequest("PUT", endpoint, entity)
     }
   }

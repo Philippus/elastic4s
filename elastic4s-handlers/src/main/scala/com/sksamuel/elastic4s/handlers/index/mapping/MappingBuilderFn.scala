@@ -22,11 +22,11 @@ object MappingBuilderFn {
     d.rawSource match {
       //user raw source if provided, ignore other mapping settings
       case Some(rs) =>
-        val builder = XContentFactory.jsonBuilder
+        val builder = XContentFactory.jsonBuilder()
         builder.rawField(tpe, XContentFactory.parse(rs))
         builder
       case None =>
-        val builder = XContentFactory.jsonBuilder
+        val builder = XContentFactory.jsonBuilder()
         builder.startObject(tpe)
         build(d, builder)
         builder.endObject()

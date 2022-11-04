@@ -20,7 +20,7 @@ trait RoleAdminHandlers {
     override def build(request: CreateOrUpdateRoleRequest): ElasticRequest = {
       val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
 
-      val body = CreateOrUpdateRoleContentBuilder(request).string()
+      val body = CreateOrUpdateRoleContentBuilder(request).string
       val entity = HttpEntity(body, "application/json")
       val method = request.action match {
         case CreateRole => "POST"

@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, GeoBoundsAg
 object GeoBoundsAggregationBuilder {
   def apply(agg: GeoBoundsAggregation): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("geo_bounds")
+    val builder = XContentFactory.obj().startObject("geo_bounds")
 
     agg.field.foreach(builder.field("field", _))
     agg.format.foreach(builder.field("format", _))

@@ -63,7 +63,7 @@ trait UpdateHandlers {
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       val body = UpdateBuilderFn(request)
-      val entity = HttpEntity(body.string(), "application/json")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
@@ -90,8 +90,8 @@ trait UpdateHandlers {
       request.slices.foreach(params.put("slices", _))
 
       val body = UpdateByQueryBodyFn(request)
-      logger.debug(s"Update by query ${body.string()}")
-      val entity = HttpEntity(body.string(), "application/json")
+      logger.debug(s"Update by query ${body.string}")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }

@@ -28,7 +28,7 @@ object ScriptSortBuilderFn {
     } else if (scriptSort.nestedPath.nonEmpty || scriptSort.nestedFilter.nonEmpty) {
       builder.startObject("nested")
       scriptSort.nestedPath.foreach(builder.field("path", _))
-      scriptSort.nestedFilter.map(f => queries.QueryBuilderFn(f).string()).foreach(builder.rawField("filter", _))
+      scriptSort.nestedFilter.map(f => queries.QueryBuilderFn(f).string).foreach(builder.rawField("filter", _))
       builder.endObject()
     }
 

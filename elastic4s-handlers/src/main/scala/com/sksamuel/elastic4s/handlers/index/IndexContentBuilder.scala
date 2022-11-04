@@ -10,6 +10,6 @@ object IndexContentBuilder {
       case None =>
         val source = XContentFactory.jsonBuilder()
         request.fields.foreach(XContentFieldValueWriter(source, _))
-        source.endObject().string()
+        source.endObject().string
     }
 }

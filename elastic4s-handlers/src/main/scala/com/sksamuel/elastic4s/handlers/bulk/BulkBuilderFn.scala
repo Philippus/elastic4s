@@ -73,7 +73,7 @@ object BulkBuilderFn {
         builder.endObject()
 
         rows += builder.string
-        rows += UpdateBuilderFn(update).string()
+        rows += UpdateBuilderFn(update).string
     }
     rows.result()
   }

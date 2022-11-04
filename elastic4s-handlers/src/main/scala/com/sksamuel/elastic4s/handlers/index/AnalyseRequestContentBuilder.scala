@@ -43,7 +43,7 @@ object AnalyseRequestContentBuilder {
       simpleFieldValue("attributes", request.attributes)
     }
 
-    source.endObject().string()
+    source.endObject().string
   }
 
 }

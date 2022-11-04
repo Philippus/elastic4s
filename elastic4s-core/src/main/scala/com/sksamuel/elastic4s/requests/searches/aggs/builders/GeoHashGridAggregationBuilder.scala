@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMe
 object GeoHashGridAggregationBuilder {
   def apply(agg: GeoHashGridAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("geohash_grid")
+    val builder = XContentFactory.obj().startObject("geohash_grid")
 
     agg.field.foreach(builder.field("field", _))
     agg.precision.foreach(builder.field("precision", _))

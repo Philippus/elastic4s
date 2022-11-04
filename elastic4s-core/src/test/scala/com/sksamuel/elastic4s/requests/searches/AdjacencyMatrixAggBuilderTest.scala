@@ -21,7 +21,7 @@ class AdjacencyMatrixAggBuilderTest extends AnyFunSuite with Matchers {
         )
       }
 
-    SearchBodyBuilderFn(searchQuery).string() shouldBe
+    SearchBodyBuilderFn(searchQuery).string shouldBe
       """{"size":0,"aggs":{"interactions":{"adjacency_matrix":{"filters":{"grpA":{"terms":{"accounts":["hillary","sidney"]}},"grpB":{"terms":{"accounts":["donald","mitt"]}},"grpC":{"terms":{"accounts":["vladimir","nigel"]}}}}}}}""".stripMargin
   }
 

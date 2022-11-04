@@ -13,21 +13,21 @@ class PutPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
   it should "build a pipeline request with a version and no processors" in {
     val req = PutPipelineRequest("empty", "Do nothing", Seq.empty, Some(1))
     val correctJson =
-      XContentFactory.parse("""{"description":"Do nothing","version":1,"processors":[]}""").string()
+      XContentFactory.parse("""{"description":"Do nothing","version":1,"processors":[]}""").string
     build(req) shouldBe ElasticRequest("PUT", "/_ingest/pipeline/empty", HttpEntity(correctJson))
   }
 
   it should "build a pipeline request with a geoip processor using the RawProcessor case class" in {
     val req = PutPipelineRequest("geoip", "Add geoip info", CustomProcessor("geoip", "{\"field\": \"ip\"}"))
     val correctJson =
-      XContentFactory.parse("""{"description":"Add geoip info","processors":[{"geoip":{"field": "ip"}}]}""").string()
+      XContentFactory.parse("""{"description":"Add geoip info","processors":[{"geoip":{"field": "ip"}}]}""").string
     build(req) shouldBe ElasticRequest("PUT", "/_ingest/pipeline/geoip", HttpEntity(correctJson))
   }
 
   it should "build a pipeline request with a geoip processor using the strongly-typed case class" in {
     val proc = GeoIPProcessor("ip", Some("geo"), Some("GeoLite2-Country.mmdb"))
     val req = PutPipelineRequest("geoip", "Add geoip info", proc)
-    val correctJson = XContentFactory.parse("""{"description":"Add geoip info","processors":[{"geoip":{"field":"ip","target_field":"geo","database_file":"GeoLite2-Country.mmdb"}}]}""").string()
+    val correctJson = XContentFactory.parse("""{"description":"Add geoip info","processors":[{"geoip":{"field":"ip","target_field":"geo","database_file":"GeoLite2-Country.mmdb"}}]}""").string
 
     build(req) shouldBe ElasticRequest("PUT", "/_ingest/pipeline/geoip", HttpEntity(correctJson))
   }
@@ -36,7 +36,7 @@ class PutPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
   it should "build a pipeline request with a langdetect processor" in {
     val req = PutPipelineRequest("langdetect-pipeline", "A pipeline to do whatever",
       CustomProcessor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }"))
-    val correctJson = XContentFactory.parse("""{"description":"A pipeline to do whatever","processors":[{"langdetect":{"field": "my_field", "target_field": "language" }}]}""").string()
+    val correctJson = XContentFactory.parse("""{"description":"A pipeline to do whatever","processors":[{"langdetect":{"field": "my_field", "target_field": "language" }}]}""").string
     build(req) shouldBe ElasticRequest("PUT", "/_ingest/pipeline/langdetect-pipeline", HttpEntity(correctJson))
   }
 
@@ -47,7 +47,7 @@ class PutPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
         CustomProcessor("langdetect", "{\"field\": \"my_field\", \"target_field\": \"language\" }")
       ))
     val correctJson = XContentFactory.parse(
-      """{"description":"A pipeline with multiple processors","processors":[{"geoip":{"field":"ip"}},{"langdetect":{"field": "my_field", "target_field": "language" }}]}""").string()
+      """{"description":"A pipeline with multiple processors","processors":[{"geoip":{"field":"ip"}},{"langdetect":{"field": "my_field", "target_field": "language" }}]}""").string
     build(req) shouldBe ElasticRequest("PUT", "/_ingest/pipeline/multi-pipeline", HttpEntity(correctJson))
   }
 

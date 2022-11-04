@@ -53,8 +53,8 @@ trait DeleteHandlers {
       request.slices.map(_.toString).foreach(params.put("slices", _))
 
       val body = DeleteByQueryBodyFn(request)
-      logger.debug(s"Delete by query ${body.string()}")
-      val entity = HttpEntity(body.string(), "application/json")
+      logger.debug(s"Delete by query ${body.string}")
+      val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }

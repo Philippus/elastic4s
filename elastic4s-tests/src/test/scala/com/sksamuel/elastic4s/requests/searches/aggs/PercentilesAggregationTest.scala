@@ -58,15 +58,15 @@ class PercentilesAggregationTest extends AnyFreeSpec with DockerTests with Match
       val agg = resp.aggs.percentiles("agg1")
       agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2062.8)
     }
-  "should support keyed=false" in {
-  val resp = client.execute {
-  search ("percentilesagg").matchAllQuery ().aggs {
-  percentilesAgg ("agg1", "height").percents (50, 80).keyed (false)
-}
-}.await.result
-  resp.totalHits shouldBe 8
-  val agg = resp.aggs.percentiles ("agg1")
-  agg.values shouldBe Map ("50.0" -> 1707.5, "80.0" -> 2062.8)
-}
+    "should support keyed=false" in {
+      val resp = client.execute {
+        search("percentilesagg").matchAllQuery().aggs {
+          percentilesAgg("agg1", "height").percents(50, 80).keyed(false)
+        }
+      }.await.result
+      resp.totalHits shouldBe 8
+      val agg = resp.aggs.percentiles("agg1")
+      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2062.8)
+    }
   }
 }

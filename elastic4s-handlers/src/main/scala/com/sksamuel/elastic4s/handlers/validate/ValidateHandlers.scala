@@ -28,7 +28,7 @@ trait ValidateHandlers {
       request.analyzeWildcard.map(_.toString).foreach(params.put("analyze_wildcard", _))
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
 
-      val body   = ValidateBodyFn(request).string()
+      val body   = ValidateBodyFn(request).string
       val entity = HttpEntity(body, "application/json")
 
       ElasticRequest("GET", endpoint, params.toMap, entity)

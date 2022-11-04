@@ -15,7 +15,7 @@ class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
       .range(50, 100)
       .range(100, 1000)
 
-    RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string() shouldBe
+    RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"range":{"field":"price","ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":100.0},{"from":100.0,"to":1000.0}]}}"""
   }
 
@@ -26,7 +26,7 @@ class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
       .range(50, 100)
       .unboundedFrom(100)
 
-    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string() shouldBe
+    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"range":{"field":"price","ranges":[{"to":50.0},{"from":50.0,"to":100.0},{"from":100.0}]}}"""
   }
 
@@ -37,7 +37,7 @@ class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
       .range("average", 50, 100)
       .unboundedFrom("expensive", 100)
 
-    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string() shouldBe
+    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"range":{"field":"price","ranges":[{"key":"cheap","to":50.0},{"key":"average","from":50.0,"to":100.0},{"key":"expensive","from":100.0}]}}"""
   }
 
@@ -48,7 +48,7 @@ class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
       .range(0, 50)
       .range(50, 1000)
 
-    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string() shouldBe
+    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"range":{"field":"price","script":{"lang":"painless","source":"doc['price'].value"},"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
   }
 
@@ -59,7 +59,7 @@ class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
       .range(50, 1000)
       .keyed(true)
 
-    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string() shouldBe
+    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"range":{"field":"price","keyed":true,"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
   }
 
@@ -70,7 +70,7 @@ class RangeAggregationBuilderTest extends AnyFunSuite with Matchers {
       .range(0, 50)
       .range(50, 1000)
 
-    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string() shouldBe
+    builders.RangeAggregationBuilder(agg, defaultCustomAggregationHandler).string shouldBe
       """{"range":{"field":"price","missing":0,"ranges":[{"from":0.0,"to":50.0},{"from":50.0,"to":1000.0}]}}"""
   }
 

@@ -15,7 +15,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
     val queryBody = RankFeatureQueryBuilderFn(query)
 
     Then("query should have right fields")
-    queryBody.string() shouldEqual rankFeatureQueryWithSigmoid
+    queryBody.string shouldEqual rankFeatureQueryWithSigmoid
   }
 
   def rankFeatureQueryWithSigmoid: String =
@@ -41,7 +41,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       val queryBody = RankFeatureQueryBuilderFn(query)
 
       Then("query should have right fields")
-      queryBody.string() shouldEqual rankFeatureQueryWithLog
+      queryBody.string shouldEqual rankFeatureQueryWithLog
     }
 
     def rankFeatureQueryWithLog: String =
@@ -66,7 +66,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       val queryBody = RankFeatureQueryBuilderFn(query)
 
       Then("query should have right fields")
-      queryBody.string() shouldEqual rankFeatureQueryWithSaturation
+      queryBody.string shouldEqual rankFeatureQueryWithSaturation
     }
 
     def rankFeatureQueryWithSaturation: String =
@@ -88,7 +88,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
     val queryBody = RankFeatureQueryBuilderFn(query)
 
     Then("query should have right fields")
-    queryBody.string() shouldEqual minimalRankFeatureQuery
+    queryBody.string shouldEqual minimalRankFeatureQuery
   }
 
   def minimalRankFeatureQuery: String =

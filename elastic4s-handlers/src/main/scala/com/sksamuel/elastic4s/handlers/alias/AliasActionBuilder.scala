@@ -11,8 +11,8 @@ object AliasActionBuilder {
 
     val actionsArray = r.actions
       .map {
-        case addAction: AddAliasActionRequest => buildAddAction(addAction).string()
-        case removeAction: RemoveAliasAction => buildRemoveAction(removeAction).string()
+        case addAction: AddAliasActionRequest => buildAddAction(addAction).string
+        case removeAction: RemoveAliasAction => buildRemoveAction(removeAction).string
       }
       .mkString(",")
 

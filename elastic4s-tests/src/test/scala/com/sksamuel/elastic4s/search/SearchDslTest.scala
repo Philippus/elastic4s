@@ -192,7 +192,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate json for a match all query" in {
     val req = search("*") limit 5 query {
-      matchAllQuery boost 4
+      matchAllQuery() boost 4
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_all.json")
   }
@@ -856,7 +856,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for script fields" in {
     val req =
-      search("sesportfolio") query matchAllQuery scriptfields(
+      search("sesportfolio") query matchAllQuery() scriptfields(
         scriptField("balance", script("portfolioscript") lang "native" params Map("fieldName" -> "rate_of_return")),
         scriptField("date", script("doc['date'].value") lang "groovy")
     )
@@ -968,7 +968,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   }
 
   it should "generate json for docvalue fields" in {
-    val req = search("music").matchAllQuery docValues ("field1", "field2")
+    val req = search("music").matchAllQuery() docValues ("field1", "field2")
     req.request.entity.get.get should matchJsonResource("/json/search/search_doc_values.json")
   }
 }

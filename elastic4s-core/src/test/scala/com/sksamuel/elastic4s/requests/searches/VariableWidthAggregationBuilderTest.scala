@@ -10,7 +10,7 @@ class VariableWidthAggregationBuilderTest extends AnyFunSuite with Matchers {
     val search = SearchRequest("myindex").aggs(
       VariableWidthAggregation("score_histogram", "score")
     )
-    SearchBodyBuilderFn(search).string() shouldBe
+    SearchBodyBuilderFn(search).string shouldBe
       """{"aggs":{"score_histogram":{"variable_width_histogram":{"field":"score"}}}}"""
   }
 
@@ -18,7 +18,7 @@ class VariableWidthAggregationBuilderTest extends AnyFunSuite with Matchers {
     val search = SearchRequest("myindex").aggs(
       VariableWidthAggregation("score_histogram", "score", shardSize = Some(500), initialBuffer = Some(100000))
     )
-    SearchBodyBuilderFn(search).string() shouldBe
+    SearchBodyBuilderFn(search).string shouldBe
       """{"aggs":{"score_histogram":{"variable_width_histogram":{"field":"score","shard_size":500,"initial_buffer":100000}}}}"""
   }
 }

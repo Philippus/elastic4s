@@ -9,7 +9,7 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("it should process geohash field") {
     val query = geoBoxQuery("location").withGeohash("a", "b")
-    GeoBoundingBoxQueryBodyFn(query).string() shouldBe
+    GeoBoundingBoxQueryBodyFn(query).string shouldBe
       """{"geo_bounding_box":{"location":{"top_left":"a","bottom_right":"b"}}}"""
   }
 }

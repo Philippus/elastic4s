@@ -46,7 +46,7 @@ class ScriptTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
           scriptField("a", Script("doc['zone'].value * params.fare") params Map("fare" -> 4.50))
         )
       }.await.result
-      result.hits.hits.head.storedField("a").value shouldBe 9.0
+      result.hits.hits.head.storedField("a").value.asInstanceOf[Double] shouldBe 9.0
     }
   }
 }

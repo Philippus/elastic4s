@@ -16,7 +16,7 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
       highlight("text")
       .matchedFields("text", "text.ngram", "text.japanese")
     }
-    SearchBodyBuilderFn(request).string() shouldBe
+    SearchBodyBuilderFn(request).string shouldBe
       """{"highlight":{"fields":{"text":{"matched_fields":["text","text.ngram","text.japanese"]}}}}"""
   }
   test("highlight with 'highlighterType' generates 'type' field.") {
@@ -24,7 +24,7 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
       highlight("text")
         .highlighterType("fvh")
     }
-    SearchBodyBuilderFn(request).string() shouldBe
+    SearchBodyBuilderFn(request).string shouldBe
       """{"highlight":{"fields":{"text":{"type":"fvh"}}}}"""
   }
   test("highlight with 'boundaryChars' generates 'boundary_chars' field.") {
@@ -32,7 +32,7 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
       highlight("text")
         .boundaryChars("test")
     }
-    SearchBodyBuilderFn(request).string() shouldBe
+    SearchBodyBuilderFn(request).string shouldBe
       """{"highlight":{"fields":{"text":{"boundary_chars":"test"}}}}"""
   }
   test("geo distance query with sort") {

@@ -27,5 +27,5 @@ case class InnerHit(index: String,
   }
 
   // todo put back ?
-//  def sourceAsString: String = SourceAsContentBuilder(source).string()
+//  def sourceAsString: String = SourceAsContentBuilder(source).string
 }

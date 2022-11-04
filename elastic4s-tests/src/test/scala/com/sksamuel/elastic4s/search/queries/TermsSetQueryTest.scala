@@ -43,7 +43,7 @@ class TermsSetQueryTest
     }.await.result
     val map = resp.hits.hits.head.sourceAsMap
     map("names") shouldBe List("nelson", "edmure", "john")
-    map("required_matches") shouldBe 2
+    map("required_matches").asInstanceOf[Int] shouldBe 2
   }
 
   // Test: Satisfying the requirements only one 'minimum should match' field (second one)
@@ -53,7 +53,7 @@ class TermsSetQueryTest
     }.await.result
     val map = resp.hits.hits.head.sourceAsMap
     map("names") shouldBe List("umber", "rudolfus", "byron")
-    map("required_matches") shouldBe 1
+    map("required_matches").asInstanceOf[Int] shouldBe 1
   }
 
   // Test: Satisfying the requirements of both 'minimum should match' fields
@@ -62,9 +62,9 @@ class TermsSetQueryTest
       search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "rudolfus", "christofer"), "required_matches")
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson", "edmure", "john")
-    resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
+    resp.hits.hits.head.sourceAsMap("required_matches").asInstanceOf[Int] shouldBe 2
     resp.hits.hits.apply(1).sourceAsMap("names") shouldBe List("umber", "rudolfus", "byron")
-    resp.hits.hits.apply(1).sourceAsMap("required_matches") shouldBe 1
+    resp.hits.hits.apply(1).sourceAsMap("required_matches").asInstanceOf[Int] shouldBe 1
   }
 
   // Test: Satisfying the requirements of the 'minimum should match' script for one document (first one)
@@ -73,7 +73,7 @@ class TermsSetQueryTest
       search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson","edmure","john")
-    resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
+    resp.hits.hits.head.sourceAsMap("required_matches").asInstanceOf[Int] shouldBe 2
   }
 
   // Test: Satisfying the requirements of the 'minimum should match' script for both documents
@@ -82,8 +82,8 @@ class TermsSetQueryTest
       search("randompeople") query termsSetQuery("names", Set("nelson", "edmure", "byron", "pete"), script("Math.min(params.num_terms,doc['required_matches'].value)"))
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson","edmure","john")
-    resp.hits.hits.head.sourceAsMap("required_matches") shouldBe 2
+    resp.hits.hits.head.sourceAsMap("required_matches").asInstanceOf[Int] shouldBe 2
     resp.hits.hits.apply(1).sourceAsMap("names") shouldBe List("umber","rudolfus","byron")
-    resp.hits.hits.apply(1).sourceAsMap("required_matches") shouldBe 1
+    resp.hits.hits.apply(1).sourceAsMap("required_matches").asInstanceOf[Int] shouldBe 1
   }
 }

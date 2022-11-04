@@ -118,7 +118,7 @@ class BulkActor[T](client: ElasticClient,
   private var flushAfterScheduler: Option[Cancellable] = None
 
   private def resetFlushAfterScheduler(): Unit = {
-    flushAfterScheduler.foreach(_.cancel)
+    flushAfterScheduler.foreach(_.cancel())
     flushAfterScheduler = config.flushAfter.map { interval =>
       system.scheduler.scheduleOnce(interval, self, BulkActor.ForceIndexing)
     }
@@ -186,8 +186,8 @@ class BulkActor[T](client: ElasticClient,
 
   // Stops the schedulers if they exist and invoke final functions
   override def postStop(): Unit = {
-    flushIntervalScheduler.map(_.cancel)
-    flushAfterScheduler.map(_.cancel)
+    flushIntervalScheduler.map(_.cancel())
+    flushAfterScheduler.map(_.cancel())
     if (failed == 0)
       config.successFn()
     config.completionFn()
@@ -268,7 +268,7 @@ class BulkActor[T](client: ElasticClient,
     buffer.clear
 
     // buffer is now empty so no point keeping a scheduled flush after operation
-    flushAfterScheduler.foreach(_.cancel)
+    flushAfterScheduler.foreach(_.cancel())
     flushAfterScheduler = None
   }
 }

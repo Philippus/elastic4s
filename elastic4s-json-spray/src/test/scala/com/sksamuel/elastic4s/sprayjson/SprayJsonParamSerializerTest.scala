@@ -15,7 +15,7 @@ class SprayJsonParamSerializerTest extends AnyWordSpec with Matchers {
       case class Foo(bar: Int)
 
       object FooJsonProtocol extends DefaultJsonProtocol {
-        implicit val fooJsonFormat = jsonFormat1(Foo)
+        implicit val fooJsonFormat: RootJsonFormat[Foo] = jsonFormat1(Foo)
       }
 
       import FooJsonProtocol._

@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s
 
+import com.fasterxml.jackson.module.scala.JavaTypeable
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.duration.{Duration, _}
@@ -32,7 +33,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
                                 executor: Executor[F],
                                 functor: Functor[F],
                                 handler: Handler[T, U],
-                                manifest: Manifest[U],
+                                javaTypeable: JavaTypeable[U],
                                 options: CommonRequestOptions): F[Response[U]] = {
     val request = handler.build(t)
 

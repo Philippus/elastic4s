@@ -9,7 +9,7 @@ object DateRangeAggregationBuilder {
 
   def apply(agg: DateRangeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("date_range")
+    val builder = XContentFactory.obj().startObject("date_range")
 
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.autofield("missing", _))

@@ -26,7 +26,7 @@ class TextFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
     )
 
     val jsonStringValue = """{"type":"text","analyzer":"bengali","boost":1.2,"copy_to":["q","er"],"index":true,"norms":true,"store":true,"fielddata":true,"position_increment_gap":3,"index_options":"freqs","search_analyzer":"norwegian","search_quote_analyzer":"english","similarity":"Classic1"}"""
-    ElasticFieldBuilderFn(field).string() shouldBe jsonStringValue
+    ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
     ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonStringValue)) shouldBe (field)
   }
 }

@@ -37,7 +37,7 @@ case class SearchResponse(
   def nonEmpty: Boolean = hits.nonEmpty
 
   lazy val aggsAsContentBuilder: XContentBuilder = SourceAsContentBuilder(aggregationsAsMap)
-  lazy val aggregationsAsString: String = aggsAsContentBuilder.string()
+  lazy val aggregationsAsString: String = aggsAsContentBuilder.string
   def aggs: Aggregations = aggregations
   def aggregations: Aggregations = Aggregations(aggregationsAsMap)
 

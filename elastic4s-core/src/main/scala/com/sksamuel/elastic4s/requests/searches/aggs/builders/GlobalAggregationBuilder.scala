@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMe
 object GlobalAggregationBuilder {
   def apply(agg: GlobalAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("global")
+    val builder = XContentFactory.obj().startObject("global")
 
     builder.endObject()
 

@@ -26,6 +26,6 @@ class CreateRoleApiTest extends AnyFlatSpec with JsonSugar with Matchers with On
 				Seq("data:read/*")
 			))
 		)
-		CreateOrUpdateRoleContentBuilder(req).string() should matchJsonResource("/json/createrole/createrole.json")
+		CreateOrUpdateRoleContentBuilder(req).string should matchJsonResource("/json/createrole/createrole.json")
 	}
 }

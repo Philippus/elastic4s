@@ -54,6 +54,6 @@ package object circe {
     "No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance "
   )
   implicit def paramSerializerWithCirce[T](implicit encoder: Encoder[T],
-                                     printer: Json => String = Printer.noSpaces.print): ParamSerializer[T] =
+                                           printer: Json => String = Printer.noSpaces.print): ParamSerializer[T] =
     (t: T) => printer(encoder(t))
 }

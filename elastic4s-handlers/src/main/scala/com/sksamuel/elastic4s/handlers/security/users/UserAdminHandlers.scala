@@ -20,7 +20,7 @@ trait UserAdminHandlers {
     override def build(request: CreateOrUpdateUserRequest): ElasticRequest = {
       val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
 
-      val body = CreateOrUpdateUserContentBuilder(request).string()
+      val body = CreateOrUpdateUserContentBuilder(request).string
       val entity = HttpEntity(body, "application/json")
       val method = request.action match {
         case CreateUser => "POST"
@@ -37,7 +37,7 @@ trait UserAdminHandlers {
         case Some(n) => USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(n) + "/_password"
         case None => USER_BASE_PATH + "_password"
       }
-      val body = ChangePasswordContentBuilder(request).string()
+      val body = ChangePasswordContentBuilder(request).string
       val entity = HttpEntity(body, "application/json")
       ElasticRequest("POST", endpoint, entity)
     }

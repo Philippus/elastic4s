@@ -18,7 +18,7 @@ trait AnalyzerFilterDefinition {
   def filterType: String
   protected[elastic4s] def build(source: XContentBuilder): Unit
   def json: XContentBuilder = {
-    val builder = XContentFactory.jsonBuilder
+    val builder = XContentFactory.jsonBuilder()
     builder.field("type", filterType)
     build(builder)
     builder.endObject()

@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMe
 object RangeAggregationBuilder {
   def apply(agg: RangeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
-    val builder = XContentFactory.obj.startObject("range")
+    val builder = XContentFactory.obj().startObject("range")
 
     agg.field.foreach(builder.field("field", _))
     agg.missing.foreach(builder.autofield("missing", _))

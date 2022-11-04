@@ -17,13 +17,13 @@ class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with Before
     }
   }
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     client.execute {
       deleteIndex("testindex")
     }.unsafeRun
   }
 
-  override def afterAll: Unit = {
+  override def afterAll(): Unit = {
     client.execute {
       deleteIndex("testindex")
     }.unsafeRun
@@ -33,7 +33,7 @@ class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with Before
     val r = client.execute {
       indexInto("testindex").doc("""{ "text":"Buna ziua!" }""")
     }.unsafeRun
-    r shouldBe 'right
+    r shouldBe Symbol("right")
     r.right.get.result.result shouldBe "created"
   }
 

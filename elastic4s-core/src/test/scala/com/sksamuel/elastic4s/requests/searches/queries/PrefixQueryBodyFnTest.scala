@@ -11,7 +11,7 @@ class PrefixQueryBodyFnTest extends AnyFunSuite with Matchers {
       .boost(1.2)
       .queryName("myquery")
       .caseInsensitive(true)
-    term.PrefixQueryBodyFn(q).string() shouldBe
+    term.PrefixQueryBodyFn(q).string shouldBe
       """{"prefix":{"mysearch":{"value":"starts","boost":1.2,"_name":"myquery","case_insensitive":true}}}"""
   }
 }

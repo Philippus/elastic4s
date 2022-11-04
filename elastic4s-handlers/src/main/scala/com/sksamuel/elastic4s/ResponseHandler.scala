@@ -1,8 +1,10 @@
 package com.sksamuel.elastic4s
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
+import com.fasterxml.jackson.databind.`type`.TypeFactory
+import com.fasterxml.jackson.module.scala.JavaTypeable
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
+import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import org.slf4j.{Logger, LoggerFactory}
 
 trait ResponseHandler[U] {
@@ -28,26 +30,26 @@ object ResponseHandler {
 
   def json(entity: HttpEntity.StringEntity): JsonNode = fromEntity[JsonNode](entity)
 
-  def fromNode[U: Manifest](node: JsonNode): U = {
-    logger.debug(s"Attempting to unmarshall json node to ${manifest.runtimeClass.getName}")
+  def fromNode[U: JavaTypeable](node: JsonNode): U = {
+    logger.debug(s"Attempting to unmarshall json node to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}")
     JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
   }
 
-  def fromResponse[U: Manifest](response: HttpResponse): U =
+  def fromResponse[U: JavaTypeable](response: HttpResponse): U =
     fromEntity(response.entity.getOrError("No entity defined but was expected"))
 
-  def fromEntity[U: Manifest](entity: HttpEntity.StringEntity): U = {
-    logger.debug(s"Attempting to unmarshall response to ${manifest.runtimeClass.getName}")
+  def fromEntity[U: JavaTypeable](entity: HttpEntity.StringEntity): U = {
+    logger.debug(s"Attempting to unmarshall response to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}")
     logger.debug(entity.content)
     JacksonSupport.mapper.readValue[U](entity.content)
   }
 
-  def default[U: Manifest] = new DefaultResponseHandler[U]
-  def failure404[U: Manifest] = new NotFound404ResponseHandler[U]
+  def default[U: JavaTypeable] = new DefaultResponseHandler[U]
+  def failure404[U: JavaTypeable] = new NotFound404ResponseHandler[U]
 }
 
 // standard response handler, 200-204s are ok, and everything else is marhalled into an error
-class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
+class DefaultResponseHandler[U: JavaTypeable] extends ResponseHandler[U] {
   self =>
 
   override def handle(response: HttpResponse): Either[ElasticError, U] = response.statusCode match {
@@ -59,7 +61,7 @@ class DefaultResponseHandler[U: Manifest] extends ResponseHandler[U] {
   }
 }
 
-class NotFound404ResponseHandler[U: Manifest] extends DefaultResponseHandler[U] {
+class NotFound404ResponseHandler[U: JavaTypeable] extends DefaultResponseHandler[U] {
   override def handle(response: HttpResponse): Either[ElasticError, U] =
     response.statusCode match {
       case 404 | 500 => sys.error(response.toString)

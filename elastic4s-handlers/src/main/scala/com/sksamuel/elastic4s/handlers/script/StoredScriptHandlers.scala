@@ -37,7 +37,7 @@ trait StoredScriptHandlers {
       builder.field("source", request.script.source)
       builder.endObject()
 
-      ElasticRequest("PUT", endpoint, HttpEntity(builder.string()))
+      ElasticRequest("PUT", endpoint, HttpEntity(builder.string))
     }
   }
 }

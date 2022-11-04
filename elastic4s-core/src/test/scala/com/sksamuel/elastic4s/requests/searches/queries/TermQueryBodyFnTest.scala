@@ -12,7 +12,7 @@ class TermQueryBodyFnTest extends AnyFunSuite with Matchers {
       .boost(1.2)
       .queryName("myquery")
       .caseInsensitive(true)
-    term.TermQueryBodyFn(q).string() shouldBe
+    term.TermQueryBodyFn(q).string shouldBe
       """{"term":{"mysearch":{"boost":1.2,"_name":"myquery","value":"myvalue","case_insensitive":true}}}"""
   }
 }

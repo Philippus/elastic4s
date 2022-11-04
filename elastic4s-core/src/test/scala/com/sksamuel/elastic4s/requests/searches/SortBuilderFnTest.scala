@@ -24,7 +24,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
       nestedFilter = Some(RangeQuery(field = "parent.child", gte = Some(21L)))
     )
 
-    FieldSortBuilderFn(fieldSort).string() shouldBe
+    FieldSortBuilderFn(fieldSort).string shouldBe
       """{"parent.child.age":{"mode":"min","order":"asc","nested":{"path":"parent","filter":{"range":{"parent.child":{"gte":21}}}}}}"""
   }
 
@@ -37,7 +37,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
           path = Some("parent.child"),
           filter = Some(MatchQuery("parent.child.name", "matt"))))))
 
-    FieldSortBuilderFn(fieldSort).string() should matchJson(
+    FieldSortBuilderFn(fieldSort).string should matchJson(
       """{
         |         "parent.child.age" : {
         |            "mode" :  "min",
@@ -65,7 +65,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
   test("field sort builder should support numeric_type option") {
     val fieldSort = FieldSort("field").numericType("double")
 
-    FieldSortBuilderFn(fieldSort).string() shouldBe
+    FieldSortBuilderFn(fieldSort).string shouldBe
       """{"field":{"order":"asc","numeric_type":"double"}}""".stripMargin
   }
 
@@ -73,7 +73,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
     val geoDistanceSort = GeoDistanceSort(field = "pin.location", points = Seq(GeoPoint(40D, -70D)))
       .ignoreUnmapped(true)
 
-    GeoDistanceSortBuilderFn(geoDistanceSort).string() shouldBe
+    GeoDistanceSortBuilderFn(geoDistanceSort).string shouldBe
       """{"_geo_distance":{"pin.location":[[-70.0,40.0]],"ignore_unmapped":true}}"""
   }
 
@@ -83,7 +83,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
       points = Seq(GeoPoint(43.65435, -79.38871))
     )
 
-    SortBuilderFn(sort).string() shouldBe
+    SortBuilderFn(sort).string shouldBe
       """{"_geo_distance":{"location":[[-79.38871,43.65435]]}}"""
   }
 
@@ -94,7 +94,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
       unit = Some(DistanceUnit.Kilometers)
     )
 
-    SortBuilderFn(sort).string() shouldBe
+    SortBuilderFn(sort).string shouldBe
       """{"_geo_distance":{"location":[[-79.38871,43.65435]],"unit":"km"}}"""
   }
 
@@ -111,7 +111,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
       .typed(ScriptSortType.Number)
       .order(SortOrder.Desc)
       .nested(nestedSort().path("foo.bar").filter(matchQuery("foo.bar", "foo")))
-    SortBuilderFn(request).string() shouldBe
+    SortBuilderFn(request).string shouldBe
       """{"_script":{"script":{"source":"dummy script","lang":"painless","params":{"nump":10.2,"stringp":"ciao","boolp":true}},"type":"number","order":"desc","nested":{"path":"foo.bar","filter":{"match":{"foo.bar":{"query":"foo"}}}}}}"""
   }
 }
