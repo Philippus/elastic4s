@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, PercentilesAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, PercentilesAggregation, SubAggsBuilderFn}
 
 object PercentilesAggregationBuilder {
-  def apply(agg: PercentilesAggregation): XContentBuilder = {
+  def apply(agg: PercentilesAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("percentiles")
@@ -32,7 +32,7 @@ object PercentilesAggregationBuilder {
 
     agg.missing.map(_.toString).foreach(builder.field("missing", _))
 
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     AggMetaDataFn(agg, builder)
     builder.endObject()
   }
