@@ -3,18 +3,18 @@ import sbt._
 
 object Dependencies {
   val AkkaHttpVersion                = "10.2.10"
-  val AkkaVersion                    = "2.6.19"
+  val AkkaVersion                    = "2.6.20"
   val CatsEffect2Version             = "2.5.5"
   val CatsEffectVersion              = "3.2.8"
   val CatsVersion                    = "2.0.0"
-  val CirceVersion                   = "0.14.2"
+  val CirceVersion                   = "0.14.3"
   val CommonsIoVersion               = "2.11.0"
-  val ElasticsearchVersion           = "8.4.1"
+  val ElasticsearchVersion           = "8.4.3"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.13.4"
-  val Json4sVersion                  = "4.0.5"
+  val Json4sVersion                  = "4.0.6"
   val Log4jVersion                   = "2.15.0"
-  val MockitoVersion                 = "4.8.0"
+  val MockitoVersion                 = "4.8.1"
   val MonixVersion                   = "3.4.1"
   val PlayJsonVersion                = "2.9.3"
   val ReactiveStreamsVersion         = "1.0.3"
@@ -27,9 +27,9 @@ object Dependencies {
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
   val ZIOJson1Version                = "0.1.5"
-  val ZIO1Version                    = "1.0.16"
+  val ZIO1Version                    = "1.0.17"
   val ZIOJsonVersion                 = "0.3.0"
-  val ZIOVersion                     = "2.0.2"
+  val ZIOVersion                     = "2.0.3"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
