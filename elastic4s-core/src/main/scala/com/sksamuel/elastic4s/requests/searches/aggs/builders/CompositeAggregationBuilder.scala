@@ -2,10 +2,10 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.script
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{CompositeAggregation, DateHistogramValueSource, HistogramValueSource, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, CompositeAggregation, DateHistogramValueSource, HistogramValueSource, SubAggsBuilderFn}
 
 object CompositeAggregationBuilder {
-  def apply(agg: CompositeAggregation): XContentBuilder = {
+  def apply(agg: CompositeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("composite")
     agg.size.foreach(builder.field("size", _))
     builder.startArray("sources")
@@ -44,7 +44,7 @@ object CompositeAggregationBuilder {
       builder.endObject()
     })
     builder.endObject()
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     builder
   }
 }

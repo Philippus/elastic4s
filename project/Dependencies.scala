@@ -12,9 +12,9 @@ object Dependencies {
   val ElasticsearchVersion           = "8.4.3"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.13.4"
-  val Json4sVersion                  = "4.0.5"
+  val Json4sVersion                  = "4.0.6"
   val Log4jVersion                   = "2.15.0"
-  val MockitoVersion                 = "4.8.0"
+  val MockitoVersion                 = "4.8.1"
   val MonixVersion                   = "3.4.1"
   val PlayJsonVersion                = "2.9.3"
   val ReactiveStreamsVersion         = "1.0.3"
@@ -29,7 +29,7 @@ object Dependencies {
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.16"
   val ZIOJsonVersion                 = "0.3.0"
-  val ZIOVersion                     = "2.0.2"
+  val ZIOVersion                     = "2.0.3"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(

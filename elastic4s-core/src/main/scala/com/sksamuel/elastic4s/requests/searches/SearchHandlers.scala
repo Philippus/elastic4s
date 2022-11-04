@@ -1,11 +1,13 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
+import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
 
 trait SearchHandlers {
 
-  implicit object MultiSearchHandler extends Handler[MultiSearchRequest, MultiSearchResponse] {
+  class BaseMultiSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])  extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
     import scala.collection.JavaConverters._
 
@@ -39,14 +41,16 @@ trait SearchHandlers {
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
       request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
-      val body = MultiSearchBuilderFn(request)
+      val body = MultiSearchBuilderFn(request, customAggregationHandler)
       logger.debug("Executing msearch: " + body)
       val entity = HttpEntity(body, "application/x-ndjson")
       ElasticRequest("POST", "/_msearch", params.toMap, entity)
     }
   }
 
-  implicit object SearchHandler extends Handler[SearchRequest, SearchResponse] {
+  implicit object MultiSearchHandler extends BaseMultiSearchHandler(defaultCustomAggregationHandler)
+
+  class BaseSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) extends Handler[SearchRequest, SearchResponse] {
 
     override def build(request: SearchRequest): ElasticRequest = {
 
@@ -76,10 +80,11 @@ trait SearchHandlers {
 
       request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
-      val body = request.source.getOrElse(SearchBodyBuilderFn(request).string())
+      val body = request.source.getOrElse(SearchBodyBuilderFn(request, customAggregationHandler).string())
       ElasticRequest("POST", endpoint, params.toMap, HttpEntity(body, "application/json"))
     }
   }
+  implicit object SearchHandler extends BaseSearchHandler(defaultCustomAggregationHandler)
 }
 
 object SearchHandlers extends SearchHandlers

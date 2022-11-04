@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.PipelineAgg
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 
 

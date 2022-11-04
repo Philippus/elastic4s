@@ -3,10 +3,10 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 import com.sksamuel.elastic4s.{EnumConversions, handlers}
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggsBuilderFn, TermsAggregation}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, SubAggsBuilderFn, TermsAggregation}
 
 object TermsAggregationBuilder {
-  def apply(agg: TermsAggregation): XContentBuilder = {
+  def apply(agg: TermsAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 
@@ -50,7 +50,7 @@ object TermsAggregationBuilder {
 
     builder.endObject()
 
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     builder.endObject()
   }
 }

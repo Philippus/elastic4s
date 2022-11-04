@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AggMetaDataFn, ScriptedMetricAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, ScriptedMetricAggregation, SubAggsBuilderFn}
 
 object ScriptedMetricAggregationBuilder {
-  def apply(agg: ScriptedMetricAggregation): XContentBuilder = {
+  def apply(agg: ScriptedMetricAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 
@@ -17,7 +17,7 @@ object ScriptedMetricAggregationBuilder {
     if (agg.params.nonEmpty)
       builder.autofield("params", agg.params)
 
-    SubAggsBuilderFn(agg, builder)
+    SubAggsBuilderFn(agg, builder, customAggregations)
     AggMetaDataFn(agg, builder)
 
     builder
