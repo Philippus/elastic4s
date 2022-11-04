@@ -27,7 +27,7 @@ object Dependencies {
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
   val ZIOJson1Version                = "0.1.5"
-  val ZIO1Version                    = "1.0.16"
+  val ZIO1Version                    = "1.0.17"
   val ZIOJsonVersion                 = "0.3.0"
   val ZIOVersion                     = "2.0.3"
 
