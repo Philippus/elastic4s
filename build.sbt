@@ -2,6 +2,12 @@ import Dependencies._
 
 ThisBuild / organizationName := "com.sksamuel.elastic4s"
 
+// Required due to dependency conflict in SBT
+// See https://github.com/sbt/sbt/issues/6997
+ThisBuild / libraryDependencySchemes ++= Seq(
+  "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+)
+
 def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
