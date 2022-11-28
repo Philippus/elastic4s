@@ -2,6 +2,12 @@ import Dependencies._
 
 ThisBuild / organizationName := "com.sksamuel.elastic4s"
 
+// Required due to dependency conflict in SBT
+// See https://github.com/sbt/sbt/issues/6997
+ThisBuild / libraryDependencySchemes ++= Seq(
+  "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+)
+
 def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
@@ -9,7 +15,7 @@ def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
-def publishVersion = if (isRelease) releaseVersion else "8.4.3." + githubRunNumber + "-SNAPSHOT"
+def publishVersion = if (isRelease) releaseVersion else "8.5.0." + githubRunNumber + "-SNAPSHOT"
 
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
@@ -19,7 +25,7 @@ def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 val scala2Versions = Seq("2.12.17", "2.13.8")
-val scalaAllVersions = scala2Versions :+ "3.2.0"
+val scalaAllVersions = scala2Versions :+ "3.2.1"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.17",
   crossScalaVersions := Nil
