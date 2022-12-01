@@ -15,7 +15,7 @@ def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
 // the version to use to publish - either from release version or a snapshot run number
-def publishVersion = if (isRelease) releaseVersion else "8.5.0." + githubRunNumber + "-SNAPSHOT"
+def publishVersion = if (isRelease) releaseVersion else "8.5.1." + githubRunNumber + "-SNAPSHOT"
 
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
