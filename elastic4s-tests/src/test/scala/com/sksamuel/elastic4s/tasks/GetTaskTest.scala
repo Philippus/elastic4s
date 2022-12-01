@@ -1,9 +1,12 @@
 package com.sksamuel.elastic4s.tasks
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.task.Retries
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+
+import scala.concurrent.duration.DurationInt
 
 class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
 
@@ -40,6 +43,10 @@ class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
       task.action shouldBe "indices:data/write/reindex"
       task.description shouldBe "reindex from [get_task_a] to [get_task_b]"
       task.startTimeInMillis >= start shouldBe true
+      task.status.versionConflicts should be(0)
+      task.status.throttledTime should be(0.millis)
+      task.status.noops should be(0)
+      task.status.retries should be(Retries(0, 0))
     }
   }
 }
