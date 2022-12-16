@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.collapse.CollapseRequest
 import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{PrefixQuery, Query, QueryStringQuery, RawQuery, RegexQuery}
+import com.sksamuel.elastic4s.requests.searches.queries._
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, Sort}
 import com.sksamuel.elastic4s.requests.searches.suggestion.Suggestion
 import com.sksamuel.elastic4s.requests.searches.term.TermQuery
@@ -56,7 +56,8 @@ case class SearchRequest(indexes: Indexes,
                          allowPartialSearchResults: Option[Boolean] = None,
                          batchedReduceSize: Option[Int] = None,
                          typedKeys: Option[Boolean] = None,
-                         runtimeMappings: Seq[RuntimeMapping] = Nil) {
+                         runtimeMappings: Seq[RuntimeMapping] = Nil,
+                         ext: Map[String, Any] = Map.empty) {
 
   /** Adds a single string query to this search
     *
@@ -285,4 +286,6 @@ case class SearchRequest(indexes: Indexes,
 
   def runtimeMappings(mappings: Iterable[RuntimeMapping]): SearchRequest =
     copy(runtimeMappings = mappings.toSeq)
+
+  def ext(ext: Map[String, Any]): SearchRequest = copy(ext = ext)
 }
