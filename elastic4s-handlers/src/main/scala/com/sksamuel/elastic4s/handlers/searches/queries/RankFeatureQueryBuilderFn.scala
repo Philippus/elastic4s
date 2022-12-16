@@ -25,6 +25,9 @@ object RankFeatureQueryBuilderFn {
       builder.field("exponent", s.exponent)
       builder.endObject()
     }
+    q.linear.foreach { _ =>
+      builder.rawField("linear", "{}")
+    }
     builder.endObject()
     builder
   }
