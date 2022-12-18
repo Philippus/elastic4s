@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.handlers.searches.queries.RankFeatureQueryBuilderFn
-import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.{Log, Saturation, Sigmoid}
+import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.{Linear, Log, Saturation, Sigmoid}
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -89,6 +89,29 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
 
     Then("query should have right fields")
     queryBody.string shouldEqual minimalRankFeatureQuery
+  }
+
+  test("Should correctly build a rank feature query with linear function") {
+    {
+      Given("A rank feature query with a linear function")
+      val query = RankFeatureQuery("pagerank").withLinear(Linear())
+
+      When("Rank feature query is built")
+      val queryBody = RankFeatureQueryBuilderFn(query)
+
+      Then("query should have right fields")
+      queryBody.string shouldEqual rankFeatureQueryWithLinear
+    }
+
+    def rankFeatureQueryWithLinear: String =
+      """
+        |{
+        |   "rank_feature":{
+        |      "field": "pagerank",
+        |      "linear": {}
+        |   }
+        |}
+    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
   }
 
   def minimalRankFeatureQuery: String =

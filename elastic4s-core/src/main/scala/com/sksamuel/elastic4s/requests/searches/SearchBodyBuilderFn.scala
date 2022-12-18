@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.requests.searches
 import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
-import com.sksamuel.elastic4s.handlers.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.HighlightBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.suggestion.{CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestionBuilderFn}
@@ -140,6 +140,10 @@ object SearchBodyBuilderFn {
     }
 
     request.trackHits.map(builder.field("track_total_hits", _))
+
+    if (request.ext.nonEmpty) {
+      builder.autofield("ext", request.ext)
+    }
 
     builder.endObject()
   }
