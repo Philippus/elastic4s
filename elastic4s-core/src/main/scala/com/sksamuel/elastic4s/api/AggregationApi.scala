@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
-import com.sksamuel.elastic4s.requests.searches.aggs.{AdjacencyMatrixAggregation, AutoDateHistogramAggregation, AvgAggregation, CardinalityAggregation, ChildrenAggregation, DateHistogramAggregation, DateRangeAggregation, ExtendedStatsAggregation, FilterAggregation, FiltersAggregation, GeoBoundsAggregation, GeoCentroidAggregation, GeoDistanceAggregation, GeoHashGridAggregation, GeoTileGridAggregation, GlobalAggregation, HistogramAggregation, IpRangeAggregation, KeyedFiltersAggregation, MaxAggregation, MinAggregation, MissingAggregation, NestedAggregation, PercentileRanksAggregation, PercentilesAggregation, RangeAggregation, ReverseNestedAggregation, SamplerAggregation, ScriptedMetricAggregation, SigTermsAggregation, StatsAggregation, SumAggregation, TermsAggregation, TopHitsAggregation, TopMetricsAggregation, ValueCountAggregation, VariableWidthAggregation, WeightedAvgAggregation, WeightedAvgField}
+import com.sksamuel.elastic4s.requests.searches.aggs.{AdjacencyMatrixAggregation, AutoDateHistogramAggregation, AvgAggregation, CardinalityAggregation, ChildrenAggregation, DateHistogramAggregation, DateRangeAggregation, ExtendedStatsAggregation, FilterAggregation, FiltersAggregation, GeoBoundsAggregation, GeoCentroidAggregation, GeoDistanceAggregation, GeoHashGridAggregation, GeoTileGridAggregation, GlobalAggregation, HistogramAggregation, IpRangeAggregation, KeyedFiltersAggregation, MaxAggregation, MinAggregation, MissingAggregation, MultiTermsAggregation, NestedAggregation, PercentileRanksAggregation, PercentilesAggregation, RangeAggregation, ReverseNestedAggregation, SamplerAggregation, ScriptedMetricAggregation, SigTermsAggregation, StatsAggregation, SumAggregation, TermsAggregation, TopHitsAggregation, TopMetricsAggregation, ValueCountAggregation, VariableWidthAggregation, WeightedAvgAggregation, WeightedAvgField}
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
@@ -80,6 +80,8 @@ trait AggregationApi {
   @deprecated("use missingAgg", "7.7")
   def missingAggregation(name: String): MissingAggregation = MissingAggregation(name)
   def missingAgg(name: String, field: String): MissingAggregation = MissingAggregation(name).field(field)
+
+  def multiTermsAgg(name: String, terms: MultiTermsAggregation.Term*): MultiTermsAggregation = MultiTermsAggregation(name).terms(terms)
 
   def nestedAggregation(name: String, path: String): NestedAggregation = NestedAggregation(name, path)
 
