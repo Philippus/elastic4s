@@ -134,6 +134,16 @@ object SearchBodyBuilderFn {
         mapping.script.foreach {
           script => builder.rawField("script", ScriptBuilderFn(script))
         }
+        if (mapping.fields.nonEmpty) {
+          builder.startObject("fields")
+          mapping.fields.foreach {
+            field =>
+              builder.startObject(field.name)
+              builder.field("type", field.`type`)
+              builder.endObject()
+          }
+          builder.endObject()
+        }
         builder.endObject()
       }
       builder.endObject()
