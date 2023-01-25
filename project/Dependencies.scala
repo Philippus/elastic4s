@@ -22,14 +22,14 @@ object Dependencies {
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
   val ScalatestPlusVersion           = "3.2.9.0"
   val ScalazVersion                  = "7.2.35"
-  val ScalatestVersion               = "3.2.13"
+  val ScalatestVersion               = "3.2.15"
   val Slf4jVersion                   = "2.0.6"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "3.8.5"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.17"
   val ZIOJsonVersion                 = "0.4.2"
-  val ZIOVersion                     = "2.0.4"
+  val ZIOVersion                     = "2.0.6"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
