@@ -10,7 +10,7 @@ case class DeleteByIdRequest(index: Index,
                              parent: Option[String] = None,
                              routing: Option[String] = None,
                              refresh: Option[RefreshPolicy] = None,
-                             waitForActiveShards: Option[Int] = None,
+                             waitForActiveShards: Option[String] = None,
                              version: Option[Long] = None,
                              ifSeqNo: Option[Long] = None,
                              ifPrimaryTerm: Option[Long] = None,
@@ -25,7 +25,9 @@ case class DeleteByIdRequest(index: Index,
   def refreshImmediately: DeleteByIdRequest = refresh(RefreshPolicy.IMMEDIATE)
 
   def waitForActiveShards(waitForActiveShards: Int): DeleteByIdRequest =
-    copy(waitForActiveShards = waitForActiveShards.some)
+    copy(waitForActiveShards = waitForActiveShards.some.map(_.toString))
+  def waitForAllActiveShards(): DeleteByIdRequest =
+    copy(waitForActiveShards = Some("all"))
   def version(version: Long): DeleteByIdRequest = copy(version = version.some)
   def ifSeqNo(ifSeqNo: Long): DeleteByIdRequest = copy(ifSeqNo = ifSeqNo.some)
   def ifPrimaryTerm(ifPrimaryTerm: Long): DeleteByIdRequest = copy(ifPrimaryTerm = ifPrimaryTerm.some)
