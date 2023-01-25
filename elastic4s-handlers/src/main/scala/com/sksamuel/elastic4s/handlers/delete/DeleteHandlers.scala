@@ -98,7 +98,7 @@ trait DeleteHandlers {
       request.ifPrimaryTerm.map(_.toString).foreach(params.put("if_primary_term", _))
       request.ifSeqNo.map(_.toString).foreach(params.put("if_seq_no", _))
       request.versionType.map(VersionTypeHttpString.apply).foreach(params.put("version_type", _))
-      request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
+      request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
       ElasticRequest("DELETE", endpoint, params.toMap)
     }
