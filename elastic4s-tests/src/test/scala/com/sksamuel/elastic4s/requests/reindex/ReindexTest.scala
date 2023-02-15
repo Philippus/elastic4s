@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.reindex
 
-import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -46,6 +46,32 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
       client.execute {
         search("reindextarget")
       }.await.result.size shouldBe 2
+    }
+    "support slices parameter" in {
+
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").slices(3).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+
+      client.execute {
+        search("reindextarget")
+      }.await.result.size shouldBe 3
+    }
+    "support slice parameter" in {
+
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").slice(Slice("2", 3)).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 1
+
+      client.execute {
+        search("reindextarget")
+      }.await.result.size shouldBe 1
     }
     "support script parameter" in {
       deleteIdx("reindextarget")

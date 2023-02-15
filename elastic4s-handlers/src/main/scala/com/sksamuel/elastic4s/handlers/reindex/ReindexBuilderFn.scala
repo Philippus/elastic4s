@@ -23,6 +23,13 @@ object ReindexBuilderFn {
 
     builder.startObject("source")
 
+    request.slice.foreach { slice =>
+      builder.startObject("slice")
+      builder.field("id", slice.id)
+      builder.field("max", slice.max)
+      builder.endObject()
+    }
+
     request.size.foreach(builder.field("size", _))
 
     request.remoteHost.foreach { host =>
