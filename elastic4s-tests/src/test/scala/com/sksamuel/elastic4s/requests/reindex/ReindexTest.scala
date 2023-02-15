@@ -64,14 +64,18 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       deleteIdx("reindextarget")
       createIdx("reindextarget")
+      
+      val maxSlice = 3
 
-      client.execute {
-        reindex("reindex", "reindextarget").slice(Slice("2", 3)).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 1
+      (0 until maxSlice).foreach { index =>
+        client.execute {
+          reindex("reindex", "reindextarget").slice(Slice(index.toString, maxSlice)).refresh(RefreshPolicy.IMMEDIATE)
+        }.await.result.left.get.created should be <= 3L
+      }
 
       client.execute {
         search("reindextarget")
-      }.await.result.size shouldBe 1
+      }.await.result.size shouldBe 3
     }
     "support script parameter" in {
       deleteIdx("reindextarget")
