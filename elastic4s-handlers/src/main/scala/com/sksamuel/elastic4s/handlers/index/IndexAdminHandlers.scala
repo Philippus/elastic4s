@@ -61,7 +61,7 @@ trait IndexAdminHandlers {
     }
   }
 
-  implicit object IndexRecoveryHandler extends Handler[IndexRecoveryRequest, IndexRecoveryResponse] {
+  implicit object IndexRecoveryHandler extends Handler[IndexRecoveryRequest, IndexRecoveryResponse.Response] {
 
     override def build(request: IndexRecoveryRequest): ElasticRequest = {
 
