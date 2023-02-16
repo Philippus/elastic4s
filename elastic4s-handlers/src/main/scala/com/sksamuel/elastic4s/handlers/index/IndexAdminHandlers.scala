@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.handlers.index
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
+import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, SplitIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 import com.sksamuel.elastic4s.requests.indexes._
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexShardStoreResponse.StoreStatusResponse
@@ -11,6 +11,7 @@ import com.sksamuel.elastic4s.requests.indexes.admin.{AliasExistsResponse, Clear
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class ShrinkIndexResponse()
+case class SplitIndexResponse()
 
 trait IndexAdminHandlers {
 
@@ -23,14 +24,39 @@ trait IndexAdminHandlers {
       val params = scala.collection.mutable.Map.empty[String, Any]
 
       val builder = XContentFactory.jsonBuilder()
-      if (request.settings.nonEmpty) {
+      val settings = request.shards.map(s => request.settings + ("index.number_of_shards" -> s.toString)).getOrElse(request.settings)
+      if (settings.nonEmpty) {
         builder.startObject("settings")
-        for ((key, value) <- request.settings)
+        for ((key, value) <- settings)
           builder.field(key, value)
         builder.endObject()
       }
 
       val entity = HttpEntity(builder.string, "application/json")
+      ElasticRequest("POST", endpoint, params.toMap, entity)
+    }
+  }
+
+  implicit object SplitIndexHandler extends Handler[SplitIndexRequest, SplitIndexResponse] {
+
+    override def build(request: SplitIndexRequest): ElasticRequest = {
+
+      val endpoint = s"/${request.source}/_split/${request.target}"
+
+      val params = scala.collection.mutable.Map.empty[String, Any]
+
+      val builder = XContentFactory.jsonBuilder()
+      val settings = request.shards.map(s => request.settings + ("index.number_of_shards" -> s.toString)).getOrElse(request.settings)
+      if (settings.nonEmpty) {
+        builder.startObject("settings")
+        for ((key, value) <- settings)
+          builder.field(key, value)
+
+        builder.endObject()
+      }
+
+      val entity = HttpEntity(builder.string, "application/json")
+
       ElasticRequest("POST", endpoint, params.toMap, entity)
     }
   }
