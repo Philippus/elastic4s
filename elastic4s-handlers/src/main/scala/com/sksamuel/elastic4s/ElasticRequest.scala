@@ -11,6 +11,8 @@ import com.sksamuel.elastic4s.HttpEntity.StringEntity
   */
 case class ElasticRequest(method: String, endpoint: String, params: Map[String, String], entity: Option[HttpEntity], headers: Map[String, String]) {
   def addParameter(name: String, value: String): ElasticRequest = copy(params = params + (name -> value))
+
+  def addHeader(name: String, value: String): ElasticRequest = copy(headers = headers + (name -> value))
 }
 
 object ElasticRequest {
