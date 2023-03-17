@@ -64,7 +64,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       deleteIdx("reindextarget")
       createIdx("reindextarget")
-      
+
       val maxSlice = 3
 
       (0 until maxSlice).foreach { index =>
@@ -76,6 +76,26 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
       client.execute {
         search("reindextarget")
       }.await.result.size shouldBe 3
+    }
+    "support createOnly parameter" in {
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").createOnly(true).refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+
+      client.execute {
+        reindex("reindex", "reindextarget")
+          .proceedOnConflicts(true)
+          .createOnly(true)
+          .refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.version_conflicts shouldBe 3
+
+      client.execute {
+        reindex("reindex", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.updated shouldBe 3
+
     }
     "support script parameter" in {
       deleteIdx("reindextarget")
