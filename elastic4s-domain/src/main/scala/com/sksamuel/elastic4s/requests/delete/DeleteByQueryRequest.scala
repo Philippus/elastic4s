@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.delete
 
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 
 import scala.concurrent.duration.FiniteDuration
@@ -22,6 +22,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
                                 shouldStoreResult: Option[Boolean] = None,
                                 maxDocs: Option[Int] = None,
                                 slices: Option[Int] = None,
+                                slice: Option[Slice] = None,
                                ) {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryRequest =
@@ -55,4 +56,5 @@ case class DeleteByQueryRequest(indexes: Indexes,
 
   def slices(slices: Int): DeleteByQueryRequest = copy(slices = slices.some)
 
+  def slice(slice: Slice): DeleteByQueryRequest = copy(slice = slice.some)
 }
