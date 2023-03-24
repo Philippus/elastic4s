@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.reindex
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.{Index, Indexes}
@@ -27,7 +27,9 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           maxDocs: Option[Int] = None,
                           script: Option[Script] = None,
                           scroll: Option[String] = None,
-                          size: Option[Int] = None) {
+                          size: Option[Int] = None,
+                          slices: Option[Int] = None,
+                          slice: Option[Slice] = None) {
 
   def remote(uri: String): ReindexRequest = copy(remoteHost = Option(uri))
   def remote(uri: String, user: String, pass: String): ReindexRequest =
@@ -66,4 +68,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
   def scroll(scroll: String): ReindexRequest = copy(scroll = scroll.some)
   def scroll(duration: FiniteDuration): ReindexRequest = copy(scroll = Some(duration.toSeconds + "s"))
   def size(size: Int): ReindexRequest = copy(size = size.some)
+
+  def slice(slice: Slice): ReindexRequest = copy(slice = slice.some)
+  def slices(slices: Int): ReindexRequest = copy(slices = slices.some)
 }
