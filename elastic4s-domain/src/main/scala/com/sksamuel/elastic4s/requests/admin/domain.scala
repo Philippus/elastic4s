@@ -51,7 +51,8 @@ case class UpdateIndexLevelSettingsRequest(indexes: Seq[String],
                                            autoExpandReplicas: Option[String] = None,
                                            refreshInterval: Option[String] = None,
                                            maxResultWindow: Option[Int] = None,
-                                           translog: Option[TranslogRequest] = None) {
+                                           translog: Option[TranslogRequest] = None,
+                                           settings: Map[String, String] = Map.empty) {
 
   def numberOfReplicas(numberOfReplicas: Int): UpdateIndexLevelSettingsRequest =
     copy(numberOfReplicas = numberOfReplicas.some)
@@ -63,7 +64,7 @@ case class UpdateIndexLevelSettingsRequest(indexes: Seq[String],
     copy(maxResultWindow = maxResultWindow.some)
   def translog(translog: TranslogRequest): UpdateIndexLevelSettingsRequest =
     copy(translog = translog.some)
-
+  def settings(map: Map[String, String]): UpdateIndexLevelSettingsRequest = copy(settings = map)
 }
 
 case class IndexShardStoreRequest(indexes: Indexes, status: Option[String] = None) {
