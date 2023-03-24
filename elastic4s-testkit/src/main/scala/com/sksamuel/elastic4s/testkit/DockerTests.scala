@@ -28,6 +28,12 @@ trait DockerTests extends ElasticDsl with ClientProvider {
     }.await
   }
 
+  protected def createIdx(name: String, shards: Int) = Try {
+    client.execute {
+      createIndex(name).shards(shards)
+    }.await
+  }
+
   protected def cleanIndex(indexName: String): Unit = {
     deleteIdx(indexName)
     createIdx(indexName)
