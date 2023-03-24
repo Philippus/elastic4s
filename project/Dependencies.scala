@@ -7,7 +7,7 @@ object Dependencies {
   val CatsEffect2Version             = "2.5.5"
   val CatsEffectVersion              = "3.2.8"
   val CatsVersion                    = "2.0.0"
-  val CirceVersion                   = "0.14.3"
+  val CirceVersion                   = "0.14.5"
   val CommonsIoVersion               = "2.11.0"
   val ElasticsearchVersion           = "8.5.3"
   val ExtsVersion                    = "1.61.1"
@@ -23,13 +23,13 @@ object Dependencies {
   val ScalatestPlusVersion           = "3.2.9.0"
   val ScalazVersion                  = "7.2.35"
   val ScalatestVersion               = "3.2.15"
-  val Slf4jVersion                   = "2.0.6"
+  val Slf4jVersion                   = "2.0.7"
   val SprayJsonVersion               = "1.3.6"
-  val SttpVersion                    = "3.8.5"
+  val SttpVersion                    = "3.8.13"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.17"
-  val ZIOJsonVersion                 = "0.4.2"
   val ZIOVersion                     = "2.0.10"
+  val ZIOJsonVersion                 = "0.5.0"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
