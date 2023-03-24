@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndexStatsRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, RolloverIndexRequest, ShrinkIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
+import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndexStatsRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, RolloverIndexRequest, ShrinkIndexRequest, SplitIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
 import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes}
 
 trait IndexAdminApi {
@@ -42,6 +42,8 @@ trait IndexAdminApi {
   def rolloverIndex(alias: String): RolloverIndexRequest = RolloverIndexRequest(alias)
 
   def shrinkIndex(source: String, target: String): ShrinkIndexRequest = ShrinkIndexRequest(source, target)
+
+  def splitIndex(source: String, target: String): SplitIndexRequest = SplitIndexRequest(source, target)
 
   def updateIndexLevelSettings(first: String, rest: String*): UpdateIndexLevelSettingsRequest =
     updateIndexLevelSettings(first +: rest)

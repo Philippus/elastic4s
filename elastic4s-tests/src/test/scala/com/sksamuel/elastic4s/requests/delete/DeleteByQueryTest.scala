@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.delete
 
 import com.sksamuel.elastic4s.fields.TextField
-import com.sksamuel.elastic4s.requests.common.RefreshPolicy
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -70,6 +70,33 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       client.execute {
         search(indexname).matchAllQuery()
       }.await.result.totalHits shouldBe 1
+    }
+
+    "delete with slices" in {
+      client.execute {
+        bulk(
+          indexInto(indexname).fields("name" -> "barkis").id("7"),
+          indexInto(indexname).fields("name" -> "belle").id("8")
+        ).refresh(RefreshPolicy.Immediate)
+      }.await
+
+      client.execute {
+        search(indexname).query(idsQuery("7","8"))
+      }.await.result.totalHits shouldBe 2
+
+      val firstSlice = client.execute {
+        deleteByQuery(indexname, idsQuery("7","8")).slice(Slice("0", 2)).refresh(RefreshPolicy.Immediate)
+      }.await.result.left.get.deleted
+
+      val secondSlice = client.execute {
+        deleteByQuery(indexname, idsQuery("7", "8")).slice(Slice("1", 2)).refresh(RefreshPolicy.Immediate)
+      }.await.result.left.get.deleted
+
+      firstSlice + secondSlice shouldBe 2
+
+      client.execute {
+        search(indexname).query(idsQuery("7","8"))
+      }.await.result.totalHits shouldBe 0
     }
 
     "return a Left[RequestFailure] when the delete fails" in {

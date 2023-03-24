@@ -13,6 +13,12 @@ object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryRequest): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.rawField("query", QueryBuilderFn(request.query))
+    request.slice.foreach { slice =>
+      builder.startObject("slice")
+      builder.field("id", slice.id)
+      builder.field("max", slice.max)
+      builder.endObject()
+    }
     builder.endObject()
     builder
   }
@@ -51,6 +57,7 @@ trait DeleteHandlers {
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
       request.slices.map(_.toString).foreach(params.put("slices", _))
+
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")
