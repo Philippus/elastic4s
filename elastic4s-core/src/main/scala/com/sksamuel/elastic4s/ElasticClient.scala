@@ -49,7 +49,9 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
       request2
     }
 
-    val f = executor.exec(client, request3)
+    val request4 = options.headers.foldLeft(request3){ case (acc, (key, value)) => acc.addHeader(key, value) }
+
+    val f = executor.exec(client, request4)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {
         case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
@@ -62,8 +64,8 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
   def close(): Unit = client.close()
 }
 
-case class CommonRequestOptions(timeout: Duration, masterNodeTimeout: Duration)
+case class CommonRequestOptions(timeout: Duration, masterNodeTimeout: Duration, headers: Map[String, String] = Map.empty)
 
 object CommonRequestOptions {
-  implicit val defaults: CommonRequestOptions = CommonRequestOptions(0.seconds, 0.seconds)
+  implicit val defaults: CommonRequestOptions = CommonRequestOptions(0.seconds, 0.seconds, Map.empty)
 }

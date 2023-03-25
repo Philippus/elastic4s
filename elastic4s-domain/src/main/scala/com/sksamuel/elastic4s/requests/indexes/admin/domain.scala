@@ -30,7 +30,13 @@ case class Segment(generation: Long,
 case class Routing(state: String, primary: Boolean, node: String)
 
 case class ForceMergeResponse()
-case class IndexRecoveryResponse()
+
+object IndexRecoveryResponse {
+  type Response = Map[String, ShardSettings]
+  type ShardStatus = Map[String, AnyRef]
+  
+  case class ShardSettings(shards: Seq[ShardStatus])
+}
 
 case class FlushIndexResponse(_shards: Shards) {
   def shards: Shards = _shards

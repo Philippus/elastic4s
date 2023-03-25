@@ -58,6 +58,7 @@ trait ReindexHandlers {
       if (request.requestsPerSecond.getOrElse(-1F) > 0)
         params.put("requests_per_second", request.requestsPerSecond.getOrElse(0).toString)
       request.scroll.foreach(params.put("scroll", _))
+      request.slices.foreach(s => params.put("slices", s.toString))
 
       val body = ReindexBuilderFn(request).string
 
