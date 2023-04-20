@@ -49,6 +49,11 @@ object ReindexBuilderFn {
     builder.startObject("dest")
     builder.field("index", request.targetIndex.name)
 
+    request.createOnly.foreach {
+      case true => builder.field("op_type", "create")
+      case false => builder.field("op_type", "index")
+    }
+
     // end dest
     builder.endObject()
   }

@@ -28,6 +28,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           script: Option[Script] = None,
                           scroll: Option[String] = None,
                           size: Option[Int] = None,
+                          createOnly: Option[Boolean] = None,
                           slices: Option[Int] = None,
                           slice: Option[Slice] = None) {
 
@@ -69,6 +70,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
   def scroll(duration: FiniteDuration): ReindexRequest = copy(scroll = Some(duration.toSeconds + "s"))
   def size(size: Int): ReindexRequest = copy(size = size.some)
 
+  def createOnly(createOnly: Boolean): ReindexRequest = copy(createOnly = createOnly.some)
   def slice(slice: Slice): ReindexRequest = copy(slice = slice.some)
   def slices(slices: Int): ReindexRequest = copy(slices = slices.some)
 }
