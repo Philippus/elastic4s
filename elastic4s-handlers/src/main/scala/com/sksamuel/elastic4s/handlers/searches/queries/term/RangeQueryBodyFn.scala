@@ -11,6 +11,7 @@ object RangeQueryBodyFn {
     val builder = XContentFactory.jsonBuilder().startObject("range").startObject(range.field)
 
     range.gte.foreach {
+      case x: Int => builder.field("gte", x)
       case x: Long => builder.field("gte", x)
       case x: Double => builder.field("gte", x)
       case x: String => builder.field("gte", x)
@@ -18,6 +19,7 @@ object RangeQueryBodyFn {
     }
 
     range.lte.foreach {
+      case x: Int => builder.field("lte", x)
       case x: Long => builder.field("lte", x)
       case x: Double => builder.field("lte", x)
       case x: String => builder.field("lte", x)
@@ -25,6 +27,7 @@ object RangeQueryBodyFn {
     }
 
     range.gt.foreach {
+      case x: Int => builder.field("gt", x)
       case x: Long => builder.field("gt", x)
       case x: Double => builder.field("gt", x)
       case x: String => builder.field("gt", x)
@@ -32,6 +35,7 @@ object RangeQueryBodyFn {
     }
 
     range.lt.foreach {
+      case x: Int => builder.field("lt", x)
       case x: Long => builder.field("lt", x)
       case x: Double => builder.field("lt", x)
       case x: String => builder.field("lt", x)

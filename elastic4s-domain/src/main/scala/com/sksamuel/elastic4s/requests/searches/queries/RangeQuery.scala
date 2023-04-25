@@ -25,21 +25,25 @@ case class RangeQuery(field: String,
   def boost(boost: Double): RangeQuery              = copy(boost = boost.some)
   def relation(relation: RangeRelation): RangeQuery = copy(relation = relation.some)
 
+  def lt(to: Int): RangeQuery          = copy(lt = to.some)
   def lt(to: Long): RangeQuery          = copy(lt = to.some)
   def lt(to: Double): RangeQuery        = copy(lt = to.some)
   def lt(to: String): RangeQuery        = copy(lt = to.some)
   def lt(date: ElasticDate): RangeQuery = copy(lt = date.some)
 
+  def gt(f: Int): RangeQuery           = copy(gt = f.some)
   def gt(f: Long): RangeQuery           = copy(gt = f.some)
   def gt(f: Double): RangeQuery         = copy(gt = f.some)
   def gt(f: String): RangeQuery         = copy(gt = f.some)
   def gt(date: ElasticDate): RangeQuery = copy(gt = date.some)
 
+  def lte(lte: Int): RangeQuery         = copy(lte = lte.some)
   def lte(lte: Long): RangeQuery         = copy(lte = lte.some)
   def lte(lte: Double): RangeQuery       = copy(lte = lte.some)
   def lte(lte: String): RangeQuery       = copy(lte = lte.some)
   def lte(date: ElasticDate): RangeQuery = copy(lte = date.some)
 
+  def gte(gte: Int): RangeQuery         = copy(gte = gte.some)
   def gte(gte: Long): RangeQuery         = copy(gte = gte.some)
   def gte(gte: Double): RangeQuery       = copy(gte = gte.some)
   def gte(gte: String): RangeQuery       = copy(gte = gte.some)
