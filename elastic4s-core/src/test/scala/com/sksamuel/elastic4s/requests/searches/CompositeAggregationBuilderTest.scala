@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.aggs.{CompositeAggregation, DateHistogramValueSource, HistogramValueSource, TermsValueSource}
+import com.sksamuel.elastic4s.requests.searches.aggs.{CompositeAggregation, DateHistogramValueSource, GeoBoundingBox, GeoTileGridValueSource, HistogramValueSource, TermsValueSource}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -43,12 +43,13 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
       CompositeAggregation("comp", sources = Seq(
         TermsValueSource("s1", field = Some("f1"), order = Some("desc"), missingBucket = true),
         HistogramValueSource("s2", 5, field = Some("f2"), order = Some("desc"), missingBucket = true),
-        DateHistogramValueSource("s3", interval = Some("5d"), field = Some("f3"), order = Some("desc"), timeZone = Some("+01:00"), missingBucket = true)
+        DateHistogramValueSource("s3", interval = Some("5d"), field = Some("f3"), order = Some("desc"), timeZone = Some("+01:00"), missingBucket = true),
+        GeoTileGridValueSource("s4", field = Some("f4"), precision = Some(10), bounds = Some(GeoBoundingBox(GeoPoint(1, 2), GeoPoint(3, 4))), order= Some("desc"), missingBucket = true)
       ))
     )
 
     SearchBodyBuilderFn(search).string shouldBe
-      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1","order":"desc","missing_bucket":true}}},{"s2":{"histogram":{"field":"f2","order":"desc","missing_bucket":true,"interval":5}}},{"s3":{"date_histogram":{"field":"f3","order":"desc","missing_bucket":true,"interval":"5d","time_zone":"+01:00"}}}]}}}}"""
+      """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1","order":"desc","missing_bucket":true}}},{"s2":{"histogram":{"field":"f2","order":"desc","missing_bucket":true,"interval":5}}},{"s3":{"date_histogram":{"field":"f3","order":"desc","missing_bucket":true,"interval":"5d","time_zone":"+01:00"}}},{"s4":{"geotile_grid":{"field":"f4","order":"desc","missing_bucket":true,"precision":10,"bounds":{"top_left":[2.0,1.0],"bottom_right":[4.0,3.0]}}}}]}}}}"""
   }
 
   test("CompositeAggregationBuilder should build simple terms-valued composites with after parameters") {
