@@ -12,6 +12,6 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
   "A DenseVectorField" should "support dims property" in {
     DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","dims":3}"""
+      """{"type":"dense_vector","dims":3,"index":false,"similarity":"l2_norm"}"""
   }
 }
