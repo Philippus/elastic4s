@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, BucketAggregation, HasAggregations}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
@@ -34,6 +33,16 @@ case class DateHistogramValueSource(override val name: String,
                                     format: Option[String] = None,
                                     override val missingBucket: Boolean = false)
   extends ValueSource("date_histogram", name, field, script, order, missingBucket)
+
+case class GeoTileGridValueSource(override val name: String,
+                                  precision: Option[Int] = None,
+                                  bounds: Option[GeoBoundingBox] = None,
+                                  override val field: Option[String] = None,
+                                  override val script: Option[Script] = None,
+                                  override val order: Option[String] = None,
+                                  override val missingBucket: Boolean = false)
+  extends ValueSource("geotile_grid", name, field, script, order, missingBucket)
+
 case class CompositeAggregation(name: String,
                                 sources: Seq[ValueSource] = Nil,
                                 size: Option[Int] = None,
