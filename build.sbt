@@ -24,7 +24,7 @@ def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
-val scala2Versions = Seq("2.12.17", "2.13.8")
+val scala2Versions = Seq("2.12.17", "2.13.11")
 val scalaAllVersions = scala2Versions :+ "3.2.2"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.17",
