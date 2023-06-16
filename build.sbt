@@ -25,7 +25,7 @@ def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 val scala2Versions = Seq("2.12.17", "2.13.11")
-val scalaAllVersions = scala2Versions :+ "3.2.2"
+val scalaAllVersions = scala2Versions :+ "3.3.0"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.17",
   crossScalaVersions := Nil
