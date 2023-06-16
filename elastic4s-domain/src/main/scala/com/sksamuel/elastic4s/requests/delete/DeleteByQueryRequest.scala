@@ -23,6 +23,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
                                 maxDocs: Option[Int] = None,
                                 slices: Option[Int] = None,
                                 slice: Option[Slice] = None,
+                                ignoreUnavailable: Option[Boolean] = None,
                                ) {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): DeleteByQueryRequest =
@@ -57,4 +58,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
   def slices(slices: Int): DeleteByQueryRequest = copy(slices = slices.some)
 
   def slice(slice: Slice): DeleteByQueryRequest = copy(slice = slice.some)
+
+  def ignoreUnavailable(ignoreUnavailable: Boolean): DeleteByQueryRequest =
+    copy(ignoreUnavailable = ignoreUnavailable.some)
 }
