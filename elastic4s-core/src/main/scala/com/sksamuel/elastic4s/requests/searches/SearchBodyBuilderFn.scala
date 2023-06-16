@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.collapse.CollapseBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.knn.KnnBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.suggestion.{CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestionBuilderFn}
@@ -26,6 +27,7 @@ object SearchBodyBuilderFn {
     request.query.map(QueryBuilderFn.apply).foreach(x => builder.rawField("query", x.string))
     request.postFilter.map(QueryBuilderFn.apply).foreach(x => builder.rawField("post_filter", x.string))
     request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
+    request.knn.map(KnnBuilderFn.apply).foreach(x => builder.rawField("knn", x.string))
 
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
