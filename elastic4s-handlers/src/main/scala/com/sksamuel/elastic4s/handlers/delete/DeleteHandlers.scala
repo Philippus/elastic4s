@@ -57,6 +57,7 @@ trait DeleteHandlers {
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
       request.slices.map(_.toString).foreach(params.put("slices", _))
+      request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
 
 
       val body = DeleteByQueryBodyFn(request)

@@ -15,6 +15,8 @@ object DenseVectorFieldBuilderFn {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)
     builder.field("dims", field.dims)
+    builder.field("index", field.index)
+    builder.field("similarity", field.similarity.name)
     builder.endObject()
   }
 }
