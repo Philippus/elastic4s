@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.Query
 
 case class TermsSetQuery(field: String,
                          terms: Set[String],
+                         boost: Option[Double] = None,
                          minimumShouldMatchField: Option[String] = None,
                          minimumShouldMatchScript: Option[Script] = None,
                          queryName: Option[String] = None) extends Query {
