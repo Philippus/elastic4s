@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.settings
 
+import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
@@ -60,6 +61,21 @@ class SettingsTest extends AnyWordSpec with Matchers with DockerTests {
         getSettings("wibble")
       }.await.error.`type` shouldBe "index_not_found_exception"
     }
+
+    "return only requested settings" in {
+      val response = client.execute {
+        getSettings("settingsa")
+          .include("index.number_of_*" :: "index.provided_name" :: Nil)
+      }.await.result
+
+      val settingsa = response.settingsForIndex("settingsa")
+
+      settingsa("index.provided_name") shouldBe "settingsa"
+      settingsa("index.number_of_replicas") shouldBe "1"
+      settingsa("index.number_of_shards") shouldBe "1"
+      settingsa.keySet shouldBe Set("index.provided_name", "index.number_of_replicas", "index.number_of_shards")
+    }
+
   }
 
   "updateSettings" should {
