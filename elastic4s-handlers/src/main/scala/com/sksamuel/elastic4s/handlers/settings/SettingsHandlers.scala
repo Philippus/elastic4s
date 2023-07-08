@@ -33,7 +33,7 @@ trait SettingsHandlers {
     }
 
     override def build(request: GetSettingsRequest): ElasticRequest = {
-      val endpoint = "/" + request.indexes.string(true) + "/_settings"
+      val endpoint = "/" + request.indexes.string(true) + "/_settings/" + request.includeSettings.mkString(",")
       ElasticRequest("GET", endpoint)
     }
   }
