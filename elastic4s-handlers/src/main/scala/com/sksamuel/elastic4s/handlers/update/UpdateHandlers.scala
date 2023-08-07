@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.task.GetTask
 import com.sksamuel.elastic4s.requests.update.{BaseUpdateByQueryRequest, UpdateByQueryAsyncRequest, UpdateByQueryAsyncResponse, UpdateByQueryRequest, UpdateByQueryResponse, UpdateByQueryTask, UpdateRequest, UpdateResponse}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{BulkIndexByScrollFailure, ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 object UpdateByQueryBodyFn {
   def apply(request: BaseUpdateByQueryRequest): XContentBuilder = {
@@ -110,7 +110,8 @@ trait UpdateHandlers {
         resp.noops,
         resp.throttled_millis,
         resp.requests_per_second,
-        resp.throttled_until_millis
+        resp.throttled_until_millis,
+        resp.failures
       )
     }
   }
@@ -141,5 +142,6 @@ case class UpdateByQuerySnakeCase(
                                    noops: Long,
                                    throttled_millis: Long,
                                    requests_per_second: Long,
-                                   throttled_until_millis: Long
+                                   throttled_until_millis: Long,
+                                   failures: Option[Seq[BulkIndexByScrollFailure]]
                                  )

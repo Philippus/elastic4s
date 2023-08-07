@@ -6,13 +6,11 @@ import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
 import com.sksamuel.elastic4s.requests.reindex.ReindexRequest
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{BulkIndexByScrollFailure, ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 import scala.concurrent.duration._
 
 case class Retries(bulk: Long, search: Long)
-
-case class ReindexFailure()
 
 case class ReindexResponse(took: Long,
                            timed_out: Boolean,
@@ -27,7 +25,7 @@ case class ReindexResponse(took: Long,
                            @JsonProperty("throttled_millis") throttledMillis: Long,
                            @JsonProperty("requests_per_second") requestsPerSecond: Long,
                            @JsonProperty("throttled_until_millis") throttledUntilMillis: Long,
-                           failures: Seq[ReindexFailure]) {
+                           failures: Option[Seq[BulkIndexByScrollFailure]]) {
   def throttled: Duration = throttledMillis.millis
   def throttledUntil: Duration = throttledUntilMillis.millis
 }
