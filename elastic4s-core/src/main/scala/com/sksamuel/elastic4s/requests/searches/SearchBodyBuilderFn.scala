@@ -133,6 +133,9 @@ object SearchBodyBuilderFn {
       request.runtimeMappings.foreach { mapping =>
         builder.startObject(mapping.field)
         builder.field("type", mapping.`type`)
+
+        // format is only allowed with a type of date
+        mapping.format.foreach(builder.field("format", _))
         mapping.script.foreach {
           script => builder.rawField("script", ScriptBuilderFn(script))
         }
