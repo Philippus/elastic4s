@@ -139,7 +139,8 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
     ziojson,
     clientsttp,
     httpstreams,
-    akkastreams
+    akkastreams,
+    pekkostreams
 )
 lazy val scala3_root = Project("elastic4s-scala3", file("scala3"))
   .settings(name := "elastic4s")
@@ -157,7 +158,7 @@ lazy val root = Project("elastic4s", file("."))
     noPublishSettings
   )
   .aggregate(
-    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka) ++ scala3Projects: _*
+    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
@@ -269,6 +270,12 @@ lazy val akkastreams = (project in file("elastic4s-streams-akka"))
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.akkaStream)
 
+lazy val pekkostreams = (project in file("elastic4s-streams-pekko"))
+  .dependsOn(core, testkit % "test", jackson % "test")
+  .settings(name := "elastic4s-streams-pkko")
+  .settings(scala2Settings) // // Scala 3 needs upgrade to Scala 3.3.x
+  .settings(libraryDependencies += Dependencies.pekkoStream)
+
 lazy val jackson = (project in file("elastic4s-json-jackson"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-jackson")
@@ -330,7 +337,7 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-pekko")
-  .settings(scala2Settings) // tests need re-writing to not use scalaMock
+  .settings(scala2Settings) // tests need re-writing to not use scalaMock and upgrade to Scala 3.3.x
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, scalaMock))
 
 
