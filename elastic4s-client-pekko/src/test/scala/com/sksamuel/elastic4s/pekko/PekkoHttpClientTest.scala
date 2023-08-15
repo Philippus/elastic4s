@@ -31,16 +31,16 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
         deleteIndex("testindex")
       }.await
 
-      akkaClient.shutdown().await
+      pekkoClient.shutdown().await
       system.terminate().await
     }
   }
 
-  private lazy val akkaClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
+  private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
-  override val client = ElasticClient(akkaClient)
+  override val client = ElasticClient(pekkoClient)
 
-  "AkkaHttpClient" should "support utf-8" in {
+  "PekkoHttpClient" should "support utf-8" in {
 
     client.execute {
       indexInto("testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")

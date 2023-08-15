@@ -13,7 +13,7 @@ import scala.util.Try
 object PekkoHttpClientSettings {
 
   private def defaultConfig: Config =
-    ConfigFactory.load().getConfig("com.sksamuel.elastic4s.akka")
+    ConfigFactory.load().getConfig("com.sksamuel.elastic4s.pekko")
 
   lazy val default: PekkoHttpClientSettings = apply(defaultConfig)
 

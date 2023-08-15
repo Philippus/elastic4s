@@ -8,7 +8,7 @@ import scala.concurrent.Future
 import scala.util.Try
 
 /**
-  * Factory for Akka's http pool flow.
+  * Factory for Pekko's http pool flow.
   */
 private[pekko] trait HttpPoolFactory {
 

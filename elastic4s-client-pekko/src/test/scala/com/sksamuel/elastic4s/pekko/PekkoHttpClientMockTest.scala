@@ -33,7 +33,7 @@ class PekkoHttpClientMockTest
     (sendRequest, poolFactory)
   }
 
-  "AkkaHttpClient" should {
+  "PekkoHttpClient" should {
 
     "retry on 502" in {
 
