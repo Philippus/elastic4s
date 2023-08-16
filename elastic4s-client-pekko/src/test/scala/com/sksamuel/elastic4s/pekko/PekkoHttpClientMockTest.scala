@@ -57,13 +57,13 @@ class PekkoHttpClientMockTest
 
       when(sendRequest
         .apply(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host1/test")
+          r != null && r.uri == Uri("http://host1/test")
         }))
         .thenReturn(Success(HttpResponse(StatusCodes.BadGateway)))
 
       when(sendRequest
         .apply(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host2/test")
+          r != null && r.uri == Uri("http://host2/test")
         }))
         .thenReturn(Success(HttpResponse().withEntity("ok")))
 
@@ -130,7 +130,7 @@ class PekkoHttpClientMockTest
 
       when(sendRequest
         .apply(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host1/test")
+          r != null && r.uri == Uri("http://host1/test")
         }))
         .thenReturn(Success(HttpResponse(StatusCodes.BadGateway)))
 
@@ -166,13 +166,13 @@ class PekkoHttpClientMockTest
 
       when(sendRequest
         .apply(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host1/test")
+          r != null && r.uri == Uri("http://host1/test")
         }))
         .thenReturn(Failure(new Exception("Some exception")))
 
       when(sendRequest
         .apply(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host2/test")
+          r != null && r.uri == Uri("http://host2/test")
         }))
         .thenReturn(Success(HttpResponse().withEntity("host2")))
 

@@ -20,7 +20,6 @@ object Dependencies {
   val PekkoVersion                   = "1.0.1"
   val PlayJsonVersion                = "2.10.0-RC6"
   val ReactiveStreamsVersion         = "1.0.3"
-  val ScalamockVersion               = "5.2.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
   val ScalatestPlusVersion           = "3.2.9.0"
   val ScalazVersion                  = "7.2.35"
@@ -83,7 +82,6 @@ object Dependencies {
   lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % "test"
   lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % "test"
   lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
-  lazy val scalaMock             = "org.scalamock"           %% "scalamock"                    % ScalamockVersion       % "test"
   lazy val scalaTestMain         = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
   lazy val scalaTest             = scalaTestMain % "test"
   lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion

@@ -3,12 +3,13 @@ package com.sksamuel.elastic4s.akka
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
 import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
-import org.scalamock.function.MockFunction1
-import org.scalamock.scalatest.MockFactory
+import org.mockito.ArgumentMatchers._
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.concurrent._
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
+import org.scalatestplus.mockito.MockitoSugar
+import org.mockito.Mockito._
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
@@ -16,7 +17,7 @@ import scala.util.{Failure, Success, Try}
 class AkkaHttpClientMockTest
   extends AnyWordSpec
     with Matchers
-    with MockFactory
+    with MockitoSugar
     with ScalaFutures
     with IntegrationPatience
     with BeforeAndAfterAll {
@@ -27,8 +28,8 @@ class AkkaHttpClientMockTest
     system.terminate()
   }
 
-  def mockHttpPool(): (MockFunction1[HttpRequest, Try[HttpResponse]], TestHttpPoolFactory) = {
-    val sendRequest = mockFunction[HttpRequest, Try[HttpResponse]]
+  def mockHttpPool(): (Function[HttpRequest, Try[HttpResponse]], TestHttpPoolFactory) = {
+    val sendRequest = mock[Function[HttpRequest, Try[HttpResponse]]]
     val poolFactory = new TestHttpPoolFactory(sendRequest)
     (sendRequest, poolFactory)
   }
@@ -49,22 +50,22 @@ class AkkaHttpClientMockTest
       val client =
         new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
 
-      (blacklist.contains _).expects("host1").returns(false)
-      (blacklist.contains _).expects("host2").returns(false)
-      (blacklist.add _).expects("host1").returns(true)
-      (blacklist.remove _).expects("host2").returns(false)
+      when(blacklist.contains("host1")).thenReturn(false)
+      when(blacklist.contains("host2")).thenReturn(false)
+      when(blacklist.add("host1")).thenReturn(true)
+      when(blacklist.remove("host2")).thenReturn(false)
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host1/test")
-        })
-        .returns(Success(HttpResponse(StatusCodes.BadGateway)))
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r != null && r.uri == Uri("http://host1/test")
+        }))
+        .thenReturn(Success(HttpResponse(StatusCodes.BadGateway)))
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host2/test")
-        })
-        .returns(Success(HttpResponse().withEntity("ok")))
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r != null && r.uri == Uri("http://host2/test")
+        }))
+        .thenReturn(Success(HttpResponse().withEntity("ok")))
 
       client
         .sendAsync(ElasticRequest("GET", "/test"))
@@ -91,14 +92,14 @@ class AkkaHttpClientMockTest
           blacklist,
           httpPool)
 
-      (blacklist.contains _).expects("host1").returns(false)
-      (blacklist.add _).expects("host1").returns(true)
+      when(blacklist.contains("host1")).thenReturn(false)
+      when(blacklist.add("host1")).thenReturn(true)
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host1/test")
-        })
-        .returns(Success(HttpResponse(StatusCodes.BadGateway)))
+        }))
+        .thenReturn(Success(HttpResponse(StatusCodes.BadGateway)))
 
       client
         .sendAsync(ElasticRequest("GET", "/test"))
@@ -122,22 +123,22 @@ class AkkaHttpClientMockTest
       val client =
         new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
 
-      (blacklist.contains _).expects("host1").returns(false)
-      (blacklist.contains _).expects("host2").returns(false)
-      (blacklist.add _).expects("host1").returns(true)
-      (blacklist.remove _).expects("host2").returns(false)
+      when(blacklist.contains("host1")).thenReturn(false)
+      when(blacklist.contains("host2")).thenReturn(false)
+      when(blacklist.add("host1")).thenReturn(true)
+      when(blacklist.remove("host2")).thenReturn(false)
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host1/test")
-        })
-        .returns(Success(HttpResponse(StatusCodes.BadGateway)))
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r != null && r.uri == Uri("http://host1/test")
+        }))
+        .thenReturn(Success(HttpResponse(StatusCodes.BadGateway)))
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host2/test")
-        })
-        .returns(Success(HttpResponse().withEntity("host2")))
+        }))
+        .thenReturn(Success(HttpResponse().withEntity("host2")))
 
       client
         .sendAsync(ElasticRequest("GET", "/test"))
@@ -158,22 +159,22 @@ class AkkaHttpClientMockTest
       val client =
         new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
 
-      (blacklist.contains _).expects("host1").returns(false)
-      (blacklist.contains _).expects("host2").returns(false)
-      (blacklist.add _).expects("host1").returns(true)
-      (blacklist.remove _).expects("host2").returns(false)
+      when(blacklist.contains("host1")).thenReturn(false)
+      when(blacklist.contains("host2")).thenReturn(false)
+      when(blacklist.add("host1")).thenReturn(true)
+      when(blacklist.remove("host2")).thenReturn(false)
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host1/test")
-        })
-        .returns(Failure(new Exception("Some exception")))
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r != null && r.uri == Uri("http://host1/test")
+        }))
+        .thenReturn(Failure(new Exception("Some exception")))
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
-          r.uri == Uri("http://host2/test")
-        })
-        .returns(Success(HttpResponse().withEntity("host2")))
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r != null && r.uri == Uri("http://host2/test")
+        }))
+        .thenReturn(Success(HttpResponse().withEntity("host2")))
 
       client
         .sendAsync(ElasticRequest("GET", "/test"))
@@ -194,16 +195,16 @@ class AkkaHttpClientMockTest
       val client =
         new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
 
-      (blacklist.contains _).expects("host1").returns(true)
-      (blacklist.size _).expects().returns(1)
-      (blacklist.contains _).expects("host2").returns(false)
-      (blacklist.remove _).expects("host2").returns(false)
+      when(blacklist.contains("host1")).thenReturn(true)
+      when(blacklist.size).thenReturn(1)
+      when(blacklist.contains("host2")).thenReturn(false)
+      when(blacklist.remove("host2")).thenReturn(false)
 
-      sendRequest
-        .expects(argThat { (r: HttpRequest) =>
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
           r.uri == Uri("http://host2/test")
-        })
-        .returns(Success(HttpResponse().withEntity("host2")))
+        }))
+        .thenReturn(Success(HttpResponse().withEntity("host2")))
 
       client
         .sendAsync(ElasticRequest("GET", "/test"))

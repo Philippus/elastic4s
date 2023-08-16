@@ -331,8 +331,8 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-akka")
-  .settings(scala2Settings) // tests need re-writing to not use scalaMock. We also need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
-  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, scalaMock))
+  .settings(scala2Settings) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
+  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream))
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .dependsOn(core, testkit % "test")
