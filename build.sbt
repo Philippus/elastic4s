@@ -337,8 +337,8 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-pekko")
-  .settings(scala2Settings) // tests need re-writing to not use scalaMock
-  .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, scalaMock))
+  .settings(scala3Settings)
+  .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
 
 
 lazy val tests = (project in file("elastic4s-tests"))
