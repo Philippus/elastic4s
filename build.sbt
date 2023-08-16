@@ -25,7 +25,7 @@ def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 val scala2Versions = Seq("2.12.17", "2.13.11")
-val scalaAllVersions = scala2Versions :+ "3.2.2"
+val scalaAllVersions = scala2Versions :+ "3.3.0"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.17",
   crossScalaVersions := Nil
@@ -273,7 +273,7 @@ lazy val akkastreams = (project in file("elastic4s-streams-akka"))
 lazy val pekkostreams = (project in file("elastic4s-streams-pekko"))
   .dependsOn(core, testkit % "test", jackson % "test")
   .settings(name := "elastic4s-streams-pkko")
-  .settings(scala2Settings) // // Scala 3 needs upgrade to Scala 3.3.x
+  .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.pekkoStream)
 
 lazy val jackson = (project in file("elastic4s-json-jackson"))
@@ -337,7 +337,7 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-pekko")
-  .settings(scala2Settings) // tests need re-writing to not use scalaMock and upgrade to Scala 3.3.x
+  .settings(scala2Settings) // tests need re-writing to not use scalaMock
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, scalaMock))
 
 
