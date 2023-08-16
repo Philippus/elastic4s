@@ -24,7 +24,7 @@ class PekkoHttpClientMockTest
 
   private implicit lazy val system: ActorSystem = ActorSystem()
 
-  override def afterAll: Unit = {
+  override def afterAll(): Unit = {
     system.terminate()
   }
 

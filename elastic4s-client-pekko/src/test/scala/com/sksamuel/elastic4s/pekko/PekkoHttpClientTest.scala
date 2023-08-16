@@ -17,7 +17,7 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
 
   private implicit lazy val system: ActorSystem = ActorSystem()
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     Try {
       client.execute {
         deleteIndex("testindex")
@@ -25,7 +25,7 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
     }
   }
 
-  override def afterAll: Unit = {
+  override def afterAll(): Unit = {
     Try {
       client.execute {
         deleteIndex("testindex")

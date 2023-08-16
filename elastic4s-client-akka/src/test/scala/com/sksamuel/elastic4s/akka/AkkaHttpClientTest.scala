@@ -17,7 +17,7 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
 
   private implicit lazy val system: ActorSystem = ActorSystem()
 
-  override def beforeAll: Unit = {
+  override def beforeAll(): Unit = {
     Try {
       client.execute {
         deleteIndex("testindex")
@@ -25,7 +25,7 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
     }
   }
 
-  override def afterAll: Unit = {
+  override def afterAll(): Unit = {
     Try {
       client.execute {
         deleteIndex("testindex")
