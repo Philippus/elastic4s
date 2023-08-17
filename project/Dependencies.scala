@@ -16,9 +16,10 @@ object Dependencies {
   val Log4jVersion                   = "2.15.0"
   val MockitoVersion                 = "5.4.0"
   val MonixVersion                   = "3.4.1"
+  val PekkoHttpVersion               = "1.0.0"
+  val PekkoVersion                   = "1.0.1"
   val PlayJsonVersion                = "2.10.0-RC6"
   val ReactiveStreamsVersion         = "1.0.3"
-  val ScalamockVersion               = "5.2.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
   val ScalatestPlusVersion           = "3.2.9.0"
   val ScalazVersion                  = "7.2.35"
@@ -65,12 +66,15 @@ object Dependencies {
   lazy val cats2                        = "org.typelevel"                 %% "cats-effect"                      % CatsEffect2Version
   lazy val elasticsearchRestClient      = "org.elasticsearch.client"       % "elasticsearch-rest-client"        % ElasticsearchVersion
   lazy val json4s                       = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
-  lazy val monix                        = "io.monix"                      %% "monix"      % MonixVersion
-  lazy val playJson                     = Seq("com.typesafe.play"         %% "play-json"  % PlayJsonVersion)
-  lazy val sprayJson                    = Seq("io.spray"                  %% "spray-json" % SprayJsonVersion)
-  lazy val sttp                         = "com.softwaremill.sttp.client3" %% "core"       % SttpVersion
-  lazy val zioJson1                     = "dev.zio"                       %% "zio-json"   % ZIOJson1Version
-  lazy val zioJson                      = "dev.zio"                       %% "zio-json"   % ZIOJsonVersion
+  lazy val monix                        = "io.monix"                      %% "monix"        % MonixVersion
+  lazy val pekkoActor                   = "org.apache.pekko"              %% "pekko-actor"  % PekkoVersion
+  lazy val pekkoHTTP                    = "org.apache.pekko"              %% "pekko-http"   % PekkoHttpVersion
+  lazy val pekkoStream                  = "org.apache.pekko"              %% "pekko-stream" % PekkoVersion
+  lazy val playJson                     = Seq("com.typesafe.play"         %% "play-json"    % PlayJsonVersion)
+  lazy val sprayJson                    = Seq("io.spray"                  %% "spray-json"   % SprayJsonVersion)
+  lazy val sttp                         = "com.softwaremill.sttp.client3" %% "core"         % SttpVersion
+  lazy val zioJson1                     = "dev.zio"                       %% "zio-json"     % ZIOJson1Version
+  lazy val zioJson                      = "dev.zio"                       %% "zio-json"     % ZIOJsonVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 
@@ -78,7 +82,6 @@ object Dependencies {
   lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % "test"
   lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % "test"
   lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
-  lazy val scalaMock             = "org.scalamock"           %% "scalamock"                    % ScalamockVersion       % "test"
   lazy val scalaTestMain         = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
   lazy val scalaTest             = scalaTestMain % "test"
   lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion

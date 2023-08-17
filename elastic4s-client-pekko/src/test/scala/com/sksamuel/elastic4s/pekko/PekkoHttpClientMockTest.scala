@@ -1,7 +1,7 @@
-package com.sksamuel.elastic4s.akka
+package com.sksamuel.elastic4s.pekko
 
-import akka.actor.ActorSystem
-import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
 import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
 import org.mockito.ArgumentMatchers._
 import org.scalatest.BeforeAndAfterAll
@@ -14,7 +14,7 @@ import org.mockito.Mockito._
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
-class AkkaHttpClientMockTest
+class PekkoHttpClientMockTest
   extends AnyWordSpec
     with Matchers
     with MockitoSugar
@@ -34,7 +34,7 @@ class AkkaHttpClientMockTest
     (sendRequest, poolFactory)
   }
 
-  "AkkaHttpClient" should {
+  "PekkoHttpClient" should {
 
     "retry on 502" in {
 
@@ -48,7 +48,7 @@ class AkkaHttpClientMockTest
       val (sendRequest, httpPool) = mockHttpPool()
 
       val client =
-        new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
+        new PekkoHttpClient(PekkoHttpClientSettings(hosts), blacklist, httpPool)
 
       when(blacklist.contains("host1")).thenReturn(false)
       when(blacklist.contains("host2")).thenReturn(false)
@@ -87,8 +87,8 @@ class AkkaHttpClientMockTest
       val (sendRequest, httpPool) = mockHttpPool()
 
       val client =
-        new AkkaHttpClient(
-          AkkaHttpClientSettings(hosts).copy(maxRetryTimeout = 0.seconds),
+        new PekkoHttpClient(
+          PekkoHttpClientSettings(hosts).copy(maxRetryTimeout = 0.seconds),
           blacklist,
           httpPool)
 
@@ -121,7 +121,7 @@ class AkkaHttpClientMockTest
       val (sendRequest, httpPool) = mockHttpPool()
 
       val client =
-        new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
+        new PekkoHttpClient(PekkoHttpClientSettings(hosts), blacklist, httpPool)
 
       when(blacklist.contains("host1")).thenReturn(false)
       when(blacklist.contains("host2")).thenReturn(false)
@@ -157,7 +157,7 @@ class AkkaHttpClientMockTest
       val (sendRequest, httpPool) = mockHttpPool()
 
       val client =
-        new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
+        new PekkoHttpClient(PekkoHttpClientSettings(hosts), blacklist, httpPool)
 
       when(blacklist.contains("host1")).thenReturn(false)
       when(blacklist.contains("host2")).thenReturn(false)
@@ -193,7 +193,7 @@ class AkkaHttpClientMockTest
       val (sendRequest, httpPool) = mockHttpPool()
 
       val client =
-        new AkkaHttpClient(AkkaHttpClientSettings(hosts), blacklist, httpPool)
+        new PekkoHttpClient(PekkoHttpClientSettings(hosts), blacklist, httpPool)
 
       when(blacklist.contains("host1")).thenReturn(true)
       when(blacklist.size).thenReturn(1)

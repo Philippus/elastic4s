@@ -25,7 +25,7 @@ def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
 val scala2Versions = Seq("2.12.17", "2.13.11")
-val scalaAllVersions = scala2Versions :+ "3.2.2"
+val scalaAllVersions = scala2Versions :+ "3.3.0"
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.17",
   crossScalaVersions := Nil
@@ -139,7 +139,8 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
     ziojson,
     clientsttp,
     httpstreams,
-    akkastreams
+    akkastreams,
+    pekkostreams
 )
 lazy val scala3_root = Project("elastic4s-scala3", file("scala3"))
   .settings(name := "elastic4s")
@@ -157,7 +158,7 @@ lazy val root = Project("elastic4s", file("."))
     noPublishSettings
   )
   .aggregate(
-    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka) ++ scala3Projects: _*
+    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
@@ -269,6 +270,12 @@ lazy val akkastreams = (project in file("elastic4s-streams-akka"))
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.akkaStream)
 
+lazy val pekkostreams = (project in file("elastic4s-streams-pekko"))
+  .dependsOn(core, testkit % "test", jackson % "test")
+  .settings(name := "elastic4s-streams-pkko")
+  .settings(scala3Settings)
+  .settings(libraryDependencies += Dependencies.pekkoStream)
+
 lazy val jackson = (project in file("elastic4s-json-jackson"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-jackson")
@@ -324,8 +331,15 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-akka")
-  .settings(scala2Settings) // tests need re-writing to not use scalaMock. We also need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
-  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, scalaMock))
+  .settings(scala2Settings) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
+  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream))
+
+lazy val clientpekko = (project in file("elastic4s-client-pekko"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-client-pekko")
+  .settings(scala3Settings)
+  .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
+
 
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")
