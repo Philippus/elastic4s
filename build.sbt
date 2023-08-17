@@ -272,7 +272,7 @@ lazy val akkastreams = (project in file("elastic4s-streams-akka"))
 
 lazy val pekkostreams = (project in file("elastic4s-streams-pekko"))
   .dependsOn(core, testkit % "test", jackson % "test")
-  .settings(name := "elastic4s-streams-pkko")
+  .settings(name := "elastic4s-streams-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.pekkoStream)
 
