@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.akka
+package com.sksamuel.elastic4s.pekko
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import com.sksamuel.elastic4s.{ElasticClient, ElasticRequest, Executor, HttpClient, HttpResponse}
 import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.elastic4s.testkit.DockerTests
@@ -13,7 +13,7 @@ import java.util.Base64
 import scala.concurrent.Future
 import scala.util.Try
 
-class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
+class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   private implicit lazy val system: ActorSystem = ActorSystem()
 
@@ -31,16 +31,16 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
         deleteIndex("testindex")
       }.await
 
-      akkaClient.shutdown().await
+      pekkoClient.shutdown().await
       system.terminate().await
     }
   }
 
-  private lazy val akkaClient = AkkaHttpClient(AkkaHttpClientSettings(List(s"$elasticHost:$elasticPort")))
+  private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
-  override val client = ElasticClient(akkaClient)
+  override val client = ElasticClient(pekkoClient)
 
-  "AkkaHttpClient" should "support utf-8" in {
+  "PekkoHttpClient" should "support utf-8" in {
 
     client.execute {
       indexInto("testindex").doc("""{ "text":"¡Hola! ¿Qué tal?" }""")

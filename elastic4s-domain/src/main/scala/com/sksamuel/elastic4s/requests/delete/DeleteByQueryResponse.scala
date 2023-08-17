@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.delete
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.sksamuel.elastic4s.BulkIndexByScrollFailure
 
 case class DeleteByQueryResponse(took: Long,
                                  @JsonProperty("timed_out") timedOut: Boolean,
@@ -11,4 +12,5 @@ case class DeleteByQueryResponse(took: Long,
                                  noops: Long,
                                  @JsonProperty("throttled_millis") throttledMillis: Long,
                                  @JsonProperty("requests_per_second") requestsPerSecond: Long,
-                                 @JsonProperty("throttled_until_millis") throttledUntilMillis: Long)
+                                 @JsonProperty("throttled_until_millis") throttledUntilMillis: Long,
+                                 failures: Option[Seq[BulkIndexByScrollFailure]])
