@@ -125,6 +125,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
     clientcore,
     clientesjava,
     clientsSniffed,
+    clientpekko,
     cats_effect,
     cats_effect_2,
     zio_1,
