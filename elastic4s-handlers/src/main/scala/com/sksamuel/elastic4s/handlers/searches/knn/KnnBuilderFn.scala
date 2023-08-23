@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.handlers.searches.knn
 
+import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.knn.Knn
 
@@ -14,6 +15,7 @@ object KnnBuilderFn {
       case Some(value) => builder.field("similarity", value)
       case _ =>
     }
+    knn.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn(filter)))
     builder.field("boost", knn.boost)
     builder.endObject()
     builder
