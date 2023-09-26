@@ -13,9 +13,8 @@ import com.sksamuel.elastic4s.requests.update.UpdateRequest
 
 object BulkBuilderFn {
 
-  def apply(bulk: BulkRequest): Seq[String] = {
-    val rows = List.newBuilder[String]
-    bulk.requests.foreach {
+  def apply(bulk: BulkRequest): Iterator[String] = {
+    bulk.requests.iterator.flatMap {
       case index: IndexRequest =>
         val builder = XContentFactory.jsonBuilder()
         val createOrIndex = if (index.createOnly.getOrElse(false)) "create" else "index"
@@ -32,8 +31,7 @@ object BulkBuilderFn {
         builder.endObject()
         builder.endObject()
 
-        rows += builder.string
-        rows += IndexContentBuilder(index)
+        Iterator(builder.string, IndexContentBuilder(index))
 
       case delete: DeleteByIdRequest =>
         val builder = XContentFactory.jsonBuilder()
@@ -49,7 +47,7 @@ object BulkBuilderFn {
         builder.endObject()
         builder.endObject()
 
-        rows += builder.string
+        Iterator.single(builder.string)
 
       case update: UpdateRequest =>
         val builder = XContentFactory.jsonBuilder()
@@ -72,9 +70,7 @@ object BulkBuilderFn {
         builder.endObject()
         builder.endObject()
 
-        rows += builder.string
-        rows += UpdateBuilderFn(update).string
+        Iterator(builder.string, UpdateBuilderFn(update).string)
     }
-    rows.result()
   }
 }
