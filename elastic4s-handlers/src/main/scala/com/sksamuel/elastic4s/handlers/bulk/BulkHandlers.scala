@@ -28,7 +28,7 @@ trait BulkHandlers {
 
   private[bulk] def buildBulkHttpBody(bulk: BulkRequest): String = {
     val builder = StringBuilder.newBuilder
-    val rows: Seq[String] = BulkBuilderFn(bulk)
+    val rows: Iterator[String] = BulkBuilderFn(bulk)
     rows.addString(builder, "", "\n", "")
     builder.append("\n") // es seems to require a trailing new line as well
     builder.mkString
