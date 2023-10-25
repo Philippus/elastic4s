@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery, Shape}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CombinedFieldsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, SimpleStringQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CombinedFieldsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, ScriptScoreQuery, SimpleStringQuery}
 import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup, span, term}
@@ -190,6 +190,9 @@ trait QueryApi {
 
   def scriptQuery(script: Script): ScriptQuery = ScriptQuery(script)
   def scriptQuery(script: String): ScriptQuery = ScriptQuery(script)
+
+  def scriptScoreQuery(): ScriptScoreQuery = ScriptScoreQuery()
+  def scriptScoreQuery(query: Query): ScriptScoreQuery = ScriptScoreQuery().query(query)
 
   def simpleStringQuery(q: String): SimpleStringQuery = SimpleStringQuery(q)
   def stringQuery(q: String): QueryStringQuery = QueryStringQuery(q)
