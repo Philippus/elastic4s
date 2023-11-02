@@ -29,6 +29,13 @@ object SearchBodyBuilderFn {
     request.collapse.map(CollapseBuilderFn.apply).foreach(x => builder.rawField("collapse", x.string))
     request.knn.map(KnnBuilderFn.apply).foreach(x => builder.rawField("knn", x.string))
 
+    if (request.multipleKnn.nonEmpty) {
+      builder.startArray("knn")
+      val arrayBody: String = request.multipleKnn.map(KnnBuilderFn.apply).map(_.string).mkString(",")
+      builder.rawValue(arrayBody)
+      builder.endArray()
+    }
+
     request.from.foreach(builder.field("from", _))
     request.size.foreach(builder.field("size", _))
 
