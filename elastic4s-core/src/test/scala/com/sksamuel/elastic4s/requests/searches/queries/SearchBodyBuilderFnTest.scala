@@ -6,6 +6,8 @@ import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistanceQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{GeoDistanceSort, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, SearchBodyBuilderFn}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.requests.searches.knn.Knn
+import com.sksamuel.elastic4s.requests.searches.term.TermQuery
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -52,5 +54,16 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
 
     SearchBodyBuilderFn(req).string shouldBe
       """{"query":{"geo_distance":{"distance":"100km","location":[-79.38871,43.65435]}},"size":100,"sort":[{"_geo_distance":{"location":[[-79.38871,43.65435]],"order":"asc","unit":"km"}}]}"""
+  }
+
+  test("multiple Knn queries") {
+    val multipleKnnDefinition =Seq(
+      Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)),
+      Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4)
+
+    val req = search("example") multipleKnn multipleKnnDefinition
+
+    SearchBodyBuilderFn(req).string shouldBe
+      """{"knn":[{"field":"image-vector","query_vector":[54.1,10.2,-2.3],"k":1,"num_candidates":50,"boost":1.0},{"field":"image-vector","query_vector":[54.1,10.2,-2.3],"k":5,"num_candidates":50,"similarity":10.0,"filter":{"term":{"file-type":{"value":"png"}}},"boost":0.4}]}"""
   }
 }
