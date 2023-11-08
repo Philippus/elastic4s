@@ -57,7 +57,10 @@ object SearchBodyBuilderFn {
 
     request.pit.foreach{pit  =>
       builder.startObject("pit")
-      builder.field("id", pit)
+      builder.field("id", pit.id)
+      pit.keepAlive.foreach{keepAlive =>
+        builder.field("keep_alive", s"${keepAlive.toSeconds}s")
+      }
       builder.endObject()
     }
 

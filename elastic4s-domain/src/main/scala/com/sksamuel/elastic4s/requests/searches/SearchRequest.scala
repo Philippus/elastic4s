@@ -61,7 +61,7 @@ case class SearchRequest(indexes: Indexes,
                          ext: Map[String, Any] = Map.empty,
                          knn: Option[Knn] = None,
                          multipleKnn: Seq[Knn] = Nil,
-                         pit: Option[String] = None) {
+                         pit: Option[Pit] = None) {
 
   /** Adds a single string query to this search
     *
@@ -297,5 +297,5 @@ case class SearchRequest(indexes: Indexes,
 
   def multipleKnn(multipleKnn: Iterable[Knn]): SearchRequest = copy(multipleKnn = multipleKnn.toSeq)
 
-  def pit(id: String): SearchRequest = copy(pit = Some(id))
+  def pit(pit: Pit): SearchRequest = copy(pit = Some(pit))
 }
