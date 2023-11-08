@@ -60,7 +60,8 @@ case class SearchRequest(indexes: Indexes,
                          runtimeMappings: Seq[RuntimeMapping] = Nil,
                          ext: Map[String, Any] = Map.empty,
                          knn: Option[Knn] = None,
-                         multipleKnn: Seq[Knn] = Nil) {
+                         multipleKnn: Seq[Knn] = Nil,
+                         pit: Option[String] = None) {
 
   /** Adds a single string query to this search
     *
@@ -295,4 +296,6 @@ case class SearchRequest(indexes: Indexes,
   def knn(knn: Knn): SearchRequest = copy(knn = knn.some)
 
   def multipleKnn(multipleKnn: Iterable[Knn]): SearchRequest = copy(multipleKnn = multipleKnn.toSeq)
+
+  def pit(id: String): SearchRequest = copy(pit = Some(id))
 }

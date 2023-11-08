@@ -55,6 +55,12 @@ object SearchBodyBuilderFn {
     if (request.searchAfter.nonEmpty)
       builder.autoarray("search_after", request.searchAfter)
 
+    request.pit.foreach{pit  =>
+      builder.startObject("pit")
+      builder.field("id", pit)
+      builder.endObject()
+    }
+
     if (request.scriptFields.nonEmpty) {
       builder.startObject("script_fields")
       request.scriptFields.foreach { field =>
