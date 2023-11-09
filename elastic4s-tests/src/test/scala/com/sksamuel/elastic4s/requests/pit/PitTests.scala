@@ -11,12 +11,12 @@ class PitTests extends AnyFlatSpec with Matchers with DockerTests {
 
   Try {
     client.execute {
-      deleteIndex("beer")
+      deleteIndex("pit")
     }.await
   }
 
   client.execute {
-    createIndex("beer").mapping {
+    createIndex("pit").mapping {
       mapping(
         textField("name").stored(true),
         textField("brand").stored(true),
@@ -27,7 +27,7 @@ class PitTests extends AnyFlatSpec with Matchers with DockerTests {
 
   "A create pit request" should "create a pit" in {
     val resp = client
-      .execute(createPointInTime("beer").keepAlive(30.seconds))
+      .execute(createPointInTime("pit").keepAlive(30.seconds))
       .await.result
 
     resp.id.length should be > 0
@@ -35,7 +35,7 @@ class PitTests extends AnyFlatSpec with Matchers with DockerTests {
 
   "A delete pit request" should "delete a pit" in {
     val pit = client
-      .execute(createPointInTime("beer").keepAlive(30.seconds))
+      .execute(createPointInTime("pit").keepAlive(30.seconds))
       .await.result
 
     val result = client.execute(deletePointInTime(pit.id)).await.result

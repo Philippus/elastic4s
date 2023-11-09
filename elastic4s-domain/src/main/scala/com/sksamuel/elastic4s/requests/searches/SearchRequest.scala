@@ -297,5 +297,8 @@ case class SearchRequest(indexes: Indexes,
 
   def multipleKnn(multipleKnn: Iterable[Knn]): SearchRequest = copy(multipleKnn = multipleKnn.toSeq)
 
-  def pit(pit: Pit): SearchRequest = copy(pit = Some(pit))
+  def pit(pit: Pit): SearchRequest = {
+    // When a pit is provided, no target must be given
+    copy(pit = Some(pit), indexes = Indexes(Nil))
+  }
 }
