@@ -55,6 +55,15 @@ object SearchBodyBuilderFn {
     if (request.searchAfter.nonEmpty)
       builder.autoarray("search_after", request.searchAfter)
 
+    request.pit.foreach{pit  =>
+      builder.startObject("pit")
+      builder.field("id", pit.id)
+      pit.keepAlive.foreach{keepAlive =>
+        builder.field("keep_alive", s"${keepAlive.toSeconds}s")
+      }
+      builder.endObject()
+    }
+
     if (request.scriptFields.nonEmpty) {
       builder.startObject("script_fields")
       request.scriptFields.foreach { field =>

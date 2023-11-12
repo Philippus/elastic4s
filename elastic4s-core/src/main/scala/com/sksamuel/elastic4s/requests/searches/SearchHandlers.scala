@@ -54,13 +54,16 @@ trait SearchHandlers {
 
     override def build(request: SearchRequest): ElasticRequest = {
 
-      val endpoint =
-        if (request.indexes.values.isEmpty)
+      val endpoint = {
+        if (request.indexes.values.isEmpty && request.pit.isDefined)
+          "/_search"
+        else if (request.indexes.values.isEmpty)
           "/_all/_search"
         else
           "/" + request.indexes.values
             .map(ElasticUrlEncoder.encodeUrlFragment)
             .mkString(",") + "/_search"
+      }
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.requestCache.map(_.toString).foreach(params.put("request_cache", _))
