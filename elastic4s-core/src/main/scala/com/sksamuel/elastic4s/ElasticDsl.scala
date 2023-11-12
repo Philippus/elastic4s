@@ -13,6 +13,7 @@ import com.sksamuel.elastic4s.handlers.index.mapping.MappingHandlers
 import com.sksamuel.elastic4s.handlers.index.{IndexAdminHandlers, IndexHandlers, IndexStatsHandlers, IndexTemplateHandlers, RolloverHandlers}
 import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
+import com.sksamuel.elastic4s.handlers.pit.PitHandlers
 import com.sksamuel.elastic4s.handlers.reindex.ReindexHandlers
 import com.sksamuel.elastic4s.handlers.script.StoredScriptHandlers
 import com.sksamuel.elastic4s.handlers.security.roles.{RoleAdminHandlers, RoleHandlers}
@@ -63,7 +64,8 @@ with TaskHandlers
 with TermVectorHandlers
 with UserAdminHandlers
 with UserHandlers
-with ValidateHandlers {
+with ValidateHandlers
+with PitHandlers {
 
 implicit class RichRequest[T](t: T) {
   def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)

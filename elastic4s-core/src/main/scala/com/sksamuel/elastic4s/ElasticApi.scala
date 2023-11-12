@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.api.{AggregationApi, AliasesApi, AnalyzeApi, AnalyzerApi, BulkApi, CatsApi, ClearRolesCacheApi, ClusterApi, CollapseApi, CountApi, CreateIndexApi, CreateRoleApi, CreateUserApi, DeleteApi, DeleteIndexApi, DeleteRoleApi, DeleteUserApi, ExistsApi, ExplainApi, ForceMergeApi, GetApi, HighlightApi, IndexAdminApi, IndexApi, IndexRecoveryApi, IndexTemplateApi, IngestApi, KnnApi, LocksApi, MappingApi, NodesApi, NormalizerApi, PipelineAggregationApi, QueryApi, ReindexApi, RoleApi, ScoreApi, ScriptApi, ScrollApi, SearchApi, SearchTemplateApi, SettingsApi, SnapshotApi, SortApi, StoredScriptApi, SuggestionApi, TaskApi, TermVectorApi, TokenFilterApi, TokenizerApi, TypesApi, UpdateApi, UserAdminApi, UserApi, ValidateApi}
+import com.sksamuel.elastic4s.api.{AggregationApi, AliasesApi, AnalyzeApi, AnalyzerApi, BulkApi, CatsApi, ClearRolesCacheApi, ClusterApi, CollapseApi, CountApi, CreateIndexApi, CreateRoleApi, CreateUserApi, DeleteApi, DeleteIndexApi, DeleteRoleApi, DeleteUserApi, ExistsApi, ExplainApi, ForceMergeApi, GetApi, HighlightApi, IndexAdminApi, IndexApi, IndexRecoveryApi, IndexTemplateApi, IngestApi, KnnApi, LocksApi, MappingApi, NodesApi, NormalizerApi, PipelineAggregationApi, PitApi, QueryApi, ReindexApi, RoleApi, ScoreApi, ScriptApi, ScrollApi, SearchApi, SearchTemplateApi, SettingsApi, SnapshotApi, SortApi, StoredScriptApi, SuggestionApi, TaskApi, TermVectorApi, TokenFilterApi, TokenizerApi, TypesApi, UpdateApi, UserAdminApi, UserApi, ValidateApi}
 
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -61,7 +61,8 @@ trait ElasticApi
     with UserAdminApi
     with UserApi
     with ValidateApi
-    with KnnApi {
+    with KnnApi
+    with PitApi {
 
   implicit class RichFuture[T](future: Future[T]) {
     def await(implicit duration: Duration = 60.seconds): T = Await.result(future, duration)
