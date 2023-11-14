@@ -5,6 +5,8 @@ elastic4s - Elasticsearch Scala Client
 [![elastic4s-core Scala version support](https://index.scala-lang.org/sksamuel/elastic4s/elastic4s-core/latest-by-scala-version.svg)](https://index.scala-lang.org/sksamuel/elastic4s/elastic4s-core)
 [<img src="https://img.shields.io/nexus/s/https/oss.sonatype.org/com.sksamuel.elastic4s/elastic4s-core_2.13.svg?label=latest%20snapshot&style=plastic"/>](https://oss.sonatype.org/content/repositories/snapshots/com/sksamuel/elastic4s/)
 
+**This is a community project - PRs will be accepted and releases published by the maintainer**
+
 Elastic4s is a concise, idiomatic, reactive, type safe Scala client for Elasticsearch. The official Elasticsearch Java client can of course be used in Scala, but due to Java's syntax it is more verbose and it naturally doesn't support classes in the core Scala core library nor Scala idioms such as typeclass support.
 
 Elastic4s's DSL allows you to construct your requests programatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into an asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying broadly similar to the Java API or Rest API. Each request is an immutable object, so you can create requests and safely reuse them, or further copy them for derived requests. Because each request is strongly typed your IDE or editor can use the type information to show you what operations are available for any request type.
