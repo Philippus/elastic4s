@@ -18,7 +18,7 @@ object Dependencies {
   val MonixVersion                   = "3.4.1"
   val PekkoHttpVersion               = "1.0.0"
   val PekkoVersion                   = "1.0.1"
-  val PlayJsonVersion                = "2.10.3"
+  val PlayJsonVersion                = "3.0.1"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalatestPlusMockitoArtifactId = "mockito-3-4"
   val ScalatestPlusVersion           = "3.2.9.0"
@@ -70,7 +70,7 @@ object Dependencies {
   lazy val pekkoActor                   = "org.apache.pekko"              %% "pekko-actor"  % PekkoVersion
   lazy val pekkoHTTP                    = "org.apache.pekko"              %% "pekko-http"   % PekkoHttpVersion
   lazy val pekkoStream                  = "org.apache.pekko"              %% "pekko-stream" % PekkoVersion
-  lazy val playJson                     = Seq("com.typesafe.play"         %% "play-json"    % PlayJsonVersion)
+  lazy val playJson                     = Seq("org.playframework"         %% "play-json"    % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray"                  %% "spray-json"   % SprayJsonVersion)
   lazy val sttp                         = "com.softwaremill.sttp.client3" %% "core"         % SttpVersion
   lazy val zioJson1                     = "dev.zio"                       %% "zio-json"     % ZIOJson1Version
