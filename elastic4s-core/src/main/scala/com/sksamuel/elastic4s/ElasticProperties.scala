@@ -6,6 +6,7 @@ object ElasticProperties {
 
   private val Regex = "(http|https)://(.*?)/?(/.*?)?(\\?.*?)?".r
   private val EndpointRegex = "(.*?)(:\\d+)?".r
+  private val ContainsProtocol = "://".r
 
   /**
     * Creates [[ElasticProperties]] from an URI. The general format of the URI is:
@@ -17,6 +18,12 @@ object ElasticProperties {
     */
   def apply(str: String): ElasticProperties = {
     str match {
+      // It's much easier to validate this in a separate check instead of making the main regex much more complex
+      case str if ContainsProtocol.findAllMatchIn(str).size > 1 =>
+        sys.error(
+          s"Invalid uri (multiple protocols) $str, must be in format http(s)://host:port,host:port(/prefix)(?querystr)"
+        )
+
       case Regex(protocol, hoststr, prefix, query) =>
         val hosts = hoststr.split(',').toSeq collect {
           case EndpointRegex(host, port) => ElasticNodeEndpoint(protocol, host, Option(port).map(_.drop(1).toInt).getOrElse(9200), Option(prefix).map(_.stripSuffix("/")))
