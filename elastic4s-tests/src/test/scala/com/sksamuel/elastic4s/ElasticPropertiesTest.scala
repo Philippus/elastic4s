@@ -44,6 +44,12 @@ class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
     } should not be null
   }
 
+  it should "error if multiple protocols are specificed" in {
+    intercept[RuntimeException] {
+      ElasticProperties.apply("http://host1:1234,http://host2:9999")
+    } should not be null
+  }
+
   it should "support https protocol" in {
     ElasticProperties("https://host1:1234,host2:2345") shouldBe
       ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234, None), ElasticNodeEndpoint("https", "host2", 2345, None)))
