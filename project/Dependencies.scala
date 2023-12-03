@@ -12,7 +12,7 @@ object Dependencies {
   val ElasticsearchVersion           = "8.11.1"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.14.3"
-  val Json4sVersion                  = "4.0.6"
+  val Json4sVersion                  = "4.0.7"
   val Log4jVersion                   = "2.15.0"
   val MockitoVersion                 = "5.7.0"
   val MonixVersion                   = "3.4.1"
