@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
+import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
 
 case class PutMappingRequest(indexes: Indexes,
                              properties: Seq[ElasticField] = Nil,
@@ -28,13 +29,14 @@ case class PutMappingRequest(indexes: Indexes,
                              routing: Option[Routing] = None,
                              templates: Seq[DynamicTemplateRequest] = Nil,
                              rawSource: Option[String] = None,
-                             includeTypeName: Option[Boolean] = None)
+                             includeTypeName: Option[Boolean] = None,
+                             runtimes: Seq[RuntimeMapping] = Nil)
   extends MappingDefinitionLike {
 
   def all(all: Boolean): PutMappingRequest = copy(all = all.some)
   def source(source: Boolean): PutMappingRequest = copy(source = source.some)
 
-  // the raw source should include proeprties but not the type
+  // the raw source should include properties but not the type
   def rawSource(rawSource: String): PutMappingRequest = copy(rawSource = rawSource.some)
 
   def sourceExcludes(sourceExcludes: String*): PutMappingRequest = copy(sourceExcludes = sourceExcludes)
@@ -85,4 +87,7 @@ case class PutMappingRequest(indexes: Indexes,
 
   def includeTypeName(includeTypeName: Boolean): PutMappingRequest = copy(includeTypeName = includeTypeName.some)
   def includeTypeName(includeTypeName: Option[Boolean]): PutMappingRequest = copy(includeTypeName = includeTypeName)
+
+  def runtimes(runtimes: Iterable[RuntimeMapping]): PutMappingRequest = copy(runtimes = runtimes.toSeq)
+  def runtimes(runtimes: RuntimeMapping*): PutMappingRequest = copy(runtimes = runtimes)
 }
