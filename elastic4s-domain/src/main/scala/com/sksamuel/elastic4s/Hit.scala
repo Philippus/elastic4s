@@ -19,6 +19,8 @@ trait Hit {
   def seqNo: Long
   def primaryTerm: Long
 
+  def sort: Option[Seq[AnyRef]]
+
   final def ref: DocumentRef = DocumentRef(index, id)
 
   /**
