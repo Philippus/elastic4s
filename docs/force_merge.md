@@ -39,3 +39,11 @@ client.execute {
   forceMerge("index1").onlyExpungeDeletes(true)
 }
 ```
+
+If `waitForCompletion` is set to false, then the future will complete as soon as the request has been received. Elasticsearch default is `true`
+
+```scala
+client.execute {
+  forceMerge("index1").waitForCompletion(true)
+}
+```
