@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.ext.OptionImplicits._
 case class ForceMergeRequest(indexes: Seq[String],
                              flush: Option[Boolean] = None,
                              maxSegments: Option[Int] = None,
+                             waitForCompletion: Option[Boolean] = None,
                              onlyExpungeDeletes: Option[Boolean] = None) {
 
   def flush(flush: Boolean): ForceMergeRequest = copy(flush = flush.some)
@@ -15,4 +16,6 @@ case class ForceMergeRequest(indexes: Seq[String],
     * Defaults to full optimization (<tt>false</tt>).
     */
   def onlyExpungeDeletes(expunge: Boolean): ForceMergeRequest = copy(onlyExpungeDeletes = expunge.some)
+
+  def waitForCompletion(waitForCompletion: Boolean): ForceMergeRequest = copy(waitForCompletion = waitForCompletion.some)
 }
