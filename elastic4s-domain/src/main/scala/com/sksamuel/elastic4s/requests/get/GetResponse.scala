@@ -18,6 +18,7 @@ case class GetResponse(@JsonProperty("_id") id: String,
 
   override def exists: Boolean = found
   override def score: Float = 0
+  override def sort: Option[Seq[AnyRef]] = None
 
   def fields: Map[String, AnyRef] = Option(_fields).getOrElse(Map.empty)
   def source: Map[String, Any] = sourceAsMap
