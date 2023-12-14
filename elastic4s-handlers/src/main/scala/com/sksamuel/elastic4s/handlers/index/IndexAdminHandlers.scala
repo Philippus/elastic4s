@@ -86,6 +86,7 @@ trait IndexAdminHandlers {
         else s"/${request.indexes.mkString(",")}/_forcemerge"
 
       val params = scala.collection.mutable.Map.empty[String, Any]
+      request.waitForCompletion.foreach(params.put("wait_for_completion", _))
       request.onlyExpungeDeletes.foreach(params.put("only_expunge_deletes", _))
       request.maxSegments.foreach(params.put("max_num_segments", _))
       request.flush.foreach(params.put("flush", _))
