@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
+import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
 
 case class MappingDefinition(properties: Seq[ElasticField] = Nil,
                              all: Option[Boolean] = None,
@@ -20,7 +21,8 @@ case class MappingDefinition(properties: Seq[ElasticField] = Nil,
                              meta: Map[String, Any] = Map.empty,
                              routing: Option[Routing] = None,
                              templates: Seq[DynamicTemplateRequest] = Nil,
-                             rawSource: Option[String] = None)
+                             rawSource: Option[String] = None,
+                             runtimes: Seq[RuntimeMapping] = Nil)
   extends MappingDefinitionLike {
 
   import com.sksamuel.elastic4s.ext.OptionImplicits._
@@ -68,4 +70,6 @@ case class MappingDefinition(properties: Seq[ElasticField] = Nil,
   def dynamicTemplates(temps: DynamicTemplateRequest*): MappingDefinition = templates(temps)
   def templates(temps: Iterable[DynamicTemplateRequest]): MappingDefinition = copy(templates = temps.toSeq)
   def templates(temps: DynamicTemplateRequest*): MappingDefinition = copy(templates = temps.toSeq)
+  def runtimes(runtimes: Iterable[RuntimeMapping]): MappingDefinition = copy(runtimes = runtimes.toSeq)
+  def runtimes(runtimes: RuntimeMapping*): MappingDefinition = copy(runtimes = runtimes)
 }

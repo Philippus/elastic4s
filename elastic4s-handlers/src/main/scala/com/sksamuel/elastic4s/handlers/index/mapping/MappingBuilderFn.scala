@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.handlers.index.mapping
 
 import com.sksamuel.elastic4s.handlers.fields.ElasticFieldBuilderFn
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.mappings.MappingDefinitionLike
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
@@ -64,6 +65,32 @@ object MappingBuilderFn {
     d.analyzer.foreach(x => builder.startObject("_analyzer").field("path", x).endObject())
     d.parent.foreach(x => builder.startObject("_parent").field("type", x).endObject())
     d.size.foreach(x => builder.startObject("_size").field("enabled", x).endObject())
+
+    if (d.runtimes.nonEmpty) {
+      builder.startObject("runtime")
+      d.runtimes.foreach { runtime =>
+        builder.startObject(runtime.field)
+        builder.field("type", runtime.`type`)
+
+        // format is only allowed with a type of date
+        runtime.format.foreach(builder.field("format", _))
+        runtime.script.foreach {
+          script => builder.rawField("script", ScriptBuilderFn(script))
+        }
+        if (runtime.fields.nonEmpty) {
+          builder.startObject("fields")
+          runtime.fields.foreach {
+            field =>
+              builder.startObject(field.name)
+              builder.field("type", field.`type`)
+              builder.endObject()
+          }
+          builder.endObject()
+        }
+        builder.endObject()
+      }
+      builder.endObject()
+    }
 
     if (d.properties.map(_.name).distinct.size != d.properties.size)
       throw new RuntimeException("Mapping contained properties with the same name")

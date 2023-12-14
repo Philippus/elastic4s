@@ -2,6 +2,7 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
+import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
 
 trait MappingDefinitionLike {
   def all: Option[Boolean]
@@ -21,4 +22,5 @@ trait MappingDefinitionLike {
   def routing: Option[Routing]
   def templates: Seq[DynamicTemplateRequest]
   def rawSource: Option[String]
+  def runtimes: Seq[RuntimeMapping]
 }
