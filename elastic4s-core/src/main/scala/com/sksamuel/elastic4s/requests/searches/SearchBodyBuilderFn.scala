@@ -170,7 +170,7 @@ object SearchBodyBuilderFn {
       builder.endObject()
     }
 
-    request.trackHits.map(builder.field("track_total_hits", _))
+    request.trackHits.map(builder.autofield("track_total_hits", _))
 
     if (request.ext.nonEmpty) {
       builder.autofield("ext", request.ext)

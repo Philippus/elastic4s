@@ -53,7 +53,7 @@ case class SearchRequest(indexes: Indexes,
                          seqNoPrimaryTerm: Option[Boolean] = None,
                          profile: Option[Boolean] = None,
                          source: Option[String] = None,
-                         trackHits: Option[Boolean] = None,
+                         trackHits: Option[Any] = None,
                          allowPartialSearchResults: Option[Boolean] = None,
                          batchedReduceSize: Option[Int] = None,
                          typedKeys: Option[Boolean] = None,
@@ -104,6 +104,8 @@ case class SearchRequest(indexes: Indexes,
   def sortByFieldDesc(name: String): SearchRequest = sortBy(FieldSort(name).desc())
 
   def trackTotalHits(value: Boolean): SearchRequest = copy(trackHits = Some(value))
+
+  def trackTotalHits(value: Long): SearchRequest = copy(trackHits = Some(value))
 
   /** This method introduces zero or more script field definitions into the search construction
     *
