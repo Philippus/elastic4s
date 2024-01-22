@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.json
 
-import java.math.BigInteger
-
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+
+import java.math.BigInteger
+import scala.collection.immutable.ListSet
 
 class XContentBuilderTest extends AnyFunSuite with Matchers {
 
@@ -21,7 +22,7 @@ class XContentBuilderTest extends AnyFunSuite with Matchers {
     XContentFactory.obj()
       .startObject("wibble").field("foo", 1).field("boo", true).endObject()
       .startObject("dibble").field("goo", 2.4).string shouldBe
-    """{"wibble":{"foo":1,"boo":true},"dibble":{"goo":2.4}}"""
+      """{"wibble":{"foo":1,"boo":true},"dibble":{"goo":2.4}}"""
   }
 
   test("should support raw fields in objects") {
@@ -66,6 +67,12 @@ class XContentBuilderTest extends AnyFunSuite with Matchers {
 
   test("should support biginteger fields") {
     XContentFactory.obj().autofield("biginteger", new BigInteger("98123981231982361893619")).string shouldBe """{"biginteger":98123981231982361893619}"""
+  }
+
+  test("should support iterable fields") {
+    XContentFactory.obj().autofield("iterable", Set(1, 2, 3)).string shouldBe """{"iterable":[1,2,3]}"""
+    XContentFactory.obj().autofield("iterable", ListSet(1, 2, 3)).string shouldBe """{"iterable":[1,2,3]}"""
+    XContentFactory.obj().autofield("iterable", Iterable(1, 2, 3)).string shouldBe """{"iterable":[1,2,3]}"""
   }
 
   test("should support int fields") {
