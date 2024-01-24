@@ -251,6 +251,7 @@ class XContentBuilder(root: JsonValue) {
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
       case map: java.util.Map[_, _] => autofield(name, map.asScala.toMap)
+      case values: Iterable[_] => autoarray(name, values.toSeq)
       case null => obj.putNull(name)
       case other => field(name, other.toString)
     }
