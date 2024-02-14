@@ -1,8 +1,7 @@
 package com.sksamuel.elastic4s.requests.snapshots
 
 import java.util.UUID
-
-import com.sksamuel.elastic4s.Index
+import com.sksamuel.elastic4s.{Index, Response}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -63,7 +62,7 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "error when the repo does not exist" in {
     client.execute {
       getSnapshot(snapshotName, "bbbbb")
-    }.await.error.`type` shouldBe "repository_missing_exception"
+    }.await.result.failures("bbbbb").`type` shouldBe "repository_missing_exception"
   }
 
   "restore snapshot" should "error when an index clashes" in {

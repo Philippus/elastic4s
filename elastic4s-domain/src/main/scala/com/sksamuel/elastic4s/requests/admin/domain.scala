@@ -18,7 +18,7 @@ case class IndexStatsRequest(indices: Indexes)
 
 case class IndicesOptionsRequest(allowNoIndices: Boolean = false,
                                  ignoreUnavailable: Boolean = false,
-                                 expandWildcardsOpen: Boolean = false,
+                                 expandWildcardsOpen: Boolean = true, // Default ES value
                                  expandWildcardClosed: Boolean = false)
 
 case class IndicesExistsRequest(
