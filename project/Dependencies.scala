@@ -9,7 +9,7 @@ object Dependencies {
   val CatsVersion                    = "2.0.0"
   val CirceVersion                   = "0.14.6"
   val CommonsIoVersion               = "2.15.1"
-  val ElasticsearchVersion           = "8.11.4"
+  val ElasticsearchVersion           = "8.12.1"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.14.3"
   val Json4sVersion                  = "4.0.7"
