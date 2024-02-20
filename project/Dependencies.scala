@@ -24,7 +24,7 @@ object Dependencies {
   val ScalatestPlusVersion           = "3.2.9.0"
   val ScalazVersion                  = "7.2.35"
   val ScalatestVersion               = "3.2.16"
-  val Slf4jVersion                   = "2.0.11"
+  val Slf4jVersion                   = "2.0.12"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "3.9.2"
   val ZIOJson1Version                = "0.1.5"
