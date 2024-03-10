@@ -47,14 +47,14 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
         "count" -> 2
       ),
       indexInto("chess").fields(
-        "name" -> "knight",
         "aka" -> "horse",
+        "name" -> "knight",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("chess").fields(
-        "name" -> "rook",
         "aka" -> "castle",
+        "name" -> "rook",
         "value" -> 5,
         "count" -> 2
       ),
