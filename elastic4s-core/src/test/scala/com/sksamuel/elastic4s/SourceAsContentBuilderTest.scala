@@ -13,6 +13,6 @@ class SourceAsContentBuilderTest extends AnyFunSuite with Matchers {
 
   test("source as content builder should handle bigdecimals") {
     val map = Map("dec" -> BigDecimal("9223372036854776000"))
-    SourceAsContentBuilder(map).string shouldBe """{"dec":9.223372036854776E+18}"""
+    SourceAsContentBuilder(map).string shouldBe """{"dec":9223372036854776000}"""
   }
 }
