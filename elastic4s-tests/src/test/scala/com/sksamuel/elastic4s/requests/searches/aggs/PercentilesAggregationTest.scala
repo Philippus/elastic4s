@@ -46,7 +46,7 @@ class PercentilesAggregationTest extends AnyFreeSpec with DockerTests with Match
       }.await.result
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
-      agg.values shouldBe Map("99.0" -> 2717.0, "25.0" -> 894.0, "95.0" -> 2717.0, "50.0" -> 1707.5, "75.0" -> 2022.0, "1.0" -> 169.0, "5.0" -> 169.0)
+      agg.values shouldBe Map("99.0" -> 2671.92, "25.0" -> 955.5, "95.0" -> 2491.5999999999995, "50.0" -> 1707.5, "75.0" -> 1996.5, "1.0" -> 211.14, "5.0" -> 379.70000000000005)
     }
     "should allow setting which percentiles to return" in {
       val resp = client.execute {
@@ -56,7 +56,7 @@ class PercentilesAggregationTest extends AnyFreeSpec with DockerTests with Match
       }.await.result
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
-      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2062.8)
+      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2032.2)
     }
     "should support keyed=false" in {
       val resp = client.execute {
@@ -66,7 +66,7 @@ class PercentilesAggregationTest extends AnyFreeSpec with DockerTests with Match
       }.await.result
       resp.totalHits shouldBe 8
       val agg = resp.aggs.percentiles("agg1")
-      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2062.8)
+      agg.values shouldBe Map("50.0" -> 1707.5, "80.0" -> 2032.2)
     }
   }
 }

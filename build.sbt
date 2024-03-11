@@ -24,8 +24,10 @@ def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
 def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
 
+
 val scala2Versions = Seq("2.12.19", "2.13.12")
-val scalaAllVersions = scala2Versions :+ "3.3.1"
+val scalaAllVersions = scala2Versions :+ "3.3.3"
+
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.19",
   crossScalaVersions := Nil
@@ -354,9 +356,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.22.1" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.22.1" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.22.1" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.23.0" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.23.0" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.23.0" % "test"
     ),
     Test / fork := false,
     Test / parallelExecution := false,
