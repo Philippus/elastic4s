@@ -15,7 +15,8 @@ case class ElasticError(`type`: String,
                         grouped: Option[Boolean] = None,
                         @JsonProperty("failed_shards") failedShards: Seq[FailedShard] = Seq()
 ) {
-  def asException: Exception = causedBy.fold(new RuntimeException(s"${`type`} $reason"))(cause => new RuntimeException(s"${`type`} $reason", new RuntimeException(cause.toString)))
+  def asException: Exception =
+    causedBy.fold(new RuntimeException(s"${`type`} $reason", Option(rootCause).flatMap(_.headOption).map(_.asException).orNull))(cause => new RuntimeException(s"${`type`} $reason", new RuntimeException(cause.toString)))
 }
 
 case class FailedShard(
