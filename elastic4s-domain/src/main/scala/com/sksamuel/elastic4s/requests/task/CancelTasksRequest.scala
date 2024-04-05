@@ -8,3 +8,5 @@ case class CancelTasksRequest(nodeIds: Seq[String],
   def actions(first: String, rest: String*): CancelTasksRequest = actions(first +: rest)
   def actions(actions: Iterable[String]): CancelTasksRequest = copy(actions = actions.toSeq)
 }
+
+case class CancelTaskByIdRequest(nodeId: String, taskId: String)
