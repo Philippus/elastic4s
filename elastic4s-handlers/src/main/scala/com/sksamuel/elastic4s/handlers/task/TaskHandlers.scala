@@ -43,7 +43,7 @@ trait TaskHandlers {
           // It can fail on a 200 by returning a response containing node_failures
           if (entity.content.contains("node_failures")) Right[ElasticError, Boolean](false)
           else {
-            Try(ResponseHandler.fromEntity[ListTaskResponse](entity)).map { list: ListTaskResponse =>
+            Try(ResponseHandler.fromEntity[ListTaskResponse](entity)).map { (list: ListTaskResponse) =>
               // Check that all the tasks on all the nodes are cancelled
               list.nodes.forall { case (_, node: Node) =>
                 node.tasks.forall { case (_, task: Task) =>
