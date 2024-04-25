@@ -35,7 +35,6 @@ class CancelTaskTest extends AnyWordSpec with Matchers with DockerTests {
       val response = client.execute {
         cancelTaskById(resp.nodeId, resp.taskId)
       }.await
-      println(response)
       response.result should be(true)
     }
 
@@ -50,7 +49,6 @@ class CancelTaskTest extends AnyWordSpec with Matchers with DockerTests {
         cancelTasks(resp.nodeId).actions("*reindex")
       }.await
 
-      println(response)
       response.result should be(true)
     }
   }
