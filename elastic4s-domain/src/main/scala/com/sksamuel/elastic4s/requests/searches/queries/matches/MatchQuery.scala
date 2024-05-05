@@ -19,11 +19,15 @@ case class MatchQuery(field: String,
                       operator: Option[Operator] = None,
                       prefixLength: Option[Int] = None,
                       queryName: Option[String] = None,
-                      zeroTerms: Option[String] = None)
+                      zeroTerms: Option[String] = None,
+                      autoGenerateSynonymsPhraseQuery: Option[Boolean] = None)
   extends Query {
 
   def analyzer(an: String): MatchQuery = copy(analyzer = an.some)
   def analyzer(an: Analyzer): MatchQuery = copy(analyzer = an.name.some)
+
+  def autoGenerateSynonymsPhraseQuery(autoGenerate: Boolean): MatchQuery =
+    copy(autoGenerateSynonymsPhraseQuery = autoGenerate.some)
 
   def boost(boost: Double): MatchQuery = copy(boost = boost.some)
   def cutoffFrequency(f: Double): MatchQuery = copy(cutoffFrequency = f.some)

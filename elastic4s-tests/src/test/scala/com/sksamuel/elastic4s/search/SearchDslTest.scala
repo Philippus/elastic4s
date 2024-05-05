@@ -172,6 +172,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
         .fuzziness("2")
         .prefixLength(4)
         .analyzer(FrenchLanguageAnalyzer)
+        .autoGenerateSynonymsPhraseQuery(false)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match.json")
   }

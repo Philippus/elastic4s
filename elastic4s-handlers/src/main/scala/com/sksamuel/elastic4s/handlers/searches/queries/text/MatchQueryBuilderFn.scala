@@ -14,6 +14,7 @@ object MatchQueryBuilderFn {
 
     q.queryName.foreach(builder.field("_name", _))
     q.analyzer.foreach(builder.field("analyzer", _))
+    q.autoGenerateSynonymsPhraseQuery.foreach(builder.field("auto_generate_synonyms_phrase_query", _))
     q.boost.foreach(builder.field("boost", _))
     q.cutoffFrequency.map(_.toString).foreach(builder.field("cutoff_frequency", _))
     q.fuzziness.foreach(builder.field("fuzziness", _))
