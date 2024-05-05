@@ -1,27 +1,5 @@
 import Dependencies._
 
-organization := "nl.gn0s1s"
-startYear := Some(2013)
-homepage := Some(url("https://github.com/philippus/elastic4s"))
-licenses += License.Apache2
-
-developers := List(
-  Developer(
-    id = "Philippus",
-    name = "Philippus Baalman",
-    email = "",
-    url = url("https://github.com/philippus")
-  ),
-  Developer(
-    id = "sksamuel",
-    name = "Samuel",
-    email = "",
-    url = url("https://github.com/sksamuel")
-  )
-)
-
-ThisBuild / organizationName := "nl.gn0s1s"
-
 // Required due to dependency conflict in SBT
 // See https://github.com/sbt/sbt/issues/6997
 ThisBuild / libraryDependencySchemes ++= Seq(
@@ -54,6 +32,7 @@ lazy val warnUnusedImport = Seq(
 )
 
 lazy val commonSettings = Seq(
+  organization := "nl.gn0s1s",
   resolvers ++= Seq(Resolver.mavenLocal),
   Test / parallelExecution := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
@@ -75,6 +54,26 @@ lazy val commonJvmSettings = Seq(
   javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled"),
 )
 
+lazy val pomSettings = Seq(
+  startYear := Some(2013),
+  homepage := Some(url("https://github.com/philippus/elastic4s")),
+  licenses += License.Apache2,
+  developers := List(
+    Developer(
+      id = "Philippus",
+      name = "Philippus Baalman",
+      email = "",
+      url = url("https://github.com/philippus")
+    ),
+    Developer(
+      id = "sksamuel",
+      name = "Samuel",
+      email = "",
+      url = url("https://github.com/sksamuel")
+    )
+  )
+)
+
 lazy val noPublishSettings = Seq(
   publish := {},
   publishLocal := {},
@@ -86,6 +85,7 @@ lazy val allSettings = commonScalaVersionSettings ++
   commonJvmSettings ++
   commonSettings ++
   commonDeps ++
+  pomSettings ++
   warnUnusedImport ++
   publishSettings
 
