@@ -4,6 +4,7 @@
             "name": {
                 "query": "coldplay",
                 "analyzer": "french",
+                "auto_generate_synonyms_phrase_query": false,
                 "cutoff_frequency": "3.4",
                 "fuzziness": "2",
                 "fuzzy_transpositions": true,
