@@ -1,6 +1,5 @@
 import Dependencies._
 
-name := "elastic4s"
 organization := "nl.gn0s1s"
 startYear := Some(2013)
 homepage := Some(url("https://github.com/philippus/elastic4s"))
@@ -34,9 +33,6 @@ def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 // set by github actions when executing a release build
 def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
-
-// the version to use to publish - either from release version or a snapshot run number
-def publishVersion = if (isRelease) releaseVersion else "8.6.0." + githubRunNumber + "-SNAPSHOT"
 
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
