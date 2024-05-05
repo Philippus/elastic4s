@@ -31,26 +31,6 @@ jobs:
       - name: run tests
         run: sbt ++2.12.12 test
 
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v3
-        with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PGP_PASSPHRASE }}
-
-      - name: GPG user IDs
-        run: |
-          echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
-          echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
-          echo "name:        ${{ steps.import_gpg.outputs.name }}"
-          echo "email:       ${{ steps.import_gpg.outputs.email }}"
-
-      - name: publish snapshot
-        run: sbt ++2.12.12 publish
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-
   scala-2_13:
     runs-on: ubuntu-latest
     steps:
@@ -70,27 +50,6 @@ jobs:
       - name: run tests
         run: sbt ++2.13.4 test
 
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v3
-        with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PGP_PASSPHRASE }}
-
-      - name: GPG user IDs
-        run: |
-          echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
-          echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
-          echo "name:        ${{ steps.import_gpg.outputs.name }}"
-          echo "email:       ${{ steps.import_gpg.outputs.email }}"
-
-      - name: publish snapshot
-        run: sbt ++2.13.4 publish
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-
-
   scala-3_0:
     runs-on: ubuntu-latest
     steps:
@@ -109,23 +68,3 @@ jobs:
 
       - name: run tests
         run: sbt ++3.3.0 elastic4s-scala3/test
-
-      - name: Import GPG key
-        id: import_gpg
-        uses: crazy-max/ghaction-import-gpg@v3
-        with:
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PGP_PASSPHRASE }}
-
-      - name: GPG user IDs
-        run: |
-          echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
-          echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
-          echo "name:        ${{ steps.import_gpg.outputs.name }}"
-          echo "email:       ${{ steps.import_gpg.outputs.email }}"
-
-      - name: publish snapshot
-        run: sbt ++3.3.0 elastic4s-scala3/publish
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
