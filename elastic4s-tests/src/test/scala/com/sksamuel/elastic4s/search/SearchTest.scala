@@ -113,6 +113,11 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
         search("chess") query matchAllQuery() sourceExclude "count"
       }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"aka\":\"horse\",\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"aka\":\"castle\",\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
     }
+    "support a mix of source includes and excludes" in {
+      client.execute {
+        search("chess") query matchAllQuery() sourceInclude "value" sourceExclude "name"
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"value\":0}", "{\"value\":1}", "{\"value\":3}", "{\"value\":5}", "{\"value\":10}")
+    }
     "support constantScoreQuery" should {
       "work with termQuery" in {
         client.execute {
