@@ -36,4 +36,22 @@ class MatchQueryTest
 
     resp.hits.hits.head.sourceAsMap shouldBe Map("scientist.name" -> "Jules Violle")
   }
+
+  "a match query" should "support excluding nested properties" in {
+
+    val resp = client.execute {
+      search("units") query matchQuery("name", "candela") sourceExclude "scientist.name"
+    }.await.result
+
+    resp.hits.hits.head.sourceAsMap shouldBe Map("name" -> "candela", "scientist.country" -> "France")
+  }
+
+  "a match query" should "support including and excluding nested properties" in {
+
+    val resp = client.execute {
+      search("units") query matchQuery("name", "candela") sourceInclude "*name" sourceExclude "scientist.*"
+    }.await.result
+
+    resp.hits.hits.head.sourceAsMap shouldBe Map("name" -> "candela")
+  }
 }

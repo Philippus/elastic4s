@@ -273,13 +273,25 @@ case class SearchRequest(indexes: Indexes,
 
   def fetchSource(fetch: Boolean): SearchRequest = copy(fetchContext = FetchSourceContext(fetch).some)
 
-  def sourceInclude(first: String, rest: String*): SearchRequest = sourceFiltering(first +: rest, Nil)
+  def sourceInclude(first: String, rest: String*): SearchRequest = fetchContext match {
+    case Some(ctx) => sourceFiltering(first +: rest, ctx.excludes)
+    case None => sourceFiltering(first +: rest, Nil)
+  }
 
-  def sourceInclude(includes: Iterable[String]): SearchRequest = sourceFiltering(includes, Nil)
+  def sourceInclude(includes: Iterable[String]): SearchRequest = fetchContext match {
+    case Some(ctx) => sourceFiltering(includes, ctx.excludes)
+    case None => sourceFiltering(includes, Nil)
+  }
 
-  def sourceExclude(first: String, rest: String*): SearchRequest = sourceFiltering(Nil, first +: rest)
+  def sourceExclude(first: String, rest: String*): SearchRequest = fetchContext match {
+    case Some(ctx) => sourceFiltering(ctx.includes, first +: rest)
+    case None => sourceFiltering(Nil, first +: rest)
+  }
 
-  def sourceExclude(excludes: Iterable[String]): SearchRequest = sourceFiltering(Nil, excludes)
+  def sourceExclude(excludes: Iterable[String]): SearchRequest = fetchContext match {
+    case Some(ctx) => sourceFiltering(ctx.includes, excludes)
+    case None => sourceFiltering(Nil, excludes)
+  }
 
   def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): SearchRequest =
     copy(fetchContext = FetchSourceContext(true, includes.toArray, excludes.toArray).some)

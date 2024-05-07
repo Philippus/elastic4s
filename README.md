@@ -1,9 +1,9 @@
-elastic4s - Elasticsearch Scala Client
-=========
+# elastic4s - Elasticsearch Scala Client
 
-![master](https://github.com/sksamuel/elastic4s/workflows/master/badge.svg)
-[![elastic4s-core Scala version support](https://index.scala-lang.org/sksamuel/elastic4s/elastic4s-core/latest-by-scala-version.svg)](https://index.scala-lang.org/sksamuel/elastic4s/elastic4s-core)
-[<img src="https://img.shields.io/nexus/s/https/oss.sonatype.org/com.sksamuel.elastic4s/elastic4s-core_2.13.svg?label=latest%20snapshot&style=plastic"/>](https://oss.sonatype.org/content/repositories/snapshots/com/sksamuel/elastic4s/)
+[![build](https://github.com/Philippus/elastic4s/workflows/master/badge.svg)](https://github.com/Philippus/elastic4s/actions/workflows/master.yml?query=workflow%3Amaster+branch%3Amaster)
+![Current Version](https://img.shields.io/badge/version-8.11.5-brightgreen.svg?style=flat "8.11.5")
+[![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat "Apache 2.0")](LICENSE)
 
 **This is a community project - PRs will be accepted and releases published by the maintainer**
 

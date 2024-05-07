@@ -147,7 +147,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       s.onError(t)
       context.stop(self)
     case Success(resp: RequestFailure) =>
-      logger.warn("Request errored, will terminate the subscription", resp.error.toString)
+      logger.warn("Request errored; will terminate the subscription; {}", resp.error.toString)
       s.onError(new RuntimeException(resp.error.toString))
       context.stop(self)
     // handle when the es request times out

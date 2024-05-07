@@ -25,13 +25,31 @@ case class GetRequest(index: IndexLike,
 
   def fetchSourceContext(context: FetchSourceContext): GetRequest = copy(fetchSource = context.some)
 
-  def fetchSourceInclude(include: String): GetRequest = fetchSourceContext(List(include), Nil)
-  def fetchSourceInclude(includes: Iterable[String]): GetRequest = fetchSourceContext(includes, Nil)
-  def fetchSourceInclude(includes: String*): GetRequest = fetchSourceContext(includes, Nil)
+  def fetchSourceInclude(include: String): GetRequest = fetchSource match {
+    case Some(ctx) => fetchSourceContext(List(include), ctx.excludes)
+    case None => fetchSourceContext(List(include), Nil)
+  }
+  def fetchSourceInclude(includes: Iterable[String]): GetRequest = fetchSource match {
+    case Some(ctx) => fetchSourceContext(includes, ctx.excludes)
+    case None => fetchSourceContext(includes, Nil)
+  }
+  def fetchSourceInclude(includes: String*): GetRequest = fetchSource match {
+    case Some(ctx) => fetchSourceContext(includes, ctx.excludes)
+    case None => fetchSourceContext(includes, Nil)
+  }
 
-  def fetchSourceExclude(exclude: String): GetRequest = fetchSourceContext(Nil, List(exclude))
-  def fetchSourceExclude(excludes: Iterable[String]): GetRequest = fetchSourceContext(Nil, excludes)
-  def fetchSourceExclude(excludes: String*): GetRequest = fetchSourceContext(Nil, excludes)
+  def fetchSourceExclude(exclude: String): GetRequest = fetchSource match {
+    case Some(ctx) => fetchSourceContext(ctx.includes, List(exclude))
+    case None => fetchSourceContext(Nil, List(exclude))
+  }
+  def fetchSourceExclude(excludes: Iterable[String]): GetRequest = fetchSource match {
+    case Some(ctx) => fetchSourceContext(ctx.includes, excludes)
+    case None => fetchSourceContext(Nil, excludes)
+  }
+  def fetchSourceExclude(excludes: String*): GetRequest = fetchSource match {
+    case Some(ctx) => fetchSourceContext(ctx.includes, excludes)
+    case None => fetchSourceContext(Nil, excludes)
+  }
 
   def storedFields(first: String, rest: String*): GetRequest = storedFields(first +: rest)
   def storedFields(fs: Iterable[String]): GetRequest = copy(storedFields = fs.toSeq)

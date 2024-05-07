@@ -106,6 +106,17 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
     resp.sourceAsMap shouldBe Map("name" -> "bud lite")
   }
 
+  it should "support specifying source includes and excludes separately" in {
+
+    val resp = client.execute {
+      get("8") from "beer" fetchSourceInclude(List("name")) fetchSourceExclude(List("bran"))
+    }.await.result
+
+    resp.exists should be(true)
+    resp.id shouldBe "8"
+    resp.sourceAsMap shouldBe Map("name" -> "bud lite")
+  }
+
   it should "retrieve a document supporting stored fields" in {
 
     val resp = client.execute {

@@ -12,13 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: 11
 
       - name: Launch elastic docker
@@ -26,19 +27,20 @@ jobs:
 
       - name: run tests
         timeout-minutes: 30
-        run: sbt ++2.12.12 test
+        run: sbt ++2.12.19 test
 
   scala-2_13:
     runs-on: ubuntu-latest
     steps:
       - name: checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: 11
 
       - name: Launch elastic docker
@@ -46,23 +48,24 @@ jobs:
 
       - name: run tests
         timeout-minutes: 30
-        run: sbt ++2.13.4 test
+        run: sbt ++2.13.14 test
 
   scala-3:
     runs-on: ubuntu-latest
     steps:
       - name: checkout the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: 11
 
       - name: Launch elastic docker
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:8.12.2
 
       - name: run tests
-        run: sbt ++3.3.0 elastic4s-scala3/test
+        run: sbt ++3.3.3 elastic4s-scala3/test
