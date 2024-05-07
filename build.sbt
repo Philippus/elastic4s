@@ -1,7 +1,5 @@
 import Dependencies._
 
-ThisBuild / organizationName := "com.sksamuel.elastic4s"
-
 // Required due to dependency conflict in SBT
 // See https://github.com/sbt/sbt/issues/6997
 ThisBuild / libraryDependencySchemes ++= Seq(
@@ -14,16 +12,8 @@ def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
 def isRelease = releaseVersion != ""
 
-// the version to use to publish - either from release version or a snapshot run number
-def publishVersion = if (isRelease) releaseVersion else "8.6.0." + githubRunNumber + "-SNAPSHOT"
-
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
-
-// creds for release to maven central
-def ossrhUsername = sys.env.getOrElse("OSSRH_USERNAME", "")
-def ossrhPassword = sys.env.getOrElse("OSSRH_PASSWORD", "")
-
 
 val scala2Versions = Seq("2.12.19", "2.13.14")
 val scalaAllVersions = scala2Versions :+ "3.3.3"
@@ -42,8 +32,7 @@ lazy val warnUnusedImport = Seq(
 )
 
 lazy val commonSettings = Seq(
-  organization := "com.sksamuel.elastic4s",
-  version := publishVersion,
+  organization := "nl.gn0s1s",
   resolvers ++= Seq(Resolver.mavenLocal),
   Test / parallelExecution := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
@@ -51,18 +40,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  publishMavenStyle := true,
-  Test / publishArtifact := false,
-  pomIncludeRepository := Function.const(false),
-  releaseCrossBuild := true,
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (isRelease)
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    else
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-  }
+  Test / publishArtifact := false
 )
 
 lazy val commonJvmSettings = Seq(
@@ -76,28 +54,24 @@ lazy val commonJvmSettings = Seq(
   javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled"),
 )
 
-
 lazy val pomSettings = Seq(
-  homepage := Some(url("https://github.com/sksamuel/elastic4s")),
-  licenses := Seq("Apache 2" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-  scmInfo := Some(ScmInfo(url("https://github.com/sksamuel/elastic4s"), "scm:git:git@github.com:sksamuel/elastic4s.git")),
-  apiURL := Some(url("http://github.com/sksamuel/elastic4s/")),
-  pomExtra := <developers>
-    <developer>
-      <id>sksamuel</id>
-      <name>Sam Samuel</name>
-      <url>https://github.com/sksamuel</url>
-    </developer>
-  </developers>
-)
-
-lazy val credentialSettings = Seq(
-  credentials := Seq(Credentials(
-    "Sonatype Nexus Repository Manager",
-    "oss.sonatype.org",
-    sys.env.getOrElse("OSSRH_USERNAME", ""),
-    sys.env.getOrElse("OSSRH_PASSWORD", "")
-  ))
+  startYear := Some(2013),
+  homepage := Some(url("https://github.com/philippus/elastic4s")),
+  licenses += License.Apache2,
+  developers := List(
+    Developer(
+      id = "Philippus",
+      name = "Philippus Baalman",
+      email = "",
+      url = url("https://github.com/philippus")
+    ),
+    Developer(
+      id = "sksamuel",
+      name = "Samuel",
+      email = "",
+      url = url("https://github.com/sksamuel")
+    )
+  )
 )
 
 lazy val noPublishSettings = Seq(
@@ -111,7 +85,6 @@ lazy val allSettings = commonScalaVersionSettings ++
   commonJvmSettings ++
   commonSettings ++
   commonDeps ++
-  credentialSettings ++
   pomSettings ++
   warnUnusedImport ++
   publishSettings
