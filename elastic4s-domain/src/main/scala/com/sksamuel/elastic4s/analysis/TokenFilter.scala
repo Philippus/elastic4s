@@ -14,7 +14,9 @@ case class SynonymTokenFilter(override val name: String,
                               @deprecated ignoreCase: Option[Boolean] = None,
                               format: Option[String] = None,
                               expand: Option[Boolean] = None,
-                              @deprecated tokenizer: Option[String] = None) extends TokenFilter {
+                              @deprecated tokenizer: Option[String] = None,
+                              updateable: Option[Boolean] = None,
+                              lenient: Option[Boolean] = None) extends TokenFilter {
   require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
 
   override def build: XContentBuilder = {
@@ -24,7 +26,9 @@ case class SynonymTokenFilter(override val name: String,
     if (synonyms.nonEmpty) b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
     ignoreCase.foreach(b.field("ignore_case", _))
+    updateable.foreach(b.field("updateable", _))
     expand.foreach(b.field("expand", _))
+    lenient.foreach(b.field("lenient", _))
     tokenizer.foreach(b.field("tokenizer", _))
     b
   }
@@ -35,6 +39,8 @@ case class SynonymTokenFilter(override val name: String,
   def format(format: String): SynonymTokenFilter = copy(format = format.some)
   def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter = copy(ignoreCase = ignoreCase.some)
   def expand(expand: Boolean): SynonymTokenFilter = copy(expand = expand.some)
+  def updateable(updateable: Boolean): SynonymTokenFilter = copy(updateable = updateable.some)
+  def lenient(lenient: Boolean): SynonymTokenFilter = copy(lenient = lenient.some)
 }
 
 case class WordDelimiterGraphTokenFilter(override val name: String,
@@ -92,7 +98,9 @@ case class SynonymGraphTokenFilter(override val name: String,
                                    @deprecated ignoreCase: Option[Boolean] = None,
                                    format: Option[String] = None,
                                    expand: Option[Boolean] = None,
-                                   @deprecated tokenizer: Option[String] = None) extends TokenFilter {
+                                   @deprecated tokenizer: Option[String] = None,
+                                   updateable: Option[Boolean] = None,
+                                   lenient: Option[Boolean] = None) extends TokenFilter {
 
   require(path.isDefined || synonyms.nonEmpty, "synonym_graph requires either `synonyms` or `synonyms_path` to be configured")
 
@@ -103,7 +111,9 @@ case class SynonymGraphTokenFilter(override val name: String,
     if (synonyms.nonEmpty) b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
     ignoreCase.foreach(b.field("ignore_case", _))
+    updateable.foreach(b.field("updateable", _))
     expand.foreach(b.field("expand", _))
+    lenient.foreach(b.field("lenient", _))
     tokenizer.foreach(b.field("tokenizer", _))
     b
   }
@@ -113,7 +123,9 @@ case class SynonymGraphTokenFilter(override val name: String,
   def tokenizer(tokenizer: String): SynonymGraphTokenFilter = copy(tokenizer = tokenizer.some)
   def format(format: String): SynonymGraphTokenFilter = copy(format = Some(format))
   def ignoreCase(ignoreCase: Boolean): SynonymGraphTokenFilter = copy(ignoreCase = Some(ignoreCase))
-  def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = Some(expand))
+  def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = expand.some)
+  def updateable(updateable: Boolean): SynonymGraphTokenFilter = copy(updateable = updateable.some)
+  def lenient(lenient: Boolean): SynonymGraphTokenFilter = copy(lenient = lenient.some)
 }
 
 case class TruncateTokenFilter(override val name: String,
