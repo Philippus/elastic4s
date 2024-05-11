@@ -5,6 +5,64 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
+  "SynonymTokenFilter" should {
+    "build json with synonyms" in {
+      SynonymTokenFilter(
+        name = "my_synonym",
+        path = Option("analysis/synonyms.txt"),
+        synonyms = Set("british,english", "queen,monarch"),
+        ignoreCase = Option(true),
+        format = Option("solr"),
+        expand = Option(true),
+        tokenizer = Option("whitespace"),
+        updateable = Option(true),
+        lenient = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymtokenfilter_synonyms_raw.json")
+    }
+
+    "build json with path" in {
+      SynonymTokenFilter(
+        name = "my_synonym",
+        path = Option("analysis/synonyms.txt"),
+        ignoreCase = Option(true),
+        format = Option("solr"),
+        expand = Option(true),
+        tokenizer = Option("whitespace"),
+        updateable = Option(true),
+        lenient = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymtokenfilter_path_raw.json")
+    }
+  }
+
+  "SynonymGraphTokenFilter" should {
+    "build json with synonyms" in {
+      SynonymGraphTokenFilter(
+        name = "my_synonym",
+        path = Option("analysis/synonyms.txt"),
+        synonyms = Set("british,english", "queen,monarch"),
+        ignoreCase = Option(true),
+        format = Option("solr"),
+        expand = Option(true),
+        tokenizer = Option("whitespace"),
+        updateable = Option(true),
+        lenient = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymgraphtokenfilter_synonyms_raw.json")
+    }
+
+    "build json with path" in {
+      SynonymGraphTokenFilter(
+        name = "my_synonym",
+        path = Option("analysis/synonyms.txt"),
+        ignoreCase = Option(true),
+        format = Option("solr"),
+        expand = Option(true),
+        tokenizer = Option("whitespace"),
+        updateable = Option(true),
+        lenient = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymgraphtokenfilter_path_raw.json")
+    }
+  }
+
   "WordDelimiterGraphTokenFilter" should {
     "build json" in {
       WordDelimiterGraphTokenFilter(
