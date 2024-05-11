@@ -11,10 +11,10 @@ trait TokenFilter {
 case class SynonymTokenFilter(override val name: String,
                               path: Option[String] = None,
                               synonyms: Set[String] = Set.empty,
-                              ignoreCase: Option[Boolean] = None,
+                              @deprecated ignoreCase: Option[Boolean] = None,
                               format: Option[String] = None,
                               expand: Option[Boolean] = None,
-                              tokenizer: Option[String] = None) extends TokenFilter {
+                              @deprecated tokenizer: Option[String] = None) extends TokenFilter {
   require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
 
   override def build: XContentBuilder = {
@@ -89,10 +89,10 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
 case class SynonymGraphTokenFilter(override val name: String,
                                    path: Option[String] = None,
                                    synonyms: Set[String] = Set.empty,
-                                   ignoreCase: Option[Boolean] = None,
+                                   @deprecated ignoreCase: Option[Boolean] = None,
                                    format: Option[String] = None,
                                    expand: Option[Boolean] = None,
-                                   tokenizer: Option[String] = None) extends TokenFilter {
+                                   @deprecated tokenizer: Option[String] = None) extends TokenFilter {
 
   require(path.isDefined || synonyms.nonEmpty, "synonym_graph requires either `synonyms` or `synonyms_path` to be configured")
 
