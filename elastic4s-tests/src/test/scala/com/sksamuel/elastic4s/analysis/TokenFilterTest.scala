@@ -8,6 +8,7 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
   "WordDelimiterGraphTokenFilter" should {
     "build json" in {
       WordDelimiterGraphTokenFilter(
+        adjustOffsets = Option(true),
         name = "my_word_delimiter_graph",
         preserveOriginal = Option(true),
         catenateNumbers = Option(true),
@@ -15,6 +16,7 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
         catenateAll = Option(true),
         generateWordParts = Option(true),
         generateNumberParts = Option(true),
+        ignoreKeywords = Option(true),
         protectedWordsPath = Option("my_protected_words.txt"),
         splitOnCaseChange = Option(true),
         splitOnNumerics = Option(true),
