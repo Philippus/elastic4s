@@ -16,14 +16,16 @@ case class SynonymTokenFilter(override val name: String,
                               expand: Option[Boolean] = None,
                               @deprecated tokenizer: Option[String] = None,
                               updateable: Option[Boolean] = None,
-                              lenient: Option[Boolean] = None) extends TokenFilter {
-  require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
+                              lenient: Option[Boolean] = None,
+                              synonymsSet: Option[String] = None) extends TokenFilter {
+  require(synonymsSet.isDefined || path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms_set`, `synonyms_path` or `synonyms` to be configured")
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "synonym")
-    if (synonyms.isEmpty) path.foreach(b.field("synonyms_path", _))
-    if (synonyms.nonEmpty) b.array("synonyms", synonyms.toArray)
+    if (synonymsSet.nonEmpty) synonymsSet.foreach(b.field("synonyms_set", _))
+    else if (path.nonEmpty) path.foreach(b.field("synonyms_path", _))
+    else b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
     ignoreCase.foreach(b.field("ignore_case", _))
     updateable.foreach(b.field("updateable", _))
@@ -106,15 +108,17 @@ case class SynonymGraphTokenFilter(override val name: String,
                                    expand: Option[Boolean] = None,
                                    @deprecated tokenizer: Option[String] = None,
                                    updateable: Option[Boolean] = None,
-                                   lenient: Option[Boolean] = None) extends TokenFilter {
+                                   lenient: Option[Boolean] = None,
+                                   synonymsSet: Option[String] = None) extends TokenFilter {
 
-  require(path.isDefined || synonyms.nonEmpty, "synonym_graph requires either `synonyms` or `synonyms_path` to be configured")
+  require(synonymsSet.isDefined || path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms_set`, `synonyms_path` or `synonyms` to be configured")
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "synonym_graph")
-    if (synonyms.isEmpty) path.foreach(b.field("synonyms_path", _))
-    if (synonyms.nonEmpty) b.array("synonyms", synonyms.toArray)
+    if (synonymsSet.nonEmpty) synonymsSet.foreach(b.field("synonyms_set", _))
+    else if (path.nonEmpty) path.foreach(b.field("synonyms_path", _))
+    else b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
     ignoreCase.foreach(b.field("ignore_case", _))
     updateable.foreach(b.field("updateable", _))

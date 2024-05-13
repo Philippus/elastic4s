@@ -6,20 +6,18 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
   "SynonymTokenFilter" should {
-    "build json with synonyms" in {
+    "build json with synonyms set" in {
       SynonymTokenFilter(
         name = "my_synonym",
-        path = Option("analysis/synonyms.txt"),
-        synonyms = Set("british,english", "queen,monarch"),
         ignoreCase = Option(true),
         format = Option("solr"),
         expand = Option(true),
         tokenizer = Option("whitespace"),
         updateable = Option(true),
-        lenient = Option(true)
-      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymtokenfilter_synonyms_raw.json")
+        lenient = Option(true),
+        synonymsSet = Option("my_synonyms_set")
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymtokenfilter_set_raw.json")
     }
-
     "build json with path" in {
       SynonymTokenFilter(
         name = "my_synonym",
@@ -32,13 +30,9 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
         lenient = Option(true)
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymtokenfilter_path_raw.json")
     }
-  }
-
-  "SynonymGraphTokenFilter" should {
     "build json with synonyms" in {
-      SynonymGraphTokenFilter(
+      SynonymTokenFilter(
         name = "my_synonym",
-        path = Option("analysis/synonyms.txt"),
         synonyms = Set("british,english", "queen,monarch"),
         ignoreCase = Option(true),
         format = Option("solr"),
@@ -46,9 +40,23 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
         tokenizer = Option("whitespace"),
         updateable = Option(true),
         lenient = Option(true)
-      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymgraphtokenfilter_synonyms_raw.json")
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymtokenfilter_synonyms_raw.json")
     }
+  }
 
+  "SynonymGraphTokenFilter" should {
+    "build json with synonyms set" in {
+      SynonymGraphTokenFilter(
+        name = "my_synonym",
+        ignoreCase = Option(true),
+        format = Option("solr"),
+        expand = Option(true),
+        tokenizer = Option("whitespace"),
+        updateable = Option(true),
+        lenient = Option(true),
+        synonymsSet = Option("my_synonyms_set")
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymgraphtokenfilter_set_raw.json")
+    }
     "build json with path" in {
       SynonymGraphTokenFilter(
         name = "my_synonym",
@@ -60,6 +68,18 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
         updateable = Option(true),
         lenient = Option(true)
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymgraphtokenfilter_path_raw.json")
+    }
+    "build json with synonyms" in {
+      SynonymGraphTokenFilter(
+        name = "my_synonym",
+        synonyms = Set("british,english", "queen,monarch"),
+        ignoreCase = Option(true),
+        format = Option("solr"),
+        expand = Option(true),
+        tokenizer = Option("whitespace"),
+        updateable = Option(true),
+        lenient = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/synonymgraphtokenfilter_synonyms_raw.json")
     }
   }
 

@@ -1,0 +1,10 @@
+{
+    "type": "synonym",
+    "synonyms_set": "my_synonyms_set",
+    "format": "solr",
+    "ignore_case": true,
+    "updateable": true,
+    "expand": true,
+    "lenient": true,
+    "tokenizer": "whitespace"
+}
