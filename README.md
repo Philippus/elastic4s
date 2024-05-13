@@ -72,7 +72,7 @@ For releases prior to 7.0 [search maven central](https://search.maven.org/search
 ## Quick Start
 
 We have created sample projects in both sbt, maven and gradle. Check them out here:
-https://github.com/sksamuel/elastic4s/tree/master/samples
+https://github.com/philippus/elastic4s/tree/master/samples
 
 To get started you will need to add a dependency:
 
@@ -83,9 +83,9 @@ To get started you will need to add a dependency:
 val elastic4sVersion = "x.x.x"
 libraryDependencies ++= Seq(
   // recommended client for beginners
-  "com.sksamuel.elastic4s" %% "elastic4s-client-esjava" % elastic4sVersion,
+  "nl.gn0s1s" %% "elastic4s-client-esjava" % elastic4sVersion,
   // test kit
-  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test"
+  "nl.gn0s1s" %% "elastic4s-testkit" % elastic4sVersion % "test"
 )
 ```
 
@@ -142,7 +142,7 @@ An example is worth 1000 characters so here is a quick example of how to connect
 index and index a one field document. Then we will search for that document using a simple text query.
 
 **Note:** As of version `0.7.x` the `LocalNode` functionality has been removed. It is recommended that you stand up
-a local ElasticSearch Docker container for development. This is the same strategy used in the [tests](https://github.com/sksamuel/elastic4s/blob/master/elastic4s-testkit/src/main/scala/com/sksamuel/elastic4s/testkit/DockerTests.scala).
+a local ElasticSearch Docker container for development. This is the same strategy used in the [tests](https://github.com/philippus/elastic4s/blob/master/elastic4s-testkit/src/main/scala/com/sksamuel/elastic4s/testkit/DockerTests.scala).
 
 ```scala
 import com.sksamuel.elastic4s.fields.TextField
@@ -270,7 +270,6 @@ client.execute {
 Then Elasticsearch is preconfigured with those mappings for those fields.
 It is still fully dynamic and other fields will be created as needed with default options. Only the fields specified will have their type preset.
 
-More examples on the create index syntax can be [found here](https://sksamuel.github.io/elastic4s/docs/indices/createindex.html).
 
 
 
@@ -635,26 +634,26 @@ For full details read the [streams documentation](docs/streams.md)
 For gradle users, add (replace 2.12 with 2.13 for Scala 2.13):
 
 ```groovy
-compile 'com.sksamuel.elastic4s:elastic4s-core_2.12:x.x.x'
+compile 'nl.gn0s1s:elastic4s-core_2.12:x.x.x'
 ```
 
-For SBT users simply add:
+For SBT users add:
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-core" % "x.x.x"
+libraryDependencies += "nl.gn0s1s" %% "elastic4s-core" % "x.x.x"
 ```
 
-For Maven users simply add (replace 2.12 with 2.13 for Scala 2.13):
+For Maven users add (replace 2.12 with 2.13 for Scala 2.13):
 
 ```xml
 <dependency>
-    <groupId>com.sksamuel.elastic4s</groupId>
+    <groupId>nl.gn0s1s/groupId>
     <artifactId>elastic4s-core_2.12</artifactId>
     <version>x.x.x</version>
 </dependency>
 ```
 
-Check for the latest released versions on [maven central](http://search.maven.org/#search|ga|1|g%3A%22com.sksamuel.elastic4s%22)
+Check for the latest released versions on [maven central](https://search.maven.org/search?q=g:nl.gn0s1s%20AND%20a:elastic4s*)
 
 ## Building and Testing
 
@@ -669,9 +668,8 @@ And to test:
 ```scala
 sbt test
 ```
-The project is currently [cross-built](https://www.scala-sbt.org/1.x/docs/Cross-Build.html) against Scala 2.12 and
-2.13, when preparing a pull request the above commands should be run with the `sbt` `+` modifier to compile and test
-against both versions. For example: `sbt +compile`.
+The project is currently [cross-built](https://www.scala-sbt.org/1.x/docs/Cross-Build.html) against Scala 2.12, 2.13 and 3, when preparing a pull request the above commands should be run with the `sbt` `+` modifier to compile and test
+against all versions. For example: `sbt +compile`.
 
 For the tests to work you will need to run a local elastic instance on port 39227, _with security enabled_. One easy way of doing this is to use docker (via docker-compose):
 `docker-compose up`
