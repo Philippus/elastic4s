@@ -11,10 +11,12 @@ trait TokenFilter {
 case class SynonymTokenFilter(override val name: String,
                               path: Option[String] = None,
                               synonyms: Set[String] = Set.empty,
-                              ignoreCase: Option[Boolean] = None,
+                              @deprecated ignoreCase: Option[Boolean] = None,
                               format: Option[String] = None,
                               expand: Option[Boolean] = None,
-                              tokenizer: Option[String] = None) extends TokenFilter {
+                              @deprecated tokenizer: Option[String] = None,
+                              updateable: Option[Boolean] = None,
+                              lenient: Option[Boolean] = None) extends TokenFilter {
   require(path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms` or `synonyms_path` to be configured")
 
   override def build: XContentBuilder = {
@@ -24,7 +26,9 @@ case class SynonymTokenFilter(override val name: String,
     if (synonyms.nonEmpty) b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
     ignoreCase.foreach(b.field("ignore_case", _))
+    updateable.foreach(b.field("updateable", _))
     expand.foreach(b.field("expand", _))
+    lenient.foreach(b.field("lenient", _))
     tokenizer.foreach(b.field("tokenizer", _))
     b
   }
@@ -35,6 +39,8 @@ case class SynonymTokenFilter(override val name: String,
   def format(format: String): SynonymTokenFilter = copy(format = format.some)
   def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter = copy(ignoreCase = ignoreCase.some)
   def expand(expand: Boolean): SynonymTokenFilter = copy(expand = expand.some)
+  def updateable(updateable: Boolean): SynonymTokenFilter = copy(updateable = updateable.some)
+  def lenient(lenient: Boolean): SynonymTokenFilter = copy(lenient = lenient.some)
 }
 
 case class WordDelimiterGraphTokenFilter(override val name: String,
@@ -50,17 +56,21 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
                                          splitOnNumerics: Option[Boolean] = None,
                                          stem_english_possessive: Option[Boolean] = None,
                                          typeTable: Option[String] = None,
-                                         typeTablePath: Option[String] = None) extends TokenFilter {
+                                         typeTablePath: Option[String] = None,
+                                         adjustOffsets: Option[Boolean] = None,
+                                         ignoreKeywords: Option[Boolean] = None) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "word_delimiter_graph")
+    adjustOffsets.foreach(b.field("adjust_offsets", _))
     preserveOriginal.foreach(b.field("preserve_original", _))
     catenateNumbers.foreach(b.field("catenate_numbers", _))
     catenateWords.foreach(b.field("catenate_words", _))
     catenateAll.foreach(b.field("catenate_all", _))
     generateWordParts.foreach(b.field("generate_word_parts", _))
     generateNumberParts.foreach(b.field("generate_number_parts", _))
+    ignoreKeywords.foreach(b.field("ignore_keywords", _))
     protectedWords.foreach(b.field("protected_words", _))
     protectedWordsPath.foreach(b.field("protected_words_path", _))
     splitOnCaseChange.foreach(b.field("split_on_case_change", _))
@@ -71,11 +81,13 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
     b
   }
 
+  def adjustOffsets(bool: Boolean): WordDelimiterGraphTokenFilter = copy(adjustOffsets = bool.some)
   def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter = copy(generateWordParts = bool.some)
   def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter = copy(generateNumberParts = bool.some)
   def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateWords = bool.some)
   def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateNumbers = bool.some)
   def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateAll = bool.some)
+  def ignoreKeywords(bool: Boolean): WordDelimiterGraphTokenFilter = copy(ignoreKeywords = bool.some)
   def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter = copy(splitOnCaseChange = bool.some)
   def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter = copy(preserveOriginal = bool.some)
   def protectedWords(words: String): WordDelimiterGraphTokenFilter = copy(protectedWords = words.some)
@@ -89,10 +101,12 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
 case class SynonymGraphTokenFilter(override val name: String,
                                    path: Option[String] = None,
                                    synonyms: Set[String] = Set.empty,
-                                   ignoreCase: Option[Boolean] = None,
+                                   @deprecated ignoreCase: Option[Boolean] = None,
                                    format: Option[String] = None,
                                    expand: Option[Boolean] = None,
-                                   tokenizer: Option[String] = None) extends TokenFilter {
+                                   @deprecated tokenizer: Option[String] = None,
+                                   updateable: Option[Boolean] = None,
+                                   lenient: Option[Boolean] = None) extends TokenFilter {
 
   require(path.isDefined || synonyms.nonEmpty, "synonym_graph requires either `synonyms` or `synonyms_path` to be configured")
 
@@ -103,7 +117,9 @@ case class SynonymGraphTokenFilter(override val name: String,
     if (synonyms.nonEmpty) b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
     ignoreCase.foreach(b.field("ignore_case", _))
+    updateable.foreach(b.field("updateable", _))
     expand.foreach(b.field("expand", _))
+    lenient.foreach(b.field("lenient", _))
     tokenizer.foreach(b.field("tokenizer", _))
     b
   }
@@ -113,7 +129,9 @@ case class SynonymGraphTokenFilter(override val name: String,
   def tokenizer(tokenizer: String): SynonymGraphTokenFilter = copy(tokenizer = tokenizer.some)
   def format(format: String): SynonymGraphTokenFilter = copy(format = Some(format))
   def ignoreCase(ignoreCase: Boolean): SynonymGraphTokenFilter = copy(ignoreCase = Some(ignoreCase))
-  def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = Some(expand))
+  def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = expand.some)
+  def updateable(updateable: Boolean): SynonymGraphTokenFilter = copy(updateable = updateable.some)
+  def lenient(lenient: Boolean): SynonymGraphTokenFilter = copy(lenient = lenient.some)
 }
 
 case class TruncateTokenFilter(override val name: String,
