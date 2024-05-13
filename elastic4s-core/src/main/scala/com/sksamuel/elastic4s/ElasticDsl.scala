@@ -15,6 +15,7 @@ import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
 import com.sksamuel.elastic4s.handlers.pit.PitHandlers
 import com.sksamuel.elastic4s.handlers.reindex.ReindexHandlers
+import com.sksamuel.elastic4s.handlers.reloadsearchanalyzers.ReloadSearchAnalyzersHandlers
 import com.sksamuel.elastic4s.handlers.script.StoredScriptHandlers
 import com.sksamuel.elastic4s.handlers.security.roles.{RoleAdminHandlers, RoleHandlers}
 import com.sksamuel.elastic4s.handlers.security.users.{UserAdminHandlers, UserHandlers}
@@ -51,6 +52,7 @@ with LocksHandlers
 with MappingHandlers
 with NodesHandlers
 with ReindexHandlers
+with ReloadSearchAnalyzersHandlers
 with RoleAdminHandlers
 with RoleHandlers
 with RolloverHandlers
