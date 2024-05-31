@@ -23,6 +23,7 @@ import com.sksamuel.elastic4s.handlers.settings.SettingsHandlers
 import com.sksamuel.elastic4s.handlers.snapshot.SnapshotHandlers
 import com.sksamuel.elastic4s.handlers.synonyms.SynonymsHandlers
 import com.sksamuel.elastic4s.handlers.task.TaskHandlers
+import com.sksamuel.elastic4s.handlers.termsenum.TermsEnumHandlers
 import com.sksamuel.elastic4s.handlers.termvectors.TermVectorHandlers
 import com.sksamuel.elastic4s.handlers.update.UpdateHandlers
 import com.sksamuel.elastic4s.handlers.validate.ValidateHandlers
@@ -66,6 +67,7 @@ with SynonymsHandlers
 with UpdateHandlers
 with TaskHandlers
 with TermVectorHandlers
+with TermsEnumHandlers
 with UserAdminHandlers
 with UserHandlers
 with ValidateHandlers
