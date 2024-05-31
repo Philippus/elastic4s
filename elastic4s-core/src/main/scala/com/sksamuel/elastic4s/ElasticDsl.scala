@@ -21,6 +21,7 @@ import com.sksamuel.elastic4s.handlers.security.roles.{RoleAdminHandlers, RoleHa
 import com.sksamuel.elastic4s.handlers.security.users.{UserAdminHandlers, UserHandlers}
 import com.sksamuel.elastic4s.handlers.settings.SettingsHandlers
 import com.sksamuel.elastic4s.handlers.snapshot.SnapshotHandlers
+import com.sksamuel.elastic4s.handlers.synonyms.SynonymsHandlers
 import com.sksamuel.elastic4s.handlers.task.TaskHandlers
 import com.sksamuel.elastic4s.handlers.termsenum.TermsEnumHandlers
 import com.sksamuel.elastic4s.handlers.termvectors.TermVectorHandlers
@@ -62,6 +63,7 @@ with SearchScrollHandlers
 with SettingsHandlers
 with SnapshotHandlers
 with StoredScriptHandlers
+with SynonymsHandlers
 with UpdateHandlers
 with TaskHandlers
 with TermVectorHandlers
