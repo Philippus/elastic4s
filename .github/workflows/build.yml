@@ -1,4 +1,4 @@
-name: main
+name: build
 
 on:
   push:
