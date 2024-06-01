@@ -25,4 +25,12 @@ class NoopQueryTest extends AnyFlatSpec with Matchers with DockerTests {
       }
     }.await.result
   }
+
+  "it" should "not error out when executed in a sequence" in {
+    client.execute {
+      search("noop").query {
+        boolQuery().should(Seq(NoopQuery, NoopQuery))
+      }
+    }.await.result
+  }
 }

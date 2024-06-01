@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.handlers.searches.queries.compound
 
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.DisMaxQuery
+import com.sksamuel.elastic4s.requests.searches.queries.{DisMaxQuery, NoopQuery}
 
 object DisMaxQueryBodyFn {
   def apply(q: DisMaxQuery): XContentBuilder = {
@@ -15,7 +15,7 @@ object DisMaxQueryBodyFn {
 
     builder.startArray("queries")
     // Workaround for bug where separator is not added with rawValues
-    q.queries.map(QueryBuilderFn.apply).foreach { query =>
+    q.queries.map(QueryBuilderFn.apply).filter(_.string.nonEmpty).foreach { query =>
       builder.rawValue(query)
     }
     builder.endArray()
