@@ -78,14 +78,14 @@ object SignificantTermsAggResult {
   )
 }
 
-case class AvgAggResult(name: String, valueOpt: Option[Double]) extends MetricAggregation {
+case class AvgAggResult(name: String, valueOpt: Option[Double], valueAsString: Option[String]) extends MetricAggregation {
   def value: Double = valueOpt.get
 }
-case class SumAggResult(name: String, valueOpt: Option[Double]) extends MetricAggregation {
+case class SumAggResult(name: String, valueOpt: Option[Double], valueAsString: Option[String]) extends MetricAggregation {
   def value: Double = valueOpt.get
 }
-case class MinAggResult(name: String, value: Option[Double]) extends MetricAggregation
-case class MaxAggResult(name: String, value: Option[Double]) extends MetricAggregation
+case class MinAggResult(name: String, value: Option[Double], valueAsString: Option[String]) extends MetricAggregation
+case class MaxAggResult(name: String, value: Option[Double], valueAsString: Option[String]) extends MetricAggregation
 case class ValueCountResult(name: String, valueOpt: Option[Double]) extends MetricAggregation {
   def value: Double = valueOpt.get
 }
@@ -241,7 +241,7 @@ trait HasAggregations extends AggResult with Transformable {
   def significantTerms(name: String): SignificantTermsAggResult = SignificantTermsAggResult(name, agg(name))
 
   // metric aggs
-  def avg(name: String): AvgAggResult = AvgAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def avg(name: String): AvgAggResult = AvgAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble), agg(name).get("value_as_string").map(_.toString))
 
   def extendedStats(name: String): ExtendedStatsAggResult =
     ExtendedStatsAggResult(
@@ -257,9 +257,9 @@ trait HasAggregations extends AggResult with Transformable {
     )
 
   def cardinality(name: String): CardinalityAggResult = CardinalityAggResult(name, agg(name)("value").toString.toDouble)
-  def sum(name: String): SumAggResult = SumAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
-  def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
-  def max(name: String): MaxAggResult = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble))
+  def sum(name: String): SumAggResult = SumAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble), agg(name).get("value_as_string").map(_.toString))
+  def min(name: String): MinAggResult = MinAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble), agg(name).get("value_as_string").map(_.toString))
+  def max(name: String): MaxAggResult = MaxAggResult(name, Option(agg(name)("value")).map(_.toString.toDouble), agg(name).get("value_as_string").map(_.toString))
 
   def percentiles(name: String): PercentilesAggResult = {
     // can be keyed, so values can be either map or list
