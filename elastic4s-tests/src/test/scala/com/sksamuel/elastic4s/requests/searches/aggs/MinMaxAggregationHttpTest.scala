@@ -25,7 +25,8 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
     createIndex("minmaxagg") mapping {
       properties(
         textField("name").fielddata(true),
-        intField("height").stored(true)
+        intField("height").stored(true),
+        dateField("opened").format("strict_date")
       )
     }
   }.await
@@ -50,9 +51,9 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("minmaxagg") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("minmaxagg") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("minmaxagg") fields("name" -> "Tower of London", "height" -> 169),
+      indexInto("minmaxagg") fields("name" -> "Willis Tower", "height" -> 1244, "opened" -> "1973-09-01"),
+      indexInto("minmaxagg") fields("name" -> "Burj Kalifa", "height" -> 2456, "opened" -> "2010-01-04"),
+      indexInto("minmaxagg") fields("name" -> "Tower of London", "height" -> 169, "opened" -> "1285-01-01"),
       indexInto("minmaxagg2") fields ("name" -> "building of unknown height")
     ).refresh(RefreshPolicy.Immediate)
   ).await
@@ -60,13 +61,15 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
   "max agg" - {
     "should return the max for the context" in {
       val resp = client.execute {
-        search("minmaxagg").matchAllQuery().aggs {
-          maxAgg("agg1", "height")
-        }
+        search("minmaxagg").matchAllQuery().aggs(
+          maxAgg("agg1", "height"),
+          maxAgg("opened", "opened"),
+        )
       }.await.result
       resp.totalHits shouldBe 3
       val agg = resp.aggs.max("agg1")
       agg.value shouldBe Some(2456)
+      resp.aggs.max("opened").valueAsString shouldBe Some("2010-01-04")
     }
     "should support results when matching docs do not define the field" in {
       val resp = client.execute {
@@ -93,13 +96,15 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
   "min agg" - {
     "should return the max for the context" in {
       val resp = client.execute {
-        search("minmaxagg").matchAllQuery().aggs {
-          minAgg("agg1", "height")
-        }
+        search("minmaxagg").matchAllQuery().aggs(
+          minAgg("agg1", "height"),
+          minAgg("opened", "opened")
+        )
       }.await.result
       resp.totalHits shouldBe 3
       val agg = resp.aggs.min("agg1")
       agg.value shouldBe Some(169)
+      resp.aggs.min("opened").valueAsString shouldBe Some("1285-01-01")
     }
     "should support results matching docs do not define the field" in {
       val resp = client.execute {
