@@ -44,7 +44,7 @@ object QueryBuilderFn {
     case q: MoreLikeThisQuery => MoreLikeThisQueryBuilderFn(q)
     case q: MultiMatchQuery => MultiMatchBodyFn(q)
     case q: NestedQuery => NestedQueryBodyFn(q)
-    case NoopQuery => XContentFactory.jsonBuilder()
+    case NoopQuery => NoopQueryBuilderFn()
     case q: ParentIdQuery => ParentIdQueryBodyFn(q)
     case q: PercolateQuery => PercolateQueryBodyFn(q)
     case q: PinnedQuery => PinnedQueryBuilderFn(q)
