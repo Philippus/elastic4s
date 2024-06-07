@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.AggReader
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.requests.searches.Total
+import com.sksamuel.elastic4s.requests.searches.{HighlightField, Total}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -75,7 +75,19 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
       val agg = resp.aggs.terms("agg1")
       val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
       tophits.hits.head.safeTo[String].get shouldBe "{\"name\":\"buckingham palace\",\"location\":\"london\"}"
+    }
 
+    "should support highlighting" in {
+      val resp = client.execute {
+        search("tophits").matchQuery("name", "palace").aggs {
+          termsAgg("agg1", "location").addSubagg(
+            topHitsAgg("agg2").sortBy(fieldSort("name")).highlighting(HighlightField("name"))
+          )
+        }
+      }.await.result
+
+      val tophits = resp.aggs.terms("agg1").buckets.find(_.key == "london").get.tophits("agg2")
+      tophits.hits.head.highlight shouldBe Map("name" -> List("buckingham <em>palace</em>"))
     }
   }
 }

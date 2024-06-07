@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.sort.Sort
 import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.requests.searches.{Highlight, HighlightField, HighlightOptions}
 
 case class TopHitsAggregation(name: String,
                               explain: Option[Boolean] = None,
@@ -16,7 +17,8 @@ case class TopHitsAggregation(name: String,
                               scripts: Map[String, Script] = Map.empty,
                               storedFields: Seq[String] = Nil,
                               subaggs: Seq[AbstractAggregation] = Nil,
-                              metadata: Map[String, AnyRef] = Map.empty)
+                              metadata: Map[String, AnyRef] = Map.empty,
+                              highlight: Option[Highlight] = None)
     extends Aggregation {
 
   type T = TopHitsAggregation
@@ -44,6 +46,18 @@ case class TopHitsAggregation(name: String,
   def trackScores(trackScores: Boolean): TopHitsAggregation = copy(trackScores = trackScores.some)
 
   def script(name: String, script: Script): T = copy(scripts = scripts + (name -> script))
+
+  def highlighting(first: HighlightField, rest: HighlightField*): TopHitsAggregation =
+    highlighting(HighlightOptions(), first +: rest)
+
+  def highlighting(fields: Iterable[HighlightField]): TopHitsAggregation =
+    highlighting(HighlightOptions(), fields)
+
+  def highlighting(options: HighlightOptions, first: HighlightField, rest: HighlightField*): TopHitsAggregation =
+    highlighting(options, first +: rest)
+
+  def highlighting(options: HighlightOptions, fields: Iterable[HighlightField]): TopHitsAggregation =
+    copy(highlight = Highlight(options, fields).some)
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T =
     sys.error("Top Hits does not support sub aggregations")

@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.handlers.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.TopHitsAggregation
@@ -25,6 +26,11 @@ object TopHitsAggregationBuilder {
     agg.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
 
     agg.explain.foreach(builder.field("explain", _))
+
+    agg.highlight.foreach { highlight =>
+      builder.rawField("highlight", HighlightBuilderFn(highlight))
+    }
+
     agg.version.foreach(builder.field("version", _))
 
     builder.endObject().endObject()

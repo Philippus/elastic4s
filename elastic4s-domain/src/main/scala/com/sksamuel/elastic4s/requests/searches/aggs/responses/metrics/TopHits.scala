@@ -15,7 +15,8 @@ case class TopHit(@JsonProperty("_index") index: String,
                   @JsonProperty("_id") id: String,
                   @JsonProperty("_score") score: Option[Double],
                   sort: Seq[String],
-                  @JsonProperty("_source") source: Map[String, Any]) extends Transformable {
+                  @JsonProperty("_source") source: Map[String, Any],
+                  highlight: Map[String, Any]) extends Transformable {
 
   @deprecated("types are deprecated in elasticsearch", "7.7")
   def ref: DocumentRef = DocumentRef(index, `type`, id)
