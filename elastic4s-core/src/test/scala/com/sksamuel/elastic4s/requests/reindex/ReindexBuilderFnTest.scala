@@ -14,4 +14,11 @@ class ReindexBuilderFnTest extends AnyFunSuite with Matchers {
     ReindexBuilderFn(req).string shouldBe
       """{"source":{"index":["source"]},"dest":{"index":"target","version_type":"external_gte"}}""".stripMargin
   }
+
+  test("reindex content builder should support pipeline") {
+    val req = reindex("source", "target").pipeline("my_pipeline")
+
+    ReindexBuilderFn(req).string shouldBe
+      """{"source":{"index":["source"]},"dest":{"index":"target","pipeline":"my_pipeline"}}""".stripMargin
+  }
 }

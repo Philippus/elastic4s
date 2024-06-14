@@ -56,6 +56,8 @@ object ReindexBuilderFn {
       case false => builder.field("op_type", "index")
     }
 
+    request.pipeline.foreach(builder.field("pipeline", _))
+
     // end dest
     builder.endObject()
   }

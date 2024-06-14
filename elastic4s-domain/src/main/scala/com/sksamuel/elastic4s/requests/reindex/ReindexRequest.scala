@@ -30,7 +30,8 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           createOnly: Option[Boolean] = None,
                           slices: Option[Int] = None,
                           slice: Option[Slice] = None,
-                          versionType: Option[VersionType] = None) {
+                          versionType: Option[VersionType] = None,
+                          pipeline: Option[String] = None) {
 
   def remote(uri: String): ReindexRequest = copy(remoteHost = Option(uri))
   def remote(uri: String, user: String, pass: String): ReindexRequest =
@@ -76,4 +77,6 @@ case class ReindexRequest(sourceIndexes: Indexes,
 
   def versionType(versionType: String): ReindexRequest = this.versionType(VersionType.valueOf(versionType))
   def versionType(versionType: VersionType): ReindexRequest = copy(versionType = versionType.some)
+
+  def pipeline(pipeline: String): ReindexRequest = copy(pipeline = pipeline.some)
 }
