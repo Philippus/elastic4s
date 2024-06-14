@@ -4,9 +4,9 @@ sealed trait VersionType
 object VersionType {
 
   def valueOf(str: String): VersionType = str.toLowerCase match {
-    case "external"                     => VersionType.External
-    case "externalgte" | "external_gte" => VersionType.ExternalGte
-    case _                              => VersionType.Internal
+    case "external" | "externalgt" | "external_gt" => VersionType.External
+    case "externalgte" | "external_gte"            => VersionType.ExternalGte
+    case _                                         => VersionType.Internal
   }
 
   case object External    extends VersionType
