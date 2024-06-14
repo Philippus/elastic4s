@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.requests.reindex
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, VersionType}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.{Index, Indexes}
-
 import scala.concurrent.duration.FiniteDuration
 
 case class ReindexRequest(sourceIndexes: Indexes,
@@ -30,7 +29,8 @@ case class ReindexRequest(sourceIndexes: Indexes,
                           size: Option[Int] = None,
                           createOnly: Option[Boolean] = None,
                           slices: Option[Int] = None,
-                          slice: Option[Slice] = None) {
+                          slice: Option[Slice] = None,
+                          versionType: Option[VersionType] = None) {
 
   def remote(uri: String): ReindexRequest = copy(remoteHost = Option(uri))
   def remote(uri: String, user: String, pass: String): ReindexRequest =
@@ -73,4 +73,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
   def createOnly(createOnly: Boolean): ReindexRequest = copy(createOnly = createOnly.some)
   def slice(slice: Slice): ReindexRequest = copy(slice = slice.some)
   def slices(slices: Int): ReindexRequest = copy(slices = slices.some)
+
+  def versionType(versionType: String): ReindexRequest = this.versionType(VersionType.valueOf(versionType))
+  def versionType(versionType: VersionType): ReindexRequest = copy(versionType = versionType.some)
 }

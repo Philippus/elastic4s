@@ -49,6 +49,8 @@ object ReindexBuilderFn {
     builder.startObject("dest")
     builder.field("index", request.targetIndex.name)
 
+    request.versionType.foreach(versionType => builder.field("version_type", handlers.VersionTypeHttpString(versionType)))
+
     request.createOnly.foreach {
       case true => builder.field("op_type", "create")
       case false => builder.field("op_type", "index")
