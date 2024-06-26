@@ -26,8 +26,8 @@ class SynonymsTest extends AnyFlatSpec with Matchers with ElasticDsl with Docker
     val resp = client.execute {
       getSynonymsSet("my-synonyms-set")
     }.await.result
-
     resp.count shouldBe 3
+    resp.synonymsSet.map(_.synonyms).toSet shouldBe Set("hello, hi", "bye, goodbye", "test => check")
   }
 
   it should "handle errors" in {
