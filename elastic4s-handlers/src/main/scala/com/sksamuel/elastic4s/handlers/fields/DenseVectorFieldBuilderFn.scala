@@ -20,7 +20,7 @@ object DenseVectorFieldBuilderFn {
   def toField(name: String, values: Map[String, Any]): DenseVectorField = DenseVectorField(
     name,
     values.get("dims").map(_.asInstanceOf[Int]).get,
-    indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions),
+    indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions)
   )
 
 
