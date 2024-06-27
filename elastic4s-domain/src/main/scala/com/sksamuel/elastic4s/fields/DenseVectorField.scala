@@ -13,6 +13,20 @@ case object Cosine extends Similarity { val name = "cosine" }
 case class DenseVectorField(name: String,
                             dims: Int,
                             index: Boolean = false,
-                            similarity: Similarity = L2Norm) extends ElasticField {
+                            similarity: Similarity = L2Norm,
+                            indexOptions: Option[DenseVectorIndexOptions] = None) extends ElasticField {
   override def `type`: String = DenseVectorField.`type`
 }
+
+sealed trait KnnAlgorithmType {
+  def name: String
+}
+case object Hnsw extends KnnAlgorithmType { val name = "hnsw" }
+case object Int8Hnsw extends KnnAlgorithmType { val name = "int8_hnsw" }
+case object Flat extends KnnAlgorithmType { val name = "flat" }
+case object Int8Flat extends KnnAlgorithmType { val name = "int8_flat" }
+
+case class DenseVectorIndexOptions(`type`: KnnAlgorithmType,
+                                   m: Option[Int] = None,
+                                   efConstruction: Option[Int] = None,
+                                   confidenceInterval: Option[Double] = None)
