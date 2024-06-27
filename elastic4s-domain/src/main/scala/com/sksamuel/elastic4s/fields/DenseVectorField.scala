@@ -15,18 +15,23 @@ case class DenseVectorField(name: String,
                             index: Boolean = false,
                             similarity: Similarity = L2Norm,
                             indexOptions: Option[DenseVectorIndexOptions] = None) extends ElasticField {
-  override def `type`: String = DenseVectorField.`type`
+  override def `type`: String  = DenseVectorField.`type`
 }
 
-sealed trait KnnAlgorithmType {
-  def name: String
+sealed trait DenseVectorIndexOptions {
+  def `type`: String
 }
-case object Hnsw extends KnnAlgorithmType { val name = "hnsw" }
-case object Int8Hnsw extends KnnAlgorithmType { val name = "int8_hnsw" }
-case object Flat extends KnnAlgorithmType { val name = "flat" }
-case object Int8Flat extends KnnAlgorithmType { val name = "int8_flat" }
-
-case class DenseVectorIndexOptions(`type`: KnnAlgorithmType,
-                                   m: Option[Int] = None,
-                                   efConstruction: Option[Int] = None,
-                                   confidenceInterval: Option[Double] = None)
+case class HnswIndexOptions(m: Option[Int] = None, efConstruction: Option[Int] = None) extends DenseVectorIndexOptions {
+  val `type`: String = "hnsw"
+}
+case class Int8HnswIndexOptions(m: Option[Int] = None,
+                                efConstruction: Option[Int] = None,
+                                confidenceInterval: Option[Double] = None) extends DenseVectorIndexOptions {
+  val `type`: String = "int8_hnsw"
+}
+case class FlatIndexOptions() extends DenseVectorIndexOptions {
+  val `type`: String = "flat"
+}
+case class Int8FlatIndexOptions(confidenceInterval: Option[Double] = None) extends DenseVectorIndexOptions {
+  val `type`: String = "int8_flat"
+}
