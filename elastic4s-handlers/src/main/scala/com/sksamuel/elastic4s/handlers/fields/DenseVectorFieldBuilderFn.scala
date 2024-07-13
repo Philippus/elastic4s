@@ -24,13 +24,15 @@ object DenseVectorFieldBuilderFn {
     name,
     values("dims").asInstanceOf[Int],
     values("index").asInstanceOf[Boolean],
-    indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions)
+    indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions),
+    elementType = values.get("element_type").map(_.asInstanceOf[String])
   )
 
   def build(field: DenseVectorField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)
+    field.elementType.foreach(builder.field("element_type", _))
     builder.field("dims", field.dims)
     builder.field("index", field.index)
     builder.field("similarity", field.similarity.name)

@@ -113,8 +113,8 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
     }
 
     "support DenseVectorField" in {
-      val field = DenseVectorField("dense_vector_field", dims = 3, index = true, indexOptions = Some(FlatIndexOptions()))
-      val jsonString = """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"flat"}}"""
+      val field = DenseVectorField("dense_vector_field", dims = 3, index = true, indexOptions = Some(FlatIndexOptions()), elementType = Some("byte"))
+      val jsonString = """{"type":"dense_vector","element_type":"byte","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"flat"}}"""
       ElasticFieldBuilderFn(field).string shouldBe jsonString
       ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
     }

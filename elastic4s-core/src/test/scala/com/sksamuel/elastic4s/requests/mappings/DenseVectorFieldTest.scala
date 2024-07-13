@@ -26,6 +26,12 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       """{"type":"dense_vector","dims":3,"index":true,"similarity":"max_inner_product"}"""
   }
 
+  it should "support elementType property" in {
+    val field = DenseVectorField(name = "myfield", dims = 3).elementType("byte")
+    DenseVectorFieldBuilderFn.build(field).string shouldBe
+      """{"type":"dense_vector","element_type":"byte","dims":3,"index":false,"similarity":"l2_norm"}"""
+  }
+
   "A DenseVectorField" should "support a hnsw type of kNN algorithm for a index_options if a index property is true" in {
     val field = DenseVectorField(
       name = "myfield",

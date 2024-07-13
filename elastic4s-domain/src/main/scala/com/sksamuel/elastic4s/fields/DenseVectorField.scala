@@ -15,10 +15,13 @@ case class DenseVectorField(name: String,
                             dims: Int,
                             index: Boolean = false,
                             similarity: Similarity = L2Norm,
-                            indexOptions: Option[DenseVectorIndexOptions] = None) extends ElasticField {
+                            indexOptions: Option[DenseVectorIndexOptions] = None,
+                            elementType: Option[String] = None) extends ElasticField {
   override def `type`: String  = DenseVectorField.`type`
 
   def similarity(similarity: Similarity): DenseVectorField = copy(similarity = similarity)
+
+  def elementType(elementType: String): DenseVectorField = copy(elementType = Some(elementType))
 }
 
 sealed trait DenseVectorIndexOptions {
