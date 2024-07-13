@@ -2,7 +2,16 @@ package com.sksamuel.elastic4s.fields
 
 object DenseVectorField {
   val `type`: String = "dense_vector"
+
+  sealed trait KnnType {
+    def name: String
+  }
+  case object Hnsw extends KnnType { val name = "hnsw" }
+  case object Int8Hnsw extends KnnType { val name = "int8_hnsw" }
+  case object Flat extends KnnType { val name = "flat" }
+  case object Int8Flat extends KnnType { val name = "int8_flat" }
 }
+
 sealed trait Similarity {
   def name: String
 }
@@ -28,20 +37,4 @@ case class DenseVectorField(name: String,
   def elementType(elementType: String): DenseVectorField = copy(elementType = Some(elementType))
 }
 
-sealed trait DenseVectorIndexOptions {
-  def `type`: String
-}
-case class HnswIndexOptions(m: Option[Int] = None, efConstruction: Option[Int] = None) extends DenseVectorIndexOptions {
-  val `type`: String = "hnsw"
-}
-case class Int8HnswIndexOptions(m: Option[Int] = None,
-                                efConstruction: Option[Int] = None,
-                                confidenceInterval: Option[Double] = None) extends DenseVectorIndexOptions {
-  val `type`: String = "int8_hnsw"
-}
-case class FlatIndexOptions() extends DenseVectorIndexOptions {
-  val `type`: String = "flat"
-}
-case class Int8FlatIndexOptions(confidenceInterval: Option[Double] = None) extends DenseVectorIndexOptions {
-  val `type`: String = "int8_flat"
-}
+case class DenseVectorIndexOptions(`type`: DenseVectorField.KnnType, m: Option[Int] = None, efConstruction: Option[Int] = None, confidenceInterval: Option[Double] = None)

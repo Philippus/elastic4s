@@ -1,7 +1,8 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.{ElasticApi, JacksonSupport}
-import com.sksamuel.elastic4s.fields.{Cosine, DenseVectorField, DotProduct, FlatIndexOptions, HnswIndexOptions, Int8FlatIndexOptions, Int8HnswIndexOptions, L2Norm, MaxInnerProduct}
+import com.sksamuel.elastic4s.fields.DenseVectorField.{Hnsw, Int8Hnsw}
+import com.sksamuel.elastic4s.ElasticApi
+import com.sksamuel.elastic4s.fields.{Cosine, DenseVectorField, DenseVectorIndexOptions, DotProduct, L2Norm, MaxInnerProduct}
 import com.sksamuel.elastic4s.handlers.fields.{DenseVectorFieldBuilderFn, ElasticFieldBuilderFn}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -38,7 +39,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       dims = 3,
       index = true,
       similarity = L2Norm,
-      indexOptions = Some(HnswIndexOptions(m = Some(100), efConstruction = Some(200)))
+      indexOptions = Some(DenseVectorIndexOptions(`type` = Hnsw, m = Some(100), efConstruction = Some(200)))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"hnsw","m":100,"ef_construction":200}}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -49,7 +50,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       name = "myfield",
       dims = 3,
       similarity = L2Norm,
-      indexOptions = Some(HnswIndexOptions(m = Some(100), efConstruction = Some(200)))
+      indexOptions = Some(DenseVectorIndexOptions(`type` = Hnsw, m = Some(100), efConstruction = Some(200)))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":false,"similarity":"l2_norm"}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -61,7 +62,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       dims = 3,
       index = true,
       similarity = L2Norm,
-      indexOptions = Some(Int8HnswIndexOptions(m = Some(100), efConstruction = Some(200), confidenceInterval = Some(0.5d)))
+      indexOptions = Some(DenseVectorIndexOptions(`type` = Int8Hnsw,  m = Some(100), efConstruction = Some(200), confidenceInterval = Some(0.5d)))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"int8_hnsw","m":100,"ef_construction":200,"confidence_interval":0.5}}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -72,7 +73,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       name = "myfield",
       dims = 3,
       similarity = L2Norm,
-      indexOptions = Some(Int8HnswIndexOptions(m = Some(100), efConstruction = Some(200), confidenceInterval = Some(0.5d)))
+      indexOptions = Some(DenseVectorIndexOptions(`type` = Int8Hnsw,  m = Some(100), efConstruction = Some(200), confidenceInterval = Some(0.5d)))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":false,"similarity":"l2_norm"}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -84,7 +85,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       dims = 3,
       index = true,
       similarity = L2Norm,
-      indexOptions = Some(FlatIndexOptions())
+      indexOptions = Some(DenseVectorIndexOptions(`type` = DenseVectorField.Flat))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"flat"}}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -95,7 +96,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       name = "myfield",
       dims = 3,
       similarity = L2Norm,
-      indexOptions = Some(FlatIndexOptions())
+      indexOptions = Some(DenseVectorIndexOptions(`type` = DenseVectorField.Flat))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":false,"similarity":"l2_norm"}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -107,7 +108,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       dims = 3,
       index = true,
       similarity = L2Norm,
-      indexOptions = Some(Int8FlatIndexOptions(confidenceInterval = Some(0.5d)))
+      indexOptions = Some(DenseVectorIndexOptions(`type` = DenseVectorField.Int8Flat, confidenceInterval = Some(0.5d)))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"int8_flat","confidence_interval":0.5}}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
@@ -118,7 +119,7 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       name = "myfield",
       dims = 3,
       similarity = L2Norm,
-      indexOptions = Some(Int8FlatIndexOptions(confidenceInterval = Some(0.5d)))
+      indexOptions = Some(DenseVectorIndexOptions(`type` = DenseVectorField.Int8Flat, confidenceInterval = Some(0.5d)))
     )
     val jsonStringValue = """{"type":"dense_vector","dims":3,"index":false,"similarity":"l2_norm"}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
