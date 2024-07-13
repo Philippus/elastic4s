@@ -9,6 +9,7 @@ sealed trait Similarity {
 case object L2Norm extends Similarity { val name = "l2_norm" }
 case object DotProduct extends Similarity { val name = "dot_product" }
 case object Cosine extends Similarity { val name = "cosine" }
+case object MaxInnerProduct extends Similarity { val name = "max_inner_product" }
 
 case class DenseVectorField(name: String,
                             dims: Int,
@@ -16,6 +17,8 @@ case class DenseVectorField(name: String,
                             similarity: Similarity = L2Norm,
                             indexOptions: Option[DenseVectorIndexOptions] = None) extends ElasticField {
   override def `type`: String  = DenseVectorField.`type`
+
+  def similarity(similarity: Similarity): DenseVectorField = copy(similarity = similarity)
 }
 
 sealed trait DenseVectorIndexOptions {

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.{ElasticApi, JacksonSupport}
-import com.sksamuel.elastic4s.fields.{DenseVectorField, FlatIndexOptions, HnswIndexOptions, Int8FlatIndexOptions, Int8HnswIndexOptions, L2Norm}
+import com.sksamuel.elastic4s.fields.{Cosine, DenseVectorField, DotProduct, FlatIndexOptions, HnswIndexOptions, Int8FlatIndexOptions, Int8HnswIndexOptions, L2Norm, MaxInnerProduct}
 import com.sksamuel.elastic4s.handlers.fields.{DenseVectorFieldBuilderFn, ElasticFieldBuilderFn}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -12,6 +12,18 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
     val field = DenseVectorField(name = "myfield", dims = 3)
     DenseVectorFieldBuilderFn.build(field).string shouldBe
       """{"type":"dense_vector","dims":3,"index":false,"similarity":"l2_norm"}"""
+  }
+
+  it should "all similarity options" in {
+    val field = DenseVectorField(name = "myfield", dims = 3, index = true, similarity = L2Norm)
+    DenseVectorFieldBuilderFn.build(field).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm"}"""
+    DenseVectorFieldBuilderFn.build(field.similarity(DotProduct)).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"similarity":"dot_product"}"""
+    DenseVectorFieldBuilderFn.build(field.similarity(Cosine)).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"similarity":"cosine"}"""
+    DenseVectorFieldBuilderFn.build(field.similarity(MaxInnerProduct)).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"similarity":"max_inner_product"}"""
   }
 
   "A DenseVectorField" should "support a hnsw type of kNN algorithm for a index_options if a index property is true" in {
