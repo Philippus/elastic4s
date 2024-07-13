@@ -19,6 +19,10 @@ case class DenseVectorField(name: String,
                             elementType: Option[String] = None) extends ElasticField {
   override def `type`: String  = DenseVectorField.`type`
 
+  def dims(dims: Int): DenseVectorField = copy(dims = dims)
+
+  def index(index: Boolean): DenseVectorField = copy(index = index)
+
   def similarity(similarity: Similarity): DenseVectorField = copy(similarity = similarity)
 
   def elementType(elementType: String): DenseVectorField = copy(elementType = Some(elementType))
