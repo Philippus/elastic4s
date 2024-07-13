@@ -23,7 +23,7 @@ object DenseVectorFieldBuilderFn {
         DenseVectorField.Int8Hnsw,
         values.get("m").map(_.asInstanceOf[Int]),
         values.get("ef_construction").map(_.asInstanceOf[Int]),
-        values.get("confidence_interval").map(_.asInstanceOf[Double])
+        values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
       )
       case "flat" => DenseVectorIndexOptions(
         DenseVectorField.Flat
@@ -32,7 +32,7 @@ object DenseVectorFieldBuilderFn {
         DenseVectorField.Int8Flat,
         None,
         None,
-        values.get("confidence_interval").map(_.asInstanceOf[Double])
+        values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
       )
     }
 
