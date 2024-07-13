@@ -1,10 +1,16 @@
 package com.sksamuel.elastic4s.handlers.fields
 
 import com.sksamuel.elastic4s.fields.DenseVectorField.{Hnsw, Int8Flat, Int8Hnsw}
-import com.sksamuel.elastic4s.fields.{DenseVectorField, DenseVectorIndexOptions}
+import com.sksamuel.elastic4s.fields.{Cosine, DenseVectorField, DenseVectorIndexOptions, DotProduct, L2Norm, MaxInnerProduct, Similarity}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object DenseVectorFieldBuilderFn {
+  private def similarityFromString(similarity: String): Similarity = similarity match {
+    case "l2_norm" => L2Norm
+    case "dot_product" => DotProduct
+    case "cosine" => Cosine
+    case "max_inner_product" => MaxInnerProduct
+  }
 
   private def getIndexOptions(values: Map[String, Any]): DenseVectorIndexOptions =
     values("type").asInstanceOf[String] match {
@@ -32,21 +38,21 @@ object DenseVectorFieldBuilderFn {
 
   def toField(name: String, values: Map[String, Any]): DenseVectorField = DenseVectorField(
     name,
-    values("dims").asInstanceOf[Int],
-    values("index").asInstanceOf[Boolean],
+    values.get("element_type").map(_.asInstanceOf[String]),
+    values.get("dims").map(_.asInstanceOf[Int]),
+    values.get("index").map(_.asInstanceOf[Boolean]),
+    values.get("similarity").map(s => similarityFromString(s.asInstanceOf[String])),
     indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions),
-    elementType = values.get("element_type").map(_.asInstanceOf[String])
   )
 
   def build(field: DenseVectorField): XContentBuilder = {
-
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)
     field.elementType.foreach(builder.field("element_type", _))
-    builder.field("dims", field.dims)
-    builder.field("index", field.index)
-    if (field.index) {
-    builder.field("similarity", field.similarity.name)
+    field.dims.foreach(builder.field("dims", _))
+    field.index.foreach(builder.field("index", _))
+    if (field.index.getOrElse(true)) {
+      field.similarity.foreach(similarity => builder.field("similarity", similarity.name))
       field.indexOptions.foreach { options =>
         builder.startObject("index_options")
         builder.field("type", options.`type`.name)

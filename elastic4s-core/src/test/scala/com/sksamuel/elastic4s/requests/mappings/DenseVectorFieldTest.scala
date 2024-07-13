@@ -35,26 +35,26 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
   }
 
   it should "not set similarity or indexOptions when index = false" in {
-    val field = DenseVectorField(name = "myfield", dims = 3, index = false, indexOptions = Some(denseVectorIndexOptions))
+    val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(false), indexOptions = Some(denseVectorIndexOptions))
     DenseVectorFieldBuilderFn.build(field).string shouldBe
       """{"type":"dense_vector","dims":3,"index":false}"""
   }
 
   it should "support indexOptions property" in {
-    val field = DenseVectorField(name = "myfield", dims = 3, index = true, indexOptions = Some(denseVectorIndexOptions))
+    val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(true), indexOptions = Some(denseVectorIndexOptions))
     DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
   }
 
   it should "support all index options types and only set m, efConstruction and confidenceInterval when applicable" in {
-    val field = DenseVectorField(name = "myfield", dims = 3, index = true, indexOptions = Some(denseVectorIndexOptions))
+    val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(true), indexOptions = Some(denseVectorIndexOptions))
     DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Hnsw))).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"hnsw","m":10,"ef_construction":100}}"""
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"hnsw","m":10,"ef_construction":100}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Flat))).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"flat"}}"""
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"flat"}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Int8Flat))).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm","index_options":{"type":"int8_flat","confidence_interval":1.0}}"""
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_flat","confidence_interval":1.0}}"""
   }
 }
