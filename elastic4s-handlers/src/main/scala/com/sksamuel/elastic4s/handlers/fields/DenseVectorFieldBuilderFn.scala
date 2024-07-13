@@ -45,8 +45,8 @@ object DenseVectorFieldBuilderFn {
     field.elementType.foreach(builder.field("element_type", _))
     builder.field("dims", field.dims)
     builder.field("index", field.index)
+    if (field.index) {
     builder.field("similarity", field.similarity.name)
-    if (field.index)
       field.indexOptions.foreach { options =>
         builder.startObject("index_options")
         builder.field("type", options.`type`.name)
@@ -55,6 +55,7 @@ object DenseVectorFieldBuilderFn {
         if (Seq(Int8Hnsw, Int8Flat).contains(options.`type`)) options.confidenceInterval.foreach(builder.field("confidence_interval", _))
         builder.endObject()
       }
+    }
     builder.endObject()
   }
 }
