@@ -35,6 +35,8 @@ case class DenseVectorField(name: String,
   def similarity(similarity: Similarity): DenseVectorField = copy(similarity = similarity)
 
   def elementType(elementType: String): DenseVectorField = copy(elementType = Some(elementType))
+
+  def indexOptions(indexOptions: DenseVectorIndexOptions): DenseVectorField = copy(indexOptions = Some(indexOptions))
 }
 
 case class DenseVectorIndexOptions(`type`: DenseVectorField.KnnType, m: Option[Int] = None, efConstruction: Option[Int] = None, confidenceInterval: Option[Double] = None)
