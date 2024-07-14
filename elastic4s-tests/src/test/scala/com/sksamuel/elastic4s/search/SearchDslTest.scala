@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.handlers.searches.suggestion.DirectGenerator
 import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
-import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches._
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.Sigmoid

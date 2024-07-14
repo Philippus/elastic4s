@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, TokenFilter, Tokenizer}
-import com.sksamuel.elastic4s.requests.indexes.{CreateIndexRequest, IndexSettings}
+import com.sksamuel.elastic4s.requests.indexes.CreateIndexRequest
 import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
 
 trait CreateIndexApi {

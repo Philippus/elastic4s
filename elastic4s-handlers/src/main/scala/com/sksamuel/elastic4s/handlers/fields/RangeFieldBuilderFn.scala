@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.{DateRangeField, DoubleRangeField, FloatRangeField, IntegerRangeField, IpRangeField, LongRangeField, RangeField}
+import com.sksamuel.elastic4s.fields.{DateRangeField, DoubleRangeField, FloatRangeField, IntegerRangeField, LongRangeField, RangeField}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object RangeFieldBuilderFn {

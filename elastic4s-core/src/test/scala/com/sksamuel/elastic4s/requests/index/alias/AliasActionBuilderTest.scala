@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.index.alias
 
 import com.sksamuel.elastic4s.handlers.alias
-import com.sksamuel.elastic4s.handlers.alias.AliasActionBuilder
 import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, IndicesAliasesRequest, RemoveAliasAction}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchAllQuery
 import org.scalatest.funsuite.AnyFunSuite

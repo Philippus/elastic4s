@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.common
 
-import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 
 // takes a FetchSourceContext and returns the appropriate json

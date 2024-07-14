@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http
 
 import java.io.InputStream
-import java.nio.charset.{Charset, StandardCharsets}
+import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show}
 import org.apache.http.HttpHost

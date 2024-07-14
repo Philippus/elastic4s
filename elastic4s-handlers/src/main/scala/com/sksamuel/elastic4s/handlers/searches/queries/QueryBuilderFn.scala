@@ -7,9 +7,9 @@ import com.sksamuel.elastic4s.handlers.searches.queries.nested.{HasChildBodyFn, 
 import com.sksamuel.elastic4s.handlers.searches.queries.span.{SpanContainingQueryBodyFn, SpanFieldMaskingQueryBodyFn, SpanFirstQueryBodyFn, SpanMultiTermQueryBodyFn, SpanNearQueryBodyFn, SpanNotQueryBodyFn, SpanOrQueryBodyFn, SpanTermQueryBodyFn, SpanWithinQueryBodyFn}
 import com.sksamuel.elastic4s.handlers.searches.queries.term.{ExistsQueryBodyFn, FuzzyQueryBodyFn, IdQueryBodyFn, PrefixQueryBodyFn, RangeQueryBodyFn, RegexQueryBodyFn, TermQueryBodyFn, TermsLookupQueryBodyFn, TermsQueryBodyFn, TermsSetQueryBodyFn, WildcardQueryBodyFn}
 import com.sksamuel.elastic4s.handlers.searches.queries.text.{CombinedFieldsQueryBodyFn, MatchAllBodyFn, MatchBoolPrefixBodyFn, MatchNoneBodyFn, MatchPhrasePrefixBodyFn, MatchPhraseQueryBodyFn, MatchQueryBuilderFn, MultiMatchBodyFn, QueryStringBodyFn, SimpleStringBodyFn}
-import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
-import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FunctionScoreQuery, ScriptScore}
+import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, CombinedFieldsQuery, ConstantScore, CustomQuery, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, MoreLikeThisQuery, NestedQuery, NoopQuery, ParentIdQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, ScriptScoreQuery, SimpleStringQuery}

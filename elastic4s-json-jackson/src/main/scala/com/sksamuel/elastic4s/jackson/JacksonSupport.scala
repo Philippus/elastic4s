@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.NumberSerializers
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
-import com.sksamuel.elastic4s.requests.searches.Total
 
 object JacksonSupport {
 
