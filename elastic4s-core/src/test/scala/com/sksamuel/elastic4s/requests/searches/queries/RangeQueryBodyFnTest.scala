@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.handlers.searches.queries.term
-import com.sksamuel.elastic4s.handlers.searches.queries.term.RangeQueryBodyFn
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

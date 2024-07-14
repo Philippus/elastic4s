@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
 import com.sksamuel.elastic4s.handlers.script
-import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object BucketSelectorPipelineBuilder {

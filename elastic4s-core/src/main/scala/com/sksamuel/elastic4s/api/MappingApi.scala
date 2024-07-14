@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
-import com.sksamuel.elastic4s.{Indexes, IndexesAndType}
+import com.sksamuel.elastic4s.Indexes
 
 trait MappingApi {
 

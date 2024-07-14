@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.search.knn
 
-import com.sksamuel.elastic4s.fields.{DenseVectorField, DotProduct}
+import com.sksamuel.elastic4s.fields.DenseVectorField
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, RefreshPolicy}
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
 import com.sksamuel.elastic4s.testkit.DockerTests

@@ -1,8 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.handlers.index.CreateIndexContentBuilder
 import com.sksamuel.elastic4s.handlers.index.mapping.MappingBuilderFn
-import com.sksamuel.elastic4s.requests.analyzers.{EnglishLanguageAnalyzer, SpanishLanguageAnalyzer}
 import com.sksamuel.elastic4s.{ElasticApi, JsonSugar}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.json.{JsonValue, XContentBuilder, XContentFactory}
+import com.sksamuel.elastic4s.json.{JsonValue, XContentFactory}
 import com.sksamuel.elastic4s.requests.count.CountRequest
 
 /**

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.searches.aggs.builders
-import com.sksamuel.elastic4s.requests.searches.aggs.builders.SigTermsAggregationBuilder
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
