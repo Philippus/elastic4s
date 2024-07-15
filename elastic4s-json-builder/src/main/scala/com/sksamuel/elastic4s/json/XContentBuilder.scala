@@ -23,10 +23,8 @@ class XContentBuilder(root: JsonValue) {
   def value: JsonValue = root
 
   // generate a json string from the contents of the builder
-  @deprecated("will be replaced with a pluggable system")
   def string: String = JacksonBuilder.writeAsString(root)
 
-  @deprecated("will be replaced with a pluggable system")
   def bytes: Array[Byte] = JacksonBuilder.writeAsString(root).getBytes
 
   def array(field: String, strings: Array[String]): XContentBuilder = {
