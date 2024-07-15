@@ -81,8 +81,8 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
     */
   override def send(request: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
     val f = request.entity match {
-      case Some(entity) => async(request.method, request.endpoint, request.params, request.headers, entity).send()
-      case None         => async(request.method, request.endpoint, request.params, request.headers).send()
+      case Some(entity) => async(request.method, request.endpoint, request.params, request.headers, entity).send(sttpBackend)
+      case None         => async(request.method, request.endpoint, request.params, request.headers).send(sttpBackend)
     }
     f.onComplete {
       case Success(resp) => callback(Right(processResponse(resp)))
