@@ -112,6 +112,25 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
       ElasticFieldBuilderFn.construct(fieldSet.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe(fieldSet)
     }
 
-  }
+    "support DenseVectorField" in {
+      val field = DenseVectorField("dense_vector_field", elementType = Some("byte"), dims = Some(3), index = Some(true), indexOptions = Some(DenseVectorIndexOptions(DenseVectorField.Flat)))
+      val jsonString = """{"type":"dense_vector","element_type":"byte","dims":3,"index":true,"index_options":{"type":"flat"}}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
+    }
 
+    "support DenseVectorField with similarity" in {
+      val field = DenseVectorField("dense_vector_field", elementType = Some("byte"), dims = Some(3), index = Some(true), similarity = Some(MaxInnerProduct))
+      val jsonString = """{"type":"dense_vector","element_type":"byte","dims":3,"index":true,"similarity":"max_inner_product"}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
+    }
+
+    "support DenseVectorField with all index options" in {
+      val field = DenseVectorField("dense_vector_field", elementType = Some("byte"), dims = Some(3), index = Some(true), indexOptions = Some(DenseVectorIndexOptions(DenseVectorField.Int8Hnsw, Some(100), Some(200), Some(0.5f))))
+      val jsonString = """{"type":"dense_vector","element_type":"byte","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":100,"ef_construction":200,"confidence_interval":0.5}}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
+    }
+  }
 }
