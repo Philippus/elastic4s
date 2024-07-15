@@ -18,7 +18,7 @@ trait SynonymsHandlers {
     }
 
     override def build(request: CreateOrUpdateSynonymsSetRequest): ElasticRequest = {
-      val endpoint = s"_synonyms/${request.synonymsSet}"
+      val endpoint = s"/_synonyms/${request.synonymsSet}"
 
       val body = UpdateSynonymsBodyFn(request).string
       val entity = HttpEntity(body, "application/json")
