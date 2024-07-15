@@ -110,7 +110,7 @@ class BulkActor[T](client: ElasticClient,
   // It has been suggested we can use ReceiveTimeout here, but one reason we can't is because BulkResult messages,
   // will cause the timeout period to be reset, but they shouldn't interfere with the flush interval.
   private val flushIntervalScheduler: Option[Cancellable] = config.flushInterval.map { interval =>
-    system.scheduler.schedule(interval, interval, self, BulkActor.ForceIndexing)
+    system.scheduler.scheduleWithFixedDelay(interval, interval, self, BulkActor.ForceIndexing)
   }
 
   // If flushAfter is specified then after each message, a scheduler is created to force indexing if no documents
