@@ -38,9 +38,9 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3").from("coldplay"),
-        get("5") from "coldplay",
-        get("7") from "coldplay"
+        get("coldplay", "3"),
+        get("coldplay", "5"),
+        get("coldplay", "7")
       )
     ).await.result
 
@@ -60,8 +60,8 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3").from("coldplay"),
-        get("711111") from "coldplay"
+        get("coldplay", "3"),
+        get("coldplay", "711111")
       )
     ).await.result
 
@@ -74,8 +74,8 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3") from "coldplay" storedFields("name", "year"),
-        get("5") from "coldplay" storedFields "name"
+        get("coldplay", "3") storedFields("name", "year"),
+        get("coldplay", "5") storedFields "name"
       )
     ).await.result
 
@@ -88,8 +88,8 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("3") from "coldplay" fetchSourceContext Seq("name", "year"),
-        get("5") from "coldplay" fetchSourceContext Seq("name")
+        get("coldplay", "3") fetchSourceContext Seq("name", "year"),
+        get("coldplay", "5") fetchSourceContext Seq("name")
       )
     ).await.result
     resp.size shouldBe 2
@@ -99,7 +99,7 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
   it should "retrieve documents by id with routing spec" in {
 
     val resp = client.execute(
-      multiget(get("3") from "coldplay" routing "3")
+      multiget(get("coldplay", "3") routing "3")
     ).await.result
 
     resp.size shouldBe 1

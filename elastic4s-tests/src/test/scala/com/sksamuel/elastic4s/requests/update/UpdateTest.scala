@@ -49,7 +49,7 @@ class UpdateTest
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("man of steel"))
   }
 
@@ -68,7 +68,7 @@ class UpdateTest
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans")
+      get("hans", "5")
     }.await.result.sourceAsMap.get(fieldName).value shouldBe document.get(fieldName).value
   }
 
@@ -78,7 +78,7 @@ class UpdateTest
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("inception"))
   }
 
@@ -90,7 +90,7 @@ class UpdateTest
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
@@ -100,7 +100,7 @@ class UpdateTest
     }.await.result.result shouldBe "created"
 
     client.execute {
-      get("44").from("hans").storedFields("name")
+      get("hans", "44").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("pirates of the caribbean"))
   }
 
@@ -113,7 +113,7 @@ class UpdateTest
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
