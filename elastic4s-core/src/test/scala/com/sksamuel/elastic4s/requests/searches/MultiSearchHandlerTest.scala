@@ -51,7 +51,7 @@ class MultiSearchHandlerTest extends AnyFlatSpec with Matchers with EitherValues
         |    ]
         |}""".stripMargin
     val response = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
-    val mResponse = MultiSearchHandler.responseHandler.handle(response).right.value
+    val mResponse = MultiSearchHandler.responseHandler.handle(response).value
     mResponse.items should have size 2
     mResponse.items.map(_.status) shouldEqual Seq(200, 400)
   }
