@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.http4s
 
 import cats.effect.Sync
 import com.sksamuel.elastic4s
-import fs2.io.file.Files
+import fs2.io.file.{Files, Path}
 import org.http4s
 
 import java.io.InputStream
@@ -19,7 +19,7 @@ trait Elastic4sEntityEncoders {
           case elastic4s.HttpEntity.InputStreamEntity(is, _) =>
             http4s.EntityEncoder.inputStreamEncoder[F, InputStream].toEntity(Sync[F].pure(is))
           case elastic4s.HttpEntity.FileEntity(file, _) =>
-            http4s.EntityEncoder.pathEncoder[F].toEntity(fs2.io.file.Path.fromNioPath(file.toPath))
+            http4s.EntityEncoder.pathEncoder[F].toEntity(Path.fromNioPath(file.toPath))
           case elastic4s.HttpEntity.ByteArrayEntity(arr, _) =>
             http4s.EntityEncoder.byteArrayEncoder[F].toEntity(arr)
         }
