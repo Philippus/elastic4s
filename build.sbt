@@ -101,6 +101,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
     clientesjava,
     clientsSniffed,
     clientpekko,
+    clienthttp4s,
     cats_effect,
     cats_effect_2,
     zio_1,
@@ -315,6 +316,12 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .settings(name := "elastic4s-client-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
+
+lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-client-http4s")
+  .settings(scala3Settings)
+  .settings(libraryDependencies ++= Seq(http4sClient))
 
 
 lazy val tests = (project in file("elastic4s-tests"))
