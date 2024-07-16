@@ -11,6 +11,7 @@ object Dependencies {
   val CommonsIoVersion               = "2.16.1"
   val ElasticsearchVersion           = "8.14.3"
   val ExtsVersion                    = "1.61.1"
+  val Http4sVersion                  = "0.23.27"
   val JacksonVersion                 = "2.17.2"
   val Json4sVersion                  = "4.0.7"
   val Log4jVersion                   = "2.15.0"
@@ -65,6 +66,7 @@ object Dependencies {
   lazy val cats                         = "org.typelevel"                 %% "cats-effect"                      % CatsEffectVersion
   lazy val cats2                        = "org.typelevel"                 %% "cats-effect"                      % CatsEffect2Version
   lazy val elasticsearchRestClient      = "org.elasticsearch.client"       % "elasticsearch-rest-client"        % ElasticsearchVersion
+  lazy val http4sClient                 = "org.http4s"                    %% "http4s-client"                    % Http4sVersion
   lazy val json4s                       = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
   lazy val monix                        = "io.monix"                      %% "monix"        % MonixVersion
   lazy val pekkoActor                   = "org.apache.pekko"              %% "pekko-actor"  % PekkoVersion
