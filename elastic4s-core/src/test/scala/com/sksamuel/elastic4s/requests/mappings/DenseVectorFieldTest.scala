@@ -11,13 +11,13 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
   private val denseVectorIndexOptions = DenseVectorIndexOptions(Int8Hnsw, Some(10), Some(100), Some(1.0f))
 
   "A DenseVectorField" should "support dims property" in {
-    val field = DenseVectorField(name = "myfield", dims = 3)
+    val field = DenseVectorField(name = "myfield").dims(3)
     DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":false}"""
+      """{"type":"dense_vector","dims":3}"""
   }
 
   it should "support all similarity options" in {
-    val field = DenseVectorField(name = "myfield", dims = 3, index = true, similarity = L2Norm)
+    val field = DenseVectorField(name = "myfield").dims(3).index(true).similarity(L2Norm)
     DenseVectorFieldBuilderFn.build(field).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"similarity":"l2_norm"}"""
     DenseVectorFieldBuilderFn.build(field.similarity(DotProduct)).string shouldBe
@@ -29,9 +29,9 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
   }
 
   it should "support elementType property" in {
-    val field = DenseVectorField(name = "myfield", dims = 3).elementType("byte")
+    val field = DenseVectorField(name = "myfield").dims(3).elementType("byte")
     DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","element_type":"byte","dims":3,"index":false}"""
+      """{"type":"dense_vector","element_type":"byte","dims":3}"""
   }
 
   it should "not set similarity or indexOptions when index = false" in {

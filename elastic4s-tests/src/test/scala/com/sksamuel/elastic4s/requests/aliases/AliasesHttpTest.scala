@@ -40,8 +40,8 @@ class AliasesHttpTest extends AnyWordSpec with Matchers with DockerTests {
     "multiple operations" in {
       client.execute {
         aliases(
-          removeAlias("beaches_alias").on("beaches"),
-          addAlias("mountains_alias").on("mountains")
+          removeAlias("beaches_alias", "beaches"),
+          addAlias("mountains_alias", "mountains")
         )
       }.await.result should be(AliasActionResponse(true))
 

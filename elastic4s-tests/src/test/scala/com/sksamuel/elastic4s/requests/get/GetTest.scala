@@ -43,7 +43,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   "A Get request" should "retrieve a document by id" in {
 
     val resp = client.execute {
-      get("8") from "beer"
+      get("beer", "8")
     }.await.result
 
     resp.exists shouldBe true
@@ -53,7 +53,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "retrieve a document by id with source" in {
 
     val resp = client.execute {
-      get("8") from "beer"
+      get("beer", "8")
     }.await.result
 
     resp.exists shouldBe true
@@ -64,7 +64,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "retrieve a document by id without source" in {
 
     val resp = client.execute {
-      get("8") from "beer" fetchSourceContext false
+      get("beer", "8") fetchSourceContext false
     }.await.result
 
     resp.exists should be(true)
@@ -76,7 +76,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "support source includes" in {
 
     val resp = client.execute {
-      get("8") from "beer" fetchSourceInclude "brand"
+      get("beer", "8") fetchSourceInclude "brand"
     }.await.result
 
     resp.exists should be(true)
@@ -87,7 +87,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "support source excludes" in {
 
     val resp = client.execute {
-      get("8") from "beer" fetchSourceExclude "brand"
+      get("beer", "8") fetchSourceExclude "brand"
     }.await.result
 
     resp.exists should be(true)
@@ -98,7 +98,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "support source includes and excludes" in {
 
     val resp = client.execute {
-      get("8") from "beer" fetchSourceContext(List("name"), List("brand"))
+      get("beer", "8") fetchSourceContext(List("name"), List("brand"))
     }.await.result
 
     resp.exists should be(true)
@@ -109,7 +109,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "support specifying source includes and excludes separately" in {
 
     val resp = client.execute {
-      get("8") from "beer" fetchSourceInclude(List("name")) fetchSourceExclude(List("bran"))
+      get("beer", "8") fetchSourceInclude(List("name")) fetchSourceExclude(List("bran"))
     }.await.result
 
     resp.exists should be(true)
@@ -120,7 +120,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "retrieve a document supporting stored fields" in {
 
     val resp = client.execute {
-      get("4") from "beer" storedFields("name", "brand")
+      get("beer", "4") storedFields("name", "brand")
     }.await.result
 
     resp.exists should be(true)
@@ -132,7 +132,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "retrieve multi value fields" in {
 
     val resp = client.execute {
-      get("4") from "beer" storedFields "ingredients"
+      get("beer", "4") storedFields "ingredients"
     }.await.result
 
     val field = resp.storedField("ingredients")
@@ -141,13 +141,13 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
 
   it should "return Left[RequestFailure] when index does not exist" in {
     client.execute {
-      get("4") from "qqqqqqqqqq"
+      get("qqqqqqqqqq", "4")
     }.await.error.`type` shouldBe "index_not_found_exception"
   }
 
   it should "return Right with exists=false when the doc does not exist" in {
     client.execute {
-      get("111111") from "beer"
+      get("beer", "111111")
     }.await.result.exists shouldBe false
   }
 }

@@ -156,7 +156,7 @@ trait ElasticSugar extends ElasticDsl {
     blockUntil(s"Expected document $id to have version $version") { () =>
       client
         .execute {
-          get(id).from(index)
+          get(index, id)
         }
         .await
         .result

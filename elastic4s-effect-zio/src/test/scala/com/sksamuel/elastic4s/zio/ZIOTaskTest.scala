@@ -11,7 +11,7 @@ class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with Before
 
   implicit class RichZIO[A](task: Task[A]) {
     def unsafeRun: Either[Throwable, A] = {
-      Unsafe.unsafeCompat { implicit u =>
+      Unsafe.unsafe { implicit u =>
         zio.Runtime.default.unsafe.run(task).toEither
       }
     }

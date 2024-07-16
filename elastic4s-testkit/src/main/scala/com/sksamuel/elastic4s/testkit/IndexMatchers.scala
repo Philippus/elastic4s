@@ -50,7 +50,7 @@ trait IndexMatchers extends Matchers {
     new Matcher[String] {
 
       override def apply(left: String): MatchResult = {
-        val exists = client.execute(get(expectedId.toString).from(left)).await(timeout).result.exists
+        val exists = client.execute(get(left, expectedId.toString)).await(timeout).result.exists
         MatchResult(
           exists,
           s"Index $left did not contain expected document $expectedId",

@@ -87,7 +87,7 @@ class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with 
 
   it should "unmarshall safely a get response" in {
     val team = client.execute {
-      get("1").from(IndexName)
+      get(IndexName, "1")
     }.await.result.safeTo[Team]
 
     team shouldBe Success(Team("Middlesbrough", "Fortress Riverside", 1876))
@@ -95,7 +95,7 @@ class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with 
 
   it should "unmarshall a get response" in {
     val team = client.execute {
-      get("1").from(IndexName)
+      get(IndexName, "1")
     }.await.result.to[Team]
 
     team shouldBe Team("Middlesbrough", "Fortress Riverside", 1876)
@@ -104,8 +104,8 @@ class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with 
   it should "unmarshall safely multi get results" in {
     val teams = client.execute {
       multiget(
-        get("1").from(IndexName),
-        get("2").from(IndexName)
+        get(IndexName, "1"),
+        get(IndexName, "2")
       )
     }.await.result.safeTo[Team]
 
@@ -118,8 +118,8 @@ class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with 
   it should "unmarshall multi get results" in {
     val teams = client.execute {
       multiget(
-        get("1").from(IndexName),
-        get("2").from(IndexName)
+        get(IndexName, "1"),
+        get(IndexName, "2")
       )
     }.await.result.to[Team]
 

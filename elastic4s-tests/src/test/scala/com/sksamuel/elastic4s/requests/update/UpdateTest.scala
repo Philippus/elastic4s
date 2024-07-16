@@ -43,13 +43,13 @@ class UpdateTest
 
   "an update request" should "support field based update" in {
     client.execute {
-      update("5").in("hans").doc(
+      updateById("hans", "5").doc(
         "name" -> "man of steel"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("man of steel"))
   }
 
@@ -64,62 +64,62 @@ class UpdateTest
         )
     )
     client.execute {
-      update("5").in("hans").doc(document).refresh(RefreshPolicy.Immediate)
+      updateById("hans", "5").doc(document).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans")
+      get("hans", "5")
     }.await.result.sourceAsMap.get(fieldName).value shouldBe document.get(fieldName).value
   }
 
   it should "support string based update" in {
     client.execute {
-      update("5").in("hans").doc(""" { "name" : "inception" } """).refresh(RefreshPolicy.Immediate)
+      updateById("hans", "5").doc(""" { "name" : "inception" } """).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("inception"))
   }
 
   it should "support field based upsert" in {
     client.execute {
-      update("5").in("hans").docAsUpsert(
+      updateById("hans", "5").docAsUpsert(
         "name" -> "batman"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
   it should "support string based upsert" in {
     client.execute {
-      update("44").in("hans").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.Immediate)
+      updateById("hans", "44").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "created"
 
     client.execute {
-      get("44").from("hans").storedFields("name")
+      get("hans", "44").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("pirates of the caribbean"))
   }
 
   it should "keep existing fields with partial update" in {
 
     client.execute {
-      update("5").in("hans").docAsUpsert(
+      updateById("hans", "5").docAsUpsert(
         "length" -> 12.34
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.result shouldBe "updated"
 
     client.execute {
-      get("5").from("hans").storedFields("name")
+      get("hans", "5").storedFields("name")
     }.await.result.storedFieldsAsMap shouldBe Map("name" -> List("batman"))
   }
 
   it should "insert non existent doc when using docAsUpsert" in {
     client.execute {
-      update("14").in("hans").docAsUpsert(
+      updateById("hans", "14").docAsUpsert(
         "name" -> "hunt for the red october"
       )
     }.await.result.result shouldBe "created"
@@ -127,7 +127,7 @@ class UpdateTest
 
   it should "return errors when the index does not exist" in {
     val resp = client.execute {
-      update("5").in("wowooasdsad").doc(
+      updateById("wowooasdsad", "5").doc(
         "name" -> "gladiator"
       )
     }.await
@@ -137,7 +137,7 @@ class UpdateTest
 
   it should "return errors when the id does not exist" in {
     val resp = client.execute {
-      update("234234").in("hans").doc(
+      updateById("hans", "234234").doc(
         "name" -> "gladiator"
       )
     }.await
@@ -147,7 +147,7 @@ class UpdateTest
 
   it should "not return source by default" in {
     val resp = client.execute {
-      update("666").in("hans").docAsUpsert(
+      updateById("hans", "666").docAsUpsert(
         "name" -> "dunkirk"
       ).refresh(RefreshPolicy.Immediate)
     }.await
@@ -156,7 +156,7 @@ class UpdateTest
 
   it should "return source when specified" in {
     val resp = client.execute {
-      update("667").in("hans").docAsUpsert(
+      updateById("hans", "667").docAsUpsert(
         "name" -> "thin red line"
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
     }.await
@@ -165,7 +165,7 @@ class UpdateTest
 
   it should "include the original json" in {
     val resp = client.execute {
-      update("555").in("hans").docAsUpsert(
+      updateById("hans", "555").docAsUpsert(
         "name" -> "spider man"
       ).refresh(RefreshPolicy.Immediate).fetchSource(true)
     }.await
@@ -176,22 +176,22 @@ class UpdateTest
 
     val id = UUID.randomUUID.toString
     val result = client.execute {
-      update(id).in("hans").docAsUpsert(
+      updateById("hans", id).docAsUpsert(
         "name" -> "rain man"
       ).refresh(RefreshPolicy.Immediate)
     }.await
     val wrongPrimaryTermResult = client.execute {
-      update(id).in("hans").doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
+      updateById("hans", id).doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
         .ifPrimaryTerm(result.result.primaryTerm + 1).refresh(RefreshPolicy.Immediate)
     }.await
     wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
     val wrongSeqNoResult = client.execute {
-      update(id).in("hans").doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo + 1)
+      updateById("hans", id).doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo + 1)
         .ifPrimaryTerm(result.result.primaryTerm).refresh(RefreshPolicy.Immediate)
     }.await
     wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
     val successfulUpdateResult = client.execute {
-      update(id).in("hans").doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
+      updateById("hans", id).doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
         .ifPrimaryTerm(result.result.primaryTerm).refresh(RefreshPolicy.Immediate)
     }.await
     successfulUpdateResult.isSuccess shouldBe true
