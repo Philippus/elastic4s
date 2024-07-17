@@ -19,7 +19,7 @@ object Http4sClient {
   def usingIO(
     client: http4s.client.Client[IO],
     endpoint: ElasticNodeEndpoint,
-    authentication: Authentication = Authentication.NoAuth
+    authentication: Authentication
   )(implicit runtime: IORuntime): Http4sClient[IO] = {
     val ioRunner = new CallbackRunner[IO] {
       override def run[A](fa: IO[A], cb: Either[Throwable, A] => Unit): Unit = fa.unsafeRunAsync(cb)
