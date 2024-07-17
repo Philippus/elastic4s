@@ -6,26 +6,26 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object DenseVectorFieldBuilderFn {
   private def similarityFromString(similarity: String): Similarity = similarity match {
-    case "l2_norm" => L2Norm
-    case "dot_product" => DotProduct
-    case "cosine" => Cosine
-    case "max_inner_product" => MaxInnerProduct
+    case L2Norm.name => L2Norm
+    case DotProduct.name => DotProduct
+    case Cosine.name => Cosine
+    case MaxInnerProduct.name => MaxInnerProduct
   }
 
   private def getIndexOptions(values: Map[String, Any]): DenseVectorIndexOptions =
     values("type").asInstanceOf[String] match {
-      case "hnsw" => DenseVectorIndexOptions(
+      case DenseVectorField.Hnsw.name => DenseVectorIndexOptions(
         DenseVectorField.Hnsw,
         values.get("m").map(_.asInstanceOf[Int]),
         values.get("ef_construction").map(_.asInstanceOf[Int])
       )
-      case "int8_hnsw" => DenseVectorIndexOptions(
+      case DenseVectorField.Int8Hnsw.name => DenseVectorIndexOptions(
         DenseVectorField.Int8Hnsw,
         values.get("m").map(_.asInstanceOf[Int]),
         values.get("ef_construction").map(_.asInstanceOf[Int]),
         values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
       )
-      case "int4_hnsw" => DenseVectorIndexOptions(
+      case DenseVectorField.Int4Hnsw.name => DenseVectorIndexOptions(
         DenseVectorField.Int4Hnsw,
         values.get("m").map(_.asInstanceOf[Int]),
         values.get("ef_construction").map(_.asInstanceOf[Int]),
@@ -34,13 +34,13 @@ object DenseVectorFieldBuilderFn {
       case DenseVectorField.Flat.name => DenseVectorIndexOptions(
         DenseVectorField.Flat
       )
-      case "int8_flat" => DenseVectorIndexOptions(
+      case DenseVectorField.Int8Flat.name => DenseVectorIndexOptions(
         DenseVectorField.Int8Flat,
         None,
         None,
         values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
       )
-      case "int4_flat" => DenseVectorIndexOptions(
+      case DenseVectorField.Int4Flat.name => DenseVectorIndexOptions(
         DenseVectorField.Int4Flat,
         None,
         None,
