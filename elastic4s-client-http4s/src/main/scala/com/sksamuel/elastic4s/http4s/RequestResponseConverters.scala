@@ -6,10 +6,13 @@ import com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticNodeEndpoint
 import fs2.io.file.Files
 import org.http4s
+import org.typelevel.ci.CIStringSyntax
 
 import scala.language.higherKinds
 
 trait RequestResponseConverters extends Elastic4sEntityEncoders {
+
+  private val ApiKeyAuthScheme = ci"ApiKey"
 
   def elasticRequestToHttp4sRequest[F[_] : Async : Files](
     endpoint: ElasticNodeEndpoint,
@@ -39,6 +42,8 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
     authentication match {
       case Authentication.UsernamePassword(username, password) =>
         request.putHeaders(http4s.headers.Authorization(http4s.BasicCredentials(username, password)))
+      case Authentication.ApiKey(apiKey) =>
+        request.putHeaders(http4s.headers.Authorization(http4s.Credentials.Token(ApiKeyAuthScheme, apiKey)))
       case Authentication.NoAuth =>
         request
     }
