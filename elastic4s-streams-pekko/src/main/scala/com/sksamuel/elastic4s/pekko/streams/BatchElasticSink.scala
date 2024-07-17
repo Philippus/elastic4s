@@ -12,7 +12,7 @@ import scala.util.{Failure, Success, Try}
 
 case class SinkSettings(refreshAfterOp: Boolean = false)
 
-class BatchElasticSink[T](client: ElasticClient, settings: SinkSettings)(implicit
+class BatchElasticSink[T](client: ElasticClient[Future], settings: SinkSettings)(implicit
     ec: ExecutionContext,
     builder: RequestBuilder[T])
     extends GraphStage[SinkShape[Seq[T]]] {

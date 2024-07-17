@@ -9,6 +9,7 @@ import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /**
@@ -21,7 +22,7 @@ import scala.util.{Failure, Success}
   * @param maxItems        the maximum number of elements to return
   * @param actorRefFactory an Actor reference factory required by the publisher
   */
-class ScrollPublisher private[streams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
+class ScrollPublisher private[streams] (client: ElasticClient[Future], search: SearchRequest, maxItems: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
@@ -38,7 +39,7 @@ class ScrollPublisher private[streams] (client: ElasticClient, search: SearchReq
   }
 }
 
-class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
+class ScrollSubscription(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Subscription {
 
@@ -66,7 +67,7 @@ object PublishActor {
   case class Request(n: Long)
 }
 
-class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
+class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
     extends Actor
     with Stash {
 

@@ -4,6 +4,6 @@ import com.sksamuel.elastic4s.{ElasticRequest, Executor, HttpClient, HttpRespons
 import monix.eval.Task
 
 class TaskExecutor extends Executor[Task] {
-  override def exec(client: HttpClient, request: ElasticRequest): Task[HttpResponse] =
-    Task.async (k => client.send(request, k))
+  override def exec(client: HttpClient[Task], request: ElasticRequest): Task[HttpResponse] =
+    client.send(request)
 }

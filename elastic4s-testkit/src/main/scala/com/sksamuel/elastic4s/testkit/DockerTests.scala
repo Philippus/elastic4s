@@ -3,6 +3,8 @@ package com.sksamuel.elastic4s.testkit
 import com.sksamuel.elastic4s.http.JavaClient
 import com.sksamuel.elastic4s.{ElasticClient, ElasticDsl, ElasticProperties}
 
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Try
 
 trait DockerTests extends ElasticDsl with ClientProvider {
@@ -12,7 +14,7 @@ trait DockerTests extends ElasticDsl with ClientProvider {
       // use obscure ports for the tests to reduce the risk of interfering with existing elastic installations/containers
       "39227"
     )
-  val client = ElasticClient(JavaClient(ElasticProperties(s"http://$elasticHost:$elasticPort")))
+  val client: ElasticClient[Future] = ElasticClient(JavaClient(ElasticProperties(s"http://$elasticHost:$elasticPort")))
 
   protected def deleteIdx(indexName: String): Unit = {
     Try {

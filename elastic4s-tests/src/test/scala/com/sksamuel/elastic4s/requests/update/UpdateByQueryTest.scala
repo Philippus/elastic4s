@@ -6,7 +6,6 @@ import org.scalatest.OptionValues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
 
 class UpdateByQueryTest

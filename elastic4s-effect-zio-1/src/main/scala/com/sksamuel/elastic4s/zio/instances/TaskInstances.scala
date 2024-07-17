@@ -9,9 +9,7 @@ trait TaskInstances {
   }
 
   implicit val taskExecutor: Executor[Task] = new Executor[Task] {
-    override def exec(client: HttpClient, request: ElasticRequest): Task[HttpResponse] =
-      Task.effectAsyncM { cb =>
-        Task.effect(client.send(request, v => cb(Task.fromEither(v))))
-      }
+    override def exec(client: HttpClient[Task], request: ElasticRequest): Task[HttpResponse] =
+      client.send(request)
   }
 }

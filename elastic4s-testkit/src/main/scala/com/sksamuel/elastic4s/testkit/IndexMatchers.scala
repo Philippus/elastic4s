@@ -4,13 +4,15 @@ import com.sksamuel.elastic4s.{ElasticClient, HitReader}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
+import scala.concurrent.Future
+
 trait IndexMatchers extends Matchers {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
   import scala.concurrent.duration._
 
-  def haveCount(expectedCount: Int)(implicit client: ElasticClient,
+  def haveCount(expectedCount: Int)(implicit client: ElasticClient[Future],
                                     timeout: FiniteDuration = 10.seconds): Matcher[String] =
     new Matcher[String] {
 
@@ -25,7 +27,7 @@ trait IndexMatchers extends Matchers {
     }
 
   def haveDocument[T](expectedId: String, expectedDocument: T)(
-    implicit client: ElasticClient,
+    implicit client: ElasticClient[Future],
     hitReader: HitReader[T],
     timeout: FiniteDuration = 10.seconds
   ): Matcher[String] = {
@@ -45,7 +47,7 @@ trait IndexMatchers extends Matchers {
     }
   }
 
-  def containDoc(expectedId: Any)(implicit client: ElasticClient,
+  def containDoc(expectedId: Any)(implicit client: ElasticClient[Future],
                                   timeout: FiniteDuration = 10.seconds): Matcher[String] =
     new Matcher[String] {
 
@@ -59,7 +61,7 @@ trait IndexMatchers extends Matchers {
       }
     }
 
-  def beCreated(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] =
+  def beCreated(implicit client: ElasticClient[Future], timeout: FiniteDuration = 10.seconds): Matcher[String] =
     new Matcher[String] {
 
       override def apply(left: String): MatchResult = {
@@ -72,7 +74,7 @@ trait IndexMatchers extends Matchers {
       }
     }
 
-  def beEmpty(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[String] =
+  def beEmpty(implicit client: ElasticClient[Future], timeout: FiniteDuration = 10.seconds): Matcher[String] =
     new Matcher[String] {
 
       override def apply(left: String): MatchResult = {

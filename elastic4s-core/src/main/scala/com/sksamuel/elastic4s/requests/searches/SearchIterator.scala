@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.{ElasticClient, HitReader, RequestFailure, RequestSuccess}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.language.higherKinds
 
@@ -22,7 +22,7 @@ object SearchIterator {
   /**
     * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits(client: ElasticClient, searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
+  def hits[F[_]](client: ElasticClient[Future], searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
     new Iterator[SearchHit] {
       require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
@@ -64,7 +64,7 @@ object SearchIterator {
     * A typeclass HitReader[T] must be provided for marshalling of the search
     * responses into instances of type T.
     */
-  def iterate[T](client: ElasticClient, searchreq: SearchRequest)(implicit
+  def iterate[T](client: ElasticClient[Future], searchreq: SearchRequest)(implicit
                                                                   reader: HitReader[T],
                                                                   timeout: Duration): Iterator[T] =
     hits(client, searchreq).map(_.to[T])
