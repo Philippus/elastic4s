@@ -31,7 +31,7 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
         deleteIndex("testindex")
       }.await
 
-      pekkoClient.shutdown().await
+      pekkoClient.close().await
       system.terminate().await
     }
   }
@@ -107,7 +107,7 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
 
   it should "propagate headers if included" in {
     implicit val executor: Executor[Future] = new Executor[Future] {
-      override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
+      override def exec(client: HttpClient[Future], request: ElasticRequest): Future[HttpResponse] = {
         val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
         Executor.FutureExecutor.exec(client, request.copy(headers = Map("Authorization" -> s"Basic $cred")))
       }

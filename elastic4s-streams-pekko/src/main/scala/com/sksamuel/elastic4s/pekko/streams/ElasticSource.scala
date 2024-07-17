@@ -18,7 +18,7 @@ import scala.util.{Failure, Success, Try}
   * @param client   a client for the cluster
   * @param settings settings for how documents are queried
   */
-class ElasticSource(client: ElasticClient, settings: SourceSettings)
+class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)
                    (implicit ec: ExecutionContext) extends GraphStage[SourceShape[SearchHit]] {
   require(settings.search.keepAlive.isDefined, "The SearchRequest must have a scroll defined (a keep alive time)")
 
