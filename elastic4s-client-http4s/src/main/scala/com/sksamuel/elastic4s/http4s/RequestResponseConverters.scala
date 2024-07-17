@@ -35,11 +35,11 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
       )
   }
 
-  def authorize[F[_]](request: http4s.Request[F], authorization: Authorization): http4s.Request[F] = {
-    authorization match {
-      case Authorization.UsernamePassword(username, password) =>
+  def authenticate[F[_]](request: http4s.Request[F], authentication: Authentication): http4s.Request[F] = {
+    authentication match {
+      case Authentication.UsernamePassword(username, password) =>
         request.putHeaders(http4s.headers.Authorization(http4s.BasicCredentials(username, password)))
-      case Authorization.NoAuth =>
+      case Authentication.NoAuth =>
         request
     }
   }
