@@ -8,8 +8,10 @@ object DenseVectorField {
   }
   case object Hnsw extends KnnType { val name = "hnsw" }
   case object Int8Hnsw extends KnnType { val name = "int8_hnsw" }
+  case object Int4Hnsw extends KnnType { val name = "int4_hnsw" }
   case object Flat extends KnnType { val name = "flat" }
   case object Int8Flat extends KnnType { val name = "int8_flat" }
+  case object Int4Flat extends KnnType { val name = "int4_flat" }
 
   @deprecated("Use the new apply method", "8.14.0")
   def apply(name: String,
