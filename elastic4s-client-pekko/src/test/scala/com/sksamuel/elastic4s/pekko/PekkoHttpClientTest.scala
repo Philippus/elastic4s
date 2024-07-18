@@ -38,7 +38,10 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
 
   private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
-  override val client = ElasticClient(pekkoClient)
+  def mkPekkoBasedClient(implicit executor: Executor[Future]): ElasticClient[Future] =
+    ElasticClient(pekkoClient)
+
+  override lazy val client = mkPekkoBasedClient
 
   "PekkoHttpClient" should "support utf-8" in {
 
@@ -113,7 +116,7 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
       }
     }
 
-    client.execute {
+    mkPekkoBasedClient.execute {
       catHealth()
     }.await.result.status shouldBe "401"
   }

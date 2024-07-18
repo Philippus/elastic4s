@@ -38,7 +38,9 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
 
   private lazy val akkaClient = AkkaHttpClient(AkkaHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
-  override val client = ElasticClient(akkaClient)
+  def mkAkkaBasedClient(implicit executor: Executor[Future]): ElasticClient[Future] = ElasticClient(akkaClient)
+
+  override lazy val client = mkAkkaBasedClient
 
   "AkkaHttpClient" should "support utf-8" in {
 
@@ -113,7 +115,7 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
       }
     }
 
-    client.execute {
+    mkAkkaBasedClient.execute {
       catHealth()
     }.await.result.status shouldBe "401"
   }
