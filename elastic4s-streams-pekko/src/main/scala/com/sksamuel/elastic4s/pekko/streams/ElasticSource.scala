@@ -28,8 +28,6 @@ class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)
   private implicit val searchHandler: Handler[SearchRequest, SearchResponse] = SearchHandlers.SearchHandler
   private implicit val scrollHandler: Handler[SearchScrollRequest, SearchResponse] = SearchScrollHandlers.SearchScrollHandler
   private implicit val clearScrollHandler: Handler[ClearScrollRequest, ClearScrollResponse] = SearchScrollHandlers.ClearScrollHandler
-  private implicit val executor: Executor[Future] = Executor.FutureExecutor
-  private implicit val functor: Functor[Future] = Functor.FutureFunctor
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new GraphStageLogic(shape) with OutHandler {
 

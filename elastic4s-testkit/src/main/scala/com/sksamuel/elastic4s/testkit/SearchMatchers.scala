@@ -7,7 +7,6 @@ import org.scalatest.matchers.{MatchResult, Matcher}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.higherKinds
 
 trait SearchMatchers extends Matchers {
 

@@ -9,7 +9,7 @@ trait Functor[F[_]] {
 
 object Functor {
 
-  def apply[F[_]: Functor]: Functor[F] = implicitly[Functor[F]]
+  def apply[F[_]](implicit f: Functor[F]): Functor[F] = f
 
   implicit def FutureFunctor(implicit ec: ExecutionContext = ExecutionContext.Implicits.global): Functor[Future] =
     new Functor[Future] {
