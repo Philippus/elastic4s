@@ -20,8 +20,6 @@ class BatchElasticSink[T](client: ElasticClient[Future], settings: SinkSettings)
   override val shape: SinkShape[Seq[T]] = SinkShape.of(in)
 
   private implicit val bulkHandler: BulkHandlers.BulkHandler.type = BulkHandlers.BulkHandler
-  private implicit val executor: Executor[Future] = Executor.FutureExecutor
-  private implicit val functor: Functor[Future] = Functor.FutureFunctor
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic =
     new GraphStageLogic(shape) {

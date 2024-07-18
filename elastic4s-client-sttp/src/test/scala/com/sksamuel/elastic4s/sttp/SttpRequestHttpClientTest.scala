@@ -11,11 +11,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class SttpRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerTests {
-  implicit val executor: Executor[Future] = new Executor[Future] {
-    override def exec(client: HttpClient[Future], request: ElasticRequest): Future[HttpResponse] = {
-      val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
-      Executor.FutureExecutor.exec(client, request.copy(headers = Map("Authorization" -> s"Basic $cred")))
-    }
+  implicit val executor: Executor[Future] = (client: HttpClient[Future], request: ElasticRequest) => {
+    val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
+    client.send(request.copy(headers = Map("Authorization" -> s"Basic $cred")))
   }
   private lazy val sttpClient = SttpRequestHttpClient(ElasticNodeEndpoint("http", elasticHost, elasticPort.toInt, None))
   override lazy val client = ElasticClient(sttpClient)
