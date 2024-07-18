@@ -32,7 +32,7 @@ class ElasticClientTests extends AnyFlatSpec with Matchers with DockerTests {
       }
     }
 
-    client.execute {
+    mkJavaBasedClient.execute {
       catHealth()
     }.await.result.status shouldBe "401"
   }
