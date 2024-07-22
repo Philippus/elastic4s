@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.zio.instances
 
-import com.sksamuel.elastic4s.{ElasticRequest, Executor, Functor, HttpClient, HttpResponse}
+import com.sksamuel.elastic4s.Functor
 import zio.Task
 
 trait TaskInstances {
