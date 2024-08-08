@@ -63,7 +63,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
     }
   }
 
-  private def authenticate[F[_]](request: ElasticRequest, authentication: Authentication): ElasticRequest = {
+  private def authenticate(request: ElasticRequest, authentication: Authentication): ElasticRequest = {
     authentication match {
       case Authentication.UsernamePassword(username, password) =>
         request.addHeader(
