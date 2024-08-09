@@ -24,24 +24,21 @@ val client = ElasticClient(JavaClient(ElasticProperties(nodes)))
 
 ### Credentials
 
-The java client is itself just a simple wrapper around the Apache HTTP client library, so anything you can do with that client, can you do with the `JavaClient`
-
-The `JavaClient` accepts a callback of type `HttpClientConfigCallback` which is invoked when the client is being created. In this we can set credentials.
-
+Credentials can be passed by defining `CommonRequestOptions` implicit in the visibility scope when calling
+`client.execute()` method:
 
 ```scala
-val callback = new HttpClientConfigCallback {
-  override def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = {
-     val creds = new BasicCredentialsProvider()
-     creds.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("sammy", "letmein"))
-     httpClientBuilder.setDefaultCredentialsProvider(creds)
-  }
-}
+implicit val options: CommonRequestOptions = CommonRequestOptions.defaults.copy(
+  credentials = Some(BasicHttpCredentials("user", "pass"))
+)
 
-val props = ElasticProperties("http://host1:9200")
-val client = ElasticClient(JavaClient(props, requestConfigCallback = NoOpRequestConfigCallback, httpClientConfigCallback = callback))
+client.execute(search("myindex"))
 ```
 
+Currently, two methods of authentication are supported:
+
+* `Authentication.UsernamePassword` to pass a username and password
+* `Authentication.ApiKey` to pass an API key
 
 
 
