@@ -38,7 +38,7 @@ trait SynonymsHandlers {
       }
 
       override def build(request: GetSynonymsSetRequest): ElasticRequest = {
-        val endpoint = s"_synonyms/${request.synonymsSet}"
+        val endpoint = s"/_synonyms/${request.synonymsSet}"
         val params = scala.collection.mutable.Map.empty[String, String]
         request.from.foreach(from => params.put("from", from.toString))
         request.size.foreach(size => params.put("size", size.toString))
@@ -56,7 +56,7 @@ trait SynonymsHandlers {
     }
 
     override def build(request: ListSynonymsSetRequest): ElasticRequest = {
-      val endpoint = "_synonyms"
+      val endpoint = "/_synonyms"
       val params = scala.collection.mutable.Map.empty[String, String]
       request.from.foreach(from => params.put("from", from.toString))
       request.size.foreach(size => params.put("size", size.toString))
@@ -75,7 +75,7 @@ trait SynonymsHandlers {
     }
 
     override def build(request: DeleteSynonymsSetRequest): ElasticRequest = {
-      val endpoint = s"_synonyms/${request.synonymsSet}"
+      val endpoint = s"/_synonyms/${request.synonymsSet}"
       ElasticRequest("DELETE", endpoint)
     }
   }
@@ -91,7 +91,7 @@ trait SynonymsHandlers {
     }
 
     override def build(request: CreateOrUpdateSynonymRuleRequest): ElasticRequest = {
-      val endpoint = s"_synonyms/${request.synonymsSet}/${request.synonymRule}"
+      val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
       println(endpoint)
       val body = UpdateSynonymRuleBodyFn(request).string
       val entity = HttpEntity(body, "application/json")
@@ -110,7 +110,7 @@ trait SynonymsHandlers {
     }
 
     override def build(request: GetSynonymRuleRequest): ElasticRequest = {
-      val endpoint = s"_synonyms/${request.synonymsSet}/${request.synonymRule}"
+      val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
       ElasticRequest("GET", endpoint)
     }
   }
@@ -126,7 +126,7 @@ trait SynonymsHandlers {
     }
 
     override def build(request: DeleteSynonymRuleRequest): ElasticRequest = {
-      val endpoint = s"_synonyms/${request.synonymsSet}/${request.synonymRule}"
+      val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
       ElasticRequest("DELETE", endpoint)
     }
   }
