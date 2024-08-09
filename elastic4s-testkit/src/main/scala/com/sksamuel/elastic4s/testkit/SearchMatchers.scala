@@ -5,14 +5,14 @@ import com.sksamuel.elastic4s.requests.searches.SearchRequest
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.higherKinds
 
 trait SearchMatchers extends Matchers {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  def containId(expectedId: Any)(implicit client: ElasticClient,
+  def containId(expectedId: Any)(implicit client: ElasticClient[Future],
                                  timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
@@ -26,7 +26,7 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveFieldValue(value: String)(implicit client: ElasticClient,
+  def haveFieldValue(value: String)(implicit client: ElasticClient[Future],
                                     timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
@@ -40,7 +40,7 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveSourceField(value: String)(implicit client: ElasticClient,
+  def haveSourceField(value: String)(implicit client: ElasticClient[Future],
                                      timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
@@ -55,7 +55,7 @@ trait SearchMatchers extends Matchers {
     }
 
   def haveSourceFieldValue(field: String, value: String)(
-    implicit client: ElasticClient,
+    implicit client: ElasticClient[Future],
     timeout: FiniteDuration = 10.seconds
   ): Matcher[SearchRequest] = new Matcher[SearchRequest] {
     override def apply(left: SearchRequest): MatchResult = {
@@ -69,7 +69,7 @@ trait SearchMatchers extends Matchers {
     }
   }
 
-  def haveTotalHits(expectedCount: Int)(implicit client: ElasticClient,
+  def haveTotalHits(expectedCount: Int)(implicit client: ElasticClient[Future],
                                         timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
@@ -83,7 +83,7 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveHits(expectedCount: Int)(implicit client: ElasticClient,
+  def haveHits(expectedCount: Int)(implicit client: ElasticClient[Future],
                                    timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
@@ -97,7 +97,7 @@ trait SearchMatchers extends Matchers {
       }
     }
 
-  def haveNoHits(implicit client: ElasticClient, timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
+  def haveNoHits(implicit client: ElasticClient[Future], timeout: FiniteDuration = 10.seconds): Matcher[SearchRequest] =
     new Matcher[SearchRequest] {
       override def apply(left: SearchRequest): MatchResult = {
         val resp  = client.execute(left).await(timeout).result

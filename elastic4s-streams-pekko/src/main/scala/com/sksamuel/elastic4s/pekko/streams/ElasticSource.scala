@@ -18,7 +18,7 @@ import scala.util.{Failure, Success, Try}
   * @param client   a client for the cluster
   * @param settings settings for how documents are queried
   */
-class ElasticSource(client: ElasticClient, settings: SourceSettings)
+class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)
                    (implicit ec: ExecutionContext) extends GraphStage[SourceShape[SearchHit]] {
   require(settings.search.keepAlive.isDefined, "The SearchRequest must have a scroll defined (a keep alive time)")
 
@@ -28,8 +28,6 @@ class ElasticSource(client: ElasticClient, settings: SourceSettings)
   private implicit val searchHandler: Handler[SearchRequest, SearchResponse] = SearchHandlers.SearchHandler
   private implicit val scrollHandler: Handler[SearchScrollRequest, SearchResponse] = SearchScrollHandlers.SearchScrollHandler
   private implicit val clearScrollHandler: Handler[ClearScrollRequest, ClearScrollResponse] = SearchScrollHandlers.ClearScrollHandler
-  private implicit val executor: Executor[Future] = Executor.FutureExecutor
-  private implicit val functor: Functor[Future] = Functor.FutureFunctor
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new GraphStageLogic(shape) with OutHandler {
 
