@@ -13,10 +13,6 @@ import scala.language.higherKinds
   * Each time the iterator needs to request more data, the iterator will block until the request
   * returns. If you require a completely lazy style iterator, consider using reactive streams.
   */
-trait Awaitable[F[_]] {
-  def result[U](f: F[U], timeout: Duration): U
-}
-
 object SearchIterator {
 
   /**
