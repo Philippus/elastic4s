@@ -31,7 +31,7 @@ class ClusterInfoTest extends AnyWordSpec with Matchers with DockerTests with Be
         Symbol("seeds") (Seq("127.0.0.1:9300", "127.0.0.2:9300")),
         Symbol("maxConnectionsPerCluster") (3),
         Symbol("initialConnectTimeout") ("30s"),
-        Symbol("skipUnavailable") (false)
+        Symbol("skipUnavailable") (true)
       )
 
       info.valueAt("cluster_two") should have(
@@ -39,7 +39,7 @@ class ClusterInfoTest extends AnyWordSpec with Matchers with DockerTests with Be
       //  Symbol("numNodesConnected") (0),
         Symbol("maxConnectionsPerCluster") (3),
         Symbol("initialConnectTimeout") ("30s"),
-        Symbol("skipUnavailable") (false))
+        Symbol("skipUnavailable") (true))
     }
   }
 

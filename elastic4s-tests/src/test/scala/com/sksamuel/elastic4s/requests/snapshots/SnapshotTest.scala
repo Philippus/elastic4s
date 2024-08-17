@@ -62,7 +62,7 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "error when the repo does not exist" in {
     client.execute {
       getSnapshot(snapshotName, "bbbbb")
-    }.await.result.failures("bbbbb").`type` shouldBe "repository_missing_exception"
+    }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
   "restore snapshot" should "error when an index clashes" in {
