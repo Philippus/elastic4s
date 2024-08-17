@@ -51,9 +51,8 @@ class KnnnHttpTest extends AnyFreeSpec with Matchers with DockerTests with Befor
           .knn {
             knnQuery(
               field = "vector_field",
-              vector = Seq(0.4558423058385518, 0.5698028822981898, 0.6837634587578276),
-              numCandidates = 10
-            )
+              queryVector = Seq(0.4558423058385518D, 0.5698028822981898D, 0.6837634587578276D)
+            ).numCandidates(10)
           }
       ).await.result
 
