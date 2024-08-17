@@ -15,6 +15,11 @@ class KnnBuilderFnTest extends AnyFunSuite with Matchers {
     KnnBuilderFn(request).string shouldBe
       """{"field":"image-vector","num_candidates":50,"query_vector":[54.0,10.0,-2.0]}""".stripMargin
   }
+  test("Knn supports queryName") {
+    val request = Knn("image-vector", 50, Seq(54D,10D,-2D)).queryName("abc")
+    KnnBuilderFn(request).string shouldBe
+      """{"field":"image-vector","num_candidates":50,"query_vector":[54.0,10.0,-2.0],"_name":"abc"}""".stripMargin
+  }
   test("Knn with all fields generates proper query.") {
     val request = Knn("image-vector", 50, Seq(54D,10D,-2D)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
     KnnBuilderFn(request).string shouldBe

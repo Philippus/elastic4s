@@ -25,6 +25,7 @@ object KnnBuilderFn {
     }
     knn.similarity.foreach(builder.field("similarity", _))
     knn.boost.foreach(builder.field("boost", _))
+    knn.queryName.foreach(builder.field("_name", _))
     knn.inner.foreach(inner => builder.field("inner_hits", InnerHitQueryBodyBuilder.toJson(inner)))
     builder.endObject()
     builder

@@ -16,6 +16,7 @@ case class Knn(
      queryVectorBuilder: Option[QueryVectorBuilder] = None,
      similarity: Option[Float] = None,
      boost: Option[Double] = None,
+     queryName: Option[String] = None,
      inner: Option[InnerHit] = None) {
 
   def filter(filter: Query): Knn = copy(filter = filter.some)
@@ -31,6 +32,8 @@ case class Knn(
   def similarity(similarity: Float): Knn = copy(similarity = similarity.some)
 
   def boost(boost: Double): Knn = copy(boost = boost.some)
+
+  def queryName(queryName: String): Knn = copy(queryName = queryName.some)
 
   def inner(inner: InnerHit): Knn = copy(inner = inner.some)
 }
