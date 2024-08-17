@@ -673,8 +673,8 @@ sbt test
 The project is currently [cross-built](https://www.scala-sbt.org/1.x/docs/Cross-Build.html) against Scala 2.12, 2.13 and 3, when preparing a pull request the above commands should be run with the `sbt` `+` modifier to compile and test
 against all versions. For example: `sbt +compile`.
 
-For the tests to work you will need to run a local elastic instance on port 39227, _with security enabled_. One easy way of doing this is to use docker (via docker-compose):
-`docker-compose up`
+For the tests to work you will need to run a local elastic instance on port 39227, _with security enabled_. One easy way of doing this is to use docker (via docker compose):
+`docker compose up`
 
 ## Used By
 * Barclays Bank
