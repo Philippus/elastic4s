@@ -12,7 +12,17 @@ object KnnBuilderFn {
     knn.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn(filter)))
     knn.k.foreach(builder.field("k", _))
     knn.numCandidates.foreach(builder.field("num_candidates", _))
-    builder.array("query_vector", knn.queryVector.toArray)
+    knn.queryVectorBuilder match {
+      case Some(qvb) =>
+        builder.startObject("query_vector_builder")
+        builder.startObject("text_embedding")
+        builder.field("model_id", qvb.modelId)
+        builder.field("model_text", qvb.modelText)
+        builder.endObject()
+        builder.endObject()
+      case None =>
+        builder.array("query_vector", knn.queryVector.toArray)
+    }
     knn.similarity.foreach(builder.field("similarity", _))
     knn.boost.foreach(builder.field("boost", _))
     knn.inner.foreach(inner => builder.field("inner_hits", InnerHitQueryBodyBuilder.toJson(inner)))
