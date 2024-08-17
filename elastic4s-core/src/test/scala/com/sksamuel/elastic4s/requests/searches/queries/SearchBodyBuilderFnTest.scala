@@ -64,6 +64,6 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
     val req = search("example") multipleKnn multipleKnnDefinition
 
     SearchBodyBuilderFn(req).string shouldBe
-      """{"knn":[{"field":"image-vector","query_vector":[54.1,10.2,-2.3],"k":1,"num_candidates":50,"boost":1.0},{"field":"image-vector","query_vector":[54.1,10.2,-2.3],"k":5,"num_candidates":50,"similarity":10.0,"filter":{"term":{"file-type":{"value":"png"}}},"boost":0.4}]}"""
+      """{"knn":[{"field":"image-vector","num_candidates":50,"query_vector":[54.1,10.2,-2.3]},{"field":"image-vector","filter":{"term":{"file-type":{"value":"png"}}},"k":5,"num_candidates":50,"query_vector":[54.1,10.2,-2.3],"similarity":10.0,"boost":0.4}]}""".stripMargin
   }
 }

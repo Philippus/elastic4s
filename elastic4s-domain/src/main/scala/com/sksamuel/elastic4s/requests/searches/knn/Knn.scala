@@ -5,21 +5,111 @@ import com.sksamuel.elastic4s.requests.searches.queries.{InnerHit, Query}
 
 case class Knn(
      field: String,
-     numCandidates: Int,
-     queryVector: Seq[Double],
-     k: Int = 1,
-     similarity: Option[Float] = None,
      filter: Option[Query] = None,
-     boost: Double = 1.0,
+     k: Option[Int] = None,
+     numCandidates: Option[Int] = None,
+     queryVector: Seq[Double] = Seq.empty[Double],
+     similarity: Option[Float] = None,
+     boost: Option[Double] = None,
      inner: Option[InnerHit] = None) {
-
-  def k(k: Int): Knn = copy(k = k)
-
-  def similarity(similarity: Float): Knn = copy(similarity = similarity.some)
 
   def filter(filter: Query): Knn = copy(filter = filter.some)
 
-  def boost(boost: Double): Knn = copy(boost = boost)
+  def k(k: Int): Knn = copy(k = k.some)
 
-  def inner(inner: InnerHit): Knn = copy(inner = Option(inner))
+  def numCandidates(numCandidates: Int): Knn = copy(numCandidates = numCandidates.some)
+
+  def queryVector(queryVector: Seq[Double]): Knn = copy(queryVector = queryVector)
+
+  def similarity(similarity: Float): Knn = copy(similarity = similarity.some)
+
+  def boost(boost: Double): Knn = copy(boost = boost.some)
+
+  def inner(inner: InnerHit): Knn = copy(inner = inner.some)
+}
+
+object Knn {
+  @deprecated("Use the new apply method", "8.15.0")
+  def apply(
+             field: String,
+             numCandidates: Int,
+             queryVector: Seq[Double]): Knn =
+    Knn(field = field,
+      numCandidates = Some(numCandidates),
+      queryVector = queryVector)
+
+  @deprecated("Use the new apply method", "8.15.0")
+  def apply(
+             field: String,
+             numCandidates: Int,
+             queryVector: Seq[Double],
+             k: Int): Knn =
+    Knn(field = field,
+      numCandidates = Some(numCandidates),
+      queryVector = queryVector,
+      k = Some(k))
+
+  @deprecated("Use the new apply method", "8.15.0")
+  def apply(
+             field: String,
+             numCandidates: Int,
+             queryVector: Seq[Double],
+             k: Int,
+             similarity: Option[Float]): Knn =
+    Knn(field = field,
+      numCandidates = Some(numCandidates),
+      queryVector = queryVector,
+      k = Some(k),
+      similarity = similarity)
+
+  @deprecated("Use the new apply method", "8.15.0")
+  def apply(
+             field: String,
+             numCandidates: Int,
+             queryVector: Seq[Double],
+             k: Int,
+             similarity: Option[Float],
+             filter: Option[Query]): Knn =
+    Knn(field = field,
+      numCandidates = Some(numCandidates),
+      queryVector = queryVector,
+      k = Some(k),
+      similarity = similarity,
+      filter = filter)
+
+  @deprecated("Use the new apply method", "8.15.0")
+  def apply(
+             field: String,
+             numCandidates: Int,
+             queryVector: Seq[Double],
+             k: Int,
+             similarity: Option[Float],
+             filter: Option[Query],
+             boost: Double): Knn =
+    Knn(field = field,
+      numCandidates = Some(numCandidates),
+      queryVector = queryVector,
+      k = Some(k),
+      similarity = similarity,
+      filter = filter,
+      boost = Some(boost))
+
+  @deprecated("Use the new apply method", "8.15.0")
+  def apply(
+             field: String,
+             numCandidates: Int,
+             queryVector: Seq[Double],
+             k: Int,
+             similarity: Option[Float],
+             filter: Option[Query],
+             boost: Double,
+             inner: Option[InnerHit]): Knn =
+    Knn(field = field,
+      numCandidates = Some(numCandidates),
+      queryVector = queryVector,
+      k = Some(k),
+      similarity = similarity,
+      filter = filter,
+      boost = Some(boost),
+      inner = inner)
 }

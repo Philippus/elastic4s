@@ -11,14 +11,14 @@ import org.scalatest.matchers.should.Matchers
 class KnnBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("Basic Knn request generates proper query.") {
-    val request = Knn("image-vector", 50, Seq(54,10,-2))
+    val request = Knn("image-vector", 50, Seq(54D,10D,-2D))
     KnnBuilderFn(request).string shouldBe
-      """{"field":"image-vector","query_vector":[54.0,10.0,-2.0],"k":1,"num_candidates":50,"boost":1.0}"""
+      """{"field":"image-vector","num_candidates":50,"query_vector":[54.0,10.0,-2.0]}""".stripMargin
   }
   test("Knn with all fields generates proper query.") {
-    val request = Knn("image-vector", 50, Seq(54,10,-2)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
+    val request = Knn("image-vector", 50, Seq(54D,10D,-2D)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
     KnnBuilderFn(request).string shouldBe
-    """{"field":"image-vector","query_vector":[54.0,10.0,-2.0],"k":5,"num_candidates":50,"similarity":10.0,"filter":{"term":{"file-type":{"value":"png"}}},"boost":0.4}"""
+    """{"field":"image-vector","filter":{"term":{"file-type":{"value":"png"}}},"k":5,"num_candidates":50,"query_vector":[54.0,10.0,-2.0],"similarity":10.0,"boost":0.4}""".stripMargin
   }
   test("Knn with inner_hits generates proper query.") {
     val innerHit = InnerHit("inners")
@@ -33,8 +33,8 @@ class KnnBuilderFnTest extends AnyFunSuite with Matchers {
       .highlighting(HighlightField("hlField"))
       .fields(List("f1", "f2"))
 
-    val request = Knn("image-vector", 50, Seq(54,10,-2), inner = Some(innerHit)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
+    val request = Knn("image-vector", 50, Seq(54D,10D,-2D)) inner innerHit k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
     KnnBuilderFn(request).string shouldBe
-    """{"field":"image-vector","query_vector":[54.0,10.0,-2.0],"k":5,"num_candidates":50,"similarity":10.0,"filter":{"term":{"file-type":{"value":"png"}}},"boost":0.4,"inner_hits":{"name":"inners","from":2,"explain":false,"track_scores":true,"version":true,"size":2,"docvalue_fields":["df1","df2"],"sort":[{"sortField":{"order":"asc"}}],"stored_fields":["field1","field2"],"fields":["f1","f2"],"highlight":{"fields":{"hlField":{}}}}}"""
+    """{"field":"image-vector","filter":{"term":{"file-type":{"value":"png"}}},"k":5,"num_candidates":50,"query_vector":[54.0,10.0,-2.0],"similarity":10.0,"boost":0.4,"inner_hits":{"name":"inners","from":2,"explain":false,"track_scores":true,"version":true,"size":2,"docvalue_fields":["df1","df2"],"sort":[{"sortField":{"order":"asc"}}],"stored_fields":["field1","field2"],"fields":["f1","f2"],"highlight":{"fields":{"hlField":{}}}}}"""
   }
 }

@@ -7,6 +7,6 @@ trait KnnApi {
     Knn(
       field = field,
       queryVector = vector,
-      numCandidates = numCandidates
+      numCandidates = Some(numCandidates)
     )
 }
