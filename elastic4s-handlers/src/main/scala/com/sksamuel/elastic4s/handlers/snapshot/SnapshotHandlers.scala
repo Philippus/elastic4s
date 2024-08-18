@@ -53,7 +53,9 @@ trait SnapshotHandlers {
   implicit object DeleteSnapshotHandler extends Handler[DeleteSnapshotRequest, DeleteSnapshotResponse] {
     override def build(request: DeleteSnapshotRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
-      ElasticRequest("DELETE", endpoint)
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
+      ElasticRequest("DELETE", endpoint, params.toMap)
     }
   }
 
