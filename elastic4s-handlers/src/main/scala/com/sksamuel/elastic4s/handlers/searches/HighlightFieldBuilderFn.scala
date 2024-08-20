@@ -13,6 +13,7 @@ object HighlightFieldBuilderFn {
     field.boundaryChars.foreach(chars => builder.field("boundary_chars", String.valueOf(chars)))
     field.boundaryMaxScan.foreach(builder.field("boundary_max_scan", _))
     field.forceSource.foreach(builder.field("force_source", _))
+    field.fragmenter.foreach(builder.field("fragmenter", _))
     field.fragmentOffset.foreach(builder.field("fragment_offset", _))
     field.fragmentSize.foreach(builder.field("fragment_size", _))
     field.highlightQuery.map(QueryBuilderFn.apply).foreach { highlight =>

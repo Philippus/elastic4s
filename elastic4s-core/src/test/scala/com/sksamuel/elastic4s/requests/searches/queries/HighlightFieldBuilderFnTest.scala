@@ -126,4 +126,8 @@ class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
     val highlight = HighlightField("text").requireFieldMatch(false)
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"require_field_match":false}"""
   }
+  test("'fragmenter' generates 'fragmenter' field.") {
+    val highlight = HighlightField("text").fragmenter("abc")
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"fragmenter":"abc"}"""
+  }
 }
