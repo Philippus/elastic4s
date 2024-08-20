@@ -23,7 +23,7 @@ case class HighlightField(field: String,
                           phraseLimit: Option[Int] = None,
                           boundaryScanner: Option[String] = None,
                           boundaryScannerLocale: Option[String] = None,
-                          options: Option[Map[String, AnyRef]] = None,
+                          options: Option[Map[String, Any]] = None,
                           encoder: Option[String] = None,
                           maxAnalyzedOffset: Option[Int] = None,
                           tagsSchema: Option[String] = None) {
@@ -73,6 +73,6 @@ case class HighlightField(field: String,
 
   def tagsSchema(tagsSchema: String): HighlightField = copy(tagsSchema = tagsSchema.some)
 
-  def options(newOptions: Map[String, AnyRef]): HighlightField = copy(options = newOptions.some)
+  def options(newOptions: Map[String, Any]): HighlightField = copy(options = newOptions.some)
 
 }

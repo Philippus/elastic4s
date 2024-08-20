@@ -142,4 +142,8 @@ class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
     val highlight = HighlightField("text").tagsSchema("abc")
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"tags_schema":"abc"}"""
   }
+  test("'options' generates 'options' fields.") {
+    val highlight = HighlightField("text").options(Map("a" -> "a", "b" -> 3, "c" -> true))
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"a":"a","b":3,"c":true}"""
+  }
 }

@@ -24,7 +24,7 @@ case class HighlightOptions(encoder: Option[String] = None,
                             postTags: Seq[String] = Nil,
                             preTags: Seq[String] = Nil,
                             requireFieldMatch: Option[Boolean] = None,
-                            options: Option[Map[String, AnyRef]] = None,
+                            options: Option[Map[String, Any]] = None,
                             fragmentOffset: Option[Int] = None,
                             matchedFields: Seq[String] = Nil) {
 
@@ -69,7 +69,7 @@ case class HighlightOptions(encoder: Option[String] = None,
   def postTags(postTags: Iterable[String]): HighlightOptions = copy(postTags = postTags.toSeq)
   def preTags(preTags: Iterable[String]): HighlightOptions = copy(preTags = preTags.toSeq)
 
-  def options(newOptions: Map[String, AnyRef]): HighlightOptions = copy(options = newOptions.some)
+  def options(newOptions: Map[String, Any]): HighlightOptions = copy(options = newOptions.some)
 
   def requireFieldMatch(requireFieldMatch: Boolean): HighlightOptions =
     copy(requireFieldMatch = requireFieldMatch.some)
