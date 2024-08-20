@@ -132,5 +132,12 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
       ElasticFieldBuilderFn(field).string shouldBe jsonString
       ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
     }
+
+    "support SparseVectorField" in {
+      val field = SparseVectorField("sparse_vector_field")
+      val jsonString = """{"type":"sparse_vector"}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
+    }
   }
 }
