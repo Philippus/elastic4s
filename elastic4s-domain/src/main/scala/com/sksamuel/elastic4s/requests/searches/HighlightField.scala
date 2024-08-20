@@ -69,7 +69,8 @@ case class HighlightField(field: String,
   def postTag(tags: String*): HighlightField = postTag(tags)
   def postTag(tags: Iterable[String]): HighlightField = copy(postTags = tags.toSeq)
 
-  def requireFieldMatchScan(req: Boolean): HighlightField = copy(requireFieldMatch = req.some)
+  @deprecated("Use requireFieldMatch", "8.15.0")
+  def requireFieldMatchScan(req: Boolean): HighlightField = requireFieldMatch(req)
 
   def tagsSchema(tagsSchema: String): HighlightField = copy(tagsSchema = tagsSchema.some)
 
