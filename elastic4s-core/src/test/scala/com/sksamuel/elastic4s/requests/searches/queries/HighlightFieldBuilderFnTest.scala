@@ -130,4 +130,16 @@ class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
     val highlight = HighlightField("text").fragmenter("abc")
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"fragmenter":"abc"}"""
   }
+  test("'encoder' generates 'encoder' field.") {
+    val highlight = HighlightField("text").encoder("abc")
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"encoder":"abc"}"""
+  }
+  test("'maxAnalyzedOffset' generates 'maxAnalyzedOffset' field.") {
+    val highlight = HighlightField("text").maxAnalyzedOffset(100)
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"max_analyzed_offset":100}"""
+  }
+  test("'tagsSchema' generates 'tagsSchema' field.") {
+    val highlight = HighlightField("text").tagsSchema("abc")
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"tags_schema":"abc"}"""
+  }
 }
