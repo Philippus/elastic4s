@@ -24,7 +24,9 @@ case class HighlightOptions(encoder: Option[String] = None,
                             postTags: Seq[String] = Nil,
                             preTags: Seq[String] = Nil,
                             requireFieldMatch: Option[Boolean] = None,
-                            options: Option[Map[String, AnyRef]] = None) {
+                            options: Option[Map[String, AnyRef]] = None,
+                            fragmentOffset: Option[Int] = None,
+                            matchedFields: Seq[String] = Nil) {
 
   def boundaryChars(boundaryChars: String): HighlightOptions = copy(boundaryChars = boundaryChars.some)
   def boundaryMaxScan(boundaryMaxScan: Int): HighlightOptions = copy(boundaryMaxScan = boundaryMaxScan.some)
@@ -39,6 +41,7 @@ case class HighlightOptions(encoder: Option[String] = None,
     copy(useExplicitFieldOrder = useExplicitFieldOrder.some)
 
   def fragmenter(fragmenter: String): HighlightOptions = copy(fragmenter = fragmenter.some)
+  def fragmentOffset(fragmentOffset: Int): HighlightOptions = copy(fragmentOffset = fragmentOffset.some)
   def fragmentSize(fragmentSize: Int): HighlightOptions = copy(fragmentSize = fragmentSize.some)
   def forceSource(forceSource: Boolean): HighlightOptions = copy(forceSource = forceSource.some)
 
@@ -50,6 +53,9 @@ case class HighlightOptions(encoder: Option[String] = None,
 
   def highlightQuery(highlightQuery: Query): HighlightOptions =
     copy(highlightQuery = highlightQuery.some)
+
+  def matchedFields(first: String, rest: String*): HighlightOptions = matchedFields(first +: rest)
+  def matchedFields(fields: Iterable[String]): HighlightOptions = copy(matchedFields = fields.toSeq)
 
   def noMatchSize(noMatchSize: Int): HighlightOptions = copy(noMatchSize = noMatchSize.some)
   def numOfFragments(numOfFragments: Int): HighlightOptions = copy(numOfFragments = numOfFragments.some)

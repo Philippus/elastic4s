@@ -15,6 +15,7 @@ object HighlightBuilderFn {
     highlight.options.boundaryChars.foreach(chars => builder.field("boundary_chars", String.valueOf(chars)))
     highlight.options.boundaryMaxScan.foreach(builder.field("boundary_max_scan", _))
     highlight.options.fragmenter.foreach(builder.field("fragmenter", _))
+    highlight.options.fragmentOffset.foreach(builder.field("fragment_offset", _))
     highlight.options.fragmentSize.foreach(builder.field("fragment_size", _))
     highlight.options.numOfFragments.foreach(builder.field("number_of_fragments", _))
     highlight.options.encoder.foreach(builder.field("encoder", _))
@@ -23,6 +24,8 @@ object HighlightBuilderFn {
     highlight.options.highlightQuery.map(QueryBuilderFn.apply).foreach { highlight =>
       builder.rawField("highlight_query", highlight)
     }
+    if (highlight.options.matchedFields.nonEmpty)
+      builder.array("matched_fields", highlight.options.matchedFields.toArray)
     highlight.options.noMatchSize.foreach(builder.field("no_match_size", _))
     highlight.options.order.foreach(builder.field("order", _))
     highlight.options.phraseLimit.foreach(builder.field("phrase_limit", _))
