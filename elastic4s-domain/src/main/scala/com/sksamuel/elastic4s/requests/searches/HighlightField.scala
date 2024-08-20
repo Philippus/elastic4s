@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.Query
 case class HighlightField(field: String,
                           boundaryChars: Option[Array[Char]] = None,
                           boundaryMaxScan: Option[Int] = None,
+                          @deprecated("This parameter has no effect", "8.15.0")
                           forceSource: Option[Boolean] = None,
                           fragmenter: Option[String] = None,
                           fragmentOffset: Option[Int] = None,
@@ -43,6 +44,7 @@ case class HighlightField(field: String,
   def requireFieldMatch(requireFieldMatch: Boolean): HighlightField =
     copy(requireFieldMatch = requireFieldMatch.some)
 
+  @deprecated("This method has no effect", "8.15.0")
   def forceSource(forceSource: Boolean): HighlightField = copy(forceSource = forceSource.some)
 
   def highlightFilter(highlightFilter: Boolean): HighlightField = copy(highlightFilter = highlightFilter.some)

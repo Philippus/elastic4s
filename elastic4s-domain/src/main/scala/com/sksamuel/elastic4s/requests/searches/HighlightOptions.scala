@@ -12,6 +12,7 @@ case class HighlightOptions(encoder: Option[String] = None,
                             boundaryScannerLocale: Option[String] = None,
                             fragmenter: Option[String] = None,
                             fragmentSize: Option[Int] = None,
+                            @deprecated("This parameter has no effect", "8.15.0")
                             forceSource: Option[Boolean] = None,
                             highlighterType: Option[String] = None,
                             highlightFilter: Option[Boolean] = None,
@@ -43,6 +44,7 @@ case class HighlightOptions(encoder: Option[String] = None,
   def fragmenter(fragmenter: String): HighlightOptions = copy(fragmenter = fragmenter.some)
   def fragmentOffset(fragmentOffset: Int): HighlightOptions = copy(fragmentOffset = fragmentOffset.some)
   def fragmentSize(fragmentSize: Int): HighlightOptions = copy(fragmentSize = fragmentSize.some)
+  @deprecated("This method has no effect", "8.15.0")
   def forceSource(forceSource: Boolean): HighlightOptions = copy(forceSource = forceSource.some)
 
   def highlighterType(highlighterType: String): HighlightOptions =
