@@ -28,6 +28,7 @@ object HighlightBuilderFn {
     highlight.options.phraseLimit.foreach(builder.field("phrase_limit", _))
     highlight.options.maxAnalyzedOffset.foreach(builder.field("max_analyzed_offset", _))
     highlight.options.requireFieldMatch.foreach(builder.field("require_field_match", _))
+    highlight.options.tagsSchema.foreach(builder.field("tags_schema", _))
 
     if (highlight.options.postTags.nonEmpty || highlight.options.preTags.nonEmpty) {
       if (highlight.options.postTags.isEmpty) builder.array("post_tags", Array("</em>"))
