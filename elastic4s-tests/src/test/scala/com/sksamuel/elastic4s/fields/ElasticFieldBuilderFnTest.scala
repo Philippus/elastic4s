@@ -132,5 +132,12 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
       ElasticFieldBuilderFn(field).string shouldBe jsonString
       ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
     }
+
+    "support RankFeaturesField with positive_score_impact" in {
+      val field = RankFeaturesField("rank_features_field", positiveScoreImpact = Some(false))
+      val jsonString = """{"type":"rank_features","positive_score_impact":false}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)) shouldBe field
+    }
   }
 }
