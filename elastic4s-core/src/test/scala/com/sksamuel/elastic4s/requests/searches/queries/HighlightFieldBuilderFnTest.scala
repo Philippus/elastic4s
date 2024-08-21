@@ -17,9 +17,10 @@ class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
     val highlight = HighlightField("text").boundaryMaxScan(20)
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"boundary_max_scan":20}"""
   }
-  test("'forceSource' generates 'force_source' field.") {
+  test("'forceSource' has no effect.") {
     val highlight = HighlightField("text").forceSource(true)
-    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"force_source":true}"""
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe
+      """{}""".stripMargin
   }
   test("'fragmentOffset' generates 'fragment_offset' field.") {
     val highlight = HighlightField("text").fragmentOffset(100)
@@ -125,5 +126,25 @@ class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
   test("'requiredFieldMatch' generates 'require_field_match' field.") {
     val highlight = HighlightField("text").requireFieldMatch(false)
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"require_field_match":false}"""
+  }
+  test("'fragmenter' generates 'fragmenter' field.") {
+    val highlight = HighlightField("text").fragmenter("abc")
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"fragmenter":"abc"}"""
+  }
+  test("'encoder' generates 'encoder' field.") {
+    val highlight = HighlightField("text").encoder("abc")
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"encoder":"abc"}"""
+  }
+  test("'maxAnalyzedOffset' generates 'maxAnalyzedOffset' field.") {
+    val highlight = HighlightField("text").maxAnalyzedOffset(100)
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"max_analyzed_offset":100}"""
+  }
+  test("'tagsSchema' generates 'tagsSchema' field.") {
+    val highlight = HighlightField("text").tagsSchema("abc")
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"tags_schema":"abc"}"""
+  }
+  test("'options' generates 'options' fields.") {
+    val highlight = HighlightField("text").options(Map("a" -> "a", "b" -> 3, "c" -> true))
+    searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"a":"a","b":3,"c":true}"""
   }
 }

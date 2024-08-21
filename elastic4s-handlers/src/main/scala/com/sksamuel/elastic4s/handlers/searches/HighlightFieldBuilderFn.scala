@@ -12,7 +12,8 @@ object HighlightFieldBuilderFn {
 
     field.boundaryChars.foreach(chars => builder.field("boundary_chars", String.valueOf(chars)))
     field.boundaryMaxScan.foreach(builder.field("boundary_max_scan", _))
-    field.forceSource.foreach(builder.field("force_source", _))
+    field.encoder.foreach(builder.field("encoder", _))
+    field.fragmenter.foreach(builder.field("fragmenter", _))
     field.fragmentOffset.foreach(builder.field("fragment_offset", _))
     field.fragmentSize.foreach(builder.field("fragment_size", _))
     field.highlightQuery.map(QueryBuilderFn.apply).foreach { highlight =>
@@ -26,6 +27,8 @@ object HighlightFieldBuilderFn {
     field.order.foreach(builder.field("order", _))
     field.phraseLimit.foreach(builder.field("phrase_limit", _))
     field.requireFieldMatch.foreach(builder.field("require_field_match", _))
+    field.maxAnalyzedOffset.foreach(builder.field("max_analyzed_offset", _))
+    field.tagsSchema.foreach(builder.field("tags_schema", _))
     field.boundaryScanner.foreach(builder.field("boundary_scanner", _))
     field.boundaryScannerLocale.foreach(builder.field("boundary_scanner_locale", _))
 
@@ -36,6 +39,8 @@ object HighlightFieldBuilderFn {
       if (field.preTags.isEmpty) builder.array("pre_tags", Array("<em>"))
       else builder.array("pre_tags", field.preTags.toArray)
     }
+
+    field.options.foreach(options => options.foreach{case (k, v) => builder.autofield(k, v)})
 
     builder
   }
