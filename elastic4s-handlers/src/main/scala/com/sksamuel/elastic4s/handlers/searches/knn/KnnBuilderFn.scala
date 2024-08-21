@@ -9,15 +9,23 @@ object KnnBuilderFn {
   def apply(knn: Knn): XContentBuilder = {
     val builder: XContentBuilder = XContentFactory.jsonBuilder()
     builder.field("field", knn.field)
-    builder.array("query_vector", knn.queryVector.toArray)
-    builder.field("k", knn.k)
-    builder.field("num_candidates", knn.numCandidates)
-    knn.similarity match {
-      case Some(value) => builder.field("similarity", value)
-      case _ =>
-    }
     knn.filter.foreach(filter => builder.rawField("filter", QueryBuilderFn(filter)))
-    builder.field("boost", knn.boost)
+    knn.k.foreach(builder.field("k", _))
+    knn.numCandidates.foreach(builder.field("num_candidates", _))
+    knn.queryVectorBuilder match {
+      case Some(qvb) =>
+        builder.startObject("query_vector_builder")
+        builder.startObject("text_embedding")
+        builder.field("model_id", qvb.modelId)
+        builder.field("model_text", qvb.modelText)
+        builder.endObject()
+        builder.endObject()
+      case None =>
+        builder.array("query_vector", knn.queryVector.toArray)
+    }
+    knn.similarity.foreach(builder.field("similarity", _))
+    knn.boost.foreach(builder.field("boost", _))
+    knn.queryName.foreach(builder.field("_name", _))
     knn.inner.foreach(inner => builder.field("inner_hits", InnerHitQueryBodyBuilder.toJson(inner)))
     builder.endObject()
     builder

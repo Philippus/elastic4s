@@ -68,9 +68,8 @@ class ChunkKnnTest extends AnyFlatSpec with Matchers with DockerTests with Befor
         .knn {
           knnQuery(
             field = PARAGRAPH_FIELD + "." + VECTOR_FIELD,
-            vector = Seq(0.45, 45),
-            numCandidates = 2
-          ).k(2)
+            queryVector = Seq(0.45, 45)
+          ).k(2).numCandidates(2)
         }
     ).await.result
 
@@ -86,10 +85,10 @@ class ChunkKnnTest extends AnyFlatSpec with Matchers with DockerTests with Befor
         .knn {
           knnQuery(
             field = PARAGRAPH_FIELD + "." + VECTOR_FIELD,
-            vector = Seq(0.45, 45),
-            numCandidates = 2
+            queryVector = Seq(0.45D, 45D)
           )
             .k(2)
+            .numCandidates(2)
             .filter {
               rangeQuery(CREATION_TIME_FIELD)
                 .gte("2019-05-01")
@@ -110,9 +109,9 @@ class ChunkKnnTest extends AnyFlatSpec with Matchers with DockerTests with Befor
         .knn {
           knnQuery(
             field = PARAGRAPH_FIELD + "." + VECTOR_FIELD,
-            vector = Seq(0.45, 45),
-            numCandidates = 2
+            queryVector = Seq(0.45D, 45D)
           ).k(2)
+            .numCandidates(2)
             .inner(InnerHit(PARAGRAPH_FIELD)
               .fetchSource(FetchSourceContext(fetchSource = false, includes = Set(PARAGRAPH_FIELD + "." + TEXT_FIELD)))
               .size(1)
