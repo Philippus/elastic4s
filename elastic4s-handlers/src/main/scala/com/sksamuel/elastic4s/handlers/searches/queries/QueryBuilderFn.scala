@@ -12,7 +12,7 @@ import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, CombinedFieldsQuery, ConstantScore, CustomQuery, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, MoreLikeThisQuery, NestedQuery, NoopQuery, ParentIdQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, ScriptScoreQuery, SimpleStringQuery, SparseVectorQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.{BoostingQuery, CombinedFieldsQuery, ConstantScore, CustomQuery, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, MoreLikeThisQuery, NestedQuery, NoopQuery, ParentIdQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, ScriptScoreQuery, SemanticQuery, SimpleStringQuery, SparseVectorQuery}
 import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanTermQuery, SpanWithinQuery}
 import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
 
@@ -56,6 +56,7 @@ object QueryBuilderFn {
     case q: RegexQuery => RegexQueryBodyFn(q)
     case q: ScriptQuery => ScriptQueryBodyFn(q)
     case q: ScriptScoreQuery => ScriptScoreQueryBodyFn(q)
+    case q: SemanticQuery => SemanticQueryBuilderFn(q)
     case s: SimpleStringQuery => SimpleStringBodyFn(s)
     case s: SpanContainingQuery => SpanContainingQueryBodyFn(s)
     case s: SpanFirstQuery => SpanFirstQueryBodyFn(s)

@@ -976,4 +976,9 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     val req = search("index").query(sparseVectorQuery("test", Map("a" -> 0.3D)))
     req.request.entity.get.get should matchJson("""{"query":{"sparse_vector":{"field":"test", "query_vector":{"a":0.3}}}}""")
   }
+
+  it should "generate json for semantic query" in {
+    val req = search("index").query(semanticQuery("test", "my_query"))
+    req.request.entity.get.get should matchJson("""{"query":{"semantic":{"field":"test", "query":"my_query"}}}""")
+  }
 }
