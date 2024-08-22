@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, DynamicField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IcuCollationKeywordField, IpField, IpRangeField, JoinField, KeywordField, MatchOnlyTextField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, SparseVectorField, TextField, TokenCountField, VersionField, WildcardField}
+import com.sksamuel.elastic4s.fields.{AggregateMetricField, AliasField, AnnotatedTextField, BinaryField, BooleanField, CompletionField, ConstantKeywordField, DateField, DateNanosField, DenseVectorField, DynamicField, ElasticField, FlattenedField, GeoPointField, GeoShapeField, HistogramField, IcuCollationKeywordField, IpField, IpRangeField, JoinField, KeywordField, MatchOnlyTextField, Murmur3Field, NestedField, NumberField, ObjectField, PercolatorField, RangeField, RankFeatureField, RankFeaturesField, SearchAsYouTypeField, SemanticTextField, SparseVectorField, TextField, TokenCountField, VersionField, WildcardField}
 import com.sksamuel.elastic4s.json.XContentBuilder
 
 object ElasticFieldBuilderFn {
@@ -36,6 +36,7 @@ object ElasticFieldBuilderFn {
       case f: RangeField => RangeFieldBuilderFn.build(f)
       case f: RankFeatureField => RankFeatureFieldBuilderFn.build(f)
       case f: RankFeaturesField => RankFeaturesFieldBuilderFn.build(f)
+      case f: SemanticTextField => SemanticTextFieldBuilderFn.build(f)
       case f: SearchAsYouTypeField => SearchAsYouTypeFieldBuilderFn.build(f)
       case f: SparseVectorField => SparseVectorFieldBuilderFn.build(f)
       case f: TextField => TextFieldBuilderFn.build(f)
@@ -72,6 +73,7 @@ object ElasticFieldBuilderFn {
       case PercolatorField.`type` => PercolatorFieldBuilderFn.toField(name, values)
       case RankFeatureField.`type` => RankFeatureFieldBuilderFn.toField(name, values)
       case RankFeaturesField.`type` => RankFeaturesFieldBuilderFn.toField(name, values)
+      case SemanticTextField.`type` => SemanticTextFieldBuilderFn.toField(name, values)
       case SearchAsYouTypeField.`type` => SearchAsYouTypeFieldBuilderFn.toField(name, values)
       case SparseVectorField.`type` => SparseVectorFieldBuilderFn.toField(name, values)
       case TextField.`type` => TextFieldBuilderFn.toField(name, values)
