@@ -53,7 +53,7 @@ object ElasticFieldBuilderFn {
       case AnnotatedTextField.`type` => AnnotatedTextFieldBuilderFn.toField(name, values)
       case BinaryField.`type` => BinaryFieldBuilderFn.toField(name, values)
       case BooleanField.`type` => BooleanFieldBuilderFn.toField(name, values)
-      case ConstantKeywordField.`type` => ConstantKeywordFieldBuilderFn.toField(name, values) // *
+      case ConstantKeywordField.`type` => ConstantKeywordFieldBuilderFn.toField(name, values)
       case CompletionField.`type` => CompletionFieldBuilderFn.toField(name, values)
       case DateField.`type` => DateFieldBuilderFn.toField(name, values)
       case DateNanosField.`type` => DateNanosFieldBuilderFn.toField(name, values)
