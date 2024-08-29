@@ -3,11 +3,10 @@ package com.sksamuel.elastic4s.handlers.reindex
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicyHttpValue, Slicing}
 import com.sksamuel.elastic4s.requests.reindex.ReindexRequest
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
 import com.sksamuel.elastic4s.{BulkIndexByScrollFailure, ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
-
 import scala.concurrent.duration._
 
 case class Retries(bulk: Long, search: Long)
@@ -56,7 +55,9 @@ trait ReindexHandlers {
       if (request.requestsPerSecond.getOrElse(-1F) > 0)
         params.put("requests_per_second", request.requestsPerSecond.getOrElse(0).toString)
       request.scroll.foreach(params.put("scroll", _))
-      request.slices.foreach(s => params.put("slices", s.toString))
+      request.slices.foreach(s =>
+        if (s == Slicing.AutoSlices) params.put("slices", Slicing.AutoSlicesValue) else params.put("slices", s.toString)
+      )
 
       val body = ReindexBuilderFn(request).string
 

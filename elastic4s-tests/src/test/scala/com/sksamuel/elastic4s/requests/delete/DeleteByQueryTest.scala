@@ -99,6 +99,27 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result.totalHits shouldBe 0
     }
 
+    "delete with automatic slicing" in {
+      client.execute {
+        bulk(
+          indexInto(indexname).fields("name" -> "barkis").id("7"),
+          indexInto(indexname).fields("name" -> "belle").id("8")
+        ).refresh(RefreshPolicy.Immediate)
+      }.await
+
+      client.execute {
+        search(indexname).query(idsQuery("7", "8"))
+      }.await.result.totalHits shouldBe 2
+
+      client.execute {
+        deleteByQuery(indexname, idsQuery("7", "8")).automaticSlicing().refresh(RefreshPolicy.Immediate)
+      }.await.result.left.get.deleted shouldBe 2
+
+      client.execute {
+        search(indexname).query(idsQuery("7","8"))
+      }.await.result.totalHits shouldBe 0
+    }
+
     "return a Left[RequestFailure] when the delete fails" in {
       client.execute {
         deleteByQuery(",", matchQuery("name", "bumbles"))
