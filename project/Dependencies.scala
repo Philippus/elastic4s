@@ -14,7 +14,7 @@ object Dependencies {
   val JacksonVersion                 = "2.17.2"
   val Json4sVersion                  = "4.0.7"
   val Log4jVersion                   = "2.15.0"
-  val MockitoVersion                 = "5.12.0"
+  val MockitoVersion                 = "5.13.0"
   val MonixVersion                   = "3.4.1"
   val PekkoHttpVersion               = "1.0.1"
   val PekkoVersion                   = "1.0.3"
@@ -29,7 +29,7 @@ object Dependencies {
   val SttpVersion                    = "3.9.8"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
-  val ZIOVersion                     = "2.1.8"
+  val ZIOVersion                     = "2.1.9"
   val ZIOJsonVersion                 = "0.7.3"
 
   lazy val commonDeps = Seq(
