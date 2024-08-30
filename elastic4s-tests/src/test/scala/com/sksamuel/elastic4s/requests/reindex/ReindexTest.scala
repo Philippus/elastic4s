@@ -60,6 +60,18 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
         search("reindextarget")
       }.await.result.size shouldBe 3
     }
+    "support automatic slicing" in {
+      deleteIdx("reindextarget")
+      createIdx("reindextarget")
+
+      client.execute {
+        reindex("reindex", "reindextarget").automaticSlicing().refresh(RefreshPolicy.IMMEDIATE)
+      }.await.result.left.get.created shouldBe 3
+
+      client.execute {
+        search("reindextarget")
+      }.await.result.size shouldBe 3
+    }
     "support slice parameter" in {
 
       deleteIdx("reindextarget")

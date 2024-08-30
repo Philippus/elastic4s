@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.RefreshPolicyHttpValue
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicyHttpValue, Slicing}
 import com.sksamuel.elastic4s.requests.delete.{DeleteByIdRequest, DeleteByQueryRequest, DeleteByQueryResponse, DeleteResponse}
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
@@ -56,9 +56,10 @@ trait DeleteHandlers {
       request.maxDocs.map(_.toString).foreach(params.put("max_docs", _))
       request.waitForActiveShards.map(_.toString).foreach(params.put("wait_for_active_shards", _))
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
-      request.slices.map(_.toString).foreach(params.put("slices", _))
+      request.slices.foreach(s =>
+        if (s == Slicing.AutoSlices) params.put("slices", Slicing.AutoSlicesValue) else params.put("slices", s.toString)
+      )
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
-
 
       val body = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")

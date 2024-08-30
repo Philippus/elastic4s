@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.reindex
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, VersionType}
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, Slicing, VersionType}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.{Index, Indexes}
@@ -74,6 +74,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
   def createOnly(createOnly: Boolean): ReindexRequest = copy(createOnly = createOnly.some)
   def slice(slice: Slice): ReindexRequest = copy(slice = slice.some)
   def slices(slices: Int): ReindexRequest = copy(slices = slices.some)
+  def automaticSlicing(): ReindexRequest = copy(slices = Some(Slicing.AutoSlices))
 
   def versionType(versionType: String): ReindexRequest = this.versionType(VersionType.valueOf(versionType))
   def versionType(versionType: VersionType): ReindexRequest = copy(versionType = versionType.some)

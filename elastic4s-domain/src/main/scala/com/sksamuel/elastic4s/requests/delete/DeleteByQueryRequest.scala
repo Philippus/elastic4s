@@ -2,9 +2,8 @@ package com.sksamuel.elastic4s.requests.delete
 
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice}
+import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, Slicing}
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-
 import scala.concurrent.duration.FiniteDuration
 
 case class DeleteByQueryRequest(indexes: Indexes,
@@ -56,6 +55,7 @@ case class DeleteByQueryRequest(indexes: Indexes,
     copy(shouldStoreResult = shouldStoreResult.some)
 
   def slices(slices: Int): DeleteByQueryRequest = copy(slices = slices.some)
+  def automaticSlicing(): DeleteByQueryRequest = copy(slices = Some(Slicing.AutoSlices))
 
   def slice(slice: Slice): DeleteByQueryRequest = copy(slice = slice.some)
 
