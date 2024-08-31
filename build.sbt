@@ -302,7 +302,7 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-sttp")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(sttp, asyncHttpClientBackendFuture))
+  .settings(libraryDependencies ++= Seq(sttp))
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % "test")

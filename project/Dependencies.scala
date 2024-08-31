@@ -61,7 +61,6 @@ object Dependencies {
   lazy val akkaActor                    = "com.typesafe.akka"             %% "akka-actor"                       % AkkaVersion
   lazy val akkaHTTP                     = "com.typesafe.akka"             %% "akka-http"                        % AkkaHttpVersion
   lazy val akkaStream                   = "com.typesafe.akka"             %% "akka-stream"                      % AkkaVersion
-  lazy val asyncHttpClientBackendFuture = "com.softwaremill.sttp.client3" %% "async-http-client-backend-future" % SttpVersion
   lazy val cats                         = "org.typelevel"                 %% "cats-effect"                      % CatsEffectVersion
   lazy val cats2                        = "org.typelevel"                 %% "cats-effect"                      % CatsEffect2Version
   lazy val elasticsearchRestClient      = "org.elasticsearch.client"       % "elasticsearch-rest-client"        % ElasticsearchVersion
