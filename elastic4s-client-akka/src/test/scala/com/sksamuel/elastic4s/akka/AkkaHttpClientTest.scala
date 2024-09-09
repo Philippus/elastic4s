@@ -31,14 +31,16 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
         deleteIndex("testindex")
       }.await
 
-      akkaClient.shutdown().await
+      akkaClient.close().await
       system.terminate().await
     }
   }
 
   private lazy val akkaClient = AkkaHttpClient(AkkaHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
-  override val client = ElasticClient(akkaClient)
+  def mkAkkaBasedClient(implicit executor: Executor[Future]): ElasticClient[Future] = ElasticClient(akkaClient)
+
+  override lazy val client = mkAkkaBasedClient
 
   "AkkaHttpClient" should "support utf-8" in {
 
@@ -106,14 +108,12 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
   }
 
   it should "propagate headers if included" in {
-    implicit val executor: Executor[Future] = new Executor[Future] {
-      override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
-        val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
-        Executor.FutureExecutor.exec(client, request.copy(headers = Map("Authorization" -> s"Basic $cred")))
-      }
+    implicit val executor: Executor[Future] = (client: HttpClient[Future], request: ElasticRequest) => {
+      val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
+      client.send(request.copy(headers = Map("Authorization" -> s"Basic $cred")))
     }
 
-    client.execute {
+    mkAkkaBasedClient.execute {
       catHealth()
     }.await.result.status shouldBe "401"
   }

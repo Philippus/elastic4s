@@ -23,7 +23,7 @@ class AkkaHttpClient private[akka] (
   blacklist: Blacklist,
   httpPoolFactory: HttpPoolFactory
 )(implicit system: ActorSystem)
-    extends ElasticHttpClient {
+    extends ElasticHttpClient[Future] {
 
   import AkkaHttpClient._
   import system.dispatcher
@@ -200,28 +200,14 @@ class AkkaHttpClient private[akka] (
     }
   }
 
-  private[akka] def sendAsync(
+  override def send(
     request: ElasticRequest
   ): Future[ElasticHttpResponse] = {
     queueRequestWithRetry(request)
   }
 
-  override def send(
-    request: ElasticRequest,
-    callback: Either[Throwable, ElasticHttpResponse] => Unit
-  ): Unit = {
-    sendAsync(request).onComplete {
-      case Success(r) => callback(Right(r))
-      case Failure(e) => callback(Left(e))
-    }
-  }
-
-  def shutdown(): Future[Unit] = {
+  override def close(): Future[Unit] = {
     httpPoolFactory.shutdown()
-  }
-
-  override def close(): Unit = {
-    shutdown()
   }
 
   private def toRequest(request: ElasticRequest,

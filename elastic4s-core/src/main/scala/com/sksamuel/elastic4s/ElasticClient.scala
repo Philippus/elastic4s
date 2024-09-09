@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.module.scala.JavaTypeable
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.duration.{Duration, _}
@@ -16,7 +15,7 @@ import scala.language.higherKinds
   *
   * @param client the HTTP client library to use
   **/
-case class ElasticClient(client: HttpClient) extends AutoCloseable {
+case class ElasticClient[F[_] : Executor : Functor](client: HttpClient[F]) {
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
@@ -29,12 +28,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
   // Executes the given request type T, and returns an effect of Response[U]
   // where U is particular to the request type.
   // For example a search request will return a Response[SearchResponse].
-  def execute[T, U, F[_]](t: T)(implicit
-                                executor: Executor[F],
-                                functor: Functor[F],
-                                handler: Handler[T, U],
-                                javaTypeable: JavaTypeable[U],
-                                options: CommonRequestOptions): F[Response[U]] = {
+  def execute[T, U](t: T)(implicit handler: Handler[T, U], options: CommonRequestOptions): F[Response[U]] = {
     val request = handler.build(t)
 
     val request2 = if (options.timeout.toMillis > 0) {
@@ -51,8 +45,8 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
 
     val request4 = options.headers.foldLeft(request3){ case (acc, (key, value)) => acc.addHeader(key, value) }
 
-    val f = executor.exec(client, request4)
-    functor.map(f) { resp =>
+    val f = Executor[F].exec(client, request4)
+    Functor[F].map(f) { resp =>
       handler.responseHandler.handle(resp) match {
         case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
         case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
@@ -61,7 +55,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
   }
 
 
-  def close(): Unit = client.close()
+  def close(): F[Unit] = client.close()
 }
 
 case class CommonRequestOptions(timeout: Duration, masterNodeTimeout: Duration, headers: Map[String, String] = Map.empty)

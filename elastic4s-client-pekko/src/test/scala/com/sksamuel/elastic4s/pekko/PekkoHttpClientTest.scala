@@ -31,14 +31,17 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
         deleteIndex("testindex")
       }.await
 
-      pekkoClient.shutdown().await
+      pekkoClient.close().await
       system.terminate().await
     }
   }
 
   private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
-  override val client = ElasticClient(pekkoClient)
+  def mkPekkoBasedClient(implicit executor: Executor[Future]): ElasticClient[Future] =
+    ElasticClient(pekkoClient)
+
+  override lazy val client = mkPekkoBasedClient
 
   "PekkoHttpClient" should "support utf-8" in {
 
@@ -106,14 +109,12 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
   }
 
   it should "propagate headers if included" in {
-    implicit val executor: Executor[Future] = new Executor[Future] {
-      override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
-        val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
-        Executor.FutureExecutor.exec(client, request.copy(headers = Map("Authorization" -> s"Basic $cred")))
-      }
+    implicit val executor: Executor[Future] = (client: HttpClient[Future], request: ElasticRequest) => {
+      val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
+      client.send(request.copy(headers = Map("Authorization" -> s"Basic $cred")))
     }
 
-    client.execute {
+    mkPekkoBasedClient.execute {
       catHealth()
     }.await.result.status shouldBe "401"
   }
