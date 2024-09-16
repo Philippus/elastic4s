@@ -10,7 +10,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.util.{Failure, Success}
 import sttp.client3._
-import sttp.client3.asynchttpclient.future.AsyncHttpClientFutureBackend
 import sttp.model.Uri
 import sttp.model.Uri.{PathSegments, QuerySegment}
 
@@ -94,7 +93,7 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
 object SttpRequestHttpClient {
 
   private def defaultEc: ExecutionContext = ExecutionContext.global
-  private def defaultSttpBackend: SttpBackend[Future, Any] = AsyncHttpClientFutureBackend()
+  private def defaultSttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
   /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
   def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(
