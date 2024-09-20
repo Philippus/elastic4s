@@ -25,7 +25,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       |      "field": "pagerank",
       |      "boost": 0.5,
       |      "sigmoid": {
-      |         "pivot": 7,
+      |         "pivot": 7.0,
       |         "exponent": 0.6
       |      }
       |   }
@@ -50,7 +50,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
         |   "rank_feature":{
         |      "field": "pagerank",
         |      "log": {
-        |          "scaling_factor": 3
+        |          "scaling_factor": 3.0
         |      }
         |   }
         |}
@@ -75,7 +75,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
         |   "rank_feature":{
         |      "field": "pagerank",
         |      "saturation": {
-        |          "pivot": 2
+        |          "pivot": 2.0
         |      }
         |   }
         |}
