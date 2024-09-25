@@ -5,7 +5,7 @@
             "field": "pagerank",
             "boost": 0.5,
             "sigmoid": {
-                "pivot": 7,
+                "pivot": 7.0,
                 "exponent": 0.6
             }
         }

@@ -26,8 +26,8 @@ case class RankFeatureQuery(field: String,
 }
 
 object RankFeatureQuery {
-  case class Saturation(pivot: Option[Int])
-  case class Log(scalingFactor: Int)
-  case class Sigmoid(pivot: Int, exponent: Double)
+  case class Saturation(pivot: Option[Float])
+  case class Log(scalingFactor: Float)
+  case class Sigmoid(pivot: Float, exponent: Double)
   case class Linear()
 }
