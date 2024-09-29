@@ -16,7 +16,7 @@ def isRelease = releaseVersion != ""
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 
 val scala2Versions = Seq("2.12.20", "2.13.15")
-val scalaAllVersions = scala2Versions :+ "3.3.3"
+val scalaAllVersions = scala2Versions :+ "3.3.4"
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.20",
