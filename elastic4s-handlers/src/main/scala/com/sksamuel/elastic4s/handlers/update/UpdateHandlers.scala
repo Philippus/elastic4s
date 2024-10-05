@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicyHttpValue, Slicing}
+import com.sksamuel.elastic4s.requests.common.{IndicesOptionsParams, RefreshPolicyHttpValue, Slicing}
 import com.sksamuel.elastic4s.requests.task.GetTask
 import com.sksamuel.elastic4s.requests.update.{BaseUpdateByQueryRequest, UpdateByQueryAsyncRequest, UpdateByQueryAsyncResponse, UpdateByQueryRequest, UpdateByQueryResponse, UpdateByQueryTask, UpdateRequest, UpdateResponse}
 import com.sksamuel.elastic4s.{BulkIndexByScrollFailure, ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
@@ -90,6 +90,10 @@ trait UpdateHandlers {
       request.slices.foreach(s =>
         if (s == Slicing.AutoSlices) params.put("slices", Slicing.AutoSlicesValue) else params.put("slices", s)
       )
+
+      request.indicesOptions.foreach { opts =>
+        IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
+      }
 
       val body = UpdateByQueryBodyFn(request)
       logger.debug(s"Update by query ${body.string}")
