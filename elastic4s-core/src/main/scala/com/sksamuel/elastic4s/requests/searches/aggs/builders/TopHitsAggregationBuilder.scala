@@ -27,6 +27,9 @@ object TopHitsAggregationBuilder {
 
     agg.explain.foreach(builder.field("explain", _))
 
+    if (agg.storedFields.nonEmpty)
+      builder.array("docvalue_fields", agg.storedFields.toArray)
+
     agg.highlight.foreach { highlight =>
       builder.rawField("highlight", HighlightBuilderFn(highlight))
     }
