@@ -16,10 +16,10 @@ case class TopHitsAggregation(name: String,
                               version: Option[Boolean] = None,
                               scripts: Map[String, Script] = Map.empty,
                               storedFields: Seq[String] = Nil,
-                              docValueFields: Seq[String] = Nil,
                               subaggs: Seq[AbstractAggregation] = Nil,
                               metadata: Map[String, AnyRef] = Map.empty,
-                              highlight: Option[Highlight] = None)
+                              highlight: Option[Highlight] = None,
+                              docValueFields: Seq[String] = Nil)
     extends Aggregation {
 
   type T = TopHitsAggregation
