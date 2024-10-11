@@ -18,7 +18,8 @@ case class TopHitsAggregation(name: String,
                               storedFields: Seq[String] = Nil,
                               subaggs: Seq[AbstractAggregation] = Nil,
                               metadata: Map[String, AnyRef] = Map.empty,
-                              highlight: Option[Highlight] = None)
+                              highlight: Option[Highlight] = None,
+                              docValueFields: Seq[String] = Nil)
     extends Aggregation {
 
   type T = TopHitsAggregation
@@ -41,6 +42,9 @@ case class TopHitsAggregation(name: String,
   def storedField(field: String): TopHitsAggregation                 = storedFields(field)
   def storedFields(first: String, rest: String*): TopHitsAggregation = storedFields(first +: rest)
   def storedFields(fields: Iterable[String]): TopHitsAggregation     = copy(storedFields = fields.toSeq)
+
+  def docValueFields(docValueFields: Iterable[String]): TopHitsAggregation =
+    copy(docValueFields = docValueFields.toSeq)
 
   def version(version: Boolean): TopHitsAggregation         = copy(version = version.some)
   def trackScores(trackScores: Boolean): TopHitsAggregation = copy(trackScores = trackScores.some)
