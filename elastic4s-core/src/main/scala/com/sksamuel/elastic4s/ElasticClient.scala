@@ -97,15 +97,15 @@ object Authentication {
 case class CommonRequestOptions(
   timeout: Duration,
   masterNodeTimeout: Duration,
-  authentication: Authentication,
-  headers: Map[String, String] = Map.empty
+  headers: Map[String, String] = Map.empty,
+  authentication: Authentication = Authentication.NoAuth,
 )
 
 object CommonRequestOptions {
   implicit val defaults: CommonRequestOptions = CommonRequestOptions(
     timeout = 0.seconds,
     masterNodeTimeout = 0.seconds,
+    headers = Map.empty,
     authentication = Authentication.NoAuth,
-    headers = Map.empty
   )
 }
