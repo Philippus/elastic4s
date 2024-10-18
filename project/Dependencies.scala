@@ -47,8 +47,8 @@ object Dependencies {
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
   )
 
-  lazy val zio1 = Seq("dev.zio" %% "zio" % ZIO1Version)
-  lazy val zio = Seq("dev.zio" %% "zio" % ZIOVersion)
+  lazy val zio1 = "dev.zio" %% "zio" % ZIO1Version
+  lazy val zio = "dev.zio" %% "zio" % ZIOVersion
 
   lazy val scalaz =
     Seq("org.scalaz" %% "scalaz-core" % ScalazVersion, "org.scalaz" %% "scalaz-concurrent" % ScalazVersion)
@@ -69,8 +69,8 @@ object Dependencies {
   lazy val pekkoActor                   = "org.apache.pekko"              %% "pekko-actor"  % PekkoVersion
   lazy val pekkoHTTP                    = "org.apache.pekko"              %% "pekko-http"   % PekkoHttpVersion
   lazy val pekkoStream                  = "org.apache.pekko"              %% "pekko-stream" % PekkoVersion
-  lazy val playJson                     = Seq("org.playframework"         %% "play-json"    % PlayJsonVersion)
-  lazy val sprayJson                    = Seq("io.spray"                  %% "spray-json"   % SprayJsonVersion)
+  lazy val playJson                     = "org.playframework"             %% "play-json"    % PlayJsonVersion
+  lazy val sprayJson                    = "io.spray"                      %% "spray-json"   % SprayJsonVersion
   lazy val sttp                         = "com.softwaremill.sttp.client3" %% "core"         % SttpVersion
   lazy val zioJson1                     = "dev.zio"                       %% "zio-json"     % ZIOJson1Version
   lazy val zioJson                      = "dev.zio"                       %% "zio-json"     % ZIOJsonVersion
