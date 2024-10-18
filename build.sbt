@@ -24,7 +24,7 @@ lazy val commonScalaVersionSettings = Seq(
 )
 
 lazy val warnUnusedImport = Seq(
-  scalacOptions ++= Seq("-Ywarn-unused:imports"),
+  scalacOptions += "-Ywarn-unused:imports",
   Compile / console / scalacOptions ~= {
     _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports"))
   },
@@ -33,7 +33,7 @@ lazy val warnUnusedImport = Seq(
 
 lazy val commonSettings = Seq(
   organization := "nl.gn0s1s",
-  resolvers ++= Seq(Resolver.mavenLocal),
+  resolvers += Resolver.mavenLocal,
   Test / parallelExecution := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
@@ -164,7 +164,7 @@ lazy val clientcore = (project in file("elastic4s-client-core"))
   .settings(name := "elastic4s-client-core")
   .dependsOn(handlers)
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(log4jApi))
+  .settings(libraryDependencies += log4jApi)
 
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   .settings(name := "elastic4s-client-esjava")
@@ -183,7 +183,7 @@ lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .settings(name := "elastic4s-client-sniffed")
   .dependsOn(clientesjava)
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(elasticsearchRestClientSniffer))
+  .settings(libraryDependencies += elasticsearchRestClientSniffer)
 
 lazy val cats_effect = (project in file("elastic4s-effect-cats"))
   .dependsOn(core, testkit % "test")
@@ -302,7 +302,7 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-sttp")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(sttp))
+  .settings(libraryDependencies += sttp)
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % "test")
