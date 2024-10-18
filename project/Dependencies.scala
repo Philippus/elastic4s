@@ -34,9 +34,9 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "com.typesafe"       % "config"                       % "1.4.3",
       "org.slf4j"          % "slf4j-api"                    % Slf4jVersion,
-      "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % "test",
-      "org.mockito"        % "mockito-core"                 % MockitoVersion       % "test",
-      "org.scalatestplus" %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion % "test"
+      "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % Test,
+      "org.mockito"        % "mockito-core"                 % MockitoVersion       % Test,
+      "org.scalatestplus" %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion % Test
     ))
 
   lazy val fasterXmlJacksonScala = Seq(
@@ -75,13 +75,13 @@ object Dependencies {
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 
-  lazy val commonsIo             = "commons-io"               % "commons-io"                   % CommonsIoVersion       % "test"
-  lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % "test"
-  lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % "test"
-  lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
+  lazy val commonsIo             = "commons-io"               % "commons-io"                   % CommonsIoVersion       % Test
+  lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % Test
+  lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % Test
+  lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % Test
   lazy val scalaTestMain         = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
-  lazy val scalaTest             = scalaTestMain % "test"
+  lazy val scalaTest             = scalaTestMain % Test
   lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
-  lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % "test"
+  lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % Test
 
 }

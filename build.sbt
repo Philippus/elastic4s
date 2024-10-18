@@ -299,19 +299,19 @@ lazy val ziojson = (project in file("elastic4s-json-zio"))
   .settings(libraryDependencies += Dependencies.zioJson)
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-sttp")
   .settings(scala3Settings)
   .settings(libraryDependencies += sttp)
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-akka")
   .settings(scala2Settings) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream))
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
@@ -319,19 +319,19 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
 
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")
-  .dependsOn(core, jackson, testkit % "test")
+  .dependsOn(core, jackson, testkit % Test)
   .settings(scala3Settings)
   .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= Seq(
       commonsIo,
       mockitoCore,
-      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.24.1" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.1" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.24.1" % "test"
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % Test,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % Test,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % Test exclude("org.scala-lang", "scala-library"),
+      "org.apache.logging.log4j" % "log4j-api" % "2.24.1" % Test,
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.1" % Test,
+      "org.apache.logging.log4j" % "log4j-core" % "2.24.1" % Test
     ),
     Test / fork := false,
     Test / parallelExecution := false,
