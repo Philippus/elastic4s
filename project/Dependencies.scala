@@ -6,11 +6,9 @@ object Dependencies {
   val AkkaVersion                    = "2.6.20"
   val CatsEffect2Version             = "2.5.5"
   val CatsEffectVersion              = "3.5.4"
-  val CatsVersion                    = "2.0.0"
   val CirceVersion                   = "0.14.10"
   val CommonsIoVersion               = "2.17.0"
   val ElasticsearchVersion           = "8.15.2"
-  val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.18.0"
   val Json4sVersion                  = "4.0.7"
   val Log4jVersion                   = "2.15.0"
@@ -36,9 +34,9 @@ object Dependencies {
     libraryDependencies ++= Seq(
       "com.typesafe"       % "config"                       % "1.4.3",
       "org.slf4j"          % "slf4j-api"                    % Slf4jVersion,
-      "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % "test",
-      "org.mockito"        % "mockito-core"                 % MockitoVersion       % "test",
-      "org.scalatestplus" %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion % "test"
+      "org.scalatest"     %% "scalatest"                    % ScalatestVersion     % Test,
+      "org.mockito"        % "mockito-core"                 % MockitoVersion       % Test,
+      "org.scalatestplus" %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion % Test
     ))
 
   lazy val fasterXmlJacksonScala = Seq(
@@ -47,8 +45,8 @@ object Dependencies {
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
   )
 
-  lazy val zio1 = Seq("dev.zio" %% "zio" % ZIO1Version)
-  lazy val zio = Seq("dev.zio" %% "zio" % ZIOVersion)
+  lazy val zio1 = "dev.zio" %% "zio" % ZIO1Version
+  lazy val zio = "dev.zio" %% "zio" % ZIOVersion
 
   lazy val scalaz =
     Seq("org.scalaz" %% "scalaz-core" % ScalazVersion, "org.scalaz" %% "scalaz-concurrent" % ScalazVersion)
@@ -69,21 +67,21 @@ object Dependencies {
   lazy val pekkoActor                   = "org.apache.pekko"              %% "pekko-actor"  % PekkoVersion
   lazy val pekkoHTTP                    = "org.apache.pekko"              %% "pekko-http"   % PekkoHttpVersion
   lazy val pekkoStream                  = "org.apache.pekko"              %% "pekko-stream" % PekkoVersion
-  lazy val playJson                     = Seq("org.playframework"         %% "play-json"    % PlayJsonVersion)
-  lazy val sprayJson                    = Seq("io.spray"                  %% "spray-json"   % SprayJsonVersion)
+  lazy val playJson                     = "org.playframework"             %% "play-json"    % PlayJsonVersion
+  lazy val sprayJson                    = "io.spray"                      %% "spray-json"   % SprayJsonVersion
   lazy val sttp                         = "com.softwaremill.sttp.client3" %% "core"         % SttpVersion
   lazy val zioJson1                     = "dev.zio"                       %% "zio-json"     % ZIOJson1Version
   lazy val zioJson                      = "dev.zio"                       %% "zio-json"     % ZIOJsonVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 
-  lazy val commonsIo             = "commons-io"               % "commons-io"                   % CommonsIoVersion       % "test"
-  lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % "test"
-  lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % "test"
-  lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
+  lazy val commonsIo             = "commons-io"               % "commons-io"                   % CommonsIoVersion       % Test
+  lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % Test
+  lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % Test
+  lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % Test
   lazy val scalaTestMain         = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
-  lazy val scalaTest             = scalaTestMain % "test"
+  lazy val scalaTest             = scalaTestMain % Test
   lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
-  lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % "test"
+  lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % Test
 
 }
