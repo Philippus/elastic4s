@@ -640,7 +640,7 @@ For gradle users, add (replace 2.12 with 2.13 for Scala 2.13):
 compile 'nl.gn0s1s:elastic4s-core_2.12:x.x.x'
 ```
 
-For SBT users add:
+For sbt users add:
 
 ```scala
 libraryDependencies += "nl.gn0s1s" %% "elastic4s-core" % "x.x.x"
@@ -660,7 +660,7 @@ Check for the latest released versions on [maven central](https://search.maven.o
 
 ## Building and Testing
 
-This project is built with SBT. So to build with:
+This project is built with sbt. So to build with:
 
 ```bash
 sbt compile
