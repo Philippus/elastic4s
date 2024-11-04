@@ -650,7 +650,7 @@ For Maven users add (replace 2.12 with 2.13 for Scala 2.13):
 
 ```xml
 <dependency>
-    <groupId>nl.gn0s1s/groupId>
+    <groupId>nl.gn0s1s</groupId>
     <artifactId>elastic4s-core_2.12</artifactId>
     <version>x.x.x</version>
 </dependency>
