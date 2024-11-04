@@ -13,9 +13,11 @@ class TopHitsAggregationBuilderTest extends AnyFunSuite with Matchers {
       .from(10)
       .version(true)
       .explain(false)
+      .docValueFields(List("name"))
+      .storedFields(List("currency"))
       .sortBy(List(FieldSort("price").sortMode(SortMode.Median)))
     TopHitsAggregationBuilder(q).string shouldBe
-      """{"top_hits":{"size":5,"from":10,"sort":[{"price":{"mode":"median","order":"asc"}}],"explain":false,"version":true}}"""
+      """{"top_hits":{"size":5,"from":10,"sort":[{"price":{"mode":"median","order":"asc"}}],"explain":false,"stored_fields":["currency"],"docvalue_fields":["name"],"version":true}}"""
   }
 
   test("top hits aggregation builder should support highlighting") {

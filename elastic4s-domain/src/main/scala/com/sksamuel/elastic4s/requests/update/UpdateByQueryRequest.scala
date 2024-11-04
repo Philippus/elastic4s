@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, Slicing}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -44,6 +45,8 @@ trait BaseUpdateByQueryRequest {
   val size: Option[Int]
 
   val waitForCompletion: Option[Boolean]
+
+  val indicesOptions: Option[IndicesOptionsRequest]
 }
 case class UpdateByQueryRequest(indexes: Indexes,
                                 query: Query,
@@ -63,7 +66,8 @@ case class UpdateByQueryRequest(indexes: Indexes,
                                 slice: Option[Slice] = None,
                                 timeout: Option[FiniteDuration] = None,
                                 shouldStoreResult: Option[Boolean] = None,
-                                size: Option[Int] = None) extends BaseUpdateByQueryRequest {
+                                size: Option[Int] = None,
+                                indicesOptions: Option[IndicesOptionsRequest] = None) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
@@ -106,4 +110,5 @@ case class UpdateByQueryRequest(indexes: Indexes,
   def shouldStoreResult(shouldStoreResult: Boolean): UpdateByQueryRequest =
     copy(shouldStoreResult = shouldStoreResult.some)
 
+  def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryRequest = copy(indicesOptions = options.some)
 }

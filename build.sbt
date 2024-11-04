@@ -15,8 +15,8 @@ def isRelease = releaseVersion != ""
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 
-val scala2Versions = Seq("2.12.20", "2.13.14")
-val scalaAllVersions = scala2Versions :+ "3.3.3"
+val scala2Versions = Seq("2.12.20", "2.13.15")
+val scalaAllVersions = scala2Versions :+ "3.3.4"
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.20",
@@ -24,7 +24,7 @@ lazy val commonScalaVersionSettings = Seq(
 )
 
 lazy val warnUnusedImport = Seq(
-  scalacOptions ++= Seq("-Ywarn-unused:imports"),
+  scalacOptions += "-Ywarn-unused:imports",
   Compile / console / scalacOptions ~= {
     _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports"))
   },
@@ -33,7 +33,7 @@ lazy val warnUnusedImport = Seq(
 
 lazy val commonSettings = Seq(
   organization := "nl.gn0s1s",
-  resolvers ++= Seq(Resolver.mavenLocal),
+  resolvers += Resolver.mavenLocal,
   Test / parallelExecution := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
@@ -165,7 +165,7 @@ lazy val clientcore = (project in file("elastic4s-client-core"))
   .settings(name := "elastic4s-client-core")
   .dependsOn(handlers)
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(log4jApi))
+  .settings(libraryDependencies += log4jApi)
 
 lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   .settings(name := "elastic4s-client-esjava")
@@ -184,7 +184,7 @@ lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .settings(name := "elastic4s-client-sniffed")
   .dependsOn(clientesjava)
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(elasticsearchRestClientSniffer))
+  .settings(libraryDependencies += elasticsearchRestClientSniffer)
 
 lazy val cats_effect = (project in file("elastic4s-effect-cats"))
   .dependsOn(core, testkit % "test")
@@ -202,13 +202,13 @@ lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-effect-zio-1")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Dependencies.zio1)
+  .settings(libraryDependencies += Dependencies.zio1)
 
 lazy val zio = (project in file("elastic4s-effect-zio"))
   .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-effect-zio")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Dependencies.zio)
+  .settings(libraryDependencies += Dependencies.zio)
 
 lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
   .dependsOn(core)
@@ -279,13 +279,13 @@ lazy val playjson = (project in file("elastic4s-json-play"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-play")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Dependencies.playJson)
+  .settings(libraryDependencies += Dependencies.playJson)
 
 lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-spray")
   .settings(scala2Settings) // ProductFormats in spray json don't work with the cross-building mode, so this probably needs https://github.com/spray/spray-json/pull/342
-  .settings(libraryDependencies ++= Dependencies.sprayJson)
+  .settings(libraryDependencies += Dependencies.sprayJson)
 
 lazy val ziojson_1 = (project in file("elastic4s-json-zio-1"))
   .dependsOn(core)
@@ -300,19 +300,19 @@ lazy val ziojson = (project in file("elastic4s-json-zio"))
   .settings(libraryDependencies += Dependencies.zioJson)
 
 lazy val clientsttp = (project in file("elastic4s-client-sttp"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-sttp")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(sttp))
+  .settings(libraryDependencies += sttp)
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-akka")
   .settings(scala2Settings) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream))
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
@@ -326,19 +326,19 @@ lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
 
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")
-  .dependsOn(core, jackson, testkit % "test")
+  .dependsOn(core, jackson, testkit % Test)
   .settings(scala3Settings)
   .settings(noPublishSettings)
   .settings(
     libraryDependencies ++= Seq(
       commonsIo,
       mockitoCore,
-      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.24.0" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.0" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.24.0" % "test"
+      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % Test,
+      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % Test,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % Test exclude("org.scala-lang", "scala-library"),
+      "org.apache.logging.log4j" % "log4j-api" % "2.24.1" % Test,
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.1" % Test,
+      "org.apache.logging.log4j" % "log4j-core" % "2.24.1" % Test
     ),
     Test / fork := false,
     Test / parallelExecution := false,
