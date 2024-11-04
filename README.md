@@ -79,7 +79,7 @@ https://github.com/philippus/elastic4s/tree/master/samples
 
 To get started you will need to add a dependency:
 
-* [elastic4s-client-esjava](https://mvnrepository.com/artifact/com.sksamuel.elastic4s/a:elastic4s-client-esjava)
+* [elastic4s-client-esjava](https://mvnrepository.com/artifact/nl.gn0s1s/elastic4s-client-esjava)
 
 ```scala
 // major.minor are in sync with the elasticsearch releases
