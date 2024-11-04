@@ -662,13 +662,13 @@ Check for the latest released versions on [maven central](https://search.maven.o
 
 This project is built with SBT. So to build with:
 
-```scala
+```bash
 sbt compile
 ```
 
 And to test:
 
-```scala
+```bash
 sbt test
 ```
 The project is currently [cross-built](https://www.scala-sbt.org/1.x/docs/Cross-Build.html) against Scala 2.12, 2.13 and 3, when preparing a pull request the above commands should be run with the `sbt` `+` modifier to compile and test
