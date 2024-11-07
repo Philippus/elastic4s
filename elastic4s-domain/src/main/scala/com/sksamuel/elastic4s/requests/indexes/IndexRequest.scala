@@ -49,7 +49,7 @@ case class IndexRequest(index: Index,
 
 
   def timeout(timeout: String): IndexRequest = copy(timeout = timeout.some)
-  def timeout(duration: FiniteDuration): IndexRequest = copy(timeout = (duration.toSeconds + "s").some)
+  def timeout(duration: FiniteDuration): IndexRequest = copy(timeout = s"${duration.toSeconds}s".some)
 
   // if set to true then trying to update a document will fail
   def createOnly(createOnly: Boolean): IndexRequest = copy(createOnly = createOnly.some)

@@ -37,7 +37,7 @@ case class UpdateByQueryAsyncRequest(indexes: Indexes,
   def refreshImmediately: UpdateByQueryAsyncRequest = refresh(RefreshPolicy.IMMEDIATE)
 
   def scroll(scroll: String): UpdateByQueryAsyncRequest = copy(scroll = scroll.some)
-  def scroll(duration: FiniteDuration): UpdateByQueryAsyncRequest = copy(scroll = Some(duration.toSeconds + "s"))
+  def scroll(duration: FiniteDuration): UpdateByQueryAsyncRequest = copy(scroll = s"${duration.toSeconds}s".some)
 
   def scrollSize(scrollSize: Int): UpdateByQueryAsyncRequest = copy(scrollSize = scrollSize.some)
   def slice(slice: Slice): UpdateByQueryAsyncRequest = copy(slice = slice.some)

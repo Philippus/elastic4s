@@ -68,7 +68,7 @@ case class ReindexRequest(sourceIndexes: Indexes,
   def script(script: Script): ReindexRequest = copy(script = script.some)
 
   def scroll(scroll: String): ReindexRequest = copy(scroll = scroll.some)
-  def scroll(duration: FiniteDuration): ReindexRequest = copy(scroll = Some(duration.toSeconds + "s"))
+  def scroll(duration: FiniteDuration): ReindexRequest = copy(scroll = s"${duration.toSeconds}s".some)
   def size(size: Int): ReindexRequest = copy(size = size.some)
 
   def createOnly(createOnly: Boolean): ReindexRequest = copy(createOnly = createOnly.some)
