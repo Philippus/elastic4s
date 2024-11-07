@@ -75,13 +75,13 @@ object Dependencies {
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 
-  lazy val commonsIo           = "commons-io"               % "commons-io"                   % CommonsIoVersion       % Test
-  lazy val log4jApi            = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % Test
-  lazy val mockitoCore         = "org.mockito"              % "mockito-core"                 % MockitoVersion         % Test
-  lazy val reactiveStreamsTck  = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % Test
-  lazy val scalaTestMain       = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
-  lazy val scalaTest           = scalaTestMain % Test
-  lazy val scalaTestPlusMokito = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
-  lazy val scalaTestPlusTestng = "org.scalatestplus"       %% "testng-7-10"                  % ScalatestPlusVersion   % Test
+  lazy val commonsIo            = "commons-io"               % "commons-io"                   % CommonsIoVersion       % Test
+  lazy val log4jApi             = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % Test
+  lazy val mockitoCore          = "org.mockito"              % "mockito-core"                 % MockitoVersion         % Test
+  lazy val reactiveStreamsTck   = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % Test
+  lazy val scalaTestMain        = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
+  lazy val scalaTest            = scalaTestMain % Test
+  lazy val scalaTestPlusMockito = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
+  lazy val scalaTestPlusTestng  = "org.scalatestplus"       %% "testng-7-10"                  % ScalatestPlusVersion   % Test
 
 }
