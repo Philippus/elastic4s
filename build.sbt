@@ -236,7 +236,7 @@ lazy val httpstreams = (project in file("elastic4s-http-streams"))
       Dependencies.akkaActor,
       Dependencies.akkaStream,
       Dependencies.reactiveStreamsTck,
-      Dependencies.scalaTestPlusTestng67
+      Dependencies.scalaTestPlusTestng
     )
   )
 
