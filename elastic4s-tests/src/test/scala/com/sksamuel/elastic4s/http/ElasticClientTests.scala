@@ -1,13 +1,10 @@
 package com.sksamuel.elastic4s.http
 
-import com.sksamuel.elastic4s.{ElasticRequest, Executor, HttpClient, HttpResponse}
 import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.elastic4s.{Authentication, CommonRequestOptions}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import java.nio.charset.StandardCharsets
-import java.util.Base64
-import scala.concurrent.Future
 import scala.util.Try
 
 class ElasticClientTests extends AnyFlatSpec with Matchers with DockerTests {
@@ -25,12 +22,9 @@ class ElasticClientTests extends AnyFlatSpec with Matchers with DockerTests {
   }
 
   it should "propagate headers if included" in {
-    implicit val executor: Executor[Future] = new Executor[Future] {
-      override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
-        val cred = Base64.getEncoder.encodeToString("user123:pass123".getBytes(StandardCharsets.UTF_8))
-        Executor.FutureExecutor.exec(client, request.copy(headers = Map("Authorization" -> s"Basic $cred")))
-      }
-    }
+    implicit val requestOptions: CommonRequestOptions = CommonRequestOptions.defaults.copy(
+      authentication = Authentication.UsernamePassword("user123", "pass123")
+    )
 
     client.execute {
       catHealth()
