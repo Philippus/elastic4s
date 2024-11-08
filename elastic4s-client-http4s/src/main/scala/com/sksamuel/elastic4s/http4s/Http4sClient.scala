@@ -19,7 +19,6 @@ object Http4sClient {
   def usingIO(
     client: http4s.client.Client[IO],
     endpoint: ElasticNodeEndpoint,
-    authentication: Authentication
   )(implicit runtime: IORuntime): Http4sClient[IO] = {
     val ioRunner = new CallbackRunner[IO] {
       override def run[A](fa: IO[A], cb: Either[Throwable, A] => Unit): Unit = fa.unsafeRunAsync(cb)
@@ -28,7 +27,6 @@ object Http4sClient {
     new Http4sClient(
       client = client,
       endpoint = endpoint,
-      authentication = authentication,
       runner = ioRunner
     )
   }
@@ -38,7 +36,6 @@ object Http4sClient {
 class Http4sClient[F[_] : Async : Files](
   client: http4s.client.Client[F],
   endpoint: ElasticNodeEndpoint,
-  authentication: Authentication,
   runner: CallbackRunner[F],
 ) extends elastic4s.HttpClient with RequestResponseConverters {
 
@@ -46,10 +43,7 @@ class Http4sClient[F[_] : Async : Files](
     request: elastic4s.ElasticRequest,
     callback: Either[Throwable, elastic4s.HttpResponse] => Unit
   ): Unit = {
-    val http4sRequest = authenticate(
-      elasticRequestToHttp4sRequest[F](endpoint, request),
-      authentication
-    )
+    val http4sRequest = elasticRequestToHttp4sRequest[F](endpoint, request)
 
     val response = client.run(http4sRequest).use(http4sResponseToElasticResponse[F])
 
