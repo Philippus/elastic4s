@@ -65,7 +65,6 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
     When("Intervals query is built")
     val queryBody = queries.IntervalsQueryBuilderFn(query)
 
-    println(queryBody.string)
     Then("query should have right fields")
     queryBody.string should matchJson(intervalsWithFilterQuery)
   }
@@ -103,7 +102,6 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
     When("Intervals query is built")
     val queryBody = queries.IntervalsQueryBuilderFn(query)
 
-    println(queryBody.string)
     Then("query should have right fields")
     queryBody.string should matchJson(intervalsWithScriptQuery)
   }
