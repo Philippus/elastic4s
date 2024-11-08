@@ -59,12 +59,12 @@ case class NodeHotThreadsRequest(nodeId: Option[String] = None,
   def ignoreIdleThreads(ignore: Boolean): NodeHotThreadsRequest = copy(ignoreIdleThreads = ignore.some)
   def `type`(t: String): NodeHotThreadsRequest = copy(`type` = t.some)
 
-  def masterTimeout(timeout: Duration): NodeHotThreadsRequest = copy(masterTimeout = (timeout.toNanos + "nanos").some)
+  def masterTimeout(timeout: Duration): NodeHotThreadsRequest = copy(masterTimeout = s"${timeout.toNanos}nanos".some)
   def masterTimeout(timeout: String): NodeHotThreadsRequest = copy(masterTimeout = timeout.some)
 
-  def timeout(timeout: Duration): NodeHotThreadsRequest = copy(timeout = (timeout.toNanos + "nanos").some)
+  def timeout(timeout: Duration): NodeHotThreadsRequest = copy(timeout = s"${timeout.toNanos}nanos".some)
   def timeout(timeout: String): NodeHotThreadsRequest = copy(timeout = timeout.some)
 
-  def interval(interval: Duration): NodeHotThreadsRequest = copy(interval = (interval.toNanos + "nanos").some)
+  def interval(interval: Duration): NodeHotThreadsRequest = copy(interval = s"${interval.toNanos}nanos".some)
   def interval(interval: String): NodeHotThreadsRequest = copy(interval = interval.some)
 }

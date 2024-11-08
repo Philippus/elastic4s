@@ -39,7 +39,7 @@ class TermsEnumTest extends AnyWordSpec with Matchers with DockerTests {
       resp.isComplete shouldBe true
     }
 
-   val termsEnumRequest = TermsEnumRequest("test", "tags")
+    val termsEnumRequest = TermsEnumRequest("test", "tags")
       .string("kiba")
       .size(3)
       .timeout("1m")

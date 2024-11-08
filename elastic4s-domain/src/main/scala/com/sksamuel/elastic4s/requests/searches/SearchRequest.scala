@@ -229,7 +229,7 @@ case class SearchRequest(indexes: Indexes,
   def keepAlive(duration: FiniteDuration): SearchRequest = scroll(duration)
 
   def scroll(keepAlive: String): SearchRequest = copy(keepAlive = keepAlive.some)
-  def scroll(duration: FiniteDuration): SearchRequest = copy(keepAlive = Some(duration.toSeconds + "s"))
+  def scroll(duration: FiniteDuration): SearchRequest = copy(keepAlive = s"${duration.toSeconds}s".some)
 
   def slice(id: Int, max: Int): SearchRequest = copy(slice = Some(id, max))
 

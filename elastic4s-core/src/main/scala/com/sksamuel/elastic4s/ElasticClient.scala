@@ -39,13 +39,13 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
     val request = handler.build(t)
 
     val request2 = if (options.timeout.toMillis > 0) {
-      request.addParameter("timeout", options.timeout.toMillis + "ms")
+      request.addParameter("timeout", s"${options.timeout.toMillis}ms")
     } else {
       request
     }
 
     val request3 = if (options.masterNodeTimeout.toMillis > 0) {
-      request2.addParameter("master_timeout", options.masterNodeTimeout.toMillis + "ms")
+      request2.addParameter("master_timeout", s"${options.masterNodeTimeout.toMillis}ms")
     } else {
       request2
     }

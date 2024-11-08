@@ -36,7 +36,7 @@ case class CreateIndexRequest(name: String,
   /**
     * Convenience method for setting the 'index.refresh_interval' property on this index.
     */
-  def refreshInterval(duration: Duration): CreateIndexRequest = refreshInterval(duration.toMillis + "ms")
+  def refreshInterval(duration: Duration): CreateIndexRequest = refreshInterval(s"${duration.toMillis}ms")
 
   /**
     * Convenience method for setting the 'index.refresh_interval' property on this index.

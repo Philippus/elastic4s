@@ -90,7 +90,7 @@ lazy val allSettings = commonScalaVersionSettings ++
   publishSettings
 
 lazy val scala2Settings = allSettings :+ (crossScalaVersions := scala2Versions)
-lazy val scala3Settings = allSettings ++ (scalacOptions ++= (if (scalaVersion.value startsWith "3") Seq("-Ytasty-reader") else Nil)) :+ (crossScalaVersions := scalaAllVersions)
+lazy val scala3Settings = allSettings :+ (crossScalaVersions := scalaAllVersions)
 
 lazy val scala3Projects: Seq[ProjectReference] = Seq(
     json_builder,
