@@ -92,7 +92,6 @@ trait SynonymsHandlers {
 
     override def build(request: CreateOrUpdateSynonymRuleRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
-      println(endpoint)
       val body = UpdateSynonymRuleBodyFn(request).string
       val entity = HttpEntity(body, "application/json")
       ElasticRequest("PUT", endpoint, entity)
