@@ -115,6 +115,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
     ziojson,
     clientsttp,
     httpstreams,
+    reactivestreamspekko,
     akkastreams,
     pekkostreams
 )
@@ -235,6 +236,19 @@ lazy val httpstreams = (project in file("elastic4s-http-streams"))
     Seq(
       Dependencies.akkaActor,
       Dependencies.akkaStream,
+      Dependencies.reactiveStreamsTck,
+      Dependencies.scalaTestPlusTestng
+    )
+  )
+
+lazy val reactivestreamspekko = (project in file("elastic4s-reactivestreams-pekko"))
+  .dependsOn(core, testkit % "test", jackson % "test")
+  .settings(name := "elastic4s-reactivestreams-pekko")
+  .settings(scala3Settings)
+  .settings(libraryDependencies ++=
+    Seq(
+      Dependencies.pekkoActor,
+      Dependencies.pekkoStream,
       Dependencies.reactiveStreamsTck,
       Dependencies.scalaTestPlusTestng
     )

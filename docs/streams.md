@@ -1,24 +1,23 @@
 ## Reactive Streams
 
-Elastic4s has an implementation of the [reactive streams](http://www.reactive-streams.org) api for both publishing and subscribing that is built
-using Akka. To use this, you need to add a dependency on the elastic4s-streams module.
+Elastic4s has implementations of the [reactive streams](http://www.reactive-streams.org) api for both publishing and subscribing that is built
+using Akka or Apache Pekko.
 
 There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
 stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.
-
 
 ### Dependencies
 
 First you have to add an additional dependency to your `build.sbt`
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-streams" % "x.x.x"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % "x.x.x"
 ```
 
 or
 
 ```scala
-libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % "x.x.x"
+libraryDependencies += "com.sksamuel.elastic4s" %% "elastic4s-reactivestreams-pekko" % "x.x.x"
 ```
 
 Import the new API with
@@ -27,11 +26,16 @@ Import the new API with
 import com.sksamuel.elastic4s.streams.ReactiveElastic._
 ```
 
+or
+```scala
+import com.sksamuel.elastic4s.reactivestreams.pekko.ReactiveElastic._
+```
+
 ### Publisher
 
 An elastic publisher can be created for any arbitrary query you wish, and then using the efficient search scroll API, the entire dataset that matches your query is streamed out to subscribers.
 
-And make sure you have an Akka Actor System in implicit scope
+And make sure you have an Actor System in implicit scope
 
 `implicit val system = ActorSystem()`
 
@@ -56,7 +60,7 @@ The subscriber can create index, update, or delete requests, so is a good way to
 
 `import ReactiveElastic._`
 
-And make sure you have an Akka Actor System in implicit scope.
+And make sure you have an Actor System in implicit scope.
 
 `implicit val system = ActorSystem()`
 
