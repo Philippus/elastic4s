@@ -51,7 +51,7 @@ Note that starting from versions 7.17.25 and 8.12.0 the group id has changed fro
 | 8.2.x           | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/8.2.svg?label=latest%208.2%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                                 | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.13/8.2.svg?label=latest%208.2%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                                 |
 | 8.1.x           | [<img src="https://img.shields.io/maven-metadata/v.svg?label=latest%208.1%20release%20for%202.12&metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fsksamuel%2Felastic4s%2Felastic4s-core_2.12%2Fmaven-metadata.xml&versionPrefix=8.1."/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22) | [<img src="https://img.shields.io/maven-metadata/v.svg?label=latest%208.1%20release%20for%202.13&metadataUrl=https%3A%2F%2Frepo1.maven.org%2Fmaven2%2Fcom%2Fsksamuel%2Felastic4s%2Felastic4s-core_2.13%2Fmaven-metadata.xml&versionPrefix=8.1."/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22) |
 | 8.0.x           | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/8.0.svg?label=latest%208.0%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                                 | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.13/8.0.svg?label=latest%208.0%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                                 |
-| 7.17.x          | [<img src="https://img.shields.io/maven-central/v/nl.gn0s1s/elastic4s-core_2.12/7.17.svg?label=latest%207.17%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                               | [<img src="https://img.shields.io/maven-central/v/nl.gn0s1s/elastic4s-core_2.13/7.17.svg?label=latest%207.17%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                               |
+| 7.17.x          | [<img src="https://img.shields.io/maven-central/v/nl.gn0s1s/elastic4s-core_2.12/7.17.svg?label=latest%207.17%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                                            | [<img src="https://img.shields.io/maven-central/v/nl.gn0s1s/elastic4s-core_2.13/7.17.svg?label=latest%207.17%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                                            |
 | 7.16.x          | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/7.16.svg?label=latest%207.16%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                               | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.13/7.16.svg?label=latest%207.16%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                               |
 | 7.15.x          | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/7.15.svg?label=latest%207.15%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                               | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.13/7.15.svg?label=latest%207.15%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                               |
 | 7.14.x          | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.12/7.14.svg?label=latest%207.14%20release%20for%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.12%22)                                                                                               | [<img src="https://img.shields.io/maven-central/v/com.sksamuel.elastic4s/elastic4s-core_2.13/7.14.svg?label=latest%207.14%20release%20for%202.13"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22elastic4s-core_2.13%22)                                                                                               |
@@ -348,15 +348,15 @@ can be used to generate Json generically.
 To use this, add the import for your chosen library below and bring the implicits into scope. Then you can pass any case class
 instance to `doc` and an `Indexable` will be derived automatically.
 
-| Library | Elastic4s Module | Import |
-|---------|------------------|--------|
-|[Jackson](https://github.com/FasterXML/jackson-module-scala)|[elastic4s-json-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-jackson)|import ElasticJackson.Implicits._|
-|[Json4s](http://json4s.org/)|[elastic4s-json-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-json4s)|import ElasticJson4s.Implicits._|
-|[Circe](https://github.com/travisbrown/circe)|[elastic4s-json-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-circe)|import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._|
-|[PlayJson](https://github.com/playframework/play-json)|[elastic4s-json-play](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-play)|import com.sksamuel.elastic4s.playjson._|
-|[Spray Json](https://github.com/spray/spray-json)|[elastic4s-json-spray](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)|import com.sksamuel.elastic4s.sprayjson._|
-|[ZIO 1.0 Json](https://github.com/zio/zio-json)|[elastic4s-json-zio-1](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-zio-1)|import com.sksamuel.elastic4s.ziojson._|
-|[ZIO 2.0 Json](https://github.com/zio/zio-json)|[elastic4s-json-zio](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-zio)|import com.sksamuel.elastic4s.ziojson._|
+| Library                                                      | Elastic4s Module                                                                            | Import                                                                    |
+|--------------------------------------------------------------|---------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| [Jackson](https://github.com/FasterXML/jackson-module-scala) | [elastic4s-json-jackson](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-jackson) | import ElasticJackson.Implicits._                                         |
+| [Json4s](http://json4s.org/)                                 | [elastic4s-json-json4s](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-json4s)   | import ElasticJson4s.Implicits._                                          |
+| [Circe](https://github.com/travisbrown/circe)                | [elastic4s-json-circe](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-circe)     | import io.circe.generic.auto._ <br/>import com.sksamuel.elastic4s.circe._ |
+| [PlayJson](https://github.com/playframework/play-json)       | [elastic4s-json-play](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-play)       | import com.sksamuel.elastic4s.playjson._                                  |
+| [Spray Json](https://github.com/spray/spray-json)            | [elastic4s-json-spray](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-spray)     | import com.sksamuel.elastic4s.sprayjson._                                 |
+| [ZIO 1.0 Json](https://github.com/zio/zio-json)              | [elastic4s-json-zio-1](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-zio-1)     | import com.sksamuel.elastic4s.ziojson._                                   |
+| [ZIO 2.0 Json](https://github.com/zio/zio-json)              | [elastic4s-json-zio](http://search.maven.org/#search%7Cga%7C1%7Celastic4s-json-zio)         | import com.sksamuel.elastic4s.ziojson._                                   |
 
 
 
@@ -640,7 +640,7 @@ For gradle users, add (replace 2.12 with 2.13 for Scala 2.13):
 compile 'nl.gn0s1s:elastic4s-core_2.12:x.x.x'
 ```
 
-For SBT users add:
+For sbt users add:
 
 ```scala
 libraryDependencies += "nl.gn0s1s" %% "elastic4s-core" % "x.x.x"
@@ -650,7 +650,7 @@ For Maven users add (replace 2.12 with 2.13 for Scala 2.13):
 
 ```xml
 <dependency>
-    <groupId>nl.gn0s1s/groupId>
+    <groupId>nl.gn0s1s</groupId>
     <artifactId>elastic4s-core_2.12</artifactId>
     <version>x.x.x</version>
 </dependency>
@@ -660,15 +660,15 @@ Check for the latest released versions on [maven central](https://search.maven.o
 
 ## Building and Testing
 
-This project is built with SBT. So to build with:
+This project is built with sbt. So to build with:
 
-```scala
+```bash
 sbt compile
 ```
 
 And to test:
 
-```scala
+```bash
 sbt test
 ```
 The project is currently [cross-built](https://www.scala-sbt.org/1.x/docs/Cross-Build.html) against Scala 2.12, 2.13 and 3, when preparing a pull request the above commands should be run with the `sbt` `+` modifier to compile and test
@@ -703,11 +703,6 @@ For the tests to work you will need to run a local elastic instance on port 3922
 * wehkamp
 
 _Raise a PR to add your company here_
-
-![youkit logo](https://www.yourkit.com/images/yklogo.png) YourKit supports open source projects with its full-featured Java Profiler.
-YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a>
-and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>,
-innovative and intelligent tools for profiling Java and .NET applications.
 
 ## Contributions
 Contributions to elastic4s are always welcome. Good ways to contribute include:

@@ -50,7 +50,7 @@ trait DeleteHandlers {
         params.put("conflicts", "proceed")
       request.refresh.map(RefreshPolicyHttpValue.apply).foreach(params.put("refresh", _))
       request.requestsPerSecond.map(_.toString).foreach(params.put("requests_per_second", _))
-      request.timeout.map(_.toMillis + "ms").foreach(params.put("timeout", _))
+      request.timeout.map(_.toMillis.toString + "ms").foreach(params.put("timeout", _))
       request.scrollSize.map(_.toString).foreach(params.put("scroll_size", _))
       request.routing.map(_.toString).foreach(params.put("routing", _))
       request.maxDocs.map(_.toString).foreach(params.put("max_docs", _))

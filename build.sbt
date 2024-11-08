@@ -90,7 +90,7 @@ lazy val allSettings = commonScalaVersionSettings ++
   publishSettings
 
 lazy val scala2Settings = allSettings :+ (crossScalaVersions := scala2Versions)
-lazy val scala3Settings = allSettings ++ (scalacOptions ++= (if (scalaVersion.value startsWith "3") Seq("-Ytasty-reader") else Nil)) :+ (crossScalaVersions := scalaAllVersions)
+lazy val scala3Settings = allSettings :+ (crossScalaVersions := scalaAllVersions)
 
 lazy val scala3Projects: Seq[ProjectReference] = Seq(
     json_builder,
@@ -226,7 +226,7 @@ lazy val testkit = (project in file("elastic4s-testkit"))
   .dependsOn(core, clientesjava)
   .settings(name := "elastic4s-testkit")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain, scalaTestPlusMokito))
+  .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain, Dependencies.scalaTestPlusMockito))
 
 lazy val httpstreams = (project in file("elastic4s-http-streams"))
   .dependsOn(core, testkit % "test", jackson % "test")
@@ -237,7 +237,7 @@ lazy val httpstreams = (project in file("elastic4s-http-streams"))
       Dependencies.akkaActor,
       Dependencies.akkaStream,
       Dependencies.reactiveStreamsTck,
-      Dependencies.scalaTestPlusTestng67
+      Dependencies.scalaTestPlusTestng
     )
   )
 

@@ -29,7 +29,7 @@ class XContentBuilder(root: JsonValue) {
 
   def array(field: String, strings: Array[String]): XContentBuilder = {
     startArray(field)
-    strings.map(StringValue).foreach(array.addValue)
+    strings.map(StringValue.apply).foreach(array.addValue)
     endArray()
     this
   }
@@ -42,7 +42,7 @@ class XContentBuilder(root: JsonValue) {
         val thirdArray = secondArray.addArray()
         third.foreach { inner =>
           val value = thirdArray.addArray()
-          value.addAll(inner.map(DoubleValue).toList)
+          value.addAll(inner.map(DoubleValue.apply).toList)
         }
       }
     }
@@ -56,7 +56,7 @@ class XContentBuilder(root: JsonValue) {
       val outer = array.addArray()
       nested.foreach { inner =>
         val value = outer.addArray()
-        value.addAll(inner.map(DoubleValue).toList)
+        value.addAll(inner.map(DoubleValue.apply).toList)
       }
     }
     endArray()
@@ -67,7 +67,7 @@ class XContentBuilder(root: JsonValue) {
     startArray(field)
     doubles.foreach { nested =>
       val value = array.addArray()
-      value.addAll(nested.map(DoubleValue).toList)
+      value.addAll(nested.map(DoubleValue.apply).toList)
     }
     endArray()
     this
@@ -75,42 +75,42 @@ class XContentBuilder(root: JsonValue) {
 
   def array(field: String, doubles: Array[Double]): XContentBuilder = {
     startArray(field)
-    array.addAll(doubles.map(DoubleValue).toList)
+    array.addAll(doubles.map(DoubleValue.apply).toList)
     endArray()
     this
   }
 
   def array(field: String, strings: List[String]): XContentBuilder = {
     startArray(field)
-    array.addAll(strings.map(StringValue))
+    array.addAll(strings.map(StringValue.apply))
     endArray()
     this
   }
 
   def array(field: String, longs: Array[Long]): XContentBuilder = {
     startArray(field)
-    array.addAll(longs.map(LongValue).toList)
+    array.addAll(longs.map(LongValue.apply).toList)
     endArray()
     this
   }
 
   def array(field: String, ints: Array[Int]): XContentBuilder = {
     startArray(field)
-    array.addAll(ints.map(IntValue).toList)
+    array.addAll(ints.map(IntValue.apply).toList)
     endArray()
     this
   }
 
   def array(field: String, floats: Array[Float]): XContentBuilder = {
     startArray(field)
-    array.addAll(floats.map(FloatValue).toList)
+    array.addAll(floats.map(FloatValue.apply).toList)
     endArray()
     this
   }
 
   def array(field: String, booleans: Array[Boolean]): XContentBuilder = {
     startArray(field)
-    array.addAll(booleans.map(BooleanValue).toList)
+    array.addAll(booleans.map(BooleanValue.apply).toList)
     endArray()
     this
   }

@@ -13,6 +13,8 @@ case class ElasticRequest(method: String, endpoint: String, params: Map[String, 
   def addParameter(name: String, value: String): ElasticRequest = copy(params = params + (name -> value))
 
   def addHeader(name: String, value: String): ElasticRequest = copy(headers = headers + (name -> value))
+
+  def addHeaders(headers: Map[String, String]): ElasticRequest = copy(headers = this.headers ++ headers)
 }
 
 object ElasticRequest {

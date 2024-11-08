@@ -50,7 +50,7 @@ jobs:
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:8.15.3
 
       - name: run tests
-        run: sbt ++2.13.14 test
+        run: sbt ++2.13.15 test
 
   scala-3_0:
     runs-on: ubuntu-latest
@@ -70,4 +70,4 @@ jobs:
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:8.15.3
 
       - name: run tests
-        run: sbt ++3.3.3 elastic4s-scala3/test
+        run: sbt ++3.3.4 elastic4s-scala3/test

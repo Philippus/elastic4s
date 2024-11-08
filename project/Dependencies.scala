@@ -13,15 +13,15 @@ object Dependencies {
   val Http4sVersion                  = "0.23.27"
   val JacksonVersion                 = "2.18.1"
   val Json4sVersion                  = "4.0.7"
-  val Log4jVersion                   = "2.15.0"
+  val Log4jVersion                   = "2.24.1"
   val MockitoVersion                 = "5.14.2"
   val MonixVersion                   = "3.4.1"
   val PekkoHttpVersion               = "1.1.0"
   val PekkoVersion                   = "1.1.2"
   val PlayJsonVersion                = "3.0.4"
-  val ReactiveStreamsVersion         = "1.0.3"
-  val ScalatestPlusMockitoArtifactId = "mockito-3-4"
-  val ScalatestPlusVersion           = "3.2.9.0"
+  val ReactiveStreamsVersion         = "1.0.4"
+  val ScalatestPlusMockitoArtifactId = "mockito-5-12"
+  val ScalatestPlusVersion           = "3.2.19.0"
   val ScalazVersion                  = "7.2.36"
   val ScalatestVersion               = "3.2.19"
   val Slf4jVersion                   = "2.0.16"
@@ -29,7 +29,7 @@ object Dependencies {
   val SttpVersion                    = "3.10.1"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
-  val ZIOVersion                     = "2.1.11"
+  val ZIOVersion                     = "2.1.12"
   val ZIOJsonVersion                 = "0.7.3"
 
   lazy val commonDeps = Seq(
@@ -79,13 +79,13 @@ object Dependencies {
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client" % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 
-  lazy val commonsIo             = "commons-io"               % "commons-io"                   % CommonsIoVersion       % Test
-  lazy val log4jApi              = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % Test
-  lazy val mockitoCore           = "org.mockito"              % "mockito-core"                 % MockitoVersion         % Test
-  lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % Test
-  lazy val scalaTestMain         = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
-  lazy val scalaTest             = scalaTestMain % Test
-  lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
-  lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % Test
+  lazy val commonsIo            = "commons-io"               % "commons-io"                   % CommonsIoVersion       % Test
+  lazy val log4jApi             = "org.apache.logging.log4j" % "log4j-api"                    % Log4jVersion           % Test
+  lazy val mockitoCore          = "org.mockito"              % "mockito-core"                 % MockitoVersion         % Test
+  lazy val reactiveStreamsTck   = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % Test
+  lazy val scalaTestMain        = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
+  lazy val scalaTest            = scalaTestMain % Test
+  lazy val scalaTestPlusMockito = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
+  lazy val scalaTestPlusTestng  = "org.scalatestplus"       %% "testng-7-10"                  % ScalatestPlusVersion   % Test
 
 }

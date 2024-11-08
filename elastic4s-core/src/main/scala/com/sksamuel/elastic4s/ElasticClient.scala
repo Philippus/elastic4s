@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import com.fasterxml.jackson.module.scala.JavaTypeable
 import org.slf4j.{Logger, LoggerFactory}
 
+import java.util.Base64
 import scala.concurrent.duration.{Duration, _}
 import scala.language.higherKinds
 
@@ -38,20 +39,22 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
     val request = handler.build(t)
 
     val request2 = if (options.timeout.toMillis > 0) {
-      request.addParameter("timeout", options.timeout.toMillis + "ms")
+      request.addParameter("timeout", s"${options.timeout.toMillis}ms")
     } else {
       request
     }
 
     val request3 = if (options.masterNodeTimeout.toMillis > 0) {
-      request2.addParameter("master_timeout", options.masterNodeTimeout.toMillis + "ms")
+      request2.addParameter("master_timeout", s"${options.masterNodeTimeout.toMillis}ms")
     } else {
       request2
     }
 
-    val request4 = options.headers.foldLeft(request3){ case (acc, (key, value)) => acc.addHeader(key, value) }
+    val request4 = request3.addHeaders(options.headers)
 
-    val f = executor.exec(client, request4)
+    val request5 = authenticate(request4, options.authentication)
+
+    val f = executor.exec(client, request5)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {
         case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
@@ -60,12 +63,49 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
     }
   }
 
+  private def authenticate(request: ElasticRequest, authentication: Authentication): ElasticRequest = {
+    authentication match {
+      case Authentication.UsernamePassword(username, password) =>
+        request.addHeader(
+          "Authorization",
+          "Basic " + Base64.getEncoder.encodeToString(s"$username:$password".getBytes)
+        )
+      case Authentication.ApiKey(apiKey) =>
+        request.addHeader(
+          "Authorization",
+          "ApiKey " + Base64.getEncoder.encodeToString(apiKey.getBytes)
+        )
+      case Authentication.NoAuth =>
+        request
+    }
+  }
+
 
   def close(): Unit = client.close()
 }
 
-case class CommonRequestOptions(timeout: Duration, masterNodeTimeout: Duration, headers: Map[String, String] = Map.empty)
+sealed trait Authentication
+
+object Authentication {
+  case class UsernamePassword(username: String, password: String) extends Authentication
+
+  case class ApiKey(apiKey: String) extends Authentication
+
+  case object NoAuth extends Authentication
+}
+
+case class CommonRequestOptions(
+  timeout: Duration,
+  masterNodeTimeout: Duration,
+  headers: Map[String, String] = Map.empty,
+  authentication: Authentication = Authentication.NoAuth,
+)
 
 object CommonRequestOptions {
-  implicit val defaults: CommonRequestOptions = CommonRequestOptions(0.seconds, 0.seconds, Map.empty)
+  implicit val defaults: CommonRequestOptions = CommonRequestOptions(
+    timeout = 0.seconds,
+    masterNodeTimeout = 0.seconds,
+    headers = Map.empty,
+    authentication = Authentication.NoAuth,
+  )
 }
