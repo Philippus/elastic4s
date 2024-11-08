@@ -14,8 +14,6 @@ class AnalyzeRequestHandlerTest extends AnyFunSuite with Matchers with IndexHand
       .index("testIndex")
     val result = AnalyzeRequestHandler.build(analyzeRequest)
 
-    println(result)
-
     result.method mustBe "GET"
     result.endpoint mustBe "/testIndex/_analyze"
     result.entity.foreach {
