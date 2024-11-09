@@ -31,10 +31,7 @@ trait Elastic4sEntityEncoders {
   implicit def optionalEntityEncoder[F[_], A](implicit ee: http4s.EntityEncoder[F, A]): http4s.EntityEncoder[F, Option[A]] =
     new http4s.EntityEncoder[F, Option[A]] {
       override def toEntity(a: Option[A]): http4s.Entity[F] = {
-        a match {
-          case Some(value) => ee.toEntity(value)
-          case None => http4s.Entity.empty
-        }
+        a.fold[http4s.Entity[F]](http4s.Entity.empty)(ee.toEntity)
       }
 
       override def headers: http4s.Headers = http4s.Headers.empty

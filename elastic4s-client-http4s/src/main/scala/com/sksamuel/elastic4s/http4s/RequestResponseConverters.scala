@@ -16,11 +16,11 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
     request: elastic4s.ElasticRequest,
   ): http4s.Request[F] = {
     val uri = http4s.Uri(
-      scheme = Some(http4s.Uri.Scheme.unsafeFromString(endpoint.protocol)),
-      authority = Some(http4s.Uri.Authority(
+      scheme = http4s.Uri.Scheme.fromString(endpoint.protocol).toOption,
+      authority = http4s.Uri.Authority(
         host = http4s.Uri.RegName(endpoint.host),
-        port = Some(endpoint.port)
-      )),
+        port = endpoint.port.some
+      ).some,
       path = http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment(_)).toVector),
       query = http4s.Query.fromPairs(request.params.toList: _*)
     )
