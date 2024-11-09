@@ -66,7 +66,6 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
         .tokenizer("letter")
     }.await.result
 
-    println(result)
     result shouldBe NoExplainAnalyzeResponse(
       List(
         AnalyseToken("hello", 0, 5, "word", 0),

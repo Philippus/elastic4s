@@ -14,7 +14,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
       AnalyzeRequest(Array("hello world"))
         .analyzer("smartcn")
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"analyzer":"smartcn"}""".stripMargin
   }
@@ -25,7 +24,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
         .analyzer("smartcn")
         .explain(true)
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"analyzer":"smartcn","explain":true}""".stripMargin
   }
@@ -36,7 +34,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
         .explain(true)
         .tokenizer("keyword")
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"explain":true,"tokenizer":"keyword"}""".stripMargin
   }
@@ -48,7 +45,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
         .filters("lowercase")
         .charFilters("html_strip")
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"tokenizer":"keyword","filter":["lowercase"],"char_filter":["html_strip"]}""".stripMargin
   }
@@ -60,7 +56,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
         .filters("lowercase","uppercase")
         .filters(StopAnalyzer("stop",List("a","is","this")))
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"tokenizer":"keyword","filter":["lowercase","uppercase",{"type":"stop","stopwords":["a","is","this"]}]}""".stripMargin
   }
@@ -70,7 +65,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
       AnalyzeRequest(Array("hello world"))
         .normalizer("my_normalizer")
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"normalizer":"my_normalizer"}""".stripMargin
   }
@@ -80,7 +74,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
       AnalyzeRequest(Array("hello world"))
         .field("obj1.field1")
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"field":"obj1.field1"}""".stripMargin
   }
@@ -90,7 +83,6 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
       AnalyzeRequest(Array("hello world"))
         .attributes("keyword")
     )
-    println(content)
     content mustBe
       """{"text":["hello world"],"attributes":["keyword"]}""".stripMargin
   }
