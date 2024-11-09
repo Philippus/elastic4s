@@ -1,0 +1,14 @@
+name: Launch Elastic
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: 'Launch elastic docker'
+      shell: bash
+      run: |
+        docker run -d -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    - name: 'Wait for cluster to start'
+      shell: bash
+      run: |
+        curl -s -S --retry 10 --retry-delay 5 --retry-all-errors "localhost:39227/_cluster/health?wait_for_status=green&timeout=50s"
