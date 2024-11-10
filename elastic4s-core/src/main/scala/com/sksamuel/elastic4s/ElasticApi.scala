@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.api.{AggregationApi, AliasesApi, AnalyzeApi, AnalyzerApi, BulkApi, CatsApi, ClearRolesCacheApi, ClusterApi, CollapseApi, CountApi, CreateIndexApi, CreateRoleApi, CreateUserApi, DeleteApi, DeleteIndexApi, DeleteRoleApi, DeleteUserApi, ExistsApi, ExplainApi, ForceMergeApi, GetApi, HighlightApi, IndexAdminApi, IndexApi, IndexLifecycleManagementApi, IndexRecoveryApi, IndexTemplateApi, IngestApi, KnnApi, LocksApi, MappingApi, NodesApi, NormalizerApi, PipelineAggregationApi, PitApi, QueryApi, ReindexApi, ReloadSearchAnalyzersApi, RoleApi, ScoreApi, ScriptApi, ScrollApi, SearchApi, SearchTemplateApi, SettingsApi, SnapshotApi, SortApi, StoredScriptApi, SuggestionApi, SynonymsApi, TaskApi, TermVectorApi, TermsEnumApi, TokenFilterApi, TokenizerApi, TypesApi, UpdateApi, UserAdminApi, UserApi, ValidateApi}
+import com.sksamuel.elastic4s.api.{AggregationApi, AliasesApi, AnalyzeApi, AnalyzerApi, BulkApi, CatsApi, ClearRolesCacheApi, ClusterApi, CollapseApi, CountApi, CreateIndexApi, CreateRoleApi, CreateUserApi, DeleteApi, DeleteIndexApi, DeleteRoleApi, DeleteUserApi, ExistsApi, ExplainApi, ForceMergeApi, GetApi, HighlightApi, IndexAdminApi, IndexApi, IndexLifecycleManagementApi, IndexRecoveryApi, IndexTemplateApi, IngestApi, KnnApi, LocksApi, MainApi, MappingApi, NodesApi, NormalizerApi, PipelineAggregationApi, PitApi, QueryApi, ReindexApi, ReloadSearchAnalyzersApi, RoleApi, ScoreApi, ScriptApi, ScrollApi, SearchApi, SearchTemplateApi, SettingsApi, SnapshotApi, SortApi, StoredScriptApi, SuggestionApi, SynonymsApi, TaskApi, TermVectorApi, TermsEnumApi, TokenFilterApi, TokenizerApi, TypesApi, UpdateApi, UserAdminApi, UserApi, ValidateApi}
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
@@ -35,6 +35,7 @@ trait ElasticApi
     with IndexTemplateApi
     with IngestApi
     with LocksApi
+    with MainApi
     with MappingApi
     with NodesApi
     with NormalizerApi
