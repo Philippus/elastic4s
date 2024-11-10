@@ -16,7 +16,13 @@ class Http4sRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerT
   )
   override val client: ElasticClient = ElasticClient(http4sClient)
 
-  "Http4sRequestHttpClient" should "be able to propagate headers if included" in {
+  "Http4sRequestHttpClient" should "be able to call elasticsearch" in {
+    client.execute {
+      catHealth()
+    }.await.result.status shouldBe "green"
+  }
+
+  it should "be able to propagate headers if included" in {
     implicit val options: CommonRequestOptions = CommonRequestOptions.defaults.copy(
       authentication = Authentication.UsernamePassword("user123", "pass123")
     )
