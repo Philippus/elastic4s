@@ -11,6 +11,7 @@ import com.sksamuel.elastic4s.handlers.explain.ExplainHandlers
 import com.sksamuel.elastic4s.handlers.get.GetHandlers
 import com.sksamuel.elastic4s.handlers.index.mapping.MappingHandlers
 import com.sksamuel.elastic4s.handlers.index.{IndexAdminHandlers, IndexHandlers, IndexStatsHandlers, IndexTemplateHandlers, RolloverHandlers}
+import com.sksamuel.elastic4s.handlers.indexlifecyclemanagement.IndexLifecycleManagementHandlers
 import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
 import com.sksamuel.elastic4s.handlers.pit.PitHandlers
@@ -47,6 +48,7 @@ with GetHandlers
 with IndexHandlers
 with IndexAdminHandlers
 with IndexAliasHandlers
+with IndexLifecycleManagementHandlers
 with IndexStatsHandlers
 with IndexTemplateHandlers
 with IngestHandlers
