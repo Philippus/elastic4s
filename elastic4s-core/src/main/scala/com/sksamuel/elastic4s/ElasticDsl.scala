@@ -13,6 +13,7 @@ import com.sksamuel.elastic4s.handlers.index.mapping.MappingHandlers
 import com.sksamuel.elastic4s.handlers.index.{IndexAdminHandlers, IndexHandlers, IndexStatsHandlers, IndexTemplateHandlers, RolloverHandlers}
 import com.sksamuel.elastic4s.handlers.indexlifecyclemanagement.IndexLifecycleManagementHandlers
 import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
+import com.sksamuel.elastic4s.handlers.main.MainHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
 import com.sksamuel.elastic4s.handlers.pit.PitHandlers
 import com.sksamuel.elastic4s.handlers.reindex.ReindexHandlers
@@ -53,6 +54,7 @@ with IndexStatsHandlers
 with IndexTemplateHandlers
 with IngestHandlers
 with LocksHandlers
+with MainHandlers
 with MappingHandlers
 with NodesHandlers
 with ReindexHandlers
