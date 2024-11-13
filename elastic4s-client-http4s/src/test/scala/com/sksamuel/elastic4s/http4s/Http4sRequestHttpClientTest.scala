@@ -18,8 +18,8 @@ class Http4sRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerT
 
   "Http4sRequestHttpClient" should "be able to call elasticsearch" in {
     client.execute {
-      catHealth()
-    }.await.result.status shouldBe "green"
+      serverInfo
+    }.await.result.tagline shouldBe "You Know, for Search"
   }
 
   it should "be able to propagate headers if included" in {
