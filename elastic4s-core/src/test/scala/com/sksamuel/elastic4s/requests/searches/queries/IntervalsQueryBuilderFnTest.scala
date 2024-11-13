@@ -123,4 +123,55 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
       |  }
       |}
     """.stripMargin.replace("\n", "")
+
+  test("Should correctly build intervals query with a regex rule") {
+    def expected =
+      """
+        |{
+        |  "intervals": {
+        |    "my_text": {
+        |      "regexp": {
+        |        "pattern": "*",
+        |        "analyzer": "standard",
+        |        "use_field": "my_text"
+        |      }
+        |    }
+        |  }
+        |}
+      """.stripMargin
+    Given("An intervals query with a regex rule")
+    val query = IntervalsQuery("my_text", Regexp(pattern = "*", analyzer = Some("standard"), useField = Some("my_text")))
+
+    When("Intervals query is built")
+    val queryBody = queries.IntervalsQueryBuilderFn(query)
+
+    Then("query should have right fields")
+    queryBody.string should matchJson(expected)
+  }
+
+  test("Should correctly build intervals query with a range rule") {
+    def expected =
+      """
+        |{
+        |  "intervals": {
+        |    "my_text": {
+        |      "range": {
+        |        "gte": "a",
+        |        "lte": "z",
+        |        "analyzer": "standard",
+        |        "use_field": "my_text"
+        |      }
+        |    }
+        |  }
+        |}
+      """.stripMargin
+    Given("An intervals query with a regex rule")
+    val query = IntervalsQuery("my_text", Range(gte = Some("a"), lte = Some("z"), analyzer = Some("standard"), useField = Some("my_text")))
+
+    When("Intervals query is built")
+    val queryBody = queries.IntervalsQueryBuilderFn(query)
+
+    Then("query should have right fields")
+    queryBody.string should matchJson(expected)
+  }
 }

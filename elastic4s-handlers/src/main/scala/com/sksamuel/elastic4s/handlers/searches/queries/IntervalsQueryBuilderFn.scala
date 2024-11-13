@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.handlers.script
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.{AllOf, AnyOf, Fuzzy, IntervalsFilter, IntervalsQuery, IntervalsRule, Match, Prefix, Wildcard}
+import com.sksamuel.elastic4s.requests.searches.queries.{AllOf, AnyOf, Fuzzy, IntervalsFilter, IntervalsQuery, IntervalsRule, Match, Prefix, Range, Regexp, Wildcard}
 
 object IntervalsFilterBuilderFn {
   def apply(f: IntervalsFilter): XContentBuilder = {
@@ -46,12 +46,27 @@ object IntervalsRuleBuilderFn {
         analyzer.foreach(builder.field("analyzer", _))
         useField.foreach(builder.field("use_field", _))
         builder.endObject()
+      case Regexp(pattern: String, analyzer: Option[String], useField: Option[String]) =>
+        builder.startObject("regexp")
+        builder.field("pattern", pattern)
+        analyzer.foreach(builder.field("analyzer", _))
+        useField.foreach(builder.field("use_field", _))
+        builder.endObject()
       case Fuzzy(term: String, prefixLength: Option[String], transpositions: Option[Boolean], fuzziness: Option[String], analyzer: Option[String], useField: Option[String]) =>
         builder.startObject("fuzzy")
         builder.field("term", term)
         prefixLength.foreach(builder.field("prefix_length", _))
         transpositions.foreach(builder.field("transpositions", _))
         fuzziness.foreach(builder.field("fuzziness", _))
+        analyzer.foreach(builder.field("analyzer", _))
+        useField.foreach(builder.field("use_field", _))
+        builder.endObject()
+      case Range(gt: Option[String], gte: Option[String], lt: Option[String], lte: Option[String], analyzer: Option[String], useField: Option[String]) =>
+        builder.startObject("range")
+        gt.foreach(builder.field("gt", _))
+        gte.foreach(builder.field("gte", _))
+        lt.foreach(builder.field("lt", _))
+        lte.foreach(builder.field("lte", _))
         analyzer.foreach(builder.field("analyzer", _))
         useField.foreach(builder.field("use_field", _))
         builder.endObject()

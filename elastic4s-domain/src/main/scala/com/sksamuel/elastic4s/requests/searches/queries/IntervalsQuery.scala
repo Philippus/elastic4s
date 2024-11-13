@@ -39,6 +39,15 @@ case class Wildcard(pattern: String,
   def useField(useField: String): Wildcard = copy(useField = useField.some)
 }
 
+case class Regexp(pattern: String,
+                  analyzer: Option[String] = None,
+                  useField: Option[String] = None) extends IntervalsRule {
+  override def toString = "regexp"
+
+  def analyzer(analyzer: String): Regexp = copy(analyzer = analyzer.some)
+  def useField(useField: String): Regexp = copy(useField = useField.some)
+}
+
 case class Fuzzy(term: String,
                  prefixLength: Option[String] = None,
                  transpositions: Option[Boolean] = None,
@@ -52,6 +61,22 @@ case class Fuzzy(term: String,
   def fuzziness(fuzziness: String): Fuzzy = copy(fuzziness = fuzziness.some)
   def analyzer(analyzer: String): Fuzzy = copy(analyzer = analyzer.some)
   def useField(useField: String): Fuzzy = copy(useField = useField.some)
+}
+
+case class Range(gt: Option[String] = None,
+                 gte: Option[String] = None,
+                 lt: Option[String] = None,
+                 lte: Option[String] = None,
+                 analyzer: Option[String] = None,
+                 useField: Option[String] = None) extends IntervalsRule {
+  override def toString = "range"
+
+  def gt(gt: String): Range = copy(gt = gt.some, gte = None)
+  def gte(gte: String): Range = copy(gte = gte.some, gt = None)
+  def lt(lt: String): Range = copy(lt = lt.some, lte = None)
+  def lte(lte: String): Range = copy(lte = lte.some, lt = None)
+  def analyzer(analyzer: String): Range = copy(analyzer = analyzer.some)
+  def useField(useField: String): Range = copy(useField = useField.some)
 }
 
 case class AllOf(intervals: List[IntervalsRule],
