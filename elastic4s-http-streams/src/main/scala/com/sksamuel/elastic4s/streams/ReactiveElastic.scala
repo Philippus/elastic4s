@@ -1,9 +1,9 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorRefFactory
-import com.sksamuel.elastic4s.requests.searches.SearchRequest
-import com.sksamuel.elastic4s.{ElasticClient, IndexesAndTypes}
 
+import com.sksamuel.elastic4s.requests.searches.SearchRequest
+import com.sksamuel.elastic4s.{ElasticClient, Indexes, IndexesAndTypes}
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
@@ -45,6 +45,12 @@ object ReactiveElastic {
       subscriber(config)
     }
 
+    def publisher(indexes: Indexes, elements: Long, keepAlive: String)(
+      implicit actorRefFactory: ActorRefFactory
+    ): ScrollPublisher =
+      publisher(search(indexes).query("*:*").scroll(keepAlive), elements)
+
+    @deprecated("Use publisher that takes an Indexes parameter instead", "8.15.4")
     def publisher(indexesTypes: IndexesAndTypes, elements: Long = Long.MaxValue, keepAlive: String = "1m")(
       implicit actorRefFactory: ActorRefFactory
     ): ScrollPublisher =
