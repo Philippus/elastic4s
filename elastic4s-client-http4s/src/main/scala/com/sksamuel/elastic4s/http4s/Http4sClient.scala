@@ -24,6 +24,21 @@ object Http4sClient {
       override def run[A](fa: IO[A], cb: Either[Throwable, A] => Unit): Unit = fa.unsafeRunAsync(cb)
     }
 
+    Http4sClient(
+      client = client,
+      endpoint = endpoint,
+      runner = ioRunner
+    )
+  }
+
+  def usingIO(
+    client: http4s.client.Client[IO],
+    endpoint: http4s.Uri,
+  )(implicit runtime: IORuntime): Http4sClient[IO] = {
+    val ioRunner = new CallbackRunner[IO] {
+      override def run[A](fa: IO[A], cb: Either[Throwable, A] => Unit): Unit = fa.unsafeRunAsync(cb)
+    }
+
     new Http4sClient(
       client = client,
       endpoint = endpoint,
@@ -31,11 +46,27 @@ object Http4sClient {
     )
   }
 
+  def apply[F[_] : Async : Files](
+    client: http4s.client.Client[F],
+    endpoint: ElasticNodeEndpoint,
+    runner: CallbackRunner[F],
+  ): Http4sClient[F] = {
+    val uri = http4s.Uri(
+      scheme = Some(http4s.Uri.Scheme.http),
+      authority = Some(http4s.Uri.Authority(host = http4s.Uri.RegName(endpoint.host), port = Some(endpoint.port))),
+      )
+    new Http4sClient(
+      client = client,
+      endpoint = uri,
+      runner = runner
+    )
+  }
+
 }
 
 class Http4sClient[F[_] : Async : Files](
   client: http4s.client.Client[F],
-  endpoint: ElasticNodeEndpoint,
+  endpoint: http4s.Uri,
   runner: CallbackRunner[F],
 ) extends elastic4s.HttpClient with RequestResponseConverters {
 
