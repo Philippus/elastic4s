@@ -18,21 +18,6 @@ object Http4sClient {
 
   def usingIO(
     client: http4s.client.Client[IO],
-    endpoint: ElasticNodeEndpoint,
-  )(implicit runtime: IORuntime): Http4sClient[IO] = {
-    val ioRunner = new CallbackRunner[IO] {
-      override def run[A](fa: IO[A], cb: Either[Throwable, A] => Unit): Unit = fa.unsafeRunAsync(cb)
-    }
-
-    Http4sClient(
-      client = client,
-      endpoint = endpoint,
-      runner = ioRunner
-    )
-  }
-
-  def usingIO(
-    client: http4s.client.Client[IO],
     endpoint: http4s.Uri,
   )(implicit runtime: IORuntime): Http4sClient[IO] = {
     val ioRunner = new CallbackRunner[IO] {
