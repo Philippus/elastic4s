@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.fields.DenseVectorField.{Flat, Hnsw, Int4Flat, Int4Hnsw, Int8Flat, Int8Hnsw}
+import com.sksamuel.elastic4s.fields.DenseVectorField._
 import com.sksamuel.elastic4s.ElasticApi
 import com.sksamuel.elastic4s.fields.{Cosine, DenseVectorField, DenseVectorIndexOptions, DotProduct, L2Norm, MaxInnerProduct}
 import com.sksamuel.elastic4s.handlers.fields.DenseVectorFieldBuilderFn
@@ -48,17 +48,22 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
   it should "support all index options types and only set m, efConstruction and confidenceInterval when applicable" in {
     val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(true), indexOptions = Some(denseVectorIndexOptions))
-    DenseVectorFieldBuilderFn.build(field).string shouldBe
+
+    DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Hnsw))).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"hnsw","m":10,"ef_construction":100}}"""
+    DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Int8Hnsw))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Int4Hnsw))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int4_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
-    DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Hnsw))).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"hnsw","m":10,"ef_construction":100}}"""
+    DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = BbqHnsw))).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_hnsw","m":10,"ef_construction":100}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Flat))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"flat"}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Int8Flat))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_flat","confidence_interval":1.0}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Int4Flat))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int4_flat","confidence_interval":1.0}}"""
+    DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = BbqFlat))).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_flat"}}"""
   }
 }
