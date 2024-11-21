@@ -5,9 +5,9 @@ object Dependencies {
   val AkkaHttpVersion                = "10.2.10"
   val AkkaVersion                    = "2.6.21"
   val CatsEffect2Version             = "2.5.5"
-  val CatsEffectVersion              = "3.5.5"
+  val CatsEffectVersion              = "3.5.6"
   val CirceVersion                   = "0.14.10"
-  val CommonsIoVersion               = "2.17.0"
+  val CommonsIoVersion               = "2.18.0"
   val ElasticsearchVersion           = "8.16.1"
   val ExtsVersion                    = "1.61.1"
   val Http4sVersion                  = "0.23.29"
@@ -29,7 +29,7 @@ object Dependencies {
   val SttpVersion                    = "3.10.1"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
-  val ZIOVersion                     = "2.1.12"
+  val ZIOVersion                     = "2.1.13"
   val ZIOJsonVersion                 = "0.7.3"
 
   lazy val commonDeps = Seq(
