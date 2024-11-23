@@ -336,9 +336,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % Test,
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % Test,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % Test exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.24.1" % Test,
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.1" % Test,
-      "org.apache.logging.log4j" % "log4j-core" % "2.24.1" % Test
+      "org.apache.logging.log4j" % "log4j-api" % "2.24.2" % Test,
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.2" % Test,
+      "org.apache.logging.log4j" % "log4j-core" % "2.24.2" % Test
     ),
     Test / fork := false,
     Test / parallelExecution := false,
