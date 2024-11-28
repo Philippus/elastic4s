@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s.akka.reactivestreams
 
 import akka.actor._
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
@@ -23,8 +23,7 @@ import scala.util.{Failure, Success}
   * @param builder used to turn elements of T into IndexDefinitions so they can be used in the bulk indexer
   * @tparam T the type of element provided by the publisher this subscriber will subscribe with
   */
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-class BulkIndexingSubscriber[T] private[streams] (
+class BulkIndexingSubscriber[T] private[reactivestreams] (
   client: ElasticClient,
   builder: RequestBuilder[T],
   config: SubscriberConfig[T]
@@ -62,7 +61,6 @@ class BulkIndexingSubscriber[T] private[streams] (
     actor ! PoisonPill
 }
 
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 object BulkActor {
 
   // signifies that the downstream publisher has completed (NOT that a bulk request has suceeded)
@@ -80,7 +78,6 @@ object BulkActor {
 
 }
 
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class BulkActor[T](client: ElasticClient,
                    subscription: Subscription,
                    builder: RequestBuilder[T],
@@ -96,16 +93,16 @@ class BulkActor[T](client: ElasticClient,
   private var completed = false
 
   // total number of documents requested from our publisher
-  private var requested: Long = 0l
+  private var requested: Long = 0L
 
   // total number of documents acknowledged at the elasticsearch cluster level but pending confirmation of index
-  private var sent: Long = 0l
+  private var sent: Long = 0L
 
   // total number of documents confirmed as successful
-  private var confirmed: Long = 0l
+  private var confirmed: Long = 0L
 
   // total number of documents that failed the retry attempts and are ignored
-  private var failed: Long = 0l
+  private var failed: Long = 0L
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
   // we can be stuck at batchSize-1 waiting for the nth message to arrive.
@@ -284,7 +281,6 @@ class BulkActor[T](client: ElasticClient,
   *
   * @tparam T the type of elements this builder supports
   */
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 trait RequestBuilder[T] {
   def request(t: T): BulkCompatibleRequest
 }
@@ -292,13 +288,11 @@ trait RequestBuilder[T] {
 /**
   * Notified on each acknowledgement
   */
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 trait ResponseListener[-T] {
   def onAck(resp: BulkResponseItem, original: T): Unit
   def onFailure(resp: BulkResponseItem, original: T): Unit = ()
 }
 
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 object ResponseListener {
   val noop: ResponseListener[Any] = new ResponseListener[Any] {
     override def onAck(resp: BulkResponseItem, original: Any): Unit = ()
@@ -328,7 +322,6 @@ object ResponseListener {
   *                           Once an index is performed (either by this flush value or because docs arrived in time)
   *                           the flush after schedule is reset.
   **/
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 case class SubscriberConfig[T](batchSize: Int = 100,
                                concurrentRequests: Int = 5,
                                refreshAfterOp: Boolean = false,

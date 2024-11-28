@@ -1,8 +1,8 @@
-package com.sksamuel.elastic4s.streams
+package com.sksamuel.elastic4s.akka.reactivestreams
 
 import akka.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
-import com.sksamuel.elastic4s.streams.PublishActor.Ready
+import com.sksamuel.elastic4s.akka.reactivestreams.PublishActor.Ready
 import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
@@ -21,8 +21,7 @@ import scala.util.{Failure, Success}
   * @param maxItems        the maximum number of elements to return
   * @param actorRefFactory an Actor reference factory required by the publisher
   */
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-class ScrollPublisher private[streams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
+class ScrollPublisher private[reactivestreams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
@@ -39,14 +38,13 @@ class ScrollPublisher private[streams] (client: ElasticClient, search: SearchReq
   }
 }
 
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Subscription {
 
   private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
 
-  private[streams] def ready(): Unit =
+  private[reactivestreams] def ready(): Unit =
     actor ! PublishActor.Ready
 
   override def cancel(): Unit =
@@ -63,13 +61,11 @@ class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscri
   }
 }
 
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 object PublishActor {
   object Ready
   case class Request(n: Long)
 }
 
-@deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
     extends Actor
     with Stash {
@@ -80,7 +76,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   private var scrollId: String                = _
-  private var processed: Long                 = 0
+  private var processed: Long                 = 0L
   private val queue: mutable.Queue[SearchHit] = mutable.Queue.empty
 
   // Parse the keep alive setting out of the original query.
@@ -100,7 +96,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
 
   private def send(k: Long): Unit = {
     require(queue.size >= k)
-    for (_ <- 0l until k)
+    for (_ <- 0L until k)
       if (max == 0 || processed < max) {
         s.onNext(queue.dequeue)
         processed = processed + 1
