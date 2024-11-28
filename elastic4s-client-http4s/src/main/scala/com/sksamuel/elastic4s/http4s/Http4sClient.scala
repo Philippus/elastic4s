@@ -31,7 +31,7 @@ object Http4sClient {
     )
   }
 
-  @deprecated("Use usingIO with http4s.Uri", "8.15.5")
+  @deprecated("Use usingIO with http4s.Uri", "8.16.0")
   def usingIO(
     client: http4s.client.Client[IO],
     endpoint: ElasticNodeEndpoint,
