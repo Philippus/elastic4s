@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.pekko.http.streams
+package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import com.sksamuel.elastic4s.ElasticDsl
 import com.sksamuel.elastic4s.requests.bulk.BulkCompatibleRequest

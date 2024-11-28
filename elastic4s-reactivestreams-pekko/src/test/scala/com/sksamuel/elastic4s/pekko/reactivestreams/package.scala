@@ -1,6 +1,6 @@
-package com.sksamuel.elastic4s.pekko.http
+package com.sksamuel.elastic4s.pekko
 
-package object streams {
+package object reactivestreams {
   val DEFAULT_TIMEOUT_MILLIS = 2000l
   val PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS = 2000L
 }

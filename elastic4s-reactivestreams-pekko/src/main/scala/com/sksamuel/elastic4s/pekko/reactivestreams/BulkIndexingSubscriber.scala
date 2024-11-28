@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.pekko.http.streams
+package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor._
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
   * @param builder used to turn elements of T into IndexDefinitions so they can be used in the bulk indexer
   * @tparam T the type of element provided by the publisher this subscriber will subscribe with
   */
-class BulkIndexingSubscriber[T] private[streams] (
+class BulkIndexingSubscriber[T] private[reactivestreams] (
   client: ElasticClient,
   builder: RequestBuilder[T],
   config: SubscriberConfig[T]

@@ -1,10 +1,10 @@
-package com.sksamuel.elastic4s.pekko.http.streams
+package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
 import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
-import com.sksamuel.elastic4s.pekko.http.streams.PublishActor.Ready
+import com.sksamuel.elastic4s.pekko.reactivestreams.PublishActor.Ready
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -21,7 +21,7 @@ import scala.util.{Failure, Success}
   * @param maxItems        the maximum number of elements to return
   * @param actorRefFactory an Actor reference factory required by the publisher
   */
-class ScrollPublisher private[streams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
+class ScrollPublisher private[reactivestreams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
   implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
@@ -44,7 +44,7 @@ class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscri
 
   private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
 
-  private[streams] def ready(): Unit =
+  private[reactivestreams] def ready(): Unit =
     actor ! PublishActor.Ready
 
   override def cancel(): Unit =
