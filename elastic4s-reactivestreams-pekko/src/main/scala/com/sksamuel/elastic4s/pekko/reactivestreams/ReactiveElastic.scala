@@ -50,12 +50,6 @@ object ReactiveElastic {
     ): ScrollPublisher =
       publisher(search(indexes).query("*:*").scroll(keepAlive), elements)
 
-    @deprecated("Use publisher that takes an Indexes parameter instead", "8.15.4")
-    def publisher(indexesTypes: IndexesAndTypes, elements: Long = Long.MaxValue, keepAlive: String = "1m")(
-      implicit actorRefFactory: ActorRefFactory
-    ): ScrollPublisher =
-      publisher(search(indexesTypes.indexes).query("*:*").scroll(keepAlive), elements)
-
     def publisher(q: SearchRequest)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
       publisher(q, Long.MaxValue)
 
