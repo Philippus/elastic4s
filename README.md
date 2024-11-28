@@ -630,7 +630,7 @@ using Akka. To use this, you need to add a dependency on the elastic4s-streams m
 There are two things you can do with the reactive streams implementation. You can create an elastic subscriber, and have that
 stream data from some publisher into elasticsearch. Or you can create an elastic publisher and have documents streamed out to subscribers.
 
-For full details read the [streams documentation](docs/streams.md)
+For full details read the [reactivestreams documentation](docs/reactivestreams.md)
 
 ## Using Elastic4s in your project
 
