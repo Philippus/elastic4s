@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.http4s
 import cats.effect.Async
 import cats.syntax.all._
 import com.sksamuel.elastic4s
-import com.sksamuel.elastic4s.ElasticNodeEndpoint
 import fs2.io.file.Files
 import org.http4s
 
@@ -12,15 +11,11 @@ import scala.language.higherKinds
 trait RequestResponseConverters extends Elastic4sEntityEncoders {
 
   def elasticRequestToHttp4sRequest[F[_] : Async : Files](
-    endpoint: ElasticNodeEndpoint,
+    endpoint: http4s.Uri,
     request: elastic4s.ElasticRequest,
   ): http4s.Request[F] = {
-    val uri = http4s.Uri(
-      scheme = http4s.Uri.Scheme.fromString(endpoint.protocol).toOption,
-      authority = http4s.Uri.Authority(
-        host = http4s.Uri.RegName(endpoint.host),
-        port = endpoint.port.some
-      ).some,
+    val uri =
+      endpoint.copy(
       path = http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment(_)).toVector),
       query = http4s.Query.fromPairs(request.params.toList: _*)
     )
