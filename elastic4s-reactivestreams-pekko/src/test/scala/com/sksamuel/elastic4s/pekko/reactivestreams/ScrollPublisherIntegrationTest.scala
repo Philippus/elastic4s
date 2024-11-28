@@ -1,7 +1,6 @@
-package com.sksamuel.elastic4s.pekko.http.streams
+package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import java.util.concurrent.{CountDownLatch, TimeUnit}
-
 import org.apache.pekko.actor.ActorSystem
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.requests.searches.SearchHit

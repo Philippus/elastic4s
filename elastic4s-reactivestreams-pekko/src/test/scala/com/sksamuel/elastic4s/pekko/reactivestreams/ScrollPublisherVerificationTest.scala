@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.pekko.http.streams
+package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor.ActorSystem
 import com.sksamuel.elastic4s.jackson.ElasticJackson
@@ -52,7 +52,7 @@ class ScrollPublisherVerificationTest
 
   private val query = search("scrollpubver").matchAllQuery().scroll("1m").limit(2)
 
-  override def boundedDepthOfOnNextAndRequestRecursion: Long = 2l
+  override def boundedDepthOfOnNextAndRequestRecursion: Long = 2L
 
   override def createFailedPublisher(): Publisher[SearchHit] = null
 

@@ -1,4 +1,4 @@
-package com.sksamuel.elastic4s.pekko.http.streams
+package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor._
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
   * @param builder used to turn elements of T into IndexDefinitions so they can be used in the bulk indexer
   * @tparam T the type of element provided by the publisher this subscriber will subscribe with
   */
-class BulkIndexingSubscriber[T] private[streams] (
+class BulkIndexingSubscriber[T] private[reactivestreams] (
   client: ElasticClient,
   builder: RequestBuilder[T],
   config: SubscriberConfig[T]
@@ -93,16 +93,16 @@ class BulkActor[T](client: ElasticClient,
   private var completed = false
 
   // total number of documents requested from our publisher
-  private var requested: Long = 0l
+  private var requested: Long = 0L
 
   // total number of documents acknowledged at the elasticsearch cluster level but pending confirmation of index
-  private var sent: Long = 0l
+  private var sent: Long = 0L
 
   // total number of documents confirmed as successful
-  private var confirmed: Long = 0l
+  private var confirmed: Long = 0L
 
   // total number of documents that failed the retry attempts and are ignored
-  private var failed: Long = 0l
+  private var failed: Long = 0L
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
   // we can be stuck at batchSize-1 waiting for the nth message to arrive.
