@@ -31,6 +31,22 @@ object Http4sClient {
     )
   }
 
+  @deprecated("Use usingIO with http4s.Uri", "8.15.5")
+  def usingIO(
+    client: http4s.client.Client[IO],
+    endpoint: ElasticNodeEndpoint,
+  )(implicit runtime: IORuntime): Http4sClient[IO] = {
+    val ioRunner = new CallbackRunner[IO] {
+      override def run[A](fa: IO[A], cb: Either[Throwable, A] => Unit): Unit = fa.unsafeRunAsync(cb)
+    }
+
+    Http4sClient(
+      client = client,
+      endpoint = endpoint,
+      runner = ioRunner
+    )
+  }
+
   def apply[F[_] : Async : Files](
     client: http4s.client.Client[F],
     endpoint: ElasticNodeEndpoint,
