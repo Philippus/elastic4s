@@ -76,7 +76,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   private var scrollId: String                = _
-  private var processed: Long                 = 0
+  private var processed: Long                 = 0L
   private val queue: mutable.Queue[SearchHit] = mutable.Queue.empty
 
   // Parse the keep alive setting out of the original query.
@@ -96,7 +96,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
 
   private def send(k: Long): Unit = {
     require(queue.size >= k)
-    for (_ <- 0l until k)
+    for (_ <- 0L until k)
       if (max == 0 || processed < max) {
         s.onNext(queue.dequeue)
         processed = processed + 1
