@@ -9,17 +9,17 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class IlmTest extends AnyFlatSpec with Matchers with ElasticDsl with DockerTests with Eventually {
-   "ilm" should "return status" in {
-     client.execute {
-       startIlm()
-     }.await.result
+  "ilm" should "return status" in {
+    client.execute {
+      startIlm()
+    }.await.result
 
-     eventually(timeout(5.seconds)) {
-       val resp = client.execute {
-         getIlmStatus
-       }.await.result
-       resp.operationMode shouldBe "RUNNING"
-     }
+    eventually(timeout(5.seconds)) {
+      val resp = client.execute {
+        getIlmStatus
+      }.await.result
+      resp.operationMode shouldBe "RUNNING"
+    }
   }
 
   "ilm" should "stop" in {
