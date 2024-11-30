@@ -678,29 +678,30 @@ For the tests to work you will need to run a local elastic instance on port 3922
 `docker compose up`
 
 ## Used By
+* AOE
 * Barclays Bank
-* HSBC
-* Shazaam
-* Lenses
-* Iterable
-* Graphflow
-* Hotel Urbano
-* Immobilien Scout
+* BlueRootLabs
+* Canal+
 * Deutsche Bank
 * Goldman Sachs
+* Graphflow
 * HMRC
-* Canal+
-* AOE
-* Starmind
+* HSBC
+* Hotel Urbano
+* Immobilien Scout
+* Iterable
+* Jusbrasil
+* Lenses
+* [Lichess](https://lichess.org)
+* Mapp
+* Rostelecom-Solar
+* [Scaladex](https://index.scala-lang.org)
+* Shazaam
 * ShopRunner
 * Soundcloud
-* Rostelecom-Solar
-* Shoprunner
+* Starmind
 * Twitter
-* bluerootlabs.io
-* mapp.com
-* Jusbrasil
-* wehkamp
+* Wehkamp Retail Group
 
 _Raise a PR to add your company here_
 
