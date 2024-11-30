@@ -26,14 +26,14 @@ class VariableWidthHistogramAggregationHttpTest extends AnyFreeSpec with DockerT
 
   client.execute(
     bulk(
-      indexInto("variablewidthhistaggs") fields("name" -> "Willis Tower",              "height" -> 1450),
-      indexInto("variablewidthhistaggs") fields("name" -> "Burj Kalifa",               "height" -> 2717),
-      indexInto("variablewidthhistaggs") fields("name" -> "The Shard",                 "height" -> 1017),
-      indexInto("variablewidthhistaggs") fields("name" -> "One Canada Square",         "height" -> 771),
-      indexInto("variablewidthhistaggs") fields("name" -> "Tower of London",           "height" -> 169),
-      indexInto("variablewidthhistaggs") fields("name" -> "Shanghai Tower",            "height" -> 2073),
-      indexInto("variablewidthhistaggs") fields("name" -> "Ping An Finance Centre",    "height" -> 1965),
-      indexInto("variablewidthhistaggs") fields("name" -> "Abraj Al-Bait Clock Tower", "height" -> 1971)
+      indexInto("variablewidthhistaggs") fields ("name" -> "Willis Tower", "height"              -> 1450),
+      indexInto("variablewidthhistaggs") fields ("name" -> "Burj Kalifa", "height"               -> 2717),
+      indexInto("variablewidthhistaggs") fields ("name" -> "The Shard", "height"                 -> 1017),
+      indexInto("variablewidthhistaggs") fields ("name" -> "One Canada Square", "height"         -> 771),
+      indexInto("variablewidthhistaggs") fields ("name" -> "Tower of London", "height"           -> 169),
+      indexInto("variablewidthhistaggs") fields ("name" -> "Shanghai Tower", "height"            -> 2073),
+      indexInto("variablewidthhistaggs") fields ("name" -> "Ping An Finance Centre", "height"    -> 1965),
+      indexInto("variablewidthhistaggs") fields ("name" -> "Abraj Al-Bait Clock Tower", "height" -> 1971)
     ).refreshImmediately
   ).await
 

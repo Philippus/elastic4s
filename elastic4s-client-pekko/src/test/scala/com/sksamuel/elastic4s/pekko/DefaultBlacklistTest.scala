@@ -10,7 +10,7 @@ class DefaultBlacklistTest extends AnyWordSpec with Matchers {
 
   val minDuration = 1 second
   val maxDuration = 10 seconds
-  val host = "elastic.test"
+  val host        = "elastic.test"
 
   "DefaultBlacklist" should {
 

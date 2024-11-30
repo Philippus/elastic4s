@@ -37,16 +37,16 @@ class GeoCentroidAggregationHttpTest extends AnyFreeSpec with DockerTests with M
       val resp = client.execute {
         search("geocentroidagg").matchAllQuery().aggs {
           geoCentroidAggregation("museums_center")
-              .field("location")
+            .field("location")
         }
       }.await.result
 
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.geoCentroid("museums_center")
-      agg.centroid.get.lat      shouldBe 51.00 +- 0.01
-      agg.centroid.get.long     shouldBe  3.96 +- 0.01
-      agg.count                 shouldBe 6
+      agg.centroid.get.lat shouldBe 51.00 +- 0.01
+      agg.centroid.get.long shouldBe 3.96 +- 0.01
+      agg.count shouldBe 6
     }
 
     "should return empty aggregation in case of no documents are returned" in {

@@ -25,12 +25,12 @@ class CompositeGeotileGridAggregationHttpTest extends AnyFreeSpec with DockerTes
   }.await
   client.execute(
     bulk(
-      indexInto("compositegeotilegridaggs") fields("name" -> "MacRonalds", "location" -> "2, 3"),
-      indexInto("compositegeotilegridaggs") fields("name" -> "Henny's", "location" -> "40, 5"),
-      indexInto("compositegeotilegridaggs") fields("name" -> "Taco Shell", "location" -> "40, 10"),
-      indexInto("compositegeotilegridaggs") fields("name" -> "Burger Sling", "location" -> "2 , 3.1"),
-      indexInto("compositegeotilegridaggs") fields("name" -> "U-bahn", "location" -> "29, 1"),
-      indexInto("compositegeotilegridaggs") fields("name" -> "John's hut", "location" -> "29, 1.2")
+      indexInto("compositegeotilegridaggs") fields ("name" -> "MacRonalds", "location"   -> "2, 3"),
+      indexInto("compositegeotilegridaggs") fields ("name" -> "Henny's", "location"      -> "40, 5"),
+      indexInto("compositegeotilegridaggs") fields ("name" -> "Taco Shell", "location"   -> "40, 10"),
+      indexInto("compositegeotilegridaggs") fields ("name" -> "Burger Sling", "location" -> "2 , 3.1"),
+      indexInto("compositegeotilegridaggs") fields ("name" -> "U-bahn", "location"       -> "29, 1"),
+      indexInto("compositegeotilegridaggs") fields ("name" -> "John's hut", "location"   -> "29, 1.2")
     ).refresh(RefreshPolicy.Immediate)
   ).await
   "Composite geotile grid agg" - {
@@ -52,12 +52,12 @@ class CompositeGeotileGridAggregationHttpTest extends AnyFreeSpec with DockerTes
         }
       }.await.result
       resp.totalHits shouldBe 6
-      val agg = resp.aggs.compositeAgg("agg1")
+      val agg  = resp.aggs.compositeAgg("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
         CompositeAggBucket(Map("tiles" -> "7/64/53"), 2, Map.empty),
         CompositeAggBucket(Map("tiles" -> "7/65/48"), 1, Map.empty),
         CompositeAggBucket(Map("tiles" -> "7/65/63"), 2, Map.empty),
-        CompositeAggBucket(Map("tiles" -> "7/67/48"), 1, Map.empty),
+        CompositeAggBucket(Map("tiles" -> "7/67/48"), 1, Map.empty)
       )
     }
   }

@@ -81,11 +81,11 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       }.await
 
       client.execute {
-        search(indexname).query(idsQuery("7","8"))
+        search(indexname).query(idsQuery("7", "8"))
       }.await.result.totalHits shouldBe 2
 
       val firstSlice = client.execute {
-        deleteByQuery(indexname, idsQuery("7","8")).slice(Slice("0", 2)).refresh(RefreshPolicy.Immediate)
+        deleteByQuery(indexname, idsQuery("7", "8")).slice(Slice("0", 2)).refresh(RefreshPolicy.Immediate)
       }.await.result.left.get.deleted
 
       val secondSlice = client.execute {
@@ -95,7 +95,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       firstSlice + secondSlice shouldBe 2
 
       client.execute {
-        search(indexname).query(idsQuery("7","8"))
+        search(indexname).query(idsQuery("7", "8"))
       }.await.result.totalHits shouldBe 0
     }
 
@@ -116,7 +116,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result.left.get.deleted shouldBe 2
 
       client.execute {
-        search(indexname).query(idsQuery("7","8"))
+        search(indexname).query(idsQuery("7", "8"))
       }.await.result.totalHits shouldBe 0
     }
 
@@ -128,7 +128,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
     "return a task when setting wait_for_completion to false" in {
       val result = client.execute {
-        deleteByQuery(indexname, matchQuery("name",  "michael douglas")).waitForCompletion(false)
+        deleteByQuery(indexname, matchQuery("name", "michael douglas")).waitForCompletion(false)
       }.await.result.right.get
       result.nodeId should not be null
       result.taskId should not be null

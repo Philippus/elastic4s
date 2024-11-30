@@ -17,7 +17,7 @@ class CatsEffectTest extends AnyFlatSpec {
   type OptionIO[A] = OptionT[IO, A]
 
   val client: ElasticClient = ElasticClient(JavaClient(ElasticProperties("http://dummy")))
-  val index = "index"
+  val index                 = "index"
 
   "ElasticClient#execute" should "compile and infer effect type as `IO`" in {
     for {

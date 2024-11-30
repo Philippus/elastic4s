@@ -33,4 +33,3 @@ class CompoundWordTokenFilterTest extends AnyWordSpec with TokenFilterApi with M
     }
   }
 }
-

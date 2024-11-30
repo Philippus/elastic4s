@@ -4,11 +4,13 @@ import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, Bucke
 
 case class GeoDistanceAggResult(name: String, buckets: Seq[GeoDistanceBucket]) extends BucketAggregation
 
-case class GeoDistanceBucket(key: String,
-                             override val docCount: Long,
-                             from: Option[Double],
-                             to: Option[Double],
-                             private[elastic4s] val data: Map[String, Any]) extends AggBucket
+case class GeoDistanceBucket(
+    key: String,
+    override val docCount: Long,
+    from: Option[Double],
+    to: Option[Double],
+    private[elastic4s] val data: Map[String, Any]
+) extends AggBucket
 
 object GeoDistanceAggResult {
   def apply(name: String, data: Map[String, Any]): GeoDistanceAggResult = GeoDistanceAggResult(
@@ -19,7 +21,7 @@ object GeoDistanceAggResult {
           mkBucket(map("key").toString, map)
         }
 
-      //keyed results
+      // keyed results
       case buckets: Map[_, _] =>
         buckets
           .asInstanceOf[Map[String, Any]]

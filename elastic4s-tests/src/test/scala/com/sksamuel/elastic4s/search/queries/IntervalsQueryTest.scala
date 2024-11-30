@@ -23,7 +23,7 @@ class IntervalsQueryTest extends AnyFlatSpec with Matchers with DockerTests {
     bulk(
       indexInto("intervalstest").fields(
         "my_text" -> "my favorite food is cold porridge"
-        ),
+      ),
       indexInto("intervalstest").fields(
         "my_text" -> "when it's cold my favorite food is porridge"
       )
@@ -33,13 +33,18 @@ class IntervalsQueryTest extends AnyFlatSpec with Matchers with DockerTests {
   "intervals query" should "work as in the elasticsearch docs" in {
     val resp = client.execute {
       search("intervalstest").query {
-        IntervalsQuery("my_text", AllOf(List(
-          Match(query = "favorite food").maxGaps(0).ordered(true),
-          AnyOf(intervals = List(
-            Match(query = "hot water"),
-            Match(query = "cold porridge")
-          ))
-        )).ordered(true))
+        IntervalsQuery(
+          "my_text",
+          AllOf(List(
+            Match(query = "favorite food").maxGaps(0).ordered(true),
+            AnyOf(intervals =
+              List(
+                Match(query = "hot water"),
+                Match(query = "cold porridge")
+              )
+            )
+          )).ordered(true)
+        )
       }
     }.await.result
 

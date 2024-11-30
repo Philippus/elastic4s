@@ -42,9 +42,9 @@ class ValueCountAggregationHttpTest extends AnyFreeSpec with Matchers with Docke
 
   client.execute(
     bulk(
-      indexInto("valuecount") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("valuecount") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("valuecount") fields("name" -> "Tower of London", "height" -> 169)
+      indexInto("valuecount") fields ("name" -> "Willis Tower", "height"    -> 1244),
+      indexInto("valuecount") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
+      indexInto("valuecount") fields ("name" -> "Tower of London", "height" -> 169)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -56,7 +56,7 @@ class ValueCountAggregationHttpTest extends AnyFreeSpec with Matchers with Docke
         }
       }.await.result
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.valueCount("agg1")
+      val agg  = resp.aggs.valueCount("agg1")
       agg.value shouldBe 7
     }
     "should support when no documents match" in {
@@ -66,7 +66,7 @@ class ValueCountAggregationHttpTest extends AnyFreeSpec with Matchers with Docke
         }
       }.await.result
       resp.totalHits shouldBe 0
-      val agg = resp.aggs.valueCount("agg1")
+      val agg  = resp.aggs.valueCount("agg1")
       agg.value shouldBe 0
     }
   }

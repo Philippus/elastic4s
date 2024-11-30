@@ -32,7 +32,6 @@ object CompletionFieldBuilderFn {
     values.get("contexts").map(_.asInstanceOf[Seq[Map[String, Any]]]).map(_.map(toContextField)).getOrElse(Seq.empty)
   )
 
-
   def build(field: CompletionField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

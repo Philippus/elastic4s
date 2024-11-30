@@ -7,34 +7,35 @@ import com.sksamuel.elastic4s.{FieldValue, FieldsMapper, Index, Indexable}
 
 import scala.concurrent.duration.FiniteDuration
 
-case class IndexRequest(index: Index,
-                        id: Option[String] = None,
-                        createOnly: Option[Boolean] = None,
-                        refresh: Option[RefreshPolicy] = None,
-                        parent: Option[String] = None,
-                        pipeline: Option[String] = None,
-                        routing: Option[String] = None,
-                        timeout: Option[String] = None,
-                        version: Option[Long] = None,
-                        ifSeqNo: Option[Long] = None,
-                        ifPrimaryTerm: Option[Long] = None,
-                        versionType: Option[VersionType] = None,
-                        fields: Seq[FieldValue] = Nil,
-                        source: Option[String] = None)
-  extends BulkCompatibleRequest {
+case class IndexRequest(
+    index: Index,
+    id: Option[String] = None,
+    createOnly: Option[Boolean] = None,
+    refresh: Option[RefreshPolicy] = None,
+    parent: Option[String] = None,
+    pipeline: Option[String] = None,
+    routing: Option[String] = None,
+    timeout: Option[String] = None,
+    version: Option[Long] = None,
+    ifSeqNo: Option[Long] = None,
+    ifPrimaryTerm: Option[Long] = None,
+    versionType: Option[VersionType] = None,
+    fields: Seq[FieldValue] = Nil,
+    source: Option[String] = None
+) extends BulkCompatibleRequest {
   require(index != null, "index must not be null or empty")
 
-  def doc(json: String): IndexRequest = source(json)
+  def doc(json: String): IndexRequest       = source(json)
   def doc[T: Indexable](t: T): IndexRequest = source(t)
 
-  def source(json: String): IndexRequest = copy(source = json.some)
+  def source(json: String): IndexRequest                              = copy(source = json.some)
   def source[T](t: T)(implicit indexable: Indexable[T]): IndexRequest = copy(source = indexable.json(t).some)
 
-  def id(id: String): IndexRequest = withId(id)
+  def id(id: String): IndexRequest     = withId(id)
   def withId(id: String): IndexRequest = copy(id = id.some)
 
   def pipeline(pipeline: String): IndexRequest = copy(pipeline = pipeline.some)
-  def parent(parent: String): IndexRequest = copy(parent = parent.some)
+  def parent(parent: String): IndexRequest     = copy(parent = parent.some)
 
   def refresh(refresh: RefreshPolicy): IndexRequest = copy(refresh = refresh.some)
 
@@ -42,20 +43,19 @@ case class IndexRequest(index: Index,
 
   def routing(routing: String): IndexRequest = copy(routing = routing.some)
 
-  def version(version: Long): IndexRequest = copy(version = version.some)
+  def version(version: Long): IndexRequest                = copy(version = version.some)
   def versionType(versionType: VersionType): IndexRequest = copy(versionType = versionType.some)
-  def ifSeqNo(ifSeqNo: Long): IndexRequest = copy(ifSeqNo = ifSeqNo.some)
-  def ifPrimaryTerm(ifPrimaryTerm: Long): IndexRequest = copy(ifPrimaryTerm = ifPrimaryTerm.some)
+  def ifSeqNo(ifSeqNo: Long): IndexRequest                = copy(ifSeqNo = ifSeqNo.some)
+  def ifPrimaryTerm(ifPrimaryTerm: Long): IndexRequest    = copy(ifPrimaryTerm = ifPrimaryTerm.some)
 
-
-  def timeout(timeout: String): IndexRequest = copy(timeout = timeout.some)
+  def timeout(timeout: String): IndexRequest          = copy(timeout = timeout.some)
   def timeout(duration: FiniteDuration): IndexRequest = copy(timeout = s"${duration.toSeconds}s".some)
 
   // if set to true then trying to update a document will fail
   def createOnly(createOnly: Boolean): IndexRequest = copy(createOnly = createOnly.some)
 
-  def fields(_fields: (String, Any)*): IndexRequest = fields(_fields.toMap)
+  def fields(_fields: (String, Any)*): IndexRequest          = fields(_fields.toMap)
   def fields(_fields: Iterable[(String, Any)]): IndexRequest = fields(_fields.toMap)
-  def fields(fields: Map[String, Any]): IndexRequest = copy(fields = FieldsMapper.mapFields(fields))
-  def fieldValues(fields: FieldValue*): IndexRequest = copy(fields = fields)
+  def fields(fields: Map[String, Any]): IndexRequest         = copy(fields = FieldsMapper.mapFields(fields))
+  def fieldValues(fields: FieldValue*): IndexRequest         = copy(fields = fields)
 }

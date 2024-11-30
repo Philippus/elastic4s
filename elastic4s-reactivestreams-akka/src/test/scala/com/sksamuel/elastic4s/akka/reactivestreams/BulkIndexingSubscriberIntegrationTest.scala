@@ -47,7 +47,7 @@ object ShipPublisher extends Publisher[Ship] {
   override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
     var remaining = Ship.ships
     s.onSubscribe(new Subscription {
-      override def cancel(): Unit = ()
+      override def cancel(): Unit         = ()
       override def request(n: Long): Unit = {
         remaining.take(n.toInt).foreach(t => s.onNext(t))
         remaining = remaining.drop(n.toInt)
@@ -58,13 +58,12 @@ object ShipPublisher extends Publisher[Ship] {
   }
 }
 
-
 object ShipEndlessPublisher extends Publisher[Ship] {
 
   override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
     var remaining = Ship.ships
     s.onSubscribe(new Subscription {
-      override def cancel(): Unit = ()
+      override def cancel(): Unit         = ()
       override def request(n: Long): Unit = {
         remaining.take(n.toInt).foreach(t => s.onNext(t))
         remaining = remaining.drop(n.toInt)

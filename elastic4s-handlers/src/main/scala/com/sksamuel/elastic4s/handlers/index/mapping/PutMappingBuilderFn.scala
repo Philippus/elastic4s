@@ -7,7 +7,7 @@ object PutMappingBuilderFn {
 
   def apply(pm: PutMappingRequest): XContentBuilder =
     pm.rawSource match {
-      case None => MappingBuilderFn.build(pm)
+      case None         => MappingBuilderFn.build(pm)
       case Some(source) => XContentFactory.parse(source)
     }
 }

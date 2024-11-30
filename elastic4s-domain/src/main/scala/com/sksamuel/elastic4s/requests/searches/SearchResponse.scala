@@ -23,23 +23,24 @@ case class SearchResponse(
     @JsonProperty("_shards") private val _shards: Shards,
     @JsonProperty("_scroll_id") scrollId: Option[String],
     @JsonProperty("aggregations") private val _aggregationsAsMap: Map[String, Any],
-    hits: SearchHits) {
+    hits: SearchHits
+) {
 
   def aggregationsAsMap: Map[String, Any] = Option(_aggregationsAsMap).getOrElse(Map.empty)
-  def totalHits: Long = hits.total.value
-  def size: Long = hits.size
-  def ids: Seq[String] = hits.hits.map(_.id)
-  def maxScore: Double = hits.maxScore
+  def totalHits: Long                     = hits.total.value
+  def size: Long                          = hits.size
+  def ids: Seq[String]                    = hits.hits.map(_.id)
+  def maxScore: Double                    = hits.maxScore
 
   def shards: Shards = Option(_shards).getOrElse(Shards(-1, -1, -1))
 
-  def isEmpty: Boolean = hits.isEmpty
+  def isEmpty: Boolean  = hits.isEmpty
   def nonEmpty: Boolean = hits.nonEmpty
 
   lazy val aggsAsContentBuilder: XContentBuilder = SourceAsContentBuilder(aggregationsAsMap)
-  lazy val aggregationsAsString: String = aggsAsContentBuilder.string
-  def aggs: Aggregations = aggregations
-  def aggregations: Aggregations = Aggregations(aggregationsAsMap)
+  lazy val aggregationsAsString: String          = aggsAsContentBuilder.string
+  def aggs: Aggregations                         = aggregations
+  def aggregations: Aggregations                 = Aggregations(aggregationsAsMap)
 
   def suggestions: Map[String, Seq[SuggestionResult]] = Option(suggest).getOrElse(Map.empty)
 
@@ -51,14 +52,13 @@ case class SearchResponse(
       }
       .toMap
 
-
-  def termSuggestion(name: String): Map[String, TermSuggestionResult] =
+  def termSuggestion(name: String): Map[String, TermSuggestionResult]             =
     suggestion(name).mapValues(_.toTerm).toMap
   def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] =
     suggestion(name).mapValues(_.toCompletion).toMap
-  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult] =
+  def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult]         =
     suggestion(name).mapValues(_.toPhrase).toMap
 
   def to[T: HitReader: ClassTag]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
-  def safeTo[T: HitReader]: IndexedSeq[Try[T]] = hits.hits.map(_.safeTo[T]).toIndexedSeq
+  def safeTo[T: HitReader]: IndexedSeq[Try[T]]  = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }

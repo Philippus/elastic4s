@@ -11,7 +11,8 @@ object TextFieldBuilderFn {
     values("min_segment_size").asInstanceOf
   )
 
-  private def getIndexPrefixes(values: Map[String, Any]) = IndexPrefixes(values("min_chars").asInstanceOf, values("max_chars").asInstanceOf)
+  private def getIndexPrefixes(values: Map[String, Any]) =
+    IndexPrefixes(values("min_chars").asInstanceOf, values("max_chars").asInstanceOf)
 
   def toField(name: String, values: Map[String, Any]): TextField = TextField(
     name,
@@ -39,7 +40,6 @@ object TextFieldBuilderFn {
     values.get("store").map(_.asInstanceOf[Boolean]),
     values.get("term_vector").map(_.asInstanceOf[String])
   )
-
 
   def build(field: TextField): XContentBuilder = {
 

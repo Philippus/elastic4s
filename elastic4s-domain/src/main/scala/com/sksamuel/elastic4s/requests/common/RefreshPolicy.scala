@@ -16,7 +16,7 @@ object RefreshPolicy {
 
   val IMMEDIATE: Immediate.type = Immediate
   @deprecated("Use WAIT_FOR", "7.0")
-  val WAIT_UNTIL: WaitFor.type = WaitFor
-  val WAIT_FOR: WaitFor.type = WaitFor
-  val NONE: None.type = None
+  val WAIT_UNTIL: WaitFor.type  = WaitFor
+  val WAIT_FOR: WaitFor.type    = WaitFor
+  val NONE: None.type           = None
 }

@@ -9,13 +9,12 @@ class CatIndicesTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("catindex1").fields("name" -> "hampton court palace"),
-      indexInto("catindex2").fields("name" -> "hampton court palace"),
-      indexInto("catindex3").fields("name" -> "hampton court palace"),
+      indexInto("catindex1").fields("name"  -> "hampton court palace"),
+      indexInto("catindex2").fields("name"  -> "hampton court palace"),
+      indexInto("catindex3").fields("name"  -> "hampton court palace"),
       indexInto("catindex33").fields("name" -> "hampton court palace")
     ).refresh(RefreshPolicy.Immediate)
   }.await
-
 
   "catIndices" should "return all indexes" in {
     val indexes = client.execute {

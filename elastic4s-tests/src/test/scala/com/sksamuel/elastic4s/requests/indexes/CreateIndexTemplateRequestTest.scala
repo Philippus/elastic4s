@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import scala.util.Try
 
 class CreateIndexTemplateRequestTest
-  extends AnyWordSpec
+    extends AnyWordSpec
     with Matchers
     with BeforeAndAfter
     with DockerTests {

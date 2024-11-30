@@ -17,55 +17,58 @@ import com.sksamuel.elastic4s.requests.searches.term.TermQuery
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class SearchRequest(indexes: Indexes,
-                         aggs: Seq[AbstractAggregation] = Nil,
-                         collapse: Option[CollapseRequest] = None,
-                         docValues: Seq[String] = Nil,
-                         scriptFields: Seq[ScriptField] = Nil,
-                         storedFields: Seq[String] = Nil,
-                         fetchContext: Option[FetchSourceContext] = None,
-                         pref: Option[String] = None,
-                         routing: Option[String] = None,
-                         terminateAfter: Option[Int] = None,
-                         timeout: Option[Duration] = None,
-                         minScore: Option[Double] = None,
-                         rescorers: Seq[Rescore] = Nil,
-                         trackScores: Option[Boolean] = None,
-                         indicesOptions: Option[IndicesOptionsRequest] = None,
-                         inners: Seq[InnerHit] = Nil,
-                         indexBoosts: Seq[(String, Double)] = Nil,
-                         keepAlive: Option[String] = None,
-                         highlight: Option[Highlight] = None,
-                         query: Option[Query] = None,
-                         postFilter: Option[Query] = None,
-                         requestCache: Option[Boolean] = None,
-                         sorts: Seq[Sort] = Nil,
-                         suggs: Seq[Suggestion] = Nil,
-                         globalSuggestionText: Option[String] = None,
-                         from: Option[Int] = None,
-                         size: Option[Int] = None,
-                         slice: Option[(Int, Int)] = None,
-                         explain: Option[Boolean] = None,
-                         stats: Seq[String] = Nil,
-                         searchType: Option[SearchType] = None,
-                         searchAfter: Seq[Any] = Nil,
-                         version: Option[Boolean] = None,
-                         seqNoPrimaryTerm: Option[Boolean] = None,
-                         profile: Option[Boolean] = None,
-                         source: Option[String] = None,
-                         trackHits: Option[Any] = None,
-                         allowPartialSearchResults: Option[Boolean] = None,
-                         batchedReduceSize: Option[Int] = None,
-                         typedKeys: Option[Boolean] = None,
-                         runtimeMappings: Seq[RuntimeMapping] = Nil,
-                         ext: Map[String, Any] = Map.empty,
-                         knn: Option[Knn] = None,
-                         multipleKnn: Seq[Knn] = Nil,
-                         pit: Option[Pit] = None) {
+case class SearchRequest(
+    indexes: Indexes,
+    aggs: Seq[AbstractAggregation] = Nil,
+    collapse: Option[CollapseRequest] = None,
+    docValues: Seq[String] = Nil,
+    scriptFields: Seq[ScriptField] = Nil,
+    storedFields: Seq[String] = Nil,
+    fetchContext: Option[FetchSourceContext] = None,
+    pref: Option[String] = None,
+    routing: Option[String] = None,
+    terminateAfter: Option[Int] = None,
+    timeout: Option[Duration] = None,
+    minScore: Option[Double] = None,
+    rescorers: Seq[Rescore] = Nil,
+    trackScores: Option[Boolean] = None,
+    indicesOptions: Option[IndicesOptionsRequest] = None,
+    inners: Seq[InnerHit] = Nil,
+    indexBoosts: Seq[(String, Double)] = Nil,
+    keepAlive: Option[String] = None,
+    highlight: Option[Highlight] = None,
+    query: Option[Query] = None,
+    postFilter: Option[Query] = None,
+    requestCache: Option[Boolean] = None,
+    sorts: Seq[Sort] = Nil,
+    suggs: Seq[Suggestion] = Nil,
+    globalSuggestionText: Option[String] = None,
+    from: Option[Int] = None,
+    size: Option[Int] = None,
+    slice: Option[(Int, Int)] = None,
+    explain: Option[Boolean] = None,
+    stats: Seq[String] = Nil,
+    searchType: Option[SearchType] = None,
+    searchAfter: Seq[Any] = Nil,
+    version: Option[Boolean] = None,
+    seqNoPrimaryTerm: Option[Boolean] = None,
+    profile: Option[Boolean] = None,
+    source: Option[String] = None,
+    trackHits: Option[Any] = None,
+    allowPartialSearchResults: Option[Boolean] = None,
+    batchedReduceSize: Option[Int] = None,
+    typedKeys: Option[Boolean] = None,
+    runtimeMappings: Seq[RuntimeMapping] = Nil,
+    ext: Map[String, Any] = Map.empty,
+    knn: Option[Knn] = None,
+    multipleKnn: Seq[Knn] = Nil,
+    pit: Option[Pit] = None
+) {
 
   /** Adds a single string query to this search
     *
-    * @param string the query string
+    * @param string
+    *   the query string
     */
   def query(string: String): SearchRequest = query(QueryStringQuery(string))
 
@@ -109,17 +112,17 @@ case class SearchRequest(indexes: Indexes,
 
   /** This method introduces zero or more script field definitions into the search construction
     *
-    * @param fields zero or more [[ScriptField]] instances
-    * @return this, an instance of [[SearchRequest]]
+    * @param fields
+    *   zero or more [[ScriptField]] instances
+    * @return
+    *   this, an instance of [[SearchRequest]]
     */
   def scriptfields(fields: ScriptField*): SearchRequest = scriptfields(fields)
 
   def scriptfields(_fields: Iterable[ScriptField]): SearchRequest =
     copy(scriptFields = _fields.toSeq)
 
-  /**
-    * Adds a new suggestion to the search request, which can be looked up in the response
-    * using the name provided.
+  /** Adds a new suggestion to the search request, which can be looked up in the response using the name provided.
     */
   def suggestions(first: Suggestion, rest: Suggestion*): SearchRequest =
     suggestions(first +: rest)
@@ -154,10 +157,9 @@ case class SearchRequest(indexes: Indexes,
 
   def matchAllQuery(): SearchRequest = query(MatchAllQuery())
 
-  /** Expects a query in json format and sets the query of the search request.
-    * i.e. underneath a "query" field if referencing HTTP API
-    * Query must be valid json beginning with '{' and ending with '}'.
-    * Field names must be double quoted.
+  /** Expects a query in json format and sets the query of the search request. i.e. underneath a "query" field if
+    * referencing HTTP API Query must be valid json beginning with '{' and ending with '}'. Field names must be double
+    * quoted.
     *
     * Example:
     * {{{
@@ -168,15 +170,13 @@ case class SearchRequest(indexes: Indexes,
     */
   def rawQuery(json: String): SearchRequest = query(RawQuery(json))
 
-  /**
-    * Sets the source of the request as a json string. Note, if you use this method
-    * any other body-level settings will be ignored.
+  /** Sets the source of the request as a json string. Note, if you use this method any other body-level settings will
+    * be ignored.
     *
     * HTTP query-parameter settings can still be used, eg limit, routing, search type etc.
     *
-    * Unlike rawQuery, source is parsed at the "root" level
-    * Query must be valid json beginning with '{' and ending with '}'.
-    * Field names must be double quoted.
+    * Unlike rawQuery, source is parsed at the "root" level Query must be valid json beginning with '{' and ending with
+    * '}'. Field names must be double quoted.
     *
     * NOTE: This method only works with the HTTP client.
     *
@@ -225,10 +225,10 @@ case class SearchRequest(indexes: Indexes,
     copy(rescorers = rescorers.toSeq)
 
   // alias for scroll
-  def keepAlive(keepAlive: String): SearchRequest = scroll(keepAlive)
+  def keepAlive(keepAlive: String): SearchRequest        = scroll(keepAlive)
   def keepAlive(duration: FiniteDuration): SearchRequest = scroll(duration)
 
-  def scroll(keepAlive: String): SearchRequest = copy(keepAlive = keepAlive.some)
+  def scroll(keepAlive: String): SearchRequest        = copy(keepAlive = keepAlive.some)
   def scroll(duration: FiniteDuration): SearchRequest = copy(keepAlive = s"${duration.toSeconds}s".some)
 
   def slice(id: Int, max: Int): SearchRequest = copy(slice = Some(id, max))
@@ -239,12 +239,9 @@ case class SearchRequest(indexes: Indexes,
 
   def seqNoPrimaryTerm(seqNoPrimaryTerm: Boolean): SearchRequest = copy(seqNoPrimaryTerm = seqNoPrimaryTerm.some)
 
-  /**
-    * The maximum number of documents to collect for each shard,
-    * upon reaching which the query execution will terminate early.
-    * If set, the response will have a boolean field terminated_early
-    * to indicate whether the query execution has actually terminated
-    * early. Defaults to no.
+  /** The maximum number of documents to collect for each shard, upon reaching which the query execution will terminate
+    * early. If set, the response will have a boolean field terminated_early to indicate whether the query execution has
+    * actually terminated early. Defaults to no.
     */
   def terminateAfter(terminateAfter: Int): SearchRequest =
     copy(terminateAfter = terminateAfter.some)
@@ -275,22 +272,22 @@ case class SearchRequest(indexes: Indexes,
 
   def sourceInclude(first: String, rest: String*): SearchRequest = fetchContext match {
     case Some(ctx) => sourceFiltering(first +: rest, ctx.excludes)
-    case None => sourceFiltering(first +: rest, Nil)
+    case None      => sourceFiltering(first +: rest, Nil)
   }
 
   def sourceInclude(includes: Iterable[String]): SearchRequest = fetchContext match {
     case Some(ctx) => sourceFiltering(includes, ctx.excludes)
-    case None => sourceFiltering(includes, Nil)
+    case None      => sourceFiltering(includes, Nil)
   }
 
   def sourceExclude(first: String, rest: String*): SearchRequest = fetchContext match {
     case Some(ctx) => sourceFiltering(ctx.includes, first +: rest)
-    case None => sourceFiltering(Nil, first +: rest)
+    case None      => sourceFiltering(Nil, first +: rest)
   }
 
   def sourceExclude(excludes: Iterable[String]): SearchRequest = fetchContext match {
     case Some(ctx) => sourceFiltering(ctx.includes, excludes)
-    case None => sourceFiltering(Nil, excludes)
+    case None      => sourceFiltering(Nil, excludes)
   }
 
   def sourceFiltering(includes: Iterable[String], excludes: Iterable[String]): SearchRequest =

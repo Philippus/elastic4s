@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 import scala.util.Try
 
 class MultiSearchHttpTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with DockerTests
     with Matchers {
 
@@ -125,7 +125,6 @@ class MultiSearchHttpTest
         search("unknown") query matchAllQuery()
       )
     )
-
 
     val expectedEntity =
       """{"index":"jtull","search_type":"dfs_query_then_fetch"}

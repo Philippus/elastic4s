@@ -29,16 +29,16 @@ case class MultiPointShape(points: Seq[GeoPoint]) extends SingleShape {
 }
 
 case class LineStringShape(
-  p1: GeoPoint,
-  p2: GeoPoint,
-  path: GeoPoint*
+    p1: GeoPoint,
+    p2: GeoPoint,
+    path: GeoPoint*
 ) extends SingleShape {
   def geoShapeType: GeoShapeType = GeoShapeType.LINESTRING
 }
 
 case class EnvelopeShape(
-  upperLeft: GeoPoint,
-  lowerRight: GeoPoint
+    upperLeft: GeoPoint,
+    lowerRight: GeoPoint
 ) extends SingleShape {
   def geoShapeType: GeoShapeType = GeoShapeType.ENVELOPE
 }
@@ -51,30 +51,31 @@ case class MultiPolygonShape(coordinate: Seq[Polygon]) extends SingleShape {
   def geoShapeType: GeoShapeType = GeoShapeType.MULTIPOLYGON
 }
 
-sealed trait CollectionShape extends ShapeDefinition
+sealed trait CollectionShape                                     extends ShapeDefinition
 case class GeometryCollectionShape(shapes: Seq[ShapeDefinition]) extends CollectionShape {
   def geoShapeType: GeoShapeType = GeoShapeType.GEOMETRYCOLLECTION
 }
 
 sealed trait Shape
-case class InlineShape(shape: ShapeDefinition)                                     extends Shape
+case class InlineShape(shape: ShapeDefinition)                     extends Shape
 case class PreindexedShape(id: String, index: Index, path: String) extends Shape
 
-case class GeoShapeQuery(field: String,
-                         shape: Shape,
-                         relation: Option[ShapeRelation] = None,
-                         boost: Option[Double] = None,
-                         queryName: Option[String] = None,
-                         strategy: Option[SpatialStrategy] = None,
-                         ignoreUnmapped: Option[Boolean] = None)
-    extends Query {
+case class GeoShapeQuery(
+    field: String,
+    shape: Shape,
+    relation: Option[ShapeRelation] = None,
+    boost: Option[Double] = None,
+    queryName: Option[String] = None,
+    strategy: Option[SpatialStrategy] = None,
+    ignoreUnmapped: Option[Boolean] = None
+) extends Query {
 
   def relation(relation: ShapeRelation): GeoShapeQuery   = copy(relation = relation.some)
   def boost(boost: Double): GeoShapeQuery                = copy(boost = boost.some)
   def queryName(queryName: String): GeoShapeQuery        = copy(queryName = queryName.some)
   def strategy(strategy: SpatialStrategy): GeoShapeQuery = copy(strategy = strategy.some)
 
-  def inlineShape(shape: ShapeDefinition): GeoShapeQuery = copy(shape = InlineShape(shape))
+  def inlineShape(shape: ShapeDefinition): GeoShapeQuery                     = copy(shape = InlineShape(shape))
   def preindexedShape(id: String, index: Index, path: String): GeoShapeQuery =
     copy(shape = PreindexedShape(id, index, path))
 

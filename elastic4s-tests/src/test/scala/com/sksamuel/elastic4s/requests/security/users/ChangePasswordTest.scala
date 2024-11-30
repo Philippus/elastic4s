@@ -24,7 +24,7 @@ class ChangeUserPasswordTest extends AnyWordSpec with Matchers with DockerTests 
     "return nothing" in {
 
       client.execute {
-        createUser("user1", password=PlaintextPassword("test1234"))
+        createUser("user1", password = PlaintextPassword("test1234"))
       }.await
 
       noException should be thrownBy client.execute {
@@ -33,7 +33,7 @@ class ChangeUserPasswordTest extends AnyWordSpec with Matchers with DockerTests 
     }
 
     "return error if the user does not exist" in {
-      val resp = client.execute{
+      val resp = client.execute {
         changePassword("user2", "1234test")
       }.await
 

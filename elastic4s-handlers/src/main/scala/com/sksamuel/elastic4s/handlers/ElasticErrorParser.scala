@@ -16,7 +16,7 @@ object ElasticErrorParser {
             ElasticError(resp.statusCode.toString, resp.statusCode.toString, None, None, None, Nil, None)
           }
         }.getOrElse(ElasticError(resp.statusCode.toString, resp.statusCode.toString, None, None, None, Nil, None))
-      case _ =>
+      case _            =>
         ElasticError(resp.statusCode.toString, resp.statusCode.toString, None, None, None, Nil, None)
     }
   }

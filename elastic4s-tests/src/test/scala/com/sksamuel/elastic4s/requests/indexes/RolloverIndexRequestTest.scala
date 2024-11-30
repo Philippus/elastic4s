@@ -77,7 +77,7 @@ class RolloverIndexRequestTest extends AnyWordSpec with Matchers with DockerTest
       }.await.result.newIndex shouldBe "rolltest-000002"
     }
     "support dry run" in {
-      val resp = client.execute {
+      val resp   = client.execute {
         rolloverIndex("roll_write").maxAge("1d").dryRun(true)
       }.await
       val result = resp.result

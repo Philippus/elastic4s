@@ -2,7 +2,11 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.ElasticDsl.{matchQuery, nestedSort, script, scriptSort}
 import com.sksamuel.elastic4s.JsonSugar
-import com.sksamuel.elastic4s.handlers.searches.queries.sort.{FieldSortBuilderFn, GeoDistanceSortBuilderFn, SortBuilderFn}
+import com.sksamuel.elastic4s.handlers.searches.queries.sort.{
+  FieldSortBuilderFn,
+  GeoDistanceSortBuilderFn,
+  SortBuilderFn
+}
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.script.ScriptType
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
@@ -35,7 +39,10 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
         filter = Some(RangeQuery("parent.age", gte = Some(21L))),
         nested = Some(NestedSort(
           path = Some("parent.child"),
-          filter = Some(MatchQuery("parent.child.name", "matt"))))))
+          filter = Some(MatchQuery("parent.child.name", "matt"))
+        ))
+      )
+    )
 
     FieldSortBuilderFn(fieldSort).string should matchJson(
       """{
@@ -59,7 +66,8 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
         |               }
         |            }
         |         }
-        |     }""".stripMargin)
+        |     }""".stripMargin
+    )
   }
 
   test("field sort builder should support numeric_type option") {
@@ -99,13 +107,13 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
   }
 
   test("sort script parameters are encoded with the correct type") {
-    val scr = script("dummy script")
+    val scr     = script("dummy script")
       .lang("painless")
       .scriptType(ScriptType.Source)
       .params(Map(
-        "nump" -> 10.2,
+        "nump"    -> 10.2,
         "stringp" -> "ciao",
-        "boolp" -> true
+        "boolp"   -> true
       ))
     val request = scriptSort(scr)
       .typed(ScriptSortType.Number)

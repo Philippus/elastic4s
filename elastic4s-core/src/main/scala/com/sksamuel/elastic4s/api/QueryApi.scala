@@ -5,17 +5,80 @@ import com.sksamuel.elastic4s.requests.common.{DistanceUnit, DocumentRef}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
-import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoBoundingBoxQuery, GeoDistanceQuery, GeoPolygonQuery, GeoShapeQuery, Shape}
-import com.sksamuel.elastic4s.requests.searches.queries.matches.{MatchAllQuery, MatchBoolPrefixQuery, MatchNoneQuery, MatchPhrasePrefixQuery, MatchPhraseQuery, MatchQuery, MultiMatchQuery}
-import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, BoostingQuery, CombinedFieldsQuery, ConstantScore, DisMaxQuery, DistanceFeatureQuery, ExistsQuery, FuzzyQuery, HasChildQuery, HasParentQuery, IdQuery, IntervalsQuery, IntervalsRule, MoreLikeThisItem, MoreLikeThisQuery, MultiTermQuery, NestedQuery, PercolateQuery, PinnedQuery, PrefixQuery, Query, QueryStringQuery, RangeQuery, RankFeatureQuery, RawQuery, RegexQuery, ScriptQuery, ScriptScoreQuery, SemanticQuery, SimpleStringQuery, SparseVectorQuery}
-import com.sksamuel.elastic4s.requests.searches.span.{SpanContainingQuery, SpanFieldMaskingQuery, SpanFirstQuery, SpanMultiTermQuery, SpanNearQuery, SpanNotQuery, SpanOrQuery, SpanQuery, SpanTermQuery, SpanWithinQuery}
-import com.sksamuel.elastic4s.requests.searches.term.{TermQuery, TermsLookupQuery, TermsQuery, TermsSetQuery, WildcardQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.geo.{
+  GeoBoundingBoxQuery,
+  GeoDistanceQuery,
+  GeoPolygonQuery,
+  GeoShapeQuery,
+  Shape
+}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.{
+  MatchAllQuery,
+  MatchBoolPrefixQuery,
+  MatchNoneQuery,
+  MatchPhrasePrefixQuery,
+  MatchPhraseQuery,
+  MatchQuery,
+  MultiMatchQuery
+}
+import com.sksamuel.elastic4s.requests.searches.queries.{
+  ArtificialDocument,
+  BoostingQuery,
+  CombinedFieldsQuery,
+  ConstantScore,
+  DisMaxQuery,
+  DistanceFeatureQuery,
+  ExistsQuery,
+  FuzzyQuery,
+  HasChildQuery,
+  HasParentQuery,
+  IdQuery,
+  IntervalsQuery,
+  IntervalsRule,
+  MoreLikeThisItem,
+  MoreLikeThisQuery,
+  MultiTermQuery,
+  NestedQuery,
+  PercolateQuery,
+  PinnedQuery,
+  PrefixQuery,
+  Query,
+  QueryStringQuery,
+  RangeQuery,
+  RankFeatureQuery,
+  RawQuery,
+  RegexQuery,
+  ScriptQuery,
+  ScriptScoreQuery,
+  SemanticQuery,
+  SimpleStringQuery,
+  SparseVectorQuery
+}
+import com.sksamuel.elastic4s.requests.searches.span.{
+  SpanContainingQuery,
+  SpanFieldMaskingQuery,
+  SpanFirstQuery,
+  SpanMultiTermQuery,
+  SpanNearQuery,
+  SpanNotQuery,
+  SpanOrQuery,
+  SpanQuery,
+  SpanTermQuery,
+  SpanWithinQuery
+}
+import com.sksamuel.elastic4s.requests.searches.term.{
+  TermQuery,
+  TermsLookupQuery,
+  TermsQuery,
+  TermsSetQuery,
+  WildcardQuery
+}
 import com.sksamuel.elastic4s.requests.searches.{GeoPoint, ScoreMode, TermsLookup, span, term}
 
 trait QueryApi {
 
   implicit def string2query(string: String): SimpleStringQuery = SimpleStringQuery(string)
-  implicit def tuple2query(kv: (String, String)): TermQuery = TermQuery(kv._1, kv._2)
+  implicit def tuple2query(kv: (String, String)): TermQuery    = TermQuery(kv._1, kv._2)
 
   def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
     BoostingQuery(positiveQuery, negativeQuery)
@@ -26,7 +89,7 @@ trait QueryApi {
   def constantScoreQuery(query: Query): ConstantScore = ConstantScore(query)
 
   def dismax(first: Query, rest: Query*): DisMaxQuery = dismax(first +: rest)
-  def dismax(queries: Iterable[Query]): DisMaxQuery = DisMaxQuery(queries.toSeq)
+  def dismax(queries: Iterable[Query]): DisMaxQuery   = DisMaxQuery(queries.toSeq)
 
   def distanceFeatureQuery(field: String, origin: String, pivot: String) = DistanceFeatureQuery(field, origin, pivot)
 
@@ -34,34 +97,34 @@ trait QueryApi {
 
   def fuzzyQuery(field: String, value: String): FuzzyQuery = FuzzyQuery(field, value)
 
-  def functionScoreQuery(): FunctionScoreQuery = FunctionScoreQuery()
+  def functionScoreQuery(): FunctionScoreQuery             = FunctionScoreQuery()
   def functionScoreQuery(query: Query): FunctionScoreQuery = functionScoreQuery().query(query)
 
-  def geoBoxQuery(field: String): GeoBoundingBoxQuery = GeoBoundingBoxQuery(field)
+  def geoBoxQuery(field: String): GeoBoundingBoxQuery                                       = GeoBoundingBoxQuery(field)
   def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQuery =
     GeoBoundingBoxQuery(field).withGeohash(topleft, bottomright)
 
   @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "7.2.0")
-  def geoDistanceQuery(field: String): GeoDistanceExpectsPoint = new GeoDistanceExpectsPoint(field)
-  def geoDistanceQuery(field: String, geohash: String): GeoDistanceQuery = GeoDistanceQuery(field).geohash(geohash)
+  def geoDistanceQuery(field: String): GeoDistanceExpectsPoint                     = new GeoDistanceExpectsPoint(field)
+  def geoDistanceQuery(field: String, geohash: String): GeoDistanceQuery           = GeoDistanceQuery(field).geohash(geohash)
   def geoDistanceQuery(field: String, lat: Double, long: Double): GeoDistanceQuery =
     GeoDistanceQuery(field).point(lat, long)
 
   @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "6.1.2")
   class GeoDistanceExpectsPoint(field: String) {
-    def geohash(geohash: String): GeoDistanceQuery = GeoDistanceQuery(field).geohash(geohash)
+    def geohash(geohash: String): GeoDistanceQuery         = GeoDistanceQuery(field).geohash(geohash)
     def point(lat: Double, long: Double): GeoDistanceQuery = GeoDistanceQuery(field).point(lat, long)
   }
 
   class GeoDistanceExpectsDistance(gdef: GeoDistanceQuery) {
-    def distance(distance: String): GeoDistanceQuery = gdef.distance(distance)
+    def distance(distance: String): GeoDistanceQuery                     = gdef.distance(distance)
     def distance(distance: Double, unit: DistanceUnit): GeoDistanceQuery = gdef.distance(distance, unit)
   }
 
   def geoPolygonQuery(field: String) = new GeoPolygonExpectsPoints(field)
   class GeoPolygonExpectsPoints(field: String) {
     def points(first: GeoPoint, rest: GeoPoint*): GeoPolygonQuery = points(first +: rest)
-    def points(points: Iterable[GeoPoint]): GeoPolygonQuery = geoPolygonQuery(field, points)
+    def points(points: Iterable[GeoPoint]): GeoPolygonQuery       = geoPolygonQuery(field, points)
   }
 
   def geoPolygonQuery(field: String, first: GeoPoint, rest: GeoPoint*): GeoPolygonQuery =
@@ -79,10 +142,10 @@ trait QueryApi {
     HasChildQuery(childType, query, scoreMode)
 
   class HasChildQueryExpectsQuery(`type`: String) {
-    def query(q: Query): ExpectsScoreMode = new ExpectsScoreMode(q)
+    def query(q: Query): ExpectsScoreMode  = new ExpectsScoreMode(q)
     def query(q: String): ExpectsScoreMode = new ExpectsScoreMode(q)
     class ExpectsScoreMode(q: Query) {
-      def scoreMode(mode: String): HasChildQuery = scoreMode(ScoreMode.valueOf(mode))
+      def scoreMode(mode: String): HasChildQuery         = scoreMode(ScoreMode.valueOf(mode))
       def scoreMode(scoreMode: ScoreMode): HasChildQuery = hasChildQuery(`type`, q, scoreMode)
     }
   }
@@ -100,7 +163,8 @@ trait QueryApi {
     }
   }
 
-  def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit = com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
+  def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit =
+    com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
 
   def intervalsQuery(field: String, rule: IntervalsRule): IntervalsQuery = IntervalsQuery(field, rule)
 
@@ -109,16 +173,16 @@ trait QueryApi {
   def matchPhraseQuery(field: String, value: Any): MatchPhraseQuery = MatchPhraseQuery(field, value)
 
   def matchPhrasePrefixQuery(field: String, value: Any): MatchPhrasePrefixQuery = MatchPhrasePrefixQuery(field, value)
-  def matchBoolPrefixQuery(field: String, value: Any): MatchBoolPrefixQuery = MatchBoolPrefixQuery(field, value)
+  def matchBoolPrefixQuery(field: String, value: Any): MatchBoolPrefixQuery     = MatchBoolPrefixQuery(field, value)
 
   def multiMatchQuery(text: String): MultiMatchQuery = MultiMatchQuery(text)
 
   def matchNoneQuery(): MatchNoneQuery = MatchNoneQuery()
-  def matchAllQuery(): MatchAllQuery = MatchAllQuery()
+  def matchAllQuery(): MatchAllQuery   = MatchAllQuery()
 
   def moreLikeThisQuery(field: String, fields: String*): MoreLikeThisExpectsLikes = moreLikeThisQuery(field +: fields)
-  def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(fields.toSeq)
-  def moreLikeThisQuery(): MoreLikeThisExpectsLikes = new MoreLikeThisExpectsLikes(Nil)
+  def moreLikeThisQuery(fields: Iterable[String]): MoreLikeThisExpectsLikes       = new MoreLikeThisExpectsLikes(fields.toSeq)
+  def moreLikeThisQuery(): MoreLikeThisExpectsLikes                               = new MoreLikeThisExpectsLikes(Nil)
 
   class MoreLikeThisExpectsLikes(fields: Seq[String]) {
 
@@ -154,7 +218,7 @@ trait QueryApi {
   }
   def nestedQuery(path: String, query: Query): NestedQuery = NestedQuery(path, query)
 
-  def query(queryString: String): QueryStringQuery = queryStringQuery(queryString)
+  def query(queryString: String): QueryStringQuery            = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQuery = QueryStringQuery(queryString)
 
   def percolateQuery(`type`: String, field: String = "query") = new PercolateExpectsUsing(`type`, field)
@@ -191,11 +255,11 @@ trait QueryApi {
   def scriptQuery(script: Script): ScriptQuery = ScriptQuery(script)
   def scriptQuery(script: String): ScriptQuery = ScriptQuery(script)
 
-  def scriptScoreQuery(): ScriptScoreQuery = ScriptScoreQuery()
+  def scriptScoreQuery(): ScriptScoreQuery             = ScriptScoreQuery()
   def scriptScoreQuery(query: Query): ScriptScoreQuery = ScriptScoreQuery().query(query)
 
   def simpleStringQuery(q: String): SimpleStringQuery = SimpleStringQuery(q)
-  def stringQuery(q: String): QueryStringQuery = QueryStringQuery(q)
+  def stringQuery(q: String): QueryStringQuery        = QueryStringQuery(q)
 
   @deprecated("use spanFirstQuery(query, end)", "7.7.0")
   def spanFirstQuery(query: SpanQuery) = new SpanFirstExpectsEnd(query)
@@ -208,9 +272,10 @@ trait QueryApi {
   def spanNearQuery(defs: Iterable[SpanQuery], slop: Int): SpanNearQuery =
     span.SpanNearQuery(defs.toSeq, slop)
 
-  def spanOrQuery(iterable: Iterable[SpanQuery]): SpanOrQuery = span.SpanOrQuery(iterable.toSeq)
-  def spanOrQuery(first: SpanQuery, rest: SpanQuery*): SpanOrQuery = spanOrQuery(first +: rest)
-  def spanFieldMaskingQuery(fieldToMask: String, query: SpanQuery): SpanFieldMaskingQuery = span.SpanFieldMaskingQuery(fieldToMask, query)
+  def spanOrQuery(iterable: Iterable[SpanQuery]): SpanOrQuery                             = span.SpanOrQuery(iterable.toSeq)
+  def spanOrQuery(first: SpanQuery, rest: SpanQuery*): SpanOrQuery                        = spanOrQuery(first +: rest)
+  def spanFieldMaskingQuery(fieldToMask: String, query: SpanQuery): SpanFieldMaskingQuery =
+    span.SpanFieldMaskingQuery(fieldToMask, query)
 
   def spanContainingQuery(big: SpanQuery, little: SpanQuery): SpanContainingQuery =
     SpanContainingQuery(big, little)
@@ -237,19 +302,15 @@ trait QueryApi {
     term.TermsLookupQuery(field, TermsLookup(ref, path))
 
   // Either minimumShouldMatchField or minimumShouldMatchScript should be specified, that's why they appear as mandatory parameters
-  def termsSetQuery(field: String,
-                    terms: Set[String],
-                    minimumShouldMatchField: String): TermsSetQuery =
+  def termsSetQuery(field: String, terms: Set[String], minimumShouldMatchField: String): TermsSetQuery =
     TermsSetQuery(field, terms, minimumShouldMatchField = Some(minimumShouldMatchField))
 
-  def termsSetQuery(field: String,
-                    terms: Set[String],
-                    minimumShouldMatchScript: Script): TermsSetQuery =
+  def termsSetQuery(field: String, terms: Set[String], minimumShouldMatchScript: Script): TermsSetQuery =
     TermsSetQuery(field, terms, minimumShouldMatchScript = Some(minimumShouldMatchScript))
 
   def wildcardQuery(field: String, value: Any): WildcardQuery = WildcardQuery(field, value)
 
-  def idsQuery(ids: Iterable[Any]): IdQuery = IdQuery(ids.toSeq)
+  def idsQuery(ids: Iterable[Any]): IdQuery  = IdQuery(ids.toSeq)
   def idsQuery(id: Any, rest: Any*): IdQuery = IdQuery(id +: rest)
 
   def bool(mustQueries: Seq[Query], shouldQueries: Seq[Query], notQueries: Seq[Query]): BoolQuery =
@@ -260,14 +321,14 @@ trait QueryApi {
 
   // short cut for a boolean query with musts
   def must(first: Query, rest: Query*): BoolQuery = must(first +: rest)
-  def must(queries: Iterable[Query]): BoolQuery = BoolQuery().must(queries)
+  def must(queries: Iterable[Query]): BoolQuery   = BoolQuery().must(queries)
 
   // short cut for a boolean query with shoulds
-  def should(queries: Query*): BoolQuery = BoolQuery().should(queries: _*)
+  def should(queries: Query*): BoolQuery          = BoolQuery().should(queries: _*)
   def should(queries: Iterable[Query]): BoolQuery = BoolQuery().should(queries)
 
   // short cut for a boolean query with nots
-  def not(queries: Query*): BoolQuery = BoolQuery().not(queries: _*)
+  def not(queries: Query*): BoolQuery          = BoolQuery().not(queries: _*)
   def not(queries: Iterable[Query]): BoolQuery = BoolQuery().not(queries)
 
   def sparseVectorQuery(field: String, inferenceId: String, query: String): SparseVectorQuery =

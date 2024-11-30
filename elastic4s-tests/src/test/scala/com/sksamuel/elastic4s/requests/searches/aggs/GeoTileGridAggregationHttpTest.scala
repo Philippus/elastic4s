@@ -34,7 +34,6 @@ class GeoTileGridAggregationHttpTest extends AnyFreeSpec with DockerTests with M
     ).refreshImmediately
   ).await
 
-
   "geohashgrid agg" - {
     "should return expected key values" in {
       val resp = client.execute {
@@ -50,7 +49,7 @@ class GeoTileGridAggregationHttpTest extends AnyFreeSpec with DockerTests with M
       val agg = resp.aggs.result[GeoTileGrid]("geo_grid")
 
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        GeoTileGridBucket("2/2/1", 6, Map.empty),
+        GeoTileGridBucket("2/2/1", 6, Map.empty)
       )
     }
   }

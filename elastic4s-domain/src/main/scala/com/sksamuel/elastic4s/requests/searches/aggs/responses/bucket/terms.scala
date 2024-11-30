@@ -1,14 +1,20 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket
 
-import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, AggResult, AggSerde, BucketAggregation, Transformable}
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.{
+  AggBucket,
+  AggResult,
+  AggSerde,
+  BucketAggregation,
+  Transformable
+}
 
 case class TermBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
-  extends AggBucket
+    extends AggBucket
     with Transformable
 
 case class Terms(name: String, buckets: Seq[TermBucket], docCountErrorUpperBound: Long, otherDocCount: Long)
-  extends BucketAggregation with AggResult {
-  def bucket(key: String): TermBucket = bucketOpt(key).get
+    extends BucketAggregation with AggResult {
+  def bucket(key: String): TermBucket            = bucketOpt(key).get
   def bucketOpt(key: String): Option[TermBucket] = buckets.find(_.key == key)
 }
 
@@ -31,4 +37,3 @@ object Terms {
     data("sum_other_doc_count").toString.toLong
   )
 }
-

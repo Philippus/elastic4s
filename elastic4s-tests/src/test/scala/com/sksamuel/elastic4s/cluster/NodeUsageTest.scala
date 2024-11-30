@@ -15,7 +15,6 @@ class NodeUsageTest extends AnyFlatSpec with Matchers with DockerTests {
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-
   "node usage" should "return all nodes" in {
     val resp = client.execute {
       nodeUsage()

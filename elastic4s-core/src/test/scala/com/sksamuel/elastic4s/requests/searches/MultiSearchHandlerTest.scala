@@ -10,10 +10,19 @@ import org.scalatest.matchers.should.Matchers
 class MultiSearchHandlerTest extends AnyFlatSpec with Matchers with EitherValues {
 
   it should "handle error responses properly" in {
-    val responseBody = """{"error":{"type":"some_error_type","reason":"some_error_reason","root_cause":[]},"status":400}"""
-    val response = HttpResponse(400, Some(StringEntity(responseBody, None)), Map.empty)
+    val responseBody =
+      """{"error":{"type":"some_error_type","reason":"some_error_reason","root_cause":[]},"status":400}"""
+    val response     = HttpResponse(400, Some(StringEntity(responseBody, None)), Map.empty)
 
-    MultiSearchHandler.responseHandler.handle(response).left.value shouldBe ElasticError("some_error_type", "some_error_reason", None, None, None, Seq.empty, None)
+    MultiSearchHandler.responseHandler.handle(response).left.value shouldBe ElasticError(
+      "some_error_type",
+      "some_error_reason",
+      None,
+      None,
+      None,
+      Seq.empty,
+      None
+    )
   }
 
   it should "handle successful responses properly" in {
@@ -50,8 +59,8 @@ class MultiSearchHandlerTest extends AnyFlatSpec with Matchers with EitherValues
         |        }
         |    ]
         |}""".stripMargin
-    val response = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
-    val mResponse = MultiSearchHandler.responseHandler.handle(response).value
+    val response     = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
+    val mResponse    = MultiSearchHandler.responseHandler.handle(response).value
     mResponse.items should have size 2
     mResponse.items.map(_.status) shouldEqual Seq(200, 400)
   }

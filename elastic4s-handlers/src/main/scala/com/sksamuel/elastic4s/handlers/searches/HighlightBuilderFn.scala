@@ -47,7 +47,7 @@ object HighlightBuilderFn {
       builder.endObject()
     }
 
-    highlight.options.options.foreach(options => options.foreach { case (k, v) => builder.autofield(k, v) } )
+    highlight.options.options.foreach(options => options.foreach { case (k, v) => builder.autofield(k, v) })
 
     builder.endObject()
     builder

@@ -8,7 +8,7 @@ import java.util.UUID
 trait SuggestionApi {
 
   @deprecated("use completionSuggestion(name, field", "7.0")
-  def completionSuggestion(): CompletionSuggExpectsField             = completionSuggestion(UUID.randomUUID.toString)
+  def completionSuggestion(): CompletionSuggExpectsField = completionSuggestion(UUID.randomUUID.toString)
 
   def completionSuggestion(name: String, field: String): CompletionSuggestion = CompletionSuggestion(name, field)
 
@@ -28,7 +28,7 @@ trait SuggestionApi {
   }
 
   @deprecated("use phraseSuggestion(name, field", "7.0")
-  def phraseSuggestion(): PhraseSuggExpectsField             = phraseSuggestion(UUID.randomUUID.toString)
+  def phraseSuggestion(): PhraseSuggExpectsField = phraseSuggestion(UUID.randomUUID.toString)
 
   def phraseSuggestion(name: String, field: String): PhraseSuggestion = PhraseSuggestion(name, field)
 

@@ -27,14 +27,14 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("beer") fields(
-        "name" -> "coors light",
-        "brand" -> "coors",
+      indexInto("beer") fields (
+        "name"        -> "coors light",
+        "brand"       -> "coors",
         "ingredients" -> Seq("hops", "barley", "water", "yeast")
       ) id "4",
-      indexInto("beer") fields(
-        "name" -> "bud lite",
-        "brand" -> "bud",
+      indexInto("beer") fields (
+        "name"        -> "bud lite",
+        "brand"       -> "bud",
         "ingredients" -> Seq("hops", "barley", "water", "yeast")
       ) id "8"
     ).refresh(RefreshPolicy.Immediate)
@@ -98,7 +98,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "support source includes and excludes" in {
 
     val resp = client.execute {
-      get("beer", "8") fetchSourceContext(List("name"), List("brand"))
+      get("beer", "8") fetchSourceContext (List("name"), List("brand"))
     }.await.result
 
     resp.exists should be(true)
@@ -109,7 +109,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "support specifying source includes and excludes separately" in {
 
     val resp = client.execute {
-      get("beer", "8") fetchSourceInclude(List("name")) fetchSourceExclude(List("bran"))
+      get("beer", "8") fetchSourceInclude (List("name")) fetchSourceExclude (List("bran"))
     }.await.result
 
     resp.exists should be(true)
@@ -120,7 +120,7 @@ class GetTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "retrieve a document supporting stored fields" in {
 
     val resp = client.execute {
-      get("beer", "4") storedFields("name", "brand")
+      get("beer", "4") storedFields ("name", "brand")
     }.await.result
 
     resp.exists should be(true)

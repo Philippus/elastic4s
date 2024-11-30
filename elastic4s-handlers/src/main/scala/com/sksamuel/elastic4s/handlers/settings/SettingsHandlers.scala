@@ -3,7 +3,16 @@ package com.sksamuel.elastic4s.handlers.settings
 import com.sksamuel.elastic4s.ext.Maps
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.settings.{GetSettingsRequest, IndexSettingsResponse, UpdateSettingsRequest}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, JacksonSupport, ResponseHandler}
+import com.sksamuel.elastic4s.{
+  ElasticError,
+  ElasticRequest,
+  Handler,
+  HttpEntity,
+  HttpResponse,
+  Index,
+  JacksonSupport,
+  ResponseHandler
+}
 
 trait SettingsHandlers {
 
@@ -16,7 +25,7 @@ trait SettingsHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, IndexSettingsResponse] =
         response.statusCode match {
           case 200 =>
-            val root = JacksonSupport.mapper.readTree(response.entity.get.content)
+            val root     = JacksonSupport.mapper.readTree(response.entity.get.content)
             val settings = root.fields.asScala.map { entry =>
               val indexSettings = JacksonSupport.mapper.readValue[Map[String, Any]](
                 JacksonSupport.mapper.writeValueAsBytes(entry.getValue)
@@ -27,7 +36,7 @@ trait SettingsHandlers {
               }
             }.toMap
             Right(IndexSettingsResponse(settings))
-          case _ =>
+          case _   =>
             Left(ElasticErrorParser.parse(response))
         }
     }
@@ -45,7 +54,7 @@ trait SettingsHandlers {
         response.statusCode match {
           case 200 =>
             Right(ResponseHandler.fromResponse[IndexSettingsResponse](response))
-          case _ =>
+          case _   =>
             Left(ElasticErrorParser.parse(response))
         }
     }

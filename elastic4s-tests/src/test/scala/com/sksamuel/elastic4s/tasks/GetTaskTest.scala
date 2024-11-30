@@ -57,7 +57,9 @@ class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
 
       // Build an invalid query to make the update by query task fail
       val query = (0 until 200000)
-        .flatMap(i => Seq(TermQuery("foo", i.toString), TermQuery("moo", (i+1).toString), TermQuery("goo" ,(i+2).toString)))
+        .flatMap(i =>
+          Seq(TermQuery("foo", i.toString), TermQuery("moo", (i + 1).toString), TermQuery("goo", (i + 2).toString))
+        )
 
       // kick off a task
       val resp: GetTask = client.execute {
@@ -68,17 +70,17 @@ class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
 
       // Sorry for this
       var result: GetTaskResponse = null
-      var found = false
+      var found                   = false
 
       // Retry to get the task until it is executed
-       while (!found) {
-         // use the task id from the above task
-         result = client.execute {
+      while (!found) {
+        // use the task id from the above task
+        result = client.execute {
           getTask(resp.nodeId, resp.taskId)
         }.await.result
-         val elapsed = System.currentTimeMillis() - before
-         found = result.completed || (elapsed > 60000)
-         Thread.sleep(1000)
+        val elapsed = System.currentTimeMillis() - before
+        found = result.completed || (elapsed > 60000)
+        Thread.sleep(1000)
       }
 
       result.task.node shouldBe resp.nodeId
@@ -92,5 +94,3 @@ class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
     }
   }
 }
-
-

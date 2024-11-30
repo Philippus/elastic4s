@@ -10,7 +10,6 @@ object JoinFieldBuilderFn {
     values.get("relations").map(_.asInstanceOf[Map[String, Any]]).getOrElse(Map.empty)
   )
 
-
   def build(field: JoinField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

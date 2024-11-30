@@ -7,7 +7,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class CatSegmentsTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with Matchers
     with DockerTests
     with Inspectors {
@@ -36,7 +36,7 @@ class CatSegmentsTest
 
     segments.map(_.size).sum > 0 shouldBe true
     segments.map(_.sizeMemory).sum >= 0 shouldBe true
-    segments.map(_.docsCount).sum  > 0 shouldBe true
+    segments.map(_.docsCount).sum > 0 shouldBe true
   }
 
 }

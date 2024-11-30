@@ -32,7 +32,6 @@ class GeoHashGridAggregationHttpTest extends AnyFreeSpec with DockerTests with M
     ).refreshImmediately
   ).await
 
-
   "geohashgrid agg" - {
     "should return expected key values" in {
       val resp = client.execute {

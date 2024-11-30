@@ -2,11 +2,13 @@ package com.sksamuel.elastic4s.analysis
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
-case class Analysis(analyzers: List[Analyzer],
-                    tokenizers: List[Tokenizer] = Nil,
-                    tokenFilters: List[TokenFilter] = Nil,
-                    charFilters: List[CharFilter] = Nil,
-                    normalizers: List[Normalizer] = Nil)
+case class Analysis(
+    analyzers: List[Analyzer],
+    tokenizers: List[Tokenizer] = Nil,
+    tokenFilters: List[TokenFilter] = Nil,
+    charFilters: List[CharFilter] = Nil,
+    normalizers: List[Normalizer] = Nil
+)
 
 object Analysis {
   def apply(analyzer: Analyzer): Analysis = Analysis(analyzers = List(analyzer))

@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class SplitIndexTest extends AnyWordSpec with Matchers with DockerTests {
 
   val reindexTarget = "reindextarget"
-  val reindex = "reindex"
+  val reindex       = "reindex"
 
   deleteIdx(reindex)
   deleteIdx(reindexTarget)
@@ -27,11 +27,11 @@ class SplitIndexTest extends AnyWordSpec with Matchers with DockerTests {
     "copy from one index to another with new shards number" in {
 
       client.execute {
-        updateIndexLevelSettings(reindex).settings(Map("index.blocks.write"-> true.toString))
+        updateIndexLevelSettings(reindex).settings(Map("index.blocks.write" -> true.toString))
       }.await.result
 
       client.execute {
-         recoverIndex(reindex)
+        recoverIndex(reindex)
       }.await.result(reindex).shards.size shouldBe 1
 
       client.execute {

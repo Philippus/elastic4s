@@ -44,9 +44,9 @@ object PhraseSuggestionBuilderFn {
     // END DIRECT GENERATOR
 
     phrase.collateQuery match {
-      case None =>
+      case None        =>
       case Some(query) =>
-        //COLLATE
+        // COLLATE
         builder.startObject("collate")
 
         builder.startObject("query")
@@ -57,15 +57,15 @@ object PhraseSuggestionBuilderFn {
         builder.rawField("params", SourceAsContentBuilder(phrase.collateParams))
 
         builder.endObject()
-      //END COLLATE
+      // END COLLATE
     }
 
-    //highlight
+    // highlight
     builder.startObject("highlight")
     phrase.preTag.foreach(builder.field("pre_tag", _))
     phrase.postTag.foreach(builder.field("post_tag", _))
     builder.endObject()
-    //end
+    // end
 
     builder
   }

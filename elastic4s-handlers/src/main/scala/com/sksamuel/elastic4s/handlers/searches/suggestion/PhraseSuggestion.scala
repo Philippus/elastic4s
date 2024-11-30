@@ -5,38 +5,41 @@ import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.suggestion.Suggestion
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class DirectGenerator(field: String,
-                           size: Option[Int] = None,
-                           suggestMode: Option[String] = None,
-                           maxEdits: Option[Integer] = None,
-                           prefixLength: Option[Int] = None,
-                           minWordLength: Option[Int] = None,
-                           maxInspections: Option[Int] = None,
-                           minDocFreq: Option[Float] = None,
-                           maxTermFreq: Option[Float] = None,
-                           preFilter: Option[String] = None,
-                           postFilter: Option[String] = None)
+case class DirectGenerator(
+    field: String,
+    size: Option[Int] = None,
+    suggestMode: Option[String] = None,
+    maxEdits: Option[Integer] = None,
+    prefixLength: Option[Int] = None,
+    minWordLength: Option[Int] = None,
+    maxInspections: Option[Int] = None,
+    minDocFreq: Option[Float] = None,
+    maxTermFreq: Option[Float] = None,
+    preFilter: Option[String] = None,
+    postFilter: Option[String] = None
+)
 
-case class PhraseSuggestion(name: String,
-                            fieldname: String,
-                            analyzer: Option[String] = None,
-                            collateParams: Map[String, AnyRef] = Map.empty,
-                            collatePrune: Option[Boolean] = None,
-                            collateQuery: Option[Script] = None,
-                            directGenerators: Seq[DirectGenerator] = Seq.empty,
-                            confidence: Option[Float] = None,
-                            forceUnigrams: Option[Boolean] = None,
-                            gramSize: Option[Int] = None,
-                            preTag: Option[String] = None,
-                            postTag: Option[String] = None,
-                            maxErrors: Option[Float] = None,
-                            realWordErrorLikelihood: Option[Float] = None,
-                            separator: Option[String] = None,
-                            tokenLimit: Option[Int] = None,
-                            size: Option[Int] = None,
-                            shardSize: Option[Int] = None,
-                            text: Option[String] = None)
-    extends Suggestion {
+case class PhraseSuggestion(
+    name: String,
+    fieldname: String,
+    analyzer: Option[String] = None,
+    collateParams: Map[String, AnyRef] = Map.empty,
+    collatePrune: Option[Boolean] = None,
+    collateQuery: Option[Script] = None,
+    directGenerators: Seq[DirectGenerator] = Seq.empty,
+    confidence: Option[Float] = None,
+    forceUnigrams: Option[Boolean] = None,
+    gramSize: Option[Int] = None,
+    preTag: Option[String] = None,
+    postTag: Option[String] = None,
+    maxErrors: Option[Float] = None,
+    realWordErrorLikelihood: Option[Float] = None,
+    separator: Option[String] = None,
+    tokenLimit: Option[Int] = None,
+    size: Option[Int] = None,
+    shardSize: Option[Int] = None,
+    text: Option[String] = None
+) extends Suggestion {
 
   override def analyzer(analyzer: String): PhraseSuggestion = copy(analyzer = analyzer.some)
   override def text(text: String): PhraseSuggestion         = copy(text = text.some)

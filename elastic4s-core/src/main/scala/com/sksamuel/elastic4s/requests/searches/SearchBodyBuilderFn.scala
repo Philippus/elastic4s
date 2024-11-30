@@ -8,14 +8,22 @@ import com.sksamuel.elastic4s.handlers.searches.collapse.CollapseBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.knn.KnnBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
-import com.sksamuel.elastic4s.handlers.searches.suggestion.{CompletionSuggestionBuilderFn, PhraseSuggestion, PhraseSuggestionBuilderFn, TermSuggestionBuilderFn}
+import com.sksamuel.elastic4s.handlers.searches.suggestion.{
+  CompletionSuggestionBuilderFn,
+  PhraseSuggestion,
+  PhraseSuggestionBuilderFn,
+  TermSuggestionBuilderFn
+}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggregationBuilderFn}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{CompletionSuggestion, TermSuggestion}
 
 object SearchBodyBuilderFn {
 
-  def apply(request: SearchRequest, customAggregation: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler): XContentBuilder = {
+  def apply(
+      request: SearchRequest,
+      customAggregation: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler
+  ): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
 
@@ -55,10 +63,10 @@ object SearchBodyBuilderFn {
     if (request.searchAfter.nonEmpty)
       builder.autoarray("search_after", request.searchAfter)
 
-    request.pit.foreach{pit  =>
+    request.pit.foreach { pit =>
       builder.startObject("pit")
       builder.field("id", pit.id)
-      pit.keepAlive.foreach{keepAlive =>
+      pit.keepAlive.foreach { keepAlive =>
         builder.field("keep_alive", s"${keepAlive.toSeconds}s")
       }
       builder.endObject()
@@ -107,10 +115,10 @@ object SearchBodyBuilderFn {
       builder.startObject("suggest")
       request.globalSuggestionText.foreach(builder.field("text", _))
       request.suggs.foreach {
-        case term: TermSuggestion => builder.rawField(term.name, TermSuggestionBuilderFn(term))
+        case term: TermSuggestion             => builder.rawField(term.name, TermSuggestionBuilderFn(term))
         case completion: CompletionSuggestion =>
           builder.rawField(completion.name, CompletionSuggestionBuilderFn(completion))
-        case phrase: PhraseSuggestion => builder.rawField(phrase.name, PhraseSuggestionBuilderFn(phrase))
+        case phrase: PhraseSuggestion         => builder.rawField(phrase.name, PhraseSuggestionBuilderFn(phrase))
       }
       builder.endObject()
     }

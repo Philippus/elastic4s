@@ -10,16 +10,16 @@ def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
 def releaseVersion: String = sys.env.getOrElse("RELEASE_VERSION", "")
-def isRelease = releaseVersion != ""
+def isRelease              = releaseVersion != ""
 
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 
-val scala2Versions = Seq("2.12.20", "2.13.15")
+val scala2Versions   = Seq("2.12.20", "2.13.15")
 val scalaAllVersions = scala2Versions :+ "3.3.4"
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion := "2.12.20",
+  scalaVersion       := "2.12.20",
   crossScalaVersions := Nil
 )
 
@@ -28,13 +28,13 @@ lazy val warnUnusedImport = Seq(
   Compile / console / scalacOptions ~= {
     _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports"))
   },
-  Test / console / scalacOptions := (Compile / console / scalacOptions).value,
+  Test / console / scalacOptions := (Compile / console / scalacOptions).value
 )
 
 lazy val commonSettings = Seq(
-  organization := "nl.gn0s1s",
+  organization                  := "nl.gn0s1s",
   resolvers += Resolver.mavenLocal,
-  Test / parallelExecution := false,
+  Test / parallelExecution      := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 )
@@ -44,19 +44,19 @@ lazy val publishSettings = Seq(
 )
 
 lazy val commonJvmSettings = Seq(
-   Test / testOptions += {
+  Test / testOptions += {
     val flag = if (isGithubActions) "-oCI" else "-oDF"
     Tests.Argument(TestFrameworks.ScalaTest, flag)
   },
-  Test / fork := true,
+  Test / fork        := true,
   Test / javaOptions := Seq("-Xmx3G"),
   javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-  javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled"),
+  javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled")
 )
 
 lazy val pomSettings = Seq(
-  startYear := Some(2013),
-  homepage := Some(url("https://github.com/philippus/elastic4s")),
+  startYear  := Some(2013),
+  homepage   := Some(url("https://github.com/philippus/elastic4s")),
   licenses += License.Apache2,
   developers := List(
     Developer(
@@ -75,11 +75,10 @@ lazy val pomSettings = Seq(
 )
 
 lazy val noPublishSettings = Seq(
-  publish := {},
-  publishLocal := {},
+  publish         := {},
+  publishLocal    := {},
   publishArtifact := false
 )
-
 
 lazy val allSettings = commonScalaVersionSettings ++
   commonJvmSettings ++
@@ -93,35 +92,35 @@ lazy val scala2Settings = allSettings :+ (crossScalaVersions := scala2Versions)
 lazy val scala3Settings = allSettings :+ (crossScalaVersions := scalaAllVersions)
 
 lazy val scala3Projects: Seq[ProjectReference] = Seq(
-    json_builder,
-    domain,
-    handlers,
-    core,
-    clientcore,
-    clientesjava,
-    clientsSniffed,
-    clientpekko,
-    clienthttp4s,
-    cats_effect,
-    cats_effect_2,
-    zio_1,
-    zio,
-    monix,
-    tests,
-    testkit,
-    circe,
-    jackson,
-    json4s,
-    playjson,
-    ziojson,
-    clientsttp,
-    httpstreams,
-    akkastreams,
-    pekkostreams,
-    reactivestreamsakka,
-    reactivestreamspekko
+  json_builder,
+  domain,
+  handlers,
+  core,
+  clientcore,
+  clientesjava,
+  clientsSniffed,
+  clientpekko,
+  clienthttp4s,
+  cats_effect,
+  cats_effect_2,
+  zio_1,
+  zio,
+  monix,
+  tests,
+  testkit,
+  circe,
+  jackson,
+  json4s,
+  playjson,
+  ziojson,
+  clientsttp,
+  httpstreams,
+  akkastreams,
+  pekkostreams,
+  reactivestreamsakka,
+  reactivestreamspekko
 )
-lazy val scala3_root = Project("elastic4s-scala3", file("scala3"))
+lazy val scala3_root                           = Project("elastic4s-scala3", file("scala3"))
   .settings(name := "elastic4s")
   .settings(allSettings)
   .settings(
@@ -130,7 +129,7 @@ lazy val scala3_root = Project("elastic4s-scala3", file("scala3"))
   .aggregate(
     scala3Projects: _*
   )
-lazy val root = Project("elastic4s", file("."))
+lazy val root                                  = Project("elastic4s", file("."))
   .settings(name := "elastic4s")
   .settings(allSettings)
   .settings(
@@ -174,11 +173,15 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
   .dependsOn(core)
   .settings(scala3Settings)
   .settings(
-    libraryDependencies ++= Seq(elasticsearchRestClient,
+    libraryDependencies ++= Seq(
+      elasticsearchRestClient,
       log4jApi,
-      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
+      "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion,
+      "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude (
+        "org.scala-lang",
+        "scala-library"
+      )
     )
   )
 
@@ -240,8 +243,7 @@ lazy val httpstreams = (project in file("elastic4s-http-streams"))
       Dependencies.akkaStream,
       Dependencies.reactiveStreamsTck,
       Dependencies.scalaTestPlusTestng
-    )
-  )
+    ))
 
 lazy val reactivestreamsakka = (project in file("elastic4s-reactivestreams-akka"))
   .dependsOn(core, testkit % "test", jackson % "test")
@@ -253,8 +255,7 @@ lazy val reactivestreamsakka = (project in file("elastic4s-reactivestreams-akka"
       Dependencies.akkaStream,
       Dependencies.reactiveStreamsTck,
       Dependencies.scalaTestPlusTestng
-    )
-  )
+    ))
 
 lazy val reactivestreamspekko = (project in file("elastic4s-reactivestreams-pekko"))
   .dependsOn(core, testkit % "test", jackson % "test")
@@ -266,8 +267,7 @@ lazy val reactivestreamspekko = (project in file("elastic4s-reactivestreams-pekk
       Dependencies.pekkoStream,
       Dependencies.reactiveStreamsTck,
       Dependencies.scalaTestPlusTestng
-    )
-  )
+    ))
 
 lazy val akkastreams = (project in file("elastic4s-streams-akka"))
   .dependsOn(core, testkit % "test", jackson % "test")
@@ -286,9 +286,12 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
   .settings(name := "elastic4s-json-jackson")
   .settings(scala3Settings)
   .settings(
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude("org.scala-lang", "scala-library")
+    libraryDependencies += "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion,
+    libraryDependencies += "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion,
+    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude (
+      "org.scala-lang",
+      "scala-library"
+    )
   )
 
 lazy val circe = (project in file("elastic4s-json-circe"))
@@ -336,7 +339,9 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-akka")
-  .settings(scala2Settings) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
+  .settings(
+    scala2Settings
+  ) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream))
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
@@ -351,7 +356,6 @@ lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(http4sClient, http4sEmberClient % Test))
 
-
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")
   .dependsOn(core, jackson, testkit % Test)
@@ -361,14 +365,17 @@ lazy val tests = (project in file("elastic4s-tests"))
     libraryDependencies ++= Seq(
       commonsIo,
       mockitoCore,
-      "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % Test,
-      "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % Test,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % Test exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.24.2" % Test,
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.2" % Test,
-      "org.apache.logging.log4j" % "log4j-core" % "2.24.2" % Test
+      "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion % Test,
+      "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion % Test,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % Test exclude (
+        "org.scala-lang",
+        "scala-library"
+      ),
+      "org.apache.logging.log4j"      % "log4j-api"            % "2.24.2"       % Test,
+      "org.apache.logging.log4j"      % "log4j-slf4j-impl"     % "2.24.2"       % Test,
+      "org.apache.logging.log4j"      % "log4j-core"           % "2.24.2"       % Test
     ),
-    Test / fork := false,
-    Test / parallelExecution := false,
+    Test / fork               := false,
+    Test / parallelExecution  := false,
     Test / testForkedParallel := false
   )

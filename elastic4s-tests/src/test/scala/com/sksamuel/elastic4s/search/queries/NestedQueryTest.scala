@@ -26,31 +26,33 @@ class NestedQueryTest extends AnyWordSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("nested") fields(
-        "name" -> "usa",
+      indexInto("nested") fields (
+        "name"   -> "usa",
         "states" -> Seq(
           Map(
-            "name" -> "Montana",
+            "name"    -> "Montana",
             "capital" -> "Helena",
-            "entry" -> 1889
-          ), Map(
-            "name" -> "South Dakota",
+            "entry"   -> 1889
+          ),
+          Map(
+            "name"    -> "South Dakota",
             "capital" -> "Pierre",
-            "entry" -> 1889
+            "entry"   -> 1889
           )
         )
       ),
-      indexInto("nested") fields(
-        "name" -> "fictional usa",
+      indexInto("nested") fields (
+        "name"   -> "fictional usa",
         "states" -> Seq(
           Map(
-            "name" -> "Old Jersey",
+            "name"    -> "Old Jersey",
             "capital" -> "Trenton",
-            "entry" -> 1889
-          ), Map(
-            "name" -> "Montana",
+            "entry"   -> 1889
+          ),
+          Map(
+            "name"    -> "Montana",
             "capital" -> "Helena",
-            "entry" -> 1567
+            "entry"   -> 1567
           )
         )
       )

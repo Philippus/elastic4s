@@ -18,35 +18,36 @@ object ClusterStatsResponse {
   case class Store(@JsonProperty("size_in_bytes") sizeInBytes: Long, size: String)
 
   case class FieldData(
-                        @JsonProperty("memory_size") memorySize: String,
-                        @JsonProperty("memory_size_in_bytes") memorySizeInBytes: Long,
-                        @JsonProperty("evictions") evictions: Long
-                      )
+      @JsonProperty("memory_size") memorySize: String,
+      @JsonProperty("memory_size_in_bytes") memorySizeInBytes: Long,
+      @JsonProperty("evictions") evictions: Long
+  )
 
   case class QueryCache(
-                         @JsonProperty("memory_size") memory_size: String,
-                         @JsonProperty("memory_size_in_bytes") memorySizeInBytes: Long,
-                         @JsonProperty("total_count") totalTount: Long,
-                         @JsonProperty("hit_count") hitCount: Long,
-                         @JsonProperty("miss_count") missCount: Long,
-                         @JsonProperty("cache_size") cacheSize: Long,
-                         @JsonProperty("cache_count") cacheCount: Long,
-                         @JsonProperty("evictions") evictions: Long
-                       )
+      @JsonProperty("memory_size") memory_size: String,
+      @JsonProperty("memory_size_in_bytes") memorySizeInBytes: Long,
+      @JsonProperty("total_count") totalTount: Long,
+      @JsonProperty("hit_count") hitCount: Long,
+      @JsonProperty("miss_count") missCount: Long,
+      @JsonProperty("cache_size") cacheSize: Long,
+      @JsonProperty("cache_count") cacheCount: Long,
+      @JsonProperty("evictions") evictions: Long
+  )
 
-  case class Indices(count: Int,
-                     shards: Shards,
-                     docs: Docs,
-                     store: Store,
-                     @JsonProperty("fielddata") fieldData: FieldData,
-                     @JsonProperty("query_cache") queryCache: QueryCache
-                    )
+  case class Indices(
+      count: Int,
+      shards: Shards,
+      docs: Docs,
+      store: Store,
+      @JsonProperty("fielddata") fieldData: FieldData,
+      @JsonProperty("query_cache") queryCache: QueryCache
+  )
 }
 
-case class ClusterStatsResponse(@JsonProperty("cluster_name") clusterName: String,
-                                @JsonProperty("cluster_uuid") clusterUUID: String,
-                                @JsonProperty("timestamp") timestamp: Long,
-                                @JsonProperty("status") status: String,
-                                @JsonProperty("indices") indices: Indices)
-
-
+case class ClusterStatsResponse(
+    @JsonProperty("cluster_name") clusterName: String,
+    @JsonProperty("cluster_uuid") clusterUUID: String,
+    @JsonProperty("timestamp") timestamp: Long,
+    @JsonProperty("status") status: String,
+    @JsonProperty("indices") indices: Indices
+)

@@ -2,7 +2,13 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.script.Script
 
-case class RuntimeMapping(field: String, `type`: String, format: Option[String] = None, script: Option[Script] = None, fields: Seq[RuntimeMapping.Field] = Seq.empty)
+case class RuntimeMapping(
+    field: String,
+    `type`: String,
+    format: Option[String] = None,
+    script: Option[Script] = None,
+    fields: Seq[RuntimeMapping.Field] = Seq.empty
+)
 
 object RuntimeMapping {
   def apply(field: String, `type`: String, script: Script): RuntimeMapping =

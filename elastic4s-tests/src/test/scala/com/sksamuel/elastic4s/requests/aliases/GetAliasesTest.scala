@@ -37,12 +37,12 @@ class GetAliasesTest extends AnyFunSuite with Matchers with DockerTests {
       getAliases("feed*", Nil)
     }.await.result shouldBe IndexAliases(
       Map(
-        Index("feed_1_22222223") -> Nil,
-        Index("feed_1_2222222345") -> Nil,
-        Index("feed_1_222222234") -> Nil,
-        Index("feed_1_1537175433991") -> List(Alias("feed_1_sync")),
+        Index("feed_1_22222223")          -> Nil,
+        Index("feed_1_2222222345")        -> Nil,
+        Index("feed_1_222222234")         -> Nil,
+        Index("feed_1_1537175433991")     -> List(Alias("feed_1_sync")),
         Index("feed_11759_1533130917711") -> List(Alias("feed_11759_sync")),
-        Index("feed_1_2222222") -> Nil
+        Index("feed_1_2222222")           -> Nil
       )
     )
   }

@@ -37,10 +37,10 @@ class ClusterStateTest extends AnyWordSpec with Matchers with DockerTests {
       state.masterNode should not be null
       state.metadata.get.clusterUuid should not be null
 
-      val indexMetadata = state.metadata.flatMap(m => m.indices.headOption).map(_._2).getOrElse(Index("closed", Seq.empty))
+      val indexMetadata =
+        state.metadata.flatMap(m => m.indices.headOption).map(_._2).getOrElse(Index("closed", Seq.empty))
 
       indexMetadata should be(Index("open", Seq.empty))
     }
   }
 }
-

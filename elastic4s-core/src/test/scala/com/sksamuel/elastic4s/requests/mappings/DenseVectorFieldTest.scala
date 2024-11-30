@@ -2,13 +2,20 @@ package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.fields.DenseVectorField._
 import com.sksamuel.elastic4s.ElasticApi
-import com.sksamuel.elastic4s.fields.{Cosine, DenseVectorField, DenseVectorIndexOptions, DotProduct, L2Norm, MaxInnerProduct}
+import com.sksamuel.elastic4s.fields.{
+  Cosine,
+  DenseVectorField,
+  DenseVectorIndexOptions,
+  DotProduct,
+  L2Norm,
+  MaxInnerProduct
+}
 import com.sksamuel.elastic4s.handlers.fields.DenseVectorFieldBuilderFn
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
-  private val denseVectorIndexOptions = DenseVectorIndexOptions(Int8Hnsw, Some(10), Some(100), Some(1.0f))
+  private val denseVectorIndexOptions = DenseVectorIndexOptions(Int8Hnsw, Some(10), Some(100), Some(1.0F))
 
   "A DenseVectorField" should "support dims property" in {
     val field = DenseVectorField(name = "myfield").dims(3)
@@ -35,19 +42,34 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
   }
 
   it should "not set similarity or indexOptions when index = false" in {
-    val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(false), indexOptions = Some(denseVectorIndexOptions))
+    val field = DenseVectorField(
+      name = "myfield",
+      dims = Some(3),
+      index = Some(false),
+      indexOptions = Some(denseVectorIndexOptions)
+    )
     DenseVectorFieldBuilderFn.build(field).string shouldBe
       """{"type":"dense_vector","dims":3,"index":false}"""
   }
 
   it should "support indexOptions property" in {
-    val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(true), indexOptions = Some(denseVectorIndexOptions))
+    val field = DenseVectorField(
+      name = "myfield",
+      dims = Some(3),
+      index = Some(true),
+      indexOptions = Some(denseVectorIndexOptions)
+    )
     DenseVectorFieldBuilderFn.build(field).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
   }
 
   it should "support all index options types and only set m, efConstruction and confidenceInterval when applicable" in {
-    val field = DenseVectorField(name = "myfield", dims = Some(3), index = Some(true), indexOptions = Some(denseVectorIndexOptions))
+    val field = DenseVectorField(
+      name = "myfield",
+      dims = Some(3),
+      index = Some(true),
+      indexOptions = Some(denseVectorIndexOptions)
+    )
 
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = Hnsw))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"hnsw","m":10,"ef_construction":100}}"""

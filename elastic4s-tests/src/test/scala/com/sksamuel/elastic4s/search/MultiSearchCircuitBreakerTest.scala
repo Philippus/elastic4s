@@ -8,7 +8,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class MultiSearchCircuitBreakerTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with DockerTests
     with Matchers
     with BeforeAndAfterAll {
@@ -21,7 +21,7 @@ class MultiSearchCircuitBreakerTest
     }
 
   "a multi search request" should "return an error when the circuit breaker is triggered" in {
-    val request = multi(search("_all"))
+    val request  = multi(search("_all"))
     val response = client.execute(request).await
     response.isError shouldBe true
     response.status shouldEqual 429

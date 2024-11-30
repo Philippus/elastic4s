@@ -7,36 +7,40 @@ case class MoreLikeThisItem(ref: DocumentRef, routing: Option[String] = None)
 object MoreLikeThisItem {
 
   @deprecated("types are deprecated in 7.0", "7.0")
-  def apply(index: String, `type`: String, id: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, `type`, id))
+  def apply(index: String, `type`: String, id: String): MoreLikeThisItem =
+    MoreLikeThisItem(DocumentRef(index, `type`, id))
 
   @deprecated("types are deprecated in 7.0", "7.0")
-  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
+  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem =
+    MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
 
   def apply(index: String, id: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, id))
 }
 
 case class ArtificialDocument(index: String, doc: String, routing: Option[String] = None)
 
-case class MoreLikeThisQuery(fields: Seq[String],
-                             likeTexts: Seq[String] = Nil,
-                             likeDocs: Seq[MoreLikeThisItem] = Nil,
-                             analyzer: Option[String] = None,
-                             artificialDocs: Seq[ArtificialDocument] = Nil,
-                             boost: Option[Double] = None,
-                             boostTerms: Option[Double] = None,
-                             failOnUnsupportedField: Option[Boolean] = None,
-                             include: Option[Boolean] = None,
-                             minDocFreq: Option[Int] = None,
-                             maxDocFreq: Option[Int] = None,
-                             minWordLength: Option[Int] = None,
-                             maxWordLength: Option[Int] = None,
-                             minTermFreq: Option[Int] = None,
-                             maxQueryTerms: Option[Int] = None,
-                             minShouldMatch: Option[String] = None,
-                             unlikeTexts: Seq[String] = Nil,
-                             unlikeDocs: Seq[MoreLikeThisItem] = Nil,
-                             stopWords: Seq[String] = Nil,
-                             queryName: Option[String] = None) extends Query {
+case class MoreLikeThisQuery(
+    fields: Seq[String],
+    likeTexts: Seq[String] = Nil,
+    likeDocs: Seq[MoreLikeThisItem] = Nil,
+    analyzer: Option[String] = None,
+    artificialDocs: Seq[ArtificialDocument] = Nil,
+    boost: Option[Double] = None,
+    boostTerms: Option[Double] = None,
+    failOnUnsupportedField: Option[Boolean] = None,
+    include: Option[Boolean] = None,
+    minDocFreq: Option[Int] = None,
+    maxDocFreq: Option[Int] = None,
+    minWordLength: Option[Int] = None,
+    maxWordLength: Option[Int] = None,
+    minTermFreq: Option[Int] = None,
+    maxQueryTerms: Option[Int] = None,
+    minShouldMatch: Option[String] = None,
+    unlikeTexts: Seq[String] = Nil,
+    unlikeDocs: Seq[MoreLikeThisItem] = Nil,
+    stopWords: Seq[String] = Nil,
+    queryName: Option[String] = None
+) extends Query {
 
   def analyzer(analyzer: String): MoreLikeThisQuery = copy(analyzer = Some(analyzer))
 

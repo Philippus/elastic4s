@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.akka
 
-
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -11,7 +10,7 @@ class DefaultBlacklistTest extends AnyWordSpec with Matchers {
 
   val minDuration = 1 second
   val maxDuration = 10 seconds
-  val host = "elastic.test"
+  val host        = "elastic.test"
 
   "DefaultBlacklist" should {
 

@@ -13,15 +13,17 @@ package object playjson {
 
   @implicitNotFound("No Reads for type ${T} found. Bring an implicit Reads[T] instance in scope")
   implicit def playJsonHitReader[T](implicit r: Reads[T]): HitReader[T] =
-    (hit: Hit) => Try {
-      Json.parse(hit.sourceAsString).as[T]
-    }
+    (hit: Hit) =>
+      Try {
+        Json.parse(hit.sourceAsString).as[T]
+      }
 
   @implicitNotFound("No Reads for type ${T} found. Bring an implicit Reads[T] instance in scope")
   implicit def playJsonAggReader[T](implicit r: Reads[T]): AggReader[T] =
-    (json: String) => Try {
-      Json.parse(json).as[T]
-    }
+    (json: String) =>
+      Try {
+        Json.parse(json).as[T]
+      }
 
   @implicitNotFound("No Writes for type ${T} found. Bring an implicit Writes[T] instance in scope")
   implicit def playJsonParamSerializer[T](implicit w: Writes[T]): ParamSerializer[T] =

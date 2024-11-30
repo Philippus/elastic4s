@@ -8,28 +8,29 @@ import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
-case class UpdateRequest(index: Index,
-                         id: String,
-                         detectNoop: Option[Boolean] = None,
-                         docAsUpsert: Option[Boolean] = None,
-                         fetchSource: Option[FetchSourceContext] = None,
-                         parent: Option[String] = None,
-                         retryOnConflict: Option[Int] = None,
-                         refresh: Option[RefreshPolicy] = None,
-                         routing: Option[String] = None,
-                         script: Option[Script] = None,
-                         scriptedUpsert: Option[Boolean] = None,
-                         timeout: Option[Duration] = None,
-                         version: Option[Long] = None,
-                         ifSeqNo: Option[Long] = None,
-                         ifPrimaryTerm: Option[Long] = None,
-                         versionType: Option[String] = None,
-                         waitForActiveShards: Option[Int] = None,
-                         upsertSource: Option[String] = None,
-                         upsertFields: Map[String, Any] = Map.empty,
-                         documentFields: Map[String, Any] = Map.empty,
-                         documentSource: Option[String] = None)
-  extends BulkCompatibleRequest {
+case class UpdateRequest(
+    index: Index,
+    id: String,
+    detectNoop: Option[Boolean] = None,
+    docAsUpsert: Option[Boolean] = None,
+    fetchSource: Option[FetchSourceContext] = None,
+    parent: Option[String] = None,
+    retryOnConflict: Option[Int] = None,
+    refresh: Option[RefreshPolicy] = None,
+    routing: Option[String] = None,
+    script: Option[Script] = None,
+    scriptedUpsert: Option[Boolean] = None,
+    timeout: Option[Duration] = None,
+    version: Option[Long] = None,
+    ifSeqNo: Option[Long] = None,
+    ifPrimaryTerm: Option[Long] = None,
+    versionType: Option[String] = None,
+    waitForActiveShards: Option[Int] = None,
+    upsertSource: Option[String] = None,
+    upsertFields: Map[String, Any] = Map.empty,
+    documentFields: Map[String, Any] = Map.empty,
+    documentSource: Option[String] = None
+) extends BulkCompatibleRequest {
   require(index != null, "index must not be null or empty")
   require(id.nonEmpty, "id must not be null or empty")
 
@@ -38,10 +39,10 @@ case class UpdateRequest(index: Index,
 
   // Sets the object to use for updates when a script is not specified.
   def doc[T](t: T)(implicit indexable: Indexable[T]): UpdateRequest = doc(indexable.json(t))
-  def doc(doc: String): UpdateRequest = copy(documentSource = doc.some)
+  def doc(doc: String): UpdateRequest                               = copy(documentSource = doc.some)
 
   // Sets the fields to use for updates when a script is not specified.
-  def doc(field: (String, Any)): UpdateRequest = doc(Map(field))
+  def doc(field: (String, Any)): UpdateRequest   = doc(Map(field))
   def doc(fields: (String, Any)*): UpdateRequest = doc(fields.toMap)
 
   // Sets the fields to use for updates when a script is not specified.
@@ -51,7 +52,7 @@ case class UpdateRequest(index: Index,
   def doc(map: Map[String, Any]): UpdateRequest = copy(documentFields = map)
 
   // Sets the field to use for updates when a script is not specified.
-  //def doc(value: FieldValue): UpdateDefinition = copy(documentSource = Seq(value))
+  // def doc(value: FieldValue): UpdateDefinition = copy(documentSource = Seq(value))
 
   def docAsUpsert(json: String): UpdateRequest = doc(json).copy(docAsUpsert = true.some)
 
@@ -59,7 +60,7 @@ case class UpdateRequest(index: Index,
   def docAsUpsert[T: Indexable](t: T): UpdateRequest = doc(t).copy(docAsUpsert = true.some)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
-  def docAsUpsert(field: (String, Any)): UpdateRequest = docAsUpsert(Map(field))
+  def docAsUpsert(field: (String, Any)): UpdateRequest   = docAsUpsert(Map(field))
   def docAsUpsert(fields: (String, Any)*): UpdateRequest = docAsUpsert(fields.toMap)
 
   // Uses this document as both the update value and for creating a new doc if the doc does not already exist
@@ -81,7 +82,7 @@ case class UpdateRequest(index: Index,
   def routing(routing: String): UpdateRequest = copy(routing = routing.some)
 
   def refresh(refresh: RefreshPolicy): UpdateRequest = copy(refresh = refresh.some)
-  def refreshImmediately: UpdateRequest = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: UpdateRequest              = refresh(RefreshPolicy.IMMEDIATE)
 
   def retryOnConflict(retryOnConflict: Int): UpdateRequest = copy(retryOnConflict = retryOnConflict.some)
 
@@ -91,7 +92,7 @@ case class UpdateRequest(index: Index,
   // If the document does not already exist, the script will be executed instead.
   def scriptedUpsert(upsert: Boolean): UpdateRequest = copy(scriptedUpsert = upsert.some)
 
-  def source[T: Indexable](t: T): UpdateRequest = doc(t)
+  def source[T: Indexable](t: T): UpdateRequest         = doc(t)
   def sourceAsUpsert[T: Indexable](t: T): UpdateRequest = docAsUpsert(t)
 
   def timeout(duration: FiniteDuration): UpdateRequest = copy(timeout = duration.some)
@@ -109,12 +110,12 @@ case class UpdateRequest(index: Index,
   def upsert(iterable: Iterable[(String, Any)]): UpdateRequest = upsert(iterable.toMap)
 
   def upsert[T](t: T)(implicit indexable: Indexable[T]): UpdateRequest = upsert(indexable.json(t))
-  def upsert(doc: String): UpdateRequest = copy(upsertSource = doc.some)
+  def upsert(doc: String): UpdateRequest                               = copy(upsertSource = doc.some)
 
-  def versionType(versionType: String): UpdateRequest = copy(versionType = versionType.some)
-  def version(version: Long): UpdateRequest = copy(version = version.some)
-  def ifSeqNo(ifSeqNo: Long): UpdateRequest = copy(ifSeqNo = ifSeqNo.some)
-  def ifPrimaryTerm(ifPrimaryTerm: Long): UpdateRequest =
+  def versionType(versionType: String): UpdateRequest              = copy(versionType = versionType.some)
+  def version(version: Long): UpdateRequest                        = copy(version = version.some)
+  def ifSeqNo(ifSeqNo: Long): UpdateRequest                        = copy(ifSeqNo = ifSeqNo.some)
+  def ifPrimaryTerm(ifPrimaryTerm: Long): UpdateRequest            =
     copy(ifPrimaryTerm = ifPrimaryTerm.some)
   def waitForActiveShards(waitForActiveShards: Int): UpdateRequest =
     copy(waitForActiveShards = waitForActiveShards.some)

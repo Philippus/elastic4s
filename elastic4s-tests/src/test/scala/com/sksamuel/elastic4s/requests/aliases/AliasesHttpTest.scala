@@ -98,7 +98,10 @@ class AliasesHttpTest extends AnyWordSpec with Matchers with DockerTests {
     "support multiple indexes where many are found" in {
       client.execute {
         getAliases(Seq("mountains", "beaches"), Nil)
-      }.await.result shouldBe IndexAliases(Map(Index("beaches") -> List(Alias("beaches_alias")), Index("mountains") -> Nil))
+      }.await.result shouldBe IndexAliases(Map(
+        Index("beaches")   -> List(Alias("beaches_alias")),
+        Index("mountains") -> Nil
+      ))
     }
     "return all aliases / all indexes when nothing is specified" in {
 

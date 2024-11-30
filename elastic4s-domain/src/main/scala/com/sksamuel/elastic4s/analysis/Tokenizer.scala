@@ -7,8 +7,7 @@ trait Tokenizer {
   def build: XContentBuilder
 }
 
-case class UaxUrlEmailTokenizer(override val name: String,
-                                maxTokenLength: Int = 255) extends Tokenizer {
+case class UaxUrlEmailTokenizer(override val name: String, maxTokenLength: Int = 255) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -20,8 +19,7 @@ case class UaxUrlEmailTokenizer(override val name: String,
   def maxTokenLength(maxTokenLength: Int): UaxUrlEmailTokenizer = copy(maxTokenLength = maxTokenLength)
 }
 
-case class CharGroupTokenizer(override val name: String,
-                              tokenizeOnChars: List[String]) extends Tokenizer {
+case class CharGroupTokenizer(override val name: String, tokenizeOnChars: List[String]) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -31,9 +29,7 @@ case class CharGroupTokenizer(override val name: String,
   }
 }
 
-
-case class StandardTokenizer(override val name: String,
-                             maxTokenLength: Int = 255) extends Tokenizer {
+case class StandardTokenizer(override val name: String, maxTokenLength: Int = 255) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -45,9 +41,8 @@ case class StandardTokenizer(override val name: String,
   def maxTokenLength(maxTokenLength: Int): StandardTokenizer = copy(maxTokenLength = maxTokenLength)
 }
 
-case class PatternTokenizer(override val name: String,
-                            pattern: String = "\\W+",
-                            flags: String = "", group: Int = -1) extends Tokenizer {
+case class PatternTokenizer(override val name: String, pattern: String = "\\W+", flags: String = "", group: Int = -1)
+    extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -61,12 +56,11 @@ case class PatternTokenizer(override val name: String,
   }
 
   def pattern(pattern: String): PatternTokenizer = copy(pattern = pattern)
-  def flags(flags: String): PatternTokenizer = copy(flags = flags)
-  def group(group: Int): PatternTokenizer = copy(group = group)
+  def flags(flags: String): PatternTokenizer     = copy(flags = flags)
+  def group(group: Int): PatternTokenizer        = copy(group = group)
 }
 
-case class KeywordTokenizer(override val name: String,
-                            bufferSize: Int = 256) extends Tokenizer {
+case class KeywordTokenizer(override val name: String, bufferSize: Int = 256) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -77,10 +71,12 @@ case class KeywordTokenizer(override val name: String,
   def bufferSize(bufferSize: Int): KeywordTokenizer = copy(bufferSize = bufferSize)
 }
 
-case class NGramTokenizer(override val name: String,
-                          minGram: Int = 1,
-                          maxGram: Int = 2,
-                          tokenChars: Iterable[String] = Nil) extends Tokenizer {
+case class NGramTokenizer(
+    override val name: String,
+    minGram: Int = 1,
+    maxGram: Int = 2,
+    tokenChars: Iterable[String] = Nil
+) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -92,15 +88,17 @@ case class NGramTokenizer(override val name: String,
     b.endObject()
   }
 
-  def minMaxGrams(min: Int, max: Int): NGramTokenizer = copy(minGram = min, maxGram = max)
-  def tokenChars(tokenChars: Iterable[String]): NGramTokenizer = copy(tokenChars = tokenChars)
+  def minMaxGrams(min: Int, max: Int): NGramTokenizer              = copy(minGram = min, maxGram = max)
+  def tokenChars(tokenChars: Iterable[String]): NGramTokenizer     = copy(tokenChars = tokenChars)
   def tokenChars(tokenChar: String, rest: String*): NGramTokenizer = copy(tokenChars = tokenChar +: rest)
 }
 
-case class EdgeNGramTokenizer(override val name: String,
-                              minGram: Int = 1,
-                              maxGram: Int = 2,
-                              tokenChars: Iterable[String] = Nil) extends Tokenizer {
+case class EdgeNGramTokenizer(
+    override val name: String,
+    minGram: Int = 1,
+    maxGram: Int = 2,
+    tokenChars: Iterable[String] = Nil
+) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -112,17 +110,19 @@ case class EdgeNGramTokenizer(override val name: String,
     b.endObject()
   }
 
-  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenizer = copy(minGram = min, maxGram = max)
-  def tokenChars(tokenChars: Iterable[String]): EdgeNGramTokenizer = copy(tokenChars = tokenChars)
+  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenizer              = copy(minGram = min, maxGram = max)
+  def tokenChars(tokenChars: Iterable[String]): EdgeNGramTokenizer     = copy(tokenChars = tokenChars)
   def tokenChars(tokenChar: String, rest: String*): EdgeNGramTokenizer = copy(tokenChars = tokenChar +: rest)
 }
 
-case class PathHierarchyTokenizer(override val name: String,
-                                  delimiter: Char = '/',
-                                  replacement: Char = '/',
-                                  bufferSize: Int = 1024,
-                                  reverse: Boolean = false,
-                                  skip: Int = 0) extends Tokenizer {
+case class PathHierarchyTokenizer(
+    override val name: String,
+    delimiter: Char = '/',
+    replacement: Char = '/',
+    bufferSize: Int = 1024,
+    reverse: Boolean = false,
+    skip: Int = 0
+) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -136,8 +136,7 @@ case class PathHierarchyTokenizer(override val name: String,
   }
 }
 
-case class WhitespaceTokenizer(override val name: String,
-                               maxTokenLength: Int) extends Tokenizer {
+case class WhitespaceTokenizer(override val name: String, maxTokenLength: Int) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -147,8 +146,7 @@ case class WhitespaceTokenizer(override val name: String,
   }
 }
 
-case class ClassicTokenizer(override val name: String,
-                            maxTokenLength: Int) extends Tokenizer {
+case class ClassicTokenizer(override val name: String, maxTokenLength: Int) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -167,8 +165,7 @@ case class ThaiTokenizer(name: String) extends Tokenizer {
   }
 }
 
-case class ICUTokenizer(override val name: String,
-                        ruleFiles: String) extends Tokenizer {
+case class ICUTokenizer(override val name: String, ruleFiles: String) extends Tokenizer {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -177,4 +174,3 @@ case class ICUTokenizer(override val name: String,
     b.endObject()
   }
 }
-

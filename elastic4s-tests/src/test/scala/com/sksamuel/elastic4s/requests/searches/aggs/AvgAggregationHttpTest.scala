@@ -26,9 +26,9 @@ class AvgAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers 
 
   client.execute(
     bulk(
-      indexInto("avgagg") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("avgagg") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("avgagg") fields("name" -> "Tower of London", "height" -> 169)
+      indexInto("avgagg") fields ("name" -> "Willis Tower", "height"    -> 1244),
+      indexInto("avgagg") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
+      indexInto("avgagg") fields ("name" -> "Tower of London", "height" -> 169)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -41,7 +41,7 @@ class AvgAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers 
         }
       }.await.result
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.avg("agg1")
+      val agg  = resp.aggs.avg("agg1")
       agg.value > 1289 shouldBe true
       agg.value > 1290 shouldBe false
     }

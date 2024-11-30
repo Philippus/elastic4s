@@ -13,7 +13,7 @@ trait CatsEffectInstances {
   implicit def catsEffectExecutor[F[_]: Async]: Executor[F] =
     new CatsEffectExecutor[F]
 
-  //this needs to be at the bottom
+  // this needs to be at the bottom
   implicit val ioExecutor: Executor[IO] = new CatsEffectExecutor[IO]
 }
 

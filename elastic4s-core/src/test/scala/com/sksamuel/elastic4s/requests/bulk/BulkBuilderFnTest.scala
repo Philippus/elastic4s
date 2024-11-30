@@ -69,7 +69,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
   test("bulk content builder should support _source_includes in UpdateRequest") {
     val req = bulk(
       updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
-        .fetchSource(includes = Set("atomicweight","name"), excludes = Set.empty)
+        .fetchSource(includes = Set("atomicweight", "name"), excludes = Set.empty)
     )
 
     handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
@@ -80,7 +80,7 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
   test("bulk content builder should support _source_excludes in UpdateRequest") {
     val req = bulk(
       updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
-        .fetchSource(includes = Set.empty, excludes = Set("atomicweight","name"))
+        .fetchSource(includes = Set.empty, excludes = Set("atomicweight", "name"))
     )
 
     handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe

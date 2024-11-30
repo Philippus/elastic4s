@@ -1,6 +1,20 @@
 package com.sksamuel.elastic4s.handlers.cluster
 
-import com.sksamuel.elastic4s.requests.cluster.{AddRemoteClusterResponse, AddRemoteClusterSettingsRequest, ClusterHealthRequest, ClusterHealthResponse, ClusterSettingsRequest, ClusterSettingsResponse, ClusterStateRequest, ClusterStateResponse, ClusterStatsRequest, ClusterStatsResponse, GetClusterSettingsRequest, RemoteClusterInfo, RemoteClusterInfoRequest}
+import com.sksamuel.elastic4s.requests.cluster.{
+  AddRemoteClusterResponse,
+  AddRemoteClusterSettingsRequest,
+  ClusterHealthRequest,
+  ClusterHealthResponse,
+  ClusterSettingsRequest,
+  ClusterSettingsResponse,
+  ClusterStateRequest,
+  ClusterStateResponse,
+  ClusterStatsRequest,
+  ClusterStatsResponse,
+  GetClusterSettingsRequest,
+  RemoteClusterInfo,
+  RemoteClusterInfoRequest
+}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait ClusterHandlers {
@@ -34,12 +48,12 @@ trait ClusterHandlers {
   implicit object ClusterSettingsHandler extends Handler[ClusterSettingsRequest, ClusterSettingsResponse] {
     override def build(request: ClusterSettingsRequest): ElasticRequest = {
       val builder = ClusterSettingsBodyBuilderFn(request)
-      val entity = HttpEntity(builder.string, "application/json")
+      val entity  = HttpEntity(builder.string, "application/json")
       ElasticRequest("PUT", "/_cluster/settings", Map("flat_settings" -> true), entity)
     }
   }
 
-  implicit val nodeUsageHandler: NodeUsageHandler.type = NodeUsageHandler
+  implicit val nodeUsageHandler: NodeUsageHandler.type           = NodeUsageHandler
   implicit val nodeHotThreadsHandler: NodeHotThreadsHandler.type = NodeHotThreadsHandler
 
   implicit object ClusterHealthHandler extends Handler[ClusterHealthRequest, ClusterHealthResponse] {
@@ -66,7 +80,7 @@ trait ClusterHandlers {
 
   implicit object ClusterStatsHandler extends Handler[ClusterStatsRequest, ClusterStatsResponse] {
 
-    private val Method = "GET"
+    private val Method   = "GET"
     private val Endpoint = "/_cluster/stats?human&pretty"
 
     override def build(t: ClusterStatsRequest): ElasticRequest = {
@@ -82,7 +96,8 @@ trait ClusterHandlers {
     }
   }
 
-  implicit object AddRemoteClusterSettingsHandler extends Handler[AddRemoteClusterSettingsRequest, AddRemoteClusterResponse] {
+  implicit object AddRemoteClusterSettingsHandler
+      extends Handler[AddRemoteClusterSettingsRequest, AddRemoteClusterResponse] {
     override def build(request: AddRemoteClusterSettingsRequest): ElasticRequest = {
       ClusterSettingsHandler.build(request.settingsRequest)
     }

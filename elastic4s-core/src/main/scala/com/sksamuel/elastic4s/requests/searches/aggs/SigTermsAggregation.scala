@@ -4,21 +4,22 @@ import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.requests.searches.{IncludeExclude, IncludePartition}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class SigTermsAggregation(name: String,
-                               minDocCount: Option[Long] = None,
-                               executionHint: Option[String] = None,
-                               size: Option[Int] = None,
-                               includeExclude: Option[IncludeExclude] = None,
-                               includePartition: Option[IncludePartition] = None,
-                               field: Option[String] = None,
-                               shardMinDocCount: Option[Long] = None,
-                               shardSize: Option[Int] = None,
-                               backgroundFilter: Option[Query] = None,
-                               subaggs: Seq[AbstractAggregation] = Nil,
-                               metadata: Map[String, AnyRef] = Map.empty,
-                               heuristic: Option[(String, Map[String, Any])] = None,
-                               filterDuplicateText: Option[Boolean] = None)
-    extends Aggregation {
+case class SigTermsAggregation(
+    name: String,
+    minDocCount: Option[Long] = None,
+    executionHint: Option[String] = None,
+    size: Option[Int] = None,
+    includeExclude: Option[IncludeExclude] = None,
+    includePartition: Option[IncludePartition] = None,
+    field: Option[String] = None,
+    shardMinDocCount: Option[Long] = None,
+    shardSize: Option[Int] = None,
+    backgroundFilter: Option[Query] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty,
+    heuristic: Option[(String, Map[String, Any])] = None,
+    filterDuplicateText: Option[Boolean] = None
+) extends Aggregation {
 
   type T = SigTermsAggregation
 

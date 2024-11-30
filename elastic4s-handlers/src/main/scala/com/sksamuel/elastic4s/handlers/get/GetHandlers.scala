@@ -4,7 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextQueryParameterFn
 import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpString}
 import com.sksamuel.elastic4s.requests.get.{GetRequest, GetResponse, MultiGetRequest, MultiGetResponse}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{
+  ElasticError,
+  ElasticRequest,
+  ElasticUrlEncoder,
+  Handler,
+  HttpEntity,
+  HttpResponse,
+  ResponseHandler
+}
 
 trait GetHandlers {
 
@@ -13,7 +21,7 @@ trait GetHandlers {
     override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
         case 404 | 500 => sys.error(response.toString)
-        case _ => Right(ResponseHandler.fromResponse[MultiGetResponse](response))
+        case _         => Right(ResponseHandler.fromResponse[MultiGetResponse](response))
       }
     }
 
@@ -47,9 +55,9 @@ trait GetHandlers {
         def good = Right(ResponseHandler.fromResponse[GetResponse](response))
 
         response.statusCode match {
-          case 200 => good
+          case 200   => good
           // 404s are odd, can be different document types
-          case 404 =>
+          case 404   =>
             val node = ResponseHandler.fromResponse[JsonNode](response)
             if (node.has("error")) bad(404) else good
           case other => bad(other)

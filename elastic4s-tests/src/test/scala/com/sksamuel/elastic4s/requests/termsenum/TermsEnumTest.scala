@@ -19,13 +19,13 @@ class TermsEnumTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createIndex("test").mapping(
       properties(
-        keywordField("tags"),
+        keywordField("tags")
       )
     )
   }.await
 
   client.execute {
-    indexInto("test") fields(
+    indexInto("test") fields (
       "tags" -> "kibana"
     ) refresh RefreshPolicy.WaitFor
   }.await

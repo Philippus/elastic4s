@@ -24,10 +24,10 @@ class ScriptTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("script") fields("name" -> "south kensington", "line" -> "district"),
-      indexInto("script") fields("name" -> "earls court", "line" -> "district", "zone" -> 2),
-      indexInto("script") fields("name" -> "cockfosters", "line" -> "picadilly"),
-      indexInto("script") fields("name" -> "bank", "line" -> "northern")
+      indexInto("script") fields ("name" -> "south kensington", "line" -> "district"),
+      indexInto("script") fields ("name" -> "earls court", "line"      -> "district", "zone" -> 2),
+      indexInto("script") fields ("name" -> "cockfosters", "line"      -> "picadilly"),
+      indexInto("script") fields ("name" -> "bank", "line"             -> "northern")
     ).refreshImmediately
   }.await
 

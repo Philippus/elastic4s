@@ -25,15 +25,18 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         binaryField("email"),
         floatField("age"),
         geoshapeField("area") tree PrefixTree.Quadtree precision "1m"
-      ) all true analyzer "somefield" dateDetection true dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
+      ) all true analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
     )
     CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_mappings.json")
   }
 
   it should "allow provide mapping properties using rawSource" in {
-    val tweetRawSource = """{"_all": {"enabled": false},"numeric_detection": true,"_boost": {"name": "myboost","null_value": 1.2},"_size": {"enabled": true},"properties": {"name": {"type": "geo_point"},"content": {"type": "date","null_value": "no content"}},"_meta": {"class": "com.sksamuel.User"}}"""
-    val req = createIndex("users").source(tweetRawSource)
-    index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_raw_source.json")
+    val tweetRawSource =
+      """{"_all": {"enabled": false},"numeric_detection": true,"_boost": {"name": "myboost","null_value": 1.2},"_size": {"enabled": true},"properties": {"name": {"type": "geo_point"},"content": {"type": "date","null_value": "no content"}},"_meta": {"class": "com.sksamuel.User"}}"""
+    val req            = createIndex("users").source(tweetRawSource)
+    index.CreateIndexContentBuilder(req).string should matchJsonResource(
+      "/json/createindex/createindex_raw_source.json"
+    )
   }
 
   it should "support override built in analyzers" in {
@@ -93,7 +96,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
       ),
       CustomAnalyzerDefinition(
         "myAnalyzer5",
-        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation")))
+        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
+      )
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_stop_path.json")
   }
@@ -136,10 +140,15 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
       ),
       CustomAnalyzerDefinition(
         "myAnalyzer5",
-        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation")))
+        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
+      )
     ).normalizers(
       CustomNormalizerDefinition("myNormalizer1", LowercaseTokenFilter),
-      CustomNormalizerDefinition("myNormalizer2", UppercaseTokenFilter, MappingCharFilter("mapping_charfilter2", "x" -> "y"))
+      CustomNormalizerDefinition(
+        "myNormalizer2",
+        UppercaseTokenFilter,
+        MappingCharFilter("mapping_charfilter2", "x" -> "y")
+      )
     )
     CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_analyis2.json")
   }
@@ -171,8 +180,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
       shards 3
       replicas 4
       refreshInterval "5s"
-      indexSetting("compound_on_flush", false)
-      indexSetting("compound_format", 0.5))
+      indexSetting ("compound_on_flush", false)
+      indexSetting ("compound_format", 0.5))
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_settings2.json")
   }
 
@@ -216,7 +225,9 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         )
       )
     )
-    index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/mapping_multi_field_type_1.json")
+    index.CreateIndexContentBuilder(req).string should matchJsonResource(
+      "/json/createindex/mapping_multi_field_type_1.json"
+    )
   }
 
   it should "support copy to a single field" in {
@@ -227,18 +238,22 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
         textField("full_name")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Dynamic
     )
-    index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/mapping_copy_to_single_field.json")
+    index.CreateIndexContentBuilder(req).string should matchJsonResource(
+      "/json/createindex/mapping_copy_to_single_field.json"
+    )
   }
 
   it should "support copy to multiple fields" in {
     val req = createIndex("tweets").mapping(
       mapping(
-        textField("title") copyTo("meta_data", "article_info"),
+        textField("title") copyTo ("meta_data", "article_info"),
         textField("meta_data"),
         textField("article_info")
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Strict
     )
-    index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/mapping_copy_to_multiple_fields.json")
+    index.CreateIndexContentBuilder(req).string should matchJsonResource(
+      "/json/createindex/mapping_copy_to_multiple_fields.json"
+    )
   }
 
   it should "support multi fields" in {
@@ -260,7 +275,9 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
           preserveSeparators false preservePositionIncrements false maxInputLength 10
       ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
     )
-    index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/mapping_completion_type.json")
+    index.CreateIndexContentBuilder(req).string should matchJsonResource(
+      "/json/createindex/mapping_completion_type.json"
+    )
   }
 
 //  it should "support creating parent mappings" in {
@@ -276,7 +293,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
     val source = Source
       .fromInputStream(getClass.getResourceAsStream("/json/createindex/createindex_mappings.json"))
       .mkString
-    val req = createIndex("tweets").source(source)
+    val req    = createIndex("tweets").source(source)
     index.CreateIndexContentBuilder(req)
   }
 

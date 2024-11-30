@@ -38,7 +38,10 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
         "a" -> Field(Some("text")),
         "b" -> Field(Some("keyword")),
         "c" -> Field(Some("long")),
-        "d" -> Field(None, Some(Map("foo" -> Field(None, Some(Map("bar" -> Field(Some("text"))))), "quux" -> Field(Some("text")))))
+        "d" -> Field(
+          None,
+          Some(Map("foo" -> Field(None, Some(Map("bar" -> Field(Some("text"))))), "quux" -> Field(Some("text"))))
+        )
       ))
     }
 
@@ -79,7 +82,7 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
       }
 
       val meta = Map(
-        "foo" -> "bar",
+        "foo"      -> "bar",
         "intvalue" -> 1,
         "mapvalue" -> Map[String, Any]("key" -> "value")
       )
@@ -89,7 +92,7 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
           properties(
             textField("a")
           )
-          .meta(meta)
+            .meta(meta)
         )
       }.await
 

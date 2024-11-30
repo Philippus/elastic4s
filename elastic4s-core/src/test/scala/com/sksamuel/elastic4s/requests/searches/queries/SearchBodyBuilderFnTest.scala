@@ -16,7 +16,7 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
   test("highlight with 'matchedMatchedFields' generates proper 'matched_fields' field as array field.") {
     val request = search("example") highlighting {
       highlight("text")
-      .matchedFields("text", "text.ngram", "text.japanese")
+        .matchedFields("text", "text.ngram", "text.japanese")
     }
     SearchBodyBuilderFn(request).string shouldBe
       """{"highlight":{"fields":{"text":{"matched_fields":["text","text.ngram","text.japanese"]}}}}"""
@@ -57,9 +57,10 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
   }
 
   test("multiple Knn queries") {
-    val multipleKnnDefinition =Seq(
+    val multipleKnnDefinition = Seq(
       Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)),
-      Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4)
+      Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
+    )
 
     val req = search("example") multipleKnn multipleKnnDefinition
 

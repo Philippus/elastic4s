@@ -10,43 +10,45 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.duration.{FiniteDuration, _}
 
-/**
-  *
-  * @param sniffIntervals Sets the interval between consecutive ordinary sniff executions in milliseconds. Will be honoured when
-  *                                  sniffOnFailure is disabled or when there are no failures between consecutive sniff executions.
-  * @param sniffAfterFailureInterval Sets the delay of a sniff execution scheduled after a failure (in milliseconds), when not set,
-  *                                  no sniffing after failure is performed
-  * @param nodeSniffer               Sets the [[org.elasticsearch.client.sniff.NodesSniffer]] to be used to read hosts.
-  *                                  A default instance of [[org.elasticsearch.client.sniff.ElasticsearchNodesSniffer]]
-  *                                  is created when not provided. This method can be used to change the configuration of the
-  *                                  [[org.elasticsearch.client.sniff.ElasticsearchNodesSniffer]],
-  *                                  or to provide a different implementation (e.g. in case hosts need to taken from a different source).
+/** @param sniffIntervals
+  *   Sets the interval between consecutive ordinary sniff executions in milliseconds. Will be honoured when
+  *   sniffOnFailure is disabled or when there are no failures between consecutive sniff executions.
+  * @param sniffAfterFailureInterval
+  *   Sets the delay of a sniff execution scheduled after a failure (in milliseconds), when not set, no sniffing after
+  *   failure is performed
+  * @param nodeSniffer
+  *   Sets the [[org.elasticsearch.client.sniff.NodesSniffer]] to be used to read hosts. A default instance of
+  *   [[org.elasticsearch.client.sniff.ElasticsearchNodesSniffer]] is created when not provided. This method can be used
+  *   to change the configuration of the [[org.elasticsearch.client.sniff.ElasticsearchNodesSniffer]], or to provide a
+  *   different implementation (e.g. in case hosts need to taken from a different source).
   */
-case class SniffingConfiguration(sniffIntervals: FiniteDuration = 5.minutes,
-                                 sniffAfterFailureInterval: Option[FiniteDuration] = Some(1.minute),
-                                 nodeSniffer: Option[NodesSniffer] = None)
+case class SniffingConfiguration(
+    sniffIntervals: FiniteDuration = 5.minutes,
+    sniffAfterFailureInterval: Option[FiniteDuration] = Some(1.minute),
+    nodeSniffer: Option[NodesSniffer] = None
+)
 
 object JavaClientSniffed {
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
-  /**
-    * Creates a new [[com.sksamuel.elastic4s.ElasticClient]] using the elasticsearch Java API rest client
-    * as the underlying client. Optional callbacks can be passed in to configure the client.
-    * Sniffing is added by the [[SniffingConfiguration]]
+  /** Creates a new [[com.sksamuel.elastic4s.ElasticClient]] using the elasticsearch Java API rest client as the
+    * underlying client. Optional callbacks can be passed in to configure the client. Sniffing is added by the
+    * [[SniffingConfiguration]]
     */
   def apply(props: ElasticProperties, sniffingConfiguration: SniffingConfiguration): JavaClient =
     apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback, sniffingConfiguration)
 
-  /**
-    * Creates a new [[com.sksamuel.elastic4s.ElasticClient]] using the elasticsearch Java API rest client
-    * as the underlying client. Optional callbacks can be passed in to configure the client.
-    * Sniffing is added by the [[SniffingConfiguration]]
+  /** Creates a new [[com.sksamuel.elastic4s.ElasticClient]] using the elasticsearch Java API rest client as the
+    * underlying client. Optional callbacks can be passed in to configure the client. Sniffing is added by the
+    * [[SniffingConfiguration]]
     */
-  def apply(props: ElasticProperties,
-            requestConfigCallback: RequestConfigCallback,
-            httpClientConfigCallback: HttpClientConfigCallback,
-            sniffingConfiguration: SniffingConfiguration): JavaClient = {
+  def apply(
+      props: ElasticProperties,
+      requestConfigCallback: RequestConfigCallback,
+      httpClientConfigCallback: HttpClientConfigCallback,
+      sniffingConfiguration: SniffingConfiguration
+  ): JavaClient = {
     val hosts = props.endpoints.map {
       case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
     }

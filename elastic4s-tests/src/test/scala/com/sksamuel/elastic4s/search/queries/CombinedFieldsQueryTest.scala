@@ -16,7 +16,8 @@ class CombinedFieldsQueryTest extends AnyWordSpec with Matchers with DockerTests
 
     def quote(value: String): String = s""""${value}""""
 
-    override def json(t: Game): String = s""" { "name": "${t.name}", "alternatives": [ ${t.alternatives.map(quote).mkString(",")} ] } """
+    override def json(t: Game): String =
+      s""" { "name": "${t.name}", "alternatives": [ ${t.alternatives.map(quote).mkString(",")} ] } """
   }
 
   Try {

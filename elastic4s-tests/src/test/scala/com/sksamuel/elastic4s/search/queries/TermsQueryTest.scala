@@ -6,7 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class TermsQueryTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with DockerTests
     with Matchers {
 
@@ -28,10 +28,10 @@ class TermsQueryTest
 
   client.execute {
     bulk(
-      indexInto("lords") fields ("name" -> "nelson"),
-      indexInto("lords") fields ("name" -> "edmure"),
-      indexInto("lords") fields ("name" -> "umber"),
-      indexInto("lords") fields ("name" -> "byron"),
+      indexInto("lords") fields ("name"               -> "nelson"),
+      indexInto("lords") fields ("name"               -> "edmure"),
+      indexInto("lords") fields ("name"               -> "umber"),
+      indexInto("lords") fields ("name"               -> "byron"),
       indexInto("lordsfanclub") fields ("lordswelike" -> List("nelson", "edmure")) id "lordsAppreciationFanClub"
     ).refresh(RefreshPolicy.Immediate)
   }.await

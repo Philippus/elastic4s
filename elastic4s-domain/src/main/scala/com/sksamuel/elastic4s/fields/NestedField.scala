@@ -5,12 +5,14 @@ import com.sksamuel.elastic4s.ext.OptionImplicits._
 object NestedField {
   val `type`: String = "nested"
 }
-case class NestedField(name: String,
-                       dynamic: Option[String] = None,
-                       enabled: Option[Boolean] = None,
-                       properties: Seq[ElasticField] = Nil,
-                       includeInParent: Option[Boolean] = None,
-                       includeInRoot: Option[Boolean] = None) extends ElasticField {
+case class NestedField(
+    name: String,
+    dynamic: Option[String] = None,
+    enabled: Option[Boolean] = None,
+    properties: Seq[ElasticField] = Nil,
+    includeInParent: Option[Boolean] = None,
+    includeInRoot: Option[Boolean] = None
+) extends ElasticField {
   override def `type`: String = NestedField.`type`
 
   def dynamic(d: Boolean): NestedField = dynamic(d.toString)
@@ -25,6 +27,6 @@ case class NestedField(name: String,
 
   def fields(fields: Iterable[ElasticField]): NestedField = copy(properties = fields.toList)
 
-  def properties(properties: ElasticField*): NestedField = copy(properties = properties.toList)
+  def properties(properties: ElasticField*): NestedField          = copy(properties = properties.toList)
   def properties(properties: Iterable[ElasticField]): NestedField = copy(properties = properties.toList)
 }

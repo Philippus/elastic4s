@@ -5,11 +5,11 @@ case object CreateRole extends RoleAction
 case object UpdateRole extends RoleAction
 
 case class CreateOrUpdateRoleRequest(
-	name: String,
-	action: RoleAction,
-	runAs: Seq[String]=Seq(),
-	clusterPermissions: Seq[String]=Seq(),
-	global: Option[GlobalPrivileges]=None,
-	indices: Seq[IndexPrivileges]=Seq(),
-	applications: Seq[ApplicationPrivileges]=Seq()
+    name: String,
+    action: RoleAction,
+    runAs: Seq[String] = Seq(),
+    clusterPermissions: Seq[String] = Seq(),
+    global: Option[GlobalPrivileges] = None,
+    indices: Seq[IndexPrivileges] = Seq(),
+    applications: Seq[ApplicationPrivileges] = Seq()
 )

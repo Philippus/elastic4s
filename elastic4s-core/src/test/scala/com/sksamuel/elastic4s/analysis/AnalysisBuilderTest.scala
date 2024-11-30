@@ -8,7 +8,12 @@ class AnalysisBuilderTest extends AnyFunSuite with Matchers {
   test("custom analyzers") {
     val analysis = Analysis(
       List(
-        CustomAnalyzer("my_analyzer", "my_uax_tokenizer", List("my_pattern_replace"), List("my_unique_filter", "my_truncate_filter"))
+        CustomAnalyzer(
+          "my_analyzer",
+          "my_uax_tokenizer",
+          List("my_pattern_replace"),
+          List("my_unique_filter", "my_truncate_filter")
+        )
       ),
       tokenizers = List(
         UaxUrlEmailTokenizer("my_uax_tokenizer")

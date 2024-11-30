@@ -25,9 +25,9 @@ class WeightedAvgAggregationHttpTest extends AnyFreeSpec with DockerTests with M
 
   client.execute(
     bulk(
-      indexInto("weightedavgagg") fields("grade" -> 90.0, "weight" -> 3.0),
-      indexInto("weightedavgagg") fields("grade" -> 72.0, "weight" -> 7.0),
-      indexInto("weightedavgagg") fields("grade" -> 19.0, "weight" -> 12.0)
+      indexInto("weightedavgagg") fields ("grade" -> 90.0, "weight" -> 3.0),
+      indexInto("weightedavgagg") fields ("grade" -> 72.0, "weight" -> 7.0),
+      indexInto("weightedavgagg") fields ("grade" -> 19.0, "weight" -> 12.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -40,7 +40,7 @@ class WeightedAvgAggregationHttpTest extends AnyFreeSpec with DockerTests with M
         }
       }.await.result
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.avg("agg1")
+      val agg  = resp.aggs.avg("agg1")
       agg.value > 45 shouldBe true
       agg.value > 46 shouldBe false
     }

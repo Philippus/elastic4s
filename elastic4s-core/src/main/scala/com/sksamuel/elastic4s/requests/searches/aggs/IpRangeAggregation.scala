@@ -3,19 +3,20 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class IpRangeAggregation(name: String,
-                              field: Option[String] = None,
-                              format: Option[String] = None,
-                              missing: Option[AnyRef] = None,
-                              keyed: Option[Boolean] = None,
-                              script: Option[Script] = None,
-                              ranges: Seq[(Option[String], String, String)] = Nil,
-                              maskRanges: Seq[(Option[String], String)] = Nil,
-                              unboundedFrom: Option[(Option[String], String)] = None,
-                              unboundedTo: Option[(Option[String], String)] = None,
-                              subaggs: Seq[AbstractAggregation] = Nil,
-                              metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class IpRangeAggregation(
+    name: String,
+    field: Option[String] = None,
+    format: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    keyed: Option[Boolean] = None,
+    script: Option[Script] = None,
+    ranges: Seq[(Option[String], String, String)] = Nil,
+    maskRanges: Seq[(Option[String], String)] = Nil,
+    unboundedFrom: Option[(Option[String], String)] = None,
+    unboundedTo: Option[(Option[String], String)] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = IpRangeAggregation
 

@@ -28,15 +28,14 @@ trait IndexHandlers {
       val (method, endpoint) = request.id match {
         case Some(id) =>
           "PUT" -> s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc/${ElasticUrlEncoder.encodeUrlFragment(id.toString)}"
-        case None =>
+        case None     =>
           "POST" -> s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]
-      request.createOnly.foreach(
-        createOnly =>
-          if (createOnly)
-            params.put("op_type", "create")
+      request.createOnly.foreach(createOnly =>
+        if (createOnly)
+          params.put("op_type", "create")
       )
       request.routing.foreach(params.put("routing", _))
       request.parent.foreach(params.put("parent", _))
@@ -66,7 +65,9 @@ trait IndexHandlers {
 
     override def responseHandler: ResponseHandler[Map[String, GetIndexResponse]] = {
       ResponseHandler.default[Map[String, GetIndexResponse]].map { map =>
-        map.mapValues { resp => if (resp.mappings.meta == null) resp.copy(mappings = resp.mappings.copy(meta = Map.empty)) else resp }.toMap
+        map.mapValues { resp =>
+          if (resp.mappings.meta == null) resp.copy(mappings = resp.mappings.copy(meta = Map.empty)) else resp
+        }.toMap
       }
     }
   }
@@ -76,14 +77,14 @@ trait IndexHandlers {
     override def responseHandler: ResponseHandler[AnalyzeResponse] = AnalyzeResponseHandler
 
     override def build(analyzeRequest: AnalyzeRequest): ElasticRequest = {
-      val utf8 = StandardCharsets.UTF_8.name()
+      val utf8               = StandardCharsets.UTF_8.name()
       val (method, endpoint) = analyzeRequest.index.map { index =>
         "GET" -> s"/${ElasticUrlEncoder.encodeUrlFragment(index)}/_analyze"
       }.getOrElse {
         "GET" -> s"/_analyze"
       }
 
-      val body = AnalyseRequestContentBuilder(analyzeRequest)
+      val body   = AnalyseRequestContentBuilder(analyzeRequest)
       val entity = ByteArrayEntity(body.getBytes(StandardCharsets.UTF_8), Some("application/json"))
 
       logger.debug(s"Endpoint=$endpoint")
@@ -93,13 +94,14 @@ trait IndexHandlers {
   }
 }
 
-case class Mapping(properties: Map[String, Field],
-                   @JsonProperty("_meta") meta: Map[String, Any] = Map.empty)
+case class Mapping(properties: Map[String, Field], @JsonProperty("_meta") meta: Map[String, Any] = Map.empty)
 
 case class Field(`type`: Option[String], properties: Option[Map[String, Field]] = None)
 
-case class GetIndexResponse(aliases: Map[String, Map[String, Any]],
-                            mappings: Mapping,
-                            @JsonProperty("settings") private val _settings: Map[String, Any]) {
+case class GetIndexResponse(
+    aliases: Map[String, Map[String, Any]],
+    mappings: Mapping,
+    @JsonProperty("settings") private val _settings: Map[String, Any]
+) {
   def settings: Map[String, Any] = Maps.flatten(_settings, ".")
 }

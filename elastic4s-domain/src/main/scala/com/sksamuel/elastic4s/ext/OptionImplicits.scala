@@ -6,9 +6,8 @@ object OptionImplicits {
     def getOrError(message: String): T = option.getOrElse(sys.error(message))
   }
 
-  /**
-    * Better than Some(t) because that will return the inferred type as Some[T], but in a fold we probably want the
-    * type inferred as Option[T]
+  /** Better than Some(t) because that will return the inferred type as Some[T], but in a fold we probably want the type
+    * inferred as Option[T]
     */
   implicit class RichOptionImplicits[T](t: T) {
     def some: Option[T] = Some(t)

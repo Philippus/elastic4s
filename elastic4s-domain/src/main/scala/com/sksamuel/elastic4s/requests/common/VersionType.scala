@@ -11,9 +11,9 @@ object VersionType {
 
   case object External    extends VersionType
   case object ExternalGte extends VersionType
-  case object Internal extends VersionType
+  case object Internal    extends VersionType
 
-  def EXTERNAL: External.type = External
+  def EXTERNAL: External.type        = External
   def EXTERNAL_GTE: ExternalGte.type = ExternalGte
-  def INTERNAL: Internal.type = Internal
+  def INTERNAL: Internal.type        = Internal
 }

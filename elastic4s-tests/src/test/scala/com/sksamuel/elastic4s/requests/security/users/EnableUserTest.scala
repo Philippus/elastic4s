@@ -21,7 +21,7 @@ class EnnableUserTest extends AnyWordSpec with Matchers with DockerTests {
   }
 
   client.execute {
-    createUser("user1", password=PlaintextPassword("test1234"), enabled=Some(false))
+    createUser("user1", password = PlaintextPassword("test1234"), enabled = Some(false))
   }.await
 
   "disable user request" should {
@@ -38,7 +38,7 @@ class EnnableUserTest extends AnyWordSpec with Matchers with DockerTests {
     }
 
     "return error if the user does not exist" in {
-      val resp = client.execute{
+      val resp = client.execute {
         enableUser("user2")
       }.await
 

@@ -17,7 +17,6 @@ object DateNanosFieldBuilderFn {
     values.get("store").map(_.asInstanceOf[Boolean])
   )
 
-
   def build(field: DateNanosField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

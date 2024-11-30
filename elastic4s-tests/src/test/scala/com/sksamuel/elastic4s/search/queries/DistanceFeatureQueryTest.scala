@@ -32,20 +32,20 @@ class DistanceFeatureQueryTest extends AnyFlatSpec with Matchers with DockerTest
   client.execute {
     bulk(
       indexInto("distancefeaturetest").fields(
-        "name" -> "chocolate",
+        "name"            -> "chocolate",
         "production_date" -> "2018-02-01",
-        "location" -> List(71.34, 41.12)
-        ),
+        "location"        -> List(71.34, 41.12)
+      ),
       indexInto("distancefeaturetest").fields(
-        "name" -> "chocolate",
+        "name"            -> "chocolate",
         "production_date" -> "2018-01-01",
-        "location" -> List(-71.3, 41.15)
+        "location"        -> List(-71.3, 41.15)
       ),
       indexInto("distancefeaturetest").fields(
-        "name" -> "chocolate",
+        "name"            -> "chocolate",
         "production_date" -> "2017-12-01",
-        "location" -> List(-71.3, 41.12)
-      ),
+        "location"        -> List(-71.3, 41.12)
+      )
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

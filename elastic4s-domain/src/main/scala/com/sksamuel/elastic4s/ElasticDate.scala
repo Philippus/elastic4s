@@ -18,9 +18,7 @@ case object Seconds extends TimeUnit("s")
 
 case class Adjustment(value: Int, unit: TimeUnit)
 
-/**
-  * Implementations of this trait are used to represent dates and date math
-  * in elasticsearch requests.
+/** Implementations of this trait are used to represent dates and date math in elasticsearch requests.
   *
   * see https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#date-math
   *
@@ -30,9 +28,9 @@ case class Adjustment(value: Int, unit: TimeUnit)
   *
   * The second is a wrapped timestamp: TimestampElasticDate(1113232321L)
   *
-  * The third and most useful is the ElasticDateMath which allows you to programatically add
-  * or subtract values, as well as add a rounding, and it will create the appropriate date string for you.
-  * For example, ElasticDate.now.minus(3, Months).add(1, Days).rounding(Weeks)
+  * The third and most useful is the ElasticDateMath which allows you to programatically add or subtract values, as well
+  * as add a rounding, and it will create the appropriate date string for you. For example, ElasticDate.now.minus(3,
+  * Months).add(1, Days).rounding(Weeks)
   */
 trait ElasticDate {
   def show: String

@@ -5,5 +5,5 @@ import monix.eval.Task
 
 class TaskExecutor extends Executor[Task] {
   override def exec(client: HttpClient, request: ElasticRequest): Task[HttpResponse] =
-    Task.async (k => client.send(request, k))
+    Task.async(k => client.send(request, k))
 }

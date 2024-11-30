@@ -6,5 +6,5 @@ object SortOrder {
   case object Desc extends SortOrder
 
   val DESC: SortOrder = Desc
-  val ASC: SortOrder = Asc
+  val ASC: SortOrder  = Asc
 }

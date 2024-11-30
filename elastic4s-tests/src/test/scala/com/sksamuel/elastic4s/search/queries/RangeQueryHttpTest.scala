@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 import scala.util.Try
 
 class RangeQueryHttpTest
-  extends AnyWordSpec
+    extends AnyWordSpec
     with DockerTests
     with ElasticMatchers {
 
@@ -29,32 +29,32 @@ class RangeQueryHttpTest
   client.execute {
     bulk(
       indexInto("rangequeryhttptest").fields(
-        "name" -> "queen",
+        "name"  -> "queen",
         "value" -> 10,
         "count" -> 1
       ),
       indexInto("rangequeryhttptest").fields(
-        "name" -> "king",
+        "name"  -> "king",
         "value" -> 0,
         "count" -> 1
       ),
       indexInto("rangequeryhttptest").fields(
-        "name" -> "bishop",
+        "name"  -> "bishop",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("rangequeryhttptest").fields(
-        "name" -> "knight",
+        "name"  -> "knight",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("rangequeryhttptest").fields(
-        "name" -> "rook",
+        "name"  -> "rook",
         "value" -> 5,
         "count" -> 2
       ),
       indexInto("rangequeryhttptest").fields(
-        "name" -> "pawn",
+        "name"  -> "pawn",
         "value" -> 1,
         "count" -> 8
       )

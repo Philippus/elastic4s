@@ -27,12 +27,12 @@ class ExtendedStatsBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTest
 
   client.execute(
     bulk(
-      indexInto("extendedstatsbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("extendedstatsbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("extendedstatsbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("extendedstatsbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("extendedstatsbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("extendedstatsbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("extendedstatsbucketagg") fields ("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("extendedstatsbucketagg") fields ("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("extendedstatsbucketagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("extendedstatsbucketagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("extendedstatsbucketagg") fields ("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("extendedstatsbucketagg") fields ("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -46,7 +46,6 @@ class ExtendedStatsBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTest
             .subaggs {
               sumAgg("sales", "value")
             },
-
           extendedStatsBucketAggregation("stats_monthly_sales", "sales_per_month>sales")
         )
       }.await.result
@@ -59,7 +58,7 @@ class ExtendedStatsBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTest
       agg.max shouldBe 6000.0
       agg.avg shouldBe 4000.0
       agg.sum shouldBe 12000.0
-      agg.sumOfSquares shouldBe 5.6E7
+      agg.sumOfSquares shouldBe 5.6e7
       math.abs(agg.variance - 2666666.66) < 0.1 shouldBe true
       math.abs(agg.stdDeviation - 1632.99) < 0.1 shouldBe true
       math.abs(agg.stdDeviationBoundsLower - 734.01) < 0.1 shouldBe true

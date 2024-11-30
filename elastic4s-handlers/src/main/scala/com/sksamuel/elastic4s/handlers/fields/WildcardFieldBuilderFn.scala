@@ -10,7 +10,6 @@ object WildcardFieldBuilderFn {
     values.get("null_value").map(_.asInstanceOf[String])
   )
 
-
   def build(field: WildcardField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)

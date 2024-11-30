@@ -18,7 +18,6 @@ object CombinedFieldsQueryBodyFn {
       builder.array("fields", fields)
     }
 
-
     q.autoGenerateSynonymsPhraseQuery.foreach(builder.field("auto_generate_synonyms_phrase_query", _))
     q.operator.map(_.toString).foreach(builder.field("operator", _))
 

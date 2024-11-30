@@ -11,10 +11,10 @@ import org.scalatestplus.testng.TestNGSuiteLike
 import scala.util.Try
 
 class ScrollPublisherVerificationTest
-  extends PublisherVerification[SearchHit](
-    new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
-    PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
-  ) with TestNGSuiteLike with DockerTests {
+    extends PublisherVerification[SearchHit](
+      new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
+      PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
+    ) with TestNGSuiteLike with DockerTests {
 
   import ElasticJackson.Implicits._
 

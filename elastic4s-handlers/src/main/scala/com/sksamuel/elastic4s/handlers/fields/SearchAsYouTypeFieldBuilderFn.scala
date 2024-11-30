@@ -22,7 +22,6 @@ object SearchAsYouTypeFieldBuilderFn {
     values.get("term_vector").map(_.asInstanceOf[String])
   )
 
-
   def build(field: SearchAsYouTypeField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

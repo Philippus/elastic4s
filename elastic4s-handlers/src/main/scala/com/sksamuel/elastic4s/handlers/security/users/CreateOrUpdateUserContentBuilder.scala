@@ -1,7 +1,13 @@
 package com.sksamuel.elastic4s.handlers.security.users
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.security.users.{CreateOrUpdateUserRequest, CreateUser, PasswordHash, PlaintextPassword, UpdateUser}
+import com.sksamuel.elastic4s.requests.security.users.{
+  CreateOrUpdateUserRequest,
+  CreateUser,
+  PasswordHash,
+  PlaintextPassword,
+  UpdateUser
+}
 
 object CreateOrUpdateUserContentBuilder {
   def apply(c: CreateOrUpdateUserRequest): XContentBuilder = {
@@ -31,13 +37,14 @@ object CreateOrUpdateUserContentBuilder {
 
     c.password match {
       case Some(pass) => pass match {
-        case p: PlaintextPassword => builder.field("password", p.value)
-        case h: PasswordHash => builder.field("password_hash", h.value)
-      }
-      case None => c.action match {
-        case CreateUser => throw new IllegalArgumentException("CreateUser request requires either a password or a password hash")
-        case UpdateUser => {}
-      }
+          case p: PlaintextPassword => builder.field("password", p.value)
+          case h: PasswordHash      => builder.field("password_hash", h.value)
+        }
+      case None       => c.action match {
+          case CreateUser =>
+            throw new IllegalArgumentException("CreateUser request requires either a password or a password hash")
+          case UpdateUser => {}
+        }
     }
 
     builder.array("roles", c.roles.toArray)

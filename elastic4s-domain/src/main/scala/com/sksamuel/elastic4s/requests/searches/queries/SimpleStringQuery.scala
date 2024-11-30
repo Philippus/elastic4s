@@ -20,18 +20,19 @@ object SimpleQueryStringFlag {
   case object SLOP       extends SimpleQueryStringFlag
 }
 
-case class SimpleStringQuery(query: String,
-                             analyzer: Option[String] = None,
-                             analyzeWildcard: Option[Boolean] = None,
-                             operator: Option[String] = None,
-                             queryName: Option[String] = None,
-                             quote_field_suffix: Option[String] = None,
-                             lenient: Option[Boolean] = None,
-                             fields: Seq[(String, Option[Double])] = Nil,
-                             flags: Seq[SimpleQueryStringFlag] = Nil,
-                             minimumShouldMatch: Option[String] = None,
-                             autoGenerateSynonymsPhraseQuery: Option[Boolean] = None)
-    extends Query {
+case class SimpleStringQuery(
+    query: String,
+    analyzer: Option[String] = None,
+    analyzeWildcard: Option[Boolean] = None,
+    operator: Option[String] = None,
+    queryName: Option[String] = None,
+    quote_field_suffix: Option[String] = None,
+    lenient: Option[Boolean] = None,
+    fields: Seq[(String, Option[Double])] = Nil,
+    flags: Seq[SimpleQueryStringFlag] = Nil,
+    minimumShouldMatch: Option[String] = None,
+    autoGenerateSynonymsPhraseQuery: Option[Boolean] = None
+) extends Query {
 
   def quoteFieldSuffix(suffix: String): SimpleStringQuery     = copy(quote_field_suffix = suffix.some)
   def flags(flags: SimpleQueryStringFlag*): SimpleStringQuery = copy(flags = flags)

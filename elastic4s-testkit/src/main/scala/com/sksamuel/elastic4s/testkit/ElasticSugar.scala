@@ -7,10 +7,8 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.Try
 
-/**
-  * Provides helper methods for things like refreshing an index, and blocking until an
-  * index has a certain count of documents. These methods are very useful when writing
-  * tests to allow for blocking, iterative coding
+/** Provides helper methods for things like refreshing an index, and blocking until an index has a certain count of
+  * documents. These methods are very useful when writing tests to allow for blocking, iterative coding
   */
 trait ElasticSugar extends ElasticDsl {
   this: Suite with ClientProvider =>

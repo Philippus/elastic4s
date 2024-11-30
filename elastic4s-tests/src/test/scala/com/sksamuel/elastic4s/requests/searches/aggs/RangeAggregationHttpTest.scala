@@ -21,12 +21,12 @@ class RangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matcher
 
   client.execute(
     bulk(
-      indexInto("rangeaggs").fields("name" -> "Breaking Bad", "grade" -> 9.0),
-      indexInto("rangeaggs").fields("name" -> "Better Call Saul", "grade" -> 9.0),
+      indexInto("rangeaggs").fields("name" -> "Breaking Bad", "grade"        -> 9.0),
+      indexInto("rangeaggs").fields("name" -> "Better Call Saul", "grade"    -> 9.0),
       indexInto("rangeaggs").fields("name" -> "Star Trek Discovery", "grade" -> 7.0),
-      indexInto("rangeaggs").fields("name" -> "Game of Thrones", "grade" -> 8.0),
+      indexInto("rangeaggs").fields("name" -> "Game of Thrones", "grade"     -> 8.0),
       indexInto("rangeaggs").fields("name" -> "Designated Survivor", "grade" -> 6.0),
-      indexInto("rangeaggs").fields("name" -> "Walking Dead", "grade" -> 5.0)
+      indexInto("rangeaggs").fields("name" -> "Walking Dead", "grade"        -> 5.0)
     ).refreshImmediately
   ).await
 
@@ -35,9 +35,9 @@ class RangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matcher
       val resp = client.execute {
         search("rangeaggs").matchAllQuery().aggs {
           rangeAgg("agg1", "grade")
-              .unboundedTo("meh", to = 5.5)
-              .range("cool", from = 5.5, to = 7.5)
-              .unboundedFrom("awesome", from = 7.5)
+            .unboundedTo("meh", to = 5.5)
+            .range("cool", from = 5.5, to = 7.5)
+            .unboundedFrom("awesome", from = 7.5)
         }
       }.await.result
 

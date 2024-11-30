@@ -8,8 +8,26 @@ import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.{IndicesOptionsParams, RefreshPolicyHttpValue, Slicing}
 import com.sksamuel.elastic4s.requests.task.GetTask
-import com.sksamuel.elastic4s.requests.update.{BaseUpdateByQueryRequest, UpdateByQueryAsyncRequest, UpdateByQueryAsyncResponse, UpdateByQueryRequest, UpdateByQueryResponse, UpdateByQueryTask, UpdateRequest, UpdateResponse}
-import com.sksamuel.elastic4s.{BulkIndexByScrollFailure, ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.requests.update.{
+  BaseUpdateByQueryRequest,
+  UpdateByQueryAsyncRequest,
+  UpdateByQueryAsyncResponse,
+  UpdateByQueryRequest,
+  UpdateByQueryResponse,
+  UpdateByQueryTask,
+  UpdateRequest,
+  UpdateResponse
+}
+import com.sksamuel.elastic4s.{
+  BulkIndexByScrollFailure,
+  ElasticError,
+  ElasticRequest,
+  ElasticUrlEncoder,
+  Handler,
+  HttpEntity,
+  HttpResponse,
+  ResponseHandler
+}
 
 object UpdateByQueryBodyFn {
   def apply(request: BaseUpdateByQueryRequest): XContentBuilder = {
@@ -39,7 +57,7 @@ trait UpdateHandlers {
         case 200 | 201 =>
           val json = response.entity.getOrError("Update responses must include a body")
           Right(ResponseHandler.fromEntity[UpdateResponse](json))
-        case _ => Left(ElasticErrorParser.parse(response))
+        case _         => Left(ElasticErrorParser.parse(response))
       }
     }
 
@@ -62,7 +80,7 @@ trait UpdateHandlers {
       request.versionType.foreach(params.put("version_type", _))
       request.waitForActiveShards.foreach(params.put("wait_for_active_shards", _))
 
-      val body = UpdateBuilderFn(request)
+      val body   = UpdateBuilderFn(request)
       val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("POST", endpoint, params.toMap, entity)
@@ -95,7 +113,7 @@ trait UpdateHandlers {
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
       }
 
-      val body = UpdateByQueryBodyFn(request)
+      val body   = UpdateByQueryBodyFn(request)
       logger.debug(s"Update by query ${body.string}")
       val entity = HttpEntity(body.string, "application/json")
 
@@ -104,22 +122,23 @@ trait UpdateHandlers {
   }
 
   implicit object SyncUpdateByQueryHandler extends UpdateByQueryHandler[UpdateByQueryRequest, UpdateByQueryResponse] {
-    override def responseHandler: ResponseHandler[UpdateByQueryResponse] = ResponseHandler.default[UpdateByQuerySnakeCase].map { resp =>
-      UpdateByQueryResponse(
-        resp.took,
-        resp.timed_out,
-        resp.total,
-        resp.updated,
-        resp.deleted,
-        resp.batches,
-        resp.version_conflicts,
-        resp.noops,
-        resp.throttled_millis,
-        resp.requests_per_second,
-        resp.throttled_until_millis,
-        resp.failures
-      )
-    }
+    override def responseHandler: ResponseHandler[UpdateByQueryResponse] =
+      ResponseHandler.default[UpdateByQuerySnakeCase].map { resp =>
+        UpdateByQueryResponse(
+          resp.took,
+          resp.timed_out,
+          resp.total,
+          resp.updated,
+          resp.deleted,
+          resp.batches,
+          resp.version_conflicts,
+          resp.noops,
+          resp.throttled_millis,
+          resp.requests_per_second,
+          resp.throttled_until_millis,
+          resp.failures
+        )
+      }
   }
 
   implicit object AsyncUpdateByQueryHandler extends UpdateByQueryHandler[UpdateByQueryAsyncRequest, UpdateByQueryTask] {
@@ -136,18 +155,17 @@ trait UpdateHandlers {
   }
 }
 
-
 case class UpdateByQuerySnakeCase(
-                                   took: Long,
-                                   timed_out: Boolean,
-                                   total: Long,
-                                   updated: Long,
-                                   deleted: Long,
-                                   batches: Long,
-                                   version_conflicts: Long,
-                                   noops: Long,
-                                   throttled_millis: Long,
-                                   requests_per_second: Long,
-                                   throttled_until_millis: Long,
-                                   failures: Option[Seq[BulkIndexByScrollFailure]]
-                                 )
+    took: Long,
+    timed_out: Boolean,
+    total: Long,
+    updated: Long,
+    deleted: Long,
+    batches: Long,
+    version_conflicts: Long,
+    noops: Long,
+    throttled_millis: Long,
+    requests_per_second: Long,
+    throttled_until_millis: Long,
+    failures: Option[Seq[BulkIndexByScrollFailure]]
+)

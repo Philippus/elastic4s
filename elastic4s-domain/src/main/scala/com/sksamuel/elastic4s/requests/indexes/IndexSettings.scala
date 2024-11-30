@@ -14,18 +14,15 @@ class IndexSettings {
   def replicas: Option[Int]             = settings.get(ReplicasKey).map(_.asInstanceOf[Int])
   def replicas_=(r: Int): IndexSettings = add(ReplicasKey, r)
 
-  /**
-    * Sets the 'index.refresh_interval' property on this index.
+  /** Sets the 'index.refresh_interval' property on this index.
     */
-  def refreshInterval: Option[String]             = settings.get(RefreshIntervalKey).map(_.asInstanceOf[String])
+  def refreshInterval: Option[String] = settings.get(RefreshIntervalKey).map(_.asInstanceOf[String])
 
-  /**
-    * Sets the 'index.refresh_interval' property on this index.
+  /** Sets the 'index.refresh_interval' property on this index.
     */
   def refreshInterval_=(i: String): IndexSettings = add(RefreshIntervalKey, i)
 
-  /**
-    * Sets (adds or replaces) a single setting on this index.
+  /** Sets (adds or replaces) a single setting on this index.
     */
   def add(name: String, value: Any): IndexSettings = {
     settings += (name -> value)

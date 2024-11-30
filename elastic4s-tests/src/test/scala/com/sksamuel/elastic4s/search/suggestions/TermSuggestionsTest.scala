@@ -83,7 +83,7 @@ class TermSuggestionsTest extends AnyWordSpec with Matchers with DockerTests {
 
       val resp = client.execute {
         search(index).suggestions {
-          termSuggestion("a", "artist" , "Quean").maxEdits(1) // so Quean->Queen but not Quean -> Quoon
+          termSuggestion("a", "artist", "Quean").maxEdits(1) // so Quean->Queen but not Quean -> Quoon
         }
       }.await.result
       resp.termSuggestion("a")("quean").optionsText shouldBe Seq("queen")

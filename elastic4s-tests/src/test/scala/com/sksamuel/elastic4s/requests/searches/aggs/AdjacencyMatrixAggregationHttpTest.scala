@@ -28,14 +28,14 @@ class AdjacencyMatrixAggregationHttpTest extends AnyFreeSpec with DockerTests wi
     bulk(
       indexInto("adjacencymatrixsagg").id("1").fields("accounts" -> Seq("hillary", "sidney")),
       indexInto("adjacencymatrixsagg").id("2").fields("accounts" -> Seq("hillary", "donald")),
-      indexInto("adjacencymatrixsagg").id("3").fields("accounts" -> Seq("vladimir", "donald")),
+      indexInto("adjacencymatrixsagg").id("3").fields("accounts" -> Seq("vladimir", "donald"))
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
   "adjacency matrix agg" - {
     "should create buckets matching the query" in {
 
-      val resp = client.execute {
+      val resp                     = client.execute {
         search("adjacencymatrixsagg")
           .size(0)
           .aggs {
@@ -52,7 +52,7 @@ class AdjacencyMatrixAggregationHttpTest extends AnyFreeSpec with DockerTests wi
       resp.totalHits shouldBe 3
       val results: AdjacencyMatrix = resp.aggs.result[AdjacencyMatrix]("interactions")
 
-      results.buckets should have size(5)
+      results.buckets should have size (5)
 
       results.buckets.map(_.copy(data = Map.empty)) should contain theSameElementsInOrderAs Seq(
         AdjacencyMatrixBucket("grpA", 2L, Map.empty),

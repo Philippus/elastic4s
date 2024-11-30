@@ -42,7 +42,7 @@ class PutMappingApiTest extends AnyFlatSpec with Matchers with DockerTests {
         dateField("content") nullValue "no content",
         textField("description") boost 1.5,
         doubleField("price"),
-        nestedField("children") fields(
+        nestedField("children") fields (
           textField("name"),
           dateField("date") nullValue "no date"
         )

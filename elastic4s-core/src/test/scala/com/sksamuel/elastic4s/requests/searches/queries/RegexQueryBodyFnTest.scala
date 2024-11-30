@@ -8,7 +8,13 @@ class RegexQueryBodyFnTest extends AnyFunSuite with Matchers {
 
   test("regex query should generate expected json") {
     val q = RegexQuery("mysearch", ".*")
-      .flags(RegexpFlag.AnyString, RegexpFlag.Complement, RegexpFlag.Empty, RegexpFlag.Intersection, RegexpFlag.Interval)
+      .flags(
+        RegexpFlag.AnyString,
+        RegexpFlag.Complement,
+        RegexpFlag.Empty,
+        RegexpFlag.Intersection,
+        RegexpFlag.Interval
+      )
       .boost(1.2)
       .queryName("myquery")
       .maxDeterminedStates(10000)

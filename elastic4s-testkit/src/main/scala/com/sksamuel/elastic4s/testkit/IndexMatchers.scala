@@ -10,8 +10,10 @@ trait IndexMatchers extends Matchers {
 
   import scala.concurrent.duration._
 
-  def haveCount(expectedCount: Int)(implicit client: ElasticClient,
-                                    timeout: FiniteDuration = 10.seconds): Matcher[String] =
+  def haveCount(expectedCount: Int)(implicit
+      client: ElasticClient,
+      timeout: FiniteDuration = 10.seconds
+  ): Matcher[String] =
     new Matcher[String] {
 
       def apply(left: String): MatchResult = {
@@ -25,28 +27,32 @@ trait IndexMatchers extends Matchers {
     }
 
   def haveDocument[T](expectedId: String, expectedDocument: T)(
-    implicit client: ElasticClient,
-    hitReader: HitReader[T],
-    timeout: FiniteDuration = 10.seconds
+      implicit
+      client: ElasticClient,
+      hitReader: HitReader[T],
+      timeout: FiniteDuration = 10.seconds
   ): Matcher[String] = {
-    (left: String) => {
-      val resp = client.execute(get(left, expectedId)).await(timeout).result
-      val maybeActualDocument = resp.toOpt[T]
-      val exists = maybeActualDocument.contains(expectedDocument)
-      MatchResult(
-        exists,
-        maybeActualDocument.fold(
-          s"Index $left did not contain expected document $expectedId"
-        )(actualDocument =>
-          s"Index $left did not contain $expectedDocument but $actualDocument"
-        ),
-        s"Index $left contained unwanted $expectedDocument"
-      )
-    }
+    (left: String) =>
+      {
+        val resp                = client.execute(get(left, expectedId)).await(timeout).result
+        val maybeActualDocument = resp.toOpt[T]
+        val exists              = maybeActualDocument.contains(expectedDocument)
+        MatchResult(
+          exists,
+          maybeActualDocument.fold(
+            s"Index $left did not contain expected document $expectedId"
+          )(actualDocument =>
+            s"Index $left did not contain $expectedDocument but $actualDocument"
+          ),
+          s"Index $left contained unwanted $expectedDocument"
+        )
+      }
   }
 
-  def containDoc(expectedId: Any)(implicit client: ElasticClient,
-                                  timeout: FiniteDuration = 10.seconds): Matcher[String] =
+  def containDoc(expectedId: Any)(implicit
+      client: ElasticClient,
+      timeout: FiniteDuration = 10.seconds
+  ): Matcher[String] =
     new Matcher[String] {
 
       override def apply(left: String): MatchResult = {

@@ -31,9 +31,9 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
         (properties() as Seq(
           textField("a") stored true analyzer WhitespaceAnalyzer.name,
           keywordField("b") normalizer "my_normalizer",
-          joinField("c") relation("parent", Seq("bar", "foo"))
+          joinField("c") relation ("parent", Seq("bar", "foo"))
         )).meta(Map(
-          "meta_key" -> "meta_value",
+          "meta_key" -> "meta_value"
         ))
       ) analysis {
         CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
@@ -41,7 +41,6 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
         CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
       }
     }.await
-
 
     client.execute {
       createIndex("indexnoprops").mapping(
@@ -64,7 +63,7 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
       }.await.result
 
       val properties = mappings.find(_.index == "index").get.mappings
-      val a = properties("a").asInstanceOf[Map[String, Any]]
+      val a          = properties("a").asInstanceOf[Map[String, Any]]
       a("type") shouldBe "text"
       a("store") shouldBe true
       a("analyzer") shouldBe "whitespace"

@@ -7,5 +7,5 @@ trait IndexApi {
   def indexInto(index: Index): IndexRequest = IndexRequest(index)
 
   def getIndex(index: String, others: String*): GetIndexRequest = getIndex(index +: others)
-  def getIndex(indexes: Seq[String]): GetIndexRequest = GetIndexRequest(indexes.mkString(","))
+  def getIndex(indexes: Seq[String]): GetIndexRequest           = GetIndexRequest(indexes.mkString(","))
 }

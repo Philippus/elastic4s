@@ -6,21 +6,22 @@ import com.sksamuel.elastic4s.requests.searches.sort.Sort
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.{Highlight, HighlightField, HighlightOptions}
 
-case class TopHitsAggregation(name: String,
-                              explain: Option[Boolean] = None,
-                              fetchSource: Option[FetchSourceContext] = None,
-                              size: Option[Int] = None,
-                              from: Option[Int] = None,
-                              sorts: Seq[Sort] = Nil,
-                              trackScores: Option[Boolean] = None,
-                              version: Option[Boolean] = None,
-                              scripts: Map[String, Script] = Map.empty,
-                              storedFields: Seq[String] = Nil,
-                              subaggs: Seq[AbstractAggregation] = Nil,
-                              metadata: Map[String, AnyRef] = Map.empty,
-                              highlight: Option[Highlight] = None,
-                              docValueFields: Seq[String] = Nil)
-    extends Aggregation {
+case class TopHitsAggregation(
+    name: String,
+    explain: Option[Boolean] = None,
+    fetchSource: Option[FetchSourceContext] = None,
+    size: Option[Int] = None,
+    from: Option[Int] = None,
+    sorts: Seq[Sort] = Nil,
+    trackScores: Option[Boolean] = None,
+    version: Option[Boolean] = None,
+    scripts: Map[String, Script] = Map.empty,
+    storedFields: Seq[String] = Nil,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty,
+    highlight: Option[Highlight] = None,
+    docValueFields: Seq[String] = Nil
+) extends Aggregation {
 
   type T = TopHitsAggregation
 
@@ -65,5 +66,5 @@ case class TopHitsAggregation(name: String,
 
   override def subAggregations(aggs: Iterable[AbstractAggregation]): T =
     sys.error("Top Hits does not support sub aggregations")
-  override def metadata(map: Map[String, AnyRef]): T = copy(metadata = map)
+  override def metadata(map: Map[String, AnyRef]): T                   = copy(metadata = map)
 }

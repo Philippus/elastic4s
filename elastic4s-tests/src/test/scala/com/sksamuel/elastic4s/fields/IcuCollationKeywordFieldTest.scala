@@ -24,7 +24,7 @@ class IcuCollationKeywordFieldTest extends AnyFlatSpec with Matchers with Elasti
       index = Some(true),
       docValues = Some(true),
       ignoreAbove = Some(42),
-      store = Some(true),
+      store = Some(true)
     )
 
     fields.ElasticFieldBuilderFn(field).string shouldBe """{"type":"icu_collation_keyword","language":"ca","country":"ES","variant":"@collation=phonebook","strength":"primary","decomposition":"no","alternate":"shifted","case_level":true,"case_first":"lower","numeric":true,"variable_top":".","hiragana_quaternary_mode":true,"index":true,"doc_values":true,"ignore_above":42,"store":true}"""

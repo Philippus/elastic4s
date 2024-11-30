@@ -10,12 +10,13 @@ object NestedFieldBuilderFn {
     values.get("enabled").map(_.asInstanceOf[Boolean]),
     values
       .get("properties")
-      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) => ElasticFieldBuilderFn.construct(key, value) }.toSeq)
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+        ElasticFieldBuilderFn.construct(key, value)
+      }.toSeq)
       .getOrElse(Seq.empty),
     values.get("include_in_parent").map(_.asInstanceOf[Boolean]),
     values.get("include_in_root").map(_.asInstanceOf[Boolean])
   )
-
 
   def build(field: NestedField): XContentBuilder = {
 

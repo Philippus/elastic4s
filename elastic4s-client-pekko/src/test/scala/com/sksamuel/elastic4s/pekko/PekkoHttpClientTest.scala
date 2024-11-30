@@ -112,4 +112,3 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
     }.await.result.status shouldBe "401"
   }
 }
-

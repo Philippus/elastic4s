@@ -26,9 +26,9 @@ class ValidateTest extends AnyWordSpec with Matchers with DockerTests {
   }.await
 
   client.execute {
-    indexInto("food") fields(
-      "name" -> "maccaroni",
-      "color" -> "yellow",
+    indexInto("food") fields (
+      "name"       -> "maccaroni",
+      "color"      -> "yellow",
       "sellbydate" -> "2005-01-01"
     ) refresh RefreshPolicy.WaitFor
   }.await

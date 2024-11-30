@@ -28,12 +28,12 @@ class TopMetricsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("the_loop").fields("a" -> 234.45, "b" -> 4),
+      indexInto("the_loop").fields("a" -> 234.45, "b"   -> 4),
       indexInto("the_loop").fields("a" -> 213.5234, "b" -> 3),
       indexInto("the_loop").fields("a" -> 9234.234, "b" -> 6),
-      indexInto("the_loop").fields("a" -> 71.5, "b" -> 5),
-      indexInto("the_loop").fields("a" -> 91.5, "b" -> 7),
-      indexInto("the_loop").fields("a" -> 12.236, "b" -> 8),
+      indexInto("the_loop").fields("a" -> 71.5, "b"     -> 5),
+      indexInto("the_loop").fields("a" -> 91.5, "b"     -> 7),
+      indexInto("the_loop").fields("a" -> 12.236, "b"   -> 8),
       indexInto("the_loop").fields("a" -> 8712.324, "b" -> 2)
     ).refresh(RefreshPolicy.Immediate)
   ).await

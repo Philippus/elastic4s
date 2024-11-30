@@ -2,11 +2,12 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class SamplerAggregation(name: String,
-                              shardSize: Option[Int] = None,
-                              subaggs: Seq[AbstractAggregation] = Nil,
-                              metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class SamplerAggregation(
+    name: String,
+    shardSize: Option[Int] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = SamplerAggregation
 

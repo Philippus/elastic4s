@@ -40,7 +40,7 @@ object HighlightFieldBuilderFn {
       else builder.array("pre_tags", field.preTags.toArray)
     }
 
-    field.options.foreach(options => options.foreach{case (k, v) => builder.autofield(k, v)})
+    field.options.foreach(options => options.foreach { case (k, v) => builder.autofield(k, v) })
 
     builder
   }

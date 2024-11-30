@@ -2,18 +2,19 @@ package com.sksamuel.elastic4s.requests.searches.span
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class SpanNotQuery(include: SpanQuery,
-                        exclude: SpanQuery,
-                        dist: Option[Int] = None,
-                        pre: Option[Int] = None,
-                        post: Option[Int] = None,
-                        boost: Option[Double] = None,
-                        queryName: Option[String] = None)
-  extends SpanQuery {
+case class SpanNotQuery(
+    include: SpanQuery,
+    exclude: SpanQuery,
+    dist: Option[Int] = None,
+    pre: Option[Int] = None,
+    post: Option[Int] = None,
+    boost: Option[Double] = None,
+    queryName: Option[String] = None
+) extends SpanQuery {
 
-  def boost(boost: Double): SpanNotQuery = copy(boost = Option(boost))
+  def boost(boost: Double): SpanNotQuery         = copy(boost = Option(boost))
   def queryName(queryName: String): SpanNotQuery = copy(queryName = queryName.some)
-  def post(post: Int): SpanNotQuery = copy(post = post.some)
-  def pre(pre: Int): SpanNotQuery = copy(pre = pre.some)
-  def dist(dist: Int): SpanNotQuery = copy(dist = dist.some)
+  def post(post: Int): SpanNotQuery              = copy(post = post.some)
+  def pre(pre: Int): SpanNotQuery                = copy(pre = pre.some)
+  def dist(dist: Int): SpanNotQuery              = copy(dist = dist.some)
 }

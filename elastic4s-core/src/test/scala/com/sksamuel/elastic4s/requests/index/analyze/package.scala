@@ -26,26 +26,31 @@ package object analyze {
     AnalyseToken("world", 6, 11, "<ALPHANUM>", 1)
   ))
 
-
   def explainResponseJson: String = readResource("/analyze_request/explain_helloworld_response.json")
 
   def explainAnalyzeResponse: ExplainAnalyzeResponse = ExplainAnalyzeResponse(
     ExplainAnalyzeDetail(
       customAnalyzer = false,
       Some(
-        ExplainAnalyzer("standard", Seq(
-          AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0,  Some(toHexBytes("hello")), Some(1),Some(1)),
-          AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, Some(toHexBytes("world")), Some(1),Some(1))
-        ))
-      ))
+        ExplainAnalyzer(
+          "standard",
+          Seq(
+            AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0, Some(toHexBytes("hello")), Some(1), Some(1)),
+            AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, Some(toHexBytes("world")), Some(1), Some(1))
+          )
+        )
+      )
+    )
   )
 
-  def explainCustomTokenFilterResponseJson: String = readResource("/analyze_request/explain_custom_tokenfilter_response.json")
+  def explainCustomTokenFilterResponseJson: String =
+    readResource("/analyze_request/explain_custom_tokenfilter_response.json")
 
   def explainCustomTokenFilterResponse: ExplainAnalyzeResponse = ExplainAnalyzeResponse(
     ExplainAnalyzeDetail(
       customAnalyzer = true,
-      None, Seq(
+      None,
+      Seq(
         ExplainTokenFilters(
           "snowball",
           Seq(
@@ -53,8 +58,8 @@ package object analyze {
             AnalyseToken("world", 6, 11, "<ALPHANUM>", 1, Some(toHexBytes("world")), Some(1), Some(1), Some(false))
           )
         )
-      ))
+      )
+    )
   )
-
 
 }

@@ -11,23 +11,25 @@ import scala.concurrent.duration._
 import scala.language.higherKinds
 import scala.util.{Failure, Success}
 
-/**
-  * An implementation of the reactive API Subscriber.
-  * This subscriber will bulk index received elements. The bulk nature means that the elasticsearch
-  * index operations are performed as a bulk call, the size of which are controlled by the batchSize param.
+/** An implementation of the reactive API Subscriber. This subscriber will bulk index received elements. The bulk nature
+  * means that the elasticsearch index operations are performed as a bulk call, the size of which are controlled by the
+  * batchSize param.
   *
-  * The received elements must be converted into an elastic4s bulk compatible definition, such as index or delete.
-  * This is done by the RequestBuilder.
+  * The received elements must be converted into an elastic4s bulk compatible definition, such as index or delete. This
+  * is done by the RequestBuilder.
   *
-  * @param client  used to connect to the cluster
-  * @param builder used to turn elements of T into IndexDefinitions so they can be used in the bulk indexer
-  * @tparam T the type of element provided by the publisher this subscriber will subscribe with
+  * @param client
+  *   used to connect to the cluster
+  * @param builder
+  *   used to turn elements of T into IndexDefinitions so they can be used in the bulk indexer
+  * @tparam T
+  *   the type of element provided by the publisher this subscriber will subscribe with
   */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class BulkIndexingSubscriber[T] private[streams] (
-  client: ElasticClient,
-  builder: RequestBuilder[T],
-  config: SubscriberConfig[T]
+    client: ElasticClient,
+    builder: RequestBuilder[T],
+    config: SubscriberConfig[T]
 )(implicit actorRefFactory: ActorRefFactory)
     extends Subscriber[T] {
 
@@ -81,11 +83,12 @@ object BulkActor {
 }
 
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-class BulkActor[T](client: ElasticClient,
-                   subscription: Subscription,
-                   builder: RequestBuilder[T],
-                   config: SubscriberConfig[T])
-    extends Actor {
+class BulkActor[T](
+    client: ElasticClient,
+    subscription: Subscription,
+    builder: RequestBuilder[T],
+    config: SubscriberConfig[T]
+) extends Actor {
 
   import com.sksamuel.elastic4s.ElasticDsl._
   import context.{dispatcher, system}
@@ -96,16 +99,16 @@ class BulkActor[T](client: ElasticClient,
   private var completed = false
 
   // total number of documents requested from our publisher
-  private var requested: Long = 0l
+  private var requested: Long = 0L
 
   // total number of documents acknowledged at the elasticsearch cluster level but pending confirmation of index
-  private var sent: Long = 0l
+  private var sent: Long = 0L
 
   // total number of documents confirmed as successful
-  private var confirmed: Long = 0l
+  private var confirmed: Long = 0L
 
   // total number of documents that failed the retry attempts and are ignored
-  private var failed: Long = 0l
+  private var failed: Long = 0L
 
   // Create a scheduler if a flushInterval is provided. This scheduler will be used to force indexing, otherwise
   // we can be stuck at batchSize-1 waiting for the nth message to arrive.
@@ -223,18 +226,20 @@ class BulkActor[T](client: ElasticClient,
 
     val f = client.execute(req)
     f.onComplete {
-      case Failure(e)                       => self ! e
-      case Success(failure: RequestFailure) => self ! new RuntimeException(failure.toString)
+      case Failure(e)                               => self ! e
+      case Success(failure: RequestFailure)         => self ! new RuntimeException(failure.toString)
       case Success(RequestSuccess(_, _, _, result)) =>
         if (result.hasSuccesses)
           self ! BulkActor.Result(
             result.successes,
             result.successes.map(getOriginalForResponse),
-            requestNext = !result.errors)
+            requestNext = !result.errors
+          )
         if (result.errors) {
           val failures = if (attempts > 0) {
             val (retriable, nonRetriable) = result.failures.partition(failure =>
-              config.retryFailure(failure, getOriginalForResponse(failure)))
+              config.retryFailure(failure, getOriginalForResponse(failure))
+            )
             // all retriable failures need to be resent, if retries left, but only after we wait for the failureWait
             // period to avoid flooding the cluster
             if (retriable.nonEmpty) {
@@ -276,21 +281,20 @@ class BulkActor[T](client: ElasticClient,
   }
 }
 
-/**
-  * An implementation of this typeclass must provide a bulk compatible request for the given instance of T.
-  * The bulk compatible request will then be sent to elastic.
+/** An implementation of this typeclass must provide a bulk compatible request for the given instance of T. The bulk
+  * compatible request will then be sent to elastic.
   *
   * A bulk compatible request can be either an index, update, or delete.
   *
-  * @tparam T the type of elements this builder supports
+  * @tparam T
+  *   the type of elements this builder supports
   */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 trait RequestBuilder[T] {
   def request(t: T): BulkCompatibleRequest
 }
 
-/**
-  * Notified on each acknowledgement
+/** Notified on each acknowledgement
   */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 trait ResponseListener[-T] {
@@ -305,39 +309,51 @@ object ResponseListener {
   }
 }
 
-/**
-  * @param listener           a listener which is notified on each acknowledge batch item
-  * @param batchSize          the number of elements to group together per batch aside from the last batch
-  * @param concurrentRequests the number of concurrent batch operations
-  * @param refreshAfterOp     if the index should be refreshed after each bulk operation
-  * @param completionFn       a function which is invoked when all sent requests have been acknowledged and the publisher has completed
-  *                           Note: this function is executed regardless of whether there was an error or not,
-  *                           that is, this function is always invoked regardless of the state
-  * @param successFn          a function will is only invoked when all operations have completed successfully
-  * @param errorFn            a function which is invoked after there is an error
-  * @param failureWait        the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of
-  *                           indicating backpressure, so this parameter determines how long to wait between requests.
-  * @param retryFailure       a function which is invoked for every failure in a bulk request, and returns true if the
- *                            failure should be retried or false if it should not.
-  * @param maxAttempts        the max number of times to try a request. If it fails too many times it probably isn't back pressure
-  *                           but an error with the document.
-  * @param flushInterval      used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch
-  *                           for a long period of time. It also is used if the publisher will never complete.
-  *                           This ensures that all elements are indexed, even if the last batch size is lower than batch size.
-  * @param flushAfter         used to schedule an index if no document has been received within the given duration.
-  *                           Once an index is performed (either by this flush value or because docs arrived in time)
-  *                           the flush after schedule is reset.
-  **/
+/** @param listener
+  *   a listener which is notified on each acknowledge batch item
+  * @param batchSize
+  *   the number of elements to group together per batch aside from the last batch
+  * @param concurrentRequests
+  *   the number of concurrent batch operations
+  * @param refreshAfterOp
+  *   if the index should be refreshed after each bulk operation
+  * @param completionFn
+  *   a function which is invoked when all sent requests have been acknowledged and the publisher has completed Note:
+  *   this function is executed regardless of whether there was an error or not, that is, this function is always
+  *   invoked regardless of the state
+  * @param successFn
+  *   a function will is only invoked when all operations have completed successfully
+  * @param errorFn
+  *   a function which is invoked after there is an error
+  * @param failureWait
+  *   the timeout before re-trying failed requests. Usually a failed request is elasticsearch's way of indicating
+  *   backpressure, so this parameter determines how long to wait between requests.
+  * @param retryFailure
+  *   a function which is invoked for every failure in a bulk request, and returns true if the failure should be retried
+  *   or false if it should not.
+  * @param maxAttempts
+  *   the max number of times to try a request. If it fails too many times it probably isn't back pressure but an error
+  *   with the document.
+  * @param flushInterval
+  *   used to schedule periodic bulk indexing. This can be set to avoid waiting for a complete batch for a long period
+  *   of time. It also is used if the publisher will never complete. This ensures that all elements are indexed, even if
+  *   the last batch size is lower than batch size.
+  * @param flushAfter
+  *   used to schedule an index if no document has been received within the given duration. Once an index is performed
+  *   (either by this flush value or because docs arrived in time) the flush after schedule is reset.
+  */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-case class SubscriberConfig[T](batchSize: Int = 100,
-                               concurrentRequests: Int = 5,
-                               refreshAfterOp: Boolean = false,
-                               listener: ResponseListener[T] = ResponseListener.noop,
-                               completionFn: () => Unit = () => (),
-                               successFn: () => Unit = () => (),
-                               errorFn: Throwable => Unit = _ => (),
-                               failureWait: FiniteDuration = 2.seconds,
-                               retryFailure: (BulkResponseItem, T) => Boolean = (_: BulkResponseItem, _: T) => true,
-                               maxAttempts: Int = 5,
-                               flushInterval: Option[FiniteDuration] = None,
-                               flushAfter: Option[FiniteDuration] = None)
+case class SubscriberConfig[T](
+    batchSize: Int = 100,
+    concurrentRequests: Int = 5,
+    refreshAfterOp: Boolean = false,
+    listener: ResponseListener[T] = ResponseListener.noop,
+    completionFn: () => Unit = () => (),
+    successFn: () => Unit = () => (),
+    errorFn: Throwable => Unit = _ => (),
+    failureWait: FiniteDuration = 2.seconds,
+    retryFailure: (BulkResponseItem, T) => Boolean = (_: BulkResponseItem, _: T) => true,
+    maxAttempts: Int = 5,
+    flushInterval: Option[FiniteDuration] = None,
+    flushAfter: Option[FiniteDuration] = None
+)

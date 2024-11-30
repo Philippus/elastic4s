@@ -37,17 +37,17 @@ class GeoBoundsAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
       val resp = client.execute {
         search("geoboundsagg").matchAllQuery().aggs {
           geoBoundsAggregation("museums_region")
-              .field("location")
+            .field("location")
         }
       }.await.result
 
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.geoBounds("museums_region")
-      agg.topLeft.get.lat      shouldBe 52.37 +- 0.01
-      agg.topLeft.get.long     shouldBe  2.32 +- 0.01
-      agg.bottomRight.get.lat  shouldBe 48.85 +- 0.01
-      agg.bottomRight.get.long shouldBe  4.91 +- 0.01
+      agg.topLeft.get.lat shouldBe 52.37 +- 0.01
+      agg.topLeft.get.long shouldBe 2.32 +- 0.01
+      agg.bottomRight.get.lat shouldBe 48.85 +- 0.01
+      agg.bottomRight.get.long shouldBe 4.91 +- 0.01
     }
 
     "should return empty aggregation in case of no documents are returned" in {

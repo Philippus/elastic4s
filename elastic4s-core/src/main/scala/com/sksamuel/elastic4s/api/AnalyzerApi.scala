@@ -1,6 +1,14 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.analyzers.{CustomAnalyzerDefinition, PatternAnalyzerDefinition, SnowballAnalyzerDefinition, StandardAnalyzerDefinition, StopAnalyzerDefinition, TokenFilter, Tokenizer}
+import com.sksamuel.elastic4s.requests.analyzers.{
+  CustomAnalyzerDefinition,
+  PatternAnalyzerDefinition,
+  SnowballAnalyzerDefinition,
+  StandardAnalyzerDefinition,
+  StopAnalyzerDefinition,
+  TokenFilter,
+  Tokenizer
+}
 
 @deprecated("use new analysis package", "7.7.0")
 trait AnalyzerApi {
@@ -22,9 +30,11 @@ trait AnalyzerApi {
     CustomAnalyzerDefinition(name, tokenizer)
 
   @deprecated("use new analysis package", "7.0.1")
-  def customAnalyzer(name: String,
-                     tokenizer: Tokenizer,
-                     filter: TokenFilter,
-                     rest: TokenFilter*): CustomAnalyzerDefinition =
+  def customAnalyzer(
+      name: String,
+      tokenizer: Tokenizer,
+      filter: TokenFilter,
+      rest: TokenFilter*
+  ): CustomAnalyzerDefinition =
     CustomAnalyzerDefinition(name, tokenizer, filter +: rest)
 }

@@ -4,10 +4,12 @@ import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class UpdateSettingsRequest(indices: Indexes,
-                                 preserveExisting: Option[Boolean] = None,
-                                 settings: Map[String, String] = Map.empty,
-                                 options: Option[IndicesOptionsRequest] = None) {
+case class UpdateSettingsRequest(
+    indices: Indexes,
+    preserveExisting: Option[Boolean] = None,
+    settings: Map[String, String] = Map.empty,
+    options: Option[IndicesOptionsRequest] = None
+) {
 
   // add a new key to the list of settings
   def add(key: String, value: String): UpdateSettingsRequest = copy(settings = settings + (key -> value))

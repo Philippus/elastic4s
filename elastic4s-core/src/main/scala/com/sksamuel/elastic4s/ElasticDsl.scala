@@ -10,7 +10,13 @@ import com.sksamuel.elastic4s.handlers.exists.ExistsHandlers
 import com.sksamuel.elastic4s.handlers.explain.ExplainHandlers
 import com.sksamuel.elastic4s.handlers.get.GetHandlers
 import com.sksamuel.elastic4s.handlers.index.mapping.MappingHandlers
-import com.sksamuel.elastic4s.handlers.index.{IndexAdminHandlers, IndexHandlers, IndexStatsHandlers, IndexTemplateHandlers, RolloverHandlers}
+import com.sksamuel.elastic4s.handlers.index.{
+  IndexAdminHandlers,
+  IndexHandlers,
+  IndexStatsHandlers,
+  IndexTemplateHandlers,
+  RolloverHandlers
+}
 import com.sksamuel.elastic4s.handlers.indexlifecyclemanagement.IndexLifecycleManagementHandlers
 import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.main.MainHandlers
@@ -35,53 +41,51 @@ import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 import com.sksamuel.elastic4s.requests.searches.template.SearchTemplateHandlers
 import com.sksamuel.elastic4s.requests.searches.{SearchHandlers, SearchScrollHandlers, defaultCustomAggregationHandler}
 
-trait ElasticDslWithoutSearch extends
+trait ElasticDslWithoutSearch extends ElasticApi
+    with BulkHandlers
+    with CatHandlers
+    with CountHandlers
+    with ClusterHandlers
+    with DeleteHandlers
+    with ExistsHandlers
+    with ExplainHandlers
+    with GetHandlers
+    with IndexHandlers
+    with IndexAdminHandlers
+    with IndexAliasHandlers
+    with IndexLifecycleManagementHandlers
+    with IndexStatsHandlers
+    with IndexTemplateHandlers
+    with IngestHandlers
+    with LocksHandlers
+    with MainHandlers
+    with MappingHandlers
+    with NodesHandlers
+    with ReindexHandlers
+    with ReloadSearchAnalyzersHandlers
+    with RoleAdminHandlers
+    with RoleHandlers
+    with RolloverHandlers
+    with SearchTemplateHandlers
+    with SearchScrollHandlers
+    with SettingsHandlers
+    with SnapshotHandlers
+    with StoredScriptHandlers
+    with SynonymsHandlers
+    with UpdateHandlers
+    with TaskHandlers
+    with TermVectorHandlers
+    with TermsEnumHandlers
+    with UserAdminHandlers
+    with UserHandlers
+    with ValidateHandlers
+    with PitHandlers {
 
-ElasticApi
-with BulkHandlers
-with CatHandlers
-with CountHandlers
-with ClusterHandlers
-with DeleteHandlers
-with ExistsHandlers
-with ExplainHandlers
-with GetHandlers
-with IndexHandlers
-with IndexAdminHandlers
-with IndexAliasHandlers
-with IndexLifecycleManagementHandlers
-with IndexStatsHandlers
-with IndexTemplateHandlers
-with IngestHandlers
-with LocksHandlers
-with MainHandlers
-with MappingHandlers
-with NodesHandlers
-with ReindexHandlers
-with ReloadSearchAnalyzersHandlers
-with RoleAdminHandlers
-with RoleHandlers
-with RolloverHandlers
-with SearchTemplateHandlers
-with SearchScrollHandlers
-with SettingsHandlers
-with SnapshotHandlers
-with StoredScriptHandlers
-with SynonymsHandlers
-with UpdateHandlers
-with TaskHandlers
-with TermVectorHandlers
-with TermsEnumHandlers
-with UserAdminHandlers
-with UserHandlers
-with ValidateHandlers
-with PitHandlers {
+  implicit class RichRequest[T](t: T) {
+    def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
 
-implicit class RichRequest[T](t: T) {
-  def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
-
-  def show(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
-}
+    def show(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
+  }
 }
 
 trait ElasticDsl
@@ -89,9 +93,12 @@ trait ElasticDsl
     with SearchHandlers
 
 object ElasticDsl extends ElasticDsl {
-  def withCustomAggregationHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])= new ElasticDslWithoutSearch {
-    implicit val customBaseSearchHandler: BaseSearchHandler = new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+  def withCustomAggregationHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) =
+    new ElasticDslWithoutSearch {
+      implicit val customBaseSearchHandler: BaseSearchHandler =
+        new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
 
-    implicit val customBaseMultiSearchHandler: BaseMultiSearchHandler = new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
-  }
+      implicit val customBaseMultiSearchHandler: BaseMultiSearchHandler =
+        new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+    }
 }

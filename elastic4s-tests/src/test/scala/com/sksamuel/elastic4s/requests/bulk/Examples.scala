@@ -8,14 +8,14 @@ object Examples extends ElasticDsl {
     indexInto("bands").fields("name" -> "coldplay"),
     deleteById("bands", "123"),
     indexInto("bands").fields(
-      "name" -> "elton john",
-      "best_album" -> "tumbleweed connection"
+      "name"                         -> "elton john",
+      "best_album"                   -> "tumbleweed connection"
     )
   )
 
   bulk(
-    indexInto("bands").fields("name" -> "coldplay"),
-    indexInto("bands").fields("name" -> "kings of leon"),
+    indexInto("bands").fields("name"    -> "coldplay"),
+    indexInto("bands").fields("name"    -> "kings of leon"),
     deleteById("places", "3"),
     deleteById("artists", "2"),
     updateById("bands", "4").doc("name" -> "kate bush")

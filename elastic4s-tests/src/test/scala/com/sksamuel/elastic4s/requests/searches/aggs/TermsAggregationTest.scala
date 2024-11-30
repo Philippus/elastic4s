@@ -28,10 +28,10 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("termsagg") fields("name" -> "Jalfrezi", "strength" -> "mild", "origin" -> "india"),
-      indexInto("termsagg") fields("name" -> "Madras", "strength" -> "hot", "origin" -> "india"),
-      indexInto("termsagg") fields("name" -> "Chilli Masala", "strength" -> "hot", "origin" -> "india"),
-      indexInto("termsagg") fields("name" -> "Tikka Masala", "strength" -> "medium")
+      indexInto("termsagg") fields ("name" -> "Jalfrezi", "strength"      -> "mild", "origin" -> "india"),
+      indexInto("termsagg") fields ("name" -> "Madras", "strength"        -> "hot", "origin"  -> "india"),
+      indexInto("termsagg") fields ("name" -> "Chilli Masala", "strength" -> "hot", "origin"  -> "india"),
+      indexInto("termsagg") fields ("name" -> "Tikka Masala", "strength"  -> "medium")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -46,7 +46,11 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.terms("agg1")
-      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty), TermBucket("medium", 1, Map.empty), TermBucket("mild", 1, Map.empty))
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
+        TermBucket("hot", 2, Map.empty),
+        TermBucket("medium", 1, Map.empty),
+        TermBucket("mild", 1, Map.empty)
+      )
     }
 
     "should only include matching documents in the query" in {
@@ -59,7 +63,10 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       resp.size shouldBe 2
 
       val agg = resp.aggregations.terms("agg1")
-      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 1, Map.empty), TermBucket("medium", 1, Map.empty))
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
+        TermBucket("hot", 1, Map.empty),
+        TermBucket("medium", 1, Map.empty)
+      )
     }
 
     "should support missing value" in {
@@ -72,7 +79,10 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.terms("agg1")
-      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 3, Map.empty), TermBucket("unknown", 1, Map.empty))
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
+        TermBucket("india", 3, Map.empty),
+        TermBucket("unknown", 1, Map.empty)
+      )
     }
 
     "should support min doc count" in {
@@ -113,7 +123,11 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.terms("agg1")
-      agg.bucket("hot").terms("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("india", 2, Map.empty))
+      agg.bucket("hot").terms("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket(
+        "india",
+        2,
+        Map.empty
+      ))
     }
 
     "should support _count desc terms order" in {
@@ -151,7 +165,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
     "should support partitioning" in {
       val numPartitions = 20
-      val responses = (0 until numPartitions).map { i =>
+      val responses     = (0 until numPartitions).map { i =>
         client.execute {
           search("termsagg").matchAllQuery().aggs {
             termsAgg("agg1", "strength").includePartition(i, numPartitions)
@@ -161,7 +175,11 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       responses.map(_.totalHits) should contain only (4)
 
       val aggs = responses.map(_.aggregations.terms("agg1"))
-      aggs.flatMap(_.buckets).map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty), TermBucket("medium", 1, Map.empty), TermBucket("mild", 1, Map.empty))
+      aggs.flatMap(_.buckets).map(_.copy(data = Map.empty)).toSet shouldBe Set(
+        TermBucket("hot", 2, Map.empty),
+        TermBucket("medium", 1, Map.empty),
+        TermBucket("mild", 1, Map.empty)
+      )
     }
   }
 }

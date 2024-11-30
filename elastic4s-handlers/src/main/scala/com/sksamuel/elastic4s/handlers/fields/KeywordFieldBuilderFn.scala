@@ -12,7 +12,9 @@ object KeywordFieldBuilderFn {
     values.get("eager_global_ordinals").map(_.asInstanceOf[Boolean]),
     values
       .get("fields")
-      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) => ElasticFieldBuilderFn.construct(key, value) }.toList).getOrElse(List.empty),
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+        ElasticFieldBuilderFn.construct(key, value)
+      }.toList).getOrElse(List.empty),
     values.get("ignore_above").map(_.asInstanceOf[Int]),
     values.get("index").map(_.asInstanceOf[Boolean]),
     values.get("index_options").map(_.asInstanceOf[String]),
@@ -24,7 +26,6 @@ object KeywordFieldBuilderFn {
     values.get("store").map(_.asInstanceOf[Boolean]),
     values.get("term_vector").map(_.asInstanceOf[String])
   )
-
 
   def build(field: KeywordField): XContentBuilder = {
 

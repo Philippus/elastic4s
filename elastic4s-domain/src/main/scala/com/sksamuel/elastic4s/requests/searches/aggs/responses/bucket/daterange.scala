@@ -13,14 +13,15 @@ object KeyedDateRangeAggResult {
     )
 }
 
-case class DateRangeBucket(from: Option[String],
-                           fromAsString: Option[String],
-                           to: Option[String],
-                           toAsString: Option[String],
-                           key: Option[String],
-                           override val docCount: Long,
-                           private[elastic4s] val data: Map[String, Any])
-  extends AggBucket
+case class DateRangeBucket(
+    from: Option[String],
+    fromAsString: Option[String],
+    to: Option[String],
+    toAsString: Option[String],
+    key: Option[String],
+    override val docCount: Long,
+    private[elastic4s] val data: Map[String, Any]
+) extends AggBucket
 
 object DateRangeBucket {
   private[elastic4s] def apply(map: Map[String, Any]): DateRangeBucket = DateRangeBucket(

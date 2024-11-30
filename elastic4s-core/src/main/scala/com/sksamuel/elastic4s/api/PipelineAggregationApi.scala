@@ -1,18 +1,36 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.{AvgBucketPipelineAgg, BucketScriptPipelineAgg, BucketSelectorPipelineAgg, BucketSortPipelineAgg, CumulativeCardinalityPipelineAgg, CumulativeSumPipelineAgg, DerivativePipelineAgg, DiffPipelineAgg, ExtendedStatsBucketPipelineAgg, MaxBucket, MinBucketPipelineAgg, MovFnPipelineAgg, PercentilesBucketPipelineAgg, StatsBucketPipelineAgg, SumBucketPipelineAgg}
+import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.{
+  AvgBucketPipelineAgg,
+  BucketScriptPipelineAgg,
+  BucketSelectorPipelineAgg,
+  BucketSortPipelineAgg,
+  CumulativeCardinalityPipelineAgg,
+  CumulativeSumPipelineAgg,
+  DerivativePipelineAgg,
+  DiffPipelineAgg,
+  ExtendedStatsBucketPipelineAgg,
+  MaxBucket,
+  MinBucketPipelineAgg,
+  MovFnPipelineAgg,
+  PercentilesBucketPipelineAgg,
+  StatsBucketPipelineAgg,
+  SumBucketPipelineAgg
+}
 import com.sksamuel.elastic4s.requests.searches.sort.Sort
 
 trait PipelineAggregationApi {
 
-  def avgBucketAgg(name: String, bucketsPath: String): AvgBucketPipelineAgg = avgBucketAggregation(name, bucketsPath)
+  def avgBucketAgg(name: String, bucketsPath: String): AvgBucketPipelineAgg         = avgBucketAggregation(name, bucketsPath)
   def avgBucketAggregation(name: String, bucketsPath: String): AvgBucketPipelineAgg =
     AvgBucketPipelineAgg(name, bucketsPath)
 
-  def bucketSelectorAggregation(name: String,
-                                script: Script,
-                                bucketsPathMap: Map[String, String]): BucketSelectorPipelineAgg =
+  def bucketSelectorAggregation(
+      name: String,
+      script: Script,
+      bucketsPathMap: Map[String, String]
+  ): BucketSelectorPipelineAgg =
     BucketSelectorPipelineAgg(name, script, bucketsPathMap)
 
   def bucketSortAggregation(name: String, sort: Seq[Sort]): BucketSortPipelineAgg =
@@ -35,7 +53,7 @@ trait PipelineAggregationApi {
   def extendedStatsBucketAggregation(name: String, bucketsPath: String): ExtendedStatsBucketPipelineAgg =
     ExtendedStatsBucketPipelineAgg(name, bucketsPath)
 
-  def maxBucketAgg(name: String, bucketsPath: String): MaxBucket = maxBucketAggregation(name, bucketsPath)
+  def maxBucketAgg(name: String, bucketsPath: String): MaxBucket         = maxBucketAggregation(name, bucketsPath)
   def maxBucketAggregation(name: String, bucketsPath: String): MaxBucket =
     MaxBucket(name, bucketsPath)
 

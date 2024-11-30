@@ -39,7 +39,7 @@ case class CustomNormalizerDefinition(override val name: String, filters: Seq[An
   def build(source: XContentBuilder): Unit = {
     source.field("type", "custom")
     val tokenFilters = filters.collect { case token: TokenFilter => token }
-    val charFilters  = filters.collect { case char: CharFilter   => char }
+    val charFilters  = filters.collect { case char: CharFilter => char }
     if (tokenFilters.nonEmpty)
       source.array("filter", tokenFilters.map(_.name).toArray)
     if (charFilters.nonEmpty)

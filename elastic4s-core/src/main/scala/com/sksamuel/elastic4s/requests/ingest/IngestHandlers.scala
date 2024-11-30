@@ -13,42 +13,43 @@ trait IngestHandlers {
     }
 
     override def responseHandler: ResponseHandler[GetPipelineResponse] = new ResponseHandler[GetPipelineResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, GetPipelineResponse] = response.statusCode match {
-        case 200 =>
-          val raw = ResponseHandler.fromResponse[Map[String, Map[String, Any]]](response)
-          val resp = raw.map { case (id, types) =>
-            GetPipelineResponse(
-              id,
-              types("description").asInstanceOf[String],
-              types.get("version").asInstanceOf[Option[Int]],
-              types("processors").asInstanceOf[Seq[Map[String, Map[String, Any]]]].map { processor =>
-                val name = processor.keys.head
-                name match {
-                  case GeoIPProcessor.name =>
-                    val mapping = processor(name)
-                    GeoIPProcessor(
-                      mapping("field").asInstanceOf[String],
-                      mapping.get("target_field").asInstanceOf[Option[String]],
-                      mapping.get("database_file").asInstanceOf[Option[String]],
-                      mapping.get("properties").asInstanceOf[Option[Seq[String]]],
-                      mapping.get("ignore_missing").asInstanceOf[Option[Boolean]],
-                      mapping.get("first_only").asInstanceOf[Option[Boolean]]
-                    )
-                  case _ =>
-                    val b = XContentFactory.jsonBuilder()
-                    processor(name).foreach { case (k, v) =>
-                      b.autofield(k, v)
-                    }
-                    b.endObject()
-                    CustomProcessor(name, b.string)
+      override def handle(response: HttpResponse): Either[ElasticError, GetPipelineResponse] =
+        response.statusCode match {
+          case 200 =>
+            val raw  = ResponseHandler.fromResponse[Map[String, Map[String, Any]]](response)
+            val resp = raw.map { case (id, types) =>
+              GetPipelineResponse(
+                id,
+                types("description").asInstanceOf[String],
+                types.get("version").asInstanceOf[Option[Int]],
+                types("processors").asInstanceOf[Seq[Map[String, Map[String, Any]]]].map { processor =>
+                  val name = processor.keys.head
+                  name match {
+                    case GeoIPProcessor.name =>
+                      val mapping = processor(name)
+                      GeoIPProcessor(
+                        mapping("field").asInstanceOf[String],
+                        mapping.get("target_field").asInstanceOf[Option[String]],
+                        mapping.get("database_file").asInstanceOf[Option[String]],
+                        mapping.get("properties").asInstanceOf[Option[Seq[String]]],
+                        mapping.get("ignore_missing").asInstanceOf[Option[Boolean]],
+                        mapping.get("first_only").asInstanceOf[Option[Boolean]]
+                      )
+                    case _                   =>
+                      val b = XContentFactory.jsonBuilder()
+                      processor(name).foreach { case (k, v) =>
+                        b.autofield(k, v)
+                      }
+                      b.endObject()
+                      CustomProcessor(name, b.string)
+                  }
                 }
-              }
-            )
-          }
-          Right(resp.head)
-        case _ =>
-          Left(ElasticErrorParser.parse(response))
-      }
+              )
+            }
+            Right(resp.head)
+          case _   =>
+            Left(ElasticErrorParser.parse(response))
+        }
     }
   }
 

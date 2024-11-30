@@ -1,6 +1,10 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.security.users.admin.{ChangePasswordRequest, DisableUserRequest, EnableUserRequest}
+import com.sksamuel.elastic4s.requests.security.users.admin.{
+  ChangePasswordRequest,
+  DisableUserRequest,
+  EnableUserRequest
+}
 
 trait UserAdminApi {
   // Changes password for a specified user

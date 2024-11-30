@@ -12,7 +12,7 @@ import org.scalatest.matchers.should.Matchers
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class UpdateTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with Matchers
     with DockerTests
     with OptionValues {
@@ -27,8 +27,8 @@ class UpdateTest
   private val nestedIndex = indexInto("hans").fields(
     "recording_location" ->
       Map(
-        "city" -> "London",
-        "country" -> "United Kingdom",
+        "city"     -> "London",
+        "country"  -> "United Kingdom",
         "position" -> List(-0.127413, 51.506907)
       )
   ) id "5" refresh RefreshPolicy.Immediate
@@ -55,11 +55,11 @@ class UpdateTest
 
   it should "support nested field based update" in {
     val fieldName = "recording_location"
-    val document = Map(
+    val document  = Map(
       fieldName ->
         Map(
-          "city" -> "London!",
-          "country" -> "United Kingdom!",
+          "city"     -> "London!",
+          "country"  -> "United Kingdom!",
           "position" -> List(-0.110146, 51.513176)
         )
     )
@@ -96,7 +96,9 @@ class UpdateTest
 
   it should "support string based upsert" in {
     client.execute {
-      updateById("hans", "44").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(RefreshPolicy.Immediate)
+      updateById("hans", "44").docAsUpsert(""" { "name" : "pirates of the caribbean" } """).refresh(
+        RefreshPolicy.Immediate
+      )
     }.await.result.result shouldBe "created"
 
     client.execute {
@@ -174,8 +176,8 @@ class UpdateTest
 
   it should "handle concurrency with internal versioning" in {
 
-    val id = UUID.randomUUID.toString
-    val result = client.execute {
+    val id                     = UUID.randomUUID.toString
+    val result                 = client.execute {
       updateById("hans", id).docAsUpsert(
         "name" -> "rain man"
       ).refresh(RefreshPolicy.Immediate)
@@ -184,12 +186,12 @@ class UpdateTest
       updateById("hans", id).doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
         .ifPrimaryTerm(result.result.primaryTerm + 1).refresh(RefreshPolicy.Immediate)
     }.await
-    wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
-    val wrongSeqNoResult = client.execute {
+    wrongPrimaryTermResult.error.toString should include("version_conflict_engine_exception")
+    val wrongSeqNoResult       = client.execute {
       updateById("hans", id).doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo + 1)
         .ifPrimaryTerm(result.result.primaryTerm).refresh(RefreshPolicy.Immediate)
     }.await
-    wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
+    wrongSeqNoResult.error.toString should include("version_conflict_engine_exception")
     val successfulUpdateResult = client.execute {
       updateById("hans", id).doc(""" { "name" : "madagascar" } """).ifSeqNo(result.result.seqNo)
         .ifPrimaryTerm(result.result.primaryTerm).refresh(RefreshPolicy.Immediate)

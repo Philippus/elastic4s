@@ -32,12 +32,30 @@ class KeyedDateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests wit
 
   client.execute(
     bulk(
-      indexInto("daterangeaggs").fields("name" -> "Star Trek Picard", "premiere_date" -> LocalDate.of(2020, 1, 23).format(dateFormatter)),
-      indexInto("daterangeaggs").fields("name" -> "Better Call Saul", "premiere_date" -> LocalDate.of(2015, 2, 8).format(dateFormatter)),
-      indexInto("daterangeaggs").fields("name" -> "Star Trek Discovery", "premiere_date" -> LocalDate.of(2017, 9, 19).format(dateFormatter)),
-      indexInto("daterangeaggs").fields("name" -> "Game of Thrones", "premiere_date" -> LocalDate.of(2011, 4, 17).format(dateFormatter)),
-      indexInto("daterangeaggs").fields("name" -> "Designated Survivor", "premiere_date" -> LocalDate.of(2016, 9, 21).format(dateFormatter)),
-      indexInto("daterangeaggs").fields("name" -> "Walking Dead", "premiere_date" -> LocalDate.of(2011, 10, 31).format(dateFormatter))
+      indexInto("daterangeaggs").fields(
+        "name"          -> "Star Trek Picard",
+        "premiere_date" -> LocalDate.of(2020, 1, 23).format(dateFormatter)
+      ),
+      indexInto("daterangeaggs").fields(
+        "name"          -> "Better Call Saul",
+        "premiere_date" -> LocalDate.of(2015, 2, 8).format(dateFormatter)
+      ),
+      indexInto("daterangeaggs").fields(
+        "name"          -> "Star Trek Discovery",
+        "premiere_date" -> LocalDate.of(2017, 9, 19).format(dateFormatter)
+      ),
+      indexInto("daterangeaggs").fields(
+        "name"          -> "Game of Thrones",
+        "premiere_date" -> LocalDate.of(2011, 4, 17).format(dateFormatter)
+      ),
+      indexInto("daterangeaggs").fields(
+        "name"          -> "Designated Survivor",
+        "premiere_date" -> LocalDate.of(2016, 9, 21).format(dateFormatter)
+      ),
+      indexInto("daterangeaggs").fields(
+        "name"          -> "Walking Dead",
+        "premiere_date" -> LocalDate.of(2011, 10, 31).format(dateFormatter)
+      )
     ).refreshImmediately
   ).await
 
@@ -57,8 +75,24 @@ class KeyedDateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests wit
 
       val agg = resp.aggs.keyedDateRange("agg1")
       agg.buckets.mapValues(_.copy(data = Map.empty)).toMap shouldBe Map(
-        "old" -> DateRangeBucket(Some("1.2923712E12"), Some("15/12/2010"), Some("1.4501376E12"), Some("15/12/2015"), None, 3, Map.empty),
-        "new" -> DateRangeBucket(Some("1.4501376E12"), Some("15/12/2015"), Some("1.6079904E12"), Some("15/12/2020"), None, 3, Map.empty)
+        "old" -> DateRangeBucket(
+          Some("1.2923712E12"),
+          Some("15/12/2010"),
+          Some("1.4501376E12"),
+          Some("15/12/2015"),
+          None,
+          3,
+          Map.empty
+        ),
+        "new" -> DateRangeBucket(
+          Some("1.4501376E12"),
+          Some("15/12/2015"),
+          Some("1.6079904E12"),
+          Some("15/12/2020"),
+          None,
+          3,
+          Map.empty
+        )
       )
     }
     "should support string dates" in {
@@ -76,8 +110,24 @@ class KeyedDateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests wit
 
       val agg = resp.aggs.keyedDateRange("agg1")
       agg.buckets.mapValues(_.copy(data = Map.empty)).toMap shouldBe Map(
-        "old" -> DateRangeBucket(Some("1.2923712E12"), Some("15/12/2010"), Some("1.4501376E12"), Some("15/12/2015"), None, 3, Map.empty),
-        "new" -> DateRangeBucket(Some("1.4501376E12"), Some("15/12/2015"), Some("1.6079904E12"), Some("15/12/2020"), None, 3, Map.empty)
+        "old" -> DateRangeBucket(
+          Some("1.2923712E12"),
+          Some("15/12/2010"),
+          Some("1.4501376E12"),
+          Some("15/12/2015"),
+          None,
+          3,
+          Map.empty
+        ),
+        "new" -> DateRangeBucket(
+          Some("1.4501376E12"),
+          Some("15/12/2015"),
+          Some("1.6079904E12"),
+          Some("15/12/2020"),
+          None,
+          3,
+          Map.empty
+        )
       )
     }
   }

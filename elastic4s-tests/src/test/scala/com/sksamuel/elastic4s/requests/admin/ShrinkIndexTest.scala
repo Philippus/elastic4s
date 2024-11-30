@@ -8,7 +8,7 @@ import org.scalatest.wordspec.AnyWordSpec
 class ShrinkIndexTest extends AnyWordSpec with Matchers with DockerTests {
 
   val reindexTarget = "reindextarget"
-  val reindex = "reindex"
+  val reindex       = "reindex"
 
   deleteIdx(reindex)
   deleteIdx(reindexTarget)
@@ -26,7 +26,7 @@ class ShrinkIndexTest extends AnyWordSpec with Matchers with DockerTests {
   "a shrink index request" should {
     "copy from one index to another with new shards number" in {
       client.execute {
-        updateIndexLevelSettings(reindex).settings(Map("index.blocks.write"-> true.toString))
+        updateIndexLevelSettings(reindex).settings(Map("index.blocks.write" -> true.toString))
       }.await.result
 
       client.execute {

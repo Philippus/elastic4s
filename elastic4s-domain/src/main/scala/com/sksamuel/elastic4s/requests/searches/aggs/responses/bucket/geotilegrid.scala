@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, AggSe
 case class GeoTileGrid(name: String, buckets: Seq[GeoTileGridBucket]) extends BucketAggregation
 
 case class GeoTileGridBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
-  extends AggBucket
+    extends AggBucket
 
 object GeoTileGrid {
 
@@ -24,4 +24,3 @@ object GeoTileGrid {
     }
   )
 }
-

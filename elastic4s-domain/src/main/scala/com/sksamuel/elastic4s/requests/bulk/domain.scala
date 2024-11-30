@@ -40,59 +40,65 @@ sealed trait BulkResponseItem {
 
 }
 
-case class IndexBulkResponseItem(itemId: Int,
-                                 @JsonProperty("_id") id: String,
-                                 @JsonProperty("_index") index: String,
-                                 @JsonProperty("_type") `type`: String,
-                                 @JsonProperty("_version") version: Long,
-                                 @JsonProperty("forced_refresh") forcedRefresh: Boolean,
-                                 @JsonProperty("_seq_no") seqNo: Long,
-                                 @JsonProperty("_primary_term") primaryTerm: Long,
-                                 found: Boolean,
-                                 created: Boolean,
-                                 result: String,
-                                 status: Int,
-                                 error: Option[BulkError],
-                                 @JsonProperty("_shards") shards: Option[Shards]) extends BulkResponseItem {
+case class IndexBulkResponseItem(
+    itemId: Int,
+    @JsonProperty("_id") id: String,
+    @JsonProperty("_index") index: String,
+    @JsonProperty("_type") `type`: String,
+    @JsonProperty("_version") version: Long,
+    @JsonProperty("forced_refresh") forcedRefresh: Boolean,
+    @JsonProperty("_seq_no") seqNo: Long,
+    @JsonProperty("_primary_term") primaryTerm: Long,
+    found: Boolean,
+    created: Boolean,
+    result: String,
+    status: Int,
+    error: Option[BulkError],
+    @JsonProperty("_shards") shards: Option[Shards]
+) extends BulkResponseItem {
   override type Self = IndexBulkResponseItem
 
   override def withItemId(itemId: Int): IndexBulkResponseItem = this.copy(itemId)
 }
 
-case class DeleteBulkResponseItem(itemId: Int,
-                                  @JsonProperty("_id") id: String,
-                                  @JsonProperty("_index") index: String,
-                                  @JsonProperty("_type") `type`: String,
-                                  @JsonProperty("_version") version: Long,
-                                  @JsonProperty("forced_refresh") forcedRefresh: Boolean,
-                                  @JsonProperty("_seq_no") seqNo: Long,
-                                  @JsonProperty("_primary_term") primaryTerm: Long,
-                                  found: Boolean,
-                                  created: Boolean,
-                                  result: String,
-                                  status: Int,
-                                  error: Option[BulkError],
-                                  @JsonProperty("_shards") shards: Option[Shards]) extends BulkResponseItem {
+case class DeleteBulkResponseItem(
+    itemId: Int,
+    @JsonProperty("_id") id: String,
+    @JsonProperty("_index") index: String,
+    @JsonProperty("_type") `type`: String,
+    @JsonProperty("_version") version: Long,
+    @JsonProperty("forced_refresh") forcedRefresh: Boolean,
+    @JsonProperty("_seq_no") seqNo: Long,
+    @JsonProperty("_primary_term") primaryTerm: Long,
+    found: Boolean,
+    created: Boolean,
+    result: String,
+    status: Int,
+    error: Option[BulkError],
+    @JsonProperty("_shards") shards: Option[Shards]
+) extends BulkResponseItem {
   override type Self = DeleteBulkResponseItem
 
   override def withItemId(itemId: Int): DeleteBulkResponseItem = this.copy(itemId)
 }
 
-case class UpdateBulkResponseItem(itemId: Int,
-                                  @JsonProperty("_id") id: String,
-                                  @JsonProperty("_index") index: String,
-                                  @JsonProperty("_type") `type`: String,
-                                  @JsonProperty("_version") version: Long,
-                                  @JsonProperty("forced_refresh") forcedRefresh: Boolean,
-                                  @JsonProperty("_seq_no") seqNo: Long,
-                                  @JsonProperty("_primary_term") primaryTerm: Long,
-                                  found: Boolean,
-                                  created: Boolean,
-                                  result: String,
-                                  status: Int,
-                                  error: Option[BulkError],
-                                  @JsonProperty("_shards") shards: Option[Shards],
-                                  private val get: Option[UpdateGet] = None) extends BulkResponseItem {
+case class UpdateBulkResponseItem(
+    itemId: Int,
+    @JsonProperty("_id") id: String,
+    @JsonProperty("_index") index: String,
+    @JsonProperty("_type") `type`: String,
+    @JsonProperty("_version") version: Long,
+    @JsonProperty("forced_refresh") forcedRefresh: Boolean,
+    @JsonProperty("_seq_no") seqNo: Long,
+    @JsonProperty("_primary_term") primaryTerm: Long,
+    found: Boolean,
+    created: Boolean,
+    result: String,
+    status: Int,
+    error: Option[BulkError],
+    @JsonProperty("_shards") shards: Option[Shards],
+    private val get: Option[UpdateGet] = None
+) extends BulkResponseItem {
   override type Self = UpdateBulkResponseItem
 
   override def withItemId(itemId: Int): UpdateBulkResponseItem = this.copy(itemId)
@@ -102,20 +108,22 @@ case class UpdateBulkResponseItem(itemId: Int,
   def sourceAsString: Option[String] = source.map(JacksonSupport.mapper.writeValueAsString)
 }
 
-case class CreateBulkResponseItem(itemId: Int,
-                                  @JsonProperty("_id") id: String,
-                                  @JsonProperty("_index") index: String,
-                                  @JsonProperty("_type") `type`: String,
-                                  @JsonProperty("_version") version: Long,
-                                  @JsonProperty("forced_refresh") forcedRefresh: Boolean,
-                                  @JsonProperty("_seq_no") seqNo: Long,
-                                  @JsonProperty("_primary_term") primaryTerm: Long,
-                                  found: Boolean,
-                                  created: Boolean,
-                                  result: String,
-                                  status: Int,
-                                  error: Option[BulkError],
-                                  @JsonProperty("_shards") shards: Option[Shards]) extends BulkResponseItem {
+case class CreateBulkResponseItem(
+    itemId: Int,
+    @JsonProperty("_id") id: String,
+    @JsonProperty("_index") index: String,
+    @JsonProperty("_type") `type`: String,
+    @JsonProperty("_version") version: Long,
+    @JsonProperty("forced_refresh") forcedRefresh: Boolean,
+    @JsonProperty("_seq_no") seqNo: Long,
+    @JsonProperty("_primary_term") primaryTerm: Long,
+    found: Boolean,
+    created: Boolean,
+    result: String,
+    status: Int,
+    error: Option[BulkError],
+    @JsonProperty("_shards") shards: Option[Shards]
+) extends BulkResponseItem {
   override type Self = CreateBulkResponseItem
 
   override def withItemId(itemId: Int): CreateBulkResponseItem = this.copy(itemId)
@@ -123,16 +131,27 @@ case class CreateBulkResponseItem(itemId: Int,
 
 case class CausedBy(`type`: String, reason: String)
 
-case class BulkError(`type`: String, reason: String, index_uuid: String, shard: Int, index: String, caused_by: Option[CausedBy])
+case class BulkError(
+    `type`: String,
+    reason: String,
+    index_uuid: String,
+    shard: Int,
+    index: String,
+    caused_by: Option[CausedBy]
+)
 
-case class BulkResponseItems(index: Option[IndexBulkResponseItem],
-                             delete: Option[DeleteBulkResponseItem],
-                             update: Option[UpdateBulkResponseItem],
-                             create: Option[CreateBulkResponseItem])
+case class BulkResponseItems(
+    index: Option[IndexBulkResponseItem],
+    delete: Option[DeleteBulkResponseItem],
+    update: Option[UpdateBulkResponseItem],
+    create: Option[CreateBulkResponseItem]
+)
 
-case class BulkResponse(took: Long,
-                        errors: Boolean,
-                        @JsonProperty("items") private val _items: Seq[BulkResponseItems]) {
+case class BulkResponse(
+    took: Long,
+    errors: Boolean,
+    @JsonProperty("items") private val _items: Seq[BulkResponseItems]
+) {
 
   def items: Seq[BulkResponseItem] =
     _items

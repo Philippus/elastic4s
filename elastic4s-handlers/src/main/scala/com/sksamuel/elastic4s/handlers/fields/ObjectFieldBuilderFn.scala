@@ -10,10 +10,11 @@ object ObjectFieldBuilderFn {
     values.get("enabled").map(_.asInstanceOf[Boolean]),
     values
       .get("properties")
-      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) => ElasticFieldBuilderFn.construct(key, value) }.toSeq)
+      .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+        ElasticFieldBuilderFn.construct(key, value)
+      }.toSeq)
       .getOrElse(Seq.empty)
   )
-
 
   def build(field: ObjectField): XContentBuilder = {
 

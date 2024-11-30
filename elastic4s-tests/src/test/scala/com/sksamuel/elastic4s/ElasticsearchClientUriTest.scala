@@ -5,9 +5,11 @@ import org.scalatest.matchers.should.Matchers
 
 class ElasticsearchClientUriTest extends AnyFlatSpec with Matchers {
 
-  private def testString(connectionString: String,
-                         hosts: List[(String, Int)],
-                         options: Map[String, String] = Map.empty): Unit = {
+  private def testString(
+      connectionString: String,
+      hosts: List[(String, Int)],
+      options: Map[String, String] = Map.empty
+  ): Unit = {
     val uri = ElasticsearchClientUri(connectionString)
     uri.hosts shouldBe hosts
     uri.options shouldBe options
@@ -34,15 +36,19 @@ class ElasticsearchClientUriTest extends AnyFlatSpec with Matchers {
   }
 
   it should "parse everything" in {
-    testString("elasticsearch://host1:1234,host2:9999?a=b&c=d",
+    testString(
+      "elasticsearch://host1:1234,host2:9999?a=b&c=d",
       List(("host1", 1234), ("host2", 9999)),
-      Map("a" -> "b", "c" -> "d"))
+      Map("a" -> "b", "c" -> "d")
+    )
   }
 
   it should "parse everything with trailing slash" in {
-    testString("elasticsearch://host1:1234,host2:9999/?a=b&c=d",
+    testString(
+      "elasticsearch://host1:1234,host2:9999/?a=b&c=d",
       List(("host1", 1234), ("host2", 9999)),
-      Map("a" -> "b", "c" -> "d"))
+      Map("a" -> "b", "c" -> "d")
+    )
   }
 
   it should "parse options" in {

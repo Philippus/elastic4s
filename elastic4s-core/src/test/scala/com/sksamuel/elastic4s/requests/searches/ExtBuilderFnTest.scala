@@ -10,10 +10,10 @@ class ExtBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
     val search = SearchRequest("anyIndex").ext(Map(
       "custom" -> Map(
         "a_string_property" -> "string property",
-        "a_long_property" -> 1L,
-        "nested_map" -> Map (
+        "a_long_property"   -> 1L,
+        "nested_map"        -> Map(
           "another_string_property" -> "string property",
-          "another_long_property" -> 2L
+          "another_long_property"   -> 2L
         )
       )
     ))

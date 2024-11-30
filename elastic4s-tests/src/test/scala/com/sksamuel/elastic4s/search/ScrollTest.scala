@@ -66,7 +66,10 @@ class ScrollTest extends AnyWordSpec with Matchers with DockerTests {
       val resp4 = client.execute {
         searchScroll(resp3.result.scrollId.get).keepAlive("1m")
       }.await
-      resp4.result.hits.hits.map(_.storedField("name").value).toList shouldBe List("jig of life", "watching you watching me")
+      resp4.result.hits.hits.map(_.storedField("name").value).toList shouldBe List(
+        "jig of life",
+        "watching you watching me"
+      )
 
       val resp5 = client.execute {
         searchScroll(resp4.result.scrollId.get)
@@ -134,7 +137,9 @@ class ScrollTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result
 
       (resp1.hits.hits ++ resp2.hits.hits ++ resp3.hits.hits ++ resp4.hits.hits).length shouldBe 9
-      val merged = Seq(resp1.hits.hits, resp3.hits.hits, resp2.hits.hits, resp4.hits.hits).flatMap(resp => resp.map(_.storedField("name").value.asInstanceOf[String])).toList.distinct
+      val merged = Seq(resp1.hits.hits, resp3.hits.hits, resp2.hits.hits, resp4.hits.hits).flatMap(resp =>
+        resp.map(_.storedField("name").value.asInstanceOf[String])
+      ).toList.distinct
       merged.length shouldBe 9
       merged.max shouldBe "watching you watching me"
       merged.min shouldBe "cloudbusting"

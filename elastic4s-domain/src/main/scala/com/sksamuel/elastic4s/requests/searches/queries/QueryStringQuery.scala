@@ -6,37 +6,38 @@ import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryB
 
 import java.util.TimeZone
 
-case class QueryStringQuery(query: String,
-                            allowLeadingWildcard: Option[Boolean] = None,
-                            analyzeWildcard: Option[Boolean] = None,
-                            analyzer: Option[String] = None,
-                            autoGeneratePhraseQueries: Option[Boolean] = None,
-                            autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
-                            boost: Option[Double] = None,
-                            defaultOperator: Option[String] = None,
-                            defaultField: Option[String] = None,
-                            enablePositionIncrements: Option[Boolean] = None,
-                            fields: Seq[(String, Option[Double])] = Nil,
-                            fuzziness: Option[String] = None,
-                            fuzzyMaxExpansions: Option[Int] = None,
-                            fuzzyPrefixLength: Option[Int] = None,
-                            fuzzyRewrite: Option[String] = None,
-                            lenient: Option[Boolean] = None,
-                            maxDeterminizedStates: Option[Int] = None,
-                            minimumShouldMatch: Option[String] = None,
-                            phraseSlop: Option[Int] = None,
-                            quoteAnalyzer: Option[String] = None,
-                            quoteFieldSuffix: Option[String] = None,
-                            queryName: Option[String] = None,
-                            rewrite: Option[String] = None,
-                            splitOnWhitespace: Option[Boolean] = None,
-                            tieBreaker: Option[Double] = None,
-                            `type`: Option[MultiMatchQueryBuilderType] = None,
-                            timeZone: Option[String] = None)
-  extends Query {
+case class QueryStringQuery(
+    query: String,
+    allowLeadingWildcard: Option[Boolean] = None,
+    analyzeWildcard: Option[Boolean] = None,
+    analyzer: Option[String] = None,
+    autoGeneratePhraseQueries: Option[Boolean] = None,
+    autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
+    boost: Option[Double] = None,
+    defaultOperator: Option[String] = None,
+    defaultField: Option[String] = None,
+    enablePositionIncrements: Option[Boolean] = None,
+    fields: Seq[(String, Option[Double])] = Nil,
+    fuzziness: Option[String] = None,
+    fuzzyMaxExpansions: Option[Int] = None,
+    fuzzyPrefixLength: Option[Int] = None,
+    fuzzyRewrite: Option[String] = None,
+    lenient: Option[Boolean] = None,
+    maxDeterminizedStates: Option[Int] = None,
+    minimumShouldMatch: Option[String] = None,
+    phraseSlop: Option[Int] = None,
+    quoteAnalyzer: Option[String] = None,
+    quoteFieldSuffix: Option[String] = None,
+    queryName: Option[String] = None,
+    rewrite: Option[String] = None,
+    splitOnWhitespace: Option[Boolean] = None,
+    tieBreaker: Option[Double] = None,
+    `type`: Option[MultiMatchQueryBuilderType] = None,
+    timeZone: Option[String] = None
+) extends Query {
 
   def rewrite(rewrite: String): QueryStringQuery = copy(rewrite = rewrite.some)
-  def boost(boost: Double): QueryStringQuery = copy(boost = boost.some)
+  def boost(boost: Double): QueryStringQuery     = copy(boost = boost.some)
 
   def analyzer(a: String): QueryStringQuery = copy(analyzer = a.some)
 
@@ -44,7 +45,7 @@ case class QueryStringQuery(query: String,
   def analyzer(a: Analyzer): QueryStringQuery = analyzer(a.name)
 
   def defaultOperator(op: String): QueryStringQuery = copy(defaultOperator = op.some)
-  def operator(op: String): QueryStringQuery = defaultOperator(op)
+  def operator(op: String): QueryStringQuery        = defaultOperator(op)
 
   def asfields(fields: String*): QueryStringQuery = copy(fields = fields.map(f => (f, None)))
 
@@ -110,7 +111,7 @@ case class QueryStringQuery(query: String,
 
   def phraseSlop(phraseSlop: Int): QueryStringQuery = copy(phraseSlop = phraseSlop.some)
 
-  def matchType(t: String): QueryStringQuery = matchType(MultiMatchQueryBuilderType.valueOf(t))
+  def matchType(t: String): QueryStringQuery                     = matchType(MultiMatchQueryBuilderType.valueOf(t))
   def matchType(t: MultiMatchQueryBuilderType): QueryStringQuery = copy(`type` = t.some)
 
   def timeZone(t: String): QueryStringQuery = copy(timeZone = t.some)

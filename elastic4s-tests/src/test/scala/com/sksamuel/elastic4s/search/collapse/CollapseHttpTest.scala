@@ -28,10 +28,9 @@ class CollapseHttpTest extends AnyFreeSpec with Matchers with DockerTests with B
 
     client.execute {
       bulk(
-        indexInto("collapse") id "1" fields("name" -> "Ibiza Playa", "board" -> "AI"),
-        indexInto("collapse") id "2" fields("name" -> "Ibiza Playa", "board" -> "BB"),
-
-        indexInto("collapse") id "3" fields("name" -> "Best Tenerife", "board" -> "AI")
+        indexInto("collapse") id "1" fields ("name" -> "Ibiza Playa", "board"   -> "AI"),
+        indexInto("collapse") id "2" fields ("name" -> "Ibiza Playa", "board"   -> "BB"),
+        indexInto("collapse") id "3" fields ("name" -> "Best Tenerife", "board" -> "AI")
       ).refresh(RefreshPolicy.Immediate)
     }.await
   }

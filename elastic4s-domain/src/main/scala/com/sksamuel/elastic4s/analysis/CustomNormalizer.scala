@@ -7,9 +7,8 @@ trait Normalizer {
   def build: XContentBuilder
 }
 
-case class CustomNormalizer(override val name: String,
-                            charFilters: List[String],
-                            tokenFilters: List[String]) extends Normalizer {
+case class CustomNormalizer(override val name: String, charFilters: List[String], tokenFilters: List[String])
+    extends Normalizer {
   override def build: XContentBuilder = NormalizerBuilder.build(this)
 }
 

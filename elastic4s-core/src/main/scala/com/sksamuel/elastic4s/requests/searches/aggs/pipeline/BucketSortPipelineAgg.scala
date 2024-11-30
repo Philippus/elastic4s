@@ -2,13 +2,14 @@ package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
 import com.sksamuel.elastic4s.requests.searches.sort.Sort
 
-case class BucketSortPipelineAgg(name: String,
-                                 sort: Seq[Sort],
-                                 from: Option[Int] = None,
-                                 size: Option[Int] = None,
-                                 gapPolicy: Option[GapPolicy] = None,
-                                 metadata: Map[String, AnyRef] = Map.empty)
-    extends PipelineAgg {
+case class BucketSortPipelineAgg(
+    name: String,
+    sort: Seq[Sort],
+    from: Option[Int] = None,
+    size: Option[Int] = None,
+    gapPolicy: Option[GapPolicy] = None,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends PipelineAgg {
 
   type T = BucketSortPipelineAgg
 

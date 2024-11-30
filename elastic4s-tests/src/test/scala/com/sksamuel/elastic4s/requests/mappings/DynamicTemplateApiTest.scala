@@ -12,18 +12,24 @@ class DynamicTemplateApiTest extends AnyWordSpec with Matchers with JsonSugar wi
 
   "dynamic templates" should {
     "support match" in {
-      val temp = DynamicTemplateRequest("es", TextField("match_*_es").analyzer(LanguageAnalyzers.spanish)) matchMappingType "string" `match` "*_es"
+      val temp = DynamicTemplateRequest(
+        "es",
+        TextField("match_*_es").analyzer(LanguageAnalyzers.spanish)
+      ) matchMappingType "string" `match` "*_es"
       DynamicTemplateBodyFn.build(temp).string should matchJsonResource("/json/mappings/dynamic_template.json")
     }
     "support match pattern" in {
-      val temp = DynamicTemplateRequest("es",
-        TextField("matchPattern_*_es").analyzer(LanguageAnalyzers.spanish)
-      ).matchMappingType("string").matchPattern("*_es")
-      DynamicTemplateBodyFn.build(temp).string should matchJsonResource("/json/mappings/dynamic_template_match_pattern.json")
+      val temp = DynamicTemplateRequest("es", TextField("matchPattern_*_es").analyzer(LanguageAnalyzers.spanish))
+        .matchMappingType("string").matchPattern("*_es")
+      DynamicTemplateBodyFn.build(temp).string should matchJsonResource(
+        "/json/mappings/dynamic_template_match_pattern.json"
+      )
     }
     "support dynamic type" in {
       val temp = DynamicTemplateRequest("es", DynamicField("", docValues = Some(false))).matchPattern("*_es")
-      DynamicTemplateBodyFn.build(temp).string should matchJsonResource("/json/mappings/dynamic_template_dynamic_type.json")
+      DynamicTemplateBodyFn.build(temp).string should matchJsonResource(
+        "/json/mappings/dynamic_template_dynamic_type.json"
+      )
     }
   }
 }

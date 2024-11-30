@@ -19,8 +19,12 @@ class LongFieldTest extends AnyFunSuite with Matchers {
       copyTo = List("q", "er")
     )
 
-    val jsonStringValue = """{"type":"long","copy_to":["q","er"],"boost":1.2,"index":true,"null_value":142,"store":true,"coerce":true,"ignore_malformed":true}"""
+    val jsonStringValue =
+      """{"type":"long","copy_to":["q","er"],"boost":1.2,"index":true,"null_value":142,"store":true,"coerce":true,"ignore_malformed":true}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
-    ElasticFieldBuilderFn.construct(field.name, JacksonSupport.mapper.readValue[Map[String, Any]](jsonStringValue)) shouldBe (field)
+    ElasticFieldBuilderFn.construct(
+      field.name,
+      JacksonSupport.mapper.readValue[Map[String, Any]](jsonStringValue)
+    ) shouldBe (field)
   }
 }

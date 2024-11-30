@@ -7,33 +7,35 @@ import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.{Index, Indexes}
 import scala.concurrent.duration.FiniteDuration
 
-case class ReindexRequest(sourceIndexes: Indexes,
-                          targetIndex: Index,
-                          filter: Option[Query] = None,
-                          requestsPerSecond: Option[Float] = None,
-                          refresh: Option[RefreshPolicy] = None,
-                          maxRetries: Option[Int] = None,
-                          waitForCompletion: Option[Boolean] = None,
-                          waitForActiveShards: Option[Int] = None,
-                          timeout: Option[FiniteDuration] = None,
-                          retryBackoffInitialTime: Option[FiniteDuration] = None,
-                          shouldStoreResult: Option[Boolean] = None,
-                          proceedOnConflicts: Option[Boolean] = None,
-                          remoteHost: Option[String] = None,
-                          remoteUser: Option[String] = None,
-                          remotePass: Option[String] = None,
-                          // It’s also possible to limit the number of processed documents by setting size.
-                          maxDocs: Option[Int] = None,
-                          script: Option[Script] = None,
-                          scroll: Option[String] = None,
-                          size: Option[Int] = None,
-                          createOnly: Option[Boolean] = None,
-                          slices: Option[Int] = None,
-                          slice: Option[Slice] = None,
-                          versionType: Option[VersionType] = None,
-                          pipeline: Option[String] = None) {
+case class ReindexRequest(
+    sourceIndexes: Indexes,
+    targetIndex: Index,
+    filter: Option[Query] = None,
+    requestsPerSecond: Option[Float] = None,
+    refresh: Option[RefreshPolicy] = None,
+    maxRetries: Option[Int] = None,
+    waitForCompletion: Option[Boolean] = None,
+    waitForActiveShards: Option[Int] = None,
+    timeout: Option[FiniteDuration] = None,
+    retryBackoffInitialTime: Option[FiniteDuration] = None,
+    shouldStoreResult: Option[Boolean] = None,
+    proceedOnConflicts: Option[Boolean] = None,
+    remoteHost: Option[String] = None,
+    remoteUser: Option[String] = None,
+    remotePass: Option[String] = None,
+    // It’s also possible to limit the number of processed documents by setting size.
+    maxDocs: Option[Int] = None,
+    script: Option[Script] = None,
+    scroll: Option[String] = None,
+    size: Option[Int] = None,
+    createOnly: Option[Boolean] = None,
+    slices: Option[Int] = None,
+    slice: Option[Slice] = None,
+    versionType: Option[VersionType] = None,
+    pipeline: Option[String] = None
+) {
 
-  def remote(uri: String): ReindexRequest = copy(remoteHost = Option(uri))
+  def remote(uri: String): ReindexRequest                             = copy(remoteHost = Option(uri))
   def remote(uri: String, user: String, pass: String): ReindexRequest =
     copy(remoteHost = Option(uri), remoteUser = Option(user), remotePass = Option(pass))
 
@@ -67,16 +69,16 @@ case class ReindexRequest(sourceIndexes: Indexes,
 
   def script(script: Script): ReindexRequest = copy(script = script.some)
 
-  def scroll(scroll: String): ReindexRequest = copy(scroll = scroll.some)
+  def scroll(scroll: String): ReindexRequest           = copy(scroll = scroll.some)
   def scroll(duration: FiniteDuration): ReindexRequest = copy(scroll = s"${duration.toSeconds}s".some)
-  def size(size: Int): ReindexRequest = copy(size = size.some)
+  def size(size: Int): ReindexRequest                  = copy(size = size.some)
 
   def createOnly(createOnly: Boolean): ReindexRequest = copy(createOnly = createOnly.some)
-  def slice(slice: Slice): ReindexRequest = copy(slice = slice.some)
-  def slices(slices: Int): ReindexRequest = copy(slices = slices.some)
-  def automaticSlicing(): ReindexRequest = copy(slices = Some(Slicing.AutoSlices))
+  def slice(slice: Slice): ReindexRequest             = copy(slice = slice.some)
+  def slices(slices: Int): ReindexRequest             = copy(slices = slices.some)
+  def automaticSlicing(): ReindexRequest              = copy(slices = Some(Slicing.AutoSlices))
 
-  def versionType(versionType: String): ReindexRequest = this.versionType(VersionType.valueOf(versionType))
+  def versionType(versionType: String): ReindexRequest      = this.versionType(VersionType.valueOf(versionType))
   def versionType(versionType: VersionType): ReindexRequest = copy(versionType = versionType.some)
 
   def pipeline(pipeline: String): ReindexRequest = copy(pipeline = pipeline.some)

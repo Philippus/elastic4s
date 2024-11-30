@@ -26,10 +26,10 @@ class FiltersAggregationHttpTest extends AnyFreeSpec with DockerTests with Match
 
   client.execute(
     bulk(
-      indexInto("filtersagg") fields("name" -> "Willis Tower", "height" -> 1244),
-      indexInto("filtersagg") fields("name" -> "Burj Kalifa", "height" -> 2456),
-      indexInto("filtersagg") fields("name" -> "Tower of London", "height" -> 169),
-      indexInto("filtersagg") fields("name" -> "London Bridge", "height" -> 63)
+      indexInto("filtersagg") fields ("name" -> "Willis Tower", "height"    -> 1244),
+      indexInto("filtersagg") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
+      indexInto("filtersagg") fields ("name" -> "Tower of London", "height" -> 169),
+      indexInto("filtersagg") fields ("name" -> "London Bridge", "height"   -> 63)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

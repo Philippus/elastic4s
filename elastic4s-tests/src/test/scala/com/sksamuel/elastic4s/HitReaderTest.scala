@@ -133,16 +133,53 @@ class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with 
 
     val milkyway = Galaxy(
       Seq(
-        Quadrant("alpha", Map(
-          UUID.randomUUID -> Race("humans", Planet("earth", 0, 0, 0), 19128948125L, peaceful = true, Affiliation.Federation, None),
-          UUID.randomUUID -> Race("vulcans", Planet("Vulcan", 156.13, 360.0, 98.12), 998342345L, peaceful = true, Affiliation.Federation, None)
-        )),
-        Quadrant("beta", Map(
-          UUID.randomUUID -> Race("romulans", Planet("Romulus", 510, 236.2, 65.2), 73454525L, peaceful = true, Affiliation.Other, "Shinzon".some)
-        )),
-        Quadrant("gamma", Map(
-          UUID.randomUUID -> Race("vorta", Planet("Kurill Prime", 11.51, 136.2, 265.6), 4389976L, peaceful = true, Affiliation.Dominion, "Weyoun".some)
-        ))
+        Quadrant(
+          "alpha",
+          Map(
+            UUID.randomUUID -> Race(
+              "humans",
+              Planet("earth", 0, 0, 0),
+              19128948125L,
+              peaceful = true,
+              Affiliation.Federation,
+              None
+            ),
+            UUID.randomUUID -> Race(
+              "vulcans",
+              Planet("Vulcan", 156.13, 360.0, 98.12),
+              998342345L,
+              peaceful = true,
+              Affiliation.Federation,
+              None
+            )
+          )
+        ),
+        Quadrant(
+          "beta",
+          Map(
+            UUID.randomUUID -> Race(
+              "romulans",
+              Planet("Romulus", 510, 236.2, 65.2),
+              73454525L,
+              peaceful = true,
+              Affiliation.Other,
+              "Shinzon".some
+            )
+          )
+        ),
+        Quadrant(
+          "gamma",
+          Map(
+            UUID.randomUUID -> Race(
+              "vorta",
+              Planet("Kurill Prime", 11.51, 136.2, 265.6),
+              4389976L,
+              peaceful = true,
+              Affiliation.Dominion,
+              "Weyoun".some
+            )
+          )
+        )
       )
     )
 
@@ -166,5 +203,12 @@ class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with 
 
 case class Galaxy(quadrants: Seq[Quadrant])
 case class Quadrant(name: String, races: Map[UUID, Race])
-case class Race(name: String, homeworld: Planet, population: Long, peaceful: Boolean, affiliation: Affiliation, leader: Option[String])
+case class Race(
+    name: String,
+    homeworld: Planet,
+    population: Long,
+    peaceful: Boolean,
+    affiliation: Affiliation,
+    leader: Option[String]
+)
 case class Planet(name: String, x: Double, y: Double, z: Double)

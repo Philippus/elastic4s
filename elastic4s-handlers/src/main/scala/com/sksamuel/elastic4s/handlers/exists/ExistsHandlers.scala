@@ -13,7 +13,7 @@ trait ExistsHandlers {
 
     override def build(request: ExistsRequest): ElasticRequest = {
       val endpoint = "/" + request.index.name + "/_doc/" + request.id
-      val method = "HEAD"
+      val method   = "HEAD"
       ElasticRequest(method, endpoint)
     }
   }

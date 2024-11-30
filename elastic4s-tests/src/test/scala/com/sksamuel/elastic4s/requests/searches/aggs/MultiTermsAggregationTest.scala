@@ -28,10 +28,10 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("multitermsagg") fields("name" -> "Jalfrezi", "strength" -> "mild", "origin" -> "india"),
-      indexInto("multitermsagg") fields("name" -> "Madras", "strength" -> "hot", "origin" -> "india"),
-      indexInto("multitermsagg") fields("name" -> "Chilli Masala", "strength" -> "hot", "origin" -> "india"),
-      indexInto("multitermsagg") fields("name" -> "Tikka Masala", "strength" -> "medium")
+      indexInto("multitermsagg") fields ("name" -> "Jalfrezi", "strength"      -> "mild", "origin" -> "india"),
+      indexInto("multitermsagg") fields ("name" -> "Madras", "strength"        -> "hot", "origin"  -> "india"),
+      indexInto("multitermsagg") fields ("name" -> "Chilli Masala", "strength" -> "hot", "origin"  -> "india"),
+      indexInto("multitermsagg") fields ("name" -> "Tikka Masala", "strength"  -> "medium")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -40,20 +40,31 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
       val resp = client.execute {
         search("multitermsagg").matchAllQuery().aggs {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin"))
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          )
         }
       }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggregations.result[MultiTerms]("agg1")
-      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(MultiTermBucket(List("hot", "india"), 2, Map.empty), MultiTermBucket(List("mild", "india"), 1, Map.empty))
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
+        MultiTermBucket(List("hot", "india"), 2, Map.empty),
+        MultiTermBucket(List("mild", "india"), 1, Map.empty)
+      )
     }
 
     "should only include matching documents in the query" in {
       val resp = client.execute {
         // should match 2 documents
         search("multitermsagg").matchQuery("name", "masala").aggregations {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin"))
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          )
         }
       }.await.result
       resp.size shouldBe 2
@@ -66,20 +77,32 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
       val resp = client.execute {
         search("multitermsagg").aggregations {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin").missing("unknown"))
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin").missing("unknown")
+          )
         }
       }.await.result
       resp.totalHits shouldBe 4
 
       val agg = resp.aggs.result[MultiTerms]("agg1")
-      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(MultiTermBucket(List("hot", "india"), 2, Map.empty), MultiTermBucket(List("medium", "unknown"), 1, Map.empty), MultiTermBucket(List("mild", "india"), 1, Map.empty))
+      agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
+        MultiTermBucket(List("hot", "india"), 2, Map.empty),
+        MultiTermBucket(List("medium", "unknown"), 1, Map.empty),
+        MultiTermBucket(List("mild", "india"), 1, Map.empty)
+      )
     }
 
     "should support min doc count" in {
 
       val resp = client.execute {
         search("multitermsagg").aggregations {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin")) minDocCount 2
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          ) minDocCount 2
         }
       }.await.result
       resp.totalHits shouldBe 4
@@ -92,7 +115,11 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
       val resp = client.execute {
         search("multitermsagg").aggregations {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin")) size 1
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          ) size 1
         }
       }.await.result
       resp.totalHits shouldBe 4
@@ -105,7 +132,11 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
       val resp = client.execute {
         search("multitermsagg").matchAllQuery().aggs {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin")).addSubagg(
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          ).addSubagg(
             termsAgg("agg2", "name")
           )
         }
@@ -120,7 +151,11 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
     "should support _count desc terms order" in {
       val resp = client.execute {
         search("multitermsagg").matchAllQuery().aggs {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin")).order(TermsOrder("_count", false))
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          ).order(TermsOrder("_count", false))
         }
       }.await.result
 
@@ -131,7 +166,11 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
     "should support _count asc terms order" in {
       val resp = client.execute {
         search("multitermsagg").matchAllQuery().aggs {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin")).order(TermsOrder("_count", true))
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          ).order(TermsOrder("_count", true))
         }
       }.await.result
 
@@ -142,7 +181,11 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
     "should support multi criteria order" in {
       val resp = client.execute {
         search("multitermsagg").matchAllQuery().aggs {
-          multiTermsAgg("agg1", MultiTermsAggregation.Term().field("strength"), MultiTermsAggregation.Term().field("origin")).order(TermsOrder("_count", true), TermsOrder("_key", false))
+          multiTermsAgg(
+            "agg1",
+            MultiTermsAggregation.Term().field("strength"),
+            MultiTermsAggregation.Term().field("origin")
+          ).order(TermsOrder("_count", true), TermsOrder("_key", false))
         }
       }.await.result
 

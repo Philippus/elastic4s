@@ -27,12 +27,12 @@ class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
 
   client.execute(
     bulk(
-      indexInto("daterangeaggs").fields("name" -> "Breaking Bad", "premiere_date" -> "20/01/2008"),
-      indexInto("daterangeaggs").fields("name" -> "Better Call Saul", "premiere_date" -> "15/01/2014"),
+      indexInto("daterangeaggs").fields("name" -> "Breaking Bad", "premiere_date"        -> "20/01/2008"),
+      indexInto("daterangeaggs").fields("name" -> "Better Call Saul", "premiere_date"    -> "15/01/2014"),
       indexInto("daterangeaggs").fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2017"),
-      indexInto("daterangeaggs").fields("name" -> "Game of Thrones", "premiere_date" -> "01/06/2010"),
+      indexInto("daterangeaggs").fields("name" -> "Game of Thrones", "premiere_date"     -> "01/06/2010"),
       indexInto("daterangeaggs").fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2016"),
-      indexInto("daterangeaggs").fields("name" -> "Walking Dead", "premiere_date" -> "19/01/2011")
+      indexInto("daterangeaggs").fields("name" -> "Walking Dead", "premiere_date"        -> "19/01/2011")
     ).refreshImmediately
   ).await
 
@@ -51,8 +51,24 @@ class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
 
       val agg = resp.aggs.dateRange("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        DateRangeBucket(Some("1.1976768E12"), Some("15/12/2007"), Some("1.3555296E12"), Some("15/12/2012"), Some("15/12/2007-15/12/2012"), 3, Map.empty),
-        DateRangeBucket(Some("1.3555296E12"), Some("15/12/2012"), Some("1.513296E12"), Some("15/12/2017"), Some("15/12/2012-15/12/2017"), 3, Map.empty)
+        DateRangeBucket(
+          Some("1.1976768E12"),
+          Some("15/12/2007"),
+          Some("1.3555296E12"),
+          Some("15/12/2012"),
+          Some("15/12/2007-15/12/2012"),
+          3,
+          Map.empty
+        ),
+        DateRangeBucket(
+          Some("1.3555296E12"),
+          Some("15/12/2012"),
+          Some("1.513296E12"),
+          Some("15/12/2017"),
+          Some("15/12/2012-15/12/2017"),
+          3,
+          Map.empty
+        )
       )
     }
     "should support string dates" in {
@@ -69,8 +85,24 @@ class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
 
       val agg = resp.aggs.dateRange("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
-        DateRangeBucket(Some("1.1976768E12"), Some("15/12/2007"), Some("1.3555296E12"), Some("15/12/2012"), Some("15/12/2007-15/12/2012"), 3, Map.empty),
-        DateRangeBucket(Some("1.3555296E12"), Some("15/12/2012"), Some("1.513296E12"), Some("15/12/2017"), Some("15/12/2012-15/12/2017"), 3, Map.empty)
+        DateRangeBucket(
+          Some("1.1976768E12"),
+          Some("15/12/2007"),
+          Some("1.3555296E12"),
+          Some("15/12/2012"),
+          Some("15/12/2007-15/12/2012"),
+          3,
+          Map.empty
+        ),
+        DateRangeBucket(
+          Some("1.3555296E12"),
+          Some("15/12/2012"),
+          Some("1.513296E12"),
+          Some("15/12/2017"),
+          Some("15/12/2012-15/12/2017"),
+          3,
+          Map.empty
+        )
       )
     }
   }

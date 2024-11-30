@@ -31,7 +31,6 @@ object AnalyseRequestContentBuilder {
       source.endArray()
     }
 
-
     if (request.charFilters.nonEmpty) {
       simpleFieldValue("char_filter", request.charFilters)
     }

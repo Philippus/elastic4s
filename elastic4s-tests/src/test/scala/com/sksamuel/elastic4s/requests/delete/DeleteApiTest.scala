@@ -23,7 +23,7 @@ class DeleteApiTest extends AnyFlatSpec with Matchers with TypeCheckedTripleEqua
   }
 
   it should "accept version and version type" in {
-    delete("141212") from "places" version 53423l versionType VersionType.External
+    delete("141212") from "places" version 53423L versionType VersionType.External
   }
 
   it should "accept refresh" in {
@@ -31,6 +31,6 @@ class DeleteApiTest extends AnyFlatSpec with Matchers with TypeCheckedTripleEqua
   }
 
   "a delete by query request" should "support the dsl syntax" in {
-  //  deleteIn("places").by("query")
+    //  deleteIn("places").by("query")
   }
 }

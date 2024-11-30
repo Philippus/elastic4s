@@ -7,39 +7,40 @@ import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
 
-case class PutMappingRequest(indexes: Indexes,
-                             properties: Seq[ElasticField] = Nil,
-                             updateAllTypes: Option[Boolean] = None,
-                             ignoreUnavailable: Option[Boolean] = None,
-                             allowNoIndices: Option[Boolean] = None,
-                             expandWildcards: Option[Boolean] = None,
-                             all: Option[Boolean] = None,
-                             source: Option[Boolean] = None,
-                             sourceExcludes: Seq[String] = Nil,
-                             dateDetection: Option[Boolean] = None,
-                             numericDetection: Option[Boolean] = None,
-                             size: Option[Boolean] = None,
-                             dynamicDateFormats: Seq[String] = Nil,
-                             analyzer: Option[String] = None,
-                             boostName: Option[String] = None,
-                             boostNullValue: Option[Double] = None,
-                             parent: Option[String] = None,
-                             dynamic: Option[DynamicMapping] = None,
-                             meta: Map[String, Any] = Map.empty,
-                             routing: Option[Routing] = None,
-                             templates: Seq[DynamicTemplateRequest] = Nil,
-                             rawSource: Option[String] = None,
-                             includeTypeName: Option[Boolean] = None,
-                             runtimes: Seq[RuntimeMapping] = Nil)
-  extends MappingDefinitionLike {
+case class PutMappingRequest(
+    indexes: Indexes,
+    properties: Seq[ElasticField] = Nil,
+    updateAllTypes: Option[Boolean] = None,
+    ignoreUnavailable: Option[Boolean] = None,
+    allowNoIndices: Option[Boolean] = None,
+    expandWildcards: Option[Boolean] = None,
+    all: Option[Boolean] = None,
+    source: Option[Boolean] = None,
+    sourceExcludes: Seq[String] = Nil,
+    dateDetection: Option[Boolean] = None,
+    numericDetection: Option[Boolean] = None,
+    size: Option[Boolean] = None,
+    dynamicDateFormats: Seq[String] = Nil,
+    analyzer: Option[String] = None,
+    boostName: Option[String] = None,
+    boostNullValue: Option[Double] = None,
+    parent: Option[String] = None,
+    dynamic: Option[DynamicMapping] = None,
+    meta: Map[String, Any] = Map.empty,
+    routing: Option[Routing] = None,
+    templates: Seq[DynamicTemplateRequest] = Nil,
+    rawSource: Option[String] = None,
+    includeTypeName: Option[Boolean] = None,
+    runtimes: Seq[RuntimeMapping] = Nil
+) extends MappingDefinitionLike {
 
-  def all(all: Boolean): PutMappingRequest = copy(all = all.some)
+  def all(all: Boolean): PutMappingRequest       = copy(all = all.some)
   def source(source: Boolean): PutMappingRequest = copy(source = source.some)
 
   // the raw source should include properties but not the type
   def rawSource(rawSource: String): PutMappingRequest = copy(rawSource = rawSource.some)
 
-  def sourceExcludes(sourceExcludes: String*): PutMappingRequest = copy(sourceExcludes = sourceExcludes)
+  def sourceExcludes(sourceExcludes: String*): PutMappingRequest          = copy(sourceExcludes = sourceExcludes)
   def sourceExcludes(sourceExcludes: Iterable[String]): PutMappingRequest =
     copy(sourceExcludes = sourceExcludes.toSeq)
 
@@ -50,11 +51,11 @@ case class PutMappingRequest(indexes: Indexes,
 
   def boostName(boostName: String): PutMappingRequest = copy(boostName = boostName.some)
 
-  def boostNullValue(boostNullValue: Double): PutMappingRequest = copy(boostNullValue = boostNullValue.some)
-  def parent(parent: String): PutMappingRequest = copy(parent = parent.some)
-  def dynamic(dynamic: DynamicMapping): PutMappingRequest = copy(dynamic = dynamic.some)
-  def meta(map: Map[String, Any]): PutMappingRequest = copy(meta = map)
-  def dateDetection(dateDetection: Boolean): PutMappingRequest = copy(dateDetection = dateDetection.some)
+  def boostNullValue(boostNullValue: Double): PutMappingRequest      = copy(boostNullValue = boostNullValue.some)
+  def parent(parent: String): PutMappingRequest                      = copy(parent = parent.some)
+  def dynamic(dynamic: DynamicMapping): PutMappingRequest            = copy(dynamic = dynamic.some)
+  def meta(map: Map[String, Any]): PutMappingRequest                 = copy(meta = map)
+  def dateDetection(dateDetection: Boolean): PutMappingRequest       = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): PutMappingRequest = copy(numericDetection = numericDetection.some)
 
   @deprecated("this method is now called properties to better match the elastic api", "8.0")
@@ -64,9 +65,9 @@ case class PutMappingRequest(indexes: Indexes,
   def fields(fields: ElasticField*): PutMappingRequest = as(fields: _*)
 
   def properties(fields: Iterable[ElasticField]): PutMappingRequest = as(fields)
-  def properties(fields: ElasticField*): PutMappingRequest = as(fields: _*)
+  def properties(fields: ElasticField*): PutMappingRequest          = as(fields: _*)
 
-  def as(fields: ElasticField*): PutMappingRequest = as(fields.toIterable)
+  def as(fields: ElasticField*): PutMappingRequest            = as(fields.toIterable)
   def as(iterable: Iterable[ElasticField]): PutMappingRequest = copy(properties = properties ++ iterable)
 
   def dynamicDateFormats(dynamic_date_formats: String*): PutMappingRequest =
@@ -81,13 +82,13 @@ case class PutMappingRequest(indexes: Indexes,
   def size(size: Boolean): PutMappingRequest = copy(size = size.some)
 
   def dynamicTemplates(temps: Iterable[DynamicTemplateRequest]): PutMappingRequest = templates(temps)
-  def dynamicTemplates(temps: DynamicTemplateRequest*): PutMappingRequest = templates(temps)
-  def templates(temps: Iterable[DynamicTemplateRequest]): PutMappingRequest = copy(templates = temps.toSeq)
-  def templates(temps: DynamicTemplateRequest*): PutMappingRequest = copy(templates = temps.toSeq)
+  def dynamicTemplates(temps: DynamicTemplateRequest*): PutMappingRequest          = templates(temps)
+  def templates(temps: Iterable[DynamicTemplateRequest]): PutMappingRequest        = copy(templates = temps.toSeq)
+  def templates(temps: DynamicTemplateRequest*): PutMappingRequest                 = copy(templates = temps.toSeq)
 
-  def includeTypeName(includeTypeName: Boolean): PutMappingRequest = copy(includeTypeName = includeTypeName.some)
+  def includeTypeName(includeTypeName: Boolean): PutMappingRequest         = copy(includeTypeName = includeTypeName.some)
   def includeTypeName(includeTypeName: Option[Boolean]): PutMappingRequest = copy(includeTypeName = includeTypeName)
 
   def runtimes(runtimes: Iterable[RuntimeMapping]): PutMappingRequest = copy(runtimes = runtimes.toSeq)
-  def runtimes(runtimes: RuntimeMapping*): PutMappingRequest = copy(runtimes = runtimes)
+  def runtimes(runtimes: RuntimeMapping*): PutMappingRequest          = copy(runtimes = runtimes)
 }

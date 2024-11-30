@@ -10,7 +10,7 @@ class DeleteUserTest extends AnyWordSpec with Matchers with DockerTests {
     "delete user" in {
 
       client.execute {
-        createUser("user1", password=PlaintextPassword("test1234"))
+        createUser("user1", password = PlaintextPassword("test1234"))
       }.await
 
       client.execute {
@@ -28,7 +28,7 @@ class DeleteUserTest extends AnyWordSpec with Matchers with DockerTests {
 
     "do nothing if the user does not exist" in {
       client.execute {
-        createUser("user1", password=PlaintextPassword("test1234"))
+        createUser("user1", password = PlaintextPassword("test1234"))
       }.await
 
       client.execute {

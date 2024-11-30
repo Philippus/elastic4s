@@ -16,7 +16,14 @@ class SynonymsTest extends AnyFlatSpec with Matchers with ElasticDsl with Docker
 
   "synonyms" should "create a new set" in {
     val resp = client.execute {
-      createOrUpdateSynonymsSet("my-synonyms-set", Seq(SynonymRule(id = Some("test-1"), synonyms = "hello, hi"), SynonymRule("bye, goodbye"), SynonymRule(id = Some("test-2"), synonyms = "test => check")))
+      createOrUpdateSynonymsSet(
+        "my-synonyms-set",
+        Seq(
+          SynonymRule(id = Some("test-1"), synonyms = "hello, hi"),
+          SynonymRule("bye, goodbye"),
+          SynonymRule(id = Some("test-2"), synonyms = "test => check")
+        )
+      )
     }.await.result
 
     resp.result shouldBe "created"
@@ -61,7 +68,14 @@ class SynonymsTest extends AnyFlatSpec with Matchers with ElasticDsl with Docker
 
   it should "update an existing rule" in {
     client.execute {
-      createOrUpdateSynonymsSet("my-synonyms-set", Seq(SynonymRule(id = Some("test-1"), synonyms = "hello, hi"), SynonymRule("bye, goodbye"), SynonymRule(id = Some("test-2"), synonyms = "test => check")))
+      createOrUpdateSynonymsSet(
+        "my-synonyms-set",
+        Seq(
+          SynonymRule(id = Some("test-1"), synonyms = "hello, hi"),
+          SynonymRule("bye, goodbye"),
+          SynonymRule(id = Some("test-2"), synonyms = "test => check")
+        )
+      )
     }.await.result
 
     val resp = client.execute {
@@ -73,7 +87,14 @@ class SynonymsTest extends AnyFlatSpec with Matchers with ElasticDsl with Docker
 
   it should "delete a synonym rule" in {
     client.execute {
-      createOrUpdateSynonymsSet("my-synonyms-set", Seq(SynonymRule(id = Some("test-1"), synonyms = "hello, hi"), SynonymRule("bye, goodbye"), SynonymRule(id = Some("test-2"), synonyms = "test => check")))
+      createOrUpdateSynonymsSet(
+        "my-synonyms-set",
+        Seq(
+          SynonymRule(id = Some("test-1"), synonyms = "hello, hi"),
+          SynonymRule("bye, goodbye"),
+          SynonymRule(id = Some("test-2"), synonyms = "test => check")
+        )
+      )
     }.await.result
 
     val resp = client.execute {

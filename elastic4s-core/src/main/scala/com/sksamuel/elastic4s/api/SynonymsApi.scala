@@ -1,6 +1,14 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.synonyms.{DeleteSynonymRuleRequest, DeleteSynonymsSetRequest, GetSynonymsSetRequest, ListSynonymsSetRequest, SynonymRule, CreateOrUpdateSynonymRuleRequest, CreateOrUpdateSynonymsSetRequest}
+import com.sksamuel.elastic4s.requests.synonyms.{
+  DeleteSynonymRuleRequest,
+  DeleteSynonymsSetRequest,
+  GetSynonymsSetRequest,
+  ListSynonymsSetRequest,
+  SynonymRule,
+  CreateOrUpdateSynonymRuleRequest,
+  CreateOrUpdateSynonymsSetRequest
+}
 
 trait SynonymsApi {
   def createOrUpdateSynonymsSet(synonymsSet: String, synonymRules: Seq[SynonymRule]): CreateOrUpdateSynonymsSetRequest =

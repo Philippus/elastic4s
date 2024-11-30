@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
-case class CumulativeCardinalityPipelineAgg(name: String,
-  bucketsPath: String,
-  format: Option[String] = None,
-  metadata: Map[String, AnyRef] = Map.empty)
-  extends PipelineAgg {
+case class CumulativeCardinalityPipelineAgg(
+    name: String,
+    bucketsPath: String,
+    format: Option[String] = None,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends PipelineAgg {
 
   type T = CumulativeCardinalityPipelineAgg
 

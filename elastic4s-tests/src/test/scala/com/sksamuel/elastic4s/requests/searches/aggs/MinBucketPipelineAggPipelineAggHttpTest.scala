@@ -27,12 +27,12 @@ class MinBucketPipelineAggPipelineAggHttpTest extends AnyFreeSpec with DockerTes
 
   client.execute(
     bulk(
-      indexInto("minbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("minbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("minbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("minbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("minbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("minbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("minbucketagg") fields ("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("minbucketagg") fields ("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("minbucketagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("minbucketagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("minbucketagg") fields ("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("minbucketagg") fields ("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -46,7 +46,6 @@ class MinBucketPipelineAggPipelineAggHttpTest extends AnyFreeSpec with DockerTes
             .subaggs {
               sumAgg("sales", "value")
             },
-
           minBucketAggregation("min_monthly_sales", "sales_per_month>sales")
         )
       }.await.result

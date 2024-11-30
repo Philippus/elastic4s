@@ -5,7 +5,10 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, SigTermsAggregation, SubAggsBuilderFn}
 
 object SigTermsAggregationBuilder {
-  def apply(agg: SigTermsAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: SigTermsAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("significant_terms")
     agg.shardSize.foreach(builder.field("shard_size", _))
     agg.shardMinDocCount.foreach(builder.field("shard_min_doc_count", _))

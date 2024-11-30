@@ -10,7 +10,7 @@ class PutStoredScriptHttpTest extends AnyFunSuite with Matchers with DockerTests
 
   test("put stored script should upload new script") {
     val storedScriptId = "putscripttest"
-    val storedScript = StoredScriptSource("painless", "_score")
+    val storedScript   = StoredScriptSource("painless", "_score")
 
     Try {
       client.execute {
@@ -24,6 +24,6 @@ class PutStoredScriptHttpTest extends AnyFunSuite with Matchers with DockerTests
 
     client.execute {
       getStoredScript(storedScriptId)
-    }.await.result shouldBe GetStoredScriptResponse(storedScriptId, found=true, storedScript)
+    }.await.result shouldBe GetStoredScriptResponse(storedScriptId, found = true, storedScript)
   }
 }

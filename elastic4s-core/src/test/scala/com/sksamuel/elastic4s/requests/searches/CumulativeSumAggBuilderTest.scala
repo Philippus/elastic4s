@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.requests.searches
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
+class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  test("cumulative sum agg should match the basic spec"){
+  test("cumulative sum agg should match the basic spec") {
     val search = SearchRequest("myIndex").aggs(
       dateHistogramAgg("sales_per_month", "date")
         .fixedInterval(DateHistogramInterval.Month)
@@ -17,8 +17,8 @@ class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers{
             cumulativeSumAggregation("cumulative_sales", "sales")
               .format("$")
               .metadata(
-              Map("color" -> "blue")
-            )
+                Map("color" -> "blue")
+              )
           )
         )
     )

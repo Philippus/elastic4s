@@ -6,21 +6,22 @@ import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class GeoDistanceAggregation(name: String,
-                                  origin: GeoPoint,
-                                  field: Option[String] = None,
-                                  format: Option[String] = None,
-                                  missing: Option[AnyRef] = None,
-                                  keyed: Option[Boolean] = None,
-                                  distanceType: Option[GeoDistance] = None,
-                                  unit: Option[DistanceUnit] = None,
-                                  ranges: Seq[(Option[String], Double, Double)] = Nil,
-                                  unboundedFrom: Option[(Option[String], Double)] = None,
-                                  unboundedTo: Option[(Option[String], Double)] = None,
-                                  script: Option[Script] = None,
-                                  subaggs: Seq[AbstractAggregation] = Nil,
-                                  metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class GeoDistanceAggregation(
+    name: String,
+    origin: GeoPoint,
+    field: Option[String] = None,
+    format: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    keyed: Option[Boolean] = None,
+    distanceType: Option[GeoDistance] = None,
+    unit: Option[DistanceUnit] = None,
+    ranges: Seq[(Option[String], Double, Double)] = Nil,
+    unboundedFrom: Option[(Option[String], Double)] = None,
+    unboundedTo: Option[(Option[String], Double)] = None,
+    script: Option[Script] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = GeoDistanceAggregation
 

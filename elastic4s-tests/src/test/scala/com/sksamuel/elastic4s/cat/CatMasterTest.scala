@@ -13,7 +13,6 @@ class CatMasterTest extends AnyFlatSpec with Matchers with DockerTests {
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-
   "cat master" should "return master node info" in {
     val result = client.execute {
       catMaster()

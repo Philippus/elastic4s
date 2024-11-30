@@ -2,14 +2,15 @@ package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
 import scala.concurrent.duration.FiniteDuration
 
-case class DerivativePipelineAgg(name: String,
-                                 bucketsPath: String,
-                                 format: Option[String] = None,
-                                 gapPolicy: Option[GapPolicy] = None,
-                                 unit: Option[FiniteDuration] = None,
-                                 unitString: Option[String] = None,
-                                 metadata: Map[String, AnyRef] = Map.empty)
-    extends PipelineAgg {
+case class DerivativePipelineAgg(
+    name: String,
+    bucketsPath: String,
+    format: Option[String] = None,
+    gapPolicy: Option[GapPolicy] = None,
+    unit: Option[FiniteDuration] = None,
+    unitString: Option[String] = None,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends PipelineAgg {
 
   type T = DerivativePipelineAgg
 

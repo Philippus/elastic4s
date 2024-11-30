@@ -1,6 +1,27 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.analyzers.{CommonGramsTokenFilter, CompoundWordTokenFilter, CompoundWordTokenFilterType, EdgeNGramTokenFilter, ElisionTokenFilter, KeywordMarkerTokenFilter, LengthTokenFilter, LimitTokenCountTokenFilter, NGramTokenFilter, PatternCaptureTokenFilter, PatternReplaceTokenFilter, ShingleTokenFilter, SnowballTokenFilter, StemmerOverrideTokenFilter, StemmerTokenFilter, StopTokenFilter, SynonymTokenFilter, TruncateTokenFilter, UniqueTokenFilter, WordDelimiterTokenFilter}
+import com.sksamuel.elastic4s.requests.analyzers.{
+  CommonGramsTokenFilter,
+  CompoundWordTokenFilter,
+  CompoundWordTokenFilterType,
+  EdgeNGramTokenFilter,
+  ElisionTokenFilter,
+  KeywordMarkerTokenFilter,
+  LengthTokenFilter,
+  LimitTokenCountTokenFilter,
+  NGramTokenFilter,
+  PatternCaptureTokenFilter,
+  PatternReplaceTokenFilter,
+  ShingleTokenFilter,
+  SnowballTokenFilter,
+  StemmerOverrideTokenFilter,
+  StemmerTokenFilter,
+  StopTokenFilter,
+  SynonymTokenFilter,
+  TruncateTokenFilter,
+  UniqueTokenFilter,
+  WordDelimiterTokenFilter
+}
 
 @deprecated("use new analysis package", "7.7.0")
 trait TokenFilterApi {
