@@ -21,13 +21,13 @@ class BoolQueryTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("fonts").fields("name" -> "helvetica", "style" -> "sans"),
+      indexInto("fonts").fields("name" -> "helvetica", "style"        -> "sans"),
       indexInto("fonts").fields("name" -> "helvetica modern", "style" -> "serif"),
-      indexInto("fonts").fields("name" -> "arial", "style" -> "serif"),
-      indexInto("fonts").fields("name" -> "verdana", "style" -> "serif"),
-      indexInto("fonts").fields("name" -> "times new roman", "style" -> "serif"),
-      indexInto("fonts").fields("name" -> "roman comic", "style" -> "comic"),
-      indexInto("fonts").fields("name" -> "comic sans", "style" -> "comic")
+      indexInto("fonts").fields("name" -> "arial", "style"            -> "serif"),
+      indexInto("fonts").fields("name" -> "verdana", "style"          -> "serif"),
+      indexInto("fonts").fields("name" -> "times new roman", "style"  -> "serif"),
+      indexInto("fonts").fields("name" -> "roman comic", "style"      -> "comic"),
+      indexInto("fonts").fields("name" -> "comic sans", "style"       -> "comic")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

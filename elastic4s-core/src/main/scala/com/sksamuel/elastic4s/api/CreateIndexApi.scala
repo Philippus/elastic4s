@@ -13,15 +13,16 @@ trait CreateIndexApi {
   def analyzers(analyzers: AnalyzerDefinition*) = new AnalyzersWrapper(analyzers)
 
   @deprecated("use new analysis package", "7.0.1")
-  def tokenizers(tokenizers: Tokenizer*)        = new TokenizersWrapper(tokenizers)
+  def tokenizers(tokenizers: Tokenizer*) = new TokenizersWrapper(tokenizers)
 
   @deprecated("use new analysis package", "7.0.1")
   def filters(filters: TokenFilter*) = new TokenFiltersWrapper(filters)
 
   val emptyMapping: MappingDefinition = MappingDefinition()
 
-  def properties(fields: Seq[ElasticField] = Nil): MappingDefinition = MappingDefinition(fields)
-  def properties(field: ElasticField, tail: ElasticField*): MappingDefinition = MappingDefinition(properties = field +: tail)
+  def properties(fields: Seq[ElasticField] = Nil): MappingDefinition          = MappingDefinition(fields)
+  def properties(field: ElasticField, tail: ElasticField*): MappingDefinition =
+    MappingDefinition(properties = field +: tail)
 
   @deprecated("This method is now called properties as types are deprecated in 7.0", "7.0.0")
   def mapping(field: ElasticField, tail: ElasticField*): MappingDefinition = properties(field +: tail)

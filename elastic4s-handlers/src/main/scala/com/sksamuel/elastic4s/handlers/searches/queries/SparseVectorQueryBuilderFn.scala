@@ -20,7 +20,9 @@ object SparseVectorQueryBuilderFn {
     q.queryName.foreach(builder.field("_name", _))
     q.prune.foreach(builder.field("prune", _))
     q.pruningConfig.foreach { pc =>
-      if (pc.tokensFreqRatioThreshold.nonEmpty || pc.tokensWeighThreshold.nonEmpty || pc.onlyScorePrunedTokens.nonEmpty) {
+      if (
+        pc.tokensFreqRatioThreshold.nonEmpty || pc.tokensWeighThreshold.nonEmpty || pc.onlyScorePrunedTokens.nonEmpty
+      ) {
         builder.startObject("pruning_config")
         pc.tokensFreqRatioThreshold.foreach(builder.field("tokens_freq_ratio_threshold", _))
         pc.tokensWeighThreshold.foreach(builder.field("tokens_weight_threshold", _))

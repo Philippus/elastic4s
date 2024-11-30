@@ -22,10 +22,10 @@ class FieldNamesFieldTest extends AnyFlatSpec with Matchers with DockerTests {
   client.execute {
     bulk(
       indexInto("space").fields(
-        "name" -> "Ceres"
+        "name"     -> "Ceres"
       ),
       indexInto("space").fields(
-        "name" -> "Pluto",
+        "name"     -> "Pluto",
         "location" -> "solar system"
       )
     ).refreshImmediately

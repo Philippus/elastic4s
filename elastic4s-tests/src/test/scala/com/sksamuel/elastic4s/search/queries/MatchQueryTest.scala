@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 import scala.util.Try
 
 class MatchQueryTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with DockerTests
     with Matchers {
 
@@ -24,7 +24,11 @@ class MatchQueryTest
 
   client.execute {
     bulk(
-      indexInto("units") fields("name" -> "candela", "scientist.name" -> "Jules Violle", "scientist.country" -> "France")
+      indexInto("units") fields (
+        "name"              -> "candela",
+        "scientist.name"    -> "Jules Violle",
+        "scientist.country" -> "France"
+      )
     ).refresh(RefreshPolicy.Immediate)
   }.await
 

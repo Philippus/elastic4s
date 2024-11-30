@@ -6,10 +6,9 @@ import io.circe.jawn._
 import scala.annotation.implicitNotFound
 import scala.util.{Failure, Success}
 
-/**
-  * Automatic HitAs and Indexable derivation
+/** Automatic HitAs and Indexable derivation
   *
-  * == Usage ==
+  * ==Usage==
   *
   * {{{
   *  import io.circe.generic.auto._
@@ -40,8 +39,10 @@ package object circe {
   @implicitNotFound(
     "No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance "
   )
-  implicit def indexableWithCirce[T](implicit encoder: Encoder[T],
-                                     printer: Json => String = Printer.noSpaces.print): Indexable[T] =
+  implicit def indexableWithCirce[T](implicit
+      encoder: Encoder[T],
+      printer: Json => String = Printer.noSpaces.print
+  ): Indexable[T] =
     (t: T) => printer(encoder(t))
 
   @implicitNotFound(
@@ -53,7 +54,9 @@ package object circe {
   @implicitNotFound(
     "No Encoder for type ${T} found. Use 'import io.circe.generic.auto._' or provide an implicit Encoder instance "
   )
-  implicit def paramSerializerWithCirce[T](implicit encoder: Encoder[T],
-                                           printer: Json => String = Printer.noSpaces.print): ParamSerializer[T] =
+  implicit def paramSerializerWithCirce[T](implicit
+      encoder: Encoder[T],
+      printer: Json => String = Printer.noSpaces.print
+  ): ParamSerializer[T] =
     (t: T) => printer(encoder(t))
 }

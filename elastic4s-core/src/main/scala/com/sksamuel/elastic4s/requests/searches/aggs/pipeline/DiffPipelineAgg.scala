@@ -2,13 +2,14 @@ package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class DiffPipelineAgg(name: String,
-                           bucketsPath: String,
-                           format: Option[String] = None,
-                           gapPolicy: Option[GapPolicy] = None,
-                           lag: Option[Int] = None,
-                           metadata: Map[String, AnyRef] = Map.empty)
-    extends PipelineAgg {
+case class DiffPipelineAgg(
+    name: String,
+    bucketsPath: String,
+    format: Option[String] = None,
+    gapPolicy: Option[GapPolicy] = None,
+    lag: Option[Int] = None,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends PipelineAgg {
 
   type T = DiffPipelineAgg
 

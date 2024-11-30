@@ -3,14 +3,15 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class CardinalityAggregation(name: String,
-                                  field: Option[String] = None,
-                                  missing: Option[String] = None,
-                                  script: Option[Script] = None,
-                                  precisionThreshold: Option[Long] = None,
-                                  subaggs: Seq[AbstractAggregation] = Nil,
-                                  metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class CardinalityAggregation(
+    name: String,
+    field: Option[String] = None,
+    missing: Option[String] = None,
+    script: Option[Script] = None,
+    precisionThreshold: Option[Long] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = CardinalityAggregation
 

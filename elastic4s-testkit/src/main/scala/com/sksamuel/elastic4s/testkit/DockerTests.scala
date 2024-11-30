@@ -8,11 +8,12 @@ import scala.util.Try
 trait DockerTests extends ElasticDsl with ClientProvider {
 
   val elasticHost = sys.env.getOrElse("ES_HOST", "127.0.0.1")
-  val elasticPort = sys.env.getOrElse("ES_PORT",
-      // use obscure ports for the tests to reduce the risk of interfering with existing elastic installations/containers
-      "39227"
-    )
-  val client = ElasticClient(JavaClient(ElasticProperties(s"http://$elasticHost:$elasticPort")))
+  val elasticPort = sys.env.getOrElse(
+    "ES_PORT",
+    // use obscure ports for the tests to reduce the risk of interfering with existing elastic installations/containers
+    "39227"
+  )
+  val client      = ElasticClient(JavaClient(ElasticProperties(s"http://$elasticHost:$elasticPort")))
 
   protected def deleteIdx(indexName: String): Unit = {
     Try {

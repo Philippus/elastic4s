@@ -4,39 +4,50 @@ import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.json.XContentBuilder
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, JacksonSupport, ResponseHandler}
+import com.sksamuel.elastic4s.{
+  ElasticError,
+  ElasticRequest,
+  ElasticUrlEncoder,
+  Handler,
+  HttpEntity,
+  HttpResponse,
+  JacksonSupport,
+  ResponseHandler
+}
 
 trait SearchHandlers {
 
-  class BaseMultiSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) extends Handler[MultiSearchRequest, MultiSearchResponse] {
+  class BaseMultiSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])
+      extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
     import scala.collection.JavaConverters._
 
     override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, MultiSearchResponse] = response.statusCode match {
-        case status if status >= 200 && status < 300 =>
-          val json = JacksonSupport.mapper.readTree(response.entity.get.content)
-          val items = Option(json.get("responses")) match {
-            case Some(node) =>
-              node.elements
-                .asScala
-                .zipWithIndex
-                .map {
-                  case (element, index) =>
-                    val status = element.get("status").intValue()
-                    val either =
-                      if (element.has("error"))
-                        Left(JacksonSupport.mapper.treeToValue[ElasticError](element.get("error")))
-                      else
-                        Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
-                    MultisearchResponseItem(index, status, either)
-                }.toSeq
-            case None => Nil
-          }
-          Right(MultiSearchResponse(items))
-        case _ =>
-          Left(ElasticErrorParser.parse(response))
-      }
+      override def handle(response: HttpResponse): Either[ElasticError, MultiSearchResponse] =
+        response.statusCode match {
+          case status if status >= 200 && status < 300 =>
+            val json  = JacksonSupport.mapper.readTree(response.entity.get.content)
+            val items = Option(json.get("responses")) match {
+              case Some(node) =>
+                node.elements
+                  .asScala
+                  .zipWithIndex
+                  .map {
+                    case (element, index) =>
+                      val status = element.get("status").intValue()
+                      val either =
+                        if (element.has("error"))
+                          Left(JacksonSupport.mapper.treeToValue[ElasticError](element.get("error")))
+                        else
+                          Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
+                      MultisearchResponseItem(index, status, either)
+                  }.toSeq
+              case None       => Nil
+            }
+            Right(MultiSearchResponse(items))
+          case _                                       =>
+            Left(ElasticErrorParser.parse(response))
+        }
     }
 
     override def build(request: MultiSearchRequest): ElasticRequest = {
@@ -45,7 +56,7 @@ trait SearchHandlers {
       request.maxConcurrentSearches.map(_.toString).foreach(params.put("max_concurrent_searches", _))
       request.typedKeys.map(_.toString).foreach(params.put("typed_keys", _))
 
-      val body = MultiSearchBuilderFn(request, customAggregationHandler)
+      val body   = MultiSearchBuilderFn(request, customAggregationHandler)
       logger.debug("Executing msearch: " + body)
       val entity = HttpEntity(body, "application/x-ndjson")
       ElasticRequest("POST", "/_msearch", params.toMap, entity)
@@ -54,7 +65,8 @@ trait SearchHandlers {
 
   implicit object MultiSearchHandler extends BaseMultiSearchHandler(defaultCustomAggregationHandler)
 
-  class BaseSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) extends Handler[SearchRequest, SearchResponse] {
+  class BaseSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])
+      extends Handler[SearchRequest, SearchResponse] {
 
     override def build(request: SearchRequest): ElasticRequest = {
 

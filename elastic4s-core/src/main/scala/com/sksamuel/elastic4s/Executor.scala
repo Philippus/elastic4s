@@ -14,7 +14,7 @@ object Executor {
   implicit def FutureExecutor(implicit ec: ExecutionContext = ExecutionContext.Implicits.global): Executor[Future] =
     new Executor[Future] {
       override def exec(client: HttpClient, request: ElasticRequest): Future[HttpResponse] = {
-        val promise = Promise[HttpResponse]()
+        val promise                                           = Promise[HttpResponse]()
         val callback: Either[Throwable, HttpResponse] => Unit = {
           case Left(t)  => promise.tryFailure(t)
           case Right(r) => promise.trySuccess(r)

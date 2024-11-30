@@ -3,15 +3,12 @@ package com.sksamuel.elastic4s.requests.searches
 import com.sksamuel.elastic4s.JsonSugar
 import org.scalatest.flatspec.AnyFlatSpec
 
-
-class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar  {
+class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  /**
-    * Took example query from www.elastic.co
+  /** Took example query from www.elastic.co
     * https://www.elastic.co/guide/en/elasticsearch/reference/6.1/search-aggregations-pipeline-bucket-script-aggregation.html
-    *
     */
   "AggregationBuilderFn" should "generate correct bucketScript aggregation json" in {
 
@@ -27,7 +24,7 @@ class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar  {
         script("params.tShirtSales / params.totalSales * 100"),
         Map(
           "tShirtSales" -> "t-shirts>sales",
-          "totalSales" -> "total_sales"
+          "totalSales"  -> "total_sales"
         )
       )
     )

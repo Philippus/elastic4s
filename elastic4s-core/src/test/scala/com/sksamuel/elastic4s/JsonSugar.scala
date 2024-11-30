@@ -21,7 +21,7 @@ trait JsonSugar extends Matchers {
       }
 
       val expectedJson = mapper.readTree(right)
-      val actualJson = mapper.readTree(left)
+      val actualJson   = mapper.readTree(left)
 
       MatchResult(
         expectedJson == actualJson,
@@ -39,7 +39,7 @@ trait JsonSugar extends Matchers {
       }
 
       val expectedJson = mapper.readTree(jsonResource)
-      val actualJson = mapper.readTree(left)
+      val actualJson   = mapper.readTree(left)
 
       MatchResult(
         expectedJson == actualJson,
@@ -48,6 +48,5 @@ trait JsonSugar extends Matchers {
       )
     }
   }
-
 
 }

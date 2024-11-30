@@ -4,15 +4,16 @@ import com.sksamuel.elastic4s.requests.common.ValueType
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class GeoCentroidAggregation(name: String,
-                                  field: Option[String] = None,
-                                  format: Option[String] = None,
-                                  missing: Option[AnyRef] = None,
-                                  valueType: Option[ValueType] = None,
-                                  script: Option[Script] = None,
-                                  subaggs: Seq[AbstractAggregation] = Nil,
-                                  metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class GeoCentroidAggregation(
+    name: String,
+    field: Option[String] = None,
+    format: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    valueType: Option[ValueType] = None,
+    script: Option[Script] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = GeoCentroidAggregation
 

@@ -6,51 +6,52 @@ import com.sksamuel.elastic4s.requests.explain.Explanation
 import com.sksamuel.elastic4s.requests.get.{HitField, MetaDataFields}
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.JacksonSupport
 
-case class SearchHit(@JsonProperty("_id") id: String,
-                     @JsonProperty("_index") index: String,
-                     @JsonProperty("_version") version: Long,
-                     @JsonProperty("_seq_no") seqNo: Long,
-                     @JsonProperty("_primary_term") primaryTerm: Long,
-                     @JsonProperty("_score") score: Float,
-                     @JsonProperty("_parent") parent: Option[String],
-                     @JsonProperty("_shard") shard: Option[String],
-                     @JsonProperty("_node") node: Option[String],
-                     @JsonProperty("_routing") routing: Option[String],
-                     @JsonProperty("_explanation") explanation: Option[Explanation],
-                     @JsonProperty("sort") sort: Option[Seq[AnyRef]],
-                     private val _source: Map[String, AnyRef],
-                     fields: Map[String, AnyRef],
-                     @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
-                     private val inner_hits: Map[String, Map[String, Any]],
-                     @JsonProperty("matched_queries") matchedQueries: Option[Set[String]])
-  extends Hit {
+case class SearchHit(
+    @JsonProperty("_id") id: String,
+    @JsonProperty("_index") index: String,
+    @JsonProperty("_version") version: Long,
+    @JsonProperty("_seq_no") seqNo: Long,
+    @JsonProperty("_primary_term") primaryTerm: Long,
+    @JsonProperty("_score") score: Float,
+    @JsonProperty("_parent") parent: Option[String],
+    @JsonProperty("_shard") shard: Option[String],
+    @JsonProperty("_node") node: Option[String],
+    @JsonProperty("_routing") routing: Option[String],
+    @JsonProperty("_explanation") explanation: Option[Explanation],
+    @JsonProperty("sort") sort: Option[Seq[AnyRef]],
+    private val _source: Map[String, AnyRef],
+    fields: Map[String, AnyRef],
+    @JsonProperty("highlight") private val _highlight: Option[Map[String, Seq[String]]],
+    private val inner_hits: Map[String, Map[String, Any]],
+    @JsonProperty("matched_queries") matchedQueries: Option[Set[String]]
+) extends Hit {
 
-  def highlight: Map[String, Seq[String]] = _highlight.getOrElse(Map.empty)
+  def highlight: Map[String, Seq[String]]           = _highlight.getOrElse(Map.empty)
   def highlightFragments(name: String): Seq[String] = highlight.getOrElse(name, Nil)
 
   def innerHitsAsMap: Map[String, Map[String, Any]] = Option(inner_hits).getOrElse(Map.empty)
 
-  def storedField(fieldName: String): HitField = storedFieldOpt(fieldName).get
+  def storedField(fieldName: String): HitField            = storedFieldOpt(fieldName).get
   def storedFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
     new HitField {
-      override def values: Seq[AnyRef] = v match {
+      override def values: Seq[AnyRef]      = v match {
         case values: Seq[AnyRef] => values
-        case value: AnyRef => Seq(value)
+        case value: AnyRef       => Seq(value)
       }
-      override def value: AnyRef = values.head
-      override def name: String = fieldName
+      override def value: AnyRef            = values.head
+      override def name: String             = fieldName
       override def isMetadataField: Boolean = MetaDataFields.fields.contains(name)
     }
   }
 
   override def sourceAsMap: Map[String, AnyRef] = _source
-  override def sourceAsString: String = JacksonSupport.mapper.writeValueAsString(_source)
+  override def sourceAsString: String           = JacksonSupport.mapper.writeValueAsString(_source)
 
   override def exists: Boolean = true
 
   private def buildInnerHits(_hits: Map[String, Map[String, Any]]): Map[String, InnerHits] =
     Option(_hits).getOrElse(Map.empty).mapValues { hits =>
-      val v = hits("hits").asInstanceOf[Map[String, AnyRef]]
+      val v     = hits("hits").asInstanceOf[Map[String, AnyRef]]
       val total = v("total").asInstanceOf[Map[String, AnyRef]]
       InnerHits(
         total = Total(total("value").toString.toLong, total("relation").toString),

@@ -12,5 +12,5 @@ object Operator {
   case object Or  extends Operator
 
   def AND: And.type = And
-  def OR: Or.type = Or
+  def OR: Or.type   = Or
 }

@@ -23,7 +23,9 @@ class InnerHitTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     bulk(
       indexInto(indexName).fields(Map("name" -> "boro", "affiliation" -> "club")).id("1").routing("1"),
-      indexInto(indexName).fields(Map("name" -> "traore", "affiliation" -> Map("name" -> "player", "parent" -> "1"))).id("2").routing("1")
+      indexInto(indexName).fields(Map("name" -> "traore", "affiliation" -> Map("name" -> "player", "parent" -> "1"))).id(
+        "2"
+      ).routing("1")
     ).refreshImmediately
   }.await
 

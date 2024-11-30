@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class SttpRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerTests {
   private lazy val sttpClient = SttpRequestHttpClient(ElasticNodeEndpoint("http", elasticHost, elasticPort.toInt, None))
-  override val client = ElasticClient(sttpClient)
+  override val client         = ElasticClient(sttpClient)
 
   "SttpRequestHttpClient" should "propagate headers if included" in {
     implicit val options: CommonRequestOptions = CommonRequestOptions.defaults.copy(

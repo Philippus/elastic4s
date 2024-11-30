@@ -15,15 +15,14 @@ class NodeHotThreadsTest extends AnyFlatSpec with Matchers with DockerTests {
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-
   "nodeHotThreads" should "return all nodes" in {
     val result = client.execute {
       nodeHotThreads()
     }.await.result
 
-    result should include ("Hot threads at")
-    result should include ("ignoreIdleThreads")
-    result should include ("interval")
-    result should include ("busiestThreads")
+    result should include("Hot threads at")
+    result should include("ignoreIdleThreads")
+    result should include("interval")
+    result should include("busiestThreads")
   }
 }

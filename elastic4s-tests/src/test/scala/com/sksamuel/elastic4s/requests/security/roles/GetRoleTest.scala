@@ -23,10 +23,10 @@ class GetRoleTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createRole(
       "role1",
-      indices=Seq(IndexPrivileges(
+      indices = Seq(IndexPrivileges(
         Seq("index1", "index2"),
         Seq("read"),
-        allow_restricted_indices=Some(false)
+        allow_restricted_indices = Some(false)
       ))
     )
   }.await
@@ -43,9 +43,9 @@ class GetRoleTest extends AnyWordSpec with Matchers with DockerTests {
 
       resp.size shouldBe 1
       resp("role1").indices shouldBe Seq(IndexPrivileges(
-        Seq("index1","index2"),
+        Seq("index1", "index2"),
         Seq("read"),
-        allow_restricted_indices=Some(false)
+        allow_restricted_indices = Some(false)
       ))
     }
   }

@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.{Index, Indexes}
 
 trait DeleteApi {
 
-  def deleteById(index: Index, id: String): DeleteByIdRequest = DeleteByIdRequest(index.name, id)
+  def deleteById(index: Index, id: String): DeleteByIdRequest         = DeleteByIdRequest(index.name, id)
   def deleteByQuery(index: Index, query: Query): DeleteByQueryRequest = DeleteByQueryRequest(index.name, query)
 
   def deleteIn(indexesAndTypes: Indexes) = new DeleteByQueryExpectsQuery(indexesAndTypes)

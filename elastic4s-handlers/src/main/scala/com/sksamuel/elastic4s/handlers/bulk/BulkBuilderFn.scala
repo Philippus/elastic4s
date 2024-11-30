@@ -16,7 +16,7 @@ object BulkBuilderFn {
   def apply(bulk: BulkRequest): Iterator[String] = {
     bulk.requests.iterator.flatMap {
       case index: IndexRequest =>
-        val builder = XContentFactory.jsonBuilder()
+        val builder       = XContentFactory.jsonBuilder()
         val createOrIndex = if (index.createOnly.getOrElse(false)) "create" else "index"
         builder.startObject(createOrIndex)
         builder.field("_index", index.index.name)
@@ -43,7 +43,9 @@ object BulkBuilderFn {
         delete.version.foreach(builder.field("version", _))
         delete.ifPrimaryTerm.foreach(builder.field("if_primary_term", _))
         delete.ifSeqNo.foreach(builder.field("if_seq_no", _))
-        delete.versionType.foreach(versionType => builder.field("version_type", handlers.VersionTypeHttpString(versionType)))
+        delete.versionType.foreach(versionType =>
+          builder.field("version_type", handlers.VersionTypeHttpString(versionType))
+        )
         builder.endObject()
         builder.endObject()
 

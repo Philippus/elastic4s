@@ -3,12 +3,14 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery._
 
-case class RankFeatureQuery(field: String,
-                            boost: Option[Double] = None,
-                            saturation: Option[Saturation] = None,
-                            log: Option[Log] = None,
-                            sigmoid: Option[Sigmoid] = None,
-                            linear: Option[Linear] = None) extends Query {
+case class RankFeatureQuery(
+    field: String,
+    boost: Option[Double] = None,
+    saturation: Option[Saturation] = None,
+    log: Option[Log] = None,
+    sigmoid: Option[Sigmoid] = None,
+    linear: Option[Linear] = None
+) extends Query {
 
   def boost(boost: Double): RankFeatureQuery = copy(boost = boost.some)
 
@@ -22,7 +24,7 @@ case class RankFeatureQuery(field: String,
     copy(sigmoid = sigmoid.some, saturation = None, log = None, linear = None)
 
   def withLinear(linear: Linear): RankFeatureQuery =
-    copy(linear = linear.some,  sigmoid = None, saturation = None, log = None)
+    copy(linear = linear.some, sigmoid = None, saturation = None, log = None)
 }
 
 object RankFeatureQuery {

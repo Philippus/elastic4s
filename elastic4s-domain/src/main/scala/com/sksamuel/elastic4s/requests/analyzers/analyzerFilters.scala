@@ -11,7 +11,7 @@ trait AnalyzerFilter {
 case class PredefinedTokenFilter(name: String) extends TokenFilter
 
 @deprecated("use new analysis package", "7.7.0")
-case class PredefinedCharFilter(name: String)  extends CharFilter
+case class PredefinedCharFilter(name: String) extends CharFilter
 
 @deprecated("use new analysis package", "7.7.0")
 trait AnalyzerFilterDefinition {

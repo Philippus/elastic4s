@@ -17,28 +17,28 @@ abstract class Tokenizer(val name: String) {
 }
 
 @deprecated("use new analysis package", "7.0.1")
-case object WhitespaceTokenizer  extends Tokenizer("whitespace")
+case object WhitespaceTokenizer extends Tokenizer("whitespace")
 
 @deprecated("use new analysis package", "7.0.1")
-case object LetterTokenizer      extends Tokenizer("letter")
+case object LetterTokenizer extends Tokenizer("letter")
 
 @deprecated("use new analysis package", "7.0.1")
-case object LowercaseTokenizer   extends Tokenizer("lowercase")
+case object LowercaseTokenizer extends Tokenizer("lowercase")
 
 @deprecated("use new analysis package", "7.0.1")
-case object StandardTokenizer    extends Tokenizer("standard")
+case object StandardTokenizer extends Tokenizer("standard")
 
 @deprecated("use new analysis package", "7.0.1")
-case object PatternTokenizer     extends Tokenizer("pattern")
+case object PatternTokenizer extends Tokenizer("pattern")
 
 @deprecated("use new analysis package", "7.0.1")
-case object KeywordTokenizer     extends Tokenizer("keyword")
+case object KeywordTokenizer extends Tokenizer("keyword")
 
 @deprecated("use new analysis package", "7.0.1")
-case object NGramTokenizer       extends Tokenizer("nGram")
+case object NGramTokenizer extends Tokenizer("nGram")
 
 @deprecated("use new analysis package", "7.0.1")
-case object EdgeNGramTokenizer   extends Tokenizer("edgeNGram")
+case object EdgeNGramTokenizer extends Tokenizer("edgeNGram")
 
 @deprecated("use new analysis package", "7.0.1")
 case object UaxUrlEmailTokenizer extends Tokenizer("uax_url_email")
@@ -88,10 +88,10 @@ case class PatternTokenizer(override val name: String, pattern: String = "\\W+",
   def pattern(pattern: String): PatternTokenizer = copy(pattern = pattern)
 
   @deprecated("use new analysis package", "7.7.0")
-  def flags(flags: String): PatternTokenizer     = copy(flags = flags)
+  def flags(flags: String): PatternTokenizer = copy(flags = flags)
 
   @deprecated("use new analysis package", "7.7.0")
-  def group(group: Int): PatternTokenizer        = copy(group = group)
+  def group(group: Int): PatternTokenizer = copy(group = group)
 }
 
 @deprecated("use new analysis package", "7.0.1")
@@ -106,11 +106,12 @@ case class KeywordTokenizer(override val name: String, bufferSize: Int = 256) ex
 }
 
 @deprecated("use new analysis package", "7.0.1")
-case class NGramTokenizer(override val name: String,
-                          minGram: Int = 1,
-                          maxGram: Int = 2,
-                          tokenChars: Iterable[String] = Nil)
-    extends CustomizedTokenizer(name) {
+case class NGramTokenizer(
+    override val name: String,
+    minGram: Int = 1,
+    maxGram: Int = 2,
+    tokenChars: Iterable[String] = Nil
+) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "nGram")
     source.field("min_gram", minGram)
@@ -125,11 +126,12 @@ case class NGramTokenizer(override val name: String,
 }
 
 @deprecated("use new analysis package", "7.0.1")
-case class EdgeNGramTokenizer(override val name: String,
-                              minGram: Int = 1,
-                              maxGram: Int = 2,
-                              tokenChars: Iterable[String] = Nil)
-    extends CustomizedTokenizer(name) {
+case class EdgeNGramTokenizer(
+    override val name: String,
+    minGram: Int = 1,
+    maxGram: Int = 2,
+    tokenChars: Iterable[String] = Nil
+) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "edgeNGram")
     source.field("min_gram", minGram)
@@ -144,13 +146,14 @@ case class EdgeNGramTokenizer(override val name: String,
 }
 
 @deprecated("use new analysis package", "7.0.1")
-case class PathHierarchyTokenizer(override val name: String,
-                                  delimiter: Char = '/',
-                                  replacement: Char = '/',
-                                  bufferSize: Int = 1024,
-                                  reverse: Boolean = false,
-                                  skip: Int = 0)
-    extends CustomizedTokenizer(name) {
+case class PathHierarchyTokenizer(
+    override val name: String,
+    delimiter: Char = '/',
+    replacement: Char = '/',
+    bufferSize: Int = 1024,
+    reverse: Boolean = false,
+    skip: Int = 0
+) extends CustomizedTokenizer(name) {
   override def build(source: XContentBuilder): Unit = {
     source.field("type", "path_hierarchy")
     source.field("delimiter", delimiter.toString)

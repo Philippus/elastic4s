@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 import scala.util.Try
 
 class SearchIteratorTest
-  extends AnyWordSpec
+    extends AnyWordSpec
     with ElasticMatchers
     with DockerTests {
 
@@ -33,32 +33,32 @@ class SearchIteratorTest
   client.execute {
     bulk(
       indexInto("searchiterator").fields(
-        "name" -> "queen",
+        "name"  -> "queen",
         "value" -> 10,
         "count" -> 1
       ),
       indexInto("searchiterator").fields(
-        "name" -> "king",
+        "name"  -> "king",
         "value" -> 0,
         "count" -> 1
       ),
       indexInto("searchiterator").fields(
-        "name" -> "bishop",
+        "name"  -> "bishop",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("searchiterator").fields(
-        "name" -> "knight",
+        "name"  -> "knight",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("searchiterator").fields(
-        "name" -> "rook",
+        "name"  -> "rook",
         "value" -> 5,
         "count" -> 2
       ),
       indexInto("searchiterator").fields(
-        "name" -> "pawn",
+        "name"  -> "pawn",
         "value" -> 1,
         "count" -> 8
       )
@@ -67,7 +67,10 @@ class SearchIteratorTest
 
   "a search iterator" should {
     "return all documents in the search request" in {
-      SearchIterator.hits(client, search("searchiterator").matchAllQuery().sortBy(fieldSort("name")).size(2).scroll("1m"))
+      SearchIterator.hits(
+        client,
+        search("searchiterator").matchAllQuery().sortBy(fieldSort("name")).size(2).scroll("1m")
+      )
         .toList.map(_.sourceField("name")) shouldBe List("bishop", "king", "knight", "pawn", "queen", "rook")
     }
   }

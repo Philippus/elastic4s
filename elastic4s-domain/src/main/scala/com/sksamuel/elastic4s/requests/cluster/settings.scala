@@ -15,5 +15,3 @@ case class ClusterSettingsResponse(persistent: Map[String, String], transient: M
 
 case class AddRemoteClusterSettingsRequest(settingsRequest: ClusterSettingsRequest)
 case class AddRemoteClusterResponse(persistent: Map[String, Any], transient: Map[String, Any])
-
-

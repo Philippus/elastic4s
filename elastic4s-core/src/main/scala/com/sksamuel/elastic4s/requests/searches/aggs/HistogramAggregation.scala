@@ -3,21 +3,22 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class HistogramAggregation(name: String,
-                                field: Option[String] = None,
-                                format: Option[String] = None,
-                                missing: Option[AnyRef] = None,
-                                minDocCount: Option[Long] = None,
-                                interval: Option[Double] = None,
-                                keyed: Option[Boolean] = None,
-                                offset: Option[Double] = None,
-                                extendedBounds: Option[ExtendedBounds] = None,
-                                hardBounds: Option[ExtendedBounds] = None,
-                                order: Option[HistogramOrder] = None,
-                                script: Option[Script] = None,
-                                subaggs: Seq[AbstractAggregation] = Nil,
-                                metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class HistogramAggregation(
+    name: String,
+    field: Option[String] = None,
+    format: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    minDocCount: Option[Long] = None,
+    interval: Option[Double] = None,
+    keyed: Option[Boolean] = None,
+    offset: Option[Double] = None,
+    extendedBounds: Option[ExtendedBounds] = None,
+    hardBounds: Option[ExtendedBounds] = None,
+    order: Option[HistogramOrder] = None,
+    script: Option[Script] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = HistogramAggregation
 
@@ -33,10 +34,10 @@ case class HistogramAggregation(name: String,
   def interval(interval: Double): HistogramAggregation = copy(interval = interval.some)
   def minDocCount(min: Long): HistogramAggregation     = copy(minDocCount = min.some)
 
-  def order(order: HistogramOrder): HistogramAggregation = copy(order = order.some)
-  def offset(offset: Double): HistogramAggregation       = copy(offset = offset.some)
+  def order(order: HistogramOrder): HistogramAggregation             = copy(order = order.some)
+  def offset(offset: Double): HistogramAggregation                   = copy(offset = offset.some)
   def extendedBounds(min: Double, max: Double): HistogramAggregation =
     copy(extendedBounds = ExtendedBounds(min, max).some)
-  def hardBounds(min: Double, max: Double): HistogramAggregation =
+  def hardBounds(min: Double, max: Double): HistogramAggregation     =
     copy(hardBounds = ExtendedBounds(min, max).some)
 }

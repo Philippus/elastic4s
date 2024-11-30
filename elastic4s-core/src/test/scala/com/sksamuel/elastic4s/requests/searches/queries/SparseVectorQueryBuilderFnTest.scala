@@ -20,7 +20,7 @@ class SparseVectorQueryBuilderFnTest extends AnyFunSuite with QueryApi with Matc
 
     val queryBody = SparseVectorQueryBuilderFn(query)
 
-      queryBody.string should matchJson("""{"sparse_vector": {
+    queryBody.string should matchJson("""{"sparse_vector": {
                                           |   "field":"ml.tokens",
                                           |   "inference_id":"the inference ID to produce the token weights",
                                           |   "query":"the query string"
@@ -42,7 +42,9 @@ class SparseVectorQueryBuilderFnTest extends AnyFunSuite with QueryApi with Matc
     val query = sparseVectorQuery("ml.tokens", "my-elser-model", "How is the weather in Jamaica?")
       .prune(true)
       .pruningConfig(PruningConfig(
-        tokensFreqRatioThreshold = Some(5), tokensWeighThreshold = Some(0.4F), onlyScorePrunedTokens = Some(false)
+        tokensFreqRatioThreshold = Some(5),
+        tokensWeighThreshold = Some(0.4F),
+        onlyScorePrunedTokens = Some(false)
       ))
 
     val queryBody = SparseVectorQueryBuilderFn(query)

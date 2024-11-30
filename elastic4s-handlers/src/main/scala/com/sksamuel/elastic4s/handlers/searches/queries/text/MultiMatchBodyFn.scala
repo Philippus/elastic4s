@@ -9,10 +9,13 @@ object MultiMatchBodyFn {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("multi_match")
     builder.field("query", q.text)
-    builder.array("fields", q.fields.map {
-      case FieldWithOptionalBoost(field, Some(boost)) => s"$field^$boost"
-      case FieldWithOptionalBoost(field, _) => field
-    }.toArray)
+    builder.array(
+      "fields",
+      q.fields.map {
+        case FieldWithOptionalBoost(field, Some(boost)) => s"$field^$boost"
+        case FieldWithOptionalBoost(field, _)           => field
+      }.toArray
+    )
     q.`type`.map(EnumConversions.multiMatchQueryBuilderType).foreach(builder.field("type", _))
     q.analyzer.foreach(builder.field("analyzer", _))
     q.cutoffFrequency.map(_.toString).foreach(builder.field("cutoff_frequency", _))

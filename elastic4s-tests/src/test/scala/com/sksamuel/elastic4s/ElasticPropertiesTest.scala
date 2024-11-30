@@ -7,19 +7,37 @@ class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
 
   "elasticsearch properties" should "parse multiple host/ports" in {
     ElasticProperties("http://host1:1234,host2:2345") shouldBe
-      ElasticProperties(Seq(ElasticNodeEndpoint("http", "host1", 1234, None), ElasticNodeEndpoint("http", "host2", 2345, None)))
+      ElasticProperties(Seq(
+        ElasticNodeEndpoint("http", "host1", 1234, None),
+        ElasticNodeEndpoint("http", "host2", 2345, None)
+      ))
   }
 
   it should "parse single host/ports" in {
-    ElasticProperties("http://host1:1234") shouldBe ElasticProperties(Seq(ElasticNodeEndpoint("http", "host1", 1234, None)))
+    ElasticProperties("http://host1:1234") shouldBe ElasticProperties(Seq(ElasticNodeEndpoint(
+      "http",
+      "host1",
+      1234,
+      None
+    )))
   }
 
   it should "parse single host/ports with trailing slash" in {
-    ElasticProperties("http://host1:1234/") shouldBe ElasticProperties(Seq(ElasticNodeEndpoint("http", "host1", 1234, None)))
+    ElasticProperties("http://host1:1234/") shouldBe ElasticProperties(Seq(ElasticNodeEndpoint(
+      "http",
+      "host1",
+      1234,
+      None
+    )))
   }
 
   it should "parse single host/ports with auth" in {
-    ElasticProperties("http://user:pass@host1:1234") shouldBe ElasticProperties(Seq(ElasticNodeEndpoint("http", "user:pass@host1", 1234, None)))
+    ElasticProperties("http://user:pass@host1:1234") shouldBe ElasticProperties(Seq(ElasticNodeEndpoint(
+      "http",
+      "user:pass@host1",
+      1234,
+      None
+    )))
   }
 
   it should "errors on invalid host string" in {
@@ -52,17 +70,26 @@ class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
 
   it should "support https protocol" in {
     ElasticProperties("https://host1:1234,host2:2345") shouldBe
-      ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234, None), ElasticNodeEndpoint("https", "host2", 2345, None)))
+      ElasticProperties(Seq(
+        ElasticNodeEndpoint("https", "host1", 1234, None),
+        ElasticNodeEndpoint("https", "host2", 2345, None)
+      ))
   }
 
   it should "support prefix path" in {
     ElasticProperties("https://host1:1234,host2:2345/prefix/path") shouldBe
-      ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")), ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))))
+      ElasticProperties(Seq(
+        ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")),
+        ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))
+      ))
   }
 
   it should "support prefix path with trailing slash" in {
     ElasticProperties("https://host1:1234,host2:2345/prefix/path/") shouldBe
-      ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")), ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))))
+      ElasticProperties(Seq(
+        ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")),
+        ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))
+      ))
   }
 
   it should "support prefix path with options" in {
@@ -71,11 +98,19 @@ class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
         Seq(
           ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")),
           ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))
-        ), Map("a" -> "b", "c" -> "d"))
+        ),
+        Map("a" -> "b", "c" -> "d")
+      )
   }
 
   it should "support prefix path with trailing slash and options" in {
     ElasticProperties("https://host1:1234,host2:2345/prefix/path/?a=b&c=d") shouldBe
-      ElasticProperties(Seq(ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")), ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))), Map("a" -> "b", "c" -> "d"))
+      ElasticProperties(
+        Seq(
+          ElasticNodeEndpoint("https", "host1", 1234, Some("/prefix/path")),
+          ElasticNodeEndpoint("https", "host2", 2345, Some("/prefix/path"))
+        ),
+        Map("a" -> "b", "c" -> "d")
+      )
   }
 }

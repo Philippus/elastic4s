@@ -2,10 +2,19 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.{EnumConversions, handlers}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, DateHistogramAggregation, ExtendedBoundsBuilderFn, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{
+  AbstractAggregation,
+  AggMetaDataFn,
+  DateHistogramAggregation,
+  ExtendedBoundsBuilderFn,
+  SubAggsBuilderFn
+}
 
 object DateHistogramAggregationBuilder {
-  def apply(agg: DateHistogramAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: DateHistogramAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("date_histogram")

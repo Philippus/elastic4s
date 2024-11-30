@@ -2,10 +2,18 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, IpRangeAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{
+  AbstractAggregation,
+  AggMetaDataFn,
+  IpRangeAggregation,
+  SubAggsBuilderFn
+}
 
 object IpRangeAggregationBuilder {
-  def apply(agg: IpRangeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: IpRangeAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
 
     val builder = XContentFactory.obj().startObject("ip_range")
 

@@ -11,7 +11,7 @@ object ReindexBuilderFn {
     val builder = XContentFactory.obj()
 
     request.proceedOnConflicts.foreach {
-      case true => builder.field("conflicts", "proceed")
+      case true  => builder.field("conflicts", "proceed")
       case false => builder.field("conflicts", "abort")
     }
 
@@ -49,10 +49,12 @@ object ReindexBuilderFn {
     builder.startObject("dest")
     builder.field("index", request.targetIndex.name)
 
-    request.versionType.foreach(versionType => builder.field("version_type", handlers.VersionTypeHttpString(versionType)))
+    request.versionType.foreach(versionType =>
+      builder.field("version_type", handlers.VersionTypeHttpString(versionType))
+    )
 
     request.createOnly.foreach {
-      case true => builder.field("op_type", "create")
+      case true  => builder.field("op_type", "create")
       case false => builder.field("op_type", "index")
     }
 

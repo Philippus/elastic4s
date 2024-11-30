@@ -9,7 +9,6 @@ object ConstantKeywordFieldBuilderFn {
     values.get("value").map(_.asInstanceOf[String]).get
   )
 
-
   def build(field: ConstantKeywordField): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)

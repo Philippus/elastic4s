@@ -14,7 +14,7 @@ trait CountHandlers {
         "/" + request.indexes.values.map(ElasticUrlEncoder.encodeUrlFragment).mkString(",") + "/_count"
 
       val builder = CountBodyBuilderFn(request)
-      val body = builder.string
+      val body    = builder.string
 
       val params = scala.collection.mutable.Map.empty[String, String]
       request.allowNoIndices.map(_.toString).foreach(params.put("allow_no_indices", _))

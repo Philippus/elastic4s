@@ -10,9 +10,8 @@ import org.slf4j.{Logger, LoggerFactory}
 trait ResponseHandler[U] {
   self =>
 
-  /**
-    * Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request
-    * as determined by the instance of this handler.
+  /** Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request as determined by
+    * the instance of this handler.
     */
   def handle(response: HttpResponse): Either[ElasticError, U]
 
@@ -31,7 +30,9 @@ object ResponseHandler {
   def json(entity: HttpEntity.StringEntity): JsonNode = fromEntity[JsonNode](entity)
 
   def fromNode[U: JavaTypeable](node: JsonNode): U = {
-    logger.debug(s"Attempting to unmarshall json node to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}")
+    logger.debug(
+      s"Attempting to unmarshall json node to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}"
+    )
     JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
   }
 
@@ -39,12 +40,14 @@ object ResponseHandler {
     fromEntity(response.entity.getOrError("No entity defined but was expected"))
 
   def fromEntity[U: JavaTypeable](entity: HttpEntity.StringEntity): U = {
-    logger.debug(s"Attempting to unmarshall response to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}")
+    logger.debug(
+      s"Attempting to unmarshall response to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}"
+    )
     logger.debug(entity.content)
     JacksonSupport.mapper.readValue[U](entity.content)
   }
 
-  def default[U: JavaTypeable] = new DefaultResponseHandler[U]
+  def default[U: JavaTypeable]    = new DefaultResponseHandler[U]
   def failure404[U: JavaTypeable] = new NotFound404ResponseHandler[U]
 }
 
@@ -56,7 +59,7 @@ class DefaultResponseHandler[U: JavaTypeable] extends ResponseHandler[U] {
     case 200 | 201 | 202 | 203 | 204 =>
       val entity = response.entity.getOrError("No entity defined")
       Right(ResponseHandler.fromEntity[U](entity))
-    case _ =>
+    case _                           =>
       Left(ElasticErrorParser.parse(response))
   }
 }
@@ -65,6 +68,6 @@ class NotFound404ResponseHandler[U: JavaTypeable] extends DefaultResponseHandler
   override def handle(response: HttpResponse): Either[ElasticError, U] =
     response.statusCode match {
       case 404 | 500 => sys.error(response.toString)
-      case _ => super.handle(response)
+      case _         => super.handle(response)
     }
 }

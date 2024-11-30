@@ -7,8 +7,7 @@ import akka.stream.scaladsl.Flow
 import scala.concurrent.Future
 import scala.util.Try
 
-/**
-  * Factory for Akka's http pool flow.
+/** Factory for Akka's http pool flow.
   */
 private[akka] trait HttpPoolFactory {
 

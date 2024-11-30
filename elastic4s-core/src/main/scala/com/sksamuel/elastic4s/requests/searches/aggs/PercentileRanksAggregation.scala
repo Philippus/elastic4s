@@ -9,19 +9,20 @@ object PercentilesMethod {
   case object HDR     extends PercentilesMethod
 }
 
-case class PercentileRanksAggregation(name: String,
-                                      field: Option[String] = None,
-                                      format: Option[String] = None,
-                                      missing: Option[AnyRef] = None,
-                                      values: Seq[Double] = Nil,
-                                      method: Option[PercentilesMethod] = None,
-                                      keyed: Option[Boolean] = None,
-                                      numberOfSignificantValueDigits: Option[Int] = None,
-                                      compression: Option[Double] = None,
-                                      script: Option[Script] = None,
-                                      subaggs: Seq[AbstractAggregation] = Nil,
-                                      metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class PercentileRanksAggregation(
+    name: String,
+    field: Option[String] = None,
+    format: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    values: Seq[Double] = Nil,
+    method: Option[PercentilesMethod] = None,
+    keyed: Option[Boolean] = None,
+    numberOfSignificantValueDigits: Option[Int] = None,
+    compression: Option[Double] = None,
+    script: Option[Script] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = PercentileRanksAggregation
 

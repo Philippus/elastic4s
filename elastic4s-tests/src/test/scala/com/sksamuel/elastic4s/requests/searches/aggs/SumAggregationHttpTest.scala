@@ -21,7 +21,6 @@ class SumAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers 
       }
     }.await.result.acknowledged shouldBe true
 
-
     Try {
       client.execute {
         deleteIndex("sumagg2")
@@ -39,12 +38,12 @@ class SumAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers 
 
     client.execute(
       bulk(
-        indexInto("sumagg") fields("name" -> "clint eastwood", "age" -> "52"),
-        indexInto("sumagg") fields("name" -> "eli wallach", "age" -> "72"),
-        indexInto("sumagg") fields("name" -> "lee van cleef", "age" -> "62"),
+        indexInto("sumagg") fields ("name" -> "clint eastwood", "age" -> "52"),
+        indexInto("sumagg") fields ("name" -> "eli wallach", "age"    -> "72"),
+        indexInto("sumagg") fields ("name" -> "lee van cleef", "age"  -> "62"),
         indexInto("sumagg") fields ("name" -> "nicholas cage"),
-        indexInto("sumagg") fields("name" -> "sean connery", "age" -> "32"),
-        indexInto("sumagg") fields("name" -> "kevin costner", "age" -> "42")
+        indexInto("sumagg") fields ("name" -> "sean connery", "age"   -> "32"),
+        indexInto("sumagg") fields ("name" -> "kevin costner", "age"  -> "42")
       ).refreshImmediately
     ).await
   }

@@ -28,11 +28,11 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
 
   client.execute(
     bulk(
-      indexInto("tophits") fields("name" -> "tower of london", "location" -> "london"),
-      indexInto("tophits") fields("name" -> "buckingham palace", "location" -> "london"),
-      indexInto("tophits") fields("name" -> "hampton court palace", "location" -> "london"),
-      indexInto("tophits") fields("name" -> "york minster", "location" -> "yorkshire"),
-      indexInto("tophits") fields("name" -> "stonehenge", "location" -> "wiltshire")
+      indexInto("tophits") fields ("name" -> "tower of london", "location"      -> "london"),
+      indexInto("tophits") fields ("name" -> "buckingham palace", "location"    -> "london"),
+      indexInto("tophits") fields ("name" -> "hampton court palace", "location" -> "london"),
+      indexInto("tophits") fields ("name" -> "york minster", "location"         -> "yorkshire"),
+      indexInto("tophits") fields ("name" -> "stonehenge", "location"           -> "wiltshire")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -48,7 +48,7 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
       }.await.result
       resp.totalHits shouldBe 5
 
-      val agg = resp.aggs.terms("agg1")
+      val agg     = resp.aggs.terms("agg1")
       val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
       tophits.total shouldBe Total(3, "eq")
       tophits.maxScore shouldBe None
@@ -63,7 +63,7 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
       implicit val stringReader: AggReader[String] = new AggReader[String] {
         override def read(json: String): Try[String] = Try(json)
       }
-      val resp = client.execute {
+      val resp                                     = client.execute {
         search("tophits").matchAllQuery().aggs {
           termsAgg("agg1", "location").addSubagg(
             topHitsAgg("agg2").sortBy(fieldSort("name"))
@@ -72,7 +72,7 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
       }.await.result
       resp.totalHits shouldBe 5
 
-      val agg = resp.aggs.terms("agg1")
+      val agg     = resp.aggs.terms("agg1")
       val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
       tophits.hits.head.safeTo[String].get shouldBe "{\"name\":\"buckingham palace\",\"location\":\"london\"}"
     }

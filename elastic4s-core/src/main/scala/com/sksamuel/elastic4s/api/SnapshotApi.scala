@@ -1,15 +1,21 @@
 package com.sksamuel.elastic4s.api
 
-import com.sksamuel.elastic4s.requests.snapshots.{CreateRepositoryRequest, CreateSnapshotRequest, DeleteSnapshotRequest, GetSnapshotsRequest, RestoreSnapshotRequest}
+import com.sksamuel.elastic4s.requests.snapshots.{
+  CreateRepositoryRequest,
+  CreateSnapshotRequest,
+  DeleteSnapshotRequest,
+  GetSnapshotsRequest,
+  RestoreSnapshotRequest
+}
 
 trait SnapshotApi {
 
   def getSnapshot(snapshotName: String, repository: String): GetSnapshotsRequest =
     getSnapshots(Seq(snapshotName), repository)
-  def getSnapshots(snapshotNames: Seq[String], repository: String) = GetSnapshotsRequest(snapshotNames, repository)
+  def getSnapshots(snapshotNames: Seq[String], repository: String)               = GetSnapshotsRequest(snapshotNames, repository)
 
   @deprecated("use getSnapshot(name: String, repository: String)", "6.0.2")
-  def getSnapshot(names: String*): GetSnapshotExpectsFrom = getSnapshot(names)
+  def getSnapshot(names: String*): GetSnapshotExpectsFrom          = getSnapshot(names)
   @deprecated("use getSnapshot(name: String, repository: String)", "6.0.2")
   def getSnapshot(names: Iterable[String]): GetSnapshotExpectsFrom = new GetSnapshotExpectsFrom(names)
   class GetSnapshotExpectsFrom(names: Iterable[String]) {

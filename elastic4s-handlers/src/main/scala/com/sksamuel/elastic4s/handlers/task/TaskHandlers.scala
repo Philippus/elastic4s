@@ -2,7 +2,16 @@ package com.sksamuel.elastic4s.handlers.task
 
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-import com.sksamuel.elastic4s.requests.task.{CancelTaskByIdRequest, CancelTasksRequest, GetTask, GetTaskResponse, ListTaskResponse, ListTasks, Node, Task}
+import com.sksamuel.elastic4s.requests.task.{
+  CancelTaskByIdRequest,
+  CancelTasksRequest,
+  GetTask,
+  GetTaskResponse,
+  ListTaskResponse,
+  ListTasks,
+  Node,
+  Task
+}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 import scala.util.Try
@@ -53,7 +62,7 @@ trait TaskHandlers {
             }.toEither.fold((_: Throwable) => Right[ElasticError, Boolean](false), b => Right[ElasticError, Boolean](b))
           }
         }
-        case _ =>
+        case _                           =>
           Left[ElasticError, Boolean](ElasticErrorParser.parse(response))
       }
     }

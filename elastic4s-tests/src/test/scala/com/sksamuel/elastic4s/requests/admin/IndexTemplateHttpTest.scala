@@ -11,7 +11,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import scala.util.Try
 
 class IndexTemplateHttpTest
-  extends AnyWordSpec
+    extends AnyWordSpec
     with MockitoSugar
     with Matchers
     with Eventually
@@ -60,8 +60,8 @@ class IndexTemplateHttpTest
       }.await
 
       client.execute {
-        indexInto("brewers") fields(
-          "name" -> "fullers",
+        indexInto("brewers") fields (
+          "name"         -> "fullers",
           "year_founded" -> 1829
         ) refresh RefreshPolicy.Immediate
       }.await

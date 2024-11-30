@@ -1,14 +1,20 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket
 
-import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, AggResult, AggSerde, BucketAggregation, Transformable}
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.{
+  AggBucket,
+  AggResult,
+  AggSerde,
+  BucketAggregation,
+  Transformable
+}
 
 case class MultiTermBucket(key: Seq[String], override val docCount: Long, private[elastic4s] val data: Map[String, Any])
-  extends AggBucket
+    extends AggBucket
     with Transformable
 
 case class MultiTerms(name: String, buckets: Seq[MultiTermBucket], docCountErrorUpperBound: Long, otherDocCount: Long)
-  extends BucketAggregation with AggResult {
-  def bucket(key: Seq[String]): MultiTermBucket = bucketOpt(key).get
+    extends BucketAggregation with AggResult {
+  def bucket(key: Seq[String]): MultiTermBucket            = bucketOpt(key).get
   def bucketOpt(key: Seq[String]): Option[MultiTermBucket] = buckets.find(_.key == key)
 }
 
@@ -31,4 +37,3 @@ object MultiTerms {
     data("sum_other_doc_count").toString.toLong
   )
 }
-

@@ -1,6 +1,29 @@
 package com.sksamuel.elastic4s.handlers.cat
 
-import com.sksamuel.elastic4s.requests.cat.{CatAliasResponse, CatAliases, CatAllocation, CatAllocationResponse, CatCount, CatCountResponse, CatHealth, CatHealthResponse, CatIndexes, CatIndicesResponse, CatMaster, CatMasterResponse, CatNodes, CatNodesResponse, CatPluginResponse, CatPlugins, CatSegments, CatSegmentsResponse, CatShards, CatShardsResponse, CatThreadPool, CatThreadPoolResponse}
+import com.sksamuel.elastic4s.requests.cat.{
+  CatAliasResponse,
+  CatAliases,
+  CatAllocation,
+  CatAllocationResponse,
+  CatCount,
+  CatCountResponse,
+  CatHealth,
+  CatHealthResponse,
+  CatIndexes,
+  CatIndicesResponse,
+  CatMaster,
+  CatMasterResponse,
+  CatNodes,
+  CatNodesResponse,
+  CatPluginResponse,
+  CatPlugins,
+  CatSegments,
+  CatSegmentsResponse,
+  CatShards,
+  CatShardsResponse,
+  CatThreadPool,
+  CatThreadPoolResponse
+}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait CatHandlers {
@@ -93,7 +116,7 @@ trait CatHandlers {
 
     override def build(request: CatCount): ElasticRequest = {
       val endpoint = request.indices match {
-        case Nil => "/_cat/count"
+        case Nil     => "/_cat/count"
         case indexes => "/_cat/count/" + indexes.mkString(",")
       }
       ElasticRequest("GET", endpoint, Map("v" -> "", "format" -> "json"))
@@ -115,7 +138,7 @@ trait CatHandlers {
     override def build(request: CatAliases): ElasticRequest = {
       val endPoint = request.pattern match {
         case Some(pattern) => s"/_cat/aliases/$pattern"
-        case _ => "/_cat/aliases"
+        case _             => "/_cat/aliases"
       }
 
       ElasticRequest("GET", endPoint, Map("v" -> "", "format" -> "json"))
@@ -129,11 +152,11 @@ trait CatHandlers {
     override def build(request: CatIndexes): ElasticRequest = {
       val endPoint = request.indexPattern match {
         case Some(indexPattern) => s"/_cat/indices/$indexPattern"
-        case _ => "/_cat/indices"
+        case _                  => "/_cat/indices"
       }
-      val params = request.health match {
+      val params   = request.health match {
         case Some(health) => BaseParams + ("health" -> health.getClass.getSimpleName.toLowerCase.stripSuffix("$"))
-        case _ => BaseParams
+        case _            => BaseParams
       }
       ElasticRequest("GET", endPoint, params)
     }

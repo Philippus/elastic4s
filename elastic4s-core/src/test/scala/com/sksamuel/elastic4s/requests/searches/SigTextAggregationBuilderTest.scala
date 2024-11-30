@@ -20,7 +20,7 @@ class SigTextAggregationBuilderTest extends AnyFunSuite with Matchers {
       .significanceHeuristic(
         "mutual_information",
         Map(
-          "include_negatives" -> true,
+          "include_negatives"      -> true,
           "background_is_superset" -> false
         )
       )

@@ -31,10 +31,15 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42l).versionType(VersionType.External),
+      indexInto("electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42L).versionType(
+        VersionType.External
+      ),
       indexInto("electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),
       indexInto("electronics").fields(Map("name" -> "iphone", "colour" -> null)),
-      indexInto("electronics").fields(Map("name" -> "m9", "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield")))),
+      indexInto("electronics").fields(Map(
+        "name"      -> "m9",
+        "locations" -> Array(Map("id" -> "11", "name" -> "manchester"), Map("id" -> "22", "name" -> "sheffield"))
+      )),
       indexInto("electronics").fields(Map("name" -> "iphone2", "models" -> Map("5s" -> Array("standard", "retina")))),
       indexInto("electronics").fields(Map("name" -> "pixel", "apps" -> Map("maps" -> "google maps", "email" -> null))),
       indexInto("electronics").source(Phone("nokia blabble", "4g"))
@@ -75,7 +80,7 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
         search("electronics").query(matchQuery("name", "galaxy")).version(true)
       }.await.result.hits.hits(0)
       found.id shouldBe "55A"
-      found.version shouldBe 42l
+      found.version shouldBe 42L
     }
     "handle custom id" in {
       client.execute {
@@ -125,14 +130,14 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result.totalHits shouldBe 1
     }
     "create aliases with index" in {
-      val id = UUID.randomUUID()
+      val id        = UUID.randomUUID()
       val indexName = s"electronics-$id"
       client.execute {
         createIndex(indexName)
           .alias("alias_1")
           .alias("alias_2")
       }.await
-      val index = client.execute {
+      val index     = client.execute {
         getIndex(indexName)
       }.await.result.apply(indexName)
       index.aliases should contain key "alias_1"
@@ -149,7 +154,7 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
       result.result.result shouldBe "created"
     }
     "return OK status if the document already exists" in {
-      val id = UUID.randomUUID().toString
+      val id     = UUID.randomUUID().toString
       client.execute {
         indexInto("electronics").fields("name" -> "super phone").withId(id).refresh(RefreshPolicy.Immediate)
       }.await
@@ -159,28 +164,28 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
       result.result.result shouldBe "updated"
     }
     "handle update concurrency with external versioning" in {
-      val id = UUID.randomUUID.toString
+      val id           = UUID.randomUUID.toString
       val insertResult = client.execute {
         indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
-          .version(2l)
+          .version(2L)
           .versionType(External)
           .refresh(RefreshPolicy.Immediate)
       }.await
-      val result = client.execute {
+      val result       = client.execute {
         indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
-          .version(2l)
+          .version(2L)
           .versionType(External)
           .refresh(RefreshPolicy.Immediate)
       }.await
-      result.error.toString should include ("version_conflict_engine_exception")
+      result.error.toString should include("version_conflict_engine_exception")
     }
     "handle update concurrency with internal versioning" in {
-      val id = UUID.randomUUID.toString
-      val insertResult = client.execute {
+      val id                     = UUID.randomUUID.toString
+      val insertResult           = client.execute {
         indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
@@ -196,17 +201,17 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
           .versionType(Internal)
           .refresh(RefreshPolicy.Immediate)
       }.await
-      wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
-      val wrongSeqNoResult = client.execute {
+      wrongPrimaryTermResult.error.toString should include("version_conflict_engine_exception")
+      val wrongSeqNoResult       = client.execute {
         indexInto("electronics")
           .fields("name" -> "super phone")
           .withId(id)
-          .ifSeqNo(insertResult.result.seqNo+1)
+          .ifSeqNo(insertResult.result.seqNo + 1)
           .ifPrimaryTerm(insertResult.result.primaryTerm)
           .versionType(Internal)
           .refresh(RefreshPolicy.Immediate)
       }.await
-      wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
+      wrongSeqNoResult.error.toString should include("version_conflict_engine_exception")
       val successfulUpdateResult = client.execute {
         indexInto("electronics")
           .fields("name" -> "super phone")

@@ -51,9 +51,9 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("minmaxagg") fields("name" -> "Willis Tower", "height" -> 1244, "opened" -> "1973-09-01"),
-      indexInto("minmaxagg") fields("name" -> "Burj Kalifa", "height" -> 2456, "opened" -> "2010-01-04"),
-      indexInto("minmaxagg") fields("name" -> "Tower of London", "height" -> 169, "opened" -> "1285-01-01"),
+      indexInto("minmaxagg") fields ("name"  -> "Willis Tower", "height"    -> 1244, "opened" -> "1973-09-01"),
+      indexInto("minmaxagg") fields ("name"  -> "Burj Kalifa", "height"     -> 2456, "opened" -> "2010-01-04"),
+      indexInto("minmaxagg") fields ("name"  -> "Tower of London", "height" -> 169, "opened"  -> "1285-01-01"),
       indexInto("minmaxagg2") fields ("name" -> "building of unknown height")
     ).refresh(RefreshPolicy.Immediate)
   ).await
@@ -63,11 +63,11 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
       val resp = client.execute {
         search("minmaxagg").matchAllQuery().aggs(
           maxAgg("agg1", "height"),
-          maxAgg("opened", "opened"),
+          maxAgg("opened", "opened")
         )
       }.await.result
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.max("agg1")
+      val agg  = resp.aggs.max("agg1")
       agg.value shouldBe Some(2456)
       resp.aggs.max("opened").valueAsString shouldBe Some("2010-01-04")
     }
@@ -78,7 +78,7 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
         }
       }.await.result
       resp.totalHits shouldBe 1
-      val agg = resp.aggs.max("agg1")
+      val agg  = resp.aggs.max("agg1")
       agg.value shouldBe None
     }
     "should support results when no documents match" in {
@@ -88,7 +88,7 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
         }
       }.await.result
       resp.totalHits shouldBe 0
-      val agg = resp.aggs.max("agg1")
+      val agg  = resp.aggs.max("agg1")
       agg.value shouldBe None
     }
   }
@@ -102,7 +102,7 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
         )
       }.await.result
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.min("agg1")
+      val agg  = resp.aggs.min("agg1")
       agg.value shouldBe Some(169)
       resp.aggs.min("opened").valueAsString shouldBe Some("1285-01-01")
     }
@@ -113,7 +113,7 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
         }
       }.await.result
       resp.totalHits shouldBe 1
-      val agg = resp.aggs.max("agg1")
+      val agg  = resp.aggs.max("agg1")
       agg.value shouldBe None
     }
     "should support results when no documents match" in {
@@ -123,7 +123,7 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
         }
       }.await.result
       resp.totalHits shouldBe 0
-      val agg = resp.aggs.max("agg1")
+      val agg  = resp.aggs.max("agg1")
       agg.value shouldBe None
     }
   }

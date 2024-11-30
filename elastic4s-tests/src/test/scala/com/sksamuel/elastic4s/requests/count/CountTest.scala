@@ -40,15 +40,15 @@ class CountTest extends AnyWordSpec with DockerTests with Matchers {
 
   client.execute {
     bulk(
-      indexInto("stads").fields("name" -> "riverside stadium"),
-      indexInto("stads").fields("name" -> "stadium of shite"),
-      indexInto("stads").fields("name" -> "sports arena dot com ashley stadium"),
-      indexInto("stads").fields("name" -> "macron"),
-      indexInto("stads").fields("name" -> "old trafford"),
-      indexInto("stads").fields("name" -> "pride park"),
-      indexInto("stads").fields("name" -> "hillsborough"),
-      indexInto("stads").fields("name" -> "KCom Stadium"),
-      indexInto("stads").fields("name" -> "Anfield"),
+      indexInto("stads").fields("name"  -> "riverside stadium"),
+      indexInto("stads").fields("name"  -> "stadium of shite"),
+      indexInto("stads").fields("name"  -> "sports arena dot com ashley stadium"),
+      indexInto("stads").fields("name"  -> "macron"),
+      indexInto("stads").fields("name"  -> "old trafford"),
+      indexInto("stads").fields("name"  -> "pride park"),
+      indexInto("stads").fields("name"  -> "hillsborough"),
+      indexInto("stads").fields("name"  -> "KCom Stadium"),
+      indexInto("stads").fields("name"  -> "Anfield"),
       indexInto("stads2").fields("name" -> "Stamford Bridge"),
       indexInto("stads3").fields("name" -> "AMEX Stadium")
     ).refreshImmediately

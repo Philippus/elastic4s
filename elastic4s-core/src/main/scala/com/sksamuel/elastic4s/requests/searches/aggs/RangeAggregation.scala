@@ -3,18 +3,19 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class RangeAggregation(name: String,
-                            field: Option[String] = None,
-                            format: Option[String] = None,
-                            missing: Option[AnyRef] = None,
-                            keyed: Option[Boolean] = None,
-                            script: Option[Script] = None,
-                            ranges: Seq[(Option[String], Double, Double)] = Nil,
-                            unboundedFrom: Option[(Option[String], Double)] = None,
-                            unboundedTo: Option[(Option[String], Double)] = None,
-                            subaggs: Seq[AbstractAggregation] = Nil,
-                            metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class RangeAggregation(
+    name: String,
+    field: Option[String] = None,
+    format: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    keyed: Option[Boolean] = None,
+    script: Option[Script] = None,
+    ranges: Seq[(Option[String], Double, Double)] = Nil,
+    unboundedFrom: Option[(Option[String], Double)] = None,
+    unboundedTo: Option[(Option[String], Double)] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = RangeAggregation
 

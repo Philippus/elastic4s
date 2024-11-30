@@ -2,10 +2,20 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.script
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, CompositeAggregation, DateHistogramValueSource, GeoTileGridValueSource, HistogramValueSource, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{
+  AbstractAggregation,
+  CompositeAggregation,
+  DateHistogramValueSource,
+  GeoTileGridValueSource,
+  HistogramValueSource,
+  SubAggsBuilderFn
+}
 
 object CompositeAggregationBuilder {
-  def apply(agg: CompositeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: CompositeAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder().startObject("composite")
     agg.size.foreach(builder.field("size", _))
     builder.startArray("sources")
@@ -18,20 +28,20 @@ object CompositeAggregationBuilder {
       s.order.foreach(builder.field("order", _))
       if (s.missingBucket) builder.field("missing_bucket", true)
       s match {
-        case HistogramValueSource(_, interval, _, _, _, _) => builder.field("interval", interval)
+        case HistogramValueSource(_, interval, _, _, _, _)                                           => builder.field("interval", interval)
         case DateHistogramValueSource(_, calendarInterval, None, None, _, _, _, timeZone, format, _) =>
           builder.field("calendar_interval", calendarInterval.get)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-        case DateHistogramValueSource(_, None, fixedInterval, None, _, _, _, timeZone, format, _) =>
+        case DateHistogramValueSource(_, None, fixedInterval, None, _, _, _, timeZone, format, _)    =>
           builder.field("fixed_interval", fixedInterval.get)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-        case DateHistogramValueSource(_, None, None, interval, _, _, _, timeZone, format, _) =>
+        case DateHistogramValueSource(_, None, None, interval, _, _, _, timeZone, format, _)         =>
           builder.field("interval", interval.get)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-        case GeoTileGridValueSource(_, precision, bounds, _, _, _, _) =>
+        case GeoTileGridValueSource(_, precision, bounds, _, _, _, _)                                =>
           precision.foreach(builder.field("precision", _))
           bounds.foreach(bound => {
             builder.startObject("bounds")
@@ -48,7 +58,7 @@ object CompositeAggregationBuilder {
 
             builder.endObject()
           })
-        case _ =>
+        case _                                                                                       =>
       }
       builder.endObject()
       builder.endObject()

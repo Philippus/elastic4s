@@ -18,7 +18,7 @@ object DateHistogram {
           mkBucket(map("key_as_string").toString, map)
         }
 
-      //keyed results
+      // keyed results
       case buckets: Map[_, _] =>
         buckets
           .asInstanceOf[Map[String, Any]]
@@ -39,8 +39,9 @@ object DateHistogram {
     )
 }
 
-case class DateHistogramBucket(date: String,
-                               timestamp: Long,
-                               override val docCount: Long,
-                               private[elastic4s] val data: Map[String, Any]) extends AggBucket
-
+case class DateHistogramBucket(
+    date: String,
+    timestamp: Long,
+    override val docCount: Long,
+    private[elastic4s] val data: Map[String, Any]
+) extends AggBucket

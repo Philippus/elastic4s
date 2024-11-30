@@ -5,9 +5,22 @@ import com.sksamuel.elastic4s.handlers.{ElasticErrorParser, VersionTypeHttpStrin
 import com.sksamuel.elastic4s.handlers.searches.queries.QueryBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.{RefreshPolicyHttpValue, Slicing}
-import com.sksamuel.elastic4s.requests.delete.{DeleteByIdRequest, DeleteByQueryRequest, DeleteByQueryResponse, DeleteResponse}
+import com.sksamuel.elastic4s.requests.delete.{
+  DeleteByIdRequest,
+  DeleteByQueryRequest,
+  DeleteByQueryResponse,
+  DeleteResponse
+}
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{
+  ElasticError,
+  ElasticRequest,
+  ElasticUrlEncoder,
+  Handler,
+  HttpEntity,
+  HttpResponse,
+  ResponseHandler
+}
 
 object DeleteByQueryBodyFn {
   def apply(request: DeleteByQueryRequest): XContentBuilder = {
@@ -26,24 +39,28 @@ object DeleteByQueryBodyFn {
 
 trait DeleteHandlers {
 
-  implicit object DeleteByQueryHandler extends Handler[DeleteByQueryRequest, Either[DeleteByQueryResponse, CreateTaskResponse]] {
+  implicit object DeleteByQueryHandler
+      extends Handler[DeleteByQueryRequest, Either[DeleteByQueryResponse, CreateTaskResponse]] {
 
-    override def responseHandler: ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] = new ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] {
-      override def handle(response: HttpResponse): Either[ElasticError, Either[DeleteByQueryResponse, CreateTaskResponse]] =
-        response.statusCode match {
-          case 200 | 201 =>
-            val entity = response.entity.getOrError("No entity defined but was expected")
-            entity.get match {
-              case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
-              case _ => Right(Left(ResponseHandler.fromResponse[DeleteByQueryResponse](response)))
-            }
-          case _ => Left(ElasticErrorParser.parse(response))
-        }
-    }
+    override def responseHandler: ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] =
+      new ResponseHandler[Either[DeleteByQueryResponse, CreateTaskResponse]] {
+        override def handle(response: HttpResponse)
+            : Either[ElasticError, Either[DeleteByQueryResponse, CreateTaskResponse]] =
+          response.statusCode match {
+            case 200 | 201 =>
+              val entity = response.entity.getOrError("No entity defined but was expected")
+              entity.get match {
+                case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
+                case _                         => Right(Left(ResponseHandler.fromResponse[DeleteByQueryResponse](response)))
+              }
+            case _         => Left(ElasticErrorParser.parse(response))
+          }
+      }
 
     override def build(request: DeleteByQueryRequest): ElasticRequest = {
 
-      val endpoint = s"/${request.indexes.values.map(ElasticUrlEncoder.encodeUrlFragment).mkString(",")}/_delete_by_query"
+      val endpoint =
+        s"/${request.indexes.values.map(ElasticUrlEncoder.encodeUrlFragment).mkString(",")}/_delete_by_query"
 
       val params = scala.collection.mutable.Map.empty[String, String]
       if (request.proceedOnConflicts.getOrElse(false))
@@ -61,7 +78,7 @@ trait DeleteHandlers {
       )
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
 
-      val body = DeleteByQueryBodyFn(request)
+      val body   = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")
       val entity = HttpEntity(body.string, "application/json")
 
@@ -82,14 +99,14 @@ trait DeleteHandlers {
         response.statusCode match {
           case 200 | 201 => right
           // annoying, 404s can return different types of data for a delete
-          case 404 =>
+          case 404       =>
             response.entity match {
-              case None => Left(ElasticErrorParser.parse(response))
+              case None    => Left(ElasticErrorParser.parse(response))
               case Some(e) =>
                 val node = ResponseHandler.json(e)
                 if (node.has("error")) left else right
             }
-          case _ => left
+          case _         => left
         }
       }
     }

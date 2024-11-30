@@ -3,12 +3,13 @@ package com.sksamuel.elastic4s.requests.searches.queries.funcscorer
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class FieldValueFactor(fieldName: String,
-                            factor: Option[Double] = None,
-                            modifier: Option[FieldValueFactorFunctionModifier] = None,
-                            missing: Option[Double] = None,
-                            override val filter: Option[Query] = None)
-    extends ScoreFunction {
+case class FieldValueFactor(
+    fieldName: String,
+    factor: Option[Double] = None,
+    modifier: Option[FieldValueFactorFunctionModifier] = None,
+    missing: Option[Double] = None,
+    override val filter: Option[Query] = None
+) extends ScoreFunction {
   def factor(factor: Double): FieldValueFactor                               = copy(factor = factor.some)
   def missing(missing: Double): FieldValueFactor                             = copy(missing = missing.some)
   def modifier(modifier: FieldValueFactorFunctionModifier): FieldValueFactor = copy(modifier = modifier.some)

@@ -60,8 +60,8 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
 
     "handle delete concurrency with internal versioning" in {
 
-      val id = UUID.randomUUID.toString
-      val insertResult = client.execute {
+      val id                     = UUID.randomUUID.toString
+      val insertResult           = client.execute {
         indexInto("lecarre")
           .fields("name" -> "george smiley")
           .withId(id)
@@ -69,18 +69,18 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
           .refresh(RefreshPolicy.Immediate)
       }.await
       val wrongPrimaryTermResult = client.execute {
-        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).
-          ifPrimaryTerm(insertResult.result.primaryTerm + 1).versionType(Internal).refresh(RefreshPolicy.Immediate)
+        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).ifPrimaryTerm(insertResult.result.primaryTerm + 1)
+          .versionType(Internal).refresh(RefreshPolicy.Immediate)
       }.await
-      wrongPrimaryTermResult.error.toString should include ("version_conflict_engine_exception")
-      val wrongSeqNoResult = client.execute {
-        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo + 1).
-          ifPrimaryTerm(insertResult.result.primaryTerm).versionType(Internal).refresh(RefreshPolicy.Immediate)
+      wrongPrimaryTermResult.error.toString should include("version_conflict_engine_exception")
+      val wrongSeqNoResult       = client.execute {
+        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo + 1).ifPrimaryTerm(insertResult.result.primaryTerm)
+          .versionType(Internal).refresh(RefreshPolicy.Immediate)
       }.await
-      wrongSeqNoResult.error.toString should include ("version_conflict_engine_exception")
+      wrongSeqNoResult.error.toString should include("version_conflict_engine_exception")
       val successfulDeleteResult = client.execute {
-        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).
-          ifPrimaryTerm(insertResult.result.primaryTerm).versionType(Internal).refresh(RefreshPolicy.Immediate)
+        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).ifPrimaryTerm(insertResult.result.primaryTerm)
+          .versionType(Internal).refresh(RefreshPolicy.Immediate)
       }.await
       successfulDeleteResult.isSuccess shouldBe true
     }

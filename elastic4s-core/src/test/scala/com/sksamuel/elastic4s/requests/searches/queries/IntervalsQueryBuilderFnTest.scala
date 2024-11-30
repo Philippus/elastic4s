@@ -11,13 +11,18 @@ import org.scalatest.matchers.should.Matchers
 class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWhenThen with JsonSugar {
   test("Should correctly build intervals query") {
     Given("An intervals query")
-    val query = IntervalsQuery("my_text", AllOf(List(
-      Match(query = "my favorite food").maxGaps(0).ordered(true),
-      AnyOf(intervals = List(
-        Match(query = "hot water"),
-        Match(query = "cold porridge")
-      ))
-    )).ordered(true))
+    val query = IntervalsQuery(
+      "my_text",
+      AllOf(List(
+        Match(query = "my favorite food").maxGaps(0).ordered(true),
+        AnyOf(intervals =
+          List(
+            Match(query = "hot water"),
+            Match(query = "cold porridge")
+          )
+        )
+      )).ordered(true)
+    )
 
     When("Intervals query is built")
     val queryBody = IntervalsQueryBuilderFn(query)
@@ -58,9 +63,12 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
 
   test("Should correctly build intervals query with a filter") {
     Given("An intervals query with a filter")
-    val query = IntervalsQuery("my_text", Match(query = "hot porridge").maxGaps(10).filter(
-      IntervalsFilter().notContaining(Match(query = "salty")
-    )))
+    val query = IntervalsQuery(
+      "my_text",
+      Match(query = "hot porridge").maxGaps(10).filter(
+        IntervalsFilter().notContaining(Match(query = "salty"))
+      )
+    )
 
     When("Intervals query is built")
     val queryBody = queries.IntervalsQueryBuilderFn(query)
@@ -68,7 +76,6 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
     Then("query should have right fields")
     queryBody.string should matchJson(intervalsWithFilterQuery)
   }
-
 
   def intervalsWithFilterQuery: String =
     """
@@ -93,11 +100,14 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
 
   test("Should correctly build intervals query with a script") {
     Given("An intervals query with a script")
-    val query = IntervalsQuery("my_text", Match("hot porridge").filter(
-      IntervalsFilter().script(Script(
-        "interval.start > 10 && interval.end < 20 && interval.gaps == 0"
-      ))
-    ))
+    val query = IntervalsQuery(
+      "my_text",
+      Match("hot porridge").filter(
+        IntervalsFilter().script(Script(
+          "interval.start > 10 && interval.end < 20 && interval.gaps == 0"
+        ))
+      )
+    )
 
     When("Intervals query is built")
     val queryBody = queries.IntervalsQueryBuilderFn(query)
@@ -140,7 +150,8 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
         |}
       """.stripMargin
     Given("An intervals query with a regex rule")
-    val query = IntervalsQuery("my_text", Regexp(pattern = "*", analyzer = Some("standard"), useField = Some("my_text")))
+    val query    =
+      IntervalsQuery("my_text", Regexp(pattern = "*", analyzer = Some("standard"), useField = Some("my_text")))
 
     When("Intervals query is built")
     val queryBody = queries.IntervalsQueryBuilderFn(query)
@@ -166,7 +177,10 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
         |}
       """.stripMargin
     Given("An intervals query with a regex rule")
-    val query = IntervalsQuery("my_text", Range(gte = Some("a"), lte = Some("z"), analyzer = Some("standard"), useField = Some("my_text")))
+    val query    = IntervalsQuery(
+      "my_text",
+      Range(gte = Some("a"), lte = Some("z"), analyzer = Some("standard"), useField = Some("my_text"))
+    )
 
     When("Intervals query is built")
     val queryBody = queries.IntervalsQueryBuilderFn(query)

@@ -1,7 +1,14 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.aggs.{CompositeAggregation, DateHistogramValueSource, GeoBoundingBox, GeoTileGridValueSource, HistogramValueSource, TermsValueSource}
+import com.sksamuel.elastic4s.requests.searches.aggs.{
+  CompositeAggregation,
+  DateHistogramValueSource,
+  GeoBoundingBox,
+  GeoTileGridValueSource,
+  HistogramValueSource,
+  TermsValueSource
+}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
@@ -9,8 +16,11 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("CompositeAggregationBuilder should build simple terms-valued composites") {
     val search = SearchRequest("myindex").aggs(
-      CompositeAggregation("comp", sources = Seq(
-        TermsValueSource("s1", field = Some("f1")))
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          TermsValueSource("s1", field = Some("f1"))
+        )
       )
     )
     SearchBodyBuilderFn(search).string shouldBe
@@ -19,10 +29,13 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("CompositeAggregationBuilder should terms-valued composites with multiple terms") {
     val search = SearchRequest("myindex").aggs(
-      CompositeAggregation("comp", sources = Seq(
-        TermsValueSource("s1", field = Some("f1")),
-        TermsValueSource("s2", field = Some("f2"))
-      ))
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          TermsValueSource("s1", field = Some("f1")),
+          TermsValueSource("s2", field = Some("f2"))
+        )
+      )
     )
     SearchBodyBuilderFn(search).string shouldBe
       """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}},{"s2":{"terms":{"field":"f2"}}}]}}}}"""
@@ -30,8 +43,11 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("CompositeAggregationBuilder should build script-valued composites") {
     val search = SearchRequest("myindex").aggs(
-      CompositeAggregation("comp", sources = Seq(
-        TermsValueSource("s1", script = Some(Script("doc['product'].value"))))
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          TermsValueSource("s1", script = Some(Script("doc['product'].value")))
+        )
       )
     )
     SearchBodyBuilderFn(search).string shouldBe
@@ -40,12 +56,29 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("CompositeAggregationBuilder should respect all possible value types and attributes") {
     val search = SearchRequest("myindex").aggs(
-      CompositeAggregation("comp", sources = Seq(
-        TermsValueSource("s1", field = Some("f1"), order = Some("desc"), missingBucket = true),
-        HistogramValueSource("s2", 5, field = Some("f2"), order = Some("desc"), missingBucket = true),
-        DateHistogramValueSource("s3", interval = Some("5d"), field = Some("f3"), order = Some("desc"), timeZone = Some("+01:00"), missingBucket = true),
-        GeoTileGridValueSource("s4", field = Some("f4"), precision = Some(10), bounds = Some(GeoBoundingBox(GeoPoint(1, 2), GeoPoint(3, 4))), order= Some("desc"), missingBucket = true)
-      ))
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          TermsValueSource("s1", field = Some("f1"), order = Some("desc"), missingBucket = true),
+          HistogramValueSource("s2", 5, field = Some("f2"), order = Some("desc"), missingBucket = true),
+          DateHistogramValueSource(
+            "s3",
+            interval = Some("5d"),
+            field = Some("f3"),
+            order = Some("desc"),
+            timeZone = Some("+01:00"),
+            missingBucket = true
+          ),
+          GeoTileGridValueSource(
+            "s4",
+            field = Some("f4"),
+            precision = Some(10),
+            bounds = Some(GeoBoundingBox(GeoPoint(1, 2), GeoPoint(3, 4))),
+            order = Some("desc"),
+            missingBucket = true
+          )
+        )
+      )
     )
 
     SearchBodyBuilderFn(search).string shouldBe
@@ -54,8 +87,11 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
 
   test("CompositeAggregationBuilder should build simple terms-valued composites with after parameters") {
     val search = SearchRequest("myindex").aggs(
-      CompositeAggregation("comp", sources = Seq(
-        TermsValueSource("s1", field = Some("f1"))),
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          TermsValueSource("s1", field = Some("f1"))
+        ),
         after = Some(Map("myafter1" -> 1, "myafter2" -> "2"))
       )
     )

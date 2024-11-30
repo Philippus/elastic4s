@@ -32,8 +32,8 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        indexInto(indexname) fields("atomicweight" -> 2, "name" -> "helium") id "2",
-        indexInto(indexname) fields("atomicweight" -> 4, "name" -> "lithium") id "4"
+        indexInto(indexname) fields ("atomicweight" -> 2, "name" -> "helium") id "2",
+        indexInto(indexname) fields ("atomicweight" -> 4, "name" -> "lithium") id "4"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
@@ -67,8 +67,8 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "handle multiple update operations" in {
     val result = client.execute {
       bulk(
-        updateById(Index(indexname), "2") doc("atomicweight" -> 6, "name" -> "carbon"),
-        updateById(Index(indexname), "4") doc("atomicweight" -> 8, "name" -> "oxygen") fetchSource (true)
+        updateById(Index(indexname), "2") doc ("atomicweight" -> 6, "name" -> "carbon"),
+        updateById(Index(indexname), "4") doc ("atomicweight" -> 8, "name" -> "oxygen") fetchSource (true)
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -93,8 +93,8 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
     client.execute {
       bulk(
-        indexInto(indexname) fields("atomicweight" -> 6, "name" -> "carbon") id "10",
-        indexInto(indexname) fields("atomicweight" -> 8, "name" -> "oxygen") id "11"
+        indexInto(indexname) fields ("atomicweight" -> 6, "name" -> "carbon") id "10",
+        indexInto(indexname) fields ("atomicweight" -> 8, "name" -> "oxygen") id "11"
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe false
 
@@ -108,8 +108,8 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
     val result = client.execute {
       bulk(
-        indexInto(indexname) fields("atomicweight" -> 6, "name" -> "carbon") id "10" createOnly false,
-        indexInto(indexname) fields("atomicweight" -> 8, "name" -> "oxygen") id "11" createOnly true
+        indexInto(indexname) fields ("atomicweight" -> 6, "name" -> "carbon") id "10" createOnly false,
+        indexInto(indexname) fields ("atomicweight" -> 8, "name" -> "oxygen") id "11" createOnly true
       ).refresh(RefreshPolicy.Immediate)
     }.await.result
 
@@ -139,7 +139,7 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
 
   it should "handle concurrency with internal versioning" in {
 
-    val result = client.execute {
+    val result                 = client.execute {
       bulk(
         indexInto(indexname).fields("atomicweight" -> 2, "name" -> "helium") versionType Internal id "2",
         indexInto(indexname).fields("atomicweight" -> 4, "name" -> "lithium") versionType Internal id "4"
@@ -156,7 +156,7 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
         }
       ).refresh(RefreshPolicy.Immediate)
     }.await.result.errors shouldBe true
-    val wrongSeqNoResult = client.execute {
+    val wrongSeqNoResult       = client.execute {
       bulk(
         result.items.map {
           responseItem =>

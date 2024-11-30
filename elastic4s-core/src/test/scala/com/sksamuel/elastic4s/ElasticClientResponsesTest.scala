@@ -21,9 +21,7 @@ class ElasticClientResponsesTest extends AnyFlatSpec with Matchers with ElasticD
       j <- response1
     } yield { i + j }
 
-
     assert(response2 == RequestSuccess(0, None, Map.empty, 94))
-
 
     // Failure
     val responseFail: Response[Int] = RequestFailure(0, None, Map.empty, null)
@@ -35,4 +33,3 @@ class ElasticClientResponsesTest extends AnyFlatSpec with Matchers with ElasticD
     assert(response3 == responseFail)
   }
 }
-

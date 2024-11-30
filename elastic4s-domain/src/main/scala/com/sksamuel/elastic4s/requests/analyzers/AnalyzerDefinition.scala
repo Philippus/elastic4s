@@ -45,10 +45,11 @@ case class StopAnalyzerDefinition(override val name: String, stopwords: Iterable
 }
 
 @deprecated("use new analysis package", "7.0.1")
-case class StandardAnalyzerDefinition(override val name: String,
-                                      stopwords: Iterable[String] = Nil,
-                                      maxTokenLength: Int = 255)
-    extends AnalyzerDefinition(name) {
+case class StandardAnalyzerDefinition(
+    override val name: String,
+    stopwords: Iterable[String] = Nil,
+    maxTokenLength: Int = 255
+) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "standard")
     source.array("stopwords", stopwords.toArray)
@@ -73,10 +74,11 @@ case class PatternAnalyzerDefinition(override val name: String, regex: String, l
 }
 
 @deprecated("use new analysis package", "7.0.1")
-case class SnowballAnalyzerDefinition(override val name: String,
-                                      lang: String = "English",
-                                      stopwords: Iterable[String] = Nil)
-    extends AnalyzerDefinition(name) {
+case class SnowballAnalyzerDefinition(
+    override val name: String,
+    lang: String = "English",
+    stopwords: Iterable[String] = Nil
+) extends AnalyzerDefinition(name) {
   def build(source: XContentBuilder): Unit = {
     source.field("type", "snowball")
     source.field("language", lang)
@@ -97,7 +99,7 @@ case class CustomAnalyzerDefinition(override val name: String, tokenizer: Tokeni
     source.field("type", "custom")
     source.field("tokenizer", tokenizer.name)
     val tokenFilters = filters.collect { case token: TokenFilter => token }
-    val charFilters  = filters.collect { case char: CharFilter   => char }
+    val charFilters  = filters.collect { case char: CharFilter => char }
     if (tokenFilters.nonEmpty)
       source.array("filter", tokenFilters.map(_.name).toArray)
     if (charFilters.nonEmpty)
@@ -110,9 +112,11 @@ case class CustomAnalyzerDefinition(override val name: String, tokenizer: Tokeni
 
 @deprecated("use new analysis package", "7.0.1")
 object CustomAnalyzerDefinition {
-  def apply(name: String,
-            tokenizer: Tokenizer,
-            first: AnalyzerFilter,
-            rest: AnalyzerFilter*): CustomAnalyzerDefinition =
+  def apply(
+      name: String,
+      tokenizer: Tokenizer,
+      first: AnalyzerFilter,
+      rest: AnalyzerFilter*
+  ): CustomAnalyzerDefinition =
     CustomAnalyzerDefinition(name, tokenizer, first +: rest)
 }

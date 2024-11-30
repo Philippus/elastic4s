@@ -27,16 +27,21 @@ class HistogramAggregationHttpTest extends AnyFreeSpec with Matchers with Docker
 
   client.execute(
     bulk(
-      indexInto("histogram") fields("name" -> "walter white", "job" -> "meth kingpin", "age" -> 50, "actor" -> "bryan"),
-      indexInto("histogram") fields("name" -> "hank schrader", "job" -> "dea agent", "age" -> 55, "actor" -> "dean"),
-      indexInto("histogram") fields("name" -> "jesse pinkman", "job" -> "meth sidekick", "age" -> 30),
-      indexInto("histogram") fields("name" -> "gus fring", "job" -> "meth kingpin", "age" -> 60),
-      indexInto("histogram") fields("name" -> "steven gomez", "job" -> "dea agent", "age" -> 50),
-      indexInto("histogram") fields("name" -> "saul goodman", "job" -> "lawyer", "age" -> 55),
-      indexInto("histogram") fields("name" -> "Huell Babineaux", "job" -> "heavy", "age" -> 43, "actor" -> "lavell"),
-      indexInto("histogram") fields("name" -> "mike ehrmantraut", "job" -> "heavy", "age" -> 45),
-      indexInto("histogram") fields("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
-      indexInto("histogram") fields("name" -> "todd alquist", "job" -> "meth sidekick", "age" -> 26)
+      indexInto("histogram") fields (
+        "name"                              -> "walter white",
+        "job"                               -> "meth kingpin",
+        "age"                               -> 50,
+        "actor"                             -> "bryan"
+      ),
+      indexInto("histogram") fields ("name" -> "hank schrader", "job"        -> "dea agent", "age"     -> 55, "actor" -> "dean"),
+      indexInto("histogram") fields ("name" -> "jesse pinkman", "job"        -> "meth sidekick", "age" -> 30),
+      indexInto("histogram") fields ("name" -> "gus fring", "job"            -> "meth kingpin", "age"  -> 60),
+      indexInto("histogram") fields ("name" -> "steven gomez", "job"         -> "dea agent", "age"     -> 50),
+      indexInto("histogram") fields ("name" -> "saul goodman", "job"         -> "lawyer", "age"        -> 55),
+      indexInto("histogram") fields ("name" -> "Huell Babineaux", "job"      -> "heavy", "age"         -> 43, "actor" -> "lavell"),
+      indexInto("histogram") fields ("name" -> "mike ehrmantraut", "job"     -> "heavy", "age"         -> 45),
+      indexInto("histogram") fields ("name" -> "lydia rodarte quayle", "job" -> "meth sidekick", "age" -> 40),
+      indexInto("histogram") fields ("name" -> "todd alquist", "job"         -> "meth sidekick", "age" -> 26)
     ).refreshImmediately
   ).await
 

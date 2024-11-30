@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.requests.common.{HealthStatus, Priority}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class ClusterHealthRequest(indices: Seq[String],
-                                timeout: Option[String] = None,
-                                waitForActiveShards: Option[Int] = None,
-                                waitForEvents: Option[Priority] = None,
-                                waitForStatus: Option[HealthStatus] = None,
-                                waitForNodes: Option[String] = None,
-                                waitForNoRelocatingShards: Option[Boolean] = None) {
+case class ClusterHealthRequest(
+    indices: Seq[String],
+    timeout: Option[String] = None,
+    waitForActiveShards: Option[Int] = None,
+    waitForEvents: Option[Priority] = None,
+    waitForStatus: Option[HealthStatus] = None,
+    waitForNodes: Option[String] = None,
+    waitForNoRelocatingShards: Option[Boolean] = None
+) {
 
   def timeout(value: String): ClusterHealthRequest = copy(timeout = value.some)
 
@@ -28,18 +30,20 @@ case class ClusterHealthRequest(indices: Seq[String],
     copy(waitForNoRelocatingShards = waitForNoRelocatingShards.some)
 }
 
-case class ClusterHealthResponse(@JsonProperty("cluster_name") clusterName: String,
-                                 status: String,
-                                 @JsonProperty("timed_out") timeOut: Boolean,
-                                 @JsonProperty("number_of_nodes") numberOfNodes: Int,
-                                 @JsonProperty("number_of_data_nodes") numberOfDataNodes: Int,
-                                 @JsonProperty("active_primary_shards") activePrimaryShards: Int,
-                                 @JsonProperty("active_shards") activeShards: Int,
-                                 @JsonProperty("relocating_shards") relocatingShards: Int,
-                                 @JsonProperty("initializing_shards") initializingShards: Int,
-                                 @JsonProperty("unassigned_shards") unassignedShards: Int,
-                                 @JsonProperty("delayed_unassigned_shards") delayedUnassignedShards: Int,
-                                 @JsonProperty("number_of_pending_tasks") numberOfPendingTasks: Int,
-                                 @JsonProperty("number_of_in_flight_fetch") numberOfInFlightFetch: Int,
-                                 @JsonProperty("task_max_waiting_in_queue_millis") taskMaxWaitingInQueueMillis: Int,
-                                 @JsonProperty("active_shards_percent_as_number") activeShardsPercentAsNumber: Double)
+case class ClusterHealthResponse(
+    @JsonProperty("cluster_name") clusterName: String,
+    status: String,
+    @JsonProperty("timed_out") timeOut: Boolean,
+    @JsonProperty("number_of_nodes") numberOfNodes: Int,
+    @JsonProperty("number_of_data_nodes") numberOfDataNodes: Int,
+    @JsonProperty("active_primary_shards") activePrimaryShards: Int,
+    @JsonProperty("active_shards") activeShards: Int,
+    @JsonProperty("relocating_shards") relocatingShards: Int,
+    @JsonProperty("initializing_shards") initializingShards: Int,
+    @JsonProperty("unassigned_shards") unassignedShards: Int,
+    @JsonProperty("delayed_unassigned_shards") delayedUnassignedShards: Int,
+    @JsonProperty("number_of_pending_tasks") numberOfPendingTasks: Int,
+    @JsonProperty("number_of_in_flight_fetch") numberOfInFlightFetch: Int,
+    @JsonProperty("task_max_waiting_in_queue_millis") taskMaxWaitingInQueueMillis: Int,
+    @JsonProperty("active_shards_percent_as_number") activeShardsPercentAsNumber: Double
+)

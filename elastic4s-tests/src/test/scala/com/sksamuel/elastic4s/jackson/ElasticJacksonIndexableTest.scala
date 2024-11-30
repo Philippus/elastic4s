@@ -49,9 +49,12 @@ class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerT
       implicit val custom: ObjectMapper with ClassTagExtensions = new ObjectMapper with ClassTagExtensions
 
       val module = new SimpleModule
-      module.addDeserializer(classOf[String], new JsonDeserializer[String] {
-        override def deserialize(p: JsonParser, ctxt: DeserializationContext): String = sys.error("boom")
-      })
+      module.addDeserializer(
+        classOf[String],
+        new JsonDeserializer[String] {
+          override def deserialize(p: JsonParser, ctxt: DeserializationContext): String = sys.error("boom")
+        }
+      )
       custom.registerModule(module)
 
       val resp = client.execute {

@@ -49,5 +49,3 @@ class CancelTaskTest extends AnyWordSpec with Matchers with DockerTests {
     }
   }
 }
-
-

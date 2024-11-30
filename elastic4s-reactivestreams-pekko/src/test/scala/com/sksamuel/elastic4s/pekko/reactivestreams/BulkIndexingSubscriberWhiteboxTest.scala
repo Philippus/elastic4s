@@ -10,7 +10,7 @@ import org.reactivestreams.{Subscriber, Subscription}
 import org.scalatestplus.testng.TestNGSuiteLike
 
 class BulkIndexingSubscriberWhiteboxTest
-  extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))
+    extends SubscriberWhiteboxVerification[Item](new TestEnvironment(DEFAULT_TIMEOUT_MILLIS))
     with TestNGSuiteLike with DockerTests {
 
   implicit val system: ActorSystem = ActorSystem()

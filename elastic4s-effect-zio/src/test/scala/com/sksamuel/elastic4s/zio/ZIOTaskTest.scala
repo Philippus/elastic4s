@@ -38,4 +38,3 @@ class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with Before
   }
 
 }
-

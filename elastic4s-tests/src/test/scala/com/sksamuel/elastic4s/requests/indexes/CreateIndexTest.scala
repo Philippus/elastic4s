@@ -30,7 +30,7 @@ class CreateIndexTest extends AnyWordSpec with Matchers with DockerTests {
     createIndex("foo").mapping(
       properties(
         textField("baz").fields(
-          textField("inner1"), //analyzer PatternAnalyzer,
+          textField("inner1"), // analyzer PatternAnalyzer,
           textField("inner2")
         )
       )
@@ -79,7 +79,8 @@ class CreateIndexTest extends AnyWordSpec with Matchers with DockerTests {
                }
               }
              }
-           """)
+           """
+        )
           .shards(1)
           .waitForActiveShards(1)
       }.await.result.acknowledged shouldBe true
@@ -90,8 +91,8 @@ class CreateIndexTest extends AnyWordSpec with Matchers with DockerTests {
         IndexMappings(
           "landscape",
           Map(
-            "content" -> Map("type" -> "text"),
-            "user_name" -> Map("type" -> "keyword"),
+            "content"    -> Map("type" -> "text"),
+            "user_name"  -> Map("type" -> "keyword"),
             "tweeted_at" -> Map("type" -> "date")
           )
         )

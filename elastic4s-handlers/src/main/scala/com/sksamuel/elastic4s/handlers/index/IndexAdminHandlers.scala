@@ -2,13 +2,50 @@ package com.sksamuel.elastic4s.handlers.index
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.requests.admin.{AliasExistsRequest, ClearCacheRequest, CloseIndexRequest, FlushIndexRequest, GetSegmentsRequest, IndexShardStoreRequest, IndicesExistsRequest, OpenIndexRequest, RefreshIndexRequest, ShrinkIndexRequest, SplitIndexRequest, TypesExistsRequest, UpdateIndexLevelSettingsRequest}
+import com.sksamuel.elastic4s.requests.admin.{
+  AliasExistsRequest,
+  ClearCacheRequest,
+  CloseIndexRequest,
+  FlushIndexRequest,
+  GetSegmentsRequest,
+  IndexShardStoreRequest,
+  IndicesExistsRequest,
+  OpenIndexRequest,
+  RefreshIndexRequest,
+  ShrinkIndexRequest,
+  SplitIndexRequest,
+  TypesExistsRequest,
+  UpdateIndexLevelSettingsRequest
+}
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
 import com.sksamuel.elastic4s.requests.indexes._
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.requests.indexes.admin.recovery.IndexRecoveryRequest
-import com.sksamuel.elastic4s.requests.indexes.admin.{AliasExistsResponse, ClearCacheResponse, CloseIndexResponse, DeleteIndexResponse, FlushIndexResponse, ForceMergeRequest, ForceMergeResponse, GetSegmentsResponse, IndexExistsResponse, IndexRecoveryResponse, OpenIndexResponse, RefreshIndexResponse, TypeExistsResponse, UpdateIndexLevelSettingsResponse}
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, ElasticUrlEncoder, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.requests.indexes.admin.{
+  AliasExistsResponse,
+  ClearCacheResponse,
+  CloseIndexResponse,
+  DeleteIndexResponse,
+  FlushIndexResponse,
+  ForceMergeRequest,
+  ForceMergeResponse,
+  GetSegmentsResponse,
+  IndexExistsResponse,
+  IndexRecoveryResponse,
+  OpenIndexResponse,
+  RefreshIndexResponse,
+  TypeExistsResponse,
+  UpdateIndexLevelSettingsResponse
+}
+import com.sksamuel.elastic4s.{
+  ElasticError,
+  ElasticRequest,
+  ElasticUrlEncoder,
+  Handler,
+  HttpEntity,
+  HttpResponse,
+  ResponseHandler
+}
 
 case class ShrinkIndexResponse()
 case class SplitIndexResponse()
@@ -23,8 +60,9 @@ trait IndexAdminHandlers {
 
       val params = scala.collection.mutable.Map.empty[String, Any]
 
-      val builder = XContentFactory.jsonBuilder()
-      val settings = request.shards.map(s => request.settings + ("index.number_of_shards" -> s.toString)).getOrElse(request.settings)
+      val builder  = XContentFactory.jsonBuilder()
+      val settings =
+        request.shards.map(s => request.settings + ("index.number_of_shards" -> s.toString)).getOrElse(request.settings)
       if (settings.nonEmpty) {
         builder.startObject("settings")
         for ((key, value) <- settings)
@@ -45,8 +83,9 @@ trait IndexAdminHandlers {
 
       val params = scala.collection.mutable.Map.empty[String, Any]
 
-      val builder = XContentFactory.jsonBuilder()
-      val settings = request.shards.map(s => request.settings + ("index.number_of_shards" -> s.toString)).getOrElse(request.settings)
+      val builder  = XContentFactory.jsonBuilder()
+      val settings =
+        request.shards.map(s => request.settings + ("index.number_of_shards" -> s.toString)).getOrElse(request.settings)
       if (settings.nonEmpty) {
         builder.startObject("settings")
         for ((key, value) <- settings)
@@ -128,9 +167,10 @@ trait IndexAdminHandlers {
 
     override def responseHandler: ResponseHandler[IndexExistsResponse] = new ResponseHandler[IndexExistsResponse] {
       override def handle(resp: HttpResponse): Either[ElasticError, IndexExistsResponse] = resp.statusCode match {
-        case 200 => Right(IndexExistsResponse(true))
-        case 404 => Right(IndexExistsResponse(false))
-        case code => Left(ElasticError.fromThrowable(new RuntimeException(s"Error with index exists request (http code $code")))
+        case 200  => Right(IndexExistsResponse(true))
+        case 404  => Right(IndexExistsResponse(false))
+        case code =>
+          Left(ElasticError.fromThrowable(new RuntimeException(s"Error with index exists request (http code $code")))
       }
     }
 
@@ -180,7 +220,7 @@ trait IndexAdminHandlers {
     private val Method = "POST"
 
     override def build(request: OpenIndexRequest): ElasticRequest = {
-      val endpoint = s"/${request.indexes.values.mkString(",")}/_open?"
+      val endpoint  = s"/${request.indexes.values.mkString(",")}/_open?"
       val endpoint2 = request.ignoreUnavailable.fold(endpoint)(ignore => s"${endpoint}ignore_unavailable=$ignore")
       val endpoint3 = request.waitForActiveShards.fold(endpoint2)(count => s"$endpoint&wait_for_active_shards=$count")
       ElasticRequest(Method, endpoint3)

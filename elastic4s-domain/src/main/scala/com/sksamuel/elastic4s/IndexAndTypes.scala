@@ -34,11 +34,10 @@ object Index {
   implicit def toIndex(str: String): Index = Index(str)
 }
 
-/**
-  * Models one or more indexes, eg
-  * - "index1"
-  * - "index1,index2"
-  * - "_all"
+/** Models one or more indexes, eg
+  *   - "index1"
+  *   - "index1,index2"
+  *   - "_all"
   */
 case class Indexes(values: Seq[String]) extends IndexesLike {
   // returns an IndexesAndTypes where the types is empty
@@ -66,8 +65,7 @@ object Indexes {
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }
 
-/**
-  * Models exactly one index associated with exactly one type.
+/** Models exactly one index associated with exactly one type.
   */
 @deprecated("types are deprecated now", "7.0")
 case class IndexAndType(index: String, `type`: String) extends IndexLike {
@@ -87,12 +85,11 @@ object IndexAndType {
   }
 }
 
-/**
-  * Models one index associated with one or more types.
+/** Models one index associated with one or more types.
   *
   * So for example,
-  * - index1/type1
-  * - index1/type1,type2
+  *   - index1/type1
+  *   - index1/type1,type2
   */
 @deprecated("types are deprecated now", "7.0")
 case class IndexAndTypes(index: String, types: Seq[String]) extends IndexLike {
@@ -103,7 +100,7 @@ case class IndexAndTypes(index: String, types: Seq[String]) extends IndexLike {
 @deprecated("types are deprecated now", "7.0")
 object IndexAndTypes {
   @deprecated("types are deprecated now", "7.0")
-  implicit def apply(string: String): IndexLike =
+  implicit def apply(string: String): IndexLike                     =
     string.split("/") match {
       case Array(index)    => Index(index)
       case Array(index, t) => IndexAndTypes(index, t.split(","))
@@ -118,16 +115,15 @@ object IndexAndTypes {
 
 }
 
-/**
-  * Models one or more indexes associated with zero or more types.
+/** Models one or more indexes associated with zero or more types.
   *
   * So for example,
-  * - index1
-  * - index1/index2
-  * - index1/type1
-  * - index1/type1,type2
-  * - index1,index2/type1
-  * - index1,index2/type1,type2
+  *   - index1
+  *   - index1/index2
+  *   - index1/type1
+  *   - index1/type1,type2
+  *   - index1,index2/type1
+  *   - index1,index2/type1,type2
   */
 @deprecated("types are deprecated now", "7.0")
 case class IndexesAndTypes(indexes: Seq[String], types: Seq[String]) extends IndexesLike {

@@ -15,7 +15,6 @@ class CatAllocationTest extends AnyFlatSpec with Matchers with DockerTests {
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
-
   "cats alloc" should "return all shards" in {
     client.execute {
       catAllocation()

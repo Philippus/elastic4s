@@ -20,7 +20,7 @@ object KnnBuilderFn {
         builder.field("model_text", qvb.modelText)
         builder.endObject()
         builder.endObject()
-      case None =>
+      case None      =>
         builder.array("query_vector", knn.queryVector.toArray)
     }
     knn.similarity.foreach(builder.field("similarity", _))

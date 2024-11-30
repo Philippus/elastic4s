@@ -6,7 +6,7 @@ import scala.io.Source
 
 object HttpEntity {
 
-  def apply(content: String): HttpEntity = HttpEntity(content, "application/json; charset=utf-8")
+  def apply(content: String): HttpEntity                      = HttpEntity(content, "application/json; charset=utf-8")
   def apply(content: String, contentType: String): HttpEntity = StringEntity(content, Some(contentType))
 
   case class StringEntity(content: String, contentCharset: Option[String]) extends HttpEntity {

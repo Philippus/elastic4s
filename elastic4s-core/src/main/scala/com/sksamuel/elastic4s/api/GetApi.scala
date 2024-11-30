@@ -13,7 +13,7 @@ trait GetApi {
   @deprecated("use get(index, id)", "7.7")
   def get(id: String): GetExpectsFrom = new GetExpectsFrom(id)
   class GetExpectsFrom(id: String) {
-    def from(index: Index): GetRequest           = GetRequest(index, id)
+    def from(index: Index): GetRequest = GetRequest(index, id)
   }
 
   def multiget(first: GetRequest, rest: GetRequest*): MultiGetRequest = multiget(first +: rest)

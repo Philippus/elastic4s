@@ -6,7 +6,12 @@ import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.handlers.index.mapping.MappingBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.indexes.{CreateIndexTemplateRequest, DeleteIndexTemplateRequest, GetIndexTemplateRequest, IndexTemplateExistsRequest}
+import com.sksamuel.elastic4s.requests.indexes.{
+  CreateIndexTemplateRequest,
+  DeleteIndexTemplateRequest,
+  GetIndexTemplateRequest,
+  IndexTemplateExistsRequest
+}
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class CreateIndexTemplateResponse(acknowledged: Boolean)
@@ -17,12 +22,14 @@ case class GetIndexTemplatesResponse(@JsonProperty("index_templates") indexTempl
 
 case class Templates(name: String, @JsonProperty("index_template") template: IndexTemplate)
 
-case class IndexTemplate(order: Int,
-                         @JsonProperty("index_patterns") indexPatterns: Seq[String],
-                         settings: Map[String, Any],
-                         mappings: Map[String, Any],
-                         aliases: Map[String, Any],
-                         version: Option[Int])
+case class IndexTemplate(
+    order: Int,
+    @JsonProperty("index_patterns") indexPatterns: Seq[String],
+    settings: Map[String, Any],
+    mappings: Map[String, Any],
+    aliases: Map[String, Any],
+    version: Option[Int]
+)
 
 trait IndexTemplateHandlers {
 
@@ -32,18 +39,19 @@ trait IndexTemplateHandlers {
 
   implicit object CreateIndexTemplateHandler extends Handler[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
 
-    override def responseHandler: ResponseHandler[CreateIndexTemplateResponse] = new ResponseHandler[CreateIndexTemplateResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] =
-        response.statusCode match {
-          case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
-          case _ => Left(ElasticErrorParser.parse(response))
-        }
-    }
+    override def responseHandler: ResponseHandler[CreateIndexTemplateResponse] =
+      new ResponseHandler[CreateIndexTemplateResponse] {
+        override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] =
+          response.statusCode match {
+            case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
+            case _   => Left(ElasticErrorParser.parse(response))
+          }
+      }
 
     override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = "/_index_template/" + request.name
-      val body = CreateIndexTemplateBodyFn(request)
-      val entity = HttpEntity(body.string, "application/json")
+      val body     = CreateIndexTemplateBodyFn(request)
+      val entity   = HttpEntity(body.string, "application/json")
       ElasticRequest("PUT", endpoint, entity)
     }
   }
@@ -57,14 +65,16 @@ trait IndexTemplateHandlers {
 
   implicit object GetIndexTemplateHandler extends Handler[GetIndexTemplateRequest, GetIndexTemplatesResponse] {
 
-    override def responseHandler: ResponseHandler[GetIndexTemplatesResponse] = new ResponseHandler[GetIndexTemplatesResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplatesResponse] = response.statusCode match {
-        case 200 =>
-          val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
-          Right(templates)
-        case _ => Left(ElasticErrorParser.parse(response))
+    override def responseHandler: ResponseHandler[GetIndexTemplatesResponse] =
+      new ResponseHandler[GetIndexTemplatesResponse] {
+        override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplatesResponse] =
+          response.statusCode match {
+            case 200 =>
+              val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
+              Right(templates)
+            case _   => Left(ElasticErrorParser.parse(response))
+          }
       }
-    }
 
     override def build(request: GetIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_index_template/" + request.indexes.string(true)
@@ -81,8 +91,7 @@ object CreateIndexTemplateBodyFn {
     create.version.foreach(builder.field("version", _))
     create.priority.foreach(builder.field("priority", _))
 
-
-    if (create.settings.nonEmpty || create.analysis.nonEmpty || create.mappings.nonEmpty || create.aliases.nonEmpty ) {
+    if (create.settings.nonEmpty || create.analysis.nonEmpty || create.mappings.nonEmpty || create.aliases.nonEmpty) {
       val template = builder.startObject("template")
 
       if (create.settings.nonEmpty || create.analysis.nonEmpty) {

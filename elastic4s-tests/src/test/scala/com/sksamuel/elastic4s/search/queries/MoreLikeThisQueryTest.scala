@@ -49,7 +49,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
     }
 
     "find matches based on doc refs" ignore {
-      val ref = DocumentRef("drinks", "4")
+      val ref   = DocumentRef("drinks", "4")
       val resp2 = client.execute {
         search("mltq").query {
           moreLikeThisQuery("text")

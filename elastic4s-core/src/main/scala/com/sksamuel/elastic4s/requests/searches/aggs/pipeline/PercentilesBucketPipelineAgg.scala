@@ -1,12 +1,13 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
-case class PercentilesBucketPipelineAgg(name: String,
-                                        bucketsPath: String,
-                                        format: Option[String] = None,
-                                        gapPolicy: Option[GapPolicy] = None,
-                                        percents: Seq[Double] = Nil,
-                                        metadata: Map[String, AnyRef] = Map.empty)
-    extends PipelineAgg {
+case class PercentilesBucketPipelineAgg(
+    name: String,
+    bucketsPath: String,
+    format: Option[String] = None,
+    gapPolicy: Option[GapPolicy] = None,
+    percents: Seq[Double] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends PipelineAgg {
 
   type T = PercentilesBucketPipelineAgg
 

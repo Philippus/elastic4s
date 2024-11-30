@@ -112,4 +112,3 @@ class AkkaHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with
     }.await.result.status shouldBe "401"
   }
 }
-

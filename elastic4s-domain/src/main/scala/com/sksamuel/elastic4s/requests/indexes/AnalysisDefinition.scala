@@ -1,10 +1,17 @@
 package com.sksamuel.elastic4s.requests.indexes
 
-import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, CharFilterDefinition, CustomAnalyzerDefinition, CustomNormalizerDefinition, NormalizerDefinition, TokenFilterDefinition, Tokenizer}
+import com.sksamuel.elastic4s.requests.analyzers.{
+  AnalyzerDefinition,
+  CharFilterDefinition,
+  CustomAnalyzerDefinition,
+  CustomNormalizerDefinition,
+  NormalizerDefinition,
+  TokenFilterDefinition,
+  Tokenizer
+}
 
 @deprecated("use new analysis package", "7.0.1")
-case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition],
-                              normalizers: Iterable[NormalizerDefinition]) {
+case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition], normalizers: Iterable[NormalizerDefinition]) {
 
   @deprecated("use new analysis package", "7.0.1")
   def tokenizers: Iterable[Tokenizer] =
@@ -17,7 +24,7 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition],
 
   @deprecated("use new analysis package", "7.0.1")
   def tokenFilterDefinitions: Iterable[TokenFilterDefinition] = {
-    val fromAnalyzers = analyzers
+    val fromAnalyzers   = analyzers
       .collect {
         case custom: CustomAnalyzerDefinition => custom
       }
@@ -35,7 +42,7 @@ case class AnalysisDefinition(analyzers: Iterable[AnalyzerDefinition],
 
   @deprecated("use new analysis package", "7.0.1")
   def charFilterDefinitions: Iterable[CharFilterDefinition] = {
-    val fromAnalyzers = analyzers
+    val fromAnalyzers   = analyzers
       .collect {
         case custom: CustomAnalyzerDefinition => custom
       }

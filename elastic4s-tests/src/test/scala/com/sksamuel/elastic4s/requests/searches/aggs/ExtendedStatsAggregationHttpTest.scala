@@ -27,9 +27,9 @@ class ExtendedStatsAggregationHttpTest extends AnyFreeSpec with DockerTests with
   // based on the example from extended stats agg documentation
   client.execute(
     bulk(
-      indexInto("extendedstatsagg") fields("month" -> "2017-01-01", "sales" -> 550.0),
-      indexInto("extendedstatsagg") fields("month" -> "2017-02-01", "sales" -> 60.0),
-      indexInto("extendedstatsagg") fields("month" -> "2017-03-01", "sales" -> 375.0)
+      indexInto("extendedstatsagg") fields ("month" -> "2017-01-01", "sales" -> 550.0),
+      indexInto("extendedstatsagg") fields ("month" -> "2017-02-01", "sales" -> 60.0),
+      indexInto("extendedstatsagg") fields ("month" -> "2017-03-01", "sales" -> 375.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -42,7 +42,7 @@ class ExtendedStatsAggregationHttpTest extends AnyFreeSpec with DockerTests with
         }
       }.await.result
       resp.totalHits shouldBe 3
-      val agg = resp.aggs.extendedStats("agg1")
+      val agg  = resp.aggs.extendedStats("agg1")
       agg.count shouldBe 3
       agg.min shouldBe 60.0
       agg.max shouldBe 550.0

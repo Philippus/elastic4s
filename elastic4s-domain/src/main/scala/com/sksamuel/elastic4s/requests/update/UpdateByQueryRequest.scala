@@ -48,43 +48,46 @@ trait BaseUpdateByQueryRequest {
 
   val indicesOptions: Option[IndicesOptionsRequest]
 }
-case class UpdateByQueryRequest(indexes: Indexes,
-                                query: Query,
-                                requestsPerSecond: Option[Float] = None,
-                                maxRetries: Option[Int] = None,
-                                proceedOnConflicts: Option[Boolean] = None,
-                                pipeline: Option[String] = None,
-                                refresh: Option[RefreshPolicy] = None,
-                                script: Option[Script] = None,
-                                waitForActiveShards: Option[Int] = None,
-                                @deprecated("This class is for synchronous updates. If you put false, use UpdateByQueryAsyncRequest instead", "8.4")
-                                waitForCompletion: Option[Boolean] = None,
-                                retryBackoffInitialTime: Option[FiniteDuration] = None,
-                                scroll: Option[String] = None,
-                                scrollSize: Option[Int] = None,
-                                slices: Option[Int] = None,
-                                slice: Option[Slice] = None,
-                                timeout: Option[FiniteDuration] = None,
-                                shouldStoreResult: Option[Boolean] = None,
-                                size: Option[Int] = None,
-                                indicesOptions: Option[IndicesOptionsRequest] = None) extends BaseUpdateByQueryRequest {
+case class UpdateByQueryRequest(
+    indexes: Indexes,
+    query: Query,
+    requestsPerSecond: Option[Float] = None,
+    maxRetries: Option[Int] = None,
+    proceedOnConflicts: Option[Boolean] = None,
+    pipeline: Option[String] = None,
+    refresh: Option[RefreshPolicy] = None,
+    script: Option[Script] = None,
+    waitForActiveShards: Option[Int] = None,
+    @deprecated("This class is for synchronous updates. If you put false, use UpdateByQueryAsyncRequest instead", "8.4")
+    waitForCompletion: Option[Boolean] = None,
+    retryBackoffInitialTime: Option[FiniteDuration] = None,
+    scroll: Option[String] = None,
+    scrollSize: Option[Int] = None,
+    slices: Option[Int] = None,
+    slice: Option[Slice] = None,
+    timeout: Option[FiniteDuration] = None,
+    shouldStoreResult: Option[Boolean] = None,
+    size: Option[Int] = None,
+    indicesOptions: Option[IndicesOptionsRequest] = None
+) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
     copy(proceedOnConflicts = proceedOnConflicts.some)
 
   def refresh(refresh: RefreshPolicy): UpdateByQueryRequest = {
-    if (refresh == RefreshPolicy.WAIT_FOR) throw new UnsupportedOperationException("Update by query does not support RefreshPolicy.WAIT_FOR")
+    if (refresh == RefreshPolicy.WAIT_FOR)
+      throw new UnsupportedOperationException("Update by query does not support RefreshPolicy.WAIT_FOR")
     copy(refresh = refresh.some)
   }
-  def refreshImmediately: UpdateByQueryRequest = refresh(RefreshPolicy.IMMEDIATE)
+  def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
 
-  def scroll(scroll: String): UpdateByQueryRequest = copy(scroll = scroll.some)
+  def scroll(scroll: String): UpdateByQueryRequest           = copy(scroll = scroll.some)
   def scroll(duration: FiniteDuration): UpdateByQueryRequest = copy(scroll = s"${duration.toSeconds}s".some)
 
   def scrollSize(scrollSize: Int): UpdateByQueryRequest = copy(scrollSize = scrollSize.some)
-  def slice(slice: Slice): UpdateByQueryRequest = copy(slice = slice.some)
-  def slices(slices: Int): UpdateByQueryRequest = copy(slices = slices.some)
-  def automaticSlicing(): UpdateByQueryRequest = copy(slices = Some(Slicing.AutoSlices))
+  def slice(slice: Slice): UpdateByQueryRequest         = copy(slice = slice.some)
+  def slices(slices: Int): UpdateByQueryRequest         = copy(slices = slices.some)
+  def automaticSlicing(): UpdateByQueryRequest          = copy(slices = Some(Slicing.AutoSlices))
 
   def requestsPerSecond(requestsPerSecond: Float): UpdateByQueryRequest =
     copy(requestsPerSecond = requestsPerSecond.some)

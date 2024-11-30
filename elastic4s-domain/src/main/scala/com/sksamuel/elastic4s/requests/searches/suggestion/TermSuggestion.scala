@@ -24,7 +24,7 @@ object SuggestMode {
 
   def MISSING: Missing.type = Missing
   def POPULAR: Popular.type = Popular
-  def ALWAYS: Always.type = Always
+  def ALWAYS: Always.type   = Always
 }
 
 sealed trait StringDistance
@@ -46,24 +46,25 @@ object StringDistance {
   case object NGRAM               extends StringDistance
 }
 
-case class TermSuggestion(name: String,
-                          fieldname: String,
-                          text: Option[String] = None,
-                          accuracy: Option[Double] = None,
-                          lowercaseTerms: Option[Boolean] = None,
-                          maxEdits: Option[Int] = None,
-                          maxInspections: Option[Int] = None,
-                          maxTermFreq: Option[Double] = None,
-                          minDocFreq: Option[Double] = None,
-                          minWordLength: Option[Int] = None,
-                          prefixLength: Option[Int] = None,
-                          sort: Option[SortBy] = None,
-                          stringDistance: Option[StringDistance] = None,
-                          suggestMode: Option[SuggestMode] = None,
-                          analyzer: Option[String] = None,
-                          size: Option[Int] = None,
-                          shardSize: Option[Int] = None)
-    extends Suggestion {
+case class TermSuggestion(
+    name: String,
+    fieldname: String,
+    text: Option[String] = None,
+    accuracy: Option[Double] = None,
+    lowercaseTerms: Option[Boolean] = None,
+    maxEdits: Option[Int] = None,
+    maxInspections: Option[Int] = None,
+    maxTermFreq: Option[Double] = None,
+    minDocFreq: Option[Double] = None,
+    minWordLength: Option[Int] = None,
+    prefixLength: Option[Int] = None,
+    sort: Option[SortBy] = None,
+    stringDistance: Option[StringDistance] = None,
+    suggestMode: Option[SuggestMode] = None,
+    analyzer: Option[String] = None,
+    size: Option[Int] = None,
+    shardSize: Option[Int] = None
+) extends Suggestion {
 
   def accuracy(accuracy: Double): TermSuggestion              = copy(accuracy = accuracy.some)
   def maxEdits(maxEdits: Int): TermSuggestion                 = copy(maxEdits = maxEdits.some)
@@ -75,7 +76,7 @@ case class TermSuggestion(name: String,
   def prefixLength(prefixLength: Int): TermSuggestion         = copy(prefixLength = prefixLength.some)
   def sort(sort: SortBy): TermSuggestion                      = copy(sort = sort.some)
 
-  def stringDistance(dist: String): TermSuggestion =
+  def stringDistance(dist: String): TermSuggestion         =
     stringDistance(StringDistance.valueOf(dist.toUpperCase))
   def stringDistance(dist: StringDistance): TermSuggestion = copy(stringDistance = dist.some)
 

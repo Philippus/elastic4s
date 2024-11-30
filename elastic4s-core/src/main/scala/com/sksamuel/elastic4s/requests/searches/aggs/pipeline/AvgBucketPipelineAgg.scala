@@ -1,11 +1,12 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
-case class AvgBucketPipelineAgg(name: String,
-                                bucketsPath: String,
-                                gapPolicy: Option[GapPolicy] = None,
-                                format: Option[String] = None,
-                                metadata: Map[String, AnyRef] = Map.empty)
-    extends PipelineAgg {
+case class AvgBucketPipelineAgg(
+    name: String,
+    bucketsPath: String,
+    gapPolicy: Option[GapPolicy] = None,
+    format: Option[String] = None,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends PipelineAgg {
 
   type T = AvgBucketPipelineAgg
 

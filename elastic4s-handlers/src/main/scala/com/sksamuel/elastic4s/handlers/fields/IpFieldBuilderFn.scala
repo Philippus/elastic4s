@@ -11,9 +11,8 @@ object IpFieldBuilderFn {
     values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
     values.get("index").map(_.asInstanceOf[Boolean]),
     values.get("null_value").map(_.asInstanceOf[String]),
-    values.get("store").map(_.asInstanceOf[Boolean]),
+    values.get("store").map(_.asInstanceOf[Boolean])
   )
-
 
   def build(field: IpField): XContentBuilder = {
 
@@ -39,7 +38,6 @@ object IpRangeFieldBuilderFn {
     values.get("store").map(_.asInstanceOf[Boolean])
   )
 
-
   def build(field: IpRangeField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
@@ -52,4 +50,3 @@ object IpRangeFieldBuilderFn {
     builder.endObject()
   }
 }
-

@@ -15,7 +15,7 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
 class PekkoHttpClientMockTest
-  extends AnyWordSpec
+    extends AnyWordSpec
     with Matchers
     with MockitoSugar
     with ScalaFutures
@@ -72,7 +72,8 @@ class PekkoHttpClientMockTest
         .futureValue shouldBe ElasticResponse(
         200,
         Some(ElasticEntity.StringEntity("ok", None)),
-        Map.empty)
+        Map.empty
+      )
     }
 
     "don't retry if no time left" in {
@@ -90,7 +91,8 @@ class PekkoHttpClientMockTest
         new PekkoHttpClient(
           PekkoHttpClientSettings(hosts).copy(maxRetryTimeout = 0.seconds),
           blacklist,
-          httpPool)
+          httpPool
+        )
 
       when(blacklist.contains("host1")).thenReturn(false)
       when(blacklist.add("host1")).thenReturn(true)
@@ -106,7 +108,8 @@ class PekkoHttpClientMockTest
         .futureValue shouldBe ElasticResponse(
         502,
         Some(ElasticEntity.StringEntity("", None)),
-        Map.empty)
+        Map.empty
+      )
     }
 
     "blacklist on 502" in {
@@ -211,7 +214,8 @@ class PekkoHttpClientMockTest
         .futureValue shouldBe ElasticResponse(
         200,
         Some(ElasticEntity.StringEntity("host2", None)),
-        Map.empty)
+        Map.empty
+      )
     }
 
   }

@@ -7,8 +7,7 @@ trait CharFilter {
   def build: XContentBuilder
 }
 
-case class MappingCharFilter(override val name: String,
-                             mappings: Map[String, String]) extends CharFilter {
+case class MappingCharFilter(override val name: String, mappings: Map[String, String]) extends CharFilter {
   def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "mapping")
@@ -21,9 +20,8 @@ case class MappingCharFilter(override val name: String,
   }
 }
 
-case class PatternReplaceCharFilter(override val name: String,
-                                    pattern: String,
-                                    replacement: String) extends CharFilter {
+case class PatternReplaceCharFilter(override val name: String, pattern: String, replacement: String)
+    extends CharFilter {
   def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "pattern_replace")

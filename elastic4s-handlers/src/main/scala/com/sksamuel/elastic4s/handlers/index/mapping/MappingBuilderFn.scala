@@ -10,9 +10,9 @@ object MappingBuilderFn {
 
   def build(d: MappingDefinitionLike): XContentBuilder =
     d.rawSource match {
-      //user raw source if provided, ignore other mapping settings
+      // user raw source if provided, ignore other mapping settings
       case Some(rs) => XContentFactory.parse(rs)
-      case None =>
+      case None     =>
         val builder = XContentFactory.jsonBuilder()
         build(d, builder)
         builder.endObject()
@@ -21,12 +21,12 @@ object MappingBuilderFn {
   // returns the mapping json wrapped in the mapping type name, eg "mytype" : { mapping }
   def buildWithName(d: MappingDefinitionLike, tpe: String): XContentBuilder =
     d.rawSource match {
-      //user raw source if provided, ignore other mapping settings
+      // user raw source if provided, ignore other mapping settings
       case Some(rs) =>
         val builder = XContentFactory.jsonBuilder()
         builder.rawField(tpe, XContentFactory.parse(rs))
         builder
-      case None =>
+      case None     =>
         val builder = XContentFactory.jsonBuilder()
         builder.startObject(tpe)
         build(d, builder)
@@ -39,8 +39,8 @@ object MappingBuilderFn {
     for (all <- d.all) builder.startObject("_all").field("enabled", all).endObject()
     (d.source, d.sourceExcludes) match {
       case (_, l) if l.nonEmpty => builder.startObject("_source").array("excludes", l.toArray).endObject()
-      case (Some(source), _) => builder.startObject("_source").field("enabled", source).endObject()
-      case _ =>
+      case (Some(source), _)    => builder.startObject("_source").field("enabled", source).endObject()
+      case _                    =>
     }
 
     if (d.dynamicDateFormats.nonEmpty)
@@ -49,18 +49,19 @@ object MappingBuilderFn {
     for (dd <- d.dateDetection) builder.field("date_detection", dd)
     for (nd <- d.numericDetection) builder.field("numeric_detection", nd)
 
-    d.dynamic.foreach(
-      dynamic =>
-        builder.field("dynamic", dynamic match {
+    d.dynamic.foreach(dynamic =>
+      builder.field(
+        "dynamic",
+        dynamic match {
           case DynamicMapping.Strict => "strict"
-          case DynamicMapping.False => "false"
-          case _ => "true"
-        })
+          case DynamicMapping.False  => "false"
+          case _                     => "true"
+        }
+      )
     )
 
-    d.boostName.foreach(
-      x =>
-        builder.startObject("_boost").field("name", x).field("null_value", d.boostNullValue.getOrElse(0D)).endObject()
+    d.boostName.foreach(x =>
+      builder.startObject("_boost").field("name", x).field("null_value", d.boostNullValue.getOrElse(0D)).endObject()
     )
     d.analyzer.foreach(x => builder.startObject("_analyzer").field("path", x).endObject())
     d.parent.foreach(x => builder.startObject("_parent").field("type", x).endObject())

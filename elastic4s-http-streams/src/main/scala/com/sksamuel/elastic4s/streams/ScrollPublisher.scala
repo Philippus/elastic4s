@@ -11,19 +11,22 @@ import org.slf4j.{Logger, LoggerFactory}
 import scala.collection.mutable
 import scala.util.{Failure, Success}
 
-/**
-  * An implementation of the reactive API Publisher, that publishes documents using an elasticsearch
-  * scroll cursor. The initial query must be provided to the publisher, and there are helpers to create
-  * a query for all documents in an index (and type).
+/** An implementation of the reactive API Publisher, that publishes documents using an elasticsearch scroll cursor. The
+  * initial query must be provided to the publisher, and there are helpers to create a query for all documents in an
+  * index (and type).
   *
-  * @param client          a client for the cluster
-  * @param search          the initial search query to execute
-  * @param maxItems        the maximum number of elements to return
-  * @param actorRefFactory an Actor reference factory required by the publisher
+  * @param client
+  *   a client for the cluster
+  * @param search
+  *   the initial search query to execute
+  * @param maxItems
+  *   the maximum number of elements to return
+  * @param actorRefFactory
+  *   an Actor reference factory required by the publisher
   */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class ScrollPublisher private[streams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
-  implicit actorRefFactory: ActorRefFactory
+    implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
 
@@ -41,7 +44,7 @@ class ScrollPublisher private[streams] (client: ElasticClient, search: SearchReq
 
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
-  implicit actorRefFactory: ActorRefFactory
+    implicit actorRefFactory: ActorRefFactory
 ) extends Subscription {
 
   private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
@@ -94,13 +97,13 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       context become ready
       logger.info("Scroll publisher has become 'Ready'")
       unstashAll()
-    case _ =>
+    case _     =>
       stash()
   }
 
   private def send(k: Long): Unit = {
     require(queue.size >= k)
-    for (_ <- 0l until k)
+    for (_ <- 0L until k)
       if (max == 0 || processed < max) {
         s.onNext(queue.dequeue)
         processed = processed + 1
@@ -132,7 +135,7 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       self ! PublishActor.Request(toRequest)
       send(queue.size)
     // in this case, we have enough available so just send 'em
-    case PublishActor.Request(n) =>
+    case PublishActor.Request(n)                   =>
       logger.debug(s"Request for $n items; sending")
       send(n)
   }
@@ -141,16 +144,16 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
   private def fetching: Actor.Receive = {
     // if we're in fetching mode, its because we ran out of results to send
     // so any requests must be stashed until a fresh batch arrives
-    case PublishActor.Request(n) =>
+    case PublishActor.Request(n)                                                 =>
       logger.debug(s"Request for $n items but we're already waiting on a response; stashing request")
       require(queue.isEmpty) // must be empty or why did we not send it before switching to this mode?
       stash()
     // if the request to elastic failed we will terminate the subscription
-    case Failure(t) =>
+    case Failure(t)                                                              =>
       logger.warn("Elasticsearch returned a failure; will terminate the subscription", t)
       s.onError(t)
       context.stop(self)
-    case Success(resp: RequestFailure) =>
+    case Success(resp: RequestFailure)                                           =>
       logger.warn("Request errored; will terminate the subscription; {}", resp.error.toString)
       s.onError(new RuntimeException(resp.error.toString))
       context.stop(self)
@@ -160,14 +163,14 @@ class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ 
       s.onError(new RuntimeException("Request terminated early or timed out"))
       context.stop(self)
     // if we had no results from ES then we have nothing left to publish and our work here is done
-    case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isEmpty =>
+    case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isEmpty    =>
       logger.debug("Response from ES came back empty; this means no more items upstream so will complete subscription")
       scrollId = resp.result.scrollId.getOrElse(scrollId)
       s.onComplete()
       logger.debug("Stopping publisher actor")
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
-    case Success(resp: RequestSuccess[SearchResponse]) =>
+    case Success(resp: RequestSuccess[SearchResponse])                           =>
       scrollId = resp.result.scrollId.getOrError("Response did not include a scroll id")
       queue ++= resp.result.hits.hits
       context become ready

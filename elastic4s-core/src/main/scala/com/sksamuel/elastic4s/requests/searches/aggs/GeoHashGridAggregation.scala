@@ -2,14 +2,15 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class GeoHashGridAggregation(name: String,
-                                  field: Option[String] = None,
-                                  shardSize: Option[Int] = None,
-                                  size: Option[Int] = None,
-                                  precision: Option[Int] = None,
-                                  subaggs: Seq[AbstractAggregation] = Nil,
-                                  metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class GeoHashGridAggregation(
+    name: String,
+    field: Option[String] = None,
+    shardSize: Option[Int] = None,
+    size: Option[Int] = None,
+    precision: Option[Int] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = GeoHashGridAggregation
 

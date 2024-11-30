@@ -1,7 +1,15 @@
 package com.sksamuel.elastic4s.api
 
 import com.sksamuel.elastic4s.requests.script.Script
-import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{ExponentialDecayScore, FieldValueFactor, GaussianDecayScore, LinearDecayScore, RandomScoreFunction, ScriptScore, WeightScore}
+import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{
+  ExponentialDecayScore,
+  FieldValueFactor,
+  GaussianDecayScore,
+  LinearDecayScore,
+  RandomScoreFunction,
+  ScriptScore,
+  WeightScore
+}
 
 trait ScoreApi {
 

@@ -2,10 +2,18 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.{EnumConversions, handlers}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, GeoDistanceAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{
+  AbstractAggregation,
+  AggMetaDataFn,
+  GeoDistanceAggregation,
+  SubAggsBuilderFn
+}
 
 object GeoDistanceAggregationBuilder {
-  def apply(agg: GeoDistanceAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: GeoDistanceAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
 
     val builder = XContentFactory.obj()
 

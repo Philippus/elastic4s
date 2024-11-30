@@ -14,7 +14,7 @@ class SubscriberListenerTest extends AnyWordSpec with Matchers with DockerTests 
 
   import ReactiveElastic._
 
-  implicit val system: ActorSystem = ActorSystem()
+  implicit val system: ActorSystem         = ActorSystem()
   implicit val builder: ShipRequestBuilder = new ShipRequestBuilder()
 
   Try {
@@ -28,7 +28,7 @@ class SubscriberListenerTest extends AnyWordSpec with Matchers with DockerTests 
 
       val latch = new CountDownLatch(Ship.ships.length)
 
-      val config = SubscriberConfig(listener = new ResponseListener[Ship] {
+      val config     = SubscriberConfig(listener = new ResponseListener[Ship] {
         def onAck(resp: BulkResponseItem, original: Ship): Unit = latch.countDown()
       })
       val subscriber = client.subscriber[Ship](config)

@@ -53,8 +53,8 @@ class AnalyseRequestContentBuilderTest extends AnyFunSuite with Matchers {
     val content = index.AnalyseRequestContentBuilder(
       AnalyzeRequest(Array("hello world"))
         .tokenizer("keyword")
-        .filters("lowercase","uppercase")
-        .filters(StopAnalyzer("stop",List("a","is","this")))
+        .filters("lowercase", "uppercase")
+        .filters(StopAnalyzer("stop", List("a", "is", "this")))
     )
     content mustBe
       """{"text":["hello world"],"tokenizer":"keyword","filter":["lowercase","uppercase",{"type":"stop","stopwords":["a","is","this"]}]}""".stripMargin

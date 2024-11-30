@@ -15,7 +15,6 @@ object BooleanFieldBuilderFn {
       values.get("store").map(_.asInstanceOf[Boolean])
     )
 
-
   def build(field: BooleanField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

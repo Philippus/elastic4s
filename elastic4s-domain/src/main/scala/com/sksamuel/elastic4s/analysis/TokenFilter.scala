@@ -8,17 +8,22 @@ trait TokenFilter {
   def build: XContentBuilder
 }
 
-case class SynonymTokenFilter(override val name: String,
-                              path: Option[String] = None,
-                              synonyms: Set[String] = Set.empty,
-                              @deprecated ignoreCase: Option[Boolean] = None,
-                              format: Option[String] = None,
-                              expand: Option[Boolean] = None,
-                              @deprecated tokenizer: Option[String] = None,
-                              updateable: Option[Boolean] = None,
-                              lenient: Option[Boolean] = None,
-                              synonymsSet: Option[String] = None) extends TokenFilter {
-  require(synonymsSet.isDefined || path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms_set`, `synonyms_path` or `synonyms` to be configured")
+case class SynonymTokenFilter(
+    override val name: String,
+    path: Option[String] = None,
+    synonyms: Set[String] = Set.empty,
+    @deprecated ignoreCase: Option[Boolean] = None,
+    format: Option[String] = None,
+    expand: Option[Boolean] = None,
+    @deprecated tokenizer: Option[String] = None,
+    updateable: Option[Boolean] = None,
+    lenient: Option[Boolean] = None,
+    synonymsSet: Option[String] = None
+) extends TokenFilter {
+  require(
+    synonymsSet.isDefined || path.isDefined || synonyms.nonEmpty,
+    "synonym requires either `synonyms_set`, `synonyms_path` or `synonyms` to be configured"
+  )
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -35,32 +40,34 @@ case class SynonymTokenFilter(override val name: String,
     b
   }
 
-  def path(path: String): SynonymTokenFilter = copy(path = Some(path))
+  def path(path: String): SynonymTokenFilter                   = copy(path = Some(path))
   def synonyms(synonyms: Iterable[String]): SynonymTokenFilter = copy(synonyms = synonyms.toSet)
-  def tokenizer(tokenizer: String): SynonymTokenFilter = copy(tokenizer = tokenizer.some)
-  def format(format: String): SynonymTokenFilter = copy(format = format.some)
-  def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter = copy(ignoreCase = ignoreCase.some)
-  def expand(expand: Boolean): SynonymTokenFilter = copy(expand = expand.some)
-  def updateable(updateable: Boolean): SynonymTokenFilter = copy(updateable = updateable.some)
-  def lenient(lenient: Boolean): SynonymTokenFilter = copy(lenient = lenient.some)
+  def tokenizer(tokenizer: String): SynonymTokenFilter         = copy(tokenizer = tokenizer.some)
+  def format(format: String): SynonymTokenFilter               = copy(format = format.some)
+  def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter      = copy(ignoreCase = ignoreCase.some)
+  def expand(expand: Boolean): SynonymTokenFilter              = copy(expand = expand.some)
+  def updateable(updateable: Boolean): SynonymTokenFilter      = copy(updateable = updateable.some)
+  def lenient(lenient: Boolean): SynonymTokenFilter            = copy(lenient = lenient.some)
 }
 
-case class WordDelimiterGraphTokenFilter(override val name: String,
-                                         preserveOriginal: Option[Boolean] = None,
-                                         catenateNumbers: Option[Boolean] = None,
-                                         catenateWords: Option[Boolean] = None,
-                                         catenateAll: Option[Boolean] = None,
-                                         generateWordParts: Option[Boolean] = None,
-                                         generateNumberParts: Option[Boolean] = None,
-                                         protectedWords: Option[String] = None,
-                                         protectedWordsPath: Option[String] = None,
-                                         splitOnCaseChange: Option[Boolean] = None,
-                                         splitOnNumerics: Option[Boolean] = None,
-                                         stem_english_possessive: Option[Boolean] = None,
-                                         typeTable: Option[String] = None,
-                                         typeTablePath: Option[String] = None,
-                                         adjustOffsets: Option[Boolean] = None,
-                                         ignoreKeywords: Option[Boolean] = None) extends TokenFilter {
+case class WordDelimiterGraphTokenFilter(
+    override val name: String,
+    preserveOriginal: Option[Boolean] = None,
+    catenateNumbers: Option[Boolean] = None,
+    catenateWords: Option[Boolean] = None,
+    catenateAll: Option[Boolean] = None,
+    generateWordParts: Option[Boolean] = None,
+    generateNumberParts: Option[Boolean] = None,
+    protectedWords: Option[String] = None,
+    protectedWordsPath: Option[String] = None,
+    splitOnCaseChange: Option[Boolean] = None,
+    splitOnNumerics: Option[Boolean] = None,
+    stem_english_possessive: Option[Boolean] = None,
+    typeTable: Option[String] = None,
+    typeTablePath: Option[String] = None,
+    adjustOffsets: Option[Boolean] = None,
+    ignoreKeywords: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -83,35 +90,40 @@ case class WordDelimiterGraphTokenFilter(override val name: String,
     b
   }
 
-  def adjustOffsets(bool: Boolean): WordDelimiterGraphTokenFilter = copy(adjustOffsets = bool.some)
-  def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter = copy(generateWordParts = bool.some)
-  def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter = copy(generateNumberParts = bool.some)
-  def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateWords = bool.some)
-  def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateNumbers = bool.some)
-  def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter = copy(catenateAll = bool.some)
-  def ignoreKeywords(bool: Boolean): WordDelimiterGraphTokenFilter = copy(ignoreKeywords = bool.some)
-  def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter = copy(splitOnCaseChange = bool.some)
-  def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter = copy(preserveOriginal = bool.some)
-  def protectedWords(words: String): WordDelimiterGraphTokenFilter = copy(protectedWords = words.some)
-  def protectedWordsPath(path: String): WordDelimiterGraphTokenFilter = copy(protectedWordsPath = path.some)
-  def splitOnNumerics(bool: Boolean): WordDelimiterGraphTokenFilter = copy(splitOnNumerics = bool.some)
+  def adjustOffsets(bool: Boolean): WordDelimiterGraphTokenFilter        = copy(adjustOffsets = bool.some)
+  def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter    = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter  = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter        = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter          = copy(catenateAll = bool.some)
+  def ignoreKeywords(bool: Boolean): WordDelimiterGraphTokenFilter       = copy(ignoreKeywords = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter    = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter     = copy(preserveOriginal = bool.some)
+  def protectedWords(words: String): WordDelimiterGraphTokenFilter       = copy(protectedWords = words.some)
+  def protectedWordsPath(path: String): WordDelimiterGraphTokenFilter    = copy(protectedWordsPath = path.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(splitOnNumerics = bool.some)
   def stemEnglishPossesive(bool: Boolean): WordDelimiterGraphTokenFilter = copy(stem_english_possessive = bool.some)
-  def typeTable(table: String): WordDelimiterGraphTokenFilter = copy(typeTable = table.some)
-  def typeTablePath(path: String): WordDelimiterGraphTokenFilter = copy(typeTablePath = path.some)
+  def typeTable(table: String): WordDelimiterGraphTokenFilter            = copy(typeTable = table.some)
+  def typeTablePath(path: String): WordDelimiterGraphTokenFilter         = copy(typeTablePath = path.some)
 }
 
-case class SynonymGraphTokenFilter(override val name: String,
-                                   path: Option[String] = None,
-                                   synonyms: Set[String] = Set.empty,
-                                   @deprecated ignoreCase: Option[Boolean] = None,
-                                   format: Option[String] = None,
-                                   expand: Option[Boolean] = None,
-                                   @deprecated tokenizer: Option[String] = None,
-                                   updateable: Option[Boolean] = None,
-                                   lenient: Option[Boolean] = None,
-                                   synonymsSet: Option[String] = None) extends TokenFilter {
+case class SynonymGraphTokenFilter(
+    override val name: String,
+    path: Option[String] = None,
+    synonyms: Set[String] = Set.empty,
+    @deprecated ignoreCase: Option[Boolean] = None,
+    format: Option[String] = None,
+    expand: Option[Boolean] = None,
+    @deprecated tokenizer: Option[String] = None,
+    updateable: Option[Boolean] = None,
+    lenient: Option[Boolean] = None,
+    synonymsSet: Option[String] = None
+) extends TokenFilter {
 
-  require(synonymsSet.isDefined || path.isDefined || synonyms.nonEmpty, "synonym requires either `synonyms_set`, `synonyms_path` or `synonyms` to be configured")
+  require(
+    synonymsSet.isDefined || path.isDefined || synonyms.nonEmpty,
+    "synonym requires either `synonyms_set`, `synonyms_path` or `synonyms` to be configured"
+  )
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -128,18 +140,17 @@ case class SynonymGraphTokenFilter(override val name: String,
     b
   }
 
-  def path(path: String): SynonymGraphTokenFilter = copy(path = Some(path))
+  def path(path: String): SynonymGraphTokenFilter                   = copy(path = Some(path))
   def synonyms(synonyms: Iterable[String]): SynonymGraphTokenFilter = copy(synonyms = synonyms.toSet)
-  def tokenizer(tokenizer: String): SynonymGraphTokenFilter = copy(tokenizer = tokenizer.some)
-  def format(format: String): SynonymGraphTokenFilter = copy(format = Some(format))
-  def ignoreCase(ignoreCase: Boolean): SynonymGraphTokenFilter = copy(ignoreCase = Some(ignoreCase))
-  def expand(expand: Boolean): SynonymGraphTokenFilter = copy(expand = expand.some)
-  def updateable(updateable: Boolean): SynonymGraphTokenFilter = copy(updateable = updateable.some)
-  def lenient(lenient: Boolean): SynonymGraphTokenFilter = copy(lenient = lenient.some)
+  def tokenizer(tokenizer: String): SynonymGraphTokenFilter         = copy(tokenizer = tokenizer.some)
+  def format(format: String): SynonymGraphTokenFilter               = copy(format = Some(format))
+  def ignoreCase(ignoreCase: Boolean): SynonymGraphTokenFilter      = copy(ignoreCase = Some(ignoreCase))
+  def expand(expand: Boolean): SynonymGraphTokenFilter              = copy(expand = expand.some)
+  def updateable(updateable: Boolean): SynonymGraphTokenFilter      = copy(updateable = updateable.some)
+  def lenient(lenient: Boolean): SynonymGraphTokenFilter            = copy(lenient = lenient.some)
 }
 
-case class TruncateTokenFilter(override val name: String,
-                               length: Int) extends TokenFilter {
+case class TruncateTokenFilter(override val name: String, length: Int) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -149,9 +160,8 @@ case class TruncateTokenFilter(override val name: String,
   }
 }
 
-case class LengthTokenFilter(override val name: String,
-                             min: Option[Int] = None,
-                             max: Option[Int] = None) extends TokenFilter {
+case class LengthTokenFilter(override val name: String, min: Option[Int] = None, max: Option[Int] = None)
+    extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -165,8 +175,7 @@ case class LengthTokenFilter(override val name: String,
   def max(max: Int): LengthTokenFilter = copy(max = max.some)
 }
 
-case class UniqueTokenFilter(override val name: String,
-                             onlyOnSamePosition: Boolean) extends TokenFilter {
+case class UniqueTokenFilter(override val name: String, onlyOnSamePosition: Boolean) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -176,11 +185,13 @@ case class UniqueTokenFilter(override val name: String,
   }
 }
 
-case class KeywordMarkerTokenFilter(override val name: String,
-                                    keywords: Seq[String] = Nil,
-                                    keywordsPath: Option[String] = None,
-                                    keywordsPattern: Option[String] = None,
-                                    ignoreCase: Option[Boolean] = None) extends TokenFilter {
+case class KeywordMarkerTokenFilter(
+    override val name: String,
+    keywords: Seq[String] = Nil,
+    keywordsPath: Option[String] = None,
+    keywordsPattern: Option[String] = None,
+    ignoreCase: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -195,11 +206,11 @@ case class KeywordMarkerTokenFilter(override val name: String,
     b
   }
 
-  def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter = copy(keywords = keywords)
+  def keywords(keywords: Seq[String]): KeywordMarkerTokenFilter        = copy(keywords = keywords)
   def keywords(first: String, rest: String*): KeywordMarkerTokenFilter = copy(keywords = first +: rest)
-  def keywordsPath(path: String): KeywordMarkerTokenFilter = copy(keywordsPath = path.some)
-  def keywordsPattern(pattern: String): KeywordMarkerTokenFilter = copy(keywordsPattern = pattern.some)
-  def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter = copy(ignoreCase = ignoreCase.some)
+  def keywordsPath(path: String): KeywordMarkerTokenFilter             = copy(keywordsPath = path.some)
+  def keywordsPattern(pattern: String): KeywordMarkerTokenFilter       = copy(keywordsPattern = pattern.some)
+  def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter        = copy(ignoreCase = ignoreCase.some)
 }
 
 case class ElisionTokenFilter(override val name: String, articles: Seq[String] = Nil) extends TokenFilter {
@@ -211,14 +222,15 @@ case class ElisionTokenFilter(override val name: String, articles: Seq[String] =
     b
   }
 
-  def articles(articles: Seq[String]): ElisionTokenFilter = copy(articles = articles)
+  def articles(articles: Seq[String]): ElisionTokenFilter        = copy(articles = articles)
   def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
 }
 
-case class LimitTokenCountTokenFilter(override val name: String,
-                                      maxTokenCount: Option[Int] = None,
-                                      consumeAllTokens: Option[Boolean] = None) extends TokenFilter {
-
+case class LimitTokenCountTokenFilter(
+    override val name: String,
+    maxTokenCount: Option[Int] = None,
+    consumeAllTokens: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -228,19 +240,20 @@ case class LimitTokenCountTokenFilter(override val name: String,
     b
   }
 
-  def maxTokenCount(maxTokenCount: Int): LimitTokenCountTokenFilter = copy(maxTokenCount = maxTokenCount.some)
+  def maxTokenCount(maxTokenCount: Int): LimitTokenCountTokenFilter           = copy(maxTokenCount = maxTokenCount.some)
   def consumeAllTokens(consumeAllTokens: Boolean): LimitTokenCountTokenFilter =
     copy(consumeAllTokens = consumeAllTokens.some)
 }
 
-case class StopTokenFilter(override val name: String,
-                           language: Option[String] = None,
-                           stopwords: Iterable[String] = Nil,
-                           stopwordsPath: Option[String] = None,
-                           enablePositionIncrements: Option[Boolean] = None, // ignored now as of 1.4.0
-                           removeTrailing: Option[Boolean] = None,
-                           ignoreCase: Option[Boolean] = None) extends TokenFilter {
-
+case class StopTokenFilter(
+    override val name: String,
+    language: Option[String] = None,
+    stopwords: Iterable[String] = Nil,
+    stopwordsPath: Option[String] = None,
+    enablePositionIncrements: Option[Boolean] = None, // ignored now as of 1.4.0
+    removeTrailing: Option[Boolean] = None,
+    ignoreCase: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -255,49 +268,50 @@ case class StopTokenFilter(override val name: String,
     b
   }
 
-  def ignoreCase(boolean: Boolean): StopTokenFilter = copy(ignoreCase = boolean.some)
-  def removeTrailing(boolean: Boolean): StopTokenFilter = copy(removeTrailing = boolean.some)
-  def enablePositionIncrements(boolean: Boolean): StopTokenFilter = copy(enablePositionIncrements = boolean.some)
-  def language(language: String): StopTokenFilter = copy(language = language.some)
-  def stopwords(stopwords: Iterable[String]): StopTokenFilter = copy(stopwords = stopwords)
+  def ignoreCase(boolean: Boolean): StopTokenFilter                = copy(ignoreCase = boolean.some)
+  def removeTrailing(boolean: Boolean): StopTokenFilter            = copy(removeTrailing = boolean.some)
+  def enablePositionIncrements(boolean: Boolean): StopTokenFilter  = copy(enablePositionIncrements = boolean.some)
+  def language(language: String): StopTokenFilter                  = copy(language = language.some)
+  def stopwords(stopwords: Iterable[String]): StopTokenFilter      = copy(stopwords = stopwords)
   def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
-  def stopwordsPath(path: String): StopTokenFilter = copy(stopwordsPath = path.some)
+  def stopwordsPath(path: String): StopTokenFilter                 = copy(stopwordsPath = path.some)
 }
 
 object NamedStopTokenFilter {
-  val Arabic = "_arabic_"
-  val Armenian = "_armenian_"
-  val Basque = "_basque_"
-  val Brazilian = "_brazilian_"
-  val Bulgarian = "_bulgarian_"
-  val Catalan = "_catalan_"
-  val Czech = "_czech_"
-  val Danish = "_danish_"
-  val Dutch = "_dutch_"
-  val English = "_english_"
-  val Finnish = "_finnish_"
-  val French = "_french_"
-  val Galician = "_galician_"
-  val German = "_german_"
-  val Greek = "_greek_"
-  val Hindi = "_hindi_"
-  val Hungarian = "_hungarian_"
+  val Arabic     = "_arabic_"
+  val Armenian   = "_armenian_"
+  val Basque     = "_basque_"
+  val Brazilian  = "_brazilian_"
+  val Bulgarian  = "_bulgarian_"
+  val Catalan    = "_catalan_"
+  val Czech      = "_czech_"
+  val Danish     = "_danish_"
+  val Dutch      = "_dutch_"
+  val English    = "_english_"
+  val Finnish    = "_finnish_"
+  val French     = "_french_"
+  val Galician   = "_galician_"
+  val German     = "_german_"
+  val Greek      = "_greek_"
+  val Hindi      = "_hindi_"
+  val Hungarian  = "_hungarian_"
   val Indonesian = "_indonesian_"
-  val Italian = "_italian_"
-  val Norwegian = "_norwegian_"
-  val Persian = "_persian_"
+  val Italian    = "_italian_"
+  val Norwegian  = "_norwegian_"
+  val Persian    = "_persian_"
   val Portuguese = "_portuguese_"
-  val Romanian = "_romanian_"
-  val Russian = "_russian_"
-  val Spanish = "_spanish_"
-  val Swedish = "_swedish_"
-  val Turkish = "_turkish_"
+  val Romanian   = "_romanian_"
+  val Russian    = "_russian_"
+  val Spanish    = "_spanish_"
+  val Swedish    = "_swedish_"
+  val Turkish    = "_turkish_"
 }
 
-case class PatternCaptureTokenFilter(override val name: String,
-                                     patterns: Seq[String] = Nil,
-                                     preserveOriginal: Boolean = true) extends TokenFilter {
-
+case class PatternCaptureTokenFilter(
+    override val name: String,
+    patterns: Seq[String] = Nil,
+    preserveOriginal: Boolean = true
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -308,17 +322,18 @@ case class PatternCaptureTokenFilter(override val name: String,
     b
   }
 
-  def patterns(patterns: Seq[String]): PatternCaptureTokenFilter = copy(patterns = patterns)
-  def patterns(first: String, rest: String*): PatternCaptureTokenFilter = copy(patterns = first +: rest)
+  def patterns(patterns: Seq[String]): PatternCaptureTokenFilter             = copy(patterns = patterns)
+  def patterns(first: String, rest: String*): PatternCaptureTokenFilter      = copy(patterns = first +: rest)
   def preserveOriginal(preserveOriginal: Boolean): PatternCaptureTokenFilter = copy(preserveOriginal = preserveOriginal)
 }
 
-case class HunspellTokenFilter(override val name: String,
-                               locale: String,
-                               dedup: Option[Boolean] = None,
-                               longestOnly: Option[Boolean] = None,
-                               dictionary: Option[String] = None) extends TokenFilter {
-
+case class HunspellTokenFilter(
+    override val name: String,
+    locale: String,
+    dedup: Option[Boolean] = None,
+    longestOnly: Option[Boolean] = None,
+    dictionary: Option[String] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -330,16 +345,14 @@ case class HunspellTokenFilter(override val name: String,
     b
   }
 
-  def locale(locale: String): HunspellTokenFilter = copy(locale = locale)
+  def locale(locale: String): HunspellTokenFilter            = copy(locale = locale)
   def longestOnly(longestOnly: Boolean): HunspellTokenFilter = copy(longestOnly = longestOnly.some)
-  def dedup(dedup: Boolean): HunspellTokenFilter = copy(dedup = dedup.some)
-  def dictionary(dictionary: String): HunspellTokenFilter = copy(dictionary = dictionary.some)
+  def dedup(dedup: Boolean): HunspellTokenFilter             = copy(dedup = dedup.some)
+  def dictionary(dictionary: String): HunspellTokenFilter    = copy(dictionary = dictionary.some)
 }
 
-case class PatternReplaceTokenFilter(override val name: String,
-                                     pattern: String,
-                                     replacement: String) extends TokenFilter {
-
+case class PatternReplaceTokenFilter(override val name: String, pattern: String, replacement: String)
+    extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -349,16 +362,17 @@ case class PatternReplaceTokenFilter(override val name: String,
     b
   }
 
-  def pattern(p: String): PatternReplaceTokenFilter = copy(pattern = p)
+  def pattern(p: String): PatternReplaceTokenFilter     = copy(pattern = p)
   def replacement(r: String): PatternReplaceTokenFilter = copy(replacement = r)
 }
 
-case class CommonGramsTokenFilter(override val name: String,
-                                  commonWords: Iterable[String] = Nil,
-                                  commonWordsPath: Option[String] = None,
-                                  ignoreCase: Option[Boolean] = None,
-                                  queryMode: Option[Boolean] = None) extends TokenFilter {
-
+case class CommonGramsTokenFilter(
+    override val name: String,
+    commonWords: Iterable[String] = Nil,
+    commonWordsPath: Option[String] = None,
+    ignoreCase: Option[Boolean] = None,
+    queryMode: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -371,18 +385,15 @@ case class CommonGramsTokenFilter(override val name: String,
     b
   }
 
-  def commonWords(words: Iterable[String]): CommonGramsTokenFilter = copy(commonWords = words)
+  def commonWords(words: Iterable[String]): CommonGramsTokenFilter      = copy(commonWords = words)
   def commonWords(first: String, rest: String*): CommonGramsTokenFilter = copy(commonWords = first +: rest)
-  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter = copy(ignoreCase = ignoreCase.some)
-  def queryMode(queryMode: Boolean): CommonGramsTokenFilter = copy(queryMode = queryMode.some)
-  def commonWordsPath(path: String): CommonGramsTokenFilter = copy(commonWordsPath = path.some)
+  def ignoreCase(ignoreCase: Boolean): CommonGramsTokenFilter           = copy(ignoreCase = ignoreCase.some)
+  def queryMode(queryMode: Boolean): CommonGramsTokenFilter             = copy(queryMode = queryMode.some)
+  def commonWordsPath(path: String): CommonGramsTokenFilter             = copy(commonWordsPath = path.some)
 }
 
-case class EdgeNGramTokenFilter(override val name: String,
-                                minGram: Int,
-                                maxGram: Int,
-                                side: Option[String] = None) extends TokenFilter {
-
+case class EdgeNGramTokenFilter(override val name: String, minGram: Int, maxGram: Int, side: Option[String] = None)
+    extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -394,15 +405,13 @@ case class EdgeNGramTokenFilter(override val name: String,
   }
 
   def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter = copy(minGram = min, maxGram = max)
-  def minGram(min: Int): EdgeNGramTokenFilter = copy(minGram = min)
-  def maxGram(max: Int): EdgeNGramTokenFilter = copy(maxGram = max)
-  def side(side: String): EdgeNGramTokenFilter = copy(side = side.some)
+  def minGram(min: Int): EdgeNGramTokenFilter               = copy(minGram = min)
+  def maxGram(max: Int): EdgeNGramTokenFilter               = copy(maxGram = max)
+  def side(side: String): EdgeNGramTokenFilter              = copy(side = side.some)
 }
 
-case class NGramTokenFilter(override val name: String,
-                            minGram: Option[Int] = None,
-                            maxGram: Option[Int] = None) extends TokenFilter {
-
+case class NGramTokenFilter(override val name: String, minGram: Option[Int] = None, maxGram: Option[Int] = None)
+    extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -413,13 +422,11 @@ case class NGramTokenFilter(override val name: String,
   }
 
   def minMaxGrams(min: Int, max: Int): NGramTokenFilter = copy(minGram = min.some, maxGram = max.some)
-  def minGram(min: Int): NGramTokenFilter = copy(minGram = min.some)
-  def maxGram(max: Int): NGramTokenFilter = copy(maxGram = max.some)
+  def minGram(min: Int): NGramTokenFilter               = copy(minGram = min.some)
+  def maxGram(max: Int): NGramTokenFilter               = copy(maxGram = max.some)
 }
 
-case class SnowballTokenFilter(override val name: String,
-                               language: String) extends TokenFilter {
-
+case class SnowballTokenFilter(override val name: String, language: String) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -431,9 +438,7 @@ case class SnowballTokenFilter(override val name: String,
   def lang(l: String): SnowballTokenFilter = copy(language = l)
 }
 
-case class StemmerTokenFilter(override val name: String,
-                              lang: String) extends TokenFilter {
-
+case class StemmerTokenFilter(override val name: String, lang: String) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -445,10 +450,11 @@ case class StemmerTokenFilter(override val name: String,
   def lang(l: String): StemmerTokenFilter = copy(lang = l)
 }
 
-case class StemmerOverrideTokenFilter(override val name: String,
-                                      rules: Seq[String] = Nil,
-                                      rulesPath: Option[String] = None) extends TokenFilter {
-
+case class StemmerOverrideTokenFilter(
+    override val name: String,
+    rules: Seq[String] = Nil,
+    rulesPath: Option[String] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -460,24 +466,25 @@ case class StemmerOverrideTokenFilter(override val name: String,
   }
 
   def rules(rules: Array[String]): StemmerOverrideTokenFilter = copy(rules = rules)
-  def rulesPath(path: String): StemmerOverrideTokenFilter = copy(rulesPath = path.some)
+  def rulesPath(path: String): StemmerOverrideTokenFilter     = copy(rulesPath = path.some)
 }
 
-case class WordDelimiterTokenFilter(override val name: String,
-                                    generateWordParts: Option[Boolean] = None,
-                                    generateNumberParts: Option[Boolean] = None,
-                                    catenateWords: Option[Boolean] = None,
-                                    catenateNumbers: Option[Boolean] = None,
-                                    catenateAll: Option[Boolean] = None,
-                                    splitOnCaseChange: Option[Boolean] = None,
-                                    protectedWords: Option[String] = None,
-                                    protectedWordsPath: Option[String] = None,
-                                    preserveOriginal: Option[Boolean] = None,
-                                    splitOnNumerics: Option[Boolean] = None,
-                                    stemEnglishPossesive: Option[Boolean] = None,
-                                    typeTable: Option[String] = None,
-                                    typeTablePath: Option[String] = None) extends TokenFilter {
-
+case class WordDelimiterTokenFilter(
+    override val name: String,
+    generateWordParts: Option[Boolean] = None,
+    generateNumberParts: Option[Boolean] = None,
+    catenateWords: Option[Boolean] = None,
+    catenateNumbers: Option[Boolean] = None,
+    catenateAll: Option[Boolean] = None,
+    splitOnCaseChange: Option[Boolean] = None,
+    protectedWords: Option[String] = None,
+    protectedWordsPath: Option[String] = None,
+    preserveOriginal: Option[Boolean] = None,
+    splitOnNumerics: Option[Boolean] = None,
+    stemEnglishPossesive: Option[Boolean] = None,
+    typeTable: Option[String] = None,
+    typeTablePath: Option[String] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -498,30 +505,30 @@ case class WordDelimiterTokenFilter(override val name: String,
     b
   }
 
-  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter = copy(generateWordParts = bool.some)
-  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter = copy(generateNumberParts = bool.some)
-  def catenateWords(bool: Boolean): WordDelimiterTokenFilter = copy(catenateWords = bool.some)
-  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter = copy(catenateNumbers = bool.some)
-  def catenateAll(bool: Boolean): WordDelimiterTokenFilter = copy(catenateAll = bool.some)
-  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnCaseChange = bool.some)
-  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter = copy(preserveOriginal = bool.some)
-  def protectedWords(words: String): WordDelimiterTokenFilter = copy(protectedWords = words.some)
-  def protectedWordsPath(path: String): WordDelimiterTokenFilter = copy(protectedWordsPath = path.some)
-  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter = copy(splitOnNumerics = bool.some)
+  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter    = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter  = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterTokenFilter        = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter      = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterTokenFilter          = copy(catenateAll = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter    = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter     = copy(preserveOriginal = bool.some)
+  def protectedWords(words: String): WordDelimiterTokenFilter       = copy(protectedWords = words.some)
+  def protectedWordsPath(path: String): WordDelimiterTokenFilter    = copy(protectedWordsPath = path.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter      = copy(splitOnNumerics = bool.some)
   def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
-  def typeTable(table: String): WordDelimiterTokenFilter = copy(typeTable = table.some)
-  def typeTablePath(path: String): WordDelimiterTokenFilter = copy(typeTablePath = path.some)
+  def typeTable(table: String): WordDelimiterTokenFilter            = copy(typeTable = table.some)
+  def typeTablePath(path: String): WordDelimiterTokenFilter         = copy(typeTablePath = path.some)
 }
 
-case class ShingleTokenFilter(override val name: String,
-                              maxShingleSize: Option[Int] = None,
-                              minShingleSize: Option[Int] = None,
-                              outputUnigrams: Option[Boolean] = None,
-                              outputUnigramsIfNoShingles: Option[Boolean] = None,
-                              tokenSeparator: Option[String] = None,
-                              fillerToken: Option[String] = None)
-  extends TokenFilter {
-
+case class ShingleTokenFilter(
+    override val name: String,
+    maxShingleSize: Option[Int] = None,
+    minShingleSize: Option[Int] = None,
+    outputUnigrams: Option[Boolean] = None,
+    outputUnigramsIfNoShingles: Option[Boolean] = None,
+    tokenSeparator: Option[String] = None,
+    fillerToken: Option[String] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -535,12 +542,12 @@ case class ShingleTokenFilter(override val name: String,
     b
   }
 
-  def maxShingleSize(max: Int): ShingleTokenFilter = copy(maxShingleSize = max.some)
-  def minShingleSize(min: Int): ShingleTokenFilter = copy(minShingleSize = min.some)
-  def outputUnigrams(b: Boolean): ShingleTokenFilter = copy(outputUnigrams = b.some)
+  def maxShingleSize(max: Int): ShingleTokenFilter               = copy(maxShingleSize = max.some)
+  def minShingleSize(min: Int): ShingleTokenFilter               = copy(minShingleSize = min.some)
+  def outputUnigrams(b: Boolean): ShingleTokenFilter             = copy(outputUnigrams = b.some)
   def outputUnigramsIfNoShingles(b: Boolean): ShingleTokenFilter = copy(outputUnigramsIfNoShingles = b.some)
-  def tokenSeparator(sep: String): ShingleTokenFilter = copy(tokenSeparator = sep.some)
-  def fillerToken(filler: String): ShingleTokenFilter = copy(fillerToken = filler.some)
+  def tokenSeparator(sep: String): ShingleTokenFilter            = copy(tokenSeparator = sep.some)
+  def fillerToken(filler: String): ShingleTokenFilter            = copy(fillerToken = filler.some)
 }
 
 sealed trait CompoundWordTokenFilterType {
@@ -555,15 +562,17 @@ case object DictionaryDecompounder extends CompoundWordTokenFilterType {
   val name = "dictionary_decompounder"
 }
 
-case class CompoundWordTokenFilter(override val name: String,
-                                   `type`: CompoundWordTokenFilterType,
-                                   wordList: Iterable[String] = Nil,
-                                   wordListPath: Option[String] = None,
-                                   hyphenationPatternsPath: Option[String] = None,
-                                   minWordSize: Option[Int] = None,
-                                   minSubwordSize: Option[Int] = None,
-                                   maxSubwordSize: Option[Int] = None,
-                                   onlyLongestMatch: Option[Boolean] = None) extends TokenFilter {
+case class CompoundWordTokenFilter(
+    override val name: String,
+    `type`: CompoundWordTokenFilterType,
+    wordList: Iterable[String] = Nil,
+    wordListPath: Option[String] = None,
+    hyphenationPatternsPath: Option[String] = None,
+    minWordSize: Option[Int] = None,
+    minSubwordSize: Option[Int] = None,
+    maxSubwordSize: Option[Int] = None,
+    onlyLongestMatch: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -579,26 +588,28 @@ case class CompoundWordTokenFilter(override val name: String,
     b
   }
 
-  def wordList(wordList: Iterable[String]): CompoundWordTokenFilter = copy(wordList = wordList)
+  def wordList(wordList: Iterable[String]): CompoundWordTokenFilter  = copy(wordList = wordList)
   def wordList(word: String, rest: String*): CompoundWordTokenFilter = copy(wordList = word +: rest)
-  def wordListPath(wordListPath: String): CompoundWordTokenFilter =
+  def wordListPath(wordListPath: String): CompoundWordTokenFilter    =
     copy(wordListPath = wordListPath.some)
 
   def hyphenationPatternsPath(hyphenationPatternsPath: String): CompoundWordTokenFilter =
     copy(hyphenationPatternsPath = hyphenationPatternsPath.some)
-  def minWordSize(minWordSize: Int): CompoundWordTokenFilter =
+  def minWordSize(minWordSize: Int): CompoundWordTokenFilter                            =
     copy(minWordSize = minWordSize.some)
-  def minSubwordSize(minSubwordSize: Int): CompoundWordTokenFilter =
+  def minSubwordSize(minSubwordSize: Int): CompoundWordTokenFilter                      =
     copy(minSubwordSize = minSubwordSize.some)
-  def maxSubwordSize(maxSubwordSize: Int): CompoundWordTokenFilter =
+  def maxSubwordSize(maxSubwordSize: Int): CompoundWordTokenFilter                      =
     copy(maxSubwordSize = maxSubwordSize.some)
-  def onlyLongestMatch(onlyLongestMatch: Boolean): CompoundWordTokenFilter =
+  def onlyLongestMatch(onlyLongestMatch: Boolean): CompoundWordTokenFilter              =
     copy(onlyLongestMatch = onlyLongestMatch.some)
 }
 
-case class MultiplexerTokenFilter(override val name: String,
-                                  filters: Seq[String] = Nil,
-                                  preserveOriginal: Option[Boolean] = None) extends TokenFilter {
+case class MultiplexerTokenFilter(
+    override val name: String,
+    filters: Seq[String] = Nil,
+    preserveOriginal: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()

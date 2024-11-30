@@ -4,10 +4,21 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.QueryRescoreMode.{Avg, Max, Min, Multiply, Total}
 import com.sksamuel.elastic4s.requests.searches.aggs.{HistogramOrder, SubAggCollectionMode, TermsOrder}
-import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{CombineFunction, FunctionScoreQueryScoreMode, MultiValueMode}
+import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{
+  CombineFunction,
+  FunctionScoreQueryScoreMode,
+  MultiValueMode
+}
 import com.sksamuel.elastic4s.requests.searches.queries.geo.GeoDistance.{Arc, Plane}
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoDistance, GeoExecType, GeoValidationMethod}
-import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.{BEST_FIELDS, BOOL_PREFIX, CROSS_FIELDS, MOST_FIELDS, PHRASE, PHRASE_PREFIX}
+import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType.{
+  BEST_FIELDS,
+  BOOL_PREFIX,
+  CROSS_FIELDS,
+  MOST_FIELDS,
+  PHRASE,
+  PHRASE_PREFIX
+}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.{MultiMatchQueryBuilderType, ZeroTermsQuery}
 import com.sksamuel.elastic4s.requests.searches.queries.{RegexpFlag, SimpleQueryStringFlag}
 import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
@@ -21,35 +32,35 @@ object EnumConversions {
   def regexflag(flag: RegexpFlag): String = flag.toString.toUpperCase
 
   def order(order: SortOrder): String = order match {
-    case SortOrder.Asc => "asc"
+    case SortOrder.Asc  => "asc"
     case SortOrder.Desc => "desc"
   }
 
   def queryRescoreMode(mode: QueryRescoreMode): String = mode match {
-    case Avg => "avg"
-    case Max => "max"
-    case Min => "min"
-    case Total => "total"
+    case Avg      => "avg"
+    case Max      => "max"
+    case Min      => "min"
+    case Total    => "total"
     case Multiply => "multiply"
   }
 
   def sortMode(mode: SortMode): String = mode.toString.toLowerCase
 
   def geoDistance(distance: GeoDistance): String = distance match {
-    case Arc => "arc"
+    case Arc   => "arc"
     case Plane => "plane"
   }
 
   def unit(distanceUnit: DistanceUnit): String = distanceUnit match {
-    case DistanceUnit.Inch => "in"
-    case DistanceUnit.Yard => "yd"
-    case DistanceUnit.Feet => "ft"
-    case DistanceUnit.Kilometers => "km"
+    case DistanceUnit.Inch          => "in"
+    case DistanceUnit.Yard          => "yd"
+    case DistanceUnit.Feet          => "ft"
+    case DistanceUnit.Kilometers    => "km"
     case DistanceUnit.NauticalMiles => "nmi"
-    case DistanceUnit.Millimeters => "mm"
-    case DistanceUnit.Centimeters => "cm"
-    case DistanceUnit.Miles => "mi"
-    case DistanceUnit.Meters => "m"
+    case DistanceUnit.Millimeters   => "mm"
+    case DistanceUnit.Centimeters   => "cm"
+    case DistanceUnit.Miles         => "mi"
+    case DistanceUnit.Meters        => "m"
   }
 
   def order(order: TermsOrder): XContentBuilder = {
@@ -83,14 +94,14 @@ object EnumConversions {
   def geoExecType(execType: GeoExecType): String = execType.toString.toLowerCase
 
   def geoValidationMethod(method: GeoValidationMethod): String = method match {
-    case GeoValidationMethod.Coerce => "COERCE"
+    case GeoValidationMethod.Coerce          => "COERCE"
     case GeoValidationMethod.IgnoreMalformed => "IGNORE_MALFORMED"
-    case GeoValidationMethod.Strict => "STRICT"
+    case GeoValidationMethod.Strict          => "STRICT"
   }
 
   def collectMode(mode: SubAggCollectionMode): String = mode match {
     case SubAggCollectionMode.BreadthFirst => "breadth_first"
-    case SubAggCollectionMode.DepthFirst => "depth_first"
+    case SubAggCollectionMode.DepthFirst   => "depth_first"
   }
 
   def sortBy(by: SortBy): String = by.toString.toLowerCase
@@ -103,41 +114,41 @@ object EnumConversions {
 
   def fuzziness(fuzziness: Fuzziness): String = fuzziness match {
     case Fuzziness.Zero => "0"
-    case Fuzziness.One => "1"
-    case Fuzziness.Two => "2"
+    case Fuzziness.One  => "1"
+    case Fuzziness.Two  => "2"
     case Fuzziness.Auto => "AUTO"
   }
 
   def regexpFlag(regexpFlag: RegexpFlag): String = regexpFlag match {
     case RegexpFlag.Intersection => "INTERSECTION"
-    case RegexpFlag.Complement => "COMPLEMENT"
-    case RegexpFlag.Empty => "EMPTY"
-    case RegexpFlag.AnyString => "ANYSTRING"
-    case RegexpFlag.Interval => "INTERVAL"
-    case RegexpFlag.All => "ALL"
-    case RegexpFlag.None => "NONE"
+    case RegexpFlag.Complement   => "COMPLEMENT"
+    case RegexpFlag.Empty        => "EMPTY"
+    case RegexpFlag.AnyString    => "ANYSTRING"
+    case RegexpFlag.Interval     => "INTERVAL"
+    case RegexpFlag.All          => "ALL"
+    case RegexpFlag.None         => "NONE"
   }
 
   def zeroTermsQuery(terms: ZeroTermsQuery): String = terms match {
-    case ZeroTermsQuery.All => "all"
+    case ZeroTermsQuery.All  => "all"
     case ZeroTermsQuery.None => "none"
   }
 
   def multiMatchQueryBuilderType(mtype: MultiMatchQueryBuilderType): String = mtype match {
-    case BEST_FIELDS => "best_fields"
-    case MOST_FIELDS => "most_fields"
-    case CROSS_FIELDS => "cross_fields"
-    case PHRASE => "phrase"
+    case BEST_FIELDS   => "best_fields"
+    case MOST_FIELDS   => "most_fields"
+    case CROSS_FIELDS  => "cross_fields"
+    case PHRASE        => "phrase"
     case PHRASE_PREFIX => "phrase_prefix"
-    case BOOL_PREFIX => "bool_prefix"
+    case BOOL_PREFIX   => "bool_prefix"
   }
 
   def multiValueMode(mode: MultiValueMode): String =
     mode match {
-      case MultiValueMode.Avg => "avg"
-      case MultiValueMode.Max => "max"
-      case MultiValueMode.Min => "min"
-      case MultiValueMode.Sum => "sum"
+      case MultiValueMode.Avg    => "avg"
+      case MultiValueMode.Max    => "max"
+      case MultiValueMode.Min    => "min"
+      case MultiValueMode.Sum    => "sum"
       case MultiValueMode.Median => "median"
     }
 

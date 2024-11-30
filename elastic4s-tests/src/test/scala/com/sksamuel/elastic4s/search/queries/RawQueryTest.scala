@@ -16,7 +16,7 @@ class RawQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("rawquerytest").fields("landmark" -> "montmarte", "arrondissement" -> "18"),
+      indexInto("rawquerytest").fields("landmark" -> "montmarte", "arrondissement"       -> "18"),
       indexInto("rawquerytest").fields("landmark" -> "le tower eiffel", "arrondissement" -> "7")
     ).refreshImmediately
   }.await

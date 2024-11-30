@@ -10,15 +10,15 @@ import scala.language.higherKinds
 
 trait RequestResponseConverters extends Elastic4sEntityEncoders {
 
-  def elasticRequestToHttp4sRequest[F[_] : Async : Files](
-    endpoint: http4s.Uri,
-    request: elastic4s.ElasticRequest,
+  def elasticRequestToHttp4sRequest[F[_]: Async: Files](
+      endpoint: http4s.Uri,
+      request: elastic4s.ElasticRequest
   ): http4s.Request[F] = {
     val uri =
       endpoint.copy(
-      path = http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment(_)).toVector),
-      query = http4s.Query.fromPairs(request.params.toList: _*)
-    )
+        path = http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment(_)).toVector),
+        query = http4s.Query.fromPairs(request.params.toList: _*)
+      )
 
     http4s.Request[F]()
       .withUri(uri)
@@ -30,17 +30,17 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
       )
   }
 
-  def http4sResponseToElasticResponse[F[_] : Async](
-    response: http4s.Response[F]
+  def http4sResponseToElasticResponse[F[_]: Async](
+      response: http4s.Response[F]
   ): F[elastic4s.HttpResponse] = {
     for {
       body <- response.body
-        .through(fs2.text.utf8.decode)
-        .compile.string
+                .through(fs2.text.utf8.decode)
+                .compile.string
     } yield elastic4s.HttpResponse(
       statusCode = response.status.code,
       entity = Some(elastic4s.HttpEntity.StringEntity(body, None)),
-      headers = response.headers.headers.map { h => h.name.toString -> h.value }.toMap,
+      headers = response.headers.headers.map { h => h.name.toString -> h.value }.toMap
     )
   }
 

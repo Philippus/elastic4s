@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.json
 import java.util
 
 object XContentFactory {
-  def jsonBuilder(): XContentBuilder = obj()
-  def obj() = new XContentBuilder(ObjectValue.empty)
-  def array() = new XContentBuilder(ArrayValue.empty)
+  def jsonBuilder(): XContentBuilder          = obj()
+  def obj()                                   = new XContentBuilder(ObjectValue.empty)
+  def array()                                 = new XContentBuilder(ArrayValue.empty)
   def parse(content: String): XContentBuilder = new XContentBuilder(RawValue(content))
 }
 
@@ -14,10 +14,10 @@ class XContentBuilder(root: JsonValue) {
   private val stack = new util.ArrayDeque[JsonValue]
   stack.push(root)
 
-  private def current = stack.peek()
-  private def array = current.asInstanceOf[ArrayValue]
-  private def obj = current.asInstanceOf[ObjectValue]
-  private def requireArray(): Unit = require(current.isInstanceOf[ArrayValue])
+  private def current               = stack.peek()
+  private def array                 = current.asInstanceOf[ArrayValue]
+  private def obj                   = current.asInstanceOf[ObjectValue]
+  private def requireArray(): Unit  = require(current.isInstanceOf[ArrayValue])
   private def requireObject(): Unit = require(current.isInstanceOf[ObjectValue])
 
   def value: JsonValue = root
@@ -139,7 +139,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def rawValue(value: XContentBuilder): this.type = rawValue(value.string)
-  def rawValue(value: String): this.type = {
+  def rawValue(value: String): this.type          = {
     array.addValue(RawValue(value))
     this
   }
@@ -178,34 +178,34 @@ class XContentBuilder(root: JsonValue) {
     import scala.collection.JavaConverters._
     requireArray()
     _value match {
-      case v: String => value(v)
-      case v: Double => value(v)
-      case v: Float => value(v)
-      case v: Int => value(v)
-      case v: Long => value(v)
-      case v: Boolean => value(v)
-      case v: Short => value(v)
-      case v: Byte => value(v)
-      case v: BigDecimal => value(v)
-      case v: java.math.BigDecimal => value(v)
-      case v: BigInt => value(v)
-      case v: java.math.BigInteger => value(v)
-      case null => array.addNull()
-      case values: Seq[_] =>
+      case v: String                       => value(v)
+      case v: Double                       => value(v)
+      case v: Float                        => value(v)
+      case v: Int                          => value(v)
+      case v: Long                         => value(v)
+      case v: Boolean                      => value(v)
+      case v: Short                        => value(v)
+      case v: Byte                         => value(v)
+      case v: BigDecimal                   => value(v)
+      case v: java.math.BigDecimal         => value(v)
+      case v: BigInt                       => value(v)
+      case v: java.math.BigInteger         => value(v)
+      case null                            => array.addNull()
+      case values: Seq[_]                  =>
         startArray()
         values.foreach(autovalue)
         endArray()
-      case values: Array[_] => autovalue(values.toSeq)
-      case values: Iterator[_] => autovalue(values.toSeq)
+      case values: Array[_]                => autovalue(values.toSeq)
+      case values: Iterator[_]             => autovalue(values.toSeq)
       case values: java.util.Collection[_] => autovalue(values.asScala)
-      case values: java.util.Iterator[_] => autovalue(values.asScala.toSeq)
-      case p: Product => autovalue(p.productIterator.toList)
-      case map: Map[_, _] =>
+      case values: java.util.Iterator[_]   => autovalue(values.asScala.toSeq)
+      case p: Product                      => autovalue(p.productIterator.toList)
+      case map: Map[_, _]                  =>
         startObject()
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[_, _] => autovalue(map.asScala.toMap)
-      case other => value(other.toString)
+      case map: java.util.Map[_, _]        => autovalue(map.asScala.toMap)
+      case other                           => value(other.toString)
     }
     this
   }
@@ -221,37 +221,37 @@ class XContentBuilder(root: JsonValue) {
     import scala.collection.JavaConverters._
 
     value match {
-      case v: String => field(name, v)
-      case v: java.lang.Double => field(name, v)
-      case v: Double => field(name, v)
-      case v: Float => field(name, v)
-      case v: Int => field(name, v)
-      case v: java.lang.Integer => field(name, v)
-      case v: java.lang.Long => field(name, v)
-      case v: Long => field(name, v)
-      case v: Boolean => field(name, v)
-      case v: java.lang.Boolean => field(name, v)
-      case v: Short => field(name, v)
-      case v: Byte => field(name, v)
-      case v: BigDecimal => field(name, v)
-      case v: java.math.BigDecimal => field(name, v)
-      case v: BigInt => field(name, v)
-      case v: java.math.BigInteger => field(name, v)
-      case None => obj.putNull(name)
-      case values: Array[_] => autoarray(name, values)
-      case values: Seq[_] => autoarray(name, values)
-      case values: Iterator[_] => autoarray(name, values.toSeq)
+      case v: String                       => field(name, v)
+      case v: java.lang.Double             => field(name, v)
+      case v: Double                       => field(name, v)
+      case v: Float                        => field(name, v)
+      case v: Int                          => field(name, v)
+      case v: java.lang.Integer            => field(name, v)
+      case v: java.lang.Long               => field(name, v)
+      case v: Long                         => field(name, v)
+      case v: Boolean                      => field(name, v)
+      case v: java.lang.Boolean            => field(name, v)
+      case v: Short                        => field(name, v)
+      case v: Byte                         => field(name, v)
+      case v: BigDecimal                   => field(name, v)
+      case v: java.math.BigDecimal         => field(name, v)
+      case v: BigInt                       => field(name, v)
+      case v: java.math.BigInteger         => field(name, v)
+      case None                            => obj.putNull(name)
+      case values: Array[_]                => autoarray(name, values)
+      case values: Seq[_]                  => autoarray(name, values)
+      case values: Iterator[_]             => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
-      case values: java.util.Iterator[_] => autoarray(name, values.asScala.toSeq)
-      case values: Product => autoarray(name, values.productIterator.toList)
-      case map: Map[_, _] =>
+      case values: java.util.Iterator[_]   => autoarray(name, values.asScala.toSeq)
+      case values: Product                 => autoarray(name, values.productIterator.toList)
+      case map: Map[_, _]                  =>
         startObject(name)
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[_, _] => autofield(name, map.asScala.toMap)
-      case values: Iterable[_] => autoarray(name, values.toSeq)
-      case null => obj.putNull(name)
-      case other => field(name, other.toString)
+      case map: java.util.Map[_, _]        => autofield(name, map.asScala.toMap)
+      case values: Iterable[_]             => autoarray(name, values.toSeq)
+      case null                            => obj.putNull(name)
+      case other                           => field(name, other.toString)
     }
     this
   }

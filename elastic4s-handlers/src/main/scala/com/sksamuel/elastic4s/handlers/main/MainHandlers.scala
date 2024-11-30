@@ -10,7 +10,7 @@ trait MainHandlers {
       override def handle(response: HttpResponse): Right[Nothing, MainResponse] =
         response.statusCode match {
           case 200 => Right(ResponseHandler.fromResponse[MainResponse](response))
-          case _ => sys.error("Invalid response")
+          case _   => sys.error("Invalid response")
         }
     }
 

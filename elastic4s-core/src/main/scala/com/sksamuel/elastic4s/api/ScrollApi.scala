@@ -5,8 +5,8 @@ import com.sksamuel.elastic4s.requests.searches.{ClearScrollRequest, SearchScrol
 trait ScrollApi {
 
   def searchScroll(id: String, keepAlive: String): SearchScrollRequest = SearchScrollRequest(id).keepAlive(keepAlive)
-  def searchScroll(id: String): SearchScrollRequest = SearchScrollRequest(id)
+  def searchScroll(id: String): SearchScrollRequest                    = SearchScrollRequest(id)
 
   def clearScroll(first: String, rest: String*): ClearScrollRequest = clearScroll(first +: rest)
-  def clearScroll(ids: Iterable[String]): ClearScrollRequest = ClearScrollRequest(ids.toSeq)
+  def clearScroll(ids: Iterable[String]): ClearScrollRequest        = ClearScrollRequest(ids.toSeq)
 }

@@ -40,11 +40,11 @@ class GeoDistanceAggregationHttpTest extends AnyFreeSpec with DockerTests with M
       val resp = client.execute {
         search("geodistanceagg").matchAllQuery().aggs {
           geoDistanceAggregation("rings_around_amsterdam")
-              .origin(GeoPoint(52.3760, 4.894))
-              .field("location")
-              .unboundedTo(to = 100000.0)
-              .range(from = 100000.0, to = 300000.0)
-              .unboundedFrom(from = 300000.0)
+            .origin(GeoPoint(52.3760, 4.894))
+            .field("location")
+            .unboundedTo(to = 100000.0)
+            .range(from = 100000.0, to = 300000.0)
+            .unboundedFrom(from = 300000.0)
         }
       }.await.result
 
@@ -62,12 +62,12 @@ class GeoDistanceAggregationHttpTest extends AnyFreeSpec with DockerTests with M
       val resp = client.execute {
         search("geodistanceagg").matchAllQuery().aggs {
           geoDistanceAggregation("rings_around_amsterdam")
-              .origin(GeoPoint(52.3760, 4.894))
-              .field("location")
-              .unit(DistanceUnit.KILOMETERS)
-              .unboundedTo(to = 100.0)
-              .range(from = 100.0, to = 300.0)
-              .unboundedFrom(from = 300.0)
+            .origin(GeoPoint(52.3760, 4.894))
+            .field("location")
+            .unit(DistanceUnit.KILOMETERS)
+            .unboundedTo(to = 100.0)
+            .range(from = 100.0, to = 300.0)
+            .unboundedFrom(from = 300.0)
         }
       }.await.result
 
@@ -85,12 +85,12 @@ class GeoDistanceAggregationHttpTest extends AnyFreeSpec with DockerTests with M
       val resp = client.execute {
         search("geodistanceagg").matchAllQuery().aggs {
           geoDistanceAggregation("rings_around_amsterdam")
-              .origin(GeoPoint(52.3760, 4.894))
-              .field("location")
-              .unboundedTo(to = 100000.0)
-              .range(from = 100000.0, to = 300000.0)
-              .unboundedFrom(from = 300000.0)
-              .keyed(true)
+            .origin(GeoPoint(52.3760, 4.894))
+            .field("location")
+            .unboundedTo(to = 100000.0)
+            .range(from = 100000.0, to = 300000.0)
+            .unboundedFrom(from = 300000.0)
+            .keyed(true)
         }
       }.await.result
 

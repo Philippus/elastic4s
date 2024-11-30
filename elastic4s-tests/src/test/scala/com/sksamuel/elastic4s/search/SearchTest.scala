@@ -32,34 +32,34 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
   client.execute {
     bulk(
       indexInto("chess").fields(
-        "name" -> "queen",
+        "name"  -> "queen",
         "value" -> 10,
         "count" -> 1
       ).routing("wibble"),
       indexInto("chess").fields(
-        "name" -> "king",
+        "name"  -> "king",
         "value" -> 0,
         "count" -> 1
       ),
       indexInto("chess").fields(
-        "name" -> "bishop",
+        "name"  -> "bishop",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("chess").fields(
-        "aka" -> "horse",
-        "name" -> "knight",
+        "aka"   -> "horse",
+        "name"  -> "knight",
         "value" -> 3,
         "count" -> 2
       ),
       indexInto("chess").fields(
-        "aka" -> "castle",
-        "name" -> "rook",
+        "aka"   -> "castle",
+        "name"  -> "rook",
         "value" -> 5,
         "count" -> 2
       ),
       indexInto("chess").fields(
-        "name" -> "pawn",
+        "name"  -> "pawn",
         "value" -> 1,
         "count" -> 8
       )
@@ -85,7 +85,14 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
     "support sorting in a single type" in {
       client.execute {
         search("chess") query matchAllQuery() sortBy fieldSort("name")
-      }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array("bishop", "king", "knight", "pawn", "queen", "rook")
+      }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array(
+        "bishop",
+        "king",
+        "knight",
+        "pawn",
+        "queen",
+        "rook"
+      )
     }
     "support explain" in {
       client.execute {
@@ -106,17 +113,34 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
     "support source includes" in {
       client.execute {
         search("chess") query matchAllQuery() sourceInclude "count"
-      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"count\":1}", "{\"count\":2}", "{\"count\":8}")
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
+        "{\"count\":1}",
+        "{\"count\":2}",
+        "{\"count\":8}"
+      )
     }
     "support source excludes" in {
       client.execute {
         search("chess") query matchAllQuery() sourceExclude "count"
-      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"name\":\"pawn\",\"value\":1}", "{\"aka\":\"horse\",\"name\":\"knight\",\"value\":3}", "{\"name\":\"king\",\"value\":0}", "{\"aka\":\"castle\",\"name\":\"rook\",\"value\":5}", "{\"name\":\"queen\",\"value\":10}", "{\"name\":\"bishop\",\"value\":3}")
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
+        "{\"name\":\"pawn\",\"value\":1}",
+        "{\"aka\":\"horse\",\"name\":\"knight\",\"value\":3}",
+        "{\"name\":\"king\",\"value\":0}",
+        "{\"aka\":\"castle\",\"name\":\"rook\",\"value\":5}",
+        "{\"name\":\"queen\",\"value\":10}",
+        "{\"name\":\"bishop\",\"value\":3}"
+      )
     }
     "support a mix of source includes and excludes" in {
       client.execute {
         search("chess") query matchAllQuery() sourceInclude "value" sourceExclude "name"
-      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set("{\"value\":0}", "{\"value\":1}", "{\"value\":3}", "{\"value\":5}", "{\"value\":10}")
+      }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
+        "{\"value\":0}",
+        "{\"value\":1}",
+        "{\"value\":3}",
+        "{\"value\":5}",
+        "{\"value\":10}"
+      )
     }
     "support constantScoreQuery" should {
       "work with termQuery" in {

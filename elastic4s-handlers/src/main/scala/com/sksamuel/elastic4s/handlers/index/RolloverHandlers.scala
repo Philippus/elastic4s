@@ -5,13 +5,15 @@ import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.admin.RolloverIndexRequest
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
-case class RolloverResponse(@JsonProperty("old_index") oldIndex: String,
-                            @JsonProperty("new_index") newIndex: String,
-                            @JsonProperty("rolled_over") rolledOver: Boolean,
-                            @JsonProperty("dry_run") dryRun: Boolean,
-                            acknowledged: Boolean,
-                            @JsonProperty("shards_acknowledged") shardsAcknowledged: Boolean,
-                            conditions: Map[String, Boolean])
+case class RolloverResponse(
+    @JsonProperty("old_index") oldIndex: String,
+    @JsonProperty("new_index") newIndex: String,
+    @JsonProperty("rolled_over") rolledOver: Boolean,
+    @JsonProperty("dry_run") dryRun: Boolean,
+    acknowledged: Boolean,
+    @JsonProperty("shards_acknowledged") shardsAcknowledged: Boolean,
+    conditions: Map[String, Boolean]
+)
 
 trait RolloverHandlers {
 

@@ -10,7 +10,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
 
 class UpdateByQueryTest
-  extends AnyFlatSpec
+    extends AnyFlatSpec
     with Matchers
     with DockerTests
     with OptionValues {
@@ -29,9 +29,9 @@ class UpdateByQueryTest
 
   client.execute {
     bulk(
-      indexInto("pop").fields("name" -> "sprite", "type" -> "lemonade", "foo" -> "f"),
-      indexInto("pop").fields("name" -> "fanta", "type" -> "orangeade", "foo" -> "f"),
-      indexInto("pop").fields("name" -> "pepsi", "type" -> "cola", "foo" -> "f")
+      indexInto("pop").fields("name" -> "sprite", "type" -> "lemonade", "foo"  -> "f"),
+      indexInto("pop").fields("name" -> "fanta", "type"  -> "orangeade", "foo" -> "f"),
+      indexInto("pop").fields("name" -> "pepsi", "type"  -> "cola", "foo"      -> "f")
     ).refreshImmediately
   }.await
 
@@ -54,7 +54,9 @@ class UpdateByQueryTest
 
   it should "support RefreshPolicy.IMMEDIATE" in {
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'b'").lang("painless")).refresh(RefreshPolicy.IMMEDIATE)
+      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'b'").lang("painless")).refresh(
+        RefreshPolicy.IMMEDIATE
+      )
     }.await.result.updated shouldBe 3
 
     client.execute {
@@ -64,7 +66,8 @@ class UpdateByQueryTest
 
   it should "support automatic slicing" in {
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'd'").lang("painless")).automaticSlicing().refresh(RefreshPolicy.IMMEDIATE)
+      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'd'").lang("painless")).automaticSlicing()
+        .refresh(RefreshPolicy.IMMEDIATE)
     }.await.result.updated shouldBe 3
 
     client.execute {
@@ -74,7 +77,9 @@ class UpdateByQueryTest
 
   it should "support RefreshPolicy.NONE" in {
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'c'").lang("painless")).refresh(RefreshPolicy.NONE)
+      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'c'").lang("painless")).refresh(
+        RefreshPolicy.NONE
+      )
     }.await.result.updated shouldBe 3
 
     client.execute {
@@ -85,7 +90,7 @@ class UpdateByQueryTest
   it should "support asynchronous update" in {
     client.execute {
       bulk(
-        indexInto("pop").fields("name" -> "coca", "type" -> "cola", "foo" -> "g"),
+        indexInto("pop").fields("name" -> "coca", "type" -> "cola", "foo" -> "g")
       ).refreshImmediately
     }.await
 
@@ -94,7 +99,7 @@ class UpdateByQueryTest
     }.await.result.task
 
     // A bit ugly way to poll the task until it's complete
-    Stream.continually{
+    Stream.continually {
       Thread.sleep(100)
       client.execute(task).await.result.completed
     }.takeWhile(!_)

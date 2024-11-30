@@ -8,12 +8,14 @@ import org.scalatest.matchers.should.Matchers
 
 class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
-  private val repoName = "repotest_" + UUID.randomUUID().toString
+  private val repoName     = "repotest_" + UUID.randomUUID().toString
   private val snapshotName = "snap1"
 
   "createRepository" should "create a new repo" in {
     val resp = client.execute {
-      createRepository(repoName, "fs").settings(Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString)))
+      createRepository(repoName, "fs").settings(
+        Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString))
+      )
     }.await
     resp.result.acknowledged shouldBe true
   }

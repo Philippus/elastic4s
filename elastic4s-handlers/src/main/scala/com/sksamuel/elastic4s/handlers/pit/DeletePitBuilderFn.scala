@@ -5,5 +5,5 @@ import com.sksamuel.elastic4s.requests.pit.DeletePitRequest
 
 object DeletePitBuilderFn {
   def apply(request: DeletePitRequest): XContentBuilder =
-    XContentFactory.jsonBuilder().field("id" , request.id)
+    XContentFactory.jsonBuilder().field("id", request.id)
 }

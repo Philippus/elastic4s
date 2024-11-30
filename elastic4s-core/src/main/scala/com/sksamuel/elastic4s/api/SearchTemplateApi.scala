@@ -12,7 +12,7 @@ trait SearchTemplateApi {
 
   class PutSearchTemplateExpectsQueryOrBody(name: String) {
     def query(query: Query): PutSearchTemplateRequest = PutSearchTemplateRequest(name, query.some, None)
-    def body(body: String): PutSearchTemplateRequest = PutSearchTemplateRequest(name, None, body.some)
+    def body(body: String): PutSearchTemplateRequest  = PutSearchTemplateRequest(name, None, body.some)
   }
 
   def templateSearch(indexesAndTypes: IndexesAndTypes): TemplateSearchExpectsName =

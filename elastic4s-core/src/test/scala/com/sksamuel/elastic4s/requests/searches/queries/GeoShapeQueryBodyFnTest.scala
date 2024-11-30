@@ -67,7 +67,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     val query = GeoShapeQuery(
       "location",
       InlineShape(
-        MultiPointShape(Seq(GeoPoint(102.0,2.0),GeoPoint(102.0,3.0)))
+        MultiPointShape(Seq(GeoPoint(102.0, 2.0), GeoPoint(102.0, 3.0)))
       )
     )
 
@@ -83,7 +83,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     val query = GeoShapeQuery(
       "location",
       InlineShape(
-        LineStringShape(GeoPoint(-77.03653, 38.897676),GeoPoint(-77.009051, 38.889939))
+        LineStringShape(GeoPoint(-77.03653, 38.897676), GeoPoint(-77.009051, 38.889939))
       )
     )
 
@@ -120,7 +120,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     val query = GeoShapeQuery(
       "location",
       InlineShape(
-        CircleShape(Circle(GeoPoint(23.23,100.23),(100.0,DistanceUnit.Meters)))
+        CircleShape(Circle(GeoPoint(23.23, 100.23), (100.0, DistanceUnit.Meters)))
       )
     )
 
@@ -156,8 +156,8 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
       InlineShape(
         GeometryCollectionShape(
           Seq(
-            CircleShape(Circle(GeoPoint(23.23,100.23),(100.0,DistanceUnit.Meters))),
-            PointShape(GeoPoint(23.23,100.23))
+            CircleShape(Circle(GeoPoint(23.23, 100.23), (100.0, DistanceUnit.Meters))),
+            PointShape(GeoPoint(23.23, 100.23))
           )
         )
       )
@@ -177,16 +177,16 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
       InlineShape(
         GeometryCollectionShape(
           Seq(
-            CircleShape(Circle(GeoPoint(23.23,100.23),(100.0,DistanceUnit.Meters))),
-            PointShape(GeoPoint(23.23,100.23)),
+            CircleShape(Circle(GeoPoint(23.23, 100.23), (100.0, DistanceUnit.Meters))),
+            PointShape(GeoPoint(23.23, 100.23)),
             GeometryCollectionShape(
               Seq(
-                CircleShape(Circle(GeoPoint(23.23,200.23),(200.0,DistanceUnit.Meters))),
-                PointShape(GeoPoint(23.23,200.23)),
+                CircleShape(Circle(GeoPoint(23.23, 200.23), (200.0, DistanceUnit.Meters))),
+                PointShape(GeoPoint(23.23, 200.23)),
                 GeometryCollectionShape(
                   Seq(
-                    CircleShape(Circle(GeoPoint(23.23,300.23),(300.0,DistanceUnit.Meters))),
-                    PointShape(GeoPoint(23.23,300.23))
+                    CircleShape(Circle(GeoPoint(23.23, 300.23), (300.0, DistanceUnit.Meters))),
+                    PointShape(GeoPoint(23.23, 300.23))
                   )
                 )
               )
@@ -233,8 +233,8 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
                 GeoPoint(100.6, 0.6)
               )
             )
-          ))
-        )
+          )
+        ))
       )
     )
 
@@ -302,7 +302,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   }
 
   def polygonQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -320,7 +320,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def multiPolygonQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -339,7 +339,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def pointQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -368,7 +368,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def envelopeQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -382,7 +382,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def multiPointQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -396,7 +396,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def lineStringQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -410,7 +410,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def multiLineStringQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -428,7 +428,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def circleQuery: String =
-  """|
+    """|
     |{
     |   "geo_shape":{
     |      "location":{
@@ -443,7 +443,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 
   def singleLevelGeometryCollectionQuery: String =
-  """
+    """
     |{
     |   "geo_shape":{
     |      "location":{
@@ -532,5 +532,3 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
       |}
     """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
 }
-
-

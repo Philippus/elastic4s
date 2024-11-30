@@ -11,11 +11,11 @@ object FetchSourceContextBuilderFn {
       if (context.includes.nonEmpty || context.excludes.nonEmpty) {
         builder.startObject("_source")
         context.includes.toList match {
-          case Nil =>
+          case Nil      =>
           case includes => builder.array("includes", includes.toArray)
         }
         context.excludes.toList match {
-          case Nil =>
+          case Nil      =>
           case excludes => builder.array("excludes", excludes.toArray)
         }
         builder.endObject()

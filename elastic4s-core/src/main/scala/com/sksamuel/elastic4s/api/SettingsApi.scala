@@ -6,10 +6,10 @@ import com.sksamuel.elastic4s.requests.settings.{GetSettingsRequest, UpdateSetti
 trait SettingsApi {
 
   def getSettings(index: String, indexes: String*): GetSettingsRequest = getSettings(index +: indexes)
-  def getSettings(indexes: Indexes): GetSettingsRequest = GetSettingsRequest(indexes)
+  def getSettings(indexes: Indexes): GetSettingsRequest                = GetSettingsRequest(indexes)
 
   def updateSettings(index: String, indexes: String*): UpdateSettingsRequest = updateSettings(index +: indexes)
-  def updateSettings(indexes: Indexes): UpdateSettingsRequest = UpdateSettingsRequest(indexes)
+  def updateSettings(indexes: Indexes): UpdateSettingsRequest                = UpdateSettingsRequest(indexes)
 
   def updateSettings(indexes: Indexes, settings: Map[String, String]) =
     UpdateSettingsRequest(indexes, settings = settings)

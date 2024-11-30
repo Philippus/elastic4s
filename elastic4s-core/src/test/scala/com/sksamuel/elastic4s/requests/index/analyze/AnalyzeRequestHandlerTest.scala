@@ -12,13 +12,13 @@ class AnalyzeRequestHandlerTest extends AnyFunSuite with Matchers with IndexHand
     val analyzeRequest = AnalyzeRequest(Array("你好世界"))
       .analyzer("smartcn")
       .index("testIndex")
-    val result = AnalyzeRequestHandler.build(analyzeRequest)
+    val result         = AnalyzeRequestHandler.build(analyzeRequest)
 
     result.method mustBe "GET"
     result.endpoint mustBe "/testIndex/_analyze"
     result.entity.foreach {
       case HttpEntity.ByteArrayEntity(content, contentCharset) =>
-        new String(content,"UTF8") mustBe
+        new String(content, "UTF8") mustBe
           AnalyseRequestContentBuilder(analyzeRequest)
         contentCharset mustBe Some("application/json")
     }

@@ -10,7 +10,7 @@ import org.scalatest.matchers.should.Matchers
 import scala.util.Try
 
 class MappingPropertiesTest extends AnyFunSuite with DockerTests
-  with Matchers with ElasticDsl {
+    with Matchers with ElasticDsl {
 
   Try {
     client.execute {
@@ -19,11 +19,11 @@ class MappingPropertiesTest extends AnyFunSuite with DockerTests
   }
 
   client.execute {
-    val name = TextField("product_name")
-    val upc = KeywordField("upc")
-    val a = LongField("a")
-    val b = IntegerField("b")
-    val c = BooleanField("c")
+    val name    = TextField("product_name")
+    val upc     = KeywordField("upc")
+    val a       = LongField("a")
+    val b       = IntegerField("b")
+    val c       = BooleanField("c")
     val mapping = MappingDefinition(properties = List(name, upc, a, b, c))
     createIndex("pcat").mapping(mapping)
   }.await
@@ -31,7 +31,13 @@ class MappingPropertiesTest extends AnyFunSuite with DockerTests
   test("get mapping should return created fields") {
     client.execute {
       getMapping("pcat")
-    }.await.result.head.mappings shouldBe Map("a" -> Map("type" -> "long"), "upc" -> Map("type" -> "keyword"), "b" -> Map("type" -> "integer"), "product_name" -> Map("type" -> "text"), "c" -> Map("type" -> "boolean"))
+    }.await.result.head.mappings shouldBe Map(
+      "a"            -> Map("type" -> "long"),
+      "upc"          -> Map("type" -> "keyword"),
+      "b"            -> Map("type" -> "integer"),
+      "product_name" -> Map("type" -> "text"),
+      "c"            -> Map("type" -> "boolean")
+    )
   }
 
   test("mappings should support keyword and text fields") {

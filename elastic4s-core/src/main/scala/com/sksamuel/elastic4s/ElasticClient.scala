@@ -7,23 +7,21 @@ import java.util.Base64
 import scala.concurrent.duration.{Duration, _}
 import scala.language.higherKinds
 
-/**
-  * An [[ElasticClient]] is used to execute HTTP requests against an ElasticSearch cluster.
-  * This class delegates the actual HTTP calls to an instance of [[HttpClient]].
+/** An [[ElasticClient]] is used to execute HTTP requests against an ElasticSearch cluster. This class delegates the
+  * actual HTTP calls to an instance of [[HttpClient]].
   *
-  * Any third party HTTP client library can be made to work with elastic4s by creating an
-  * instance of the HttpClient typeclass wrapping the underlying client library and
-  * then creating the ElasticClient with it.
+  * Any third party HTTP client library can be made to work with elastic4s by creating an instance of the HttpClient
+  * typeclass wrapping the underlying client library and then creating the ElasticClient with it.
   *
-  * @param client the HTTP client library to use
-  **/
+  * @param client
+  *   the HTTP client library to use
+  */
 case class ElasticClient(client: HttpClient) extends AutoCloseable {
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
-  /**
-    * Returns a String containing the request details.
-    * The string will have the HTTP method, endpoint, params and if applicable the request body.
+  /** Returns a String containing the request details. The string will have the HTTP method, endpoint, params and if
+    * applicable the request body.
     */
   def show[T](t: T)(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
 
@@ -31,11 +29,12 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
   // where U is particular to the request type.
   // For example a search request will return a Response[SearchResponse].
   def execute[T, U, F[_]](t: T)(implicit
-                                executor: Executor[F],
-                                functor: Functor[F],
-                                handler: Handler[T, U],
-                                javaTypeable: JavaTypeable[U],
-                                options: CommonRequestOptions): F[Response[U]] = {
+      executor: Executor[F],
+      functor: Functor[F],
+      handler: Handler[T, U],
+      javaTypeable: JavaTypeable[U],
+      options: CommonRequestOptions
+  ): F[Response[U]] = {
     val request = handler.build(t)
 
     val request2 = if (options.timeout.toMillis > 0) {
@@ -57,7 +56,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
     val f = executor.exec(client, request5)
     functor.map(f) { resp =>
       handler.responseHandler.handle(resp) match {
-        case Right(u) => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
+        case Right(u)    => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
         case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
       }
     }
@@ -70,16 +69,15 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
           "Authorization",
           "Basic " + Base64.getEncoder.encodeToString(s"$username:$password".getBytes)
         )
-      case Authentication.ApiKey(apiKey) =>
+      case Authentication.ApiKey(apiKey)                       =>
         request.addHeader(
           "Authorization",
           "ApiKey " + Base64.getEncoder.encodeToString(apiKey.getBytes)
         )
-      case Authentication.NoAuth =>
+      case Authentication.NoAuth                               =>
         request
     }
   }
-
 
   def close(): Unit = client.close()
 }
@@ -95,10 +93,10 @@ object Authentication {
 }
 
 case class CommonRequestOptions(
-  timeout: Duration,
-  masterNodeTimeout: Duration,
-  headers: Map[String, String] = Map.empty,
-  authentication: Authentication = Authentication.NoAuth,
+    timeout: Duration,
+    masterNodeTimeout: Duration,
+    headers: Map[String, String] = Map.empty,
+    authentication: Authentication = Authentication.NoAuth
 )
 
 object CommonRequestOptions {
@@ -106,6 +104,6 @@ object CommonRequestOptions {
     timeout = 0.seconds,
     masterNodeTimeout = 0.seconds,
     headers = Map.empty,
-    authentication = Authentication.NoAuth,
+    authentication = Authentication.NoAuth
   )
 }

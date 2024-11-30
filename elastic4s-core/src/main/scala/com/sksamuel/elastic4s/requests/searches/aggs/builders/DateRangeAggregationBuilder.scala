@@ -2,11 +2,19 @@ package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.{EnumConversions, handlers}
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, AggMetaDataFn, DateRangeAggregation, SubAggsBuilderFn}
+import com.sksamuel.elastic4s.requests.searches.aggs.{
+  AbstractAggregation,
+  AggMetaDataFn,
+  DateRangeAggregation,
+  SubAggsBuilderFn
+}
 
 object DateRangeAggregationBuilder {
 
-  def apply(agg: DateRangeAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: DateRangeAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
 
     val builder = XContentFactory.obj().startObject("date_range")
 

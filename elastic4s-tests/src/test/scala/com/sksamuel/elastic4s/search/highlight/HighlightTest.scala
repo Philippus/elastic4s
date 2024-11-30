@@ -54,10 +54,10 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
         "Space, the final <em>frontier</em>. These are the voyages of the starship Enterprise."
     }
     "use fragment size" in {
-      val resp = client.execute {
+      val resp      = client.execute {
         search("intros") query "new" highlighting (
           highlight("text").requireFieldMatch(false) fragmentSize 15
-          )
+        )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 3
@@ -66,49 +66,49 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
       fragments(2) shouldBe "life and <em>new</em> civilisations"
     }
     "use number of fragments size" in {
-      val resp = client.execute {
+      val resp      = client.execute {
         search("intros") query "text:new" highlighting (
           highlight("text") fragmentSize 5 numberOfFragments 2
-          )
+        )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 2
     }
     "use no match size" in {
-      val resp = client.execute {
+      val resp      = client.execute {
         search("intros") query "trek" highlighting (
           highlight("text") noMatchSize 50
-          )
+        )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head shouldBe "Space, the final frontier. These are the voyages of"
     }
     "use pre tags" in {
-      val resp = client.execute {
+      val resp      = client.execute {
         search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 preTag "<picard>"
-          )
+        )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head.trim shouldBe "Space, the final <picard>frontier</em>"
     }
     "use post tags" in {
-      val resp = client.execute {
+      val resp      = client.execute {
         search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 postTag "<riker>"
-          )
+        )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1
       fragments.head.trim shouldBe "Space, the final <em>frontier<riker>"
     }
     "use highlight query" in {
-      val resp = client.execute {
+      val resp      = client.execute {
         search("intros") query matchQuery("text", "frontier") highlighting (
           highlight("text") fragmentSize 20 query matchQuery("text", "life")
-          )
+        )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
       fragments.size shouldBe 1

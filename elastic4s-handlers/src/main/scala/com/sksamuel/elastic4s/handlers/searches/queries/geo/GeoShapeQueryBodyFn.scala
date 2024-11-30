@@ -3,7 +3,22 @@ package com.sksamuel.elastic4s.handlers.searches.queries.geo
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.Shapes.{Circle, Polygon}
-import com.sksamuel.elastic4s.requests.searches.queries.geo.{CircleShape, EnvelopeShape, GeoShapeQuery, GeometryCollectionShape, InlineShape, LineStringShape, MultiLineStringShape, MultiPointShape, MultiPolygonShape, PointShape, PolygonShape, PreindexedShape, ShapeDefinition, SingleShape}
+import com.sksamuel.elastic4s.requests.searches.queries.geo.{
+  CircleShape,
+  EnvelopeShape,
+  GeoShapeQuery,
+  GeometryCollectionShape,
+  InlineShape,
+  LineStringShape,
+  MultiLineStringShape,
+  MultiPointShape,
+  MultiPolygonShape,
+  PointShape,
+  PolygonShape,
+  PreindexedShape,
+  ShapeDefinition,
+  SingleShape
+}
 
 import scala.language.implicitConversions
 
@@ -72,7 +87,7 @@ object GeoShapeQueryBodyFn {
       case MultiPointShape(points) =>
         builder.array("coordinates", points.map(identity[Coordinates](_)).toArray)
 
-      case LineStringShape(first, second, remaining@_*) =>
+      case LineStringShape(first, second, remaining @ _*) =>
         val points = first :: second :: remaining.toList
         builder.array("coordinates", points.map(identity[Coordinates](_)).toArray)
 

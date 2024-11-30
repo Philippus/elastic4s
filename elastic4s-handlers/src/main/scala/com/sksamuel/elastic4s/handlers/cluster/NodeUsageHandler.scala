@@ -8,7 +8,7 @@ object NodeUsageHandler extends Handler[NodeUsageRequest, NodeUsageResponse] {
 
     val endpoint = t.nodeId match {
       case Some(nodeId) => s"/_nodes/$nodeId/usage"
-      case _ => "/_nodes/usage"
+      case _            => "/_nodes/usage"
     }
 
     val params = scala.collection.mutable.Map.empty[String, String]

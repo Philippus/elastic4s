@@ -27,14 +27,14 @@ class PercentilesBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests 
 
   client.execute(
     bulk(
-      indexInto("percentilesbucketagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-03-02", "value" -> 3000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-04-02", "value" -> 4000.0),
-      indexInto("percentilesbucketagg") fields("date" -> "2017-04-02", "value" -> 4000.0)
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-03-02", "value" -> 3000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-04-02", "value" -> 4000.0),
+      indexInto("percentilesbucketagg") fields ("date" -> "2017-04-02", "value" -> 4000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -48,7 +48,6 @@ class PercentilesBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests 
             .subaggs {
               sumAgg("sales", "value")
             },
-
           percentilesBucketAggregation("percentiles_monthly_sales", "sales_per_month>sales")
             .percents(Seq(25.0, 50.0, 75.0))
         )

@@ -1,7 +1,18 @@
 package com.sksamuel.elastic4s.handlers.snapshot
 
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.requests.snapshots.{CreateRepositoryRequest, CreateRepositoryResponse, CreateSnapshotRequest, CreateSnapshotResponse, DeleteSnapshotRequest, DeleteSnapshotResponse, GetSnapshotResponse, GetSnapshotsRequest, RestoreSnapshotRequest, RestoreSnapshotResponse}
+import com.sksamuel.elastic4s.requests.snapshots.{
+  CreateRepositoryRequest,
+  CreateRepositoryResponse,
+  CreateSnapshotRequest,
+  CreateSnapshotResponse,
+  DeleteSnapshotRequest,
+  DeleteSnapshotResponse,
+  GetSnapshotResponse,
+  GetSnapshotsRequest,
+  RestoreSnapshotRequest,
+  RestoreSnapshotResponse
+}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait SnapshotHandlers {
@@ -15,7 +26,7 @@ trait SnapshotHandlers {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.verify.map(_.toString).foreach(params.put("verify", _))
 
-      val body = XContentFactory.jsonBuilder()
+      val body   = XContentFactory.jsonBuilder()
       body.field("type", request.`type`)
       body.startObject("settings")
       request.settings.foreach {
@@ -38,7 +49,7 @@ trait SnapshotHandlers {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
 
-      val body = XContentFactory.jsonBuilder()
+      val body   = XContentFactory.jsonBuilder()
       if (request.indices.isNonEmpty)
         body.field("indices", request.indices.string(false))
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))
@@ -53,7 +64,7 @@ trait SnapshotHandlers {
   implicit object DeleteSnapshotHandler extends Handler[DeleteSnapshotRequest, DeleteSnapshotResponse] {
     override def build(request: DeleteSnapshotRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotName
-      val params = scala.collection.mutable.Map.empty[String, String]
+      val params   = scala.collection.mutable.Map.empty[String, String]
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
       ElasticRequest("DELETE", endpoint, params.toMap)
     }
@@ -62,7 +73,7 @@ trait SnapshotHandlers {
   implicit object GetSnapshotHandler extends Handler[GetSnapshotsRequest, GetSnapshotResponse] {
     override def build(request: GetSnapshotsRequest): ElasticRequest = {
       val endpoint = s"/_snapshot/" + request.repositoryName + "/" + request.snapshotNames.mkString(",")
-      val params = scala.collection.mutable.Map.empty[String, String]
+      val params   = scala.collection.mutable.Map.empty[String, String]
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
       request.verbose.map(_.toString).foreach(params.put("verbose", _))
       ElasticRequest("GET", endpoint, params.toMap)
@@ -76,7 +87,7 @@ trait SnapshotHandlers {
       val params = scala.collection.mutable.Map.empty[String, String]
       request.waitForCompletion.map(_.toString).foreach(params.put("wait_for_completion", _))
 
-      val body = XContentFactory.jsonBuilder()
+      val body   = XContentFactory.jsonBuilder()
       if (request.indices.isNonEmpty)
         body.field("indices", request.indices.string(false))
       request.ignoreUnavailable.foreach(body.field("ignore_unavailable", _))

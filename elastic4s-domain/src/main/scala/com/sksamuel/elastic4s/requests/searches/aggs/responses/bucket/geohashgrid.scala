@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.responses.{AggBucket, AggSe
 case class GeoHashGrid(name: String, buckets: Seq[GeoHashGridBucket]) extends BucketAggregation
 
 case class GeoHashGridBucket(key: String, override val docCount: Long, private[elastic4s] val data: Map[String, Any])
-  extends AggBucket
+    extends AggBucket
 
 object GeoHashGrid {
 
@@ -24,4 +24,3 @@ object GeoHashGrid {
     }
   )
 }
-

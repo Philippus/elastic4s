@@ -6,5 +6,5 @@ trait BulkApi {
   this: IndexApi =>
 
   def bulk(requests: Iterable[BulkCompatibleRequest]): BulkRequest = BulkRequest(requests.toSeq)
-  def bulk(requests: BulkCompatibleRequest*): BulkRequest = bulk(requests)
+  def bulk(requests: BulkCompatibleRequest*): BulkRequest          = bulk(requests)
 }

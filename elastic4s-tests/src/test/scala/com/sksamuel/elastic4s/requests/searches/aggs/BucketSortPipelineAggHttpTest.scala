@@ -30,12 +30,12 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
 
   client.execute(
     bulk(
-      indexInto("bucketsortagg") fields("date" -> "2017-01-01", "value" -> 1000.0),
-      indexInto("bucketsortagg") fields("date" -> "2017-01-02", "value" -> 1000.0),
-      indexInto("bucketsortagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("bucketsortagg") fields("date" -> "2017-02-01", "value" -> 2000.0),
-      indexInto("bucketsortagg") fields("date" -> "2017-03-01", "value" -> 3000.0),
-      indexInto("bucketsortagg") fields("date" -> "2017-03-02", "value" -> 3000.0)
+      indexInto("bucketsortagg") fields ("date" -> "2017-01-01", "value" -> 1000.0),
+      indexInto("bucketsortagg") fields ("date" -> "2017-01-02", "value" -> 1000.0),
+      indexInto("bucketsortagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("bucketsortagg") fields ("date" -> "2017-02-01", "value" -> 2000.0),
+      indexInto("bucketsortagg") fields ("date" -> "2017-03-01", "value" -> 3000.0),
+      indexInto("bucketsortagg") fields ("date" -> "2017-03-02", "value" -> 3000.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -48,8 +48,7 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
             .calendarInterval(DateHistogramInterval.Month)
             .subaggs(
               sumAgg("sales", "value"),
-              bucketSortAggregation("sales_bucket_sort",
-                Seq(FieldSort("sales").order(SortOrder.DESC)))
+              bucketSortAggregation("sales_bucket_sort", Seq(FieldSort("sales").order(SortOrder.DESC)))
             )
         )
       }.await.result
@@ -71,10 +70,9 @@ class BucketSortPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
       search("bucketsortagg").matchAllQuery().aggs(
         dateHistogramAgg("sales_per_month", "date")
           .calendarInterval(DateHistogramInterval.Month)
-          .subaggs (
+          .subaggs(
             sumAgg("sales", "value"),
-            bucketSortAggregation("sales_bucket_sort",
-              Seq(FieldSort("sales").order(SortOrder.DESC)))
+            bucketSortAggregation("sales_bucket_sort", Seq(FieldSort("sales").order(SortOrder.DESC)))
               .size(1)
               .from(1)
           )

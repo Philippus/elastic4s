@@ -15,7 +15,7 @@ class Json4sParamSerializerTest extends AnyWordSpec with Matchers {
     "be implicitly found and used for parameter serialization" in {
 
       import ElasticJson4s.Implicits._
-      implicit val formats: Formats = Serialization.formats(NoTypeHints)
+      implicit val formats: Formats             = Serialization.formats(NoTypeHints)
       implicit val serialization: Serialization = Serialization
 
       Script("some script")

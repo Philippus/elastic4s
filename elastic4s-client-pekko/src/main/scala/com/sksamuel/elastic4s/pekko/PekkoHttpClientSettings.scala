@@ -18,12 +18,12 @@ object PekkoHttpClientSettings {
   lazy val default: PekkoHttpClientSettings = apply(defaultConfig)
 
   def apply(config: Config): PekkoHttpClientSettings = {
-    val cfg = config.withFallback(defaultConfig)
-    val hosts = cfg.getStringList("hosts").asScala.toVector
-    val username = Try(cfg.getString("username")).map(Some(_)).getOrElse(None)
-    val password = Try(cfg.getString("password")).map(Some(_)).getOrElse(None)
-    val queueSize = cfg.getInt("queue-size")
-    val https = cfg.getBoolean("https")
+    val cfg                  = config.withFallback(defaultConfig)
+    val hosts                = cfg.getStringList("hosts").asScala.toVector
+    val username             = Try(cfg.getString("username")).map(Some(_)).getOrElse(None)
+    val password             = Try(cfg.getString("password")).map(Some(_)).getOrElse(None)
+    val queueSize            = cfg.getInt("queue-size")
+    val https                = cfg.getBoolean("https")
     val verifySslCertificate = Try(cfg.getBoolean("verify-ssl-certificate")).toOption.getOrElse(true)
     val blacklistMinDuration = Duration(
       cfg.getDuration("blacklist.min-duration", TimeUnit.MILLISECONDS),
@@ -33,11 +33,11 @@ object PekkoHttpClientSettings {
       cfg.getDuration("blacklist.max-duration", TimeUnit.MILLISECONDS),
       TimeUnit.MILLISECONDS
     )
-    val maxRetryTimeout = Duration(
+    val maxRetryTimeout      = Duration(
       cfg.getDuration("max-retry-timeout", TimeUnit.MILLISECONDS),
       TimeUnit.MILLISECONDS
     )
-    val poolSettings = ConnectionPoolSettings(
+    val poolSettings         = ConnectionPoolSettings(
       cfg.withFallback(ConfigFactory.load())
     )
     PekkoHttpClientSettings(
@@ -64,20 +64,20 @@ object PekkoHttpClientSettings {
 }
 
 case class PekkoHttpClientSettings(
-  https: Boolean,
-  hosts: Vector[String],
-  username: Option[String],
-  password: Option[String],
-  queueSize: Int,
-  poolSettings: ConnectionPoolSettings,
-  verifySSLCertificate : Boolean,
-  blacklistMinDuration: FiniteDuration =
-    PekkoHttpClientSettings.default.blacklistMinDuration,
-  blacklistMaxDuration: FiniteDuration =
-    PekkoHttpClientSettings.default.blacklistMaxDuration,
-  maxRetryTimeout: FiniteDuration =
-    PekkoHttpClientSettings.default.maxRetryTimeout,
-  requestCallback: HttpRequest => HttpRequest = identity
+    https: Boolean,
+    hosts: Vector[String],
+    username: Option[String],
+    password: Option[String],
+    queueSize: Int,
+    poolSettings: ConnectionPoolSettings,
+    verifySSLCertificate: Boolean,
+    blacklistMinDuration: FiniteDuration =
+      PekkoHttpClientSettings.default.blacklistMinDuration,
+    blacklistMaxDuration: FiniteDuration =
+      PekkoHttpClientSettings.default.blacklistMaxDuration,
+    maxRetryTimeout: FiniteDuration =
+      PekkoHttpClientSettings.default.maxRetryTimeout,
+    requestCallback: HttpRequest => HttpRequest = identity
 ) {
   def hasCredentialsDefined: Boolean = username.isDefined && password.isDefined
 }

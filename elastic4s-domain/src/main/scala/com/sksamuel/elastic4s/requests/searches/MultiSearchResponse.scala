@@ -18,6 +18,6 @@ case class MultiSearchResponse(items: Seq[MultisearchResponseItem]) {
     case right: Right[ElasticError, SearchResponse] => right.right.get
   }
 
-  def to[T: HitReader]: IndexedSeq[T] = successes.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq
+  def to[T: HitReader]: IndexedSeq[T]          = successes.flatMap(_.hits.hits).map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Try[T]] = successes.flatMap(_.hits.hits).map(_.safeTo[T]).toIndexedSeq
 }

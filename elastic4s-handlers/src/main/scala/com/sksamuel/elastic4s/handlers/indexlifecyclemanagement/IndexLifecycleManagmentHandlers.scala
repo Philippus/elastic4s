@@ -10,8 +10,8 @@ trait IndexLifecycleManagementHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, GetIlmStatusResponse] = {
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[GetIlmStatusResponse](response))
-          case 400 => Left(ElasticErrorParser.parse(response))
-          case _ => sys.error("Invalid response")
+          case 400       => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error("Invalid response")
         }
       }
     }
@@ -28,8 +28,8 @@ trait IndexLifecycleManagementHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, StartIlmResponse] = {
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[StartIlmResponse](response))
-          case 400 => Left(ElasticErrorParser.parse(response))
-          case _ => sys.error("Invalid response")
+          case 400       => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error("Invalid response")
         }
       }
     }
@@ -50,8 +50,8 @@ trait IndexLifecycleManagementHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, StopIlmResponse] = {
         response.statusCode match {
           case 200 | 201 => Right(ResponseHandler.fromResponse[StopIlmResponse](response))
-          case 400 => Left(ElasticErrorParser.parse(response))
-          case _ => sys.error("Invalid response")
+          case 400       => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error("Invalid response")
         }
       }
     }

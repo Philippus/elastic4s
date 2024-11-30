@@ -5,16 +5,18 @@ import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
 
 import scala.concurrent.duration.FiniteDuration
 
-case class RolloverIndexRequest(sourceAlias: String,
-                                maxAge: Option[String] = None,
-                                maxDocs: Option[Long] = None,
-                                maxSize: Option[String] = None,
-                                dryRun: Option[Boolean] = None,
-                                mappings: Seq[MappingDefinition] = Nil,
-                                newIndexName: Option[String] = None,
-                                settings: Map[String, Any] = Map.empty,
-                                waitForActiveShards: Option[Int] = None,
-                                masterNodeTimeout: Option[FiniteDuration] = None) {
+case class RolloverIndexRequest(
+    sourceAlias: String,
+    maxAge: Option[String] = None,
+    maxDocs: Option[Long] = None,
+    maxSize: Option[String] = None,
+    dryRun: Option[Boolean] = None,
+    mappings: Seq[MappingDefinition] = Nil,
+    newIndexName: Option[String] = None,
+    settings: Map[String, Any] = Map.empty,
+    waitForActiveShards: Option[Int] = None,
+    masterNodeTimeout: Option[FiniteDuration] = None
+) {
 
   def waitForActiveShards(waitForActiveShards: Int): RolloverIndexRequest =
     copy(waitForActiveShards = waitForActiveShards.some)

@@ -3,11 +3,11 @@ package com.sksamuel.elastic4s.requests.searches
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class CumulativeCardinalityPipelineAggBuilderTest extends AnyFunSuite with Matchers{
+class CumulativeCardinalityPipelineAggBuilderTest extends AnyFunSuite with Matchers {
 
   import com.sksamuel.elastic4s.ElasticDsl._
 
-  test("cumulative cardinality agg should match the basic spec"){
+  test("cumulative cardinality agg should match the basic spec") {
     val search = SearchRequest("myIndex").aggs(
       dateHistogramAgg("users_per_day", "date")
         .fixedInterval(DateHistogramInterval.Month)

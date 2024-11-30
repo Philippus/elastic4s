@@ -16,10 +16,10 @@ class GetSegmentTest extends AnyFlatSpec with Matchers with DockerTests {
   }.await
 
   "getSegments" should "return segment list" in {
-    val resp = client.execute {
+    val resp     = client.execute {
       getSegments("segments_1", "segments_2", "segments_3")
     }.await
-    val shards = resp.result.indices("segments_1")
+    val shards   = resp.result.indices("segments_1")
     val segments = shards.shards.values.flatten.flatMap(_.segments.values).flatten
     segments.exists(_.search) shouldBe true
     segments.exists(_.sizeInBytes > 0) shouldBe true

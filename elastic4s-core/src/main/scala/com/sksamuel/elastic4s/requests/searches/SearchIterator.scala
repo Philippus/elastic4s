@@ -6,12 +6,11 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.language.higherKinds
 
-/**
-  * A SearchIterator is used to create standard library iterator's from a search request.
-  * The iterator will use a search scroll internally for lazy loading of the data.
+/** A SearchIterator is used to create standard library iterator's from a search request. The iterator will use a search
+  * scroll internally for lazy loading of the data.
   *
-  * Each time the iterator needs to request more data, the iterator will block until the request
-  * returns. If you require a completely lazy style iterator, consider using reactive streams.
+  * Each time the iterator needs to request more data, the iterator will block until the request returns. If you require
+  * a completely lazy style iterator, consider using reactive streams.
   */
 trait Awaitable[F[_]] {
   def result[U](f: F[U], timeout: Duration): U
@@ -19,8 +18,7 @@ trait Awaitable[F[_]] {
 
 object SearchIterator {
 
-  /**
-    * Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
+  /** Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
   def hits(client: ElasticClient, searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
     new Iterator[SearchHit] {
@@ -29,7 +27,7 @@ object SearchIterator {
       import com.sksamuel.elastic4s.ElasticDsl._
 
       private var internalIterator: Iterator[SearchHit] = Iterator.empty
-      private var scrollId: Option[String]      = None
+      private var scrollId: Option[String]              = None
 
       override def hasNext: Boolean = internalIterator.hasNext || {
         internalIterator = fetchNext()
@@ -59,13 +57,12 @@ object SearchIterator {
       }
     }
 
-  /**
-    * Creates a new Iterator for type T by wrapping the given HTTP client.
-    * A typeclass HitReader[T] must be provided for marshalling of the search
-    * responses into instances of type T.
+  /** Creates a new Iterator for type T by wrapping the given HTTP client. A typeclass HitReader[T] must be provided for
+    * marshalling of the search responses into instances of type T.
     */
   def iterate[T](client: ElasticClient, searchreq: SearchRequest)(implicit
-                                                                  reader: HitReader[T],
-                                                                  timeout: Duration): Iterator[T] =
+      reader: HitReader[T],
+      timeout: Duration
+  ): Iterator[T] =
     hits(client, searchreq).map(_.to[T])
 }

@@ -5,7 +5,10 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.aggs.{AbstractAggregation, SubAggsBuilderFn, MultiTermsAggregation}
 
 object MultiTermsAggregationBuilder {
-  def apply(agg: MultiTermsAggregation, customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]): XContentBuilder = {
+  def apply(
+      agg: MultiTermsAggregation,
+      customAggregations: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("multi_terms")
 
@@ -33,7 +36,7 @@ object MultiTermsAggregationBuilder {
     agg.orders match {
       case order if order.isEmpty =>
       case Seq(order)             => builder.rawField("order", EnumConversions.order(order))
-      case _ =>
+      case _                      =>
         builder.startArray("order")
         agg.orders.map(EnumConversions.order).foreach(builder.rawValue)
         builder.endArray()

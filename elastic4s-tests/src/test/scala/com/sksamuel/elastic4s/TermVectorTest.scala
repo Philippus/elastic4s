@@ -7,7 +7,7 @@ import org.scalatest.time.SpanSugar._
 import org.scalatest.wordspec.AnyWordSpec
 
 class TermVectorTest
-  extends AnyWordSpec
+    extends AnyWordSpec
     with DockerTests
     with Matchers
     with ScalaFutures {
@@ -16,11 +16,11 @@ class TermVectorTest
 
   client.execute {
     bulk(
-      indexInto("termvectortest") fields("name" -> "james kirk", "rank" -> "captain") id "1",
-      indexInto("termvectortest") fields("name" -> "jean luc picard", "rank" -> "captain") id "2",
-      indexInto("termvectortest") fields("name" -> "will riker", "rank" -> "cmdr") id "3",
-      indexInto("termvectortest") fields("name" -> "data", "rank" -> "ltr cmdr") id "4",
-      indexInto("termvectortest") fields("name" -> "geordie la forge", "rank" -> "ltr cmdr") id "5"
+      indexInto("termvectortest") fields ("name" -> "james kirk", "rank"       -> "captain") id "1",
+      indexInto("termvectortest") fields ("name" -> "jean luc picard", "rank"  -> "captain") id "2",
+      indexInto("termvectortest") fields ("name" -> "will riker", "rank"       -> "cmdr") id "3",
+      indexInto("termvectortest") fields ("name" -> "data", "rank"             -> "ltr cmdr") id "4",
+      indexInto("termvectortest") fields ("name" -> "geordie la forge", "rank" -> "ltr cmdr") id "5"
     )
   }.await
 

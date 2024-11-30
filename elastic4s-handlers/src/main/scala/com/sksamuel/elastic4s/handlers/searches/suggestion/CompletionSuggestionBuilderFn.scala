@@ -50,7 +50,7 @@ object CompletionSuggestionBuilderFn {
           value.foreach { context =>
             builder.startObject()
             context match {
-              case CategoryContext(name, boost, prefix) =>
+              case CategoryContext(name, boost, prefix)   =>
                 builder.field("context", name)
                 builder.field("boost", boost)
                 builder.field("prefix", prefix)

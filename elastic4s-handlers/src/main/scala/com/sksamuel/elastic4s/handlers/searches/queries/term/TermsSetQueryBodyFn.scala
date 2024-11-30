@@ -11,7 +11,9 @@ object TermsSetQueryBodyFn {
     builder.array("terms", t.terms.toArray[String])
     t.boost.foreach(builder.field("boost", _))
     t.minimumShouldMatchField.foreach(builder.field("minimum_should_match_field", _))
-    t.minimumShouldMatchScript.foreach(script => builder.rawField("minimum_should_match_script", handlers.script.ScriptBuilderFn(script)))
+    t.minimumShouldMatchScript.foreach(script =>
+      builder.rawField("minimum_should_match_script", handlers.script.ScriptBuilderFn(script))
+    )
     builder.endObject().endObject()
   }
 }

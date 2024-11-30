@@ -18,10 +18,10 @@ import com.sksamuel.elastic4s.{
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success, Try}
 
-class PekkoHttpClient private[pekko](
-  settings: PekkoHttpClientSettings,
-  blacklist: Blacklist,
-  httpPoolFactory: HttpPoolFactory
+class PekkoHttpClient private[pekko] (
+    settings: PekkoHttpClientSettings,
+    blacklist: Blacklist,
+    httpPoolFactory: HttpPoolFactory
 )(implicit system: ActorSystem)
     extends ElasticHttpClient {
 
@@ -41,32 +41,32 @@ class PekkoHttpClient private[pekko](
       .statefulMapConcat { () =>
         val hosts = iterateHosts
 
-        in =>
-          {
-            (in, hosts.next()) match {
-              case ((r, s), Some(host)) =>
-                // if host is resolved - send request forward
-                toRequest(r, host) match {
-                  case Success(req) =>
-                    s.host.success(host)
-                    (req, s) :: Nil
-                  case Failure(e) =>
-                    s.host.failure(e)
-                    s.response.failure(e)
-                    Nil
-                }
-              case ((_, s), None) =>
-                // if not - all hosts are blacklisted, return an error
-                val exception = AllHostsBlacklistedException
-                s.host.failure(exception)
-                s.response.failure(exception)
-                Nil
-            }
+        in => {
+          (in, hosts.next()) match {
+            case ((r, s), Some(host)) =>
+              // if host is resolved - send request forward
+              toRequest(r, host) match {
+                case Success(req) =>
+                  s.host.success(host)
+                  (req, s) :: Nil
+                case Failure(e)   =>
+                  s.host.failure(e)
+                  s.response.failure(e)
+                  Nil
+              }
+            case ((_, s), None)       =>
+              // if not - all hosts are blacklisted, return an error
+              val exception = AllHostsBlacklistedException
+              s.host.failure(exception)
+              s.response.failure(exception)
+              Nil
           }
+        }
       }
       .via(httpPoolFactory.create[RequestState]())
       .flatMapMerge(
-        settings.poolSettings.maxConnections, {
+        settings.poolSettings.maxConnections,
+        {
           case (request, Success(response), state)
               if request.method == HttpMethods.HEAD =>
             response.discardEntityBytes()
@@ -77,10 +77,13 @@ class PekkoHttpClient private[pekko](
             r.entity.dataBytes
               .fold(ByteString())(_ ++ _)
               .map(data => (Success(toResponse(r, data)), s))
-              .recoverWithRetries(1, { // in case of TCP timeout or response subscription timeout, etc.
-                case t: Throwable =>
-                  Source.single(Failure(t), s)
-              })
+              .recoverWithRetries(
+                1,
+                { // in case of TCP timeout or response subscription timeout, etc.
+                  case t: Throwable =>
+                    Source.single(Failure(t), s)
+                }
+              )
           case (_, Failure(e), s) => Source.single(Failure(e), s)
         }
       )
@@ -90,8 +93,7 @@ class PekkoHttpClient private[pekko](
       }))(Keep.left)
       .run()
 
-  /**
-    * Iterator of Some(host) or None if all hosts are blacklisted.
+  /** Iterator of Some(host) or None if all hosts are blacklisted.
     */
   private def iterateHosts: Iterator[Option[String]] =
     Iterator
@@ -105,11 +107,10 @@ class PekkoHttpClient private[pekko](
         } else Some(host) :: Nil
       }
 
-  private def queueRequest(request: ElasticRequest,
-                           state: RequestState): Future[ElasticHttpResponse] = {
+  private def queueRequest(request: ElasticRequest, state: RequestState): Future[ElasticHttpResponse] = {
     queue.offer(request -> state).flatMap {
-      case QueueOfferResult.Enqueued => state.response.future
-      case QueueOfferResult.Dropped =>
+      case QueueOfferResult.Enqueued    => state.response.future
+      case QueueOfferResult.Dropped     =>
         Future.failed(new Exception("Queue overflowed. Try again later."))
       case QueueOfferResult.Failure(ex) => Future.failed(ex)
       case QueueOfferResult.QueueClosed =>
@@ -122,14 +123,14 @@ class PekkoHttpClient private[pekko](
   }
 
   private def queueRequestWithRetry(
-    request: ElasticRequest,
-    startTimeNanos: Long = System.nanoTime
+      request: ElasticRequest,
+      startTimeNanos: Long = System.nanoTime
   ): Future[ElasticHttpResponse] = {
 
     val state = RequestState()
 
     def retryIfPossible(
-      notPossible: => Either[Throwable, ElasticHttpResponse]
+        notPossible: => Either[Throwable, ElasticHttpResponse]
     ): Future[ElasticHttpResponse] = {
       val timePassed = System.nanoTime - startTimeNanos
       if (timePassed < settings.maxRetryTimeout.toNanos) {
@@ -137,7 +138,7 @@ class PekkoHttpClient private[pekko](
         queueRequestWithRetry(request, startTimeNanos)
       } else {
         notPossible match {
-          case Left(exc) =>
+          case Left(exc)   =>
             Future.failed(
               new Exception(
                 s"Request retries exceeded max retry timeout [${settings.maxRetryTimeout}]",
@@ -186,7 +187,7 @@ class PekkoHttpClient private[pekko](
       }
       .recoverWith {
         case err @ AllHostsBlacklistedException => retryIfPossible(Left(err))
-        case err: Throwable =>
+        case err: Throwable                     =>
           markDead().flatMap(_ => retryIfPossible(Left(err)))
       }
   }
@@ -201,14 +202,14 @@ class PekkoHttpClient private[pekko](
   }
 
   private[pekko] def sendAsync(
-    request: ElasticRequest
+      request: ElasticRequest
   ): Future[ElasticHttpResponse] = {
     queueRequestWithRetry(request)
   }
 
   override def send(
-    request: ElasticRequest,
-    callback: Either[Throwable, ElasticHttpResponse] => Unit
+      request: ElasticRequest,
+      callback: Either[Throwable, ElasticHttpResponse] => Unit
   ): Unit = {
     sendAsync(request).onComplete {
       case Success(r) => callback(Right(r))
@@ -224,8 +225,7 @@ class PekkoHttpClient private[pekko](
     shutdown()
   }
 
-  private def toRequest(request: ElasticRequest,
-                        host: String): Try[HttpRequest] = Try {
+  private def toRequest(request: ElasticRequest, host: String): Try[HttpRequest] = Try {
     val httpRequest = HttpRequest(
       method = HttpMethods
         .getForKeyCaseInsensitive(request.method)
@@ -247,8 +247,7 @@ class PekkoHttpClient private[pekko](
     )
   }
 
-  private def toResponse(response: HttpResponse,
-                         data: ByteString): ElasticHttpResponse = {
+  private def toResponse(response: HttpResponse, data: ByteString): ElasticHttpResponse = {
     ElasticHttpResponse(
       response.status.intValue(),
       Some(StringEntity(data.utf8String, None)),
@@ -258,19 +257,19 @@ class PekkoHttpClient private[pekko](
 
   private def toEntity(entity: ElasticHttpEntity): RequestEntity = {
     entity match {
-      case ElasticHttpEntity.StringEntity(content, contentType) =>
+      case ElasticHttpEntity.StringEntity(content, contentType)     =>
         val ct =
           contentType
             .flatMap(value => ContentType.parse(value).right.toOption)
             .getOrElse(ContentTypes.`text/plain(UTF-8)`)
         HttpEntity(ct, ByteString(content))
-      case ElasticHttpEntity.ByteArrayEntity(content, contentType) =>
+      case ElasticHttpEntity.ByteArrayEntity(content, contentType)  =>
         val ct =
           contentType
             .flatMap(value => ContentType.parse(value).right.toOption)
             .getOrElse(ContentTypes.`text/plain(UTF-8)`)
         HttpEntity(ct, ByteString(content))
-      case ElasticHttpEntity.FileEntity(file, contentType) =>
+      case ElasticHttpEntity.FileEntity(file, contentType)          =>
         val ct = contentType
           .flatMap(value => ContentType.parse(value).right.toOption)
           .getOrElse(ContentTypes.`application/octet-stream`)
@@ -287,7 +286,7 @@ class PekkoHttpClient private[pekko](
 object PekkoHttpClient {
 
   def apply(
-    settings: PekkoHttpClientSettings
+      settings: PekkoHttpClientSettings
   )(implicit system: ActorSystem): PekkoHttpClient = {
 
     val blacklist = new DefaultBlacklist(
@@ -300,9 +299,11 @@ object PekkoHttpClient {
     new PekkoHttpClient(settings, blacklist, httpPoolFactory)
   }
 
-  private[pekko] case class RequestState(response: Promise[ElasticHttpResponse] =
-                                          Promise(),
-                                        host: Promise[String] = Promise())
+  private[pekko] case class RequestState(
+      response: Promise[ElasticHttpResponse] =
+        Promise(),
+      host: Promise[String] = Promise()
+  )
 
   private[pekko] case object AllHostsBlacklistedException
       extends Exception("All hosts are blacklisted!")

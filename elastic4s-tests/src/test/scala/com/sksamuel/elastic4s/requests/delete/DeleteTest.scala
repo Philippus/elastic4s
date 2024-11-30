@@ -17,17 +17,17 @@ class DeleteTest extends AnyFlatSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("places") id "99" fields(
-        "name" -> "London",
-        "country" -> "UK"
+      indexInto("places") id "99" fields (
+        "name"      -> "London",
+        "country"   -> "UK"
       ),
-      indexInto("places") id "44" fields(
-        "name" -> "Philadelphia",
-        "country" -> "USA"
+      indexInto("places") id "44" fields (
+        "name"      -> "Philadelphia",
+        "country"   -> "USA"
       ),
-      indexInto("places") id "615" fields(
-        "name" -> "Middlesbrough",
-        "country" -> "UK",
+      indexInto("places") id "615" fields (
+        "name"      -> "Middlesbrough",
+        "country"   -> "UK",
         "continent" -> "Europe"
       )
     ).refreshImmediately

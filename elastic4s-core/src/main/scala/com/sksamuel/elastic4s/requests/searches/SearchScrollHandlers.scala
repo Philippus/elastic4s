@@ -17,7 +17,7 @@ trait SearchScrollHandlers {
         response.statusCode match {
           case 200 =>
             Right(ResponseHandler.fromResponse[ClearScrollResponse](response))
-          case _ =>
+          case _   =>
             Left(ElasticErrorParser.parse(response))
         }
     }
@@ -26,7 +26,7 @@ trait SearchScrollHandlers {
 
       val (method, endpoint) = ("DELETE", s"/_search/scroll/")
 
-      val body = ClearScrollContentFn(request).string
+      val body   = ClearScrollContentFn(request).string
       logger.debug("Executing clear scroll: " + body)
       val entity = HttpEntity(body, "application/json")
 
@@ -45,7 +45,7 @@ trait SearchScrollHandlers {
 
     override def build(req: SearchScrollRequest): ElasticRequest = {
 
-      val body = SearchScrollBuilderFn(req).string
+      val body   = SearchScrollBuilderFn(req).string
       logger.debug("Executing search scroll: " + body)
       val entity = HttpEntity(body, "application/json")
 

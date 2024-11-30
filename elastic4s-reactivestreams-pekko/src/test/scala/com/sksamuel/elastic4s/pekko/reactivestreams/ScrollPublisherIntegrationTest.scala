@@ -11,7 +11,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with Matchers  {
+class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with Matchers {
 
   import ReactiveElastic._
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
@@ -64,13 +64,13 @@ class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with M
       val publisher = client.publisher(search(indexName) query "*:*" scroll "1m")
 
       val completionLatch = new CountDownLatch(1)
-      val documentLatch = new CountDownLatch(emperors.length)
+      val documentLatch   = new CountDownLatch(emperors.length)
 
       publisher.subscribe(new Subscriber[SearchHit] {
-        override def onComplete(): Unit = completionLatch.countDown()
-        override def onError(t: Throwable): Unit = fail(t)
+        override def onComplete(): Unit                 = completionLatch.countDown()
+        override def onError(t: Throwable): Unit        = fail(t)
         override def onSubscribe(s: Subscription): Unit = s.request(1000)
-        override def onNext(t: SearchHit): Unit = documentLatch.countDown()
+        override def onNext(t: SearchHit): Unit         = documentLatch.countDown()
       })
 
       completionLatch.await(10, TimeUnit.SECONDS) shouldBe true

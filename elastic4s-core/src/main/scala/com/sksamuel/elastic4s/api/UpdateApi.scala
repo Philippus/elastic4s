@@ -13,7 +13,8 @@ trait UpdateApi {
 
   def updateByQuerySync(index: Index, query: Query): UpdateByQueryRequest = UpdateByQueryRequest(index.name, query)
 
-  def updateByQueryAsync(index: Index, query: Query): UpdateByQueryAsyncRequest = UpdateByQueryAsyncRequest(index.name, query)
+  def updateByQueryAsync(index: Index, query: Query): UpdateByQueryAsyncRequest =
+    UpdateByQueryAsyncRequest(index.name, query)
 
   @deprecated("use updateById", "7.7")
   def update(id: String): UpdateExpectsIn = new UpdateExpectsIn(id)

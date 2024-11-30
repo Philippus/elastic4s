@@ -16,7 +16,6 @@ object TokenCountFieldBuilderFn {
     values.get("store").map(_.asInstanceOf[Boolean])
   )
 
-
   def build(field: TokenCountField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

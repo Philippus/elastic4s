@@ -9,37 +9,37 @@ import scala.concurrent.duration._
 
 case class IndexAliasRequest(name: String, filter: Option[Query] = None, routing: Option[String] = None)
 
-case class CreateIndexRequest(name: String,
-                              @deprecated("use the new analysis package", "7.0.1")
-                              _analysis: Option[AnalysisDefinition] = None,
-                              analysis: Option[com.sksamuel.elastic4s.analysis.Analysis] = None,
-                              mapping: Option[MappingDefinition] = None,
-                              rawSource: Option[String] = None,
-                              waitForActiveShards: Option[Int] = None,
-                              aliases: Set[IndexAliasRequest] = Set.empty,
-                              settings: IndexSettings = new IndexSettings,
-                              includeTypeName: Option[Boolean] = None) {
+case class CreateIndexRequest(
+    name: String,
+    @deprecated("use the new analysis package", "7.0.1")
+    _analysis: Option[AnalysisDefinition] = None,
+    analysis: Option[com.sksamuel.elastic4s.analysis.Analysis] = None,
+    mapping: Option[MappingDefinition] = None,
+    rawSource: Option[String] = None,
+    waitForActiveShards: Option[Int] = None,
+    aliases: Set[IndexAliasRequest] = Set.empty,
+    settings: IndexSettings = new IndexSettings,
+    includeTypeName: Option[Boolean] = None
+) {
 
-  def alias(name: String): CreateIndexRequest = alias(IndexAliasRequest(name, None))
-  def alias(name: String, filter: Query): CreateIndexRequest =
+  def alias(name: String): CreateIndexRequest                  = alias(IndexAliasRequest(name, None))
+  def alias(name: String, filter: Query): CreateIndexRequest   =
     alias(IndexAliasRequest(name, Option(filter)))
   def alias(definition: IndexAliasRequest): CreateIndexRequest = copy(aliases = aliases + definition)
 
-  def singleShard(): CreateIndexRequest = shards(1)
+  def singleShard(): CreateIndexRequest   = shards(1)
   def singleReplica(): CreateIndexRequest = replicas(1)
 
   def waitForActiveShards(shards: Int): CreateIndexRequest = copy(waitForActiveShards = shards.some)
 
-  def shards(shds: Int): CreateIndexRequest = copy(settings = settings.shards = shds)
+  def shards(shds: Int): CreateIndexRequest    = copy(settings = settings.shards = shds)
   def replicas(repls: Int): CreateIndexRequest = copy(settings = settings.replicas = repls)
 
-  /**
-    * Convenience method for setting the 'index.refresh_interval' property on this index.
+  /** Convenience method for setting the 'index.refresh_interval' property on this index.
     */
   def refreshInterval(duration: Duration): CreateIndexRequest = refreshInterval(s"${duration.toMillis}ms")
 
-  /**
-    * Convenience method for setting the 'index.refresh_interval' property on this index.
+  /** Convenience method for setting the 'index.refresh_interval' property on this index.
     */
   def refreshInterval(interval: String): CreateIndexRequest = copy(settings = settings.refreshInterval = interval)
 
@@ -50,7 +50,7 @@ case class CreateIndexRequest(name: String,
 
   @deprecated("use mapping", "8.0.0")
   def mappings(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
-  def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
+  def mapping(mapping: MappingDefinition): CreateIndexRequest  = copy(mapping = mapping.some)
 
   @deprecated("use the new analysis package", "7.0.1")
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)
@@ -61,10 +61,12 @@ case class CreateIndexRequest(name: String,
   def analysis(analysis: com.sksamuel.elastic4s.analysis.Analysis): CreateIndexRequest = copy(analysis = analysis.some)
 
   @deprecated("use the new analysis package", "7.0.1")
-  def analysis(analyzers: Iterable[AnalyzerDefinition],
-               normalizers: Iterable[NormalizerDefinition]): CreateIndexRequest =
+  def analysis(
+      analyzers: Iterable[AnalyzerDefinition],
+      normalizers: Iterable[NormalizerDefinition]
+  ): CreateIndexRequest =
     _analysis match {
-      case None => copy(_analysis = AnalysisDefinition(analyzers, normalizers).some)
+      case None    => copy(_analysis = AnalysisDefinition(analyzers, normalizers).some)
       case Some(a) => copy(_analysis = AnalysisDefinition(a.analyzers ++ analyzers, a.normalizers ++ normalizers).some)
     }
 
@@ -75,8 +77,7 @@ case class CreateIndexRequest(name: String,
   @deprecated("use the new analysis package", "7.0.1")
   def normalizers(normalizers: Iterable[NormalizerDefinition]): CreateIndexRequest = analysis(Nil, normalizers)
 
-  /**
-    * Creates an index using the json provided as is.
+  /** Creates an index using the json provided as is.
     */
   def source(source: String): CreateIndexRequest = copy(rawSource = source.some)
 

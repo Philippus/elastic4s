@@ -17,7 +17,6 @@ object DateFieldBuilderFn {
     values.get("store").map(_.asInstanceOf[Boolean])
   )
 
-
   def build(field: DateField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

@@ -6,7 +6,10 @@ import com.sksamuel.elastic4s.requests.searches.aggs.AbstractAggregation
 
 object MultiSearchBuilderFn {
 
-  def apply(request: MultiSearchRequest, customAggregation: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler): String = {
+  def apply(
+      request: MultiSearchRequest,
+      customAggregation: PartialFunction[AbstractAggregation, XContentBuilder] = defaultCustomAggregationHandler
+  ): String = {
 
     request.searches.flatMap { search =>
       val header = XContentFactory.jsonBuilder()
@@ -21,8 +24,8 @@ object MultiSearchBuilderFn {
 
       search.indicesOptions.foreach {
         IndicesOptionsParams(_).map {
-          case (n@"ignore_unavailable", v@"true") => header.field(n, v)
-          case _ => ()
+          case (n @ "ignore_unavailable", v @ "true") => header.field(n, v)
+          case _                                      => ()
         }
       }
       header.endObject()

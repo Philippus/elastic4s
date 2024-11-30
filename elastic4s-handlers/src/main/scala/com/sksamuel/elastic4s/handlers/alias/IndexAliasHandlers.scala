@@ -1,7 +1,12 @@
 package com.sksamuel.elastic4s.handlers.alias
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-import com.sksamuel.elastic4s.requests.alias.{AddAliasActionRequest, GetAliasesRequest, IndicesAliasesRequest, RemoveAliasAction}
+import com.sksamuel.elastic4s.requests.alias.{
+  AddAliasActionRequest,
+  GetAliasesRequest,
+  IndicesAliasesRequest,
+  RemoveAliasAction
+}
 import com.sksamuel.elastic4s.requests.indexes.admin.AliasActionResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, ResponseHandler}
 
@@ -15,7 +20,7 @@ trait IndexAliasHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, IndexAliases] = response.statusCode match {
         case 200 =>
           val root = ResponseHandler.json(response.entity.get)
-          val map = root.fields.asScala.toVector.map { entry =>
+          val map  = root.fields.asScala.toVector.map { entry =>
             Index(entry.getKey) -> entry.getValue.get("aliases").fieldNames.asScala.toList.map(Alias.apply)
           }.toMap
           Right(IndexAliases(map))
@@ -26,7 +31,7 @@ trait IndexAliasHandlers {
 
     override def build(request: GetAliasesRequest): ElasticRequest = {
       val endpoint = s"/${request.indices.string(true)}/_alias/${request.aliases.mkString(",")}"
-      val params = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore =>
+      val params   = request.ignoreUnavailable.fold(Map.empty[String, Any]) { ignore =>
         Map("ignore_unavailable" -> ignore)
       }
       ElasticRequest("GET", endpoint, params)

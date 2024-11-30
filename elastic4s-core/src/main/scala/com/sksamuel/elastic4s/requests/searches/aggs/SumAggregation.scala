@@ -3,13 +3,14 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class SumAggregation(name: String,
-                          field: Option[String] = None,
-                          missing: Option[AnyRef] = None,
-                          script: Option[Script] = None,
-                          subaggs: Seq[AbstractAggregation] = Nil,
-                          metadata: Map[String, AnyRef] = Map.empty)
-    extends Aggregation {
+case class SumAggregation(
+    name: String,
+    field: Option[String] = None,
+    missing: Option[AnyRef] = None,
+    script: Option[Script] = None,
+    subaggs: Seq[AbstractAggregation] = Nil,
+    metadata: Map[String, AnyRef] = Map.empty
+) extends Aggregation {
 
   type T = SumAggregation
 

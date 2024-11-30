@@ -14,15 +14,17 @@ package object sprayjson {
 
   @implicitNotFound("No RootJsonReader for type ${T} found. Bring an implicit RootJsonReader[T] instance in scope")
   implicit def sprayJsonHitReader[T](implicit r: RootJsonReader[T]): HitReader[T] =
-    (hit: Hit) => Try {
-      r.read(hit.sourceAsString.parseJson)
-    }
+    (hit: Hit) =>
+      Try {
+        r.read(hit.sourceAsString.parseJson)
+      }
 
   @implicitNotFound("No RootJsonReader for type ${T} found. Bring an implicit RootJsonReader[T] instance in scope")
   implicit def sprayJsonAggReader[T](implicit r: RootJsonReader[T]): AggReader[T] =
-    (json: String) => Try {
-      r.read(json.parseJson)
-    }
+    (json: String) =>
+      Try {
+        r.read(json.parseJson)
+      }
 
   @implicitNotFound("No RootJsonWriter for type ${T} found. Bring an implicit RootJsonWriter[T] instance in scope")
   implicit def sprayJsonParamSerializer[T](implicit w: RootJsonWriter[T]): ParamSerializer[T] =

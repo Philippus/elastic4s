@@ -1,7 +1,12 @@
 package com.sksamuel.elastic4s.handlers.termvectors
 
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s.requests.termvectors.{MultiTermVectorsRequest, MultiTermVectorsResponse, TermVectorsRequest, TermVectorsResponse}
+import com.sksamuel.elastic4s.requests.termvectors.{
+  MultiTermVectorsRequest,
+  MultiTermVectorsResponse,
+  TermVectorsRequest,
+  TermVectorsResponse
+}
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity}
 
 trait TermVectorHandlers {
@@ -38,10 +43,7 @@ trait TermVectorHandlers {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.realtime.foreach(params.put("realtime", _))
 
-      ElasticRequest("GET",
-        endpoint,
-        params.toMap,
-        HttpEntity(builder.string, "application/json"))
+      ElasticRequest("GET", endpoint, params.toMap, HttpEntity(builder.string, "application/json"))
     }
   }
 
@@ -92,10 +94,7 @@ trait TermVectorHandlers {
       val params = scala.collection.mutable.Map.empty[String, Any]
       request.realtime.foreach(params.put("realtime", _))
 
-      ElasticRequest("POST",
-        endpoint,
-        params.toMap,
-        HttpEntity(builder.string, "application/json"))
+      ElasticRequest("POST", endpoint, params.toMap, HttpEntity(builder.string, "application/json"))
     }
   }
 }

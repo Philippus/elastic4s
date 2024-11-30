@@ -23,14 +23,14 @@ class GetUserTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createUser(
       "user1",
-      password=PlaintextPassword("test1234")
+      password = PlaintextPassword("test1234")
     )
   }.await
 
   client.execute {
     createUser(
       "user2",
-      password=PlaintextPassword("test1234")
+      password = PlaintextPassword("test1234")
     )
   }.await
 

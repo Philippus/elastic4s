@@ -1,45 +1,43 @@
 package com.sksamuel.elastic4s.pekko
 
-/**
-  * List of 'bad' hosts.
-  * Implementation must have expiration logic backed-in.
+/** List of 'bad' hosts. Implementation must have expiration logic backed-in.
   */
 private[pekko] trait Blacklist {
 
-  /**
-    * Adds a host to the blacklist.
+  /** Adds a host to the blacklist.
     *
-    * @param host host
-    * @return true if record is blacklisted for the first time
+    * @param host
+    *   host
+    * @return
+    *   true if record is blacklisted for the first time
     */
   def add(host: String): Boolean
 
-  /**
-    * Removes a host from the blacklist.
+  /** Removes a host from the blacklist.
     *
-    * @param host host
-    * @return true if host was blacklisted
+    * @param host
+    *   host
+    * @return
+    *   true if host was blacklisted
     */
   def remove(host: String): Boolean
 
-  /**
-    * Checks if a host can be used.
+  /** Checks if a host can be used.
     *
-    * @param host host
-    * @return true if host is not in a blacklist or temporary removed from it
+    * @param host
+    *   host
+    * @return
+    *   true if host is not in a blacklist or temporary removed from it
     */
   def contains(host: String): Boolean
 
-  /**
-    * Number of hosts in blacklist
+  /** Number of hosts in blacklist
     */
   def size: Int
 
-  /**
-    * List all hosts in the blacklist
+  /** List all hosts in the blacklist
     *
     * @return
     */
   def list: List[String]
 }
-
