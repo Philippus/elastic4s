@@ -371,9 +371,9 @@ lazy val tests = (project in file("elastic4s-tests"))
         "org.scala-lang",
         "scala-library"
       ),
-      "org.apache.logging.log4j"      % "log4j-api"            % "2.24.2"       % Test,
-      "org.apache.logging.log4j"      % "log4j-slf4j-impl"     % "2.24.2"       % Test,
-      "org.apache.logging.log4j"      % "log4j-core"           % "2.24.2"       % Test
+      "org.apache.logging.log4j"      % "log4j-api"            % "2.24.3"       % Test,
+      "org.apache.logging.log4j"      % "log4j-slf4j-impl"     % "2.24.3"       % Test,
+      "org.apache.logging.log4j"      % "log4j-core"           % "2.24.3"       % Test
     ),
     Test / fork               := false,
     Test / parallelExecution  := false,
