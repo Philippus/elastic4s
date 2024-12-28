@@ -20,7 +20,7 @@ object Dependencies {
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "6.0.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-2"
-  val ScalatestPlusVersion           = "3.1.2.0"
+  val ScalatestPlusVersion           = "3.1.4.0"
   val ScalazVersion                  = "7.2.34"
   val ScalatestVersion               = "3.2.11"
   val Slf4jVersion                   = "2.0.16"
