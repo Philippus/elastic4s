@@ -5,24 +5,24 @@ object Dependencies {
   val AkkaHttpVersion                = "10.2.10"
   val AkkaVersion                    = "2.6.21"
   val CatsEffect2Version             = "2.5.5"
-  val CatsEffectVersion              = "3.5.5"
+  val CatsEffectVersion              = "3.5.7"
   val CatsVersion                    = "2.0.0"
   val CirceVersion                   = "0.14.10"
-  val CommonsIoVersion               = "2.17.0"
-  val ElasticsearchVersion           = "7.17.25"
+  val CommonsIoVersion               = "2.18.0"
+  val ElasticsearchVersion           = "7.17.26"
   val ExtsVersion                    = "1.61.1"
-  val JacksonVersion                 = "2.18.1"
+  val JacksonVersion                 = "2.18.2"
   val Json4sVersion                  = "4.0.7"
-  val Log4jVersion                   = "2.24.1"
+  val Log4jVersion                   = "2.24.3"
   val MockitoVersion                 = "5.14.2"
   val MonixVersion                   = "3.4.1"
-  val PlayJsonVersion                = "2.10.6"
+  val PlayJsonVersion                = "3.0.4"
   val ReactiveStreamsVersion         = "1.0.4"
   val ScalamockVersion               = "6.0.0"
-  val ScalatestPlusMockitoArtifactId = "mockito-3-2"
-  val ScalatestPlusVersion           = "3.1.2.0"
-  val ScalazVersion                  = "7.2.34"
-  val ScalatestVersion               = "3.2.11"
+  val ScalatestPlusMockitoArtifactId = "mockito-3-3"
+  val ScalatestPlusVersion           = "3.1.4.0"
+  val ScalazVersion                  = "7.2.36"
+  val ScalatestVersion               = "3.2.19"
   val Slf4jVersion                   = "2.0.16"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "1.7.2"
@@ -63,7 +63,7 @@ object Dependencies {
   lazy val elasticsearchRestClient      = "org.elasticsearch.client" % "elasticsearch-rest-client"        % ElasticsearchVersion
   lazy val json4s                       = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
   lazy val monix                        = "io.monix"                %% "monix"                            % MonixVersion
-  lazy val playJson                     = Seq("com.typesafe.play" %% "play-json" % PlayJsonVersion)
+  lazy val playJson                     = Seq("org.playframework" %% "play-json" % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
   lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion
   lazy val zioJson                      = "dev.zio"                 %% "zio-json"                         % ZIOJsonVersion
@@ -76,7 +76,7 @@ object Dependencies {
   lazy val reactiveStreamsTck    = "org.reactivestreams"      % "reactive-streams-tck"         % ReactiveStreamsVersion % "test"
   lazy val scalaMock             = "org.scalamock"           %% "scalamock"                    % ScalamockVersion       % "test"
   lazy val scalaTest             = "org.scalatest"           %% "scalatest"                    % ScalatestVersion       % "test"
-  lazy val scalaTestPlusMokito   = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
+  lazy val scalaTestPlusMockito  = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
   lazy val scalaTestPlusTestng67 = "org.scalatestplus"       %% "testng-6-7"                   % ScalatestPlusVersion   % "test"
 
 }

@@ -196,7 +196,7 @@ lazy val testkit = (project in file("elastic4s-testkit"))
   .dependsOn(core, clientesjava)
   .settings(name := "elastic4s-testkit")
   .settings(allSettings)
-  .settings(libraryDependencies ++= Seq(Dependencies.scalaTest, scalaTestPlusMokito))
+  .settings(libraryDependencies ++= Seq(Dependencies.scalaTest, scalaTestPlusMockito))
 
 lazy val httpstreams = (project in file("elastic4s-http-streams"))
   .dependsOn(core, testkit % "test", jackson % "test")
@@ -281,9 +281,9 @@ lazy val tests = (project in file("elastic4s-tests"))
       "com.fasterxml.jackson.core" % "jackson-core" % JacksonVersion % "test",
       "com.fasterxml.jackson.core" % "jackson-databind" % JacksonVersion % "test",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % "test" exclude("org.scala-lang", "scala-library"),
-      "org.apache.logging.log4j" % "log4j-api" % "2.24.1" % "test",
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.1" % "test",
-      "org.apache.logging.log4j" % "log4j-core" % "2.24.1" % "test"
+      "org.apache.logging.log4j" % "log4j-api" % "2.24.3" % "test",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.24.3" % "test",
+      "org.apache.logging.log4j" % "log4j-core" % "2.24.3" % "test"
     ),
     Test / fork := false,
     Test / parallelExecution := false,
