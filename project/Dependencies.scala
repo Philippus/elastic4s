@@ -16,7 +16,7 @@ object Dependencies {
   val Log4jVersion                   = "2.24.1"
   val MockitoVersion                 = "5.14.2"
   val MonixVersion                   = "3.4.1"
-  val PlayJsonVersion                = "2.10.6"
+  val PlayJsonVersion                = "3.0.4"
   val ReactiveStreamsVersion         = "1.0.3"
   val ScalamockVersion               = "6.0.0"
   val ScalatestPlusMockitoArtifactId = "mockito-3-2"
@@ -63,7 +63,7 @@ object Dependencies {
   lazy val elasticsearchRestClient      = "org.elasticsearch.client" % "elasticsearch-rest-client"        % ElasticsearchVersion
   lazy val json4s                       = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
   lazy val monix                        = "io.monix"                %% "monix"                            % MonixVersion
-  lazy val playJson                     = Seq("com.typesafe.play" %% "play-json" % PlayJsonVersion)
+  lazy val playJson                     = Seq("org.playframework" %% "play-json" % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
   lazy val sttp                         = "com.softwaremill.sttp"   %% "core"                             % SttpVersion
   lazy val zioJson                      = "dev.zio"                 %% "zio-json"                         % ZIOJsonVersion
