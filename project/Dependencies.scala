@@ -13,7 +13,7 @@ object Dependencies {
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.18.2"
   val Json4sVersion                  = "4.0.7"
-  val Log4jVersion                   = "2.24.1"
+  val Log4jVersion                   = "2.24.3"
   val MockitoVersion                 = "5.14.2"
   val MonixVersion                   = "3.4.1"
   val PlayJsonVersion                = "2.10.6"
