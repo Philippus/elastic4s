@@ -33,6 +33,8 @@ case class GetRepositoryResponse() {
 }
 case class Repository(`type`: String, settings: Map[String, AnyRef] = Map.empty)
 
+case class DeleteRepositoryResponse(acknowledged: Boolean)
+
 case class GetSnapshotResponse(snapshots: Seq[Snapshot], failures: Map[String, ElasticError])
 case class Snapshot(
     snapshot: String,

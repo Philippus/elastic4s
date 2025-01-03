@@ -41,6 +41,29 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
     }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
+  "deleteRepository" should "delete a snapshot repository" in {
+    val deleteRepoName = "delete_repotest_" + UUID.randomUUID().toString
+    client.execute {
+      createRepository(deleteRepoName, "fs").settings(
+        Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString))
+      )
+    }.await
+
+    client.execute {
+      deleteRepository(deleteRepoName)
+    }.await.result.acknowledged shouldBe true
+
+    client.execute {
+      getRepository(deleteRepoName)
+    }.await.error.`type` shouldBe "repository_missing_exception"
+  }
+
+  it should "error when the repo does not exist" in {
+    client.execute {
+      getRepository("not_exists")
+    }.await.error.`type` shouldBe "repository_missing_exception"
+  }
+
   "createSnapshot" should "create a new snapshot" in {
     // ensure there's at least one index to restore, so that we can test some of the behaviour around that
     createIdx("tmpidx").isSuccess shouldBe true

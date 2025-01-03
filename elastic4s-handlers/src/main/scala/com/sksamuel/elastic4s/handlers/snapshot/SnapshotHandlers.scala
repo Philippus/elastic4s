@@ -6,6 +6,8 @@ import com.sksamuel.elastic4s.requests.snapshots.{
   CreateRepositoryResponse,
   CreateSnapshotRequest,
   CreateSnapshotResponse,
+  DeleteRepositoryRequest,
+  DeleteRepositoryResponse,
   DeleteSnapshotRequest,
   DeleteSnapshotResponse,
   GetRepositoryRequest,
@@ -50,6 +52,13 @@ trait SnapshotHandlers {
       request.local.map(_.toString).foreach(params.put("local", _))
 
       ElasticRequest("GET", endpoint, params.toMap)
+    }
+  }
+
+  implicit object DeleteRepositoryHandler extends Handler[DeleteRepositoryRequest, DeleteRepositoryResponse] {
+    override def build(request: DeleteRepositoryRequest): ElasticRequest = {
+      val endpoint = s"/_snapshot/" + request.name
+      ElasticRequest("DELETE", endpoint)
     }
   }
 

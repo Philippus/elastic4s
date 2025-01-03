@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.api
 import com.sksamuel.elastic4s.requests.snapshots.{
   CreateRepositoryRequest,
   CreateSnapshotRequest,
+  DeleteRepositoryRequest,
   DeleteSnapshotRequest,
   GetRepositoryRequest,
   GetSnapshotsRequest,
@@ -61,4 +62,6 @@ trait SnapshotApi {
   }
 
   def getRepository(repositoryName: String) = GetRepositoryRequest(repositoryName)
+
+  def deleteRepository(repositoryName: String) = DeleteRepositoryRequest(repositoryName)
 }
