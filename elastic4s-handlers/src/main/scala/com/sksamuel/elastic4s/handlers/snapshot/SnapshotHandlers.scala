@@ -8,6 +8,8 @@ import com.sksamuel.elastic4s.requests.snapshots.{
   CreateSnapshotResponse,
   DeleteSnapshotRequest,
   DeleteSnapshotResponse,
+  GetRepositoryRequest,
+  GetRepositoryResponse,
   GetSnapshotResponse,
   GetSnapshotsRequest,
   RestoreSnapshotRequest,
@@ -37,6 +39,17 @@ trait SnapshotHandlers {
       val entity = HttpEntity(body.string, "application/json")
 
       ElasticRequest("PUT", endpoint, params.toMap, entity)
+    }
+  }
+
+  implicit object GetRepositoryHandler extends Handler[GetRepositoryRequest, GetRepositoryResponse] {
+    override def build(request: GetRepositoryRequest): ElasticRequest = {
+      val endpoint = s"/_snapshot/" + request.name
+
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.local.map(_.toString).foreach(params.put("local", _))
+
+      ElasticRequest("GET", endpoint, params.toMap)
     }
   }
 

@@ -1,9 +1,10 @@
 package com.sksamuel.elastic4s.requests.snapshots
 
-import com.fasterxml.jackson.annotation.{JsonProperty, JsonSubTypes, JsonTypeInfo}
+import com.fasterxml.jackson.annotation.{JsonAnySetter, JsonProperty, JsonSubTypes, JsonTypeInfo}
 import com.sksamuel.elastic4s.ElasticError
 import com.sksamuel.elastic4s.requests.common.Shards
 
+import scala.collection.mutable
 import scala.concurrent.duration._
 
 case class CreateRepositoryResponse(acknowledged: Boolean)
@@ -21,6 +22,17 @@ case class CreateSnapshotResponseAsync(accepted: Boolean)  extends CreateSnapsho
 case class CreateSnapshotResponseAwait(snapshot: Snapshot) extends CreateSnapshotResponse {
   override def succeeded: Boolean = snapshot.state == "SUCCESS"
 }
+
+case class GetRepositoryResponse() {
+  private val _repositories = mutable.Map[String, Repository]()
+
+  // noinspection ScalaUnusedSymbol
+  @JsonAnySetter private def setRepositories(k: String, v: Repository): Unit = _repositories.put(k, v)
+
+  def repositories: Map[String, Repository] = _repositories.toMap
+}
+case class Repository(`type`: String, settings: Map[String, AnyRef] = Map.empty)
+
 case class GetSnapshotResponse(snapshots: Seq[Snapshot], failures: Map[String, ElasticError])
 case class Snapshot(
     snapshot: String,

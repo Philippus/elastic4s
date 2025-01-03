@@ -10,12 +10,11 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
   private val repoName     = "repotest_" + UUID.randomUUID().toString
   private val snapshotName = "snap1"
+  private val settings     = Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString))
 
   "createRepository" should "create a new repo" in {
     val resp = client.execute {
-      createRepository(repoName, "fs").settings(
-        Map("location" -> ("/tmp/elastic4s/backup_" + UUID.randomUUID.toString))
-      )
+      createRepository(repoName, "fs").settings(settings)
     }.await
     resp.result.acknowledged shouldBe true
   }
@@ -24,6 +23,22 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
     client.execute {
       createRepository(repoName, "fs")
     }.await.error.`type` shouldBe "repository_exception"
+  }
+
+  "getRepository" should "return the named snapshot repository" in {
+    val resp = client.execute {
+      getRepository(repoName)
+    }.await.result
+
+    resp.repositories.head._1 shouldBe repoName
+    resp.repositories.head._2.`type` shouldBe "fs"
+    resp.repositories.head._2.settings shouldBe settings
+  }
+
+  it should "error when the repo does not exist" in {
+    client.execute {
+      getRepository("not_exists")
+    }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
   "createSnapshot" should "create a new snapshot" in {
