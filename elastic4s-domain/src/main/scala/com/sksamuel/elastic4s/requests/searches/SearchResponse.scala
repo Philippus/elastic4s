@@ -22,6 +22,7 @@ case class SearchResponse(
     private val suggest: Map[String, Seq[SuggestionResult]],
     @JsonProperty("_shards") private val _shards: Shards,
     @JsonProperty("_scroll_id") scrollId: Option[String],
+    @JsonProperty("pit_id") pitId: Option[String],
     @JsonProperty("aggregations") private val _aggregationsAsMap: Map[String, Any],
     hits: SearchHits
 ) {
