@@ -17,7 +17,7 @@ object Dependencies {
   val MockitoVersion                 = "5.15.2"
   val MonixVersion                   = "3.4.1"
   val PekkoHttpVersion               = "1.1.0"
-  val PekkoVersion                   = "1.1.2"
+  val PekkoVersion                   = "1.1.3"
   val PlayJsonVersion                = "3.0.4"
   val ReactiveStreamsVersion         = "1.0.4"
   val ScalatestPlusMockitoArtifactId = "mockito-5-12"
