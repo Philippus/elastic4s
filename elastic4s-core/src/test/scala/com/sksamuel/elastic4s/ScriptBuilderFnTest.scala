@@ -9,7 +9,10 @@ import org.scalatest.matchers.should.Matchers
 class ScriptBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("should handle recursive maps") {
-    ScriptBuilderFn(Script("myscript", params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3)))))).string shouldBe
+    ScriptBuilderFn(Script(
+      "myscript",
+      params = Map("a" -> 1.2, "b" -> Map("c" -> true, "d" -> List(Map("e" -> 3))))
+    )).string shouldBe
       """{"source":"myscript","params":{"a":1.2,"b":{"c":true,"d":[{"e":3}]}}}"""
   }
 

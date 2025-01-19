@@ -8,7 +8,9 @@ class PatternTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers {
 
   "PatternTokenizer builder" should {
     "set flags" in {
-      patternTokenizer("testy").flags("abc").json.string shouldBe """{"type":"pattern","flags":"abc","pattern":"\\W+"}"""
+      patternTokenizer(
+        "testy"
+      ).flags("abc").json.string shouldBe """{"type":"pattern","flags":"abc","pattern":"\\W+"}"""
     }
     "not set flags if not specified" in {
       patternTokenizer("testy").json.string shouldBe """{"type":"pattern","pattern":"\\W+"}"""

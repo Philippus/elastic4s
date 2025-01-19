@@ -31,7 +31,10 @@ class IndexTest extends AnyWordSpec with Matchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("electronics").fields(Map("name" -> "galaxy", "screensize" -> 5)).withId("55A").version(42L).versionType(
+      indexInto("electronics").fields(Map(
+        "name"       -> "galaxy",
+        "screensize" -> 5
+      )).withId("55A").version(42L).versionType(
         VersionType.External
       ),
       indexInto("electronics").fields(Map("name" -> "razor", "colours" -> Array("white", "blue"))),

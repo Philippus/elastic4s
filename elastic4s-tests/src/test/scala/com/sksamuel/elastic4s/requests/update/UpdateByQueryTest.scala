@@ -95,7 +95,10 @@ class UpdateByQueryTest
     }.await
 
     val task = client.execute {
-      updateByQueryAsync("pop", termsQuery("name", "coca")).script(script("ctx._source.foo = 'h'").lang("painless")).refreshImmediately
+      updateByQueryAsync(
+        "pop",
+        termsQuery("name", "coca")
+      ).script(script("ctx._source.foo = 'h'").lang("painless")).refreshImmediately
     }.await.result.task
 
     // A bit ugly way to poll the task until it's complete

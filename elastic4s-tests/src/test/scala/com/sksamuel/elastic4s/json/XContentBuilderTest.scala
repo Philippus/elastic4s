@@ -26,15 +26,23 @@ class XContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("should support raw fields in objects") {
-    XContentFactory.obj().rawField("nested", """{"test":true,"name":"foo"}""").string shouldBe """{"nested":{"test":true,"name":"foo"}}"""
+    XContentFactory.obj().rawField(
+      "nested",
+      """{"test":true,"name":"foo"}"""
+    ).string shouldBe """{"nested":{"test":true,"name":"foo"}}"""
   }
 
   test("should support raw values in arrays") {
-    XContentFactory.array().rawValue("""{"test":true,"name":"foo"}""").string shouldBe """[{"test":true,"name":"foo"}]"""
+    XContentFactory.array().rawValue(
+      """{"test":true,"name":"foo"}"""
+    ).string shouldBe """[{"test":true,"name":"foo"}]"""
   }
 
   test("should support boolean arrays") {
-    XContentFactory.obj().array("booleans", Array(true, false, true)).string shouldBe """{"booleans":[true,false,true]}"""
+    XContentFactory.obj().array(
+      "booleans",
+      Array(true, false, true)
+    ).string shouldBe """{"booleans":[true,false,true]}"""
   }
 
   test("should support double arrays") {
@@ -42,11 +50,17 @@ class XContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("should support biginteger arrays") {
-    XContentFactory.obj().autoarray("bigintegers", Seq(new BigInteger("123"), new BigInteger("456"))).string shouldBe """{"bigintegers":[123,456]}"""
+    XContentFactory.obj().autoarray(
+      "bigintegers",
+      Seq(new BigInteger("123"), new BigInteger("456"))
+    ).string shouldBe """{"bigintegers":[123,456]}"""
   }
 
   test("should support long arrays") {
-    XContentFactory.obj().array("longs", Array(345345435345L, 3257059014L)).string shouldBe """{"longs":[345345435345,3257059014]}"""
+    XContentFactory.obj().array(
+      "longs",
+      Array(345345435345L, 3257059014L)
+    ).string shouldBe """{"longs":[345345435345,3257059014]}"""
   }
 
   test("should support string arrays") {
@@ -58,15 +72,24 @@ class XContentBuilderTest extends AnyFunSuite with Matchers {
   }
 
   test("should support bigdecimal fields") {
-    XContentFactory.obj().field("dec", BigDecimal("291839123.12321312")).string shouldBe """{"dec":291839123.12321312}"""
+    XContentFactory.obj().field(
+      "dec",
+      BigDecimal("291839123.12321312")
+    ).string shouldBe """{"dec":291839123.12321312}"""
   }
 
   test("should support bigint fields") {
-    XContentFactory.obj().field("bigint", BigInt("98123981231982361893619")).string shouldBe """{"bigint":98123981231982361893619}"""
+    XContentFactory.obj().field(
+      "bigint",
+      BigInt("98123981231982361893619")
+    ).string shouldBe """{"bigint":98123981231982361893619}"""
   }
 
   test("should support biginteger fields") {
-    XContentFactory.obj().autofield("biginteger", new BigInteger("98123981231982361893619")).string shouldBe """{"biginteger":98123981231982361893619}"""
+    XContentFactory.obj().autofield(
+      "biginteger",
+      new BigInteger("98123981231982361893619")
+    ).string shouldBe """{"biginteger":98123981231982361893619}"""
   }
 
   test("should support iterable fields") {

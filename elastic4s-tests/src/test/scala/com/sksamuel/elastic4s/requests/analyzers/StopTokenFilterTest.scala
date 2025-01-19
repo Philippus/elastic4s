@@ -8,7 +8,10 @@ class StopTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers 
 
   "StopTokenFilter builder" should {
     "set stop words" in {
-      stopTokenFilter("testy").stopwords("boo", "foo").json.string shouldBe """{"type":"stop","stopwords":["boo","foo"]}"""
+      stopTokenFilter("testy").stopwords(
+        "boo",
+        "foo"
+      ).json.string shouldBe """{"type":"stop","stopwords":["boo","foo"]}"""
     }
     "set ignore case" in {
       stopTokenFilter("testy").ignoreCase(true).json.string shouldBe """{"type":"stop","ignore_case":true}"""

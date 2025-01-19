@@ -17,13 +17,19 @@ class ShingleTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matche
       shingleTokenFilter("testy").minShingleSize(11).json.string shouldBe """{"type":"shingle","min_shingle_size":11}"""
     }
     "set output unigrams" in {
-      shingleTokenFilter("testy").outputUnigrams(false).json.string shouldBe """{"type":"shingle","output_unigrams":false}"""
+      shingleTokenFilter(
+        "testy"
+      ).outputUnigrams(false).json.string shouldBe """{"type":"shingle","output_unigrams":false}"""
     }
     "set output unigrams if no shingles" in {
-      shingleTokenFilter("testy").outputUnigramsIfNoShingles(true).json.string shouldBe """{"type":"shingle","output_unigrams_if_no_shingles":true}"""
+      shingleTokenFilter("testy").outputUnigramsIfNoShingles(
+        true
+      ).json.string shouldBe """{"type":"shingle","output_unigrams_if_no_shingles":true}"""
     }
     "set token separator" in {
-      shingleTokenFilter("testy").tokenSeparator("/").json.string shouldBe """{"type":"shingle","token_separator":"/"}"""
+      shingleTokenFilter(
+        "testy"
+      ).tokenSeparator("/").json.string shouldBe """{"type":"shingle","token_separator":"/"}"""
     }
     "set filler token" in {
       shingleTokenFilter("testy").fillerToken("-").json.string shouldBe """{"type":"shingle","filler_token":"-"}"""

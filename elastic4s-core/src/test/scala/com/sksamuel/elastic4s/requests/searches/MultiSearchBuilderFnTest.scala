@@ -20,7 +20,9 @@ class MultiSearchBuilderFnTest extends AnyWordSpec with Matchers {
     }
     "build multisearch request with ignore_unavailable indices option" in {
       val req = searchRequest indicesOptions IndicesOptionsRequest(ignoreUnavailable = true)
-      MultiSearchBuilderFn(multi(req)).linesIterator.next shouldBe """{"index":"someIndex","ignore_unavailable":"true"}"""
+      MultiSearchBuilderFn(
+        multi(req)
+      ).linesIterator.next shouldBe """{"index":"someIndex","ignore_unavailable":"true"}"""
 
     }
   }

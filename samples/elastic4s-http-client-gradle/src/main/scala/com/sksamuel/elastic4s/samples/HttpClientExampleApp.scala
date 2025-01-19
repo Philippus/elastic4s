@@ -15,7 +15,7 @@ object HttpClientExampleApp extends App {
   client.execute {
     bulk(
       indexInto("myindex" / "mytype").fields("country" -> "Mongolia", "capital" -> "Ulaanbaatar"),
-      indexInto("myindex" / "mytype").fields("country" -> "Namibia", "capital" -> "Windhoek")
+      indexInto("myindex" / "mytype").fields("country" -> "Namibia", "capital"  -> "Windhoek")
     ).refresh(RefreshPolicy.WaitFor)
   }.await
 

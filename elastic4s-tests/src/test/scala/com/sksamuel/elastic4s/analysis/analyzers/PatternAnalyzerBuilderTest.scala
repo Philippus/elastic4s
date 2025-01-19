@@ -8,7 +8,10 @@ class PatternAnalyzerBuilderTest extends AnyWordSpec with Matchers {
 
   "PatternAnalyzer" should {
     "build json" in {
-      PatternAnalyzer("testy", regex = "21.*").lowercase(true).build.string shouldBe """{"type":"pattern","lowercase":true,"pattern":"21.*"}"""
+      PatternAnalyzer(
+        "testy",
+        regex = "21.*"
+      ).lowercase(true).build.string shouldBe """{"type":"pattern","lowercase":true,"pattern":"21.*"}"""
     }
   }
 }
