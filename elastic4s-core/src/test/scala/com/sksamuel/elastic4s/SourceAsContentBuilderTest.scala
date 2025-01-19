@@ -8,7 +8,9 @@ class SourceAsContentBuilderTest extends AnyFunSuite with Matchers {
 
   test("source as content builder should handle tuples") {
     val map = Map("name" -> "sammy", "teams" -> Seq(("football", "boro"), ("baseball", "phillies")), "projects" -> null)
-    SourceAsContentBuilder(map).string shouldBe """{"name":"sammy","teams":[["football","boro"],["baseball","phillies"]],"projects":null}"""
+    SourceAsContentBuilder(
+      map
+    ).string shouldBe """{"name":"sammy","teams":[["football","boro"],["baseball","phillies"]],"projects":null}"""
   }
 
   test("source as content builder should handle bigdecimals") {

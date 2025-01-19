@@ -43,6 +43,8 @@ class UpdateIndexLevelSettingsBuilderTest extends AnyFunSuite with Matchers {
       settings = Map("index.blocks.write" -> true.toString)
     )
 
-    UpdateIndexLevelSettingsBuilder(definition).string shouldBe """{"settings":{"index.blocks.write":"true","index.number_of_replicas":0}}"""
+    UpdateIndexLevelSettingsBuilder(
+      definition
+    ).string shouldBe """{"settings":{"index.blocks.write":"true","index.number_of_replicas":0}}"""
   }
 }

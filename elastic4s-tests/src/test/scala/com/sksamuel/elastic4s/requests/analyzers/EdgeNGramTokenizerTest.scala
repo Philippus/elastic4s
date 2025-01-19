@@ -8,7 +8,10 @@ class EdgeNGramTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers
 
   "EdgeNGramTokenizer builder" should {
     "set min and max ngrams" in {
-      edgeNGramTokenizer("testy").minMaxGrams(3, 4).json.string shouldBe """{"type":"edgeNGram","min_gram":3,"max_gram":4}"""
+      edgeNGramTokenizer("testy").minMaxGrams(
+        3,
+        4
+      ).json.string shouldBe """{"type":"edgeNGram","min_gram":3,"max_gram":4}"""
     }
     "set token chars" in {
       edgeNGramTokenizer("testy")
