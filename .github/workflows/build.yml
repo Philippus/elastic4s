@@ -26,6 +26,9 @@ jobs:
           distribution: temurin
           java-version: 11
 
+      - name: set up sbt
+        uses: sbt/setup-sbt@v1
+
       - name: Launch elastic docker
         uses: ./.github/actions/launch-elasticsearch
 
@@ -46,6 +49,9 @@ jobs:
           distribution: temurin
           java-version: 11
 
+      - name: set up sbt
+        uses: sbt/setup-sbt@v1
+
       - name: Launch elastic docker
         uses: ./.github/actions/launch-elasticsearch
 
@@ -65,6 +71,9 @@ jobs:
         with:
           distribution: temurin
           java-version: 11
+
+      - name: set up sbt
+        uses: sbt/setup-sbt@v1
 
       - name: Launch elastic docker
         uses: ./.github/actions/launch-elasticsearch
