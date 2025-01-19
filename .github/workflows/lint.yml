@@ -22,5 +22,8 @@ jobs:
           distribution: temurin
           java-version: 11
 
+      - name: set up sbt
+        uses: sbt/setup-sbt@v1
+
       - name: run lint
         run: sbt -v "+scalafmtCheckAll;scalafmtSbtCheck"
