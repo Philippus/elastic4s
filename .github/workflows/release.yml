@@ -13,6 +13,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 11
+      - uses: sbt/setup-sbt@v1
       - run: sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
