@@ -26,10 +26,10 @@ object Dependencies {
   val ScalatestVersion               = "3.2.19"
   val Slf4jVersion                   = "2.0.16"
   val SprayJsonVersion               = "1.3.6"
-  val SttpVersion                    = "3.10.2"
+  val SttpVersion                    = "3.10.3"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
-  val ZIOVersion                     = "2.1.14"
+  val ZIOVersion                     = "2.1.15"
   val ZIOJsonVersion                 = "0.7.15"
 
   lazy val commonDeps = Seq(
