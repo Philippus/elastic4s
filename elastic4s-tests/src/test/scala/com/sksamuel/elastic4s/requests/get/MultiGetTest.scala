@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.get
 
+import com.sksamuel.elastic4s.{Authentication, CommonRequestOptions}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
@@ -106,5 +107,15 @@ class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
 
     resp.items.head.id shouldBe "3"
     resp.items.head.exists shouldBe true
+  }
+
+  it should "error if authentication is unsuccessful" in {
+    implicit val requestOptions: CommonRequestOptions = CommonRequestOptions.defaults.copy(
+      authentication = Authentication.UsernamePassword("not_exists", "pass123")
+    )
+
+    client.execute(
+      multiget(get("coldplay", "3") routing "3")
+    ).await.error.`type` shouldBe "security_exception"
   }
 }
