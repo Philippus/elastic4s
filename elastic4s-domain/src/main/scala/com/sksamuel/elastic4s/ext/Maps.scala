@@ -12,6 +12,7 @@ object Maps {
     case (key, value: java.util.Map[String, V]) => flatten(value.asScala.toMap[String, V]).map { case (k, v) =>
         s"$key$separator$k" -> v
       }
+    case (key, null)                            => Map(key -> null.asInstanceOf[V])
     case (key, value: V)                        => Map(key -> value)
   }
 
