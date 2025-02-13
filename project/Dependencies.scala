@@ -8,7 +8,7 @@ object Dependencies {
   val CatsEffectVersion              = "3.5.7"
   val CirceVersion                   = "0.14.10"
   val CommonsIoVersion               = "2.18.0"
-  val ElasticsearchVersion           = "8.17.1"
+  val ElasticsearchVersion           = "8.17.2"
   val ExtsVersion                    = "1.61.1"
   val Http4sVersion                  = "0.23.30"
   val JacksonVersion                 = "2.18.2"
@@ -30,7 +30,7 @@ object Dependencies {
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
   val ZIOVersion                     = "2.1.15"
-  val ZIOJsonVersion                 = "0.7.16"
+  val ZIOJsonVersion                 = "0.7.17"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
