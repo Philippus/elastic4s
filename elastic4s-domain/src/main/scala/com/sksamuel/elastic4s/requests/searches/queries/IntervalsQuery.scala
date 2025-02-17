@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
-case class IntervalsQuery(field: String, rule: IntervalsRule) extends Query
+case class IntervalsQuery(field: String, rule: IntervalsRule, boost: Option[Double] = None) extends Query
 
 sealed trait IntervalsRule
 case class Match(
