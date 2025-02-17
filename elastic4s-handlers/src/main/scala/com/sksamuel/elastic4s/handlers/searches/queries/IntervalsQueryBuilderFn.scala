@@ -143,7 +143,13 @@ object IntervalsQueryBuilderFn {
   def apply(q: IntervalsQuery): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
     builder.startObject("intervals")
-    builder.rawField(q.field, IntervalsRuleBuilderFn(q.rule))
+    builder.rawField(
+      q.field, {
+        val ruleBuilder = IntervalsRuleBuilderFn(q.rule)
+        q.boost.foreach(ruleBuilder.field("boost", _))
+        ruleBuilder
+      }
+    )
     builder.endObject()
   }
 }
