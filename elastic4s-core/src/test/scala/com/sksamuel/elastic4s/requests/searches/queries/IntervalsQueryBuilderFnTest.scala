@@ -188,4 +188,58 @@ class IntervalsQueryBuilderFnTest extends AnyFunSuite with Matchers with GivenWh
     Then("query should have right fields")
     queryBody.string should matchJson(expected)
   }
+
+  test("Should correctly build intervals boosted query") {
+    Given("An intervals query with boost set")
+    val query = IntervalsQuery(
+      "my_text",
+      AllOf(List(
+        Match(query = "my favorite food").maxGaps(0).ordered(true),
+        AnyOf(intervals =
+          List(
+            Match(query = "hot water"),
+            Match(query = "cold porridge")
+          )
+        )
+      )).ordered(true),
+      Some(2.5D)
+    )
+
+    When("Intervals query is built")
+    val queryBody = IntervalsQueryBuilderFn(query)
+
+    Then("query should have right fields and boost set")
+    queryBody.string should matchJson(intervalsBoostedQuery)
+  }
+
+  def intervalsBoostedQuery: String =
+    """
+      |{
+      |  "intervals" : {
+      |    "my_text" : {
+      |      "boost": 2.5,
+      |      "all_of" : {
+      |        "ordered" : true,
+      |        "intervals" : [
+      |          {
+      |            "match" : {
+      |              "query" : "my favorite food",
+      |              "max_gaps" : 0,
+      |              "ordered" : true
+      |            }
+      |          },
+      |          {
+      |            "any_of" : {
+      |              "intervals" : [
+      |                { "match" : { "query" : "hot water" } },
+      |                { "match" : { "query" : "cold porridge" } }
+      |              ]
+      |            }
+      |          }
+      |        ]
+      |      }
+      |    }
+      |  }
+      |}
+    """.stripMargin.replace("\n", "")
 }
