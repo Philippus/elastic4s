@@ -11,7 +11,7 @@ object Dependencies {
   val CommonsIoVersion               = "2.18.0"
   val ElasticsearchVersion           = "7.17.28"
   val ExtsVersion                    = "1.61.1"
-  val JacksonVersion                 = "2.18.2"
+  val JacksonVersion                 = "2.18.3"
   val Json4sVersion                  = "4.0.7"
   val Log4jVersion                   = "2.24.3"
   val MockitoVersion                 = "5.15.2"
