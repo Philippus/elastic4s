@@ -8,8 +8,7 @@ on:
       - '*.md'
       - '*.yml'
     branches:
-      - main
-      - release/*
+      - series/9.x
 
 jobs:
   scala-2_12:
