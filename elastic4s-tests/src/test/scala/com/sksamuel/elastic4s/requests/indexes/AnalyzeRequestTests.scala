@@ -29,16 +29,15 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
     ))
   }
 
-  "standard analyze request text array and text" should "equal" in {
+  "standard analyze with text array" should "work well" in {
     val result = client.execute {
-      analyze("hello world")
-    }.await.result
-
-    val resultSeq = client.execute {
       analyze("hello", "world")
     }.await.result
 
-    result shouldBe resultSeq
+    result shouldBe NoExplainAnalyzeResponse(Seq(
+      AnalyseToken("hello", 0, 5, "<ALPHANUM>", 0),
+      AnalyseToken("world", 6, 11, "<ALPHANUM>", 101)
+    ))
   }
 
   "analyze request with explain" should "work well" in {
