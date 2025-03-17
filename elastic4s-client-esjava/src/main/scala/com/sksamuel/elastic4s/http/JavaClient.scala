@@ -27,6 +27,7 @@ import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, Req
 import org.elasticsearch.client.{Request, ResponseException, ResponseListener, RestClient}
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.io.{Codec, Source}
 import scala.language.higherKinds
 
@@ -34,7 +35,7 @@ case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
 
 /** An implementation of HttpClient that wraps the Elasticsearch Java Rest Client
   */
-class JavaClient(client: RestClient) extends HttpClient {
+class JavaClient(client: RestClient)(implicit ec: ExecutionContext) extends HttpClient[Future] {
 
   def apacheEntity(entity: HttpEntity): AbstractHttpEntity = entity match {
     case e: HttpEntity.StringEntity      =>
@@ -72,16 +73,18 @@ class JavaClient(client: RestClient) extends HttpClient {
     HttpResponse(r.getStatusLine.getStatusCode, entity, headers)
   }
 
-  override def send(req: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
+  override def send(req: ElasticRequest): Future[HttpResponse] = {
     if (logger.isDebugEnabled) {
       logger.debug("Executing elastic request {}", Show[ElasticRequest].show(req))
     }
 
+    val promise = Promise[HttpResponse]()
+
     val l = new ResponseListener {
-      override def onSuccess(r: org.elasticsearch.client.Response): Unit = callback(Right(fromResponse(r)))
+      override def onSuccess(r: org.elasticsearch.client.Response): Unit = promise.success(fromResponse(r))
       override def onFailure(e: Exception): Unit                         = e match {
-        case re: ResponseException => callback(Right(fromResponse(re.getResponse)))
-        case t                     => callback(Left(JavaClientExceptionWrapper(t)))
+        case re: ResponseException => promise.success(fromResponse(re.getResponse))
+        case t                     => promise.failure(JavaClientExceptionWrapper(t))
       }
     }
 
@@ -92,9 +95,11 @@ class JavaClient(client: RestClient) extends HttpClient {
     req.headers.foreach((optBuilder.addHeader _).tupled)
     request.setOptions(optBuilder)
     client.performRequestAsync(request, l)
+
+    promise.future
   }
 
-  override def close(): Unit = client.close()
+  override def close(): Future[Unit] = Future(client.close())
 
   private def isEntityGziped(entity: org.apache.http.HttpEntity): Boolean = {
     Option(entity.getContentEncoding).flatMap(x => Option(x.getValue)).contains("gzip")
@@ -112,24 +117,28 @@ object JavaClient {
     * @return
     *   newly created Scala client
     */
-  def fromRestClient(client: RestClient): JavaClient = new JavaClient(client)
+  def fromRestClient(client: RestClient)(implicit ec: ExecutionContext): JavaClient = new JavaClient(client)
 
   /** Creates a new [[ElasticClient]] using the elasticsearch Java API rest client as the underlying client. Optional
     * callbacks can be passed in to configure the client.
     */
-  def apply(props: ElasticProperties): JavaClient =
+  def apply(props: ElasticProperties)(implicit ec: ExecutionContext): JavaClient =
     apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback)
 
   /** Creates a new [[ElasticClient]] using the elasticsearch Java API rest client as the underlying client. Optional
     * callbacks can be passed in to configure the client.
     */
-  def apply(props: ElasticProperties, requestConfigCallback: RequestConfigCallback): JavaClient =
+  def apply(props: ElasticProperties, requestConfigCallback: RequestConfigCallback)(implicit
+      ec: ExecutionContext
+  ): JavaClient =
     apply(props, requestConfigCallback, NoOpHttpClientConfigCallback)
 
   /** Creates a new [[ElasticClient]] using the elasticsearch Java API rest client as the underlying client. Optional
     * callbacks can be passed in to configure the client.
     */
-  def apply(props: ElasticProperties, httpClientConfigCallback: HttpClientConfigCallback): JavaClient =
+  def apply(props: ElasticProperties, httpClientConfigCallback: HttpClientConfigCallback)(implicit
+      ec: ExecutionContext
+  ): JavaClient =
     apply(props, NoOpRequestConfigCallback, httpClientConfigCallback)
 
   /** Creates a new [[ElasticClient]] using the elasticsearch Java API rest client as the underlying client. Optional
@@ -139,7 +148,7 @@ object JavaClient {
       props: ElasticProperties,
       requestConfigCallback: RequestConfigCallback,
       httpClientConfigCallback: HttpClientConfigCallback
-  ): JavaClient = {
+  )(implicit ec: ExecutionContext): JavaClient = {
     val hosts = props.endpoints.map {
       case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
     }

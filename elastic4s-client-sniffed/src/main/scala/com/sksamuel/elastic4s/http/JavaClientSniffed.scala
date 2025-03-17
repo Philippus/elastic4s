@@ -8,6 +8,7 @@ import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, Req
 import org.elasticsearch.client.sniff.{NodesSniffer, SniffOnFailureListener, Sniffer}
 import org.slf4j.{Logger, LoggerFactory}
 
+import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.{FiniteDuration, _}
 
 /** @param sniffIntervals
@@ -36,7 +37,9 @@ object JavaClientSniffed {
     * underlying client. Optional callbacks can be passed in to configure the client. Sniffing is added by the
     * [[SniffingConfiguration]]
     */
-  def apply(props: ElasticProperties, sniffingConfiguration: SniffingConfiguration): JavaClient =
+  def apply(props: ElasticProperties, sniffingConfiguration: SniffingConfiguration)(implicit
+      ec: ExecutionContext
+  ): JavaClient =
     apply(props, NoOpRequestConfigCallback, NoOpHttpClientConfigCallback, sniffingConfiguration)
 
   /** Creates a new [[com.sksamuel.elastic4s.ElasticClient]] using the elasticsearch Java API rest client as the
@@ -48,7 +51,7 @@ object JavaClientSniffed {
       requestConfigCallback: RequestConfigCallback,
       httpClientConfigCallback: HttpClientConfigCallback,
       sniffingConfiguration: SniffingConfiguration
-  ): JavaClient = {
+  )(implicit ec: ExecutionContext): JavaClient = {
     val hosts = props.endpoints.map {
       case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
     }

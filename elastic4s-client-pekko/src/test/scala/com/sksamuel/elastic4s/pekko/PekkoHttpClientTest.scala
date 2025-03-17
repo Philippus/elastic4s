@@ -2,17 +2,23 @@ package com.sksamuel.elastic4s.pekko
 
 import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.elastic4s.testkit.DockerTests.{elasticHost, elasticPort}
 import com.sksamuel.elastic4s.{Authentication, CommonRequestOptions, ElasticClient}
 import org.apache.pekko.actor.ActorSystem
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import scala.concurrent.Future
 import scala.util.Try
 
 class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   private implicit lazy val system: ActorSystem = ActorSystem()
+
+  private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
+
+  override val client: ElasticClient[Future] = ElasticClient(pekkoClient)
 
   override def beforeAll(): Unit = {
     Try {
@@ -28,14 +34,10 @@ class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests wit
         deleteIndex("testindex")
       }.await
 
-      pekkoClient.shutdown().await
+      client.close().await
       system.terminate().await
     }
   }
-
-  private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
-
-  override val client = ElasticClient(pekkoClient)
 
   "PekkoHttpClient" should "support utf-8" in {
 

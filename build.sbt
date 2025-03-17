@@ -351,7 +351,7 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, cats_effect, testkit % "test")
   .settings(name := "elastic4s-client-http4s")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(http4sClient, http4sEmberClient % Test))

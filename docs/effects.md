@@ -1,5 +1,7 @@
 ## Effect Types
 
+TODO: fix this section
+
 By default, elastic4s uses scala `Future`s when returning responses, but any effect type can be supported.
 
 Internally, elastic4s uses two typeclasses for execution. An `Executor` which will wrap the result in an effect.

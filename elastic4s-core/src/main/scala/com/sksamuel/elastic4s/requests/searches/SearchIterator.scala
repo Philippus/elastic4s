@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.{ElasticClient, HitReader, RequestFailure, RequestSuccess}
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import scala.language.higherKinds
 
@@ -12,15 +12,11 @@ import scala.language.higherKinds
   * Each time the iterator needs to request more data, the iterator will block until the request returns. If you require
   * a completely lazy style iterator, consider using reactive streams.
   */
-trait Awaitable[F[_]] {
-  def result[U](f: F[U], timeout: Duration): U
-}
-
 object SearchIterator {
 
   /** Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits(client: ElasticClient, searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
+  def hits(client: ElasticClient[Future], searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
     new Iterator[SearchHit] {
       require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
@@ -60,7 +56,7 @@ object SearchIterator {
   /** Creates a new Iterator for type T by wrapping the given HTTP client. A typeclass HitReader[T] must be provided for
     * marshalling of the search responses into instances of type T.
     */
-  def iterate[T](client: ElasticClient, searchreq: SearchRequest)(implicit
+  def iterate[T](client: ElasticClient[Future], searchreq: SearchRequest)(implicit
       reader: HitReader[T],
       timeout: Duration
   ): Iterator[T] =

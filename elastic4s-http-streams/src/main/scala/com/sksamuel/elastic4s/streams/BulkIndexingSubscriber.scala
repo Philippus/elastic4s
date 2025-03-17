@@ -7,6 +7,7 @@ import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.higherKinds
 import scala.util.{Failure, Success}
@@ -27,7 +28,7 @@ import scala.util.{Failure, Success}
   */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class BulkIndexingSubscriber[T] private[streams] (
-    client: ElasticClient,
+    client: ElasticClient[Future],
     builder: RequestBuilder[T],
     config: SubscriberConfig[T]
 )(implicit actorRefFactory: ActorRefFactory)
@@ -84,7 +85,7 @@ object BulkActor {
 
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 class BulkActor[T](
-    client: ElasticClient,
+    client: ElasticClient[Future],
     subscription: Subscription,
     builder: RequestBuilder[T],
     config: SubscriberConfig[T]

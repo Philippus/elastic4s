@@ -1,10 +1,10 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.module.scala.JavaTypeable
+import com.sksamuel.elastic4s.FunctorSyntax._
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.util.Base64
-import scala.concurrent.duration.{Duration, _}
+import scala.concurrent.duration._
 import scala.language.higherKinds
 
 /** An [[ElasticClient]] is used to execute HTTP requests against an ElasticSearch cluster. This class delegates the
@@ -16,7 +16,7 @@ import scala.language.higherKinds
   * @param client
   *   the HTTP client library to use
   */
-case class ElasticClient(client: HttpClient) extends AutoCloseable {
+case class ElasticClient[F[_]: Functor](client: HttpClient[F]) {
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
@@ -28,13 +28,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
   // Executes the given request type T, and returns an effect of Response[U]
   // where U is particular to the request type.
   // For example a search request will return a Response[SearchResponse].
-  def execute[T, U, F[_]](t: T)(implicit
-      executor: Executor[F],
-      functor: Functor[F],
-      handler: Handler[T, U],
-      javaTypeable: JavaTypeable[U],
-      options: CommonRequestOptions
-  ): F[Response[U]] = {
+  def execute[T, U](t: T)(implicit handler: Handler[T, U], options: CommonRequestOptions): F[Response[U]] = {
     val request = handler.build(t)
 
     val request2 = if (options.timeout.toMillis > 0) {
@@ -53,8 +47,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
 
     val request5 = authenticate(request4, options.authentication)
 
-    val f = executor.exec(client, request5)
-    functor.map(f) { resp =>
+    client.send(request5).map { resp =>
       handler.responseHandler.handle(resp) match {
         case Right(u)    => RequestSuccess(resp.statusCode, resp.entity.map(_.content), resp.headers, u)
         case Left(error) => RequestFailure(resp.statusCode, resp.entity.map(_.content), resp.headers, error)
@@ -79,7 +72,7 @@ case class ElasticClient(client: HttpClient) extends AutoCloseable {
     }
   }
 
-  def close(): Unit = client.close()
+  def close(): F[Unit] = client.close()
 }
 
 sealed trait Authentication
