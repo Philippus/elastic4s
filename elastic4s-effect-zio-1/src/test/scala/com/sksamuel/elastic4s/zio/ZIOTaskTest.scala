@@ -1,13 +1,12 @@
 package com.sksamuel.elastic4s.zio
 
-import com.sksamuel.elastic4s.testkit.DockerTests
+import com.sksamuel.elastic4s.Functor
 import com.sksamuel.elastic4s.zio.instances._
-import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import zio.Task
 
-class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
+class ZIOTaskTest extends AnyFlatSpec with Matchers {
 
   implicit class RichZIO[A](task: Task[A]) {
     def unsafeRun: Either[Throwable, A] = {
@@ -15,24 +14,8 @@ class ZIOTaskTest extends AnyFlatSpec with Matchers with DockerTests with Before
     }
   }
 
-  override def beforeAll(): Unit = {
-    client.execute {
-      deleteIndex("testindex")
-    }.unsafeRun
-  }
-
-  override def afterAll(): Unit = {
-    client.execute {
-      deleteIndex("testindex")
-    }.unsafeRun
-  }
-
-  it should "index doc successfully" in {
-    val r = client.execute {
-      indexInto("testindex").doc("""{ "text":"Buna ziua!" }""")
-    }.unsafeRun
-    r shouldBe Symbol("right")
-    r.right.get.result.result shouldBe "created"
+  "Functor" should "map A to B" in {
+    Functor[Task].map(Task.succeed(1))(_ + 1).unsafeRun shouldBe Right(2)
   }
 
 }

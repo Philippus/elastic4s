@@ -68,7 +68,7 @@ class AkkaHttpClientMockTest
         .thenReturn(Success(HttpResponse().withEntity("ok")))
 
       client
-        .sendAsync(ElasticRequest("GET", "/test"))
+        .send(ElasticRequest("GET", "/test"))
         .futureValue shouldBe ElasticResponse(
         200,
         Some(ElasticEntity.StringEntity("ok", None)),
@@ -104,7 +104,7 @@ class AkkaHttpClientMockTest
         .thenReturn(Success(HttpResponse(StatusCodes.BadGateway)))
 
       client
-        .sendAsync(ElasticRequest("GET", "/test"))
+        .send(ElasticRequest("GET", "/test"))
         .futureValue shouldBe ElasticResponse(
         502,
         Some(ElasticEntity.StringEntity("", None)),
@@ -144,7 +144,7 @@ class AkkaHttpClientMockTest
         .thenReturn(Success(HttpResponse().withEntity("host2")))
 
       client
-        .sendAsync(ElasticRequest("GET", "/test"))
+        .send(ElasticRequest("GET", "/test"))
         .futureValue
     }
 
@@ -180,7 +180,7 @@ class AkkaHttpClientMockTest
         .thenReturn(Success(HttpResponse().withEntity("host2")))
 
       client
-        .sendAsync(ElasticRequest("GET", "/test"))
+        .send(ElasticRequest("GET", "/test"))
         .futureValue
     }
 
@@ -210,7 +210,7 @@ class AkkaHttpClientMockTest
         .thenReturn(Success(HttpResponse().withEntity("host2")))
 
       client
-        .sendAsync(ElasticRequest("GET", "/test"))
+        .send(ElasticRequest("GET", "/test"))
         .futureValue shouldBe ElasticResponse(
         200,
         Some(ElasticEntity.StringEntity("host2", None)),

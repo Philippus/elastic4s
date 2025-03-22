@@ -1,15 +1,16 @@
 package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor.ActorRefFactory
-
 import com.sksamuel.elastic4s.requests.searches.SearchRequest
 import com.sksamuel.elastic4s.{ElasticClient, Indexes, IndexesAndTypes}
+
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 object ReactiveElastic {
 
-  implicit class ReactiveElastic(client: ElasticClient) {
+  implicit class ReactiveElastic(client: ElasticClient[Future]) {
 
     import com.sksamuel.elastic4s.ElasticDsl._
 

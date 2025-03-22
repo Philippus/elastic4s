@@ -1,16 +1,17 @@
 package com.sksamuel.elastic4s.streams
 
 import akka.actor.ActorRefFactory
-
 import com.sksamuel.elastic4s.requests.searches.SearchRequest
 import com.sksamuel.elastic4s.{ElasticClient, Indexes, IndexesAndTypes}
+
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
 object ReactiveElastic {
 
-  implicit class ReactiveElastic(client: ElasticClient) {
+  implicit class ReactiveElastic(client: ElasticClient[Future]) {
 
     import com.sksamuel.elastic4s.ElasticDsl._
 
