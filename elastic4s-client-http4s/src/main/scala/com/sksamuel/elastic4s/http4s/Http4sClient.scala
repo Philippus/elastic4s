@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http4s
 
-import cats.effect.Async
+import cats.effect.Sync
 import com.sksamuel.elastic4s
 import com.sksamuel.elastic4s.ElasticNodeEndpoint
 import fs2.io.file.Files
@@ -10,7 +10,7 @@ import scala.language.higherKinds
 
 object Http4sClient {
 
-  def apply[F[_]: Async: Files](
+  def apply[F[_]: Sync: Files](
       client: http4s.client.Client[F],
       endpoint: ElasticNodeEndpoint
   ): Http4sClient[F] = {
@@ -26,7 +26,7 @@ object Http4sClient {
 
 }
 
-class Http4sClient[F[_]: Async: Files](
+class Http4sClient[F[_]: Sync: Files](
     client: http4s.client.Client[F],
     endpoint: http4s.Uri
 ) extends elastic4s.HttpClient[F] with RequestResponseConverters {
@@ -40,5 +40,5 @@ class Http4sClient[F[_]: Async: Files](
   }
 
   // Instantiation of the http4s client happens by the Resource monad, so closing should be managed by it as well
-  override def close(): F[Unit] = Async[F].unit
+  override def close(): F[Unit] = Sync[F].unit
 }
