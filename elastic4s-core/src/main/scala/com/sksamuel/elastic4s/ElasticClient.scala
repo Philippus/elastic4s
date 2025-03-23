@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.FunctorSyntax._
+import cats.Functor
+import cats.syntax.functor._
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.util.Base64

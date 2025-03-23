@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.http4s
 
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
-import com.sksamuel.elastic4s.cats.effect.instances._
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.testkit.DockerTests.{elasticHost, elasticPort}
 import com.sksamuel.elastic4s.{Authentication, CommonRequestOptions, ElasticClient}
