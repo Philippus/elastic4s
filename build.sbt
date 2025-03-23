@@ -101,11 +101,6 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   clientsSniffed,
   clientpekko,
   clienthttp4s,
-  cats_effect,
-  cats_effect_2,
-  zio_1,
-  zio,
-  monix,
   tests,
   testkit,
   circe,
@@ -136,7 +131,7 @@ lazy val root                                  = Project("elastic4s", file("."))
     noPublishSettings
   )
   .aggregate(
-    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
+    Seq[ProjectReference](sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
@@ -154,7 +149,10 @@ lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .dependsOn(domain, clientcore, handlers, json_builder)
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= fasterXmlJacksonScala)
+  .settings(
+    libraryDependencies += cats,
+    libraryDependencies ++= fasterXmlJacksonScala
+  )
 
 lazy val handlers = (project in file("elastic4s-handlers"))
   .settings(name := "elastic4s-handlers")
@@ -190,42 +188,6 @@ lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .dependsOn(clientesjava)
   .settings(scala3Settings)
   .settings(libraryDependencies += elasticsearchRestClientSniffer)
-
-lazy val cats_effect = (project in file("elastic4s-effect-cats"))
-  .dependsOn(core, testkit % "test")
-  .settings(name := "elastic4s-effect-cats")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += cats)
-
-lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
-  .dependsOn(core, testkit % "test")
-  .settings(name := "elastic4s-effect-cats-2")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += cats2)
-
-lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
-  .dependsOn(core, testkit % "test")
-  .settings(name := "elastic4s-effect-zio-1")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += Dependencies.zio1)
-
-lazy val zio = (project in file("elastic4s-effect-zio"))
-  .dependsOn(core, testkit % "test")
-  .settings(name := "elastic4s-effect-zio")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += Dependencies.zio)
-
-lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
-  .dependsOn(core)
-  .settings(name := "elastic4s-effect-scalaz")
-  .settings(scala2Settings) // scalaz.concurrent has gone now, so this is probably never going to be portable to scala 3
-  .settings(libraryDependencies ++= Dependencies.scalaz)
-
-lazy val monix = (project in file("elastic4s-effect-monix"))
-  .dependsOn(core)
-  .settings(name := "elastic4s-effect-monix")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += Dependencies.monix)
 
 lazy val testkit = (project in file("elastic4s-testkit"))
   .dependsOn(core, clientesjava)
@@ -351,7 +313,7 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
-  .dependsOn(core, cats_effect, testkit % "test")
+  .dependsOn(core, testkit % "test")
   .settings(name := "elastic4s-client-http4s")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(http4sClient, http4sEmberClient % Test))

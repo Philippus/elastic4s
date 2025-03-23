@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.pekko
 
+import cats.implicits.catsStdInstancesForFuture
 import com.sksamuel.elastic4s.requests.common.HealthStatus
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.testkit.DockerTests.{elasticHost, elasticPort}
@@ -9,12 +10,13 @@ import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 class PekkoHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   private implicit lazy val system: ActorSystem = ActorSystem()
+  implicit lazy val ec: ExecutionContext        = system.dispatcher
 
   private lazy val pekkoClient = PekkoHttpClient(PekkoHttpClientSettings(List(s"$elasticHost:$elasticPort")))
 
