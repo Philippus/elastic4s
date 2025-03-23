@@ -11,7 +11,7 @@ import scala.util.Try
   * documents. These methods are very useful when writing tests to allow for blocking, iterative coding
   */
 trait ElasticSugar extends ElasticDsl {
-  this: Suite with ClientProvider =>
+  this: Suite with FutureClientProvider =>
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 

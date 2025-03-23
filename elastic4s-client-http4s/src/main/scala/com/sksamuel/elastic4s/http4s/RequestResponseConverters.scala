@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http4s
 
-import cats.effect.Async
+import cats.effect.Sync
 import cats.syntax.all._
 import com.sksamuel.elastic4s
 import fs2.io.file.Files
@@ -10,7 +10,7 @@ import scala.language.higherKinds
 
 trait RequestResponseConverters extends Elastic4sEntityEncoders {
 
-  def elasticRequestToHttp4sRequest[F[_]: Async: Files](
+  def elasticRequestToHttp4sRequest[F[_]: Sync: Files](
       endpoint: http4s.Uri,
       request: elastic4s.ElasticRequest
   ): http4s.Request[F] = {
@@ -30,7 +30,7 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
       )
   }
 
-  def http4sResponseToElasticResponse[F[_]: Async](
+  def http4sResponseToElasticResponse[F[_]: Sync](
       response: http4s.Response[F]
   ): F[elastic4s.HttpResponse] = {
     for {

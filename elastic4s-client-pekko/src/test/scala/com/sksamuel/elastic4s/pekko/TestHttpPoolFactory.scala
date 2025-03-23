@@ -5,10 +5,9 @@ import org.apache.pekko.http.scaladsl.model.{HttpRequest, HttpResponse}
 import org.apache.pekko.stream.scaladsl.Flow
 
 import scala.concurrent.Future
-import scala.concurrent.duration.{FiniteDuration, _}
 import scala.util.Try
 
-class TestHttpPoolFactory(sendRequest: HttpRequest => Try[HttpResponse], timeout: FiniteDuration = 2.seconds)
+class TestHttpPoolFactory(sendRequest: HttpRequest => Try[HttpResponse])
     extends HttpPoolFactory {
 
   override def create[T](): Flow[(HttpRequest, T), (HttpRequest, Try[HttpResponse], T), NotUsed] = {

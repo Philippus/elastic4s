@@ -5,13 +5,14 @@ import akka.stream.{Attributes, Inlet, SinkShape}
 import com.sksamuel.elastic4s.handlers.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponse}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.{ElasticClient, Executor, Functor, RequestFailure, RequestSuccess, Response}
+import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess, Response}
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
 
 case class SinkSettings(refreshAfterOp: Boolean = false)
 
-class BatchElasticSink[T](client: ElasticClient, settings: SinkSettings)(implicit
+class BatchElasticSink[T](client: ElasticClient[Future], settings: SinkSettings)(implicit
     ec: ExecutionContext,
     builder: RequestBuilder[T]
 ) extends GraphStage[SinkShape[Seq[T]]] {
@@ -20,8 +21,6 @@ class BatchElasticSink[T](client: ElasticClient, settings: SinkSettings)(implici
   override val shape: SinkShape[Seq[T]] = SinkShape.of(in)
 
   private implicit val bulkHandler: BulkHandlers.BulkHandler.type = BulkHandlers.BulkHandler
-  private implicit val executor: Executor[Future]                 = Executor.FutureExecutor
-  private implicit val functor: Functor[Future]                   = Functor.FutureFunctor
 
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic =
     new GraphStageLogic(shape) {

@@ -9,6 +9,7 @@ import org.reactivestreams.{Publisher, Subscriber, Subscription}
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 /** An implementation of the reactive API Publisher, that publishes documents using an elasticsearch scroll cursor. The
@@ -25,7 +26,7 @@ import scala.util.{Failure, Success}
   *   an Actor reference factory required by the publisher
   */
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-class ScrollPublisher private[streams] (client: ElasticClient, search: SearchRequest, maxItems: Long)(
+class ScrollPublisher private[streams] (client: ElasticClient[Future], search: SearchRequest, maxItems: Long)(
     implicit actorRefFactory: ActorRefFactory
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
@@ -43,7 +44,7 @@ class ScrollPublisher private[streams] (client: ElasticClient, search: SearchReq
 }
 
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-class ScrollSubscription(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
+class ScrollSubscription(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
     implicit actorRefFactory: ActorRefFactory
 ) extends Subscription {
 
@@ -73,7 +74,7 @@ object PublishActor {
 }
 
 @deprecated("Use the elastic4-reactivestreams-akka package", "8.16.0")
-class PublishActor(client: ElasticClient, query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
+class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
     extends Actor
     with Stash {
 
