@@ -162,7 +162,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate json for a boosting query" in {
     val req = search("*") limit 5 query {
-      boostingQuery(stringQuery("coldplay"), stringQuery("jethro tull")) negativeBoost 5.6 boost 7.6
+      boostingQuery(stringQuery("coldplay"), stringQuery("jethro tull"), 5.6)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_boosting.json")
   }
