@@ -31,6 +31,7 @@ import com.sksamuel.elastic4s.fields.{
   RangeField,
   RankFeatureField,
   RankFeaturesField,
+  RankVectorsField,
   SearchAsYouTypeField,
   SemanticTextField,
   SparseVectorField,
@@ -74,6 +75,7 @@ object ElasticFieldBuilderFn {
       case f: RangeField               => RangeFieldBuilderFn.build(f)
       case f: RankFeatureField         => RankFeatureFieldBuilderFn.build(f)
       case f: RankFeaturesField        => RankFeaturesFieldBuilderFn.build(f)
+      case f: RankVectorsField         => RankVectorsFieldBuilderFn.build(f)
       case f: SemanticTextField        => SemanticTextFieldBuilderFn.build(f)
       case f: SearchAsYouTypeField     => SearchAsYouTypeFieldBuilderFn.build(f)
       case f: SparseVectorField        => SparseVectorFieldBuilderFn.build(f)
@@ -111,6 +113,7 @@ object ElasticFieldBuilderFn {
       case PercolatorField.`type`                                                         => PercolatorFieldBuilderFn.toField(name, values)
       case RankFeatureField.`type`                                                        => RankFeatureFieldBuilderFn.toField(name, values)
       case RankFeaturesField.`type`                                                       => RankFeaturesFieldBuilderFn.toField(name, values)
+      case RankVectorsField.`type`                                                        => RankVectorsFieldBuilderFn.toField(name, values)
       case SemanticTextField.`type`                                                       => SemanticTextFieldBuilderFn.toField(name, values)
       case SearchAsYouTypeField.`type`                                                    => SearchAsYouTypeFieldBuilderFn.toField(name, values)
       case SparseVectorField.`type`                                                       => SparseVectorFieldBuilderFn.toField(name, values)
