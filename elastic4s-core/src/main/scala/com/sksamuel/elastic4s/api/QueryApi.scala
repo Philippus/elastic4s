@@ -80,8 +80,8 @@ trait QueryApi {
   implicit def string2query(string: String): SimpleStringQuery = SimpleStringQuery(string)
   implicit def tuple2query(kv: (String, String)): TermQuery    = TermQuery(kv._1, kv._2)
 
-  def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
-    BoostingQuery(positiveQuery, negativeQuery)
+  def boostingQuery(positiveQuery: Query, negativeQuery: Query, negativeBoost: Double): BoostingQuery =
+    BoostingQuery(positiveQuery, negativeQuery, negativeBoost)
 
   def combinedFieldsQuery(query: String, fields: Seq[String]): CombinedFieldsQuery =
     CombinedFieldsQuery(query, fields.map(_ -> None))
