@@ -60,7 +60,7 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
   it should "error when the repo does not exist" in {
     client.execute {
-      getRepository("not_exists")
+      deleteRepository("not_exists")
     }.await.error.`type` shouldBe "repository_missing_exception"
   }
 
