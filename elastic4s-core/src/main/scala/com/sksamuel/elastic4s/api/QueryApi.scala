@@ -80,6 +80,10 @@ trait QueryApi {
   implicit def string2query(string: String): SimpleStringQuery = SimpleStringQuery(string)
   implicit def tuple2query(kv: (String, String)): TermQuery    = TermQuery(kv._1, kv._2)
 
+  @deprecated("Use boostingQuery with required negativeBoost parameter instead", "8.18.0")
+  def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
+    BoostingQuery(positiveQuery, negativeQuery)
+
   def boostingQuery(positiveQuery: Query, negativeQuery: Query, negativeBoost: Double): BoostingQuery =
     BoostingQuery(positiveQuery, negativeQuery, negativeBoost)
 
