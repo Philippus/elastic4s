@@ -101,6 +101,9 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   clientsSniffed,
   clientpekko,
   clienthttp4s,
+  zio_1,
+  zio,
+  monix,
   tests,
   testkit,
   circe,
@@ -131,7 +134,7 @@ lazy val root                                  = Project("elastic4s", file("."))
     noPublishSettings
   )
   .aggregate(
-    Seq[ProjectReference](sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
+    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
@@ -188,6 +191,30 @@ lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .dependsOn(clientesjava)
   .settings(scala3Settings)
   .settings(libraryDependencies += elasticsearchRestClientSniffer)
+
+lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-effect-zio-1")
+  .settings(scala3Settings)
+  .settings(libraryDependencies += Dependencies.zio1)
+
+lazy val zio = (project in file("elastic4s-effect-zio"))
+  .dependsOn(core, testkit % "test")
+  .settings(name := "elastic4s-effect-zio")
+  .settings(scala3Settings)
+  .settings(libraryDependencies += Dependencies.zio)
+
+lazy val scalaz = (project in file("elastic4s-effect-scalaz"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-effect-scalaz")
+  .settings(scala2Settings) // scalaz.concurrent has gone now, so this is probably never going to be portable to scala 3
+  .settings(libraryDependencies ++= Dependencies.scalaz)
+
+lazy val monix = (project in file("elastic4s-effect-monix"))
+  .dependsOn(core)
+  .settings(name := "elastic4s-effect-monix")
+  .settings(scala3Settings)
+  .settings(libraryDependencies += Dependencies.monix)
 
 lazy val testkit = (project in file("elastic4s-testkit"))
   .dependsOn(core, clientesjava)

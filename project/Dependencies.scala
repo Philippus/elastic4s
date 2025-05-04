@@ -15,6 +15,7 @@ object Dependencies {
   val Json4sVersion                  = "4.0.7"
   val Log4jVersion                   = "2.24.3"
   val MockitoVersion                 = "5.17.0"
+  val MonixVersion                   = "3.4.1"
   val PekkoHttpVersion               = "1.1.0"
   val PekkoVersion                   = "1.1.3"
   val PlayJsonVersion                = "3.0.4"
@@ -68,6 +69,7 @@ object Dependencies {
   lazy val http4sClient                   = "org.http4s"                    %% "http4s-client"                     % Http4sVersion
   lazy val http4sEmberClient              = "org.http4s"                    %% "http4s-ember-client"               % Http4sVersion
   lazy val json4s                         = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
+  lazy val monix                          = "io.monix"                      %% "monix"                             % MonixVersion
   lazy val pekkoActor                     = "org.apache.pekko"              %% "pekko-actor"                       % PekkoVersion
   lazy val pekkoHTTP                      = "org.apache.pekko"              %% "pekko-http"                        % PekkoHttpVersion
   lazy val pekkoStream                    = "org.apache.pekko"              %% "pekko-stream"                      % PekkoVersion

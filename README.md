@@ -190,14 +190,45 @@ object ArtistIndex extends App {
 ```
 
 
-## Alternative Executors
+## Executors
 
-By default, elastic4s uses scala `Future`s when returning responses, but any effect type can be supported.
+From version 9, elastic4s uses `cats.Functor` typeclass to map effects. This allows to support various effect types for
+all major effect libraries. See below the list of supported libraries and how to work with them.
 
-If you wish to use ZIO, Cats-Effect, Monix or Scalaz, then read this page on [alternative effects](docs/effects.md).
+### Cats Effect IO
 
+1. Add dependency on `cats-effect` library to your project.
+2. Use `import cats.effect.implicits._` to bring implicit instances for `cats.effect.IO`
 
+### Scala Future
 
+To work with `scala.concurrent.Future`, you need to import the following:
+
+```scala
+// 1. bring in the Functor instance for Future:
+import cats.implicits.catsStdInstancesForFuture
+
+// 2. import implicit ExecutionContext
+import scala.concurrent.ExecutionContext.Implicits.global
+```
+
+### ZIO Task
+
+1. Add `elastic4s-effect-zio` dependency to your project.
+2. Use `import com.sksamuel.elastic4s.zio.instances._` to bring implicit instances for `zio.Task`
+
+Alternatively, you can use an official [zio-interop-cats](https://zio.dev/guides/interop/with-cats-effect/) library,
+then `import zio.interop.catz.core._` will bring necessary typeclass implementations.
+
+### Monix Task
+
+1. Add `elastic4s-effect-monix` dependency to your project.
+2. Use `import com.sksamuel.elastic4s.monix.instances._` to bring implicit instances for `monix.eval.Task`
+
+### Scalaz Task
+
+1. Add `elastic4s-effect-scalaz` dependency to your project.
+2. Use `import com.sksamuel.elastic4s.scalaz.instances._` to bring implicit instances for `scalaz.concurrent.Task`
 
 
 ## Index Refreshing
