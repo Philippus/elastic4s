@@ -2,7 +2,6 @@ package com.sksamuel.elastic4s.sttp
 
 import java.io._
 import java.nio.file.Files
-
 import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
 import com.sksamuel.elastic4s.{
   ElasticNodeEndpoint,
@@ -15,25 +14,19 @@ import com.sksamuel.elastic4s.{
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
-import scala.util.{Failure, Success}
 import sttp.client3._
 import sttp.model.Uri
 import sttp.model.Uri.{PathSegments, QuerySegment}
+import sttp.monad.{FutureMonad, MonadError}
+import sttp.monad.syntax.MonadErrorOps
 
-class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
-    implicit
-    ec: ExecutionContext,
-    sttpBackend: SttpBackend[Future, Any]
-) extends HttpClient {
+import scala.language.higherKinds
 
-  /** Alternative constructor for backwards compatibility. */
-  @deprecated("Use the constructor which takes an ElasticNodeEndpoint", "7.3.2")
-  def this(clientUri: ElasticsearchClientUri) = {
-    this(ElasticNodeEndpoint("http", clientUri.hosts.head._1, clientUri.hosts.head._2, None))(
-      SttpRequestHttpClient.defaultEc,
-      SttpRequestHttpClient.defaultSttpBackend
-    )
-  }
+class SttpRequestHttpClient[F[_]: MonadError](
+    nodeEndpoint: ElasticNodeEndpoint
+)(
+    implicit sttpBackend: SttpBackend[F, Any]
+) extends HttpClient[F] {
 
   private def request(
       method: String,
@@ -92,7 +85,7 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
     }
   }
 
-  override def close(): Unit = sttpBackend.close()
+  override def close(): F[Unit] = sttpBackend.close()
 
   /** Sends the given request to elasticsearch.
     *
@@ -101,27 +94,33 @@ class SttpRequestHttpClient(nodeEndpoint: ElasticNodeEndpoint)(
     * The callback function should be invoked with a HttpResponse for all requests that received a response, including
     * 4xx and 5xx responses. The callback function should only be invoked with an exception if the client failed.
     */
-  override def send(request: ElasticRequest, callback: Either[Throwable, HttpResponse] => Unit): Unit = {
+  override def send(request: ElasticRequest): F[HttpResponse] = {
     val f = request.entity match {
       case Some(entity) =>
         async(request.method, request.endpoint, request.params, request.headers, entity).send(sttpBackend)
       case None         => async(request.method, request.endpoint, request.params, request.headers).send(sttpBackend)
     }
-    f.onComplete {
-      case Success(resp) => callback(Right(processResponse(resp)))
-      case Failure(t)    => callback(Left(t))
-    }
+
+    f.map(processResponse)
   }
 }
 
 object SttpRequestHttpClient {
 
-  private def defaultEc: ExecutionContext                  = ExecutionContext.global
-  private def defaultSttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
+  private implicit def futureMonad(implicit ec: ExecutionContext): MonadError[Future] = new FutureMonad()
+
+  private implicit def defaultSttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
 
   /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
-  def apply(nodeEndpoint: ElasticNodeEndpoint): SttpRequestHttpClient = new SttpRequestHttpClient(nodeEndpoint)(
-    defaultEc,
-    defaultSttpBackend
-  )
+  def apply(nodeEndpoint: ElasticNodeEndpoint)(implicit ec: ExecutionContext): SttpRequestHttpClient[Future] =
+    new SttpRequestHttpClient(nodeEndpoint)
+
+  /** Alternative constructor for backwards compatibility. */
+  @deprecated("Use the constructor which takes an ElasticNodeEndpoint", "7.3.2")
+  def apply(clientUri: ElasticsearchClientUri)(implicit ec: ExecutionContext): SttpRequestHttpClient[Future] = {
+    val endpoint = ElasticNodeEndpoint("http", clientUri.hosts.head._1, clientUri.hosts.head._2, None)
+
+    new SttpRequestHttpClient[Future](endpoint)
+  }
+
 }

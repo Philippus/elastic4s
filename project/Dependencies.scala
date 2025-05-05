@@ -4,7 +4,7 @@ import sbt._
 object Dependencies {
   val AkkaHttpVersion                = "10.2.10"
   val AkkaVersion                    = "2.6.21"
-  val CatsEffect2Version             = "2.5.5"
+  val CatsVersion                    = "2.13.0"
   val CatsEffectVersion              = "3.6.1"
   val CirceVersion                   = "0.14.13"
   val CommonsIoVersion               = "2.19.0"
@@ -63,8 +63,8 @@ object Dependencies {
   lazy val akkaActor                      = "com.typesafe.akka"             %% "akka-actor"                        % AkkaVersion
   lazy val akkaHTTP                       = "com.typesafe.akka"             %% "akka-http"                         % AkkaHttpVersion
   lazy val akkaStream                     = "com.typesafe.akka"             %% "akka-stream"                       % AkkaVersion
-  lazy val cats                           = "org.typelevel"                 %% "cats-effect"                       % CatsEffectVersion
-  lazy val cats2                          = "org.typelevel"                 %% "cats-effect"                       % CatsEffect2Version
+  lazy val cats                           = "org.typelevel"                 %% "cats-core"                         % CatsVersion
+  lazy val catsEffect                     = "org.typelevel"                 %% "cats-effect"                       % CatsEffectVersion
   lazy val elasticsearchRestClient        = "org.elasticsearch.client"       % "elasticsearch-rest-client"         % ElasticsearchVersion
   lazy val http4sClient                   = "org.http4s"                    %% "http4s-client"                     % Http4sVersion
   lazy val http4sEmberClient              = "org.http4s"                    %% "http4s-ember-client"               % Http4sVersion

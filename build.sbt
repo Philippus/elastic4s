@@ -101,8 +101,6 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   clientsSniffed,
   clientpekko,
   clienthttp4s,
-  cats_effect,
-  cats_effect_2,
   zio_1,
   zio,
   monix,
@@ -154,7 +152,10 @@ lazy val core = (project in file("elastic4s-core"))
   .settings(name := "elastic4s-core")
   .dependsOn(domain, clientcore, handlers, json_builder)
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= fasterXmlJacksonScala)
+  .settings(
+    libraryDependencies += cats,
+    libraryDependencies ++= fasterXmlJacksonScala
+  )
 
 lazy val handlers = (project in file("elastic4s-handlers"))
   .settings(name := "elastic4s-handlers")
@@ -190,18 +191,6 @@ lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .dependsOn(clientesjava)
   .settings(scala3Settings)
   .settings(libraryDependencies += elasticsearchRestClientSniffer)
-
-lazy val cats_effect = (project in file("elastic4s-effect-cats"))
-  .dependsOn(core, testkit % "test")
-  .settings(name := "elastic4s-effect-cats")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += cats)
-
-lazy val cats_effect_2 = (project in file("elastic4s-effect-cats-2"))
-  .dependsOn(core, testkit % "test")
-  .settings(name := "elastic4s-effect-cats-2")
-  .settings(scala3Settings)
-  .settings(libraryDependencies += cats2)
 
 lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
   .dependsOn(core, testkit % "test")

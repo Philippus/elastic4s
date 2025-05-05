@@ -1,16 +1,6 @@
 ## Effect Types
 
-By default, elastic4s uses scala `Future`s when returning responses, but any effect type can be supported.
-
-Internally, elastic4s uses two typeclasses for execution. An `Executor` which will wrap the result in an effect.
-
-```scala
-trait Executor[F[_]] {
-  def exec(client: HttpClient, request: ElasticRequest): F[HttpResponse]
-}
-```
-
-And `Functor` which is used to map effects.
+Internally, elastic4s uses `cats.Functor` typeclass to map effects:
 
 ```scala
 trait Functor[F[_]] {
@@ -18,12 +8,16 @@ trait Functor[F[_]] {
 }
 ```
 
-The default `Executor` uses scala `Future`s to execute requests, but there are alternate Executors that can be used by
-adding appropriate imports. The imports will create an implicit `Executor[F]` and a `Functor[F]`,
-where `F` is some effect type.
+elastic4s provides instances for the following effect types:
 
-### Cats-Effect IO
-`import com.sksamuel.elastic4s.cats.effect.instances._` will provide implicit instances for `cats.effect.IO`
+### Scala Future's
+
+To work with `scala.concurrent.Future`, you need to import the following:
+
+```scala
+import cats.implicits.catsStdInstancesForFuture
+import scala.concurrent.ExecutionContext.Implicits.global // or define your own ExecutionContext
+```
 
 ### Monix Task
 `import com.sksamuel.elastic4s.monix.instances._` will provide implicit instances for `monix.eval.Task`
@@ -32,4 +26,7 @@ where `F` is some effect type.
 `import com.sksamuel.elastic4s.scalaz.instances._` will provide implicit instances for `scalaz.concurrent.Task`
 
 ### ZIO Task
-`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task`
+`import com.sksamuel.elastic4s.zio.instances._` will provide implicit instances for `zio.Task`.
+
+Alternatively, you can use an official [zio-interop-cats](https://zio.dev/guides/interop/with-cats-effect/) library,
+so then `import zio.interop.catz._` will bring necessary typeclass implementations.
