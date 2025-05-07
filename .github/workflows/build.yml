@@ -11,29 +11,6 @@ on:
       - series/9.x
 
 jobs:
-  scala-2_12:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout the repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 11
-
-      - name: set up sbt
-        uses: sbt/setup-sbt@v1
-
-      - name: Launch elastic docker
-        uses: ./.github/actions/launch-elasticsearch
-
-      - name: run tests
-        run: sbt ++2.12.20 test
-
   scala-2_13:
     runs-on: ubuntu-latest
     steps:
