@@ -3,14 +3,26 @@ package com.sksamuel.elastic4s.requests.searches.queries
 case class BoostingQuery(
     positiveQuery: Query,
     negativeQuery: Query,
-    queryName: Option[String] = None,
-    boost: Option[Double] = None,
-    negativeBoost: Option[Double] = None
+    negativeBoost: Double
 ) extends Query {
+  @deprecated("queryName is not supported in BoostingQuery", "8.18.0")
+  def withQueryName(queryName: String): BoostingQuery = this
 
-  def withQueryName(queryName: String): BoostingQuery = copy(queryName = Option(queryName))
+  @deprecated("boost is not supported in BoostingQuery", "8.18.0")
+  def boost(boost: Double): BoostingQuery = this
 
-  def boost(boost: Double): BoostingQuery                 = copy(boost = Option(boost))
-  def negativeBoost(negativeBoost: Double): BoostingQuery = copy(negativeBoost = Option(negativeBoost))
-  def queryName(queryName: String): BoostingQuery         = copy(queryName = Option(queryName))
+  @deprecated("Use BoostingQuery with required negativeBoost parameter instead", "8.18.0")
+  def negativeBoost(negativeBoost: Double): BoostingQuery = copy(negativeBoost = negativeBoost)
+
+  @deprecated("queryName is not supported in BoostingQuery", "8.18.0")
+  def queryName(queryName: String): BoostingQuery = this
+}
+
+object BoostingQuery {
+  @deprecated("Use BoostingQuery with required negativeBoost parameter instead", "8.18.0")
+  def apply(
+      positiveQuery: Query,
+      negativeQuery: Query
+  ): BoostingQuery =
+    BoostingQuery(positiveQuery, negativeQuery, 1.0D)
 }

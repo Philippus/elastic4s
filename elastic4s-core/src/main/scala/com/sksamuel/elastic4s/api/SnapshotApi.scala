@@ -3,7 +3,9 @@ package com.sksamuel.elastic4s.api
 import com.sksamuel.elastic4s.requests.snapshots.{
   CreateRepositoryRequest,
   CreateSnapshotRequest,
+  DeleteRepositoryRequest,
   DeleteSnapshotRequest,
+  GetRepositoryRequest,
   GetSnapshotsRequest,
   RestoreSnapshotRequest
 }
@@ -58,4 +60,8 @@ trait SnapshotApi {
     @deprecated("use createRepository(name: String, repository: String)", "6.0.2")
     def `type`(`type`: String) = CreateRepositoryRequest(name, `type`)
   }
+
+  def getRepository(repositoryName: String) = GetRepositoryRequest(repositoryName)
+
+  def deleteRepository(repositoryName: String) = DeleteRepositoryRequest(repositoryName)
 }

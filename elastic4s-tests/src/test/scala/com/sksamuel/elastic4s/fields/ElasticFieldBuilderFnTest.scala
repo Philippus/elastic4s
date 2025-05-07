@@ -265,9 +265,28 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
         JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
       ) shouldBe field
     }
+    "support RankVectorsField" in {
+      val field      = RankVectorsField("rank_vectors_field", elementType = Some("byte"), dims = Some(3))
+      val jsonString = """{"type":"rank_vectors","element_type":"byte","dims":3}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(
+        field.name,
+        JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
+      ) shouldBe field
+    }
     "support SemanticTextField" in {
       val field      = SemanticTextField("semantic_text_field", "my-elser-endpoint")
       val jsonString = """{"type":"semantic_text","inference_id":"my-elser-endpoint"}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(
+        field.name,
+        JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
+      ) shouldBe field
+    }
+    "support SemanticTextField with search_inference_id" in {
+      val field      = SemanticTextField("semantic_text_field", "my-elser-endpoint", Some("my-elser-endpoint-for-search"))
+      val jsonString =
+        """{"type":"semantic_text","inference_id":"my-elser-endpoint","search_inference_id":"my-elser-endpoint-for-search"}"""
       ElasticFieldBuilderFn(field).string shouldBe jsonString
       ElasticFieldBuilderFn.construct(
         field.name,

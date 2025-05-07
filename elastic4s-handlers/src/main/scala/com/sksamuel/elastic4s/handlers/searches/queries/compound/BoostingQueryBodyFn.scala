@@ -12,8 +12,7 @@ object BoostingQueryBodyFn {
     builder.startObject("boosting")
     builder.rawField("positive", QueryBuilderFn(q.positiveQuery))
     builder.rawField("negative", queries.QueryBuilderFn(q.negativeQuery))
-    q.negativeBoost.foreach(builder.field("negative_boost", _))
-    q.boost.foreach(builder.field("boost", _))
+    builder.field("negative_boost", q.negativeBoost)
     builder.endObject()
     builder.endObject()
   }
