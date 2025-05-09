@@ -45,7 +45,7 @@ class GetPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
         |""".stripMargin
     val response     = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
 
-    responseHandler.handle(response).right.get shouldBe
+    responseHandler.handle(response).toOption.get shouldBe
       GetPipelineResponse(
         "test-pipeline",
         "describe pipeline",
@@ -76,7 +76,7 @@ class GetPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with
         |""".stripMargin
     val response     = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
 
-    responseHandler.handle(response).right.get shouldBe
+    responseHandler.handle(response).toOption.get shouldBe
       GetPipelineResponse(
         "test-pipeline",
         "describe pipeline",

@@ -28,7 +28,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
     "copy from one index to another" in {
       client.execute {
         reindex("reindex", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
 
       client.execute {
         search("reindextarget")
@@ -41,7 +41,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").maxDocs(2).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 2
+      }.await.result.swap.toOption.get.created shouldBe 2
 
       client.execute {
         search("reindextarget")
@@ -54,7 +54,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").slices(3).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
 
       client.execute {
         search("reindextarget")
@@ -66,7 +66,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").automaticSlicing().refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
 
       client.execute {
         search("reindextarget")
@@ -82,7 +82,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
       (0 until maxSlice).foreach { index =>
         client.execute {
           reindex("reindex", "reindextarget").slice(Slice(index.toString, maxSlice)).refresh(RefreshPolicy.IMMEDIATE)
-        }.await.result.left.get.created should be <= 3L
+        }.await.result.swap.toOption.get.created should be <= 3L
       }
 
       client.execute {
@@ -95,18 +95,18 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").createOnly(true).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
 
       client.execute {
         reindex("reindex", "reindextarget")
           .proceedOnConflicts(true)
           .createOnly(true)
           .refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.version_conflicts shouldBe 3
+      }.await.result.swap.toOption.get.version_conflicts shouldBe 3
 
       client.execute {
         reindex("reindex", "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.updated shouldBe 3
+      }.await.result.swap.toOption.get.updated shouldBe 3
 
     }
     "support script parameter" in {
@@ -115,7 +115,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").script("ctx._source.scripted=42").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
       client.execute {
         search("reindextarget")
       }.await.result.hits.hits.flatMap(_.sourceAsMap.get("scripted")) shouldBe Array(42, 42, 42)
@@ -126,14 +126,14 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").proceedOnConflicts(true).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
 
       deleteIdx("reindextarget")
       createIdx("reindextarget")
 
       client.execute {
         reindex("reindex", "reindextarget").proceedOnConflicts(false).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
     }
     "support size parameter" in {
 
@@ -142,7 +142,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex("reindex", "reindextarget").size(2).refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 3
+      }.await.result.swap.toOption.get.created shouldBe 3
 
       client.execute {
         search("reindextarget")
@@ -155,7 +155,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         reindex(Seq("reindex", "reindex2"), "reindextarget").refresh(RefreshPolicy.IMMEDIATE)
-      }.await.result.left.get.created shouldBe 4
+      }.await.result.swap.toOption.get.created shouldBe 4
 
       client.execute {
         search("reindextarget")
@@ -169,7 +169,7 @@ class ReindexTest extends AnyWordSpec with Matchers with DockerTests {
     "return a task when setting wait_for_completion to false" in {
       val result = client.execute {
         reindex("reindex", "reindextarget").maxDocs(2).waitForCompletion(false)
-      }.await.result.right.get
+      }.await.result.toOption.get
       result.nodeId should not be null
       result.taskId should not be null
     }

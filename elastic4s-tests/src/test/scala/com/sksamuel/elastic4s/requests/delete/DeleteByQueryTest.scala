@@ -43,7 +43,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         deleteByQuery(indexname, matchQuery("name", "bumbles")).refresh(RefreshPolicy.Immediate)
-      }.await.result.left.get.deleted shouldBe 2
+      }.await.result.swap.toOption.get.deleted shouldBe 2
 
       client.execute {
         search(indexname).matchAllQuery()
@@ -65,7 +65,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         deleteByQuery(indexname, matchAllQuery()).refresh(RefreshPolicy.Immediate).maxDocs(3)
-      }.await.result.left.get.deleted shouldBe 3
+      }.await.result.swap.toOption.get.deleted shouldBe 3
 
       client.execute {
         search(indexname).matchAllQuery()
@@ -86,11 +86,11 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
       val firstSlice = client.execute {
         deleteByQuery(indexname, idsQuery("7", "8")).slice(Slice("0", 2)).refresh(RefreshPolicy.Immediate)
-      }.await.result.left.get.deleted
+      }.await.result.swap.toOption.get.deleted
 
       val secondSlice = client.execute {
         deleteByQuery(indexname, idsQuery("7", "8")).slice(Slice("1", 2)).refresh(RefreshPolicy.Immediate)
-      }.await.result.left.get.deleted
+      }.await.result.swap.toOption.get.deleted
 
       firstSlice + secondSlice shouldBe 2
 
@@ -113,7 +113,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
 
       client.execute {
         deleteByQuery(indexname, idsQuery("7", "8")).automaticSlicing().refresh(RefreshPolicy.Immediate)
-      }.await.result.left.get.deleted shouldBe 2
+      }.await.result.swap.toOption.get.deleted shouldBe 2
 
       client.execute {
         search(indexname).query(idsQuery("7", "8"))
@@ -129,7 +129,7 @@ class DeleteByQueryTest extends AnyWordSpec with Matchers with DockerTests {
     "return a task when setting wait_for_completion to false" in {
       val result = client.execute {
         deleteByQuery(indexname, matchQuery("name", "michael douglas")).waitForCompletion(false)
-      }.await.result.right.get
+      }.await.result.toOption.get
       result.nodeId should not be null
       result.taskId should not be null
     }
