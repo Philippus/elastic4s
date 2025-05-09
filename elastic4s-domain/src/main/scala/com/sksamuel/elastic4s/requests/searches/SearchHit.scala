@@ -50,7 +50,7 @@ case class SearchHit(
   override def exists: Boolean = true
 
   private def buildInnerHits(_hits: Map[String, Map[String, Any]]): Map[String, InnerHits] =
-    Option(_hits).getOrElse(Map.empty).mapValues { hits =>
+    Option(_hits).getOrElse(Map.empty).view.mapValues { hits =>
       val v     = hits("hits").asInstanceOf[Map[String, AnyRef]]
       val total = v("total").asInstanceOf[Map[String, AnyRef]]
       InnerHits(

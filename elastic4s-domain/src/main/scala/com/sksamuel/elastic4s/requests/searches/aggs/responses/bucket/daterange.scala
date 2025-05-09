@@ -9,7 +9,7 @@ object KeyedDateRangeAggResult {
   private[elastic4s] def fromData(name: String, data: Map[String, Any]): KeyedDateRangeAggResult =
     KeyedDateRangeAggResult(
       name,
-      data("buckets").asInstanceOf[Map[String, Map[String, Any]]].mapValues(DateRangeBucket(_)).toMap
+      data("buckets").asInstanceOf[Map[String, Map[String, Any]]].view.mapValues(DateRangeBucket(_)).toMap
     )
 }
 

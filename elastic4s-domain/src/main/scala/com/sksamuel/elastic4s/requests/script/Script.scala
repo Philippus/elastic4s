@@ -71,7 +71,7 @@ case class Script(
     paramsObject(first +: rest)
   def paramsObject[T](seq: Seq[(String, T)])(implicit serializer: ParamSerializer[T]): Script                  = paramsObject(seq.toMap)
   def paramsObject[T](map: Map[String, T])(implicit serializer: ParamSerializer[T]): Script                    =
-    copy(paramsRaw = paramsRaw ++ map.mapValues(serializer.json))
+    copy(paramsRaw = paramsRaw ++ map.view.mapValues(serializer.json))
 
   def scriptType(tpe: String): Script            = copy(scriptType = ScriptType.valueOf(tpe))
   def scriptType(scriptType: ScriptType): Script = copy(scriptType = scriptType)

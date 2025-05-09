@@ -54,11 +54,11 @@ case class SearchResponse(
       .toMap
 
   def termSuggestion(name: String): Map[String, TermSuggestionResult]             =
-    suggestion(name).mapValues(_.toTerm).toMap
+    suggestion(name).view.mapValues(_.toTerm).toMap
   def completionSuggestion(name: String): Map[String, CompletionSuggestionResult] =
-    suggestion(name).mapValues(_.toCompletion).toMap
+    suggestion(name).view.mapValues(_.toCompletion).toMap
   def phraseSuggestion(name: String): Map[String, PhraseSuggestionResult]         =
-    suggestion(name).mapValues(_.toPhrase).toMap
+    suggestion(name).view.mapValues(_.toPhrase).toMap
 
   def to[T: HitReader: ClassTag]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Try[T]]  = hits.hits.map(_.safeTo[T]).toIndexedSeq

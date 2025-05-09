@@ -51,7 +51,7 @@ class KeyedRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Ma
       resp.totalHits shouldBe 6
 
       val agg = resp.aggs.keyedRange("agg1")
-      agg.buckets.mapValues(_.copy(data = Map.empty)).toMap shouldBe Map(
+      agg.buckets.view.mapValues(_.copy(data = Map.empty)).toMap shouldBe Map(
         "meh"     -> RangeBucket(None, None, Some(5.5), 1, Map.empty),
         "cool"    -> RangeBucket(None, Some(5.5), Some(7.5), 2, Map.empty),
         "awesome" -> RangeBucket(None, Some(7.5), None, 3, Map.empty)
