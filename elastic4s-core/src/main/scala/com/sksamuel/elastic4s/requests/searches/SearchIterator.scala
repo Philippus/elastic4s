@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.{ElasticClient, HitReader, RequestFailure, Request
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
-import scala.language.higherKinds
 
 /** A SearchIterator is used to create standard library iterator's from a search request. The iterator will use a search
   * scroll internally for lazy loading of the data.

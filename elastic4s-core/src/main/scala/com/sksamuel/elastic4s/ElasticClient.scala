@@ -6,7 +6,6 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import java.util.Base64
 import scala.concurrent.duration._
-import scala.language.higherKinds
 
 /** An [[ElasticClient]] is used to execute HTTP requests against an ElasticSearch cluster. This class delegates the
   * actual HTTP calls to an instance of [[HttpClient]].

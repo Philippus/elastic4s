@@ -9,7 +9,6 @@ import org.reactivestreams.{Subscriber, Subscription}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.higherKinds
 import scala.util.{Failure, Success}
 
 /** An implementation of the reactive API Subscriber. This subscriber will bulk index received elements. The bulk nature

@@ -29,7 +29,6 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.io.{Codec, Source}
-import scala.language.higherKinds
 
 case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
 

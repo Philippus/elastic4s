@@ -20,8 +20,6 @@ import sttp.model.Uri.{PathSegments, QuerySegment}
 import sttp.monad.{FutureMonad, MonadError}
 import sttp.monad.syntax.MonadErrorOps
 
-import scala.language.higherKinds
-
 class SttpRequestHttpClient[F[_]: MonadError](
     nodeEndpoint: ElasticNodeEndpoint
 )(
