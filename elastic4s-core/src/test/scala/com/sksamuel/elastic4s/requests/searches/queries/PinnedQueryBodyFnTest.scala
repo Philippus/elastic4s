@@ -32,6 +32,6 @@ class PinnedQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenThen
       |      }
       |   }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 
 }

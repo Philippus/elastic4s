@@ -30,7 +30,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       |      }
       |   }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 
   test("Should correctly build a rank feature query with a log function") {
     {
@@ -54,7 +54,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
         |      }
         |   }
         |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
   }
 
   test("Should correctly build a rank feature query with a saturation function") {
@@ -79,7 +79,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
         |      }
         |   }
         |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 
     Given("A rank feature query with a saturation function without specified pivot")
     val query = RankFeatureQuery("pagerank").withSaturation(Saturation(None))
@@ -111,7 +111,7 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
         |      "linear": {}
         |   }
         |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
   }
 
   def minimalRankFeatureQuery: String =
@@ -122,5 +122,5 @@ class RankFeatureQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhe
       |      "saturation": {}
       |   }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 }
