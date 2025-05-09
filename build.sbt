@@ -15,11 +15,11 @@ def isRelease              = releaseVersion != ""
 // set by github actions and used as the snapshot build number
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 
-val scala2Versions   = Seq("2.12.20", "2.13.16")
+val scala2Versions   = Seq("2.13.16")
 val scalaAllVersions = scala2Versions :+ "3.3.6"
 
 lazy val commonScalaVersionSettings = Seq(
-  scalaVersion       := "2.12.20",
+  scalaVersion       := "2.13.16",
   crossScalaVersions := Nil
 )
 
