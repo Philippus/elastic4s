@@ -2,10 +2,11 @@ package com.sksamuel.elastic4s.requests.admin
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
+import org.scalatest.concurrent.Eventually
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class ShrinkIndexTest extends AnyWordSpec with Matchers with DockerTests {
+class ShrinkIndexTest extends AnyWordSpec with Matchers with DockerTests with Eventually {
 
   val reindexTarget = "reindextarget"
   val reindex       = "reindex"
@@ -37,11 +38,10 @@ class ShrinkIndexTest extends AnyWordSpec with Matchers with DockerTests {
         shrinkIndex(reindex, reindexTarget).shards(1)
       }.await.result
 
-      Stream.continually {
-        Thread.sleep(100)
+      eventually {
         val resp = client.execute(recoverIndex(reindexTarget)).await.result
-        resp(reindexTarget).shards.forall(_.get("stage").contains("DONE")) && resp.size == 1
-      }.takeWhile(!_)
+        (resp(reindexTarget).shards.forall(_.get("stage").contains("DONE")) && resp.size == 1) shouldBe true
+      }
 
       client.execute {
         search(reindexTarget)

@@ -38,12 +38,6 @@ class SplitIndexTest extends AnyWordSpec with Matchers with DockerTests {
         splitIndex(reindex, reindexTarget).shards(2).settings(Map("index.number_of_routing_shards" -> 2.toString))
       }.await.result
 
-      Stream.continually {
-        Thread.sleep(100)
-        val resp = client.execute(recoverIndex(reindexTarget)).await.result
-        resp(reindexTarget).shards.forall(_.get("stage").contains("DONE")) && resp.size == 2
-      }.takeWhile(!_)
-
       client.execute {
         search(reindexTarget)
       }.await.result.size shouldBe 3
