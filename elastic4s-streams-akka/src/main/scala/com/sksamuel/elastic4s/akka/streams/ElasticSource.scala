@@ -56,7 +56,7 @@ class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(imp
                   fetching = false
                   buffer ++= searchr.hits.hits
                   if (buffer.nonEmpty && isAvailable(out)) {
-                    push(out, buffer.dequeue)
+                    push(out, buffer.dequeue())
                     maybeFetch()
                   }
                   // complete when no more elements to emit
@@ -86,7 +86,7 @@ class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(imp
 
       override def onPull(): Unit = {
         if (buffer.nonEmpty)
-          push(out, buffer.dequeue)
+          push(out, buffer.dequeue())
         maybeFetch()
       }
 
