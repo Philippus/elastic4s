@@ -51,7 +51,7 @@ case class MappingDefinition(
   def properties(fields: Iterable[ElasticField]): MappingDefinition = as(fields)
   def properties(fields: ElasticField*): MappingDefinition          = as(fields)
 
-  def as(fields: ElasticField*): MappingDefinition            = as(fields.toIterable)
+  def as(fields: ElasticField*): MappingDefinition            = as(fields.toSeq)
   def as(iterable: Iterable[ElasticField]): MappingDefinition = copy(properties = properties ++ iterable)
 
   def dynamicDateFormats(dynamic_date_formats: String*): MappingDefinition =
