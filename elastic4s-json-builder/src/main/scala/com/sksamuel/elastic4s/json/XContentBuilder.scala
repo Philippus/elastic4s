@@ -175,7 +175,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def autovalue(_value: Any): XContentBuilder = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     requireArray()
     _value match {
       case v: String                       => value(v)
@@ -218,7 +218,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def autofield(name: String, value: Any): XContentBuilder = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
 
     value match {
       case v: String                       => field(name, v)

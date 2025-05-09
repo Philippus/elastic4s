@@ -10,7 +10,7 @@ import com.sksamuel.elastic4s.requests.alias.{
 import com.sksamuel.elastic4s.requests.indexes.admin.AliasActionResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, ResponseHandler}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait IndexAliasHandlers {
 

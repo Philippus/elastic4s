@@ -20,7 +20,7 @@ trait SearchHandlers {
   class BaseMultiSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])
       extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
 
     override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
       override def handle(response: HttpResponse): Either[ElasticError, MultiSearchResponse] =

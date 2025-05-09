@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.akka
 
 import java.util.concurrent.ConcurrentHashMap
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration.FiniteDuration
 
 /** Thread-safe host blacklist. Blacklist duration starts with `min` and exponentially increased up to `max` on

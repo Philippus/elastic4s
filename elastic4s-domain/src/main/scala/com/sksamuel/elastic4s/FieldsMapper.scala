@@ -4,7 +4,7 @@ package com.sksamuel.elastic4s
   */
 object FieldsMapper {
 
-  import scala.collection.JavaConverters._
+  import scala.jdk.CollectionConverters._
 
   def mapper(m: Map[String, Any]): Map[String, AnyRef] =
     m map {
