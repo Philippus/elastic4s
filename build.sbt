@@ -112,7 +112,6 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   playjson,
   ziojson,
   clientsttp,
-  httpstreams,
   akkastreams,
   pekkostreams,
   reactivestreamsakka,
@@ -221,18 +220,6 @@ lazy val testkit = (project in file("elastic4s-testkit"))
   .settings(name := "elastic4s-testkit")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain, Dependencies.scalaTestPlusMockito))
-
-lazy val httpstreams = (project in file("elastic4s-http-streams"))
-  .dependsOn(core, testkit % "test", jackson % "test")
-  .settings(name := "elastic4s-http-streams")
-  .settings(scala3Settings)
-  .settings(libraryDependencies ++=
-    Seq(
-      Dependencies.akkaActor,
-      Dependencies.akkaStream,
-      Dependencies.reactiveStreamsTck,
-      Dependencies.scalaTestPlusTestng
-    ))
 
 lazy val reactivestreamsakka = (project in file("elastic4s-reactivestreams-akka"))
   .dependsOn(core, testkit % "test", jackson % "test")
