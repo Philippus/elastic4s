@@ -35,7 +35,10 @@ class SttpRequestHttpClient[F[_]: MonadError](
     val url = new Uri(
       scheme = Some(nodeEndpoint.protocol),
       authority = None,
-      pathSegments = PathSegments.absoluteOrEmptyS(collection.immutable.Seq(endpoint.stripPrefix("/").split('/'): _*)),
+      pathSegments =
+        PathSegments.absoluteOrEmptyS(
+          collection.immutable.Seq(endpoint.stripPrefix("/").split('/').toIndexedSeq: _*).toIndexedSeq
+        ),
       querySegments =
         collection.immutable.Seq(params.map { case (k, v) => QuerySegment.KeyValue(k, v.toString) }.toSeq: _*),
       fragmentSegment = None

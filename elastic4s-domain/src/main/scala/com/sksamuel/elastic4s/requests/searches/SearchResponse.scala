@@ -30,7 +30,7 @@ case class SearchResponse(
   def aggregationsAsMap: Map[String, Any] = Option(_aggregationsAsMap).getOrElse(Map.empty)
   def totalHits: Long                     = hits.total.value
   def size: Long                          = hits.size
-  def ids: Seq[String]                    = hits.hits.map(_.id)
+  def ids: Seq[String]                    = hits.hits.map(_.id).toIndexedSeq
   def maxScore: Double                    = hits.maxScore
 
   def shards: Shards = Option(_shards).getOrElse(Shards(-1, -1, -1))

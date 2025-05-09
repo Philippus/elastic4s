@@ -39,11 +39,11 @@ object FieldsMapper {
 
       case (name: String, nest: Array[Map[_, _]]) =>
         val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
-        ArrayFieldValue(name, nested)
+        ArrayFieldValue(name, nested.toIndexedSeq)
 
       case (name: String, arr: Array[Any]) =>
         val values = arr.map(new SimpleFieldValue(None, _))
-        ArrayFieldValue(name, values)
+        ArrayFieldValue(name, values.toIndexedSeq)
 
       case (name: String, a: FieldValue) =>
         NestedFieldValue(name, Seq(a))
