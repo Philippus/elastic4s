@@ -9,7 +9,7 @@ import org.scalatest.matchers.must.Matchers
 class AnalyzeRequestHandlerTest extends AnyFunSuite with Matchers with IndexHandlers {
 
   test("analyzeRequestHandler work well") {
-    val analyzeRequest = AnalyzeRequest(Array("你好世界"))
+    val analyzeRequest = AnalyzeRequest(Seq("你好世界"))
       .analyzer("smartcn")
       .index("testIndex")
     val result         = AnalyzeRequestHandler.build(analyzeRequest)
