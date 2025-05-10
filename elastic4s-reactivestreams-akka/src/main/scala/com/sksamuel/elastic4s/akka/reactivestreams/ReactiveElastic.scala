@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.{ElasticClient, IndexesAndTypes}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.implicitConversions
 
 object ReactiveElastic {
 

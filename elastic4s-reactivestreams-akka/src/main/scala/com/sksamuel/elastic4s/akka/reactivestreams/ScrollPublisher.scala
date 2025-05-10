@@ -102,7 +102,7 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
     require(queue.size >= k)
     for (_ <- 0L until k)
       if (max == 0 || processed < max) {
-        s.onNext(queue.dequeue)
+        s.onNext(queue.dequeue())
         processed = processed + 1
         if (processed == max && max > 0) {
           s.onComplete()

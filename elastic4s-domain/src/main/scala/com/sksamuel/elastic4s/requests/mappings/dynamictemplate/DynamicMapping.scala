@@ -1,7 +1,5 @@
 package com.sksamuel.elastic4s.requests.mappings.dynamictemplate
 
-import scala.language.implicitConversions
-
 sealed abstract class DynamicMapping
 
 object DynamicMapping {

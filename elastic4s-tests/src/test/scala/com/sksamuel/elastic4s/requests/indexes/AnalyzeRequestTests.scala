@@ -75,7 +75,7 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
 
   "analyze request explain custom filters" should "work well" in {
     val result = client.execute {
-      AnalyzeRequest(Array("hello world"))
+      AnalyzeRequest(Seq("hello world"))
         .explain(true)
         .tokenizer("standard")
         .filters("snowball")
@@ -98,7 +98,7 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
 
   "analyze request custom filters from analyzer" should "work well" in {
     val result = client.execute {
-      AnalyzeRequest(Array("hello world"))
+      AnalyzeRequest(Seq("hello world"))
         .tokenizer("keyword")
         .filters("lowercase", "uppercase")
         .filters(StopAnalyzer("stop", List("a", "is", "this")))

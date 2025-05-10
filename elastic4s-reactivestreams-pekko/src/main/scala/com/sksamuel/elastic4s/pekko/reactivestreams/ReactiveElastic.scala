@@ -2,11 +2,10 @@ package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor.ActorRefFactory
 import com.sksamuel.elastic4s.requests.searches.SearchRequest
-import com.sksamuel.elastic4s.{ElasticClient, Indexes, IndexesAndTypes}
+import com.sksamuel.elastic4s.{ElasticClient, Indexes}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.implicitConversions
 
 object ReactiveElastic {
 

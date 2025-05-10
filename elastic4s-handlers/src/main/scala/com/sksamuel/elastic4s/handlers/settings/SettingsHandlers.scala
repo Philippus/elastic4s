@@ -16,7 +16,7 @@ import com.sksamuel.elastic4s.{
 
 trait SettingsHandlers {
 
-  import scala.collection.JavaConverters._
+  import scala.jdk.CollectionConverters._
 
   implicit object GetSettingsHandler extends Handler[GetSettingsRequest, IndexSettingsResponse] {
 
@@ -26,7 +26,7 @@ trait SettingsHandlers {
         response.statusCode match {
           case 200 =>
             val root     = JacksonSupport.mapper.readTree(response.entity.get.content)
-            val settings = root.fields.asScala.map { entry =>
+            val settings = root.properties.asScala.map { entry =>
               val indexSettings = JacksonSupport.mapper.readValue[Map[String, Any]](
                 JacksonSupport.mapper.writeValueAsBytes(entry.getValue)
               )

@@ -32,7 +32,7 @@ class GetTaskTest extends AnyWordSpec with Matchers with DockerTests {
       // kick off a task
       val resp = client.execute {
         reindex("get_task_a", "get_task_b").waitForCompletion(false)
-      }.await.result.right.get
+      }.await.result.toOption.get
 
       // use the task id from the above task
       val task = client.execute {

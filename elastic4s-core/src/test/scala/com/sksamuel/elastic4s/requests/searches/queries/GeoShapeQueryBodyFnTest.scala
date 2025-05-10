@@ -317,7 +317,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def multiPolygonQuery: String =
     """
@@ -336,7 +336,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def pointQuery: String =
     """
@@ -350,7 +350,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def pointQueryWithRelation: String =
     """
@@ -365,7 +365,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
       |      }
       |   }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 
   def envelopeQuery: String =
     """
@@ -379,7 +379,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def multiPointQuery: String =
     """
@@ -393,7 +393,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def lineStringQuery: String =
     """
@@ -407,7 +407,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def multiLineStringQuery: String =
     """
@@ -425,7 +425,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def circleQuery: String =
     """|
@@ -440,7 +440,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def singleLevelGeometryCollectionQuery: String =
     """
@@ -464,7 +464,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
     |      }
     |   }
     |}
-  """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+  """.stripMargin.replace(" ", "").replace("\n", "")
 
   def multiLevelGeometryCollectionQuery: String =
     """
@@ -516,7 +516,7 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
       |      }
       |   }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 
   def emptyGeometryCollectionQuery: String =
     """
@@ -530,5 +530,5 @@ class GeoShapeQueryBodyFnTest extends AnyFunSuite with Matchers with GivenWhenTh
       |      }
       |   }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 }

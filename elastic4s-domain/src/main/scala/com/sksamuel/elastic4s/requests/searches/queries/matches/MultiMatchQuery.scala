@@ -36,7 +36,7 @@ case class MultiMatchQuery(
   def queryName(queryName: String): MultiMatchQuery = copy(queryName = queryName.some)
   def boost(boost: Double): MultiMatchQuery         = copy(boost = boost.some)
 
-  def fields(_fields: String*): MultiMatchQuery            = fields(_fields.toIterable)
+  def fields(_fields: String*): MultiMatchQuery            = fields(_fields.toSeq)
   def fields(_fields: Iterable[String]): MultiMatchQuery   =
     copy(fields = _fields.map(FieldWithOptionalBoost(_, None)).toSeq)
   def field(name: String, boost: Double): MultiMatchQuery  =

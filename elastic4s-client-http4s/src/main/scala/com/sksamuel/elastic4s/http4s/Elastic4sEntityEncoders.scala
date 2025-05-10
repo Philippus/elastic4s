@@ -6,7 +6,6 @@ import fs2.io.file.{Files, Path}
 import org.http4s
 
 import java.io.InputStream
-import scala.language.higherKinds
 
 trait Elastic4sEntityEncoders {
 

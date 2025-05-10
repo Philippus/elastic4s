@@ -246,23 +246,23 @@ class AkkaHttpClient private[akka] (
       case ElasticHttpEntity.StringEntity(content, contentType)     =>
         val ct =
           contentType
-            .flatMap(value => ContentType.parse(value).right.toOption)
+            .flatMap(value => ContentType.parse(value).toOption)
             .getOrElse(ContentTypes.`text/plain(UTF-8)`)
         HttpEntity(ct, ByteString(content))
       case ElasticHttpEntity.ByteArrayEntity(content, contentType)  =>
         val ct =
           contentType
-            .flatMap(value => ContentType.parse(value).right.toOption)
+            .flatMap(value => ContentType.parse(value).toOption)
             .getOrElse(ContentTypes.`text/plain(UTF-8)`)
         HttpEntity(ct, ByteString(content))
       case ElasticHttpEntity.FileEntity(file, contentType)          =>
         val ct = contentType
-          .flatMap(value => ContentType.parse(value).right.toOption)
+          .flatMap(value => ContentType.parse(value).toOption)
           .getOrElse(ContentTypes.`application/octet-stream`)
         HttpEntity(ct, file.length, FileIO.fromPath(file.toPath))
       case ElasticHttpEntity.InputStreamEntity(stream, contentType) =>
         val ct = contentType
-          .flatMap(value => ContentType.parse(value).right.toOption)
+          .flatMap(value => ContentType.parse(value).toOption)
           .getOrElse(ContentTypes.`application/octet-stream`)
         HttpEntity(ct, StreamConverters.fromInputStream(() => stream))
     }

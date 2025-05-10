@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.api.QueryApi
-import com.sksamuel.elastic4s.handlers.searches.queries.{SemanticQueryBuilderFn, SparseVectorQueryBuilderFn}
+import com.sksamuel.elastic4s.handlers.searches.queries.SemanticQueryBuilderFn
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

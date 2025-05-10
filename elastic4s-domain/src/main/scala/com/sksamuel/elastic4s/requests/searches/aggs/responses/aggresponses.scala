@@ -44,7 +44,7 @@ case class KeyedRangeAggResult(
 object KeyedRangeAggResult {
   def apply(name: String, data: Map[String, Any]): KeyedRangeAggResult = KeyedRangeAggResult(
     name,
-    data("buckets").asInstanceOf[Map[String, Map[String, Any]]].mapValues(RangeBucket(_)).toMap,
+    data("buckets").asInstanceOf[Map[String, Map[String, Any]]].view.mapValues(RangeBucket(_)).toMap,
     data
   )
 }

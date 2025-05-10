@@ -89,7 +89,7 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with Given
                                      |    }
                                      |  }
                                      |}
-                                   """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+                                   """.stripMargin.replace(" ", "").replace("\n", "")
   }
 
   def buildBasicGeoBoxQuery() =
@@ -108,5 +108,5 @@ class GeoBoundingBoxQueryBodyFnTest extends AnyFunSuite with Matchers with Given
       |    }
       |  }
       |}
-    """.stripMargin.replaceAllLiterally(" ", "").replace("\n", "")
+    """.stripMargin.replace(" ", "").replace("\n", "")
 }

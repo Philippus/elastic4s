@@ -24,6 +24,6 @@ class DeletePipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers w
         |""".stripMargin
     val response     = HttpResponse(200, Some(StringEntity(responseBody, None)), Map.empty)
 
-    responseHandler.handle(response).right.get shouldBe DeletePipelineResponse(true)
+    responseHandler.handle(response).toOption.get shouldBe DeletePipelineResponse(true)
   }
 }

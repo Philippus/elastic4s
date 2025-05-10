@@ -10,7 +10,7 @@ import com.sksamuel.elastic4s.requests.alias.{
 import com.sksamuel.elastic4s.requests.indexes.admin.AliasActionResponse
 import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, ResponseHandler}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 trait IndexAliasHandlers {
 
@@ -20,7 +20,7 @@ trait IndexAliasHandlers {
       override def handle(response: HttpResponse): Either[ElasticError, IndexAliases] = response.statusCode match {
         case 200 =>
           val root = ResponseHandler.json(response.entity.get)
-          val map  = root.fields.asScala.toVector.map { entry =>
+          val map  = root.properties.asScala.toVector.map { entry =>
             Index(entry.getKey) -> entry.getValue.get("aliases").fieldNames.asScala.toList.map(Alias.apply)
           }.toMap
           Right(IndexAliases(map))

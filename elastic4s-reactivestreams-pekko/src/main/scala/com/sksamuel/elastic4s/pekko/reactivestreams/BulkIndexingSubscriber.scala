@@ -9,7 +9,6 @@ import org.reactivestreams.{Subscriber, Subscription}
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.language.higherKinds
 import scala.util.{Failure, Success}
 
 /** An implementation of the reactive API Subscriber. This subscriber will bulk index received elements. The bulk nature
@@ -271,7 +270,7 @@ class BulkActor[T](
     sent = sent + buffer.size
     self ! BulkActor.Send(bulkDef, buffer.toList, config.maxAttempts)
 
-    buffer.clear
+    buffer.clear()
 
     // buffer is now empty so no point keeping a scheduled flush after operation
     flushAfterScheduler.foreach(_.cancel())

@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.handlers.searches.queries
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.requests.searches.queries.{PruningConfig, SparseVectorQuery}
+import com.sksamuel.elastic4s.requests.searches.queries.SparseVectorQuery
 
 object SparseVectorQueryBuilderFn {
   def apply(q: SparseVectorQuery): XContentBuilder = {

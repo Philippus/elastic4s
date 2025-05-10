@@ -25,7 +25,7 @@ class CancelTaskTest extends AnyWordSpec with Matchers with DockerTests {
       // kick off a task
       val resp = client.execute {
         reindex("cancel_task_a", "cancel_task_b").waitForCompletion(false)
-      }.await.result.right.get
+      }.await.result.toOption.get
 
       // use the task id from the above task
       val response = client.execute {
@@ -38,7 +38,7 @@ class CancelTaskTest extends AnyWordSpec with Matchers with DockerTests {
       // kick off a task
       val resp = client.execute {
         reindex("cancel_task_a", "cancel_task_c").waitForCompletion(false)
-      }.await.result.right.get
+      }.await.result.toOption.get
 
       // use the task id from the above task
       val response = client.execute {

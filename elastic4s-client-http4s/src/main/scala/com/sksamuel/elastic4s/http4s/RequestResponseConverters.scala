@@ -6,8 +6,6 @@ import com.sksamuel.elastic4s
 import fs2.io.file.Files
 import org.http4s
 
-import scala.language.higherKinds
-
 trait RequestResponseConverters extends Elastic4sEntityEncoders {
 
   def elasticRequestToHttp4sRequest[F[_]: Sync: Files](

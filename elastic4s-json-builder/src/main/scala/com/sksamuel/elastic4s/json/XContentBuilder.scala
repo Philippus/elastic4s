@@ -175,7 +175,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def autovalue(_value: Any): XContentBuilder = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     requireArray()
     _value match {
       case v: String                       => value(v)
@@ -218,7 +218,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def autofield(name: String, value: Any): XContentBuilder = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
 
     value match {
       case v: String                       => field(name, v)
@@ -238,7 +238,7 @@ class XContentBuilder(root: JsonValue) {
       case v: BigInt                       => field(name, v)
       case v: java.math.BigInteger         => field(name, v)
       case None                            => obj.putNull(name)
-      case values: Array[_]                => autoarray(name, values)
+      case values: Array[_]                => autoarray(name, values.toIndexedSeq)
       case values: Seq[_]                  => autoarray(name, values)
       case values: Iterator[_]             => autoarray(name, values.toSeq)
       case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)

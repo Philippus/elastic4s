@@ -6,8 +6,6 @@ import com.sksamuel.elastic4s.ElasticNodeEndpoint
 import fs2.io.file.Files
 import org.http4s
 
-import scala.language.higherKinds
-
 object Http4sClient {
 
   def apply[F[_]: Sync: Files](

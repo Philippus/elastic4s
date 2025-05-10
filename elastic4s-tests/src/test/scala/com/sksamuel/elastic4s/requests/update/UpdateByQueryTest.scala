@@ -5,15 +5,16 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.OptionValues
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
+
+import org.scalatest.concurrent.Eventually
 
 class UpdateByQueryTest
     extends AnyFlatSpec
     with Matchers
     with DockerTests
-    with OptionValues {
+    with OptionValues
+    with Eventually {
 
   Try {
     client.execute {
@@ -101,11 +102,9 @@ class UpdateByQueryTest
       ).script(script("ctx._source.foo = 'h'").lang("painless")).refreshImmediately
     }.await.result.task
 
-    // A bit ugly way to poll the task until it's complete
-    Stream.continually {
-      Thread.sleep(100)
-      client.execute(task).await.result.completed
-    }.takeWhile(!_)
+    eventually {
+      client.execute(task).await.result.completed shouldBe true
+    }
 
     client.execute {
       count("pop").query(termQuery("foo", "h"))

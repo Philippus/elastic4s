@@ -2,8 +2,6 @@ package com.sksamuel.elastic4s
 
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.language.higherKinds
-
 /** A typeclass that an underlying http client can implement, so that it can be used by the [[ElasticClient]]
   * implementation by elastic4s.
   *

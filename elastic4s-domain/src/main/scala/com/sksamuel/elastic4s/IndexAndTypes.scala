@@ -9,7 +9,7 @@ trait IndexesLike {
 }
 
 object IndexesLike {
-  implicit def apply(indexes: String): IndexesLike           = Indexes(indexes.split(','))
+  implicit def apply(indexes: String): IndexesLike           = Indexes(indexes.split(',').toIndexedSeq)
   def apply(first: String, rest: String*): IndexesLike       = Indexes(first +: rest)
   implicit def apply(indexes: Iterable[String]): IndexesLike = Indexes(indexes.toSeq)
 }
@@ -60,7 +60,7 @@ case class Indexes(values: Seq[String]) extends IndexesLike {
 object Indexes {
   val All                                                = Indexes("_all")
   val Empty                                              = Indexes(Nil)
-  implicit def apply(indexes: String): Indexes           = Indexes(indexes.split(','))
+  implicit def apply(indexes: String): Indexes           = Indexes(indexes.split(',').toIndexedSeq)
   def apply(first: String, rest: String*): Indexes       = Indexes(first +: rest)
   implicit def apply(indexes: Iterable[String]): Indexes = Indexes(indexes.toSeq)
 }

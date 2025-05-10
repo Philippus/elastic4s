@@ -67,7 +67,7 @@ case class PutMappingRequest(
   def properties(fields: Iterable[ElasticField]): PutMappingRequest = as(fields)
   def properties(fields: ElasticField*): PutMappingRequest          = as(fields: _*)
 
-  def as(fields: ElasticField*): PutMappingRequest            = as(fields.toIterable)
+  def as(fields: ElasticField*): PutMappingRequest            = as(fields.toSeq)
   def as(iterable: Iterable[ElasticField]): PutMappingRequest = copy(properties = properties ++ iterable)
 
   def dynamicDateFormats(dynamic_date_formats: String*): PutMappingRequest =
