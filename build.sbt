@@ -1,4 +1,5 @@
 import Dependencies._
+import xerial.sbt.Sonatype.sonatypeCentralHost
 
 // Required due to dependency conflict in SBT
 // See https://github.com/sbt/sbt/issues/6997
@@ -40,7 +41,8 @@ lazy val commonSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  Test / publishArtifact := false
+  ThisBuild / sonatypeCredentialHost := sonatypeCentralHost,
+  Test / publishArtifact             := false
 )
 
 lazy val commonJvmSettings = Seq(
