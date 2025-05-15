@@ -37,7 +37,7 @@ lazy val commonSettings = Seq(
   resolvers += Resolver.mavenLocal,
   Test / parallelExecution      := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
-  scalacOptions ++= Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+  scalacOptions ++= Seq("-release:17", "-unchecked", "-deprecation", "-encoding", "utf8")
 )
 
 lazy val publishSettings = Seq(
@@ -52,8 +52,7 @@ lazy val commonJvmSettings = Seq(
   },
   Test / fork        := true,
   Test / javaOptions := Seq("-Xmx3G"),
-  javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
-  javaOptions ++= Seq("-Xms512M", "-Xmx2048M", "-XX:+CMSClassUnloadingEnabled")
+  javaOptions ++= Seq("-Xms512M", "-Xmx2048M")
 )
 
 lazy val pomSettings = Seq(
