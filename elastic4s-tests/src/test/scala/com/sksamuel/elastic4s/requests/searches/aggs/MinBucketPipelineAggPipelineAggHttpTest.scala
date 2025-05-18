@@ -18,7 +18,7 @@ class MinBucketPipelineAggPipelineAggHttpTest extends AnyFreeSpec with DockerTes
 
   client.execute {
     createIndex("minbucketagg") mapping {
-      mapping(
+      properties(
         dateField("date"),
         doubleField("value").stored(true)
       )

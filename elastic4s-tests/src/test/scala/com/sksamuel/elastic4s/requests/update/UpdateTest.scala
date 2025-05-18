@@ -18,7 +18,7 @@ class UpdateTest
     with OptionValues {
 
   private val createMapping = createIndex("hans").mapping(
-    mapping(
+    properties(
       textField("name").stored(true)
     )
   )

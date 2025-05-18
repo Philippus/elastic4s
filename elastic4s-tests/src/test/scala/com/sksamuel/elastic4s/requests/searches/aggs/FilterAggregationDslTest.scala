@@ -8,13 +8,13 @@ import org.scalatest.matchers.should.Matchers
 class FilterAggregationDslTest extends AnyFlatSpec with Matchers with ElasticApi {
 
   "filter agg" should "support sub aggs" in {
-    filterAggregation("filtered").query(
+    filterAgg(
+      "filtered",
       boolQuery().must(
         rangeQuery("some_date_field").gte("now-1y")
       )
     ).addSubAggregation(
-      dateHistogramAggregation("per_month")
-        .field("some_date_field")
+      dateHistogramAgg("per_month", "some_date_field")
         .calendarInterval(DateHistogramInterval.Month)
         .minDocCount(0L)
     )

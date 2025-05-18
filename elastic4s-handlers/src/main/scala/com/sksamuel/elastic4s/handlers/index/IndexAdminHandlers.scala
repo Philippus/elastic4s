@@ -14,7 +14,6 @@ import com.sksamuel.elastic4s.requests.admin.{
   RefreshIndexRequest,
   ShrinkIndexRequest,
   SplitIndexRequest,
-  TypesExistsRequest,
   UpdateIndexLevelSettingsRequest
 }
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
@@ -187,18 +186,6 @@ trait IndexAdminHandlers {
     override def build(request: GetSegmentsRequest): ElasticRequest = {
       val endpoint = if (request.indexes.isAll) "/_segments" else s"/${request.indexes.string(true)}/_segments"
       ElasticRequest("GET", endpoint)
-    }
-  }
-
-  implicit object TypeExistsHandler extends Handler[TypesExistsRequest, TypeExistsResponse] {
-
-    override def responseHandler: ResponseHandler[TypeExistsResponse] = new ResponseHandler[TypeExistsResponse] {
-      override def handle(response: HttpResponse) = Right(TypeExistsResponse(response.statusCode == 200))
-    }
-
-    override def build(request: TypesExistsRequest): ElasticRequest = {
-      val endpoint = s"/${request.indexes.mkString(",")}/_mapping/${request.types.mkString(",")}"
-      ElasticRequest("HEAD", endpoint)
     }
   }
 

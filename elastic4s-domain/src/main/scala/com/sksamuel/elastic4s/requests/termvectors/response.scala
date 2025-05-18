@@ -12,7 +12,7 @@ case class TermVectorsResponse(
     took: Int,
     @JsonProperty("term_vectors") termVectors: Map[String, TermVectors]
 ) {
-  def ref = DocumentRef(index, `type`, id)
+  def ref: Any = DocumentRef(index, id)
 }
 
 case class FieldStatistics(

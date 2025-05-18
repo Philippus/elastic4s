@@ -18,7 +18,7 @@ class AdjacencyMatrixAggregationHttpTest extends AnyFreeSpec with DockerTests wi
 
   client.execute {
     createIndex("adjacencymatrixsagg") mapping {
-      mapping(
+      properties(
         keywordField("accounts")
       )
     }

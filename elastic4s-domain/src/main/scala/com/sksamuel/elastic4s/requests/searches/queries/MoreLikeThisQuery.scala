@@ -5,15 +5,6 @@ import com.sksamuel.elastic4s.requests.common.DocumentRef
 case class MoreLikeThisItem(ref: DocumentRef, routing: Option[String] = None)
 
 object MoreLikeThisItem {
-
-  @deprecated("types are deprecated in 7.0", "7.0")
-  def apply(index: String, `type`: String, id: String): MoreLikeThisItem =
-    MoreLikeThisItem(DocumentRef(index, `type`, id))
-
-  @deprecated("types are deprecated in 7.0", "7.0")
-  def apply(index: String, `type`: String, id: String, routing: String): MoreLikeThisItem =
-    MoreLikeThisItem(DocumentRef(index, `type`, id), Some(routing))
-
   def apply(index: String, id: String): MoreLikeThisItem = MoreLikeThisItem(DocumentRef(index, id))
 }
 

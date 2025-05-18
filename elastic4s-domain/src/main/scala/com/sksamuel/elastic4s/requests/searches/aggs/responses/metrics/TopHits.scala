@@ -23,8 +23,7 @@ case class TopHit(
     highlight: Map[String, Any]
 ) extends Transformable {
 
-  @deprecated("types are deprecated in elasticsearch", "7.7")
-  def ref: DocumentRef                 = DocumentRef(index, `type`, id)
+  def ref: DocumentRef                 = DocumentRef(index, id)
   override private[elastic4s] val data = source
 }
 

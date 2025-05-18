@@ -7,8 +7,6 @@ case class HighlightField(
     field: String,
     boundaryChars: Option[Array[Char]] = None,
     boundaryMaxScan: Option[Int] = None,
-    @deprecated("This parameter has no effect", "8.15.0")
-    forceSource: Option[Boolean] = None,
     fragmenter: Option[String] = None,
     fragmentOffset: Option[Int] = None,
     fragmentSize: Option[Int] = None,
@@ -46,9 +44,6 @@ case class HighlightField(
   def requireFieldMatch(requireFieldMatch: Boolean): HighlightField =
     copy(requireFieldMatch = requireFieldMatch.some)
 
-  @deprecated("This method has no effect", "8.15.0")
-  def forceSource(forceSource: Boolean): HighlightField = copy(forceSource = forceSource.some)
-
   def highlightFilter(highlightFilter: Boolean): HighlightField = copy(highlightFilter = highlightFilter.some)
   def highlighterType(highlighterType: String): HighlightField  = copy(highlighterType = highlighterType.some)
 
@@ -72,9 +67,6 @@ case class HighlightField(
 
   def postTag(tags: String*): HighlightField          = postTag(tags)
   def postTag(tags: Iterable[String]): HighlightField = copy(postTags = tags.toSeq)
-
-  @deprecated("Use requireFieldMatch", "8.15.0")
-  def requireFieldMatchScan(req: Boolean): HighlightField = requireFieldMatch(req)
 
   def tagsSchema(tagsSchema: String): HighlightField = copy(tagsSchema = tagsSchema.some)
 

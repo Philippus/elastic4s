@@ -17,11 +17,6 @@ class HighlightFieldBuilderFnTest extends AnyFunSuite with Matchers {
     val highlight = HighlightField("text").boundaryMaxScan(20)
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"boundary_max_scan":20}"""
   }
-  test("'forceSource' has no effect.") {
-    val highlight = HighlightField("text").forceSource(true)
-    searches.HighlightFieldBuilderFn(highlight).string shouldBe
-      """{}""".stripMargin
-  }
   test("'fragmentOffset' generates 'fragment_offset' field.") {
     val highlight = HighlightField("text").fragmentOffset(100)
     searches.HighlightFieldBuilderFn(highlight).string shouldBe """{"fragment_offset":100}"""

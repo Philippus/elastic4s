@@ -20,7 +20,7 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("lecarre").mapping(
-      mapping(
+      properties(
         textField("name")
       )
     ).shards(1).waitForActiveShards(1)
@@ -42,7 +42,7 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result.totalHits shouldBe 2
 
       client.execute {
-        delete("2").from("lecarre").refresh(RefreshPolicy.Immediate)
+        deleteById("lecarre", "2").refresh(RefreshPolicy.Immediate)
       }.await
 
       client.execute {
@@ -50,7 +50,7 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
       }.await.result.totalHits shouldBe 1
 
       client.execute {
-        delete("4").from("lecarre").refresh(RefreshPolicy.Immediate)
+        deleteById("lecarre", "4").refresh(RefreshPolicy.Immediate)
       }.await
 
       client.execute {
@@ -69,17 +69,17 @@ class DeleteByIdTest extends AnyWordSpec with Matchers with DockerTests {
           .refresh(RefreshPolicy.Immediate)
       }.await
       val wrongPrimaryTermResult = client.execute {
-        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).ifPrimaryTerm(insertResult.result.primaryTerm + 1)
+        deleteById("lecarre", id).ifSeqNo(insertResult.result.seqNo).ifPrimaryTerm(insertResult.result.primaryTerm + 1)
           .versionType(Internal).refresh(RefreshPolicy.Immediate)
       }.await
       wrongPrimaryTermResult.error.toString should include("version_conflict_engine_exception")
       val wrongSeqNoResult       = client.execute {
-        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo + 1).ifPrimaryTerm(insertResult.result.primaryTerm)
+        deleteById("lecarre", id).ifSeqNo(insertResult.result.seqNo + 1).ifPrimaryTerm(insertResult.result.primaryTerm)
           .versionType(Internal).refresh(RefreshPolicy.Immediate)
       }.await
       wrongSeqNoResult.error.toString should include("version_conflict_engine_exception")
       val successfulDeleteResult = client.execute {
-        delete(id).from("lecarre").ifSeqNo(insertResult.result.seqNo).ifPrimaryTerm(insertResult.result.primaryTerm)
+        deleteById("lecarre", id).ifSeqNo(insertResult.result.seqNo).ifPrimaryTerm(insertResult.result.primaryTerm)
           .versionType(Internal).refresh(RefreshPolicy.Immediate)
       }.await
       successfulDeleteResult.isSuccess shouldBe true

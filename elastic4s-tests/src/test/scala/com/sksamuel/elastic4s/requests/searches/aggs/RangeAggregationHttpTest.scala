@@ -12,7 +12,7 @@ class RangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matcher
 
   client.execute {
     createIndex("rangeaggs") mapping {
-      mapping(
+      properties(
         textField("name").fielddata(true),
         doubleField("grade")
       )

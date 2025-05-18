@@ -6,7 +6,6 @@ import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStre
 import com.sksamuel.elastic4s.{
   ElasticNodeEndpoint,
   ElasticRequest,
-  ElasticsearchClientUri,
   HttpClient,
   HttpEntity,
   HttpResponse
@@ -107,7 +106,6 @@ class SttpRequestHttpClient[F[_]: MonadError](
 }
 
 object SttpRequestHttpClient {
-
   private implicit def futureMonad(implicit ec: ExecutionContext): MonadError[Future] = new FutureMonad()
 
   private implicit def defaultSttpBackend: SttpBackend[Future, Any] = HttpClientFutureBackend()
@@ -115,13 +113,4 @@ object SttpRequestHttpClient {
   /** Instantiate an [[SttpRequestHttpClient]] with reasonable defaults for the implicit parameters. */
   def apply(nodeEndpoint: ElasticNodeEndpoint)(implicit ec: ExecutionContext): SttpRequestHttpClient[Future] =
     new SttpRequestHttpClient(nodeEndpoint)
-
-  /** Alternative constructor for backwards compatibility. */
-  @deprecated("Use the constructor which takes an ElasticNodeEndpoint", "7.3.2")
-  def apply(clientUri: ElasticsearchClientUri)(implicit ec: ExecutionContext): SttpRequestHttpClient[Future] = {
-    val endpoint = ElasticNodeEndpoint("http", clientUri.hosts.head._1, clientUri.hosts.head._2, None)
-
-    new SttpRequestHttpClient[Future](endpoint)
-  }
-
 }

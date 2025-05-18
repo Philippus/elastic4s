@@ -18,7 +18,6 @@ import com.sksamuel.elastic4s.api.{
   DeleteIndexApi,
   DeleteRoleApi,
   DeleteUserApi,
-  ExistsApi,
   ExplainApi,
   ForceMergeApi,
   GetApi,
@@ -42,7 +41,6 @@ import com.sksamuel.elastic4s.api.{
   ReloadSearchAnalyzersApi,
   RoleApi,
   ScoreApi,
-  ScriptApi,
   ScrollApi,
   SearchApi,
   SearchTemplateApi,
@@ -84,7 +82,6 @@ trait ElasticApi
     with DeleteIndexApi
     with DeleteRoleApi
     with DeleteUserApi
-    with ExistsApi
     with ExplainApi
     with ForceMergeApi
     with GetApi
@@ -106,7 +103,6 @@ trait ElasticApi
     with ReindexApi
     with ReloadSearchAnalyzersApi
     with RoleApi
-    with ScriptApi
     with ScoreApi
     with ScrollApi
     with SearchApi

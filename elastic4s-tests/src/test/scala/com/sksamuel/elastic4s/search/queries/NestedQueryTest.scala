@@ -17,7 +17,7 @@ class NestedQueryTest extends AnyWordSpec with DockerTests with Matchers {
 
   client.execute {
     createIndex("nested").mapping(
-      mapping(
+      properties(
         keywordField("name"),
         nestedField("states")
       )
@@ -63,12 +63,13 @@ class NestedQueryTest extends AnyWordSpec with DockerTests with Matchers {
     "match against nested objects" in {
       client.execute {
         search("nested") query {
-          nestedQuery("states").query {
+          nestedQuery(
+            "states",
             boolQuery().must(
               matchQuery("states.name", "Montana"),
               matchQuery("states.entry", 1889)
             )
-          }
+          )
         }
       }.await.result.totalHits shouldBe 1
     }

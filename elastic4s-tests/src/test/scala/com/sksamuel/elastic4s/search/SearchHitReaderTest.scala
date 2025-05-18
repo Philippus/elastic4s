@@ -20,8 +20,8 @@ class SearchHitReaderTest extends AnyFlatSpec with Matchers with DockerTests {
     )
 
     client.execute {
-      createIndex("cars").mappings(
-        mapping()
+      createIndex("cars").mapping(
+        properties()
       )
     }.await
 

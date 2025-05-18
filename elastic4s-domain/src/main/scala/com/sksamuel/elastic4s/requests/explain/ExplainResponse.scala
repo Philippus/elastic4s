@@ -14,5 +14,5 @@ case class ExplainResponse(
 ) {
 
   def isMatch: Boolean = matched
-  def ref: DocumentRef = DocumentRef(index, `type`, id)
+  def ref: DocumentRef = DocumentRef(index, id)
 }

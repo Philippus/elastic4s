@@ -17,8 +17,8 @@ class StatsBucketPipelineAggHttpTest extends AnyFreeSpec with DockerTests with M
   }
 
   client.execute {
-    createIndex("statsbucketagg") mappings {
-      mapping(
+    createIndex("statsbucketagg") mapping {
+      properties(
         dateField("date"),
         doubleField("value").stored(true)
       )

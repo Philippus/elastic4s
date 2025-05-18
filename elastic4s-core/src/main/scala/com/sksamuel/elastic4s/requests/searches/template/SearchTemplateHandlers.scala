@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.{
   SearchResponse,
   TemplateSearchRequest
 }
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, IndexesAndTypes, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, Index, Indexes, ResponseHandler}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait SearchTemplateHandlers {
@@ -16,12 +16,9 @@ trait SearchTemplateHandlers {
   implicit object TemplateSearchHandler extends Handler[TemplateSearchRequest, SearchResponse] {
 
     override def build(req: TemplateSearchRequest): ElasticRequest = {
-      val endpoint = req.indexesAndTypes match {
-        case IndexesAndTypes(Nil, Nil)       => "/_search/template"
-        case IndexesAndTypes(indexes, Nil)   => "/" + indexes.mkString(",") + "/_search/template"
-        case IndexesAndTypes(Nil, types)     => "/_all/" + types.mkString(",") + "/_search/template"
-        case IndexesAndTypes(indexes, types) =>
-          "/" + indexes.mkString(",") + "/" + types.mkString(",") + "/_search/template"
+      val endpoint = req.indexes match {
+        case Indexes(Nil)     => "/_search/template"
+        case Indexes(indexes) => "/" + indexes.mkString(",") + "/_search/template"
       }
       val body     = TemplateSearchBuilderFn(req).string
       ElasticRequest("POST", endpoint, HttpEntity(body, "application/json"))

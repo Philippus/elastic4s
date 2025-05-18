@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MultiMatchQueryBuilderType
 
 import java.util.TimeZone
@@ -40,9 +39,6 @@ case class QueryStringQuery(
   def boost(boost: Double): QueryStringQuery     = copy(boost = boost.some)
 
   def analyzer(a: String): QueryStringQuery = copy(analyzer = a.some)
-
-  @deprecated("use the string version with the name of an analyzer", "7.7.0")
-  def analyzer(a: Analyzer): QueryStringQuery = analyzer(a.name)
 
   def defaultOperator(op: String): QueryStringQuery = copy(defaultOperator = op.some)
   def operator(op: String): QueryStringQuery        = defaultOperator(op)

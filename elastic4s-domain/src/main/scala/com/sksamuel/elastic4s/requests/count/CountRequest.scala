@@ -17,11 +17,7 @@ case class CountRequest(
     terminateAfter: Option[Int] = None,
     minScore: Option[Double] = None
 ) {
-
-  @deprecated("use query")
-  def filter(query: Query): CountRequest = copy(query = query.some)
-  def query(query: Query): CountRequest  = copy(query = query.some)
-
+  def query(query: Query): CountRequest                      = copy(query = query.some)
   def lenient(lenient: Boolean): CountRequest                = copy(lenient = lenient.some)
   def allowNoIndices(allowNoIndices: Boolean): CountRequest  = copy(allowNoIndices = allowNoIndices.some)
   def ignoreThrottled(ignore: Boolean): CountRequest         = copy(ignoreThrottled = ignore.some)

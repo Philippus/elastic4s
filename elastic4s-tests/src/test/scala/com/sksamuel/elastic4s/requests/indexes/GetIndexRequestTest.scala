@@ -59,11 +59,11 @@ class GetIndexRequestTest extends AnyWordSpec with Matchers with DockerTests {
     "return aliases" in {
 
       client.execute {
-        addAlias("myalias1").on("getindextest")
+        addAlias("myalias1", "getindextest")
       }.await
 
       client.execute {
-        addAlias("myalias2").on("getindextest")
+        addAlias("myalias2", "getindextest")
       }.await
 
       val resp = client.execute {

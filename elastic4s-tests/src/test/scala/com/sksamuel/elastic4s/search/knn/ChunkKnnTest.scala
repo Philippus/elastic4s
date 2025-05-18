@@ -43,8 +43,8 @@ class ChunkKnnTest extends AnyFlatSpec with Matchers with DockerTests with Befor
           nestedField(PARAGRAPH_FIELD).properties(
             DenseVectorField(
               name = VECTOR_FIELD,
-              dims = 2,
-              index = true
+              dims = Some(2),
+              index = Some(true)
             ),
             textField(TEXT_FIELD).index(false)
           )

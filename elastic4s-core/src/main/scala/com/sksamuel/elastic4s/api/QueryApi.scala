@@ -80,10 +80,6 @@ trait QueryApi {
   implicit def string2query(string: String): SimpleStringQuery = SimpleStringQuery(string)
   implicit def tuple2query(kv: (String, String)): TermQuery    = TermQuery(kv._1, kv._2)
 
-  @deprecated("Use boostingQuery with required negativeBoost parameter instead", "8.18.0")
-  def boostingQuery(positiveQuery: Query, negativeQuery: Query): BoostingQuery =
-    BoostingQuery(positiveQuery, negativeQuery)
-
   def boostingQuery(positiveQuery: Query, negativeQuery: Query, negativeBoost: Double): BoostingQuery =
     BoostingQuery(positiveQuery, negativeQuery, negativeBoost)
 
@@ -108,17 +104,9 @@ trait QueryApi {
   def geoBoxQuery(field: String, topleft: String, bottomright: String): GeoBoundingBoxQuery =
     GeoBoundingBoxQuery(field).withGeohash(topleft, bottomright)
 
-  @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "7.2.0")
-  def geoDistanceQuery(field: String): GeoDistanceExpectsPoint                     = new GeoDistanceExpectsPoint(field)
   def geoDistanceQuery(field: String, geohash: String): GeoDistanceQuery           = GeoDistanceQuery(field).geohash(geohash)
   def geoDistanceQuery(field: String, lat: Double, long: Double): GeoDistanceQuery =
     GeoDistanceQuery(field).point(lat, long)
-
-  @deprecated("use geoDistanceQuery(field, hash) or geoDistanceQuery(field, lat, long)", "6.1.2")
-  class GeoDistanceExpectsPoint(field: String) {
-    def geohash(geohash: String): GeoDistanceQuery         = GeoDistanceQuery(field).geohash(geohash)
-    def point(lat: Double, long: Double): GeoDistanceQuery = GeoDistanceQuery(field).point(lat, long)
-  }
 
   class GeoDistanceExpectsDistance(gdef: GeoDistanceQuery) {
     def distance(distance: String): GeoDistanceQuery                     = gdef.distance(distance)
@@ -139,33 +127,11 @@ trait QueryApi {
 
   def geoShapeQuery(field: String, shape: Shape): GeoShapeQuery = GeoShapeQuery(field, shape)
 
-  @deprecated("use hasChildQuery(`type`: String, query: Query, score: Boolean)", "6.3.0")
-  def hasChildQuery(`type`: String): HasChildQueryExpectsQuery = new HasChildQueryExpectsQuery(`type`)
-
   def hasChildQuery(childType: String, query: Query, scoreMode: ScoreMode = ScoreMode.None): HasChildQuery =
     HasChildQuery(childType, query, scoreMode)
 
-  class HasChildQueryExpectsQuery(`type`: String) {
-    def query(q: Query): ExpectsScoreMode  = new ExpectsScoreMode(q)
-    def query(q: String): ExpectsScoreMode = new ExpectsScoreMode(q)
-    class ExpectsScoreMode(q: Query) {
-      def scoreMode(mode: String): HasChildQuery         = scoreMode(ScoreMode.valueOf(mode))
-      def scoreMode(scoreMode: ScoreMode): HasChildQuery = hasChildQuery(`type`, q, scoreMode)
-    }
-  }
-
-  @deprecated("use hasParentQuery(`type`: String, query: Query, score: Boolean)", "6.3.0")
-  def hasParentQuery(`type`: String) = new HasParentQueryExpectsQuery(`type`)
-
   def hasParentQuery(parentType: String, query: Query, score: Boolean): HasParentQuery =
     HasParentQuery(parentType, query, score)
-
-  class HasParentQueryExpectsQuery(`type`: String) {
-    def query(q: Query) = new ExpectsScoreMode(q)
-    class ExpectsScoreMode(q: Query) {
-      def scoreMode(scoreMode: Boolean): HasParentQuery = hasParentQuery(`type`, q, scoreMode)
-    }
-  }
 
   def innerHits(name: String): com.sksamuel.elastic4s.requests.searches.queries.InnerHit =
     com.sksamuel.elastic4s.requests.searches.queries.InnerHit(name)
@@ -215,33 +181,25 @@ trait QueryApi {
       MoreLikeThisQuery(fields).copy(artificialDocs = docs.toSeq)
   }
 
-  @deprecated("use nestedQuery(path, query)", "7.7.0")
-  def nestedQuery(path: String) = new NestedQueryExpectsQuery(path)
-  class NestedQueryExpectsQuery(path: String) {
-    def query(query: Query): NestedQuery = nestedQuery(path, query)
-  }
   def nestedQuery(path: String, query: Query): NestedQuery = NestedQuery(path, query)
 
   def query(queryString: String): QueryStringQuery            = queryStringQuery(queryString)
   def queryStringQuery(queryString: String): QueryStringQuery = QueryStringQuery(queryString)
 
-  def percolateQuery(`type`: String, field: String = "query") = new PercolateExpectsUsing(`type`, field)
+  def percolateQuery(field: String = "query") = new PercolateExpectsUsing(field)
 
-  @deprecated("types are going away", "7.2.0")
-  class PercolateExpectsUsing(`type`: String, field: String) {
-
-    @deprecated("types are going away", "7.7.0")
-    def usingId(index: String, `type`: String, id: Any): PercolateQuery =
-      usingId(DocumentRef(index, `type`, id.toString))
+  class PercolateExpectsUsing(field: String) {
+    def usingId(index: String, id: Any): PercolateQuery =
+      usingId(DocumentRef(index, id.toString))
 
     def usingId(ref: DocumentRef): PercolateQuery =
-      PercolateQuery(field, `type`, ref = Some(ref))
+      PercolateQuery(field, ref = Some(ref))
 
     def usingSource(json: String): PercolateQuery =
-      PercolateQuery(field, `type`, source = Some(json))
+      PercolateQuery(field, source = Some(json))
 
     def usingSource[T](t: T)(implicit indexable: Indexable[T]): PercolateQuery =
-      PercolateQuery(field, `type`, source = Some(indexable.json(t)))
+      PercolateQuery(field, source = Some(indexable.json(t)))
   }
 
   def pinnedQuery(ids: List[String], organic: Query): PinnedQuery = PinnedQuery(ids, organic)
@@ -264,12 +222,6 @@ trait QueryApi {
 
   def simpleStringQuery(q: String): SimpleStringQuery = SimpleStringQuery(q)
   def stringQuery(q: String): QueryStringQuery        = QueryStringQuery(q)
-
-  @deprecated("use spanFirstQuery(query, end)", "7.7.0")
-  def spanFirstQuery(query: SpanQuery) = new SpanFirstExpectsEnd(query)
-  class SpanFirstExpectsEnd(query: SpanQuery) {
-    def end(end: Int): SpanFirstQuery = SpanFirstQuery(query, end)
-  }
 
   def spanFirstQuery(query: SpanQuery, end: Int) = SpanFirstQuery(query, end)
 

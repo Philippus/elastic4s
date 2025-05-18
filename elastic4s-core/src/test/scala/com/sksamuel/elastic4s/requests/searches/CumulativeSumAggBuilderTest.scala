@@ -13,7 +13,7 @@ class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers {
         .fixedInterval(DateHistogramInterval.Month)
         .subaggs(
           Seq(
-            sumAggregation("sales").field("price"),
+            sumAgg("sales", "price"),
             cumulativeSumAggregation("cumulative_sales", "sales")
               .format("$")
               .metadata(

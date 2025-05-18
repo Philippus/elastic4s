@@ -12,10 +12,8 @@ case class SynonymTokenFilter(
     override val name: String,
     path: Option[String] = None,
     synonyms: Set[String] = Set.empty,
-    @deprecated ignoreCase: Option[Boolean] = None,
     format: Option[String] = None,
     expand: Option[Boolean] = None,
-    @deprecated tokenizer: Option[String] = None,
     updateable: Option[Boolean] = None,
     lenient: Option[Boolean] = None,
     synonymsSet: Option[String] = None
@@ -32,19 +30,15 @@ case class SynonymTokenFilter(
     else if (path.nonEmpty) path.foreach(b.field("synonyms_path", _))
     else b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
-    ignoreCase.foreach(b.field("ignore_case", _))
     updateable.foreach(b.field("updateable", _))
     expand.foreach(b.field("expand", _))
     lenient.foreach(b.field("lenient", _))
-    tokenizer.foreach(b.field("tokenizer", _))
     b
   }
 
   def path(path: String): SynonymTokenFilter                   = copy(path = Some(path))
   def synonyms(synonyms: Iterable[String]): SynonymTokenFilter = copy(synonyms = synonyms.toSet)
-  def tokenizer(tokenizer: String): SynonymTokenFilter         = copy(tokenizer = tokenizer.some)
   def format(format: String): SynonymTokenFilter               = copy(format = format.some)
-  def ignoreCase(ignoreCase: Boolean): SynonymTokenFilter      = copy(ignoreCase = ignoreCase.some)
   def expand(expand: Boolean): SynonymTokenFilter              = copy(expand = expand.some)
   def updateable(updateable: Boolean): SynonymTokenFilter      = copy(updateable = updateable.some)
   def lenient(lenient: Boolean): SynonymTokenFilter            = copy(lenient = lenient.some)
@@ -111,10 +105,8 @@ case class SynonymGraphTokenFilter(
     override val name: String,
     path: Option[String] = None,
     synonyms: Set[String] = Set.empty,
-    @deprecated ignoreCase: Option[Boolean] = None,
     format: Option[String] = None,
     expand: Option[Boolean] = None,
-    @deprecated tokenizer: Option[String] = None,
     updateable: Option[Boolean] = None,
     lenient: Option[Boolean] = None,
     synonymsSet: Option[String] = None
@@ -132,19 +124,15 @@ case class SynonymGraphTokenFilter(
     else if (path.nonEmpty) path.foreach(b.field("synonyms_path", _))
     else b.array("synonyms", synonyms.toArray)
     format.foreach(b.field("format", _))
-    ignoreCase.foreach(b.field("ignore_case", _))
     updateable.foreach(b.field("updateable", _))
     expand.foreach(b.field("expand", _))
     lenient.foreach(b.field("lenient", _))
-    tokenizer.foreach(b.field("tokenizer", _))
     b
   }
 
   def path(path: String): SynonymGraphTokenFilter                   = copy(path = Some(path))
   def synonyms(synonyms: Iterable[String]): SynonymGraphTokenFilter = copy(synonyms = synonyms.toSet)
-  def tokenizer(tokenizer: String): SynonymGraphTokenFilter         = copy(tokenizer = tokenizer.some)
   def format(format: String): SynonymGraphTokenFilter               = copy(format = Some(format))
-  def ignoreCase(ignoreCase: Boolean): SynonymGraphTokenFilter      = copy(ignoreCase = Some(ignoreCase))
   def expand(expand: Boolean): SynonymGraphTokenFilter              = copy(expand = expand.some)
   def updateable(updateable: Boolean): SynonymGraphTokenFilter      = copy(updateable = updateable.some)
   def lenient(lenient: Boolean): SynonymGraphTokenFilter            = copy(lenient = lenient.some)

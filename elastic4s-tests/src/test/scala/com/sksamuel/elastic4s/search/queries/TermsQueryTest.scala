@@ -12,7 +12,7 @@ class TermsQueryTest
 
   client.execute {
     createIndex("lords").mapping(
-      mapping(
+      properties(
         keywordField("name")
       )
     )
@@ -20,7 +20,7 @@ class TermsQueryTest
 
   client.execute {
     createIndex("lordsfanclub").mapping(
-      mapping(
+      properties(
         keywordField("lordswelike")
       )
     )

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.handlers.searches.queries.sort
 
 import com.sksamuel.elastic4s.EnumConversions
-import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
 
@@ -15,14 +14,7 @@ object FieldSortBuilderFn {
     fs.sortMode.map(EnumConversions.sortMode).foreach(builder.field("mode", _))
     builder.field("order", EnumConversions.order(fs.order))
 
-    if (fs.nested.nonEmpty) {
-      fs.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
-    } else if (fs.nestedPath.nonEmpty || fs.nestedFilter.nonEmpty) {
-      builder.startObject("nested")
-      fs.nestedPath.foreach(builder.field("path", _))
-      fs.nestedFilter.map(f => queries.QueryBuilderFn(f).string).foreach(builder.rawField("filter", _))
-      builder.endObject()
-    }
+    fs.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
 
     fs.numericType.foreach(builder.field("numeric_type", _))
 

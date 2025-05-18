@@ -14,18 +14,6 @@ object DenseVectorField {
   case object Int8Flat extends KnnType { val name = "int8_flat" }
   case object Int4Flat extends KnnType { val name = "int4_flat" }
   case object BbqFlat  extends KnnType { val name = "bbq_flat"  }
-
-  @deprecated("Use the new apply method", "8.14.0")
-  def apply(name: String, dims: Int): DenseVectorField =
-    DenseVectorField(name, None, Some(dims), Some(false), Some(L2Norm))
-
-  @deprecated("Use the new apply method", "8.14.0")
-  def apply(name: String, dims: Int, index: Boolean): DenseVectorField =
-    DenseVectorField(name, None, Some(dims), Some(index), Some(L2Norm))
-
-  @deprecated("Use the new apply method", "8.14.0")
-  def apply(name: String, dims: Int, index: Boolean, similarity: Similarity): DenseVectorField =
-    DenseVectorField(name, None, Some(dims), Some(index), Some(similarity))
 }
 
 sealed trait Similarity {

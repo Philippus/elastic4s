@@ -17,7 +17,7 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("intros").mapping(
-      mapping(
+      properties(
         textField("name").stored(true),
         textField("text").stored(true)
       )
