@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
-class KnnnHttpTest extends AnyFreeSpec with Matchers with DockerTests with BeforeAndAfterAll {
+class KnnHttpTest extends AnyFreeSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   private val index                  = "knn-index"
   override protected def beforeAll() = {
