@@ -11,8 +11,8 @@ case class MatchPhraseQuery(
     slop: Option[Int] = None,
     queryName: Option[String] = None
 ) extends Query {
-
-  def analyzer(a: Analyzer): MatchPhraseQuery        = copy(analyzer = Some(a.name))
+  def analyzer(a: Analyzer): MatchPhraseQuery        = analyzer(a.name)
+  def analyzer(analyzer: String): MatchPhraseQuery   = copy(analyzer = Some(analyzer))
   def boost(boost: Double): MatchPhraseQuery         = copy(boost = Some(boost))
   def slop(slop: Int): MatchPhraseQuery              = copy(slop = Some(slop))
   def queryName(queryName: String): MatchPhraseQuery = copy(queryName = Some(queryName))
