@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.handlers.searches.queries.text
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchPhrasePrefixQuery
 
@@ -14,9 +15,7 @@ object MatchPhrasePrefixBodyFn {
     q.slop.foreach(builder.field("slop", _))
     q.maxExpansions.foreach(builder.field("max_expansions", _))
     q.boost.foreach(builder.field("boost", _))
-    builder.endObject()
-    builder.endObject()
-    builder.endObject()
-    builder
+    q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(builder.field("zero_terms_query", _))
+    builder.endObject().endObject().endObject()
   }
 }

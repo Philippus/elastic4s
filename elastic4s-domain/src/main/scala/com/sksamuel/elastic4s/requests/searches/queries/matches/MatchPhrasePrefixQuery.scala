@@ -11,13 +11,17 @@ case class MatchPhrasePrefixQuery(
     queryName: Option[String] = None,
     boost: Option[Double] = None,
     maxExpansions: Option[Int] = None,
-    slop: Option[Int] = None
+    slop: Option[Int] = None,
+    zeroTermsQuery: Option[ZeroTermsQuery] = None
 ) extends Query {
-
-  def analyzer(a: Analyzer): MatchPhrasePrefixQuery        = analyzer(a.name)
-  def analyzer(name: String): MatchPhrasePrefixQuery       = copy(analyzer = name.some)
-  def queryName(queryName: String): MatchPhrasePrefixQuery = copy(queryName = queryName.some)
-  def boost(boost: Double): MatchPhrasePrefixQuery         = copy(boost = boost.some)
-  def maxExpansions(max: Int): MatchPhrasePrefixQuery      = copy(maxExpansions = max.some)
-  def slop(slop: Int): MatchPhrasePrefixQuery              = copy(slop = slop.some)
+  def analyzer(a: Analyzer): MatchPhrasePrefixQuery                          = analyzer(a.name)
+  def analyzer(name: String): MatchPhrasePrefixQuery                         = copy(analyzer = name.some)
+  def queryName(queryName: String): MatchPhrasePrefixQuery                   = copy(queryName = queryName.some)
+  def boost(boost: Double): MatchPhrasePrefixQuery                           = copy(boost = boost.some)
+  def maxExpansions(max: Int): MatchPhrasePrefixQuery                        = copy(maxExpansions = max.some)
+  def slop(slop: Int): MatchPhrasePrefixQuery                                = copy(slop = slop.some)
+  def zeroTermsQuery(zeroTermsQuery: String): MatchPhrasePrefixQuery         =
+    copy(zeroTermsQuery = ZeroTermsQuery.valueOf(zeroTermsQuery).some)
+  def zeroTermsQuery(zeroTermsQuery: ZeroTermsQuery): MatchPhrasePrefixQuery =
+    copy(zeroTermsQuery = zeroTermsQuery.some)
 }
