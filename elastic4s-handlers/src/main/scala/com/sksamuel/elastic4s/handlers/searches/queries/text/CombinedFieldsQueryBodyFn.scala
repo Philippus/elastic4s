@@ -23,6 +23,6 @@ object CombinedFieldsQueryBodyFn {
 
     q.minimumShouldMatch.foreach(builder.field("minimum_should_match", _))
     q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(builder.field("zero_terms_query", _))
-    builder.endObject()
+    builder.endObject().endObject()
   }
 }

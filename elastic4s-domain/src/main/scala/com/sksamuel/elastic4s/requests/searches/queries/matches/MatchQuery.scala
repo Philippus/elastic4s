@@ -20,8 +20,9 @@ case class MatchQuery(
     operator: Option[Operator] = None,
     prefixLength: Option[Int] = None,
     queryName: Option[String] = None,
-    zeroTerms: Option[String] = None,
-    autoGenerateSynonymsPhraseQuery: Option[Boolean] = None
+    @deprecated("Use zeroTermsQuery", "8.18.1") zeroTerms: Option[String] = None,
+    autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
+    zeroTermsQuery: Option[ZeroTermsQuery] = None
 ) extends Query {
 
   def analyzer(an: String): MatchQuery   = copy(analyzer = an.some)
@@ -51,5 +52,8 @@ case class MatchQuery(
 
   def queryName(queryName: String): MatchQuery = copy(queryName = queryName.some)
 
-  def zeroTermsQuery(zeroTerms: String): MatchQuery = copy(zeroTerms = zeroTerms.some)
+  def zeroTermsQuery(zeroTermsQuery: String): MatchQuery         =
+    copy(zeroTermsQuery = ZeroTermsQuery.valueOf(zeroTermsQuery).some, zeroTerms = None)
+  def zeroTermsQuery(zeroTermsQuery: ZeroTermsQuery): MatchQuery =
+    copy(zeroTermsQuery = zeroTermsQuery.some, zeroTerms = None)
 }

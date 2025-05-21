@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.handlers.searches.queries.text
 
+import com.sksamuel.elastic4s.EnumConversions
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
 
@@ -25,7 +26,10 @@ object MatchQueryBuilderFn {
     q.minimumShouldMatch.foreach(builder.field("minimum_should_match", _))
     q.operator.map(_.toString.toUpperCase).foreach(builder.field("operator", _))
     q.prefixLength.map(_.toString).foreach(builder.field("prefix_length", _))
-    q.zeroTerms.foreach(builder.field("zero_terms_query", _))
+    if (q.zeroTermsQuery.nonEmpty)
+      q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(builder.field("zero_terms_query", _))
+    else
+      q.zeroTerms.foreach(builder.field("zero_terms_query", _))
 
     builder.endObject().endObject().endObject()
   }
