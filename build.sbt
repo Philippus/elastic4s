@@ -112,6 +112,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   jackson,
   json4s,
   playjson,
+  sprayjson,
   ziojson,
   clientsttp,
   httpstreams,
@@ -136,7 +137,7 @@ lazy val root                                  = Project("elastic4s", file("."))
     noPublishSettings
   )
   .aggregate(
-    Seq[ProjectReference](scalaz, sprayjson, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
+    Seq[ProjectReference](scalaz, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
@@ -315,7 +316,7 @@ lazy val playjson = (project in file("elastic4s-json-play"))
 lazy val sprayjson = (project in file("elastic4s-json-spray"))
   .dependsOn(core)
   .settings(name := "elastic4s-json-spray")
-  .settings(scala2Settings) // ProductFormats in spray json don't work with the cross-building mode, so this probably needs https://github.com/spray/spray-json/pull/342
+  .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.sprayJson)
 
 lazy val ziojson_1 = (project in file("elastic4s-json-zio-1"))
