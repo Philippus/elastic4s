@@ -53,4 +53,4 @@ jobs:
         uses: ./.github/actions/launch-elasticsearch
 
       - name: run tests
-        run: sbt ++3.3.4 elastic4s-scala3/test
+        run: sbt ++3.3.6 elastic4s-scala3/test
