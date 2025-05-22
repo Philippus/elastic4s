@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
@@ -14,7 +13,6 @@ case class MatchPhrasePrefixQuery(
     slop: Option[Int] = None,
     zeroTermsQuery: Option[ZeroTermsQuery] = None
 ) extends Query {
-  def analyzer(a: Analyzer): MatchPhrasePrefixQuery                          = analyzer(a.name)
   def analyzer(name: String): MatchPhrasePrefixQuery                         = copy(analyzer = name.some)
   def queryName(queryName: String): MatchPhrasePrefixQuery                   = copy(queryName = queryName.some)
   def boost(boost: Double): MatchPhrasePrefixQuery                           = copy(boost = boost.some)

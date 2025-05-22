@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.fields.ElasticField
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
 
@@ -33,9 +32,6 @@ case class MappingDefinition(
   def sourceExcludes(sourceExcludes: String*): MappingDefinition          = copy(sourceExcludes = sourceExcludes)
   def sourceExcludes(sourceExcludes: Iterable[String]): MappingDefinition = copy(sourceExcludes = sourceExcludes.toSeq)
   def analyzer(analyzer: String): MappingDefinition                       = copy(analyzer = analyzer.some)
-
-  @deprecated("use new analysis package", "7.2.0")
-  def analyzer(analyzer: Analyzer): MappingDefinition = copy(analyzer = analyzer.name.some)
 
   def boostName(boostName: String): MappingDefinition           = copy(boostName = boostName.some)
   def boostNullValue(boostNullValue: Double): MappingDefinition = copy(boostNullValue = boostNullValue.some)

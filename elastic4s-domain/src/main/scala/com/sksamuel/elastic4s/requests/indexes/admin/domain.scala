@@ -46,10 +46,6 @@ case class FlushIndexResponse(_shards: Shards) {
   def shards: Shards = _shards
 }
 
-case class TypeExistsResponse(exists: Boolean) {
-  def isExists: Boolean = exists
-}
-
 case class IndexExistsResponse(exists: Boolean) {
   def isExists: Boolean = exists
 }

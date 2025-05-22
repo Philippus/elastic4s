@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.common.Operator
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
@@ -19,8 +18,6 @@ case class MatchBoolPrefixQuery(
     fuzzyTranspositions: Option[Boolean] = None,
     fuzzyRewrite: Option[String] = None
 ) extends Query {
-
-  def analyzer(a: Analyzer): MatchBoolPrefixQuery               = analyzer(a.name)
   def analyzer(name: String): MatchBoolPrefixQuery              = copy(analyzer = name.some)
   def queryName(queryName: String): MatchBoolPrefixQuery        = copy(queryName = queryName.some)
   def boost(boost: Double): MatchBoolPrefixQuery                = copy(boost = boost.some)

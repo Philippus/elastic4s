@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.common.Operator
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
@@ -31,7 +30,6 @@ case class MultiMatchQuery(
   def cutoffFrequency(freq: Double): MultiMatchQuery = copy(cutoffFrequency = freq.some)
   def prefixLength(len: Int): MultiMatchQuery        = copy(prefixLength = len.some)
 
-  def analyzer(a: Analyzer): MultiMatchQuery        = analyzer(a.name)
   def analyzer(name: String): MultiMatchQuery       = copy(analyzer = name.some)
   def queryName(queryName: String): MultiMatchQuery = copy(queryName = queryName.some)
   def boost(boost: Double): MultiMatchQuery         = copy(boost = boost.some)

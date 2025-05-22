@@ -187,7 +187,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
         .minimumShouldMatch("75%")
         .fuzziness("2")
         .prefixLength(4)
-        .analyzer(FrenchLanguageAnalyzer)
+        .analyzer(FrenchLanguageAnalyzer.name)
         .autoGenerateSynonymsPhraseQuery(false)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match.json")
@@ -272,7 +272,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       matchPhraseQuery("name", "coldplay")
         .slop(3)
         .boost(15)
-        .analyzer(SnowballAnalyzer)
+        .analyzer(SnowballAnalyzer.name)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_phrase.json")
   }
@@ -282,7 +282,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       matchPhrasePrefixQuery("name", "coldplay")
         .maxExpansions(3)
         .slop(3)
-        .analyzer(SnowballAnalyzer)
+        .analyzer(SnowballAnalyzer.name)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_phrase_prefix.json")
   }
@@ -292,7 +292,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
       matchBoolPrefixQuery("name", "coldplay")
         .maxExpansions(3)
         .fuzziness("0<1")
-        .analyzer(SnowballAnalyzer)
+        .analyzer(SnowballAnalyzer.name)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_bool_prefix.json")
   }
@@ -562,7 +562,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for multi match query" in {
     val req = search("music") query {
-      multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer boost
+      multiMatchQuery("this is my query") fields ("name", "location", "genre") analyzer WhitespaceAnalyzer.name boost
         3.4 cutoffFrequency 1.7 fuzziness
         "something" prefixLength 4 minimumShouldMatch 2 tieBreaker 4.5 zeroTermsQuery
         ZeroTermsQuery.ALL fuzzyRewrite "some-rewrite" maxExpansions 4 lenient true prefixLength 4 operator "AND" matchType MultiMatchQueryBuilderType.CROSS_FIELDS

@@ -33,7 +33,6 @@ import com.sksamuel.elastic4s.requests.indexes.admin.{
   IndexRecoveryResponse,
   OpenIndexResponse,
   RefreshIndexResponse,
-  TypeExistsResponse,
   UpdateIndexLevelSettingsResponse
 }
 import com.sksamuel.elastic4s.{

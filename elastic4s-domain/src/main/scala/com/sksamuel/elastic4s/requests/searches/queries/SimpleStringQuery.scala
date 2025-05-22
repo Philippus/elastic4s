@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.ext.OptionImplicits._
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 
 sealed trait SimpleQueryStringFlag
 object SimpleQueryStringFlag {
@@ -37,7 +36,6 @@ case class SimpleStringQuery(
   def quoteFieldSuffix(suffix: String): SimpleStringQuery     = copy(quote_field_suffix = suffix.some)
   def flags(flags: SimpleQueryStringFlag*): SimpleStringQuery = copy(flags = flags)
   def analyzer(analyzer: String): SimpleStringQuery           = copy(analyzer = analyzer.some)
-  def analyzer(analyzer: Analyzer): SimpleStringQuery         = copy(analyzer = analyzer.name.some)
   def queryName(queryName: String): SimpleStringQuery         = copy(queryName = queryName.some)
   def defaultOperator(op: String): SimpleStringQuery          = copy(operator = op.some)
 
