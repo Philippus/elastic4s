@@ -9,11 +9,15 @@ case class MatchPhraseQuery(
     boost: Option[Double] = None,
     analyzer: Option[String] = None,
     slop: Option[Int] = None,
-    queryName: Option[String] = None
+    queryName: Option[String] = None,
+    zeroTermsQuery: Option[ZeroTermsQuery] = None
 ) extends Query {
-
-  def analyzer(a: Analyzer): MatchPhraseQuery        = copy(analyzer = Some(a.name))
-  def boost(boost: Double): MatchPhraseQuery         = copy(boost = Some(boost))
-  def slop(slop: Int): MatchPhraseQuery              = copy(slop = Some(slop))
-  def queryName(queryName: String): MatchPhraseQuery = copy(queryName = Some(queryName))
+  def analyzer(a: Analyzer): MatchPhraseQuery                          = analyzer(a.name)
+  def analyzer(analyzer: String): MatchPhraseQuery                     = copy(analyzer = Some(analyzer))
+  def boost(boost: Double): MatchPhraseQuery                           = copy(boost = Some(boost))
+  def slop(slop: Int): MatchPhraseQuery                                = copy(slop = Some(slop))
+  def queryName(queryName: String): MatchPhraseQuery                   = copy(queryName = Some(queryName))
+  def zeroTermsQuery(zeroTermsQuery: String): MatchPhraseQuery         =
+    copy(zeroTermsQuery = Some(ZeroTermsQuery.valueOf(zeroTermsQuery)))
+  def zeroTermsQuery(zeroTermsQuery: ZeroTermsQuery): MatchPhraseQuery = copy(zeroTermsQuery = Some(zeroTermsQuery))
 }
