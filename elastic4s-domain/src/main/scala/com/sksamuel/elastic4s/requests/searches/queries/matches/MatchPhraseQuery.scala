@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 
 case class MatchPhraseQuery(
@@ -12,7 +11,6 @@ case class MatchPhraseQuery(
     queryName: Option[String] = None,
     zeroTermsQuery: Option[ZeroTermsQuery] = None
 ) extends Query {
-  def analyzer(a: Analyzer): MatchPhraseQuery                          = analyzer(a.name)
   def analyzer(analyzer: String): MatchPhraseQuery                     = copy(analyzer = Some(analyzer))
   def boost(boost: Double): MatchPhraseQuery                           = copy(boost = Some(boost))
   def slop(slop: Int): MatchPhraseQuery                                = copy(slop = Some(slop))

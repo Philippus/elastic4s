@@ -3,7 +3,6 @@ package com.sksamuel.elastic4s.requests.mappings
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.fields.ElasticField
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
 
@@ -45,9 +44,6 @@ case class PutMappingRequest(
     copy(sourceExcludes = sourceExcludes.toSeq)
 
   def analyzer(analyzer: String): PutMappingRequest = copy(analyzer = analyzer.some)
-
-  @deprecated("use new analysis package", "7.2.0")
-  def analyzer(analyzer: Analyzer): PutMappingRequest = copy(analyzer = analyzer.name.some)
 
   def boostName(boostName: String): PutMappingRequest = copy(boostName = boostName.some)
 

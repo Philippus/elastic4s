@@ -1,6 +1,5 @@
 package com.sksamuel.elastic4s.requests.searches.queries.matches
 
-import com.sksamuel.elastic4s.requests.analyzers.Analyzer
 import com.sksamuel.elastic4s.requests.common.Operator
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
@@ -23,9 +22,7 @@ case class MatchQuery(
     autoGenerateSynonymsPhraseQuery: Option[Boolean] = None,
     zeroTermsQuery: Option[ZeroTermsQuery] = None
 ) extends Query {
-
-  def analyzer(an: String): MatchQuery   = copy(analyzer = an.some)
-  def analyzer(an: Analyzer): MatchQuery = copy(analyzer = an.name.some)
+  def analyzer(an: String): MatchQuery = copy(analyzer = an.some)
 
   def autoGenerateSynonymsPhraseQuery(autoGenerate: Boolean): MatchQuery =
     copy(autoGenerateSynonymsPhraseQuery = autoGenerate.some)
