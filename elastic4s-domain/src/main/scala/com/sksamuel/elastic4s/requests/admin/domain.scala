@@ -14,7 +14,6 @@ case class OpenIndexRequest(
 
 case class CloseIndexRequest(indexes: Indexes)
 case class GetSegmentsRequest(indexes: Indexes)
-case class TypesExistsRequest(indexes: Seq[String], types: Seq[String])
 case class AliasExistsRequest(alias: String)
 case class IndexStatsRequest(indices: Indexes)
 

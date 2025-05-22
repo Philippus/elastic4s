@@ -16,8 +16,8 @@ class GlobalAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
   }
 
   client.execute {
-    createIndex("globalagg") mappings {
-      mapping(keywordField("name"))
+    createIndex("globalagg") mapping {
+      properties(keywordField("name"))
     }
   }.await
 

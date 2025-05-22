@@ -12,8 +12,8 @@ class InnerHitTest extends AnyWordSpec with Matchers with DockerTests {
   deleteIdx(indexName)
 
   client.execute {
-    createIndex(indexName).mappings {
-      mapping(
+    createIndex(indexName).mapping {
+      properties(
         keywordField("name"),
         joinField("affiliation").relation("club", "player")
       )

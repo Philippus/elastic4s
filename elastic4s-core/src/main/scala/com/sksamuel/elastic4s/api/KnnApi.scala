@@ -8,12 +8,4 @@ trait KnnApi {
 
   def knnQuery(field: String, queryVectorBuilder: QueryVectorBuilder): Knn =
     Knn(field = field, queryVectorBuilder = Some(queryVectorBuilder))
-
-  @deprecated("Use one of the other knnQuery methods", "8.15.0")
-  def knnQuery(field: String, numCandidates: Int, vector: Seq[Double]): Knn =
-    Knn(
-      field = field,
-      queryVector = vector,
-      numCandidates = Some(numCandidates)
-    )
 }

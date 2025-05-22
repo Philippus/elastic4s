@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s.search.sort
 import com.sksamuel.elastic4s.requests.searches.sort.ScriptSortType
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import org.scalatest.freespec.AnyFreeSpec
-
 import scala.util.Try
+
+import com.sksamuel.elastic4s.requests.script.Script
 
 class ScriptSortTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
@@ -16,7 +17,7 @@ class ScriptSortTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
   client.execute {
     createIndex("scriptsort").mapping(
-      mapping(
+      properties(
         textField("name").fielddata(true),
         textField("line").fielddata(true)
       )
@@ -36,7 +37,7 @@ class ScriptSortTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
       val sorted = client.execute {
         search("scriptsort") query matchAllQuery() sortBy {
           scriptSort(
-            script(""" doc['name'].value.length() """)
+            Script(""" doc['name'].value.length() """)
           ) typed ScriptSortType.NUMBER
         }
       }.await.result

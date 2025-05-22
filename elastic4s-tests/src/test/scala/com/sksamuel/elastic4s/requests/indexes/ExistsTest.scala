@@ -3,8 +3,9 @@ package com.sksamuel.elastic4s.requests.indexes
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-
 import scala.util.Try
+
+import com.sksamuel.elastic4s.requests.exists.ExistsRequest
 
 class ExistsTest extends AnyWordSpec with Matchers with DockerTests {
 
@@ -27,12 +28,12 @@ class ExistsTest extends AnyWordSpec with Matchers with DockerTests {
   "an exists request" should {
     "return true for an existing doc" in {
       client.execute {
-        exists("a", "exists")
+        ExistsRequest("a", "exists")
       }.await.result shouldBe true
     }
     "return false for non existing doc" in {
       client.execute {
-        exists("b", "exists")
+        ExistsRequest("b", "exists")
       }.await.result shouldBe false
     }
   }

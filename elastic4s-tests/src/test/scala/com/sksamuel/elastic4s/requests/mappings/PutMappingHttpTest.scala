@@ -26,7 +26,7 @@ class PutMappingHttpTest extends AnyFunSuite with Matchers with DockerTests {
     }.await
 
     client.execute {
-      putMapping("putmaptest").fields(
+      putMapping("putmaptest").properties(
         keywordField("moo")
       )
     }.await

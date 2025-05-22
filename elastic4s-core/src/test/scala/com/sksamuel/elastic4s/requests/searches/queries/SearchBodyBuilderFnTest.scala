@@ -58,8 +58,11 @@ class SearchBodyBuilderFnTest extends AnyFunSuite with Matchers {
 
   test("multiple Knn queries") {
     val multipleKnnDefinition = Seq(
-      Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)),
-      Knn("image-vector", 50, Seq(54.1, 10.2, -2.3)) k 5 filter TermQuery("file-type", "png") similarity 10 boost .4
+      Knn("image-vector", None, None, Some(50), Seq(54.1, 10.2, -2.3)),
+      Knn("image-vector", None, None, Some(50), Seq(54.1, 10.2, -2.3)) k 5 filter TermQuery(
+        "file-type",
+        "png"
+      ) similarity 10 boost .4
     )
 
     val req = search("example") multipleKnn multipleKnnDefinition

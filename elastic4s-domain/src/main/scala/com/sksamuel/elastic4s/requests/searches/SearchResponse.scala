@@ -63,18 +63,3 @@ case class SearchResponse(
   def to[T: HitReader: ClassTag]: IndexedSeq[T] = hits.hits.map(_.to[T]).toIndexedSeq
   def safeTo[T: HitReader]: IndexedSeq[Try[T]]  = hits.hits.map(_.safeTo[T]).toIndexedSeq
 }
-
-object SearchResponse {
-  @deprecated("Use apply with pitId instead", "8.17.1")
-  def apply(
-      took: Long,
-      isTimedOut: Boolean,
-      isTerminatedEarly: Boolean,
-      suggest: Map[String, Seq[SuggestionResult]],
-      _shards: Shards,
-      scrollId: Option[String],
-      _aggregationsAsMap: Map[String, Any],
-      hits: SearchHits
-  ): SearchResponse =
-    SearchResponse(took, isTimedOut, isTerminatedEarly, suggest, _shards, scrollId, None, _aggregationsAsMap, hits)
-}

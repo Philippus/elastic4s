@@ -217,8 +217,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   }
 
   it should "support nested multi fields" in {
-    val req = createIndex("tweets").mappings(
-      mapping(
+    val req = createIndex("tweets").mapping(
+      properties(
         textField("name").fields(
           keywordField("username"),
           keywordField("principal")
@@ -232,7 +232,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
 
   it should "support copy to a single field" in {
     val req = createIndex("tweets").mapping(
-      mapping(
+      properties(
         textField("first_name") copyTo "full_name",
         textField("last_name") copyTo "full_name",
         textField("full_name")
@@ -245,7 +245,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
 
   it should "support copy to multiple fields" in {
     val req = createIndex("tweets").mapping(
-      mapping(
+      properties(
         textField("title") copyTo ("meta_data", "article_info"),
         textField("meta_data"),
         textField("article_info")
@@ -258,7 +258,7 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
 
   it should "support multi fields" in {
     val req = createIndex("tweets").mapping(
-      mapping(
+      properties(
         textField("title") fields textField("raw"),
         textField("meta_data"),
         textField("article_info")
@@ -268,8 +268,8 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   }
 
   it should "support completion type" in {
-    val req = createIndex("tweets").mappings(
-      mapping(
+    val req = createIndex("tweets").mapping(
+      properties(
         textField("name"),
         completionField("ac") analyzer "simple" searchAnalyzer "simple"
           preserveSeparators false preservePositionIncrements false maxInputLength 10

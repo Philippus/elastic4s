@@ -17,7 +17,7 @@ class FiltersAggregationHttpTest extends AnyFreeSpec with DockerTests with Match
 
   client.execute {
     createIndex("filtersagg") mapping {
-      mapping(
+      properties(
         textField("name").fielddata(true),
         intField("height").stored(true)
       )

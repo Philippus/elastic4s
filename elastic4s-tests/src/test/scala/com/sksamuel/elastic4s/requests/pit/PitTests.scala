@@ -17,7 +17,7 @@ class PitTests extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute {
     createIndex("pit").mapping {
-      mapping(
+      properties(
         textField("name").stored(true),
         textField("brand").stored(true),
         textField("ingredients").stored(true)

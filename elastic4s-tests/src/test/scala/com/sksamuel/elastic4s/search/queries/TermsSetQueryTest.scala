@@ -4,8 +4,9 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-
 import scala.util.Try
+
+import com.sksamuel.elastic4s.requests.script.Script
 
 class TermsSetQueryTest
     extends AnyFlatSpec
@@ -21,7 +22,7 @@ class TermsSetQueryTest
   Try {
     client.execute {
       createIndex("randompeople").mapping(
-        mapping(
+        properties(
           textField("names"),
           floatField("required_matches")
         )
@@ -77,7 +78,7 @@ class TermsSetQueryTest
       search("randompeople") query termsSetQuery(
         "names",
         Set("nelson", "edmure", "pete"),
-        script("Math.min(params.num_terms,doc['required_matches'].value)")
+        Script("Math.min(params.num_terms,doc['required_matches'].value)")
       )
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson", "edmure", "john")
@@ -90,7 +91,7 @@ class TermsSetQueryTest
       search("randompeople") query termsSetQuery(
         "names",
         Set("nelson", "edmure", "byron", "pete"),
-        script("Math.min(params.num_terms,doc['required_matches'].value)")
+        Script("Math.min(params.num_terms,doc['required_matches'].value)")
       )
     }.await.result
     resp.hits.hits.head.sourceAsMap("names") shouldBe List("nelson", "edmure", "john")

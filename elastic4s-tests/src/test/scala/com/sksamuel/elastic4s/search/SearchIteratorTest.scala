@@ -24,7 +24,7 @@ class SearchIteratorTest
 
   client.execute {
     createIndex("searchiterator").mapping(
-      mapping(
+      properties(
         keywordField("name")
       )
     )

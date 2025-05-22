@@ -67,7 +67,7 @@ class CountTest extends AnyWordSpec with DockerTests with Matchers {
     }
     "count with a filter" in {
       client.execute {
-        count("stads").filter(prefixQuery("name", "river"))
+        count("stads").query(prefixQuery("name", "river"))
       }.await.result.count shouldBe 1
     }
     "count with type set" in {

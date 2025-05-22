@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.ElasticDsl.{matchQuery, nestedSort, script, scriptSort}
+import com.sksamuel.elastic4s.ElasticDsl.{matchQuery, nestedSort, scriptSort}
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.{
   FieldSortBuilderFn,
@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.handlers.searches.queries.sort.{
   SortBuilderFn
 }
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
-import com.sksamuel.elastic4s.requests.script.ScriptType
+import com.sksamuel.elastic4s.requests.script.{Script, ScriptType}
 import com.sksamuel.elastic4s.requests.searches.queries.matches.MatchQuery
 import com.sksamuel.elastic4s.requests.searches.queries.RangeQuery
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, GeoDistanceSort, NestedSort, ScriptSortType, SortOrder}
@@ -18,20 +18,6 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
 class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
-
-  test("field sort builder should support defining both nested path and nested filter") {
-    val fieldSort = FieldSort(
-      field = "parent.child.age",
-      sortMode = Some(Min),
-      order = Asc,
-      nestedPath = Some("parent"),
-      nestedFilter = Some(RangeQuery(field = "parent.child", gte = Some(21L)))
-    )
-
-    FieldSortBuilderFn(fieldSort).string shouldBe
-      """{"parent.child.age":{"mode":"min","order":"asc","nested":{"path":"parent","filter":{"range":{"parent.child":{"gte":21}}}}}}"""
-  }
-
   test("field sort builder should correctly build nested option") {
     val fieldSort = FieldSort("parent.child.age").order(Asc).mode(Min).nested(
       NestedSort(
@@ -107,7 +93,7 @@ class SortBuilderFnTest extends AnyFunSuite with Matchers with JsonSugar {
   }
 
   test("sort script parameters are encoded with the correct type") {
-    val scr     = script("dummy script")
+    val scr     = Script("dummy script")
       .lang("painless")
       .scriptType(ScriptType.Source)
       .params(Map(

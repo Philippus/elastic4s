@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.requests.script.Script
 import org.scalatest.flatspec.AnyFlatSpec
 
 class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar {
@@ -21,7 +22,7 @@ class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar {
       ),
       bucketScriptAggregation(
         "t-shirt-percentage",
-        script("params.tShirtSales / params.totalSales * 100"),
+        Script("params.tShirtSales / params.totalSales * 100"),
         Map(
           "tShirtSales" -> "t-shirts>sales",
           "totalSales"  -> "total_sales"

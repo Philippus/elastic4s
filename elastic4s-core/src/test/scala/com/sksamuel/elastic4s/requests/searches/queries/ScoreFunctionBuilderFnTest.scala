@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s.requests.searches.queries
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.handlers.searches.queries.ScoreFunctionBuilderFn
+import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.{FieldValueFactorFunctionModifier, MultiValueMode}
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -43,7 +44,7 @@ class ScoreFunctionBuilderFnTest extends AnyFlatSpec with JsonSugar {
 
   it should "generate correct json for a script scorer" in {
     val req     = scriptScore {
-      script("some script").lang("java").param("param1", "value1").params(Map("param2" -> "value2"))
+      Script("some script").lang("java").param("param1", "value1").params(Map("param2" -> "value2"))
     }.weight(0.4)
     val builder = queries.ScoreFunctionBuilderFn(req)
     val actual  = builder.string

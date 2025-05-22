@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.TermBucket
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.{TermBucket, Terms}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-
 import scala.util.Try
 
 class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
@@ -45,7 +44,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       }.await.result
       resp.totalHits shouldBe 4
 
-      val agg = resp.aggregations.terms("agg1")
+      val agg = resp.aggregations.result[Terms]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
         TermBucket("hot", 2, Map.empty),
         TermBucket("medium", 1, Map.empty),
@@ -62,7 +61,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       }.await.result
       resp.size shouldBe 2
 
-      val agg = resp.aggregations.terms("agg1")
+      val agg = resp.aggregations.result[Terms]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
         TermBucket("hot", 1, Map.empty),
         TermBucket("medium", 1, Map.empty)
@@ -73,12 +72,12 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
       val resp = client.execute {
         search("termsagg").aggregations {
-          termsAggregation("agg1") field "origin" missing "unknown"
+          termsAgg("agg1", "origin") missing "unknown"
         }
       }.await.result
       resp.totalHits shouldBe 4
 
-      val agg = resp.aggs.terms("agg1")
+      val agg = resp.aggs.result[Terms]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(
         TermBucket("india", 3, Map.empty),
         TermBucket("unknown", 1, Map.empty)
@@ -89,12 +88,12 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
       val resp = client.execute {
         search("termsagg").aggregations {
-          termsAggregation("agg1") field "strength" minDocCount 2
+          termsAgg("agg1", "strength") minDocCount 2
         }
       }.await.result
       resp.totalHits shouldBe 4
 
-      val agg = resp.aggs.terms("agg1")
+      val agg = resp.aggs.result[Terms]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty))
     }
 
@@ -102,12 +101,12 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
       val resp = client.execute {
         search("termsagg").aggregations {
-          termsAggregation("agg1") field "strength" size 1
+          termsAgg("agg1", "strength") size 1
         }
       }.await.result
       resp.totalHits shouldBe 4
 
-      val agg = resp.aggs.terms("agg1")
+      val agg = resp.aggs.result[Terms]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket("hot", 2, Map.empty))
     }
 
@@ -122,8 +121,8 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       }.await.result
       resp.totalHits shouldBe 4
 
-      val agg = resp.aggregations.terms("agg1")
-      agg.bucket("hot").terms("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket(
+      val agg = resp.aggregations.result[Terms]("agg1")
+      agg.bucket("hot").result[Terms]("agg2").buckets.map(_.copy(data = Map.empty)).toSet shouldBe Set(TermBucket(
         "india",
         2,
         Map.empty
@@ -137,7 +136,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
         }
       }.await.result
 
-      val agg = resp.aggregations.terms("agg1")
+      val agg = resp.aggregations.result[Terms]("agg1")
       agg.buckets.map(_.key) shouldBe List("hot", "medium", "mild")
     }
 
@@ -148,7 +147,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
         }
       }.await.result
 
-      val agg = resp.aggregations.terms("agg1")
+      val agg = resp.aggregations.result[Terms]("agg1")
       agg.buckets.map(_.key) shouldBe List("medium", "mild", "hot")
     }
 
@@ -159,7 +158,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
         }
       }.await.result
 
-      val agg = resp.aggregations.terms("agg1")
+      val agg = resp.aggregations.result[Terms]("agg1")
       agg.buckets.map(_.key) shouldBe List("mild", "medium", "hot")
     }
 
@@ -174,7 +173,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
       }
       responses.map(_.totalHits) should contain only (4)
 
-      val aggs = responses.map(_.aggregations.terms("agg1"))
+      val aggs = responses.map(_.aggregations.result[Terms]("agg1"))
       aggs.flatMap(_.buckets).map(_.copy(data = Map.empty)).toSet shouldBe Set(
         TermBucket("hot", 2, Map.empty),
         TermBucket("medium", 1, Map.empty),

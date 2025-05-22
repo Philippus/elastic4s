@@ -1,10 +1,12 @@
 package com.sksamuel.elastic4s.search
 
 import java.util.TimeZone
+
 import com.sksamuel.elastic4s._
 import com.sksamuel.elastic4s.handlers.searches.suggestion.DirectGenerator
 import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
+import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches._
 import com.sksamuel.elastic4s.requests.searches.aggs.{SubAggCollectionMode, TermsOrder}
 import com.sksamuel.elastic4s.requests.searches.queries.RankFeatureQuery.Sigmoid
@@ -137,8 +139,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
     val req = search("*") limit 5 query {
       stringQuery(
         "coldplay"
-      ) allowLeadingWildcard true analyzeWildcard true analyzer WhitespaceAnalyzer quoteAnalyzer WhitespaceAnalyzer
-        .name autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyPrefixLength 3 lenient true maxDeterminizedStates 42 phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer" timeZone "+02:00"
+      ) allowLeadingWildcard true analyzeWildcard true analyzer WhitespaceAnalyzer.name quoteAnalyzer
+        WhitespaceAnalyzer.name autoGeneratePhraseQueries true defaultField "name" boost 6.5 enablePositionIncrements true fuzzyMaxExpansions 4 fuzzyPrefixLength 3 lenient true maxDeterminizedStates 42 phraseSlop 10 tieBreaker 0.5 operator "OR" rewrite "writer" timeZone "+02:00"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_string.json")
   }
@@ -214,18 +216,22 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate json for a hasChild query" in {
     val req = search("*") limit 5 query {
-      hasChildQuery("sometype") query {
-        "coldplay"
-      } scoreMode ScoreMode.Avg boost 1.2
+      hasChildQuery(
+        "sometype",
+        "coldplay",
+        ScoreMode.Avg
+      ) boost 1.2
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_haschild_query.json")
   }
 
   it should "generate json for a hasParent query" in {
     val req = search("*") limit 5 query {
-      hasParentQuery("sometype") query {
-        "coldplay"
-      } scoreMode true boost 1.2
+      hasParentQuery(
+        "sometype",
+        "coldplay",
+        true
+      ) boost 1.2
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_hasparent_query.json")
   }
@@ -363,54 +369,64 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate json for has child query with filter" in {
     val req = search("music") postFilter {
-      hasChildQuery("singer").query {
-        termQuery("name", "chris")
-      }.scoreMode(ScoreMode.Min).minMaxChildren(2, 4).boost(2.3).queryName("namey")
+      hasChildQuery(
+        "singer",
+        termQuery("name", "chris"),
+        ScoreMode.Min
+      ).minMaxChildren(2, 4).boost(2.3).queryName("namey")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_haschild_filter.json")
   }
 
   it should "generate json for has parent query with filter" in {
     val req = search("music") postFilter {
-      hasParentQuery("singer").query {
-        termQuery("name", "chris")
-      }.scoreMode(true).boost(2.3).queryName("spidername")
+      hasParentQuery(
+        "singer",
+        termQuery("name", "chris"),
+        true
+      ).boost(2.3).queryName("spidername")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_hasparent_filter.json")
   }
 
   it should "generate json for nested query with query" in {
     val req = search("music") postFilter {
-      nestedQuery("singer").query {
+      nestedQuery(
+        "singer",
         termQuery("name", "chris")
-      }.scoreMode("Min") queryName "namey"
+      ).scoreMode("Min") queryName "namey"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_nested_filter.json")
   }
 
   it should "generate json for has child query with query" in {
     val req = search("music") postFilter {
-      hasChildQuery("singer") query {
-        termQuery("name", "chris")
-      } scoreMode ScoreMode.Min queryName "namey"
+      hasChildQuery(
+        "singer",
+        termQuery("name", "chris"),
+        ScoreMode.Min
+      ) queryName "namey"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_haschild_filter_query.json")
   }
 
   it should "generate json for has parent query with query" in {
     val req = search("music") postFilter {
-      hasParentQuery("singer") query {
-        termQuery("name", "chris")
-      } scoreMode true queryName "namey"
+      hasParentQuery(
+        "singer",
+        termQuery("name", "chris"),
+        true
+      ) queryName "namey"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_hasparent_filter_query.json")
   }
 
   it should "generate json for nested filter with query" in {
     val req = search("music") postFilter {
-      nestedQuery("singer") query {
+      nestedQuery(
+        "singer",
         termQuery("name", "chris")
-      } scoreMode "Min"
+      ) scoreMode "Min"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_nested_filter_query.json")
   }
@@ -458,7 +474,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for script sort" in {
     val req = search("music") sortBy {
-      scriptSort(script("document.score").lang("java")) typed "number" order SortOrder
+      scriptSort(Script("document.score").lang("java")) typed "number" order SortOrder
         .DESC nested { nestedSort() path "a.b.c" } sortMode "min"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script.json")
@@ -466,7 +482,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for script sort with params but unspecified lang" in {
     val req = search("music") sortBy {
-      scriptSort(script("doc.score")
+      scriptSort(Script("doc.score")
         .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.Desc
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_sort_script_params.json")
@@ -474,7 +490,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for script sort with params and lang" in {
     val req = search("music") sortBy {
-      scriptSort(script("doc.score")
+      scriptSort(Script("doc.score")
         .lang("painless")
         .params(Map("param1" -> "value1", "param2" -> "value2"))) typed "number" order SortOrder.Desc
     }
@@ -645,14 +661,14 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for datehistogram aggregation" in {
     val req = search("music") aggs {
-      dateHistogramAggregation("years").field("date").fixedInterval(DateHistogramInterval.Year).minDocCount(0)
+      dateHistogramAgg("years", "date").fixedInterval(DateHistogramInterval.Year).minDocCount(0)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_datehistogram.json")
   }
 
   it should "generate correct json for range aggregation" in {
     val req = search("music") aggs {
-      rangeAggregation("range_agg") field "score" range (10.0, 15.0)
+      rangeAgg("range_agg", "score") range (10.0, 15.0)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_range.json")
   }
@@ -668,16 +684,14 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for date range aggregation with unbounded from" in {
     val req = search("music") aggs {
-      dateRangeAggregation("daterange_agg") field "date" unboundedFrom ("key", "now-1Y")
+      dateRangeAgg("daterange_agg", "date") unboundedFrom ("key", "now-1Y")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_daterange_from.json")
   }
 
   it should "generate correct json for date range aggregation with unbounded to" in {
     val req = search("music") aggs {
-      dateRangeAggregation(
-        "daterange_agg"
-      ) field "date" unboundedTo ("key", "now")
+      dateRangeAgg("daterange_agg", "date") unboundedTo ("key", "now")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_daterange_to.json")
   }
@@ -691,7 +705,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for filter aggregation" in {
     val req = search("music") aggs {
-      filterAggregation("my_filter_agg").query {
+      filterAgg(
+        "my_filter_agg",
         must {
           termQuery("name", "sammy")
         } should {
@@ -699,22 +714,22 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
         } not {
           termQuery("type", "rap")
         }
-      }
+      )
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_filter.json")
   }
 
   it should "generate correct json for terms aggregation" in {
     val req = search("music") aggs {
-      termsAggregation("my_terms_agg") field "keyword" size 10 order TermsOrder("count")
+      termsAgg("my_terms_agg", "keyword") size 10 order TermsOrder("count")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_terms.json")
   }
 
   it should "generate correct json for top hits aggregation" in {
     val req = search("music") aggs {
-      termsAggregation("top-tags") field "tags" size 3 order TermsOrder("count") addSubAggregation (
-        topHitsAggregation("top_tag_hits") size 1 sortBy {
+      termsAgg("top-tags", "tags") size 3 order TermsOrder("count") addSubAggregation (
+        topHitsAgg("top_tag_hits") size 1 sortBy {
           fieldSort("last_activity_date") order SortOrder.Desc
         } fetchSource (Array("title"), Array.empty)
       )
@@ -741,9 +756,9 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for sub aggregation" in {
     val req = search("music") aggs {
-      dateHistogramAggregation("days") field "date" calendarInterval DateHistogramInterval.Day subAggregations (
-        termsAggregation("keywords") field "keyword" size 5,
-        termsAggregation("countries") field "country"
+      dateHistogramAgg("days", "date") calendarInterval DateHistogramInterval.Day subAggregations (
+        termsAgg("keywords", "keyword") size 5,
+        termsAgg("countries", "country")
       )
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_datehistogram_subs.json")
@@ -751,8 +766,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for min aggregation" in {
     val req = search("school") aggs {
-      minAggregation("grades_min") field "grade" script {
-        script("doc['grade'].value").lang("lua").param("apple", "bad")
+      minAgg("grades_min", "grade") script {
+        Script("doc['grade'].value").lang("lua").param("apple", "bad")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_min.json")
@@ -760,8 +775,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for max aggregation" in {
     val req = search("school") aggs {
-      maxAggregation("grades_max") field "grade" script {
-        script("doc['grade'].value").lang("lua")
+      maxAgg("grades_max", "grade") script {
+        Script("doc['grade'].value").lang("lua")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_max.json")
@@ -769,8 +784,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for sum aggregation" in {
     val req = search("school") aggs {
-      sumAggregation("grades_sum") field "grade" script {
-        script("doc['grade'].value").lang("lua") params Map("classsize" -> "30", "room" -> "101A")
+      sumAgg("grades_sum", "grade") script {
+        Script("doc['grade'].value").lang("lua") params Map("classsize" -> "30", "room" -> "101A")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_sum.json")
@@ -778,8 +793,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for avg aggregation" in {
     val req = search("school") aggs {
-      avgAggregation("grades_avg") field "grade" script {
-        script("doc['grade'].value").lang("lua")
+      avgAgg("grades_avg", "grade") script {
+        Script("doc['grade'].value").lang("lua")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_avg.json")
@@ -788,7 +803,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   it should "generate correct json for stats aggregation" in {
     val req = search("school") aggs {
       statsAggregation("grades_stats") field "grade" script {
-        script("doc['grade'].value").lang("lua")
+        Script("doc['grade'].value").lang("lua")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_stats.json")
@@ -796,8 +811,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for extendedstats aggregation" in {
     val req = search("school") aggs {
-      extendedStatsAggregation("grades_extendedstats") field "grade" script {
-        script("doc['grade'].value").lang("lua")
+      extendedStatsAgg("grades_extendedstats", "grade") script {
+        Script("doc['grade'].value").lang("lua")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_extendedstats.json")
@@ -805,7 +820,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for percentiles aggregation" in {
     val req = search("school") aggs {
-      percentilesAggregation("grades_percentiles") field "grade" percents (95, 99, 99.9) compression 200
+      percentilesAgg("grades_percentiles", "grade") percents (95, 99, 99.9) compression 200
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_percentiles.json")
   }
@@ -819,8 +834,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for value count aggregation" in {
     val req = search("school") aggs {
-      valueCountAggregation("grades_count") field "grade" script {
-        script("doc['grade'].value").lang("lua")
+      valueCountAgg("grades_count", "grade") script {
+        Script("doc['grade'].value").lang("lua")
       }
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_count.json")
@@ -828,7 +843,7 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for cardinality aggregation" in {
     val req = search("school") aggs {
-      cardinalityAggregation("grades_cardinality") field "grade" precisionThreshold 40000
+      cardinalityAgg("grades_cardinality", "grade") precisionThreshold 40000
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_aggregations_cardinality.json")
   }
@@ -895,8 +910,8 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
   it should "generate correct json for script fields" in {
     val req =
       search("sesportfolio") query matchAllQuery() scriptfields (
-        scriptField("balance", script("portfolioscript") lang "native" params Map("fieldName" -> "rate_of_return")),
-        scriptField("date", script("doc['date'].value") lang "groovy")
+        scriptField("balance", Script("portfolioscript") lang "native" params Map("fieldName" -> "rate_of_return")),
+        scriptField("date", Script("doc['date'].value") lang "groovy")
       )
     req.request.entity.get.get should matchJsonResource("/json/search/search_script_field_poc.json")
   }
@@ -941,22 +956,24 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for nested query" in {
     val req = search("music") query {
-      nestedQuery("obj1") query {
+      nestedQuery(
+        "obj1",
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode "Avg" boost 14.5 queryName "namey"
+      ) scoreMode "Avg" boost 14.5 queryName "namey"
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_query_nested.json")
   }
 
   it should "generate correct json for nested query with inner highlight" in {
     val req = search("music") query {
-      nestedQuery("obj1") query {
+      nestedQuery(
+        "obj1",
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode "avg" inner
+      ) scoreMode "avg" inner
         innerHits("obj1").size(6).highlighting(
           highlightOptions().preTags("<b>").postTags("</b>"),
           highlight("name").fragmentSize(20)
@@ -967,11 +984,12 @@ class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with On
 
   it should "generate correct json for nested query with inner-hits source modulation" in {
     val req = search("music") query {
-      nestedQuery("obj1") query {
+      nestedQuery(
+        "obj1",
         constantScoreQuery {
           termQuery("name", "sammy")
         }
-      } scoreMode "avg" inner innerHits("obj1").fetchSource(FetchSourceContext(
+      ) scoreMode "avg" inner innerHits("obj1").fetchSource(FetchSourceContext(
         fetchSource = true,
         Seq("incme").toArray,
         Seq("excme").toArray

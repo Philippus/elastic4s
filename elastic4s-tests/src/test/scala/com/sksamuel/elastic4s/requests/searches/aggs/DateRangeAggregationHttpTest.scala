@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s.requests.searches.aggs
 
-import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.DateRangeBucket
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.{DateRange, DateRangeBucket}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.{ElasticDate, ElasticDateMath, Years}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-
 import scala.util.Try
 
 class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers {
@@ -49,7 +48,7 @@ class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
 
       resp.totalHits shouldBe 6
 
-      val agg = resp.aggs.dateRange("agg1")
+      val agg = resp.aggs.result[DateRange]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
         DateRangeBucket(
           Some("1.1976768E12"),
@@ -83,7 +82,7 @@ class DateRangeAggregationHttpTest extends AnyFreeSpec with DockerTests with Mat
 
       resp.totalHits shouldBe 6
 
-      val agg = resp.aggs.dateRange("agg1")
+      val agg = resp.aggs.result[DateRange]("agg1")
       agg.buckets.map(_.copy(data = Map.empty)) shouldBe Seq(
         DateRangeBucket(
           Some("1.1976768E12"),

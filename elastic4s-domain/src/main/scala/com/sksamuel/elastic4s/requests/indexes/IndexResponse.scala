@@ -14,5 +14,5 @@ case class IndexResponse(
     @JsonProperty("forced_refresh") forcedRefresh: Boolean,
     @JsonProperty("_shards") shards: Shards
 ) {
-  def ref = DocumentRef(index, `type`, id)
+  def ref: DocumentRef = DocumentRef(index, id)
 }

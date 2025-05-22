@@ -48,9 +48,7 @@ case class CreateIndexRequest(
 
   def indexSetting(name: String, value: Any): CreateIndexRequest = copy(settings = settings.add(name, value))
 
-  @deprecated("use mapping", "8.0.0")
-  def mappings(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
-  def mapping(mapping: MappingDefinition): CreateIndexRequest  = copy(mapping = mapping.some)
+  def mapping(mapping: MappingDefinition): CreateIndexRequest = copy(mapping = mapping.some)
 
   @deprecated("use the new analysis package", "7.0.1")
   def analysis(first: AnalyzerDefinition, rest: AnalyzerDefinition*): CreateIndexRequest = analysis(first +: rest)
@@ -80,10 +78,4 @@ case class CreateIndexRequest(
   /** Creates an index using the json provided as is.
     */
   def source(source: String): CreateIndexRequest = copy(rawSource = source.some)
-
-  @deprecated("types are deprecated", "7.0.0")
-  def includeTypeName(includeTypeName: Boolean): CreateIndexRequest = copy(includeTypeName = includeTypeName.some)
-
-  @deprecated("types are deprecated", "7.0.0")
-  def includeTypeName(includeTypeName: Option[Boolean]): CreateIndexRequest = copy(includeTypeName = includeTypeName)
 }

@@ -24,12 +24,6 @@ trait CreateIndexApi {
   def properties(field: ElasticField, tail: ElasticField*): MappingDefinition =
     MappingDefinition(properties = field +: tail)
 
-  @deprecated("This method is now called properties as types are deprecated in 7.0", "7.0.0")
-  def mapping(field: ElasticField, tail: ElasticField*): MappingDefinition = properties(field +: tail)
-
-  @deprecated("This method is now called properties as types are deprecated in 7.0", "7.0.0")
-  def mapping(fields: Seq[ElasticField] = Nil): MappingDefinition = MappingDefinition(fields)
-
   @deprecated("use new analysis package", "7.0.1")
   class AnalyzersWrapper(val analyzers: Iterable[AnalyzerDefinition])
 

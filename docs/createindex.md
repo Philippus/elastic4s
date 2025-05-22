@@ -1,7 +1,7 @@
 ## Creating Indexes
 
 By default Elasticsearch does not require us to define indexes or their fields before we use them.
-Indexes and types are created when they are first accessed, then updated with extra fields as more data is indexed.
+Indexes are created when they are first accessed, then updated with extra fields as more data is indexed.
 
 Elasticsearch does a good job of guessing what we want but sometimes we need to override the defaults to better match our requirements (providing default values for fields or changing the way fields are analyzed).
 This is achieved by providing Elasticsearch with a [mapping](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/mapping.html) before we start indexing data.

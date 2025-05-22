@@ -40,18 +40,4 @@ class BoostingQueryTest extends AnyFlatSpec with Matchers with DockerTests {
       }
     }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array("helvetica", "verdana", "arial")
   }
-
-  "deprecated boosting query" should "still work" in {
-    client.execute {
-      search("fonts").query {
-        boostingQuery(matchAllQuery(), "verdana").negativeBoost(0.5)
-      }
-    }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array("helvetica", "arial", "verdana")
-
-    client.execute {
-      search("fonts").query {
-        boostingQuery(matchAllQuery(), "arial").negativeBoost(0.5)
-      }
-    }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array("helvetica", "verdana", "arial")
-  }
 }

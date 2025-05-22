@@ -14,10 +14,9 @@ import com.sksamuel.elastic4s.requests.admin.{
   RolloverIndexRequest,
   ShrinkIndexRequest,
   SplitIndexRequest,
-  TypesExistsRequest,
   UpdateIndexLevelSettingsRequest
 }
-import com.sksamuel.elastic4s.{Indexes, IndexesAndTypes}
+import com.sksamuel.elastic4s.Indexes
 
 trait IndexAdminApi {
 
@@ -27,13 +26,6 @@ trait IndexAdminApi {
 
   def indexStats(indexes: Indexes = Indexes.All): IndexStatsRequest = IndexStatsRequest(indexes)
   def indexStats(first: String, rest: String*): IndexStatsRequest   = indexStats(first +: rest)
-
-  def typesExist(indexesAndTypes: IndexesAndTypes)             = TypesExistsRequest(indexesAndTypes.indexes, indexesAndTypes.types)
-  def typesExist(types: String*): TypesExistExpectsIn          = typesExist(types)
-  def typesExist(types: Iterable[String]): TypesExistExpectsIn = new TypesExistExpectsIn(types)
-  class TypesExistExpectsIn(types: Iterable[String]) {
-    def in(indexes: String*): TypesExistsRequest = TypesExistsRequest(indexes, types.toSeq)
-  }
 
   def closeIndex(first: String, rest: String*): CloseIndexRequest = CloseIndexRequest(first +: rest)
   def openIndex(first: String, rest: String*): OpenIndexRequest   = OpenIndexRequest(first +: rest)

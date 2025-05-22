@@ -25,7 +25,7 @@ class CreateIndexTemplateRequestTest
     "create and use the template for an index" in {
       client.execute {
         createIndexTemplate("matchme", "matchme.*").mappings(
-          mapping(
+          properties(
             keywordField("field1"),
             geopointField("field2"),
             keywordField("field3"),

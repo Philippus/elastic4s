@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.util.Try
 
-class KnnnHttpTest extends AnyFreeSpec with Matchers with DockerTests with BeforeAndAfterAll {
+class KnnHttpTest extends AnyFreeSpec with Matchers with DockerTests with BeforeAndAfterAll {
 
   private val index                  = "knn-index"
   override protected def beforeAll() = {
@@ -25,9 +25,9 @@ class KnnnHttpTest extends AnyFreeSpec with Matchers with DockerTests with Befor
           keywordField("name"),
           DenseVectorField(
             name = "vector_field",
-            dims = 3,
-            index = true,
-            similarity = DotProduct
+            dims = Some(3),
+            index = Some(true),
+            similarity = Some(DotProduct)
           )
         )
       }

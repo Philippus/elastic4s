@@ -6,8 +6,10 @@ import com.sksamuel.elastic4s.requests.searches.{HighlightField, Total}
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-
 import scala.util.Try
+
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.Terms
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.metrics.TopHits
 
 class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
@@ -48,8 +50,8 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
       }.await.result
       resp.totalHits shouldBe 5
 
-      val agg     = resp.aggs.terms("agg1")
-      val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
+      val agg     = resp.aggs.result[Terms]("agg1")
+      val tophits = agg.buckets.find(_.key == "london").get.result[TopHits]("agg2")
       tophits.total shouldBe Total(3, "eq")
       tophits.maxScore shouldBe None
       tophits.name shouldBe "agg2"
@@ -72,8 +74,8 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
       }.await.result
       resp.totalHits shouldBe 5
 
-      val agg     = resp.aggs.terms("agg1")
-      val tophits = agg.buckets.find(_.key == "london").get.tophits("agg2")
+      val agg     = resp.aggs.result[Terms]("agg1")
+      val tophits = agg.buckets.find(_.key == "london").get.result[TopHits]("agg2")
       tophits.hits.head.safeTo[String].get shouldBe "{\"name\":\"buckingham palace\",\"location\":\"london\"}"
     }
 
@@ -86,7 +88,7 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
         }
       }.await.result
 
-      val tophits = resp.aggs.terms("agg1").buckets.find(_.key == "london").get.tophits("agg2")
+      val tophits = resp.aggs.result[Terms]("agg1").buckets.find(_.key == "london").get.result[TopHits]("agg2")
       tophits.hits.head.highlight shouldBe Map("name" -> List("buckingham <em>palace</em>"))
     }
   }

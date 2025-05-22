@@ -40,12 +40,6 @@ class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
     )))
   }
 
-  it should "errors on invalid host string" in {
-    intercept[RuntimeException] {
-      ElasticsearchClientUri("elasticsearch://host1:1234,qwe")
-    } should not be null
-  }
-
   it should "parse everything" in {
     ElasticProperties("http://user:pass@host1:1234?a=b&c=d") shouldBe
       ElasticProperties(Seq(ElasticNodeEndpoint("http", "user:pass@host1", 1234, None)), Map("a" -> "b", "c" -> "d"))
@@ -54,12 +48,6 @@ class ElasticPropertiesTest extends AnyFlatSpec with Matchers {
   it should "parse everything with trailing slash" in {
     ElasticProperties("http://user:pass@host1:1234/?a=b&c=d") shouldBe
       ElasticProperties(Seq(ElasticNodeEndpoint("http", "user:pass@host1", 1234, None)), Map("a" -> "b", "c" -> "d"))
-  }
-
-  it should "error on missing values between commas" in {
-    intercept[RuntimeException] {
-      ElasticsearchClientUri("elasticsearch://host1:1234,,host2:9999")
-    } should not be null
   }
 
   it should "error if multiple protocols are specificed" in {

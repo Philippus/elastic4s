@@ -20,7 +20,7 @@ class RangeQueryHttpTest
 
   client.execute {
     createIndex("rangequeryhttptest").mapping(
-      mapping(
+      properties(
         textField("name").fielddata(true)
       )
     )

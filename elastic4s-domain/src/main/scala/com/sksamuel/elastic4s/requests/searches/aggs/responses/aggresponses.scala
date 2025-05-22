@@ -3,16 +3,11 @@ package com.sksamuel.elastic4s.requests.searches.aggs.responses
 import com.sksamuel.elastic4s.AggReader
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.{
-  DateHistogram,
-  DateRange,
   GeoDistanceAggResult,
-  GeoHashGrid,
   HistogramAggResult,
   IpRangeAggResult,
-  KeyedDateRangeAggResult,
-  Terms
+  KeyedDateRangeAggResult
 }
-import com.sksamuel.elastic4s.requests.searches.aggs.responses.metrics.TopHits
 
 import scala.util.Try
 
@@ -234,16 +229,7 @@ trait HasAggregations extends AggResult with Transformable {
 
   def histogram(name: String): HistogramAggResult = HistogramAggResult(name, agg(name))
 
-  @deprecated("use aggs.result[DateHistogram]", "7.7")
-  def dateHistogram(name: String): DateHistogram = result[DateHistogram](name)
-
-  @deprecated("use aggs.result[DateRange]", "7.7")
-  def dateRange(name: String): DateRange = result[DateRange](name)
-
   def keyedDateRange(name: String): KeyedDateRangeAggResult = KeyedDateRangeAggResult.fromData(name, agg(name))
-
-  @deprecated("use aggs.result[Terms]", "7.7")
-  def terms(name: String): Terms = result[Terms](name)
 
   /** Returns an aggregation result of type T. Uses an implicit [[AggSerde]].
     */
@@ -251,9 +237,6 @@ trait HasAggregations extends AggResult with Transformable {
 
   def children(name: String): ChildrenAggResult       = ChildrenAggResult(name, agg(name))
   def geoDistance(name: String): GeoDistanceAggResult = GeoDistanceAggResult(name, agg(name))
-
-  @deprecated("use aggs.result[GeoHashGrid]", "7.7")
-  def geoHashGrid(name: String): GeoHashGrid = result[GeoHashGrid](name)
 
   def ipRange(name: String): IpRangeAggResult = IpRangeAggResult(name, agg(name))
 
@@ -332,9 +315,6 @@ trait HasAggregations extends AggResult with Transformable {
     val count    = agg(name)("count").toString.toLong
     GeoCentroidAggResult(name, location.map(l => GeoPoint(l("lat"), l("lon"))), count)
   }
-
-  @deprecated("use aggs.result[TopHits]", "7.7")
-  def tophits(name: String): TopHits = result[TopHits](name)
 
   def valueCount(name: String): ValueCountResult =
     ValueCountResult(name, Option(agg(name)("value")).map(_.toString.toDouble))

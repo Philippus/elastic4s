@@ -52,7 +52,7 @@ class TermSuggestionsTest extends AnyWordSpec with Matchers with DockerTests {
 
       val resp = client.execute {
         search(index).suggestions {
-          termSuggestion("a").on("artist").text("taylor swuft")
+          termSuggestion("a", "artist", "taylor swuft")
         }
       }.await.result
 

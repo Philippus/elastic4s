@@ -58,12 +58,6 @@ case class PutMappingRequest(
   def dateDetection(dateDetection: Boolean): PutMappingRequest       = copy(dateDetection = dateDetection.some)
   def numericDetection(numericDetection: Boolean): PutMappingRequest = copy(numericDetection = numericDetection.some)
 
-  @deprecated("this method is now called properties to better match the elastic api", "8.0")
-  def fields(fields: Iterable[ElasticField]): PutMappingRequest = as(fields)
-
-  @deprecated("this method is now called properties to better match the elastic api", "8.0")
-  def fields(fields: ElasticField*): PutMappingRequest = as(fields: _*)
-
   def properties(fields: Iterable[ElasticField]): PutMappingRequest = as(fields)
   def properties(fields: ElasticField*): PutMappingRequest          = as(fields: _*)
 

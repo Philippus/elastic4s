@@ -6,8 +6,9 @@ import com.sksamuel.elastic4s.requests.searches.aggs.responses.Aggregations
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-
 import scala.util.Try
+
+import com.sksamuel.elastic4s.requests.searches.aggs.responses.bucket.DateHistogram
 
 class SerialDiffPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Matchers {
 
@@ -18,8 +19,8 @@ class SerialDiffPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
   }
 
   client.execute {
-    createIndex("serialdiffagg") mappings {
-      mapping(
+    createIndex("serialdiffagg") mapping {
+      properties(
         dateField("date"),
         doubleField("value").stored(true)
       )
@@ -54,7 +55,7 @@ class SerialDiffPipelineAggHttpTest extends AnyFreeSpec with DockerTests with Ma
 
       resp.totalHits shouldBe 6
 
-      val buckets = resp.aggs.dateHistogram("sales_per_month").buckets
+      val buckets = resp.aggs.result[DateHistogram]("sales_per_month").buckets
 
       buckets.size shouldBe 3
       buckets.head.data.contains("diff") shouldBe false

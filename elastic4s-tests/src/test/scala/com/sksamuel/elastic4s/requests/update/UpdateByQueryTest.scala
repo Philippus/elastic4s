@@ -7,6 +7,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import scala.util.Try
 
+import com.sksamuel.elastic4s.requests.script.Script
 import org.scalatest.concurrent.Eventually
 
 class UpdateByQueryTest
@@ -39,7 +40,10 @@ class UpdateByQueryTest
   "an update by query request" should "support script based update" in {
 
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'a'").lang("painless")).refreshImmediately
+      updateByQuerySync(
+        "pop",
+        matchAllQuery()
+      ).script(Script("ctx._source.foo = 'a'").lang("painless")).refreshImmediately
     }.await.result.updated shouldBe 3
 
     client.execute {
@@ -49,13 +53,13 @@ class UpdateByQueryTest
 
   it should "return errors if the update fails" in {
     client.execute {
-      updateByQuery("pop", prefixQuery("name", "spr")).script("wibble")
+      updateByQuerySync("pop", prefixQuery("name", "spr")).script("wibble")
     }.await.error.`type` shouldBe "script_exception"
   }
 
   it should "support RefreshPolicy.IMMEDIATE" in {
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'b'").lang("painless")).refresh(
+      updateByQuerySync("pop", matchAllQuery()).script(Script("ctx._source.foo = 'b'").lang("painless")).refresh(
         RefreshPolicy.IMMEDIATE
       )
     }.await.result.updated shouldBe 3
@@ -67,7 +71,10 @@ class UpdateByQueryTest
 
   it should "support automatic slicing" in {
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'd'").lang("painless")).automaticSlicing()
+      updateByQuerySync(
+        "pop",
+        matchAllQuery()
+      ).script(Script("ctx._source.foo = 'd'").lang("painless")).automaticSlicing()
         .refresh(RefreshPolicy.IMMEDIATE)
     }.await.result.updated shouldBe 3
 
@@ -78,7 +85,7 @@ class UpdateByQueryTest
 
   it should "support RefreshPolicy.NONE" in {
     client.execute {
-      updateByQuery("pop", matchAllQuery()).script(script("ctx._source.foo = 'c'").lang("painless")).refresh(
+      updateByQuerySync("pop", matchAllQuery()).script(Script("ctx._source.foo = 'c'").lang("painless")).refresh(
         RefreshPolicy.NONE
       )
     }.await.result.updated shouldBe 3
@@ -99,7 +106,7 @@ class UpdateByQueryTest
       updateByQueryAsync(
         "pop",
         termsQuery("name", "coca")
-      ).script(script("ctx._source.foo = 'h'").lang("painless")).refreshImmediately
+      ).script(Script("ctx._source.foo = 'h'").lang("painless")).refreshImmediately
     }.await.result.task
 
     eventually {

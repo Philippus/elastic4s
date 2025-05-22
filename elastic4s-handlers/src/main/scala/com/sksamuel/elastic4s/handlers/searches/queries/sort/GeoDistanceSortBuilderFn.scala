@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.handlers.searches.queries.sort
 
 import com.sksamuel.elastic4s.EnumConversions
-import com.sksamuel.elastic4s.handlers.searches.queries
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.sort.GeoDistanceSort
 
@@ -29,14 +28,7 @@ object GeoDistanceSortBuilderFn {
     geo.order.map(o => builder.field("order", EnumConversions.order(o)))
     geo.unit.map(EnumConversions.unit).foreach(unit => builder.field("unit", unit))
 
-    if (geo.nested.nonEmpty) {
-      geo.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
-    } else if (geo.nestedPath.nonEmpty || geo.nestedFilter.nonEmpty) {
-      builder.startObject("nested")
-      geo.nestedPath.foreach(builder.field("path", _))
-      geo.nestedFilter.map(f => queries.QueryBuilderFn(f).string).foreach(builder.rawField("filter", _))
-      builder.endObject()
-    }
+    geo.nested.foreach(n => builder.rawField("nested", NestedSortBuilderFn(n)))
 
     geo.ignoreUnmapped.foreach(builder.field("ignore_unmapped", _))
 
