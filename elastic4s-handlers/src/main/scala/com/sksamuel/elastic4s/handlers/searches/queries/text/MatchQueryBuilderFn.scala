@@ -26,10 +26,7 @@ object MatchQueryBuilderFn {
     q.minimumShouldMatch.foreach(builder.field("minimum_should_match", _))
     q.operator.map(_.toString.toUpperCase).foreach(builder.field("operator", _))
     q.prefixLength.map(_.toString).foreach(builder.field("prefix_length", _))
-    if (q.zeroTermsQuery.nonEmpty)
-      q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(builder.field("zero_terms_query", _))
-    else
-      q.zeroTerms.foreach(builder.field("zero_terms_query", _))
+    q.zeroTermsQuery.map(EnumConversions.zeroTermsQuery).foreach(builder.field("zero_terms_query", _))
 
     builder.endObject().endObject().endObject()
   }
