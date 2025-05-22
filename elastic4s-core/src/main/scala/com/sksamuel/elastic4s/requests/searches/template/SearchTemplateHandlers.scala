@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.searches.{
   SearchResponse,
   TemplateSearchRequest
 }
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, Index, Indexes, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, Indexes, ResponseHandler}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 trait SearchTemplateHandlers {
