@@ -15,6 +15,8 @@ case class IntegerField(
     index: Option[Boolean] = None,
     nullValue: Option[Int] = None,
     store: Option[Boolean] = None,
+    timeSeriesDimension: Option[Boolean] = None,
+    timeSeriesMetric: Option[String] = None,
     meta: Map[String, Any] = Map.empty
 ) extends NumberField[Int] {
   override def `type`: String = IntegerField.`type`

@@ -13,6 +13,8 @@ case class LongField(
     index: Option[Boolean] = None,
     store: Option[Boolean] = None,
     nullValue: Option[Long] = None,
+    timeSeriesDimension: Option[Boolean] = None,
+    timeSeriesMetric: Option[String] = None,
     meta: Map[String, Any] = Map.empty
 ) extends NumberField[Long] {
   override def `type`: String = LongField.`type`
