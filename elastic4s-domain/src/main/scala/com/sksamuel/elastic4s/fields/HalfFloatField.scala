@@ -13,6 +13,7 @@ case class HalfFloatField(
     index: Option[Boolean] = None,
     nullValue: Option[Float] = None,
     store: Option[Boolean] = None,
+    timeSeriesMetric: Option[String] = None,
     meta: Map[String, Any] = Map.empty
 ) extends NumberField[Float] {
   override def `type`: String = HalfFloatField.`type`

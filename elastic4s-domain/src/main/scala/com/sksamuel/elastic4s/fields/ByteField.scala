@@ -13,6 +13,8 @@ case class ByteField(
     index: Option[Boolean] = None,
     nullValue: Option[Byte] = None,
     store: Option[Boolean] = None,
+    timeSeriesDimension: Option[Boolean] = None,
+    timeSeriesMetric: Option[String] = None,
     meta: Map[String, Any] = Map.empty
 ) extends NumberField[Byte] {
   override def `type`: String = ByteField.`type`

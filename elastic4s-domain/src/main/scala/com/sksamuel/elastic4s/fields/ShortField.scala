@@ -14,6 +14,8 @@ case class ShortField(
     index: Option[Boolean] = None,
     nullValue: Option[Short] = None,
     store: Option[Boolean] = None,
+    timeSeriesDimension: Option[Boolean] = None,
+    timeSeriesMetric: Option[String] = None,
     meta: Map[String, Any] = Map.empty
 ) extends NumberField[Short] {
   override def `type`: String = ShortField.`type`
