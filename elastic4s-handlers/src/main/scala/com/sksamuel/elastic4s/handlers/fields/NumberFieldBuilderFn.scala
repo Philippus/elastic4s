@@ -26,7 +26,9 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.byteValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case DoubleField.`type`       => DoubleField(
         name,
@@ -37,7 +39,8 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.doubleValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case FloatField.`type`        => FloatField(
         name,
@@ -48,7 +51,8 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case HalfFloatField.`type`    => HalfFloatField(
         name,
@@ -59,7 +63,8 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case ScaledFloatField.`type`  => ScaledFloatField(
         name,
@@ -71,7 +76,8 @@ object NumberFieldBuilderFn {
         values.get("scaling_factor").map(_.asInstanceOf[Int]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case IntegerField.`type`      => IntegerField(
         name,
@@ -82,7 +88,9 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.intValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case LongField.`type`         => LongField(
         name,
@@ -93,7 +101,9 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("store").map(_.asInstanceOf[Boolean]),
-        values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue())
+        values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue()),
+        values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case ShortField.`type`        => ShortField(
         name,
@@ -105,7 +115,9 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.shortValue()),
-        values.get("store").map(_.asInstanceOf[Boolean])
+        values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case UnsignedLongField.`type` => UnsignedLongField(
         name,
@@ -116,7 +128,9 @@ object NumberFieldBuilderFn {
         values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("store").map(_.asInstanceOf[Boolean]),
-        values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue())
+        values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue()),
+        values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
+        values.get("time_series_metric").map(_.asInstanceOf[String])
       )
   }
 
@@ -149,6 +163,22 @@ object NumberFieldBuilderFn {
         f.scalingFactor.foreach(builder.field("scaling_factor", _))
       case _                   =>
     }
+
+    field match {
+      case f: ByteField         =>
+        f.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
+      case f: ShortField        =>
+        f.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
+      case f: IntegerField      =>
+        f.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
+      case f: LongField         =>
+        f.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
+      case f: UnsignedLongField =>
+        f.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
+      case _                    =>
+    }
+
+    field.timeSeriesMetric.foreach(builder.field("time_series_metric", _))
 
     builder.endObject()
   }
