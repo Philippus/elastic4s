@@ -13,8 +13,8 @@ case class FloatField(
     index: Option[Boolean] = None,
     nullValue: Option[Float] = None,
     store: Option[Boolean] = None,
-    timeSeriesMetric: Option[String] = None,
-    meta: Map[String, Any] = Map.empty
+    meta: Map[String, String] = Map.empty,
+    timeSeriesMetric: Option[String] = None
 ) extends NumberField[Float] {
   override def `type`: String = FloatField.`type`
 }

@@ -13,9 +13,9 @@ case class UnsignedLongStringField(
     index: Option[Boolean] = None,
     store: Option[Boolean] = None,
     nullValue: Option[String] = None,
+    meta: Map[String, String] = Map.empty,
     timeSeriesDimension: Option[Boolean] = None,
-    timeSeriesMetric: Option[String] = None,
-    meta: Map[String, Any] = Map.empty
+    timeSeriesMetric: Option[String] = None
 ) extends NumberField[String] {
   override def `type`: String = UnsignedLongStringField.`type`
 }
