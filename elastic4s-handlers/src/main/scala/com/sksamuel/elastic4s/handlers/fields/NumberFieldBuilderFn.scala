@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.fields._
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object NumberFieldBuilderFn {
-  val supportedTypes = Set(
+  private[fields] val supportedTypes = Set(
     ByteField.`type`,
     DoubleField.`type`,
     FloatField.`type`,
@@ -27,6 +27,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.byteValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
@@ -40,6 +41,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.doubleValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case FloatField.`type`        => FloatField(
@@ -52,6 +54,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case HalfFloatField.`type`    => HalfFloatField(
@@ -64,6 +67,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case ScaledFloatField.`type`  => ScaledFloatField(
@@ -77,6 +81,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
     case IntegerField.`type`      => IntegerField(
@@ -89,6 +94,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.intValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
@@ -102,6 +108,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue()),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
@@ -116,6 +123,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.shortValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
@@ -129,6 +137,7 @@ object NumberFieldBuilderFn {
         values.get("index").map(_.asInstanceOf[Boolean]),
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue()),
+        values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
         values.get("time_series_metric").map(_.asInstanceOf[String])
       )
@@ -162,6 +171,12 @@ object NumberFieldBuilderFn {
       case f: ScaledFloatField =>
         f.scalingFactor.foreach(builder.field("scaling_factor", _))
       case _                   =>
+    }
+
+    if (field.meta.nonEmpty) {
+      builder.startObject("meta")
+      field.meta.foreach { case (key, value) => builder.autofield(key, value) }
+      builder.endObject()
     }
 
     field match {
