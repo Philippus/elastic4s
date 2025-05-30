@@ -16,7 +16,8 @@ case class DoubleField(
     nullValue: Option[Double] = None,
     store: Option[Boolean] = None,
     meta: Map[String, String] = Map.empty,
-    timeSeriesMetric: Option[String] = None
+    timeSeriesMetric: Option[String] = None,
+    fields: List[ElasticField] = Nil
 ) extends NumberField[Double] {
   override def `type`: String = DoubleField.`type`
 

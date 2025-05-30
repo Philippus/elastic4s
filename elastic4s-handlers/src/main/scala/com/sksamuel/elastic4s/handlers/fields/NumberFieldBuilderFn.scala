@@ -29,7 +29,10 @@ object NumberFieldBuilderFn {
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case DoubleField.`type`       => DoubleField(
         name,
@@ -42,7 +45,10 @@ object NumberFieldBuilderFn {
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.doubleValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case FloatField.`type`        => FloatField(
         name,
@@ -55,7 +61,10 @@ object NumberFieldBuilderFn {
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case HalfFloatField.`type`    => HalfFloatField(
         name,
@@ -68,7 +77,10 @@ object NumberFieldBuilderFn {
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case ScaledFloatField.`type`  => ScaledFloatField(
         name,
@@ -82,7 +94,10 @@ object NumberFieldBuilderFn {
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.floatValue()),
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case IntegerField.`type`      => IntegerField(
         name,
@@ -96,7 +111,10 @@ object NumberFieldBuilderFn {
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case LongField.`type`         => LongField(
         name,
@@ -110,7 +128,10 @@ object NumberFieldBuilderFn {
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue()),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case ShortField.`type`        => ShortField(
         name,
@@ -125,7 +146,10 @@ object NumberFieldBuilderFn {
         values.get("store").map(_.asInstanceOf[Boolean]),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
     case UnsignedLongField.`type` => UnsignedLongField(
         name,
@@ -139,7 +163,10 @@ object NumberFieldBuilderFn {
         values.get("null_value").map(_.asInstanceOf[Number]).map(_.longValue()),
         values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
         values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
-        values.get("time_series_metric").map(_.asInstanceOf[String])
+        values.get("time_series_metric").map(_.asInstanceOf[String]),
+        values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+          ElasticFieldBuilderFn.construct(key, value)
+        }.toList).getOrElse(List.empty)
       )
   }
 
@@ -194,6 +221,14 @@ object NumberFieldBuilderFn {
     }
 
     field.timeSeriesMetric.foreach(builder.field("time_series_metric", _))
+
+    if (field.fields.nonEmpty) {
+      builder.startObject("fields")
+      field.fields.foreach { field =>
+        builder.rawField(field.name, ElasticFieldBuilderFn(field))
+      }
+      builder.endObject()
+    }
 
     builder.endObject()
   }

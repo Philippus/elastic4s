@@ -15,7 +15,8 @@ case class LongField(
     nullValue: Option[Long] = None,
     meta: Map[String, String] = Map.empty,
     timeSeriesDimension: Option[Boolean] = None,
-    timeSeriesMetric: Option[String] = None
+    timeSeriesMetric: Option[String] = None,
+    fields: List[ElasticField] = Nil
 ) extends NumberField[Long] {
   override def `type`: String = LongField.`type`
 }

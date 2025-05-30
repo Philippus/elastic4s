@@ -11,4 +11,5 @@ trait NumberField[T] extends ElasticField {
   def copyTo: Seq[String]
   def meta: Map[String, String]
   def timeSeriesMetric: Option[String]
+  def fields: List[ElasticField]
 }
