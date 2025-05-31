@@ -79,13 +79,13 @@ class Examples extends ElasticDsl {
     Analysis(
       analyzers = List(
         CustomAnalyzer(
-          "super_analyzer",                           // names the analzyer
-          tokenizer = "my_whitespace",                // uses the custom tokenizer
+          "super_analyzer",            // names the analzyer
+          tokenizer = "my_whitespace", // uses the custom tokenizer
           tokenFilters = List("lowercase", "my_edge") // uses a built in token filter and a custom one
         )
       ),
       tokenizers = List(
-        WhitespaceTokenizer("my_whitespace", maxTokenLength = 5)  // custom tokenizer
+        WhitespaceTokenizer("my_whitespace", maxTokenLength = 5) // custom tokenizer
       ),
       tokenFilters = List(
         EdgeNGramTokenFilter("my_edge", minGram = 3, maxGram = 4) // custom token filter
