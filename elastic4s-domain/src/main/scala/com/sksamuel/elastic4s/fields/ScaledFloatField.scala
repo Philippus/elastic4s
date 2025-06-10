@@ -14,7 +14,9 @@ case class ScaledFloatField(
     index: Option[Boolean] = None,
     nullValue: Option[Float] = None,
     store: Option[Boolean] = None,
-    meta: Map[String, Any] = Map.empty
+    meta: Map[String, String] = Map.empty,
+    timeSeriesMetric: Option[String] = None,
+    fields: List[ElasticField] = Nil
 ) extends NumberField[Float] {
   override def `type`: String = "scaled_float"
 }

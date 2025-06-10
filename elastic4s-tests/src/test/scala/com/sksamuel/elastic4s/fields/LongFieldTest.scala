@@ -16,11 +16,18 @@ class LongFieldTest extends AnyFunSuite with Matchers {
       nullValue = Some(142),
       ignoreMalformed = Some(true),
       index = Some(true),
-      copyTo = List("q", "er")
+      copyTo = List("q", "er"),
+      meta = Map("banana" -> "yellow", "strawberry" -> "red"),
+      timeSeriesDimension = Some(true),
+      timeSeriesMetric = Some("gauge"),
+      fields = List(
+        KeywordField("raw"),
+        TextField("english").analyzer("english")
+      )
     )
 
     val jsonStringValue =
-      """{"type":"long","copy_to":["q","er"],"boost":1.2,"index":true,"null_value":142,"store":true,"coerce":true,"ignore_malformed":true}"""
+      """{"type":"long","copy_to":["q","er"],"boost":1.2,"index":true,"null_value":142,"store":true,"coerce":true,"ignore_malformed":true,"meta":{"banana":"yellow","strawberry":"red"},"time_series_dimension":true,"time_series_metric":"gauge","fields":{"raw":{"type":"keyword"},"english":{"type":"text","analyzer":"english"}}}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
     ElasticFieldBuilderFn.construct(
       field.name,

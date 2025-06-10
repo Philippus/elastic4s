@@ -9,4 +9,7 @@ trait NumberField[T] extends ElasticField {
   def docValues: Option[Boolean]
   def nullValue: Option[T]
   def copyTo: Seq[String]
+  def meta: Map[String, String]
+  def timeSeriesMetric: Option[String]
+  def fields: List[ElasticField]
 }
