@@ -19,7 +19,7 @@ case class Knn(
     boost: Option[Double] = None,
     queryName: Option[String] = None,
     inner: Option[InnerHit] = None
-) {
+) extends Query {
 
   def filter(filter: Query): Knn = copy(filter = filter.some)
 
