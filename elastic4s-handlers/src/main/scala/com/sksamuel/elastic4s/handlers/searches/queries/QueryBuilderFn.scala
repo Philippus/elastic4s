@@ -56,6 +56,7 @@ import com.sksamuel.elastic4s.handlers.searches.queries.text.{
   SimpleStringBodyFn
 }
 import com.sksamuel.elastic4s.json.XContentBuilder
+import com.sksamuel.elastic4s.requests.searches.knn.Knn
 import com.sksamuel.elastic4s.requests.searches.queries.compound.BoolQuery
 import com.sksamuel.elastic4s.requests.searches.queries.funcscorer.FunctionScoreQuery
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{
@@ -181,6 +182,7 @@ object QueryBuilderFn {
     case t: TermsSetQuery          => TermsSetQueryBodyFn(t)
     case q: WildcardQuery          => WildcardQueryBodyFn(q)
     case q: SpanFieldMaskingQuery  => SpanFieldMaskingQueryBodyFn(q)
+    case q: Knn                    => KnnQueryBuilderFn(q)
     case c: CustomQuery            => c.buildQueryBody()
 
     // Not implemented
