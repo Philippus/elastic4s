@@ -27,7 +27,11 @@ object KnnBuilderFn {
     knn.boost.foreach(builder.field("boost", _))
     knn.queryName.foreach(builder.field("_name", _))
     knn.inner.foreach(inner => builder.field("inner_hits", InnerHitQueryBodyBuilder.toJson(inner)))
+    knn.rescoreVector.foreach { rescoreVector =>
+      builder.startObject("rescore_vector")
+      builder.field("oversample", rescoreVector.oversample)
+      builder.endObject()
+    }
     builder.endObject()
-    builder
   }
 }
