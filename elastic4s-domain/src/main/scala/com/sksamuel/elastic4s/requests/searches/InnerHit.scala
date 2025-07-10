@@ -12,7 +12,8 @@ case class InnerHit(
     innerHits: Map[String, InnerHits],
     highlight: Map[String, Seq[String]],
     sort: Seq[AnyRef],
-    fields: Map[String, AnyRef]
+    fields: Map[String, AnyRef],
+    matchedQueries: Seq[String]
 ) {
 
   def docValueField(fieldName: String): HitField            = docValueFieldOpt(fieldName).get

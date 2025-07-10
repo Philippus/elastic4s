@@ -55,7 +55,8 @@ class InnerHitTest extends AnyWordSpec with Matchers with DockerTests {
               Map.empty,
               Map.empty,
               Nil,
-              Map.empty
+              Map.empty,
+              Seq.empty
             )
           )
         )
