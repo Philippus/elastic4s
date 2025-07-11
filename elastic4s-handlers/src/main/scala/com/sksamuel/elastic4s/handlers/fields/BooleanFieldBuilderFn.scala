@@ -12,7 +12,8 @@ object BooleanFieldBuilderFn {
       values.get("doc_values").map(_.asInstanceOf[Boolean]),
       values.get("index").map(_.asInstanceOf[Boolean]),
       values.get("null_value").map(_.asInstanceOf[Boolean]),
-      values.get("store").map(_.asInstanceOf[Boolean])
+      values.get("store").map(_.asInstanceOf[Boolean]),
+      values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty)
     )
 
   def build(field: BooleanField): XContentBuilder = {
@@ -26,6 +27,12 @@ object BooleanFieldBuilderFn {
     field.index.foreach(builder.field("index", _))
     field.nullValue.foreach(builder.field("null_value", _))
     field.store.foreach(builder.field("store", _))
+
+    if (field.meta.nonEmpty) {
+      builder.startObject("meta")
+      field.meta.foreach { case (key, value) => builder.autofield(key, value) }
+      builder.endObject()
+    }
 
     builder.endObject()
   }
