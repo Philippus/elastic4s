@@ -14,7 +14,8 @@ object BooleanFieldBuilderFn {
       values.get("null_value").map(_.asInstanceOf[Boolean]),
       values.get("store").map(_.asInstanceOf[Boolean]),
       values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
-      values.get("ignore_malformed").map(_.asInstanceOf[Boolean])
+      values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
+      values.get("time_series_dimension").map(_.asInstanceOf[Boolean])
     )
 
   def build(field: BooleanField): XContentBuilder = {
@@ -36,6 +37,7 @@ object BooleanFieldBuilderFn {
     }
 
     field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
+    field.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
 
     builder.endObject()
   }

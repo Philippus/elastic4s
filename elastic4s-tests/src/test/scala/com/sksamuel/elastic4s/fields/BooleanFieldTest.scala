@@ -15,11 +15,12 @@ class BooleanFieldTest extends AnyFunSuite with Matchers {
       index = Some(true),
       copyTo = List("q", "er"),
       meta = Map("banana" -> "yellow", "strawberry" -> "red"),
-      ignoreMalformed = Some(false)
+      ignoreMalformed = Some(false),
+      timeSeriesDimension = Some(false)
     )
 
     val jsonStringValue =
-      """{"type":"boolean","boost":1.2,"copy_to":["q","er"],"index":true,"null_value":false,"store":true,"meta":{"banana":"yellow","strawberry":"red"},"ignore_malformed":false}"""
+      """{"type":"boolean","boost":1.2,"copy_to":["q","er"],"index":true,"null_value":false,"store":true,"meta":{"banana":"yellow","strawberry":"red"},"ignore_malformed":false,"time_series_dimension":false}"""
     ElasticFieldBuilderFn(field).string shouldBe jsonStringValue
     ElasticFieldBuilderFn.construct(
       field.name,
