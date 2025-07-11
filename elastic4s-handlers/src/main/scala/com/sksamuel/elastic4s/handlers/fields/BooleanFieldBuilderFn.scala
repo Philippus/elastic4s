@@ -13,7 +13,8 @@ object BooleanFieldBuilderFn {
       values.get("index").map(_.asInstanceOf[Boolean]),
       values.get("null_value").map(_.asInstanceOf[Boolean]),
       values.get("store").map(_.asInstanceOf[Boolean]),
-      values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty)
+      values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
+      values.get("ignore_malformed").map(_.asInstanceOf[Boolean])
     )
 
   def build(field: BooleanField): XContentBuilder = {
@@ -33,6 +34,8 @@ object BooleanFieldBuilderFn {
       field.meta.foreach { case (key, value) => builder.autofield(key, value) }
       builder.endObject()
     }
+
+    field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
 
     builder.endObject()
   }
