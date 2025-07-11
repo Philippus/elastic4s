@@ -14,7 +14,8 @@ case class BooleanField(
     store: Option[Boolean] = None,
     meta: Map[String, Any] = Map.empty,
     ignoreMalformed: Option[Boolean] = None,
-    timeSeriesDimension: Option[Boolean] = None
+    timeSeriesDimension: Option[Boolean] = None,
+    fields: List[ElasticField] = Nil
 ) extends ElasticField {
   override def `type`: String = BooleanField.`type`
 }

@@ -15,7 +15,10 @@ object BooleanFieldBuilderFn {
       values.get("store").map(_.asInstanceOf[Boolean]),
       values.get("meta").map(_.asInstanceOf[Map[String, String]]).getOrElse(Map.empty),
       values.get("ignore_malformed").map(_.asInstanceOf[Boolean]),
-      values.get("time_series_dimension").map(_.asInstanceOf[Boolean])
+      values.get("time_series_dimension").map(_.asInstanceOf[Boolean]),
+      values.get("fields").map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (key, value) =>
+        ElasticFieldBuilderFn.construct(key, value)
+      }.toList).getOrElse(List.empty)
     )
 
   def build(field: BooleanField): XContentBuilder = {
@@ -38,6 +41,14 @@ object BooleanFieldBuilderFn {
 
     field.ignoreMalformed.foreach(builder.field("ignore_malformed", _))
     field.timeSeriesDimension.foreach(builder.field("time_series_dimension", _))
+
+    if (field.fields.nonEmpty) {
+      builder.startObject("fields")
+      field.fields.foreach { field =>
+        builder.rawField(field.name, ElasticFieldBuilderFn(field))
+      }
+      builder.endObject()
+    }
 
     builder.endObject()
   }
