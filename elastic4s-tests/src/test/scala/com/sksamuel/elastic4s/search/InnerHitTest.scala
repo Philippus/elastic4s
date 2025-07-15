@@ -79,6 +79,23 @@ class InnerHitTest extends AnyWordSpec with Matchers with DockerTests {
         innerHit.docValueFieldOpt("name") shouldBe defined
         innerHit.docValueFieldOpt("affiliation") shouldBe empty
       }
+
+      "include matched queries" in {
+        val result = client.execute {
+          search(indexName).query {
+            hasChildQuery(
+              "player",
+              boolQuery().should(
+                matchQuery("name", "traore").queryName("traore_query"),
+                matchQuery("name", "hackney").queryName("hackney_query")
+              )
+            ).innerHit(InnerHit("myinner").docValueFields(Set("name")))
+          }
+        }.await.result
+
+        val innerHit = result.hits.hits.head.innerHits("myinner").hits.head
+        innerHit.matchedQueries shouldBe List("traore_query")
+      }
     }
   }
 }
