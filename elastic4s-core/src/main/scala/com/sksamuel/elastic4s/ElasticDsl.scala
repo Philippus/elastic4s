@@ -17,7 +17,7 @@ import com.sksamuel.elastic4s.handlers.index.{
   IndexTemplateHandlers,
   RolloverHandlers
 }
-import com.sksamuel.elastic4s.handlers.indexlifecyclemanagement.IndexLifecycleManagementHandlers
+import com.sksamuel.elastic4s.handlers.indexlifecyclemanagement.IndexLifecycleManagmentHandlers
 import com.sksamuel.elastic4s.handlers.locks.LocksHandlers
 import com.sksamuel.elastic4s.handlers.main.MainHandlers
 import com.sksamuel.elastic4s.handlers.nodes.NodesHandlers
@@ -53,7 +53,7 @@ trait ElasticDslWithoutSearch extends ElasticApi
     with IndexHandlers
     with IndexAdminHandlers
     with IndexAliasHandlers
-    with IndexLifecycleManagementHandlers
+    with IndexLifecycleManagmentHandlers
     with IndexStatsHandlers
     with IndexTemplateHandlers
     with IngestHandlers
