@@ -15,6 +15,14 @@ case class IndexLifecyclePolicy(
     copy(phases = addPhases.toList ::: phases)
   def withMeta(meta: (String, JsonValue)*): IndexLifecyclePolicy              =
     copy(meta = this.meta ++ meta.toMap)
+
+  override def equals(obj: Any): Boolean = obj match {
+    case that: IndexLifecyclePolicy =>
+      this.name == that.name &&
+      this.phases.sortBy(_.phaseName) == that.phases.sortBy(_.phaseName) &&
+      this.meta == that.meta
+    case _                          => false
+  }
 }
 
 object IndexLifecyclePolicy {

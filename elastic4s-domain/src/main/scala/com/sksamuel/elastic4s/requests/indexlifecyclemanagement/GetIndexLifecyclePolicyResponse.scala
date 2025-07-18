@@ -8,10 +8,10 @@ import com.sksamuel.elastic4s.requests.indexlifecyclemanagement.policy.IndexLife
 import scala.collection.JavaConverters._
 
 case class GetIndexLifecyclePolicyResponse(
-                                            version: Int,
-                                            @JsonProperty("modified_date") modifiedDate: Long,
-                                            policy: IndexLifecyclePolicy,
-                                            @JsonProperty("in_use_by") inUseBy: Option[InUseBy]
+    version: Int,
+    modifiedDate: Long,
+    policy: IndexLifecyclePolicy,
+    inUseBy: Option[InUseBy]
 )
 
 object GetIndexLifecyclePolicyResponse {

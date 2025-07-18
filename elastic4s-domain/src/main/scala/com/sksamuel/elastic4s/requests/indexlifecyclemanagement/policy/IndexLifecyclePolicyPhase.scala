@@ -16,6 +16,14 @@ case class IndexLifecyclePolicyPhase(
 
   def withActions(actions: IndexLifecyclePolicyAction*): IndexLifecyclePolicyPhase =
     copy(actions = actions.toList ::: this.actions)
+
+  override def equals(obj: Any): Boolean = obj match {
+    case that: IndexLifecyclePolicyPhase =>
+      this.phaseName == that.phaseName &&
+      this.settings == that.settings &&
+      this.actions.sortBy(_.actionName) == that.actions.sortBy(_.actionName)
+    case _                               => false
+  }
 }
 
 object IndexLifecyclePolicyPhase {

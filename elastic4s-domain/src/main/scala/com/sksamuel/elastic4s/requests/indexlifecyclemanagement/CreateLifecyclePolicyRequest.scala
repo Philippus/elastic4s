@@ -6,9 +6,9 @@ import com.sksamuel.elastic4s.requests.indexlifecyclemanagement.policy.IndexLife
 import scala.concurrent.duration.Duration
 
 case class CreateLifecyclePolicyRequest(
-                                         policy: IndexLifecyclePolicy,
-                                         masterTimeout: Option[String] = None,
-                                         timeout: Option[String] = None
+    policy: IndexLifecyclePolicy,
+    masterTimeout: Option[String] = None,
+    timeout: Option[String] = None
 ) {
   def masterTimeout(timeout: Duration): CreateLifecyclePolicyRequest =
     copy(masterTimeout = s"${timeout.toNanos}nanos".some)
