@@ -67,7 +67,8 @@ case class SearchHit(
             innerHits = buildInnerHits(hits.getOrElse("inner_hits", null).asInstanceOf[Map[String, Map[String, Any]]]),
             highlight = hits.get("highlight").map(_.asInstanceOf[Map[String, Seq[String]]]).getOrElse(Map.empty),
             sort = hits.get("sort").map(_.asInstanceOf[Seq[AnyRef]]).getOrElse(Seq.empty),
-            fields = hits.get("fields").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty)
+            fields = hits.get("fields").map(_.asInstanceOf[Map[String, AnyRef]]).getOrElse(Map.empty),
+            matchedQueries = hits.get("matched_queries").map(_.asInstanceOf[Seq[String]]).getOrElse(Seq.empty)
           )
         }
       )
