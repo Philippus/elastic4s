@@ -8,6 +8,10 @@ case class QueryVectorBuilder(
     modelText: String
 )
 
+case class RescoreVector(
+    oversample: Float
+)
+
 case class Knn(
     field: String,
     filter: Option[Query] = None,
@@ -18,7 +22,8 @@ case class Knn(
     similarity: Option[Float] = None,
     boost: Option[Double] = None,
     queryName: Option[String] = None,
-    inner: Option[InnerHit] = None
+    inner: Option[InnerHit] = None,
+    rescoreVector: Option[RescoreVector] = None
 ) extends Query {
 
   def filter(filter: Query): Knn = copy(filter = filter.some)
@@ -39,6 +44,8 @@ case class Knn(
   def queryName(queryName: String): Knn = copy(queryName = queryName.some)
 
   def inner(inner: InnerHit): Knn = copy(inner = inner.some)
+
+  def rescoreVector(rescoreVector: RescoreVector): Knn = copy(rescoreVector = rescoreVector.some)
 }
 
 object Knn {
