@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries
 
 import com.sksamuel.elastic4s.handlers.searches.knn.KnnBuilderFn
 import com.sksamuel.elastic4s.requests.searches.HighlightField
-import com.sksamuel.elastic4s.requests.searches.knn.{Knn, QueryVectorBuilder}
+import com.sksamuel.elastic4s.requests.searches.knn.{Knn, QueryVectorBuilder, RescoreVector}
 import com.sksamuel.elastic4s.requests.searches.sort.FieldSort
 import com.sksamuel.elastic4s.requests.searches.term.TermQuery
 import org.scalatest.funsuite.AnyFunSuite
@@ -97,5 +97,16 @@ class KnnBuilderFnTest extends AnyFunSuite with Matchers {
 
     KnnBuilderFn(request).string shouldBe
       """{"field":"dense-vector-field","k":10,"num_candidates":100,"query_vector_builder":{"text_embedding":{"model_id":"my-text-embedding-model","model_text":"The opposite of blue"}}}"""
+  }
+
+  test("knn supports rescore vector") {
+    val request = Knn(
+      field = "dense-vector-field",
+      queryVector = Seq(54D, 10D, -2D),
+      rescoreVector = Some(RescoreVector(1.0F))
+    )
+
+    KnnBuilderFn(request).string shouldBe
+      """{"field":"dense-vector-field","query_vector":[54.0,10.0,-2.0],"rescore_vector":{"oversample":1.0}}"""
   }
 }
