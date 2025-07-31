@@ -34,7 +34,7 @@ case class InnerHit(
 }
 
 object InnerHit {
-  @deprecated("Use apply with required matchedQueries parameter instead", "8.19.0")
+  @deprecated("Use apply with required matchedQueries parameter instead", "9.1.0")
   def apply(
       index: String,
       id: String,
