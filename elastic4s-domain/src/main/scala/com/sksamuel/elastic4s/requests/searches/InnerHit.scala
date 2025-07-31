@@ -32,3 +32,20 @@ case class InnerHit(
   // todo put back ?
 //  def sourceAsString: String = SourceAsContentBuilder(source).string
 }
+
+object InnerHit {
+  @deprecated("Use apply with required matchedQueries parameter instead", "8.19.0")
+  def apply(
+      index: String,
+      id: String,
+      nested: Map[String, AnyRef],
+      score: Option[Double],
+      routing: String,
+      source: Map[String, AnyRef],
+      innerHits: Map[String, InnerHits],
+      highlight: Map[String, Seq[String]],
+      sort: Seq[AnyRef],
+      fields: Map[String, AnyRef]
+  ): InnerHit =
+    InnerHit(index, id, nested, score, routing, source, innerHits, highlight, sort, fields, Seq.empty[String])
+}
