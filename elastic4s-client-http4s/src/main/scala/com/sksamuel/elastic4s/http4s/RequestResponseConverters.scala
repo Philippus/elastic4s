@@ -14,7 +14,7 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
   ): http4s.Request[F] = {
     val uri =
       endpoint.copy(
-        path = http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment(_)).toVector),
+        path = http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment.encoded).toVector),
         query = http4s.Query.fromPairs(request.params.toList: _*)
       )
 

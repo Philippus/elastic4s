@@ -34,4 +34,10 @@ class Http4sRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerT
     }.unsafeRunSync().result.status shouldBe "401"
   }
 
+  it should "be able index document with id properly" in {
+    val id = "id://test-id"
+    ioClient.execute {
+      indexInto("testindex").withId(id)
+    }.unsafeRunSync().result.id shouldBe id
+  }
 }
