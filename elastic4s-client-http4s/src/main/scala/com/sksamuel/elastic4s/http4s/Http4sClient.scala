@@ -13,7 +13,7 @@ object Http4sClient {
       endpoint: ElasticNodeEndpoint
   ): Http4sClient[F] = {
     val uri = http4s.Uri(
-      scheme = Some(http4s.Uri.Scheme.http),
+      scheme = endpoint.prefix.flatMap(http4s.Uri.Scheme.fromString(_).toOption),
       authority = Some(http4s.Uri.Authority(host = http4s.Uri.RegName(endpoint.host), port = Some(endpoint.port)))
     )
     new Http4sClient(
