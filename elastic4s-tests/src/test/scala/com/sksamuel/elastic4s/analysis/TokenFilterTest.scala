@@ -110,4 +110,16 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/worddelimitertokenfilter_raw.json")
     }
   }
+
+  "EdgeNGramTokenFilter" should {
+    "build json" in {
+      EdgeNGramTokenFilter(
+        name = "my_edge_ngram",
+        minGram = 2,
+        maxGram = 5,
+        side = Some("back"),
+        preserveOriginal = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/edgengramtokenfilter_raw.json")
+    }
+  }
 }

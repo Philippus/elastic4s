@@ -380,8 +380,13 @@ case class CommonGramsTokenFilter(
   def commonWordsPath(path: String): CommonGramsTokenFilter             = copy(commonWordsPath = path.some)
 }
 
-case class EdgeNGramTokenFilter(override val name: String, minGram: Int, maxGram: Int, side: Option[String] = None)
-    extends TokenFilter {
+case class EdgeNGramTokenFilter(
+    override val name: String,
+    minGram: Int,
+    maxGram: Int,
+    side: Option[String] = None,
+    preserveOriginal: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
@@ -389,13 +394,15 @@ case class EdgeNGramTokenFilter(override val name: String, minGram: Int, maxGram
     b.field("min_gram", minGram)
     b.field("max_gram", maxGram)
     side.foreach(b.field("side", _))
+    preserveOriginal.foreach(b.field("preserve_original", _))
     b
   }
 
-  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter = copy(minGram = min, maxGram = max)
-  def minGram(min: Int): EdgeNGramTokenFilter               = copy(minGram = min)
-  def maxGram(max: Int): EdgeNGramTokenFilter               = copy(maxGram = max)
-  def side(side: String): EdgeNGramTokenFilter              = copy(side = side.some)
+  def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter     = copy(minGram = min, maxGram = max)
+  def minGram(min: Int): EdgeNGramTokenFilter                   = copy(minGram = min)
+  def maxGram(max: Int): EdgeNGramTokenFilter                   = copy(maxGram = max)
+  def side(side: String): EdgeNGramTokenFilter                  = copy(side = side.some)
+  def preserveOriginal(preserve: Boolean): EdgeNGramTokenFilter = copy(preserveOriginal = preserve.some)
 }
 
 case class NGramTokenFilter(override val name: String, minGram: Option[Int] = None, maxGram: Option[Int] = None)

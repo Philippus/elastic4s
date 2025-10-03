@@ -1,0 +1,7 @@
+{
+    "type": "edge_ngram",
+    "min_gram": 2,
+    "max_gram": 5,
+    "side": "back",
+    "preserve_original": true
+}
