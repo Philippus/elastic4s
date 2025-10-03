@@ -86,7 +86,7 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
         protectedWordsPath = Option("my_protected_words.txt"),
         splitOnCaseChange = Option(true),
         splitOnNumerics = Option(true),
-        stem_english_possessive = Option(true),
+        stemEnglishPossessive = Option(true),
         typeTablePath = Option("my_table_path.txt")
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/worddelimitergraphtokenfilter_raw.json")
     }
