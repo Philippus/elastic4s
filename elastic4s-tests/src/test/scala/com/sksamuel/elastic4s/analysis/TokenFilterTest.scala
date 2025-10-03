@@ -5,6 +5,16 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
 class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
+  "ElisionTokenFilter" should {
+    "build json" in {
+      ElisionTokenFilter(
+        name = "my_elision",
+        articles = Seq("a", "b"),
+        articlesPath = Some("/abc"),
+        articlesCase = Some(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/elisiontokenfilter_raw.json")
+    }
+  }
   "SynonymTokenFilter" should {
     "build json with synonyms set" in {
       SynonymTokenFilter(

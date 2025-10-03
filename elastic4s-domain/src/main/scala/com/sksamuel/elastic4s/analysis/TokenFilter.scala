@@ -201,17 +201,26 @@ case class KeywordMarkerTokenFilter(
   def ignoreCase(ignoreCase: Boolean): KeywordMarkerTokenFilter        = copy(ignoreCase = ignoreCase.some)
 }
 
-case class ElisionTokenFilter(override val name: String, articles: Seq[String] = Nil) extends TokenFilter {
+case class ElisionTokenFilter(
+    override val name: String,
+    articles: Seq[String] = Nil,
+    articlesPath: Option[String] = None,
+    articlesCase: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "elision")
     b.array("articles", articles.toArray)
+    articlesPath.foreach(b.field("articles_path", _))
+    articlesCase.foreach(b.field("articles_case", _))
     b
   }
 
   def articles(articles: Seq[String]): ElisionTokenFilter        = copy(articles = articles)
   def articles(first: String, rest: String*): ElisionTokenFilter = copy(articles = first +: rest)
+  def articlesPath(articlesPath: String): ElisionTokenFilter     = copy(articlesPath = articlesPath.some)
+  def articlesCase(articlesCase: Boolean): ElisionTokenFilter    = copy(articlesCase = articlesCase.some)
 }
 
 case class LimitTokenCountTokenFilter(
