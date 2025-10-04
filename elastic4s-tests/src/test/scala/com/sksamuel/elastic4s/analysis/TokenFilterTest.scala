@@ -132,4 +132,12 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/edgengramtokenfilter_raw.json")
     }
   }
+
+  "ReverseTokenFilter" should {
+    "build json" in {
+      ReverseTokenFilter(
+        name = "my_reverse"
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/reversetokenfilter_raw.json")
+    }
+  }
 }
