@@ -140,4 +140,28 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/reversetokenfilter_raw.json")
     }
   }
+
+  "StopTokenFilter" should {
+    "build json" in {
+      StopTokenFilter(
+        name = "my_stop",
+        language = None,
+        stopwords = List("a", "an"),
+        stopwordsPath = None,
+        removeTrailing = Some(true),
+        ignoreCase = Some(false)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/stoptokenfilter_raw.json")
+    }
+    "build json with deprecated constructor" in {
+      StopTokenFilter(
+        name = "my_stop",
+        language = None,
+        stopwords = List("a", "an"),
+        stopwordsPath = None,
+        enablePositionIncrements = Some(false),
+        removeTrailing = Some(true),
+        ignoreCase = Some(false)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/stoptokenfilter_raw.json")
+    }
+  }
 }
