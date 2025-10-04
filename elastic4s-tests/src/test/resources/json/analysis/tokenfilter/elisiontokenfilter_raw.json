@@ -1,0 +1,9 @@
+{
+  "type": "elision",
+  "articles": [
+    "a",
+    "b"
+  ],
+  "articles_path": "/abc",
+  "articles_case": true
+}
