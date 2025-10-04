@@ -121,6 +121,17 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
     }
   }
 
+  "PatternReplaceTokenFilter" should {
+    "build json" in {
+      PatternReplaceTokenFilter(
+        name = "my_pattern_replace",
+        pattern = "[£|€]",
+        replacement = "",
+        all = Some(false)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/patternreplacetokenfilter_raw.json")
+    }
+  }
+
   "EdgeNGramTokenFilter" should {
     "build json" in {
       EdgeNGramTokenFilter(
