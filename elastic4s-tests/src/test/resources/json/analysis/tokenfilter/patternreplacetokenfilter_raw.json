@@ -1,0 +1,7 @@
+{
+  "type": "pattern_replace",
+  "pattern": "[£|€]",
+  "replacement": "",
+  "all": false
+}
+

@@ -363,19 +363,25 @@ case class HunspellTokenFilter(
   def dictionary(dictionary: String): HunspellTokenFilter    = copy(dictionary = dictionary.some)
 }
 
-case class PatternReplaceTokenFilter(override val name: String, pattern: String, replacement: String)
-    extends TokenFilter {
+case class PatternReplaceTokenFilter(
+    override val name: String,
+    pattern: String,
+    replacement: String,
+    all: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "pattern_replace")
     b.field("pattern", pattern)
     b.field("replacement", replacement)
+    all.foreach(b.field("all", _))
     b
   }
 
   def pattern(p: String): PatternReplaceTokenFilter     = copy(pattern = p)
   def replacement(r: String): PatternReplaceTokenFilter = copy(replacement = r)
+  def all(all: Boolean): PatternReplaceTokenFilter      = copy(all = all.some)
 }
 
 case class CommonGramsTokenFilter(
