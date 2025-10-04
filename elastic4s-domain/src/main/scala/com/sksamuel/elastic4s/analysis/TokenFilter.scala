@@ -630,3 +630,10 @@ case class MultiplexerTokenFilter(
   def preserveOriginal(preserveOriginal: Boolean): MultiplexerTokenFilter =
     copy(preserveOriginal = preserveOriginal.some)
 }
+
+case class ReverseTokenFilter(override val name: String) extends TokenFilter {
+  override def build: XContentBuilder = {
+    val b = XContentFactory.jsonBuilder()
+    b.field("type", "reverse")
+  }
+}
