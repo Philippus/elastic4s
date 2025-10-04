@@ -1,0 +1,6 @@
+{
+  "type": "ngram",
+  "min_gram": 2,
+  "max_gram": 5,
+  "preserve_original": true
+}

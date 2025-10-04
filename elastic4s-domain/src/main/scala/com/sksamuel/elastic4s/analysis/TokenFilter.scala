@@ -441,20 +441,26 @@ case class EdgeNGramTokenFilter(
   def preserveOriginal(preserve: Boolean): EdgeNGramTokenFilter = copy(preserveOriginal = preserve.some)
 }
 
-case class NGramTokenFilter(override val name: String, minGram: Option[Int] = None, maxGram: Option[Int] = None)
-    extends TokenFilter {
+case class NGramTokenFilter(
+    override val name: String,
+    minGram: Option[Int] = None,
+    maxGram: Option[Int] = None,
+    preserveOriginal: Option[Boolean] = None
+) extends TokenFilter {
 
   override def build: XContentBuilder = {
     val b = XContentFactory.jsonBuilder()
     b.field("type", "ngram")
     minGram.foreach(b.field("min_gram", _))
     maxGram.foreach(b.field("max_gram", _))
+    preserveOriginal.foreach(b.field("preserve_original", _))
     b
   }
 
-  def minMaxGrams(min: Int, max: Int): NGramTokenFilter = copy(minGram = min.some, maxGram = max.some)
-  def minGram(min: Int): NGramTokenFilter               = copy(minGram = min.some)
-  def maxGram(max: Int): NGramTokenFilter               = copy(maxGram = max.some)
+  def minMaxGrams(min: Int, max: Int): NGramTokenFilter             = copy(minGram = min.some, maxGram = max.some)
+  def minGram(min: Int): NGramTokenFilter                           = copy(minGram = min.some)
+  def maxGram(max: Int): NGramTokenFilter                           = copy(maxGram = max.some)
+  def preserveOriginal(preserveOriginal: Boolean): NGramTokenFilter = copy(preserveOriginal = preserveOriginal.some)
 }
 
 case class SnowballTokenFilter(override val name: String, language: String) extends TokenFilter {

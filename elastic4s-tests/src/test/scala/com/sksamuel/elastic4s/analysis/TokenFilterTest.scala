@@ -144,6 +144,17 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
     }
   }
 
+  "NGramTokenFilter" should {
+    "build json" in {
+      NGramTokenFilter(
+        name = "my_ngram",
+        minGram = Some(2),
+        maxGram = Some(5),
+        preserveOriginal = Option(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/ngramtokenfilter_raw.json")
+    }
+  }
+
   "ReverseTokenFilter" should {
     "build json" in {
       ReverseTokenFilter(
