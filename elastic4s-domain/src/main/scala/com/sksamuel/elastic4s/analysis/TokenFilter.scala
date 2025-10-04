@@ -408,7 +408,10 @@ case class EdgeNGramTokenFilter(
     override val name: String,
     minGram: Int,
     maxGram: Int,
-    side: Option[String] = None,
+    @deprecated(
+      "The side parameter is deprecated and will be removed. Use a reverse before and after the edge_ngram instead",
+      "9.1.1"
+    ) side: Option[String] = None,
     preserveOriginal: Option[Boolean] = None
 ) extends TokenFilter {
 
@@ -425,7 +428,10 @@ case class EdgeNGramTokenFilter(
   def minMaxGrams(min: Int, max: Int): EdgeNGramTokenFilter     = copy(minGram = min, maxGram = max)
   def minGram(min: Int): EdgeNGramTokenFilter                   = copy(minGram = min)
   def maxGram(max: Int): EdgeNGramTokenFilter                   = copy(maxGram = max)
-  def side(side: String): EdgeNGramTokenFilter                  = copy(side = side.some)
+  @deprecated(
+    "The side parameter is deprecated and will be removed. Use a reverse before and after the edge_ngram instead",
+    "9.1.1"
+  ) def side(side: String): EdgeNGramTokenFilter                = copy(side = side.some)
   def preserveOriginal(preserve: Boolean): EdgeNGramTokenFilter = copy(preserveOriginal = preserve.some)
 }
 
