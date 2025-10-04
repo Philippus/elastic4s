@@ -247,7 +247,6 @@ case class StopTokenFilter(
     language: Option[String] = None,
     stopwords: Iterable[String] = Nil,
     stopwordsPath: Option[String] = None,
-    enablePositionIncrements: Option[Boolean] = None, // ignored now as of 1.4.0
     removeTrailing: Option[Boolean] = None,
     ignoreCase: Option[Boolean] = None
 ) extends TokenFilter {
@@ -259,19 +258,35 @@ case class StopTokenFilter(
       b.array("stopwords", stopwords.toArray)
     language.foreach(b.field("stopwords", _))
     stopwordsPath.foreach(b.field("stopwords_path", _))
-    enablePositionIncrements.foreach(b.field("enable_position_increments", _))
     ignoreCase.foreach(b.field("ignore_case", _))
     removeTrailing.foreach(b.field("remove_trailing", _))
     b
   }
 
-  def ignoreCase(boolean: Boolean): StopTokenFilter                = copy(ignoreCase = boolean.some)
-  def removeTrailing(boolean: Boolean): StopTokenFilter            = copy(removeTrailing = boolean.some)
-  def enablePositionIncrements(boolean: Boolean): StopTokenFilter  = copy(enablePositionIncrements = boolean.some)
-  def language(language: String): StopTokenFilter                  = copy(language = language.some)
-  def stopwords(stopwords: Iterable[String]): StopTokenFilter      = copy(stopwords = stopwords)
-  def stopwords(stopwords: String, rest: String*): StopTokenFilter = copy(stopwords = stopwords +: rest)
-  def stopwordsPath(path: String): StopTokenFilter                 = copy(stopwordsPath = path.some)
+  def ignoreCase(boolean: Boolean): StopTokenFilter                 = copy(ignoreCase = boolean.some)
+  def removeTrailing(boolean: Boolean): StopTokenFilter             = copy(removeTrailing = boolean.some)
+  @deprecated(
+    "enablePositionIncrements is not supported anymore",
+    "9.1.1"
+  ) def enablePositionIncrements(boolean: Boolean): StopTokenFilter = this
+  def language(language: String): StopTokenFilter                   = copy(language = language.some)
+  def stopwords(stopwords: Iterable[String]): StopTokenFilter       = copy(stopwords = stopwords)
+  def stopwords(stopwords: String, rest: String*): StopTokenFilter  = copy(stopwords = stopwords +: rest)
+  def stopwordsPath(path: String): StopTokenFilter                  = copy(stopwordsPath = path.some)
+}
+
+object StopTokenFilter {
+  @deprecated("Use apply without enablePositionIncrements parameter instead", "9.1.1")
+  def apply(
+      name: String,
+      language: Option[String],
+      stopwords: Iterable[String],
+      stopwordsPath: Option[String],
+      enablePositionIncrements: Option[Boolean],
+      removeTrailing: Option[Boolean],
+      ignoreCase: Option[Boolean]
+  ): StopTokenFilter =
+    StopTokenFilter(name, language, stopwords, stopwordsPath, removeTrailing, ignoreCase)
 }
 
 object NamedStopTokenFilter {

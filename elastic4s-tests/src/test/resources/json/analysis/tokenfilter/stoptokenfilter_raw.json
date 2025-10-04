@@ -1,0 +1,9 @@
+{
+  "type": "stop",
+  "stopwords": [
+    "a",
+    "an"
+  ],
+  "remove_trailing": true,
+  "ignore_case": false
+}
