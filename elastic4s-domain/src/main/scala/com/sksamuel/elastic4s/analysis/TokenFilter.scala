@@ -121,26 +121,24 @@ object WordDelimiterGraphTokenFilter {
       typeTablePath: Option[String] = None,
       adjustOffsets: Option[Boolean] = None,
       ignoreKeywords: Option[Boolean] = None
-  ): WordDelimiterGraphTokenFilter = {
-    new WordDelimiterGraphTokenFilter(
-      name = name,
-      preserveOriginal = preserveOriginal,
-      catenateNumbers = catenateNumbers,
-      catenateWords = catenateWords,
-      catenateAll = catenateAll,
-      generateWordParts = generateWordParts,
-      generateNumberParts = generateNumberParts,
-      protectedWords = protectedWords,
-      protectedWordsPath = protectedWordsPath,
-      splitOnCaseChange = splitOnCaseChange,
-      splitOnNumerics = splitOnNumerics,
-      stemEnglishPossessive = stem_english_possessive,
-      typeTable = typeTable,
-      typeTablePath = typeTablePath,
-      adjustOffsets = adjustOffsets,
-      ignoreKeywords = ignoreKeywords
-    )
-  }
+  ): WordDelimiterGraphTokenFilter = new WordDelimiterGraphTokenFilter(
+    name = name,
+    preserveOriginal = preserveOriginal,
+    catenateNumbers = catenateNumbers,
+    catenateWords = catenateWords,
+    catenateAll = catenateAll,
+    generateWordParts = generateWordParts,
+    generateNumberParts = generateNumberParts,
+    protectedWords = protectedWords,
+    protectedWordsPath = protectedWordsPath,
+    splitOnCaseChange = splitOnCaseChange,
+    splitOnNumerics = splitOnNumerics,
+    stemEnglishPossessive = stem_english_possessive,
+    typeTable = typeTable,
+    typeTablePath = typeTablePath,
+    adjustOffsets = adjustOffsets,
+    ignoreKeywords = ignoreKeywords
+  )
 }
 
 case class SynonymGraphTokenFilter(
