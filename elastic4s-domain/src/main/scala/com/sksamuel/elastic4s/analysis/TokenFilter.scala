@@ -101,6 +101,48 @@ case class WordDelimiterGraphTokenFilter(
   def typeTablePath(path: String): WordDelimiterGraphTokenFilter         = copy(typeTablePath = path.some)
 }
 
+object WordDelimiterGraphTokenFilter {
+
+  @deprecated("Use apply with stemEnglishPossessive parameter instead", "9.1.1")
+  def apply(
+      name: String,
+      preserveOriginal: Option[Boolean] = None,
+      catenateNumbers: Option[Boolean] = None,
+      catenateWords: Option[Boolean] = None,
+      catenateAll: Option[Boolean] = None,
+      generateWordParts: Option[Boolean] = None,
+      generateNumberParts: Option[Boolean] = None,
+      protectedWords: Option[String] = None,
+      protectedWordsPath: Option[String] = None,
+      splitOnCaseChange: Option[Boolean] = None,
+      splitOnNumerics: Option[Boolean] = None,
+      stem_english_possessive: Option[Boolean] = None,
+      typeTable: Option[String] = None,
+      typeTablePath: Option[String] = None,
+      adjustOffsets: Option[Boolean] = None,
+      ignoreKeywords: Option[Boolean] = None
+  ): WordDelimiterGraphTokenFilter = {
+    new WordDelimiterGraphTokenFilter(
+      name = name,
+      preserveOriginal = preserveOriginal,
+      catenateNumbers = catenateNumbers,
+      catenateWords = catenateWords,
+      catenateAll = catenateAll,
+      generateWordParts = generateWordParts,
+      generateNumberParts = generateNumberParts,
+      protectedWords = protectedWords,
+      protectedWordsPath = protectedWordsPath,
+      splitOnCaseChange = splitOnCaseChange,
+      splitOnNumerics = splitOnNumerics,
+      stemEnglishPossessive = stem_english_possessive,
+      typeTable = typeTable,
+      typeTablePath = typeTablePath,
+      adjustOffsets = adjustOffsets,
+      ignoreKeywords = ignoreKeywords
+    )
+  }
+}
+
 case class SynonymGraphTokenFilter(
     override val name: String,
     path: Option[String] = None,
