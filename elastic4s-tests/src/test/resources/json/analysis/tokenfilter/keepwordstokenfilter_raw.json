@@ -1,0 +1,9 @@
+{
+  "type": "keep",
+  "keep_words": [
+    "a",
+    "b"
+  ],
+  "keep_words_path": "/abc",
+  "keep_words_case": true
+}
