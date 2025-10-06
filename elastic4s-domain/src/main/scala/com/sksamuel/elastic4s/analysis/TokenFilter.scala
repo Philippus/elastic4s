@@ -84,61 +84,23 @@ case class WordDelimiterGraphTokenFilter(
     b
   }
 
-  def adjustOffsets(bool: Boolean): WordDelimiterGraphTokenFilter        = copy(adjustOffsets = bool.some)
-  def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter    = copy(generateWordParts = bool.some)
-  def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter  = copy(generateNumberParts = bool.some)
-  def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter        = copy(catenateWords = bool.some)
-  def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(catenateNumbers = bool.some)
-  def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter          = copy(catenateAll = bool.some)
-  def ignoreKeywords(bool: Boolean): WordDelimiterGraphTokenFilter       = copy(ignoreKeywords = bool.some)
-  def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter    = copy(splitOnCaseChange = bool.some)
-  def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter     = copy(preserveOriginal = bool.some)
-  def protectedWords(words: String): WordDelimiterGraphTokenFilter       = copy(protectedWords = words.some)
-  def protectedWordsPath(path: String): WordDelimiterGraphTokenFilter    = copy(protectedWordsPath = path.some)
-  def splitOnNumerics(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(splitOnNumerics = bool.some)
-  def stemEnglishPossesive(bool: Boolean): WordDelimiterGraphTokenFilter = copy(stemEnglishPossessive = bool.some)
-  def typeTable(table: String): WordDelimiterGraphTokenFilter            = copy(typeTable = table.some)
-  def typeTablePath(path: String): WordDelimiterGraphTokenFilter         = copy(typeTablePath = path.some)
-}
-
-object WordDelimiterGraphTokenFilter {
-
-  @deprecated("Use apply with stemEnglishPossessive parameter instead", "9.1.1")
-  def apply(
-      name: String,
-      preserveOriginal: Option[Boolean] = None,
-      catenateNumbers: Option[Boolean] = None,
-      catenateWords: Option[Boolean] = None,
-      catenateAll: Option[Boolean] = None,
-      generateWordParts: Option[Boolean] = None,
-      generateNumberParts: Option[Boolean] = None,
-      protectedWords: Option[String] = None,
-      protectedWordsPath: Option[String] = None,
-      splitOnCaseChange: Option[Boolean] = None,
-      splitOnNumerics: Option[Boolean] = None,
-      stem_english_possessive: Option[Boolean] = None,
-      typeTable: Option[String] = None,
-      typeTablePath: Option[String] = None,
-      adjustOffsets: Option[Boolean] = None,
-      ignoreKeywords: Option[Boolean] = None
-  ): WordDelimiterGraphTokenFilter = new WordDelimiterGraphTokenFilter(
-    name = name,
-    preserveOriginal = preserveOriginal,
-    catenateNumbers = catenateNumbers,
-    catenateWords = catenateWords,
-    catenateAll = catenateAll,
-    generateWordParts = generateWordParts,
-    generateNumberParts = generateNumberParts,
-    protectedWords = protectedWords,
-    protectedWordsPath = protectedWordsPath,
-    splitOnCaseChange = splitOnCaseChange,
-    splitOnNumerics = splitOnNumerics,
-    stemEnglishPossessive = stem_english_possessive,
-    typeTable = typeTable,
-    typeTablePath = typeTablePath,
-    adjustOffsets = adjustOffsets,
-    ignoreKeywords = ignoreKeywords
-  )
+  def adjustOffsets(bool: Boolean): WordDelimiterGraphTokenFilter         = copy(adjustOffsets = bool.some)
+  def generateWordParts(bool: Boolean): WordDelimiterGraphTokenFilter     = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterGraphTokenFilter   = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterGraphTokenFilter         = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterGraphTokenFilter       = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterGraphTokenFilter           = copy(catenateAll = bool.some)
+  def ignoreKeywords(bool: Boolean): WordDelimiterGraphTokenFilter        = copy(ignoreKeywords = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterGraphTokenFilter     = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterGraphTokenFilter      = copy(preserveOriginal = bool.some)
+  def protectedWords(words: String): WordDelimiterGraphTokenFilter        = copy(protectedWords = words.some)
+  def protectedWordsPath(path: String): WordDelimiterGraphTokenFilter     = copy(protectedWordsPath = path.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterGraphTokenFilter       = copy(splitOnNumerics = bool.some)
+  @deprecated("Use stemEnglishPossessive instead", "9.1.1")
+  def stemEnglishPossesive(bool: Boolean): WordDelimiterGraphTokenFilter  = copy(stemEnglishPossessive = bool.some)
+  def stemEnglishPossessive(bool: Boolean): WordDelimiterGraphTokenFilter = copy(stemEnglishPossessive = bool.some)
+  def typeTable(table: String): WordDelimiterGraphTokenFilter             = copy(typeTable = table.some)
+  def typeTablePath(path: String): WordDelimiterGraphTokenFilter          = copy(typeTablePath = path.some)
 }
 
 case class SynonymGraphTokenFilter(
