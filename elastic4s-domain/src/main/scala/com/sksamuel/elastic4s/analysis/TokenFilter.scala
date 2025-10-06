@@ -223,6 +223,28 @@ case class ElisionTokenFilter(
   def articlesCase(articlesCase: Boolean): ElisionTokenFilter    = copy(articlesCase = articlesCase.some)
 }
 
+case class KeepWordsTokenFilter(
+    override val name: String,
+    keepWords: Seq[String] = Nil,
+    keepWordsPath: Option[String] = None,
+    keepWordsCase: Option[Boolean] = None
+) extends TokenFilter {
+
+  override def build: XContentBuilder = {
+    val b = XContentFactory.jsonBuilder()
+    b.field("type", "keep")
+    b.array("keep_words", keepWords.toArray)
+    keepWordsPath.foreach(b.field("keep_words_path", _))
+    keepWordsCase.foreach(b.field("keep_words_case", _))
+    b
+  }
+
+  def keepWords(keepWords: Seq[String]): KeepWordsTokenFilter       = copy(keepWords = keepWords)
+  def keepWords(first: String, rest: String*): KeepWordsTokenFilter = copy(keepWords = first +: rest)
+  def keepWordsPath(keepWordsPath: String): KeepWordsTokenFilter    = copy(keepWordsPath = keepWordsPath.some)
+  def keepWordsCase(keepWordsCase: Boolean): KeepWordsTokenFilter   = copy(keepWordsCase = keepWordsCase.some)
+}
+
 case class LimitTokenCountTokenFilter(
     override val name: String,
     maxTokenCount: Option[Int] = None,

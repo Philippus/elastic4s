@@ -15,6 +15,16 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/elisiontokenfilter_raw.json")
     }
   }
+  "KeepWordstoken" should {
+    "build json" in {
+      KeepWordsTokenFilter(
+        name = "my_keep_words",
+        keepWords = Seq("a", "b"),
+        keepWordsPath = Some("/abc"),
+        keepWordsCase = Some(true)
+      ).build.string should matchJsonResource("/json/analysis/tokenfilter/keepwordstokenfilter_raw.json")
+    }
+  }
   "SynonymTokenFilter" should {
     "build json with synonyms set" in {
       SynonymTokenFilter(
