@@ -16,7 +16,7 @@ object Dependencies {
   val Log4jVersion                   = "2.25.2"
   val MockitoVersion                 = "5.20.0"
   val MonixVersion                   = "3.4.1"
-  val PlayJsonVersion                = "3.0.5"
+  val PlayJsonVersion                = "3.0.6"
   val ReactiveStreamsVersion         = "1.0.4"
   val ScalamockVersion               = "7.5.0"
   val ScalatestPlusMockitoArtifactId = "mockito-5-12"
