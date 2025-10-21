@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.indexlifecyclemanagement._
 import java.nio.charset.StandardCharsets
 import scala.util.Try
 
-trait IndexLifecycleManagmentHandlers {
+trait IndexLifecycleManagementHandlers {
   implicit object IndexLifecycleStatusHandler extends Handler[GetIlmStatusRequest, GetIlmStatusResponse] {
     override def responseHandler: ResponseHandler[GetIlmStatusResponse] = (response: HttpResponse) => {
       response.statusCode match {
