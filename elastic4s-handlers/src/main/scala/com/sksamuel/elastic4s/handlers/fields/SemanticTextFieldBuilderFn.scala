@@ -6,6 +6,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 object SemanticTextFieldBuilderFn {
   private def getChunkingSettings(values: Map[String, Any]): ChunkingSettings =
     values("strategy").asInstanceOf[String] match {
+      case "none"     => ChunkingSettings.none()
       case "word"     => ChunkingSettings.word(
           values.get("max_chunk_size").map(_.asInstanceOf[Int]).get,
           values.get("overlap").map(_.asInstanceOf[Int]).get
@@ -31,10 +32,15 @@ object SemanticTextFieldBuilderFn {
     field.chunkingSettings.foreach { chunkingSettings =>
       builder.startObject("chunking_settings")
       builder.field("strategy", chunkingSettings.strategy)
-      builder.field("max_chunk_size", chunkingSettings.maxChunkSize)
       chunkingSettings.strategy match {
-        case "word"     => chunkingSettings.overlap.foreach(builder.field("overlap", _))
-        case "sentence" => chunkingSettings.sentenceOverlap.foreach(builder.field("sentence_overlap", _))
+        case "none"     =>
+          ()
+        case "word"     =>
+          chunkingSettings.maxChunkSize.foreach(builder.field("max_chunk_size", _))
+          chunkingSettings.overlap.foreach(builder.field("overlap", _))
+        case "sentence" =>
+          chunkingSettings.maxChunkSize.foreach(builder.field("max_chunk_size", _))
+          chunkingSettings.sentenceOverlap.foreach(builder.field("sentence_overlap", _))
       }
       builder.endObject()
     }

@@ -283,6 +283,17 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
         JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
       ) shouldBe field
     }
+    "support SemanticTextField with `none` strategy chunking settings" in {
+      val field      =
+        SemanticTextField("semantic_text_field", "my-elser-endpoint").chunkingSettings(ChunkingSettings.none())
+      val jsonString =
+        """{"type":"semantic_text","inference_id":"my-elser-endpoint","chunking_settings":{"strategy":"none"}}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(
+        field.name,
+        JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
+      ) shouldBe field
+    }
     "support SemanticTextField with `word` strategy chunking settings" in {
       val field      =
         SemanticTextField("semantic_text_field", "my-elser-endpoint").chunkingSettings(ChunkingSettings.word(3, 1))
