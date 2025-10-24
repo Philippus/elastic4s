@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.fields
 
 case class ChunkingSettings(
-    `type`: String,
+    strategy: String,
     maxChunkSize: Int,
     overlap: Option[Int] = None,
     sentenceOverlap: Option[Int] = None
@@ -9,9 +9,9 @@ case class ChunkingSettings(
 
 object ChunkingSettings {
   def sentence(maxChunkSize: Int, sentenceOverlap: Int): ChunkingSettings =
-    ChunkingSettings(`type` = "sentence", maxChunkSize = maxChunkSize, sentenceOverlap = Some(sentenceOverlap))
+    ChunkingSettings(strategy = "sentence", maxChunkSize = maxChunkSize, sentenceOverlap = Some(sentenceOverlap))
   def word(maxChunkSize: Int, overlap: Int): ChunkingSettings             =
-    ChunkingSettings(`type` = "word", maxChunkSize = maxChunkSize, overlap = Some(overlap))
+    ChunkingSettings(strategy = "word", maxChunkSize = maxChunkSize, overlap = Some(overlap))
 }
 
 object SemanticTextField {
