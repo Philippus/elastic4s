@@ -283,22 +283,33 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
         JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
       ) shouldBe field
     }
-    "support SemanticTextField with `word` type chunking settings" in {
+    "support SemanticTextField with `none` strategy chunking settings" in {
       val field      =
-        SemanticTextField("semantic_text_field", "my-elser-endpoint").chunkingSettings(ChunkingSettings.word(3, 1))
+        SemanticTextField("semantic_text_field", "my-elser-endpoint").chunkingSettings(ChunkingSettings.none())
       val jsonString =
-        """{"type":"semantic_text","inference_id":"my-elser-endpoint","chunking_settings":{"type":"word","max_chunk_size":3,"overlap":1}}"""
+        """{"type":"semantic_text","inference_id":"my-elser-endpoint","chunking_settings":{"strategy":"none"}}"""
       ElasticFieldBuilderFn(field).string shouldBe jsonString
       ElasticFieldBuilderFn.construct(
         field.name,
         JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
       ) shouldBe field
     }
-    "support SemanticTextField with `sentence` type chunking settings" in {
+    "support SemanticTextField with `word` strategy chunking settings" in {
+      val field      =
+        SemanticTextField("semantic_text_field", "my-elser-endpoint").chunkingSettings(ChunkingSettings.word(3, 1))
+      val jsonString =
+        """{"type":"semantic_text","inference_id":"my-elser-endpoint","chunking_settings":{"strategy":"word","max_chunk_size":3,"overlap":1}}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(
+        field.name,
+        JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
+      ) shouldBe field
+    }
+    "support SemanticTextField with `sentence` strategy chunking settings" in {
       val field      =
         SemanticTextField("semantic_text_field", "my-elser-endpoint").chunkingSettings(ChunkingSettings.sentence(3, 1))
       val jsonString =
-        """{"type":"semantic_text","inference_id":"my-elser-endpoint","chunking_settings":{"type":"sentence","max_chunk_size":3,"sentence_overlap":1}}"""
+        """{"type":"semantic_text","inference_id":"my-elser-endpoint","chunking_settings":{"strategy":"sentence","max_chunk_size":3,"sentence_overlap":1}}"""
       ElasticFieldBuilderFn(field).string shouldBe jsonString
       ElasticFieldBuilderFn.construct(
         field.name,
