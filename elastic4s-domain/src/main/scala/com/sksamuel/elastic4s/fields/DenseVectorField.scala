@@ -25,12 +25,17 @@ case object DotProduct      extends Similarity { val name = "dot_product"       
 case object Cosine          extends Similarity { val name = "cosine"            }
 case object MaxInnerProduct extends Similarity { val name = "max_inner_product" }
 
+case class DenseVectorIndexOptionsRescoreVector(
+    oversample: Float
+)
+
 case class DenseVectorIndexOptions(
     `type`: DenseVectorField.KnnType,
     m: Option[Int] = None,
     efConstruction: Option[Int] = None,
-    confidenceInterval: Option[Float] = None
-) {}
+    confidenceInterval: Option[Float] = None,
+    rescoreVector: Option[DenseVectorIndexOptionsRescoreVector] = None
+)
 
 case class DenseVectorField(
     name: String,

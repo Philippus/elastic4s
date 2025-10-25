@@ -1,10 +1,11 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.DenseVectorField.{BbqHnsw, Hnsw, Int4Flat, Int4Hnsw, Int8Flat, Int8Hnsw}
+import com.sksamuel.elastic4s.fields.DenseVectorField.{BbqFlat, BbqHnsw, Hnsw, Int4Flat, Int4Hnsw, Int8Flat, Int8Hnsw}
 import com.sksamuel.elastic4s.fields.{
   Cosine,
   DenseVectorField,
   DenseVectorIndexOptions,
+  DenseVectorIndexOptionsRescoreVector,
   DotProduct,
   L2Norm,
   MaxInnerProduct,
@@ -20,6 +21,9 @@ object DenseVectorFieldBuilderFn {
     case MaxInnerProduct.name => MaxInnerProduct
   }
 
+  private def getDenseVectorIndexOptionsRescoreVector(values: Map[String, Any]): DenseVectorIndexOptionsRescoreVector =
+    DenseVectorIndexOptionsRescoreVector(values.get("oversample").map(_.asInstanceOf[Double].toFloat).get)
+
   private def getIndexOptions(values: Map[String, Any]): DenseVectorIndexOptions =
     values("type").asInstanceOf[String] match {
       case DenseVectorField.Hnsw.name     => DenseVectorIndexOptions(
@@ -31,18 +35,31 @@ object DenseVectorFieldBuilderFn {
           DenseVectorField.Int8Hnsw,
           values.get("m").map(_.asInstanceOf[Int]),
           values.get("ef_construction").map(_.asInstanceOf[Int]),
-          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
+          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat),
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
       case DenseVectorField.Int4Hnsw.name => DenseVectorIndexOptions(
           DenseVectorField.Int4Hnsw,
           values.get("m").map(_.asInstanceOf[Int]),
           values.get("ef_construction").map(_.asInstanceOf[Int]),
-          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
+          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat),
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
       case DenseVectorField.BbqHnsw.name  => DenseVectorIndexOptions(
           DenseVectorField.BbqHnsw,
           values.get("m").map(_.asInstanceOf[Int]),
-          values.get("ef_construction").map(_.asInstanceOf[Int])
+          values.get("ef_construction").map(_.asInstanceOf[Int]),
+          None,
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
       case DenseVectorField.Flat.name     => DenseVectorIndexOptions(
           DenseVectorField.Flat
@@ -51,16 +68,31 @@ object DenseVectorFieldBuilderFn {
           DenseVectorField.Int8Flat,
           None,
           None,
-          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
+          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat),
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
       case DenseVectorField.Int4Flat.name => DenseVectorIndexOptions(
           DenseVectorField.Int4Flat,
           None,
           None,
-          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat)
+          values.get("confidence_interval").map(d => d.asInstanceOf[Double].toFloat),
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
       case DenseVectorField.BbqFlat.name  => DenseVectorIndexOptions(
-          DenseVectorField.BbqFlat
+          DenseVectorField.BbqFlat,
+          None,
+          None,
+          None,
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
     }
 
@@ -89,6 +121,12 @@ object DenseVectorFieldBuilderFn {
           options.efConstruction.foreach(builder.field("ef_construction", _))
         if (Seq(Int8Hnsw, Int4Hnsw, Int8Flat, Int4Flat).contains(options.`type`))
           options.confidenceInterval.foreach(builder.field("confidence_interval", _))
+        if (Seq(Int8Hnsw, Int4Hnsw, Int8Flat, Int4Flat, BbqHnsw, BbqFlat).contains(options.`type`))
+          options.rescoreVector.foreach { rescoreVector =>
+            builder.startObject("rescore_vector")
+            builder.field("oversample", rescoreVector.oversample)
+            builder.endObject()
+          }
         builder.endObject()
       }
     }

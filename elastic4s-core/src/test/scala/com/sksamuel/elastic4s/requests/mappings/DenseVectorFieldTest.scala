@@ -1,16 +1,17 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.fields.DenseVectorField._
-import com.sksamuel.elastic4s.ElasticApi
+import com.sksamuel.elastic4s.{ElasticApi, JacksonSupport}
 import com.sksamuel.elastic4s.fields.{
   Cosine,
   DenseVectorField,
   DenseVectorIndexOptions,
+  DenseVectorIndexOptionsRescoreVector,
   DotProduct,
   L2Norm,
   MaxInnerProduct
 }
-import com.sksamuel.elastic4s.handlers.fields.DenseVectorFieldBuilderFn
+import com.sksamuel.elastic4s.handlers.fields.{DenseVectorFieldBuilderFn, ElasticFieldBuilderFn}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -87,5 +88,23 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int4_flat","confidence_interval":1.0}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = BbqFlat))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_flat"}}"""
+  }
+
+  it should "support rescoreVector" in {
+    val field = DenseVectorField(
+      name = "myfield",
+      dims = Some(3),
+      index = Some(true),
+      indexOptions = Some(denseVectorIndexOptions.copy(rescoreVector =
+        Some(DenseVectorIndexOptionsRescoreVector(oversample = 1.0F))
+      ))
+    )
+    DenseVectorFieldBuilderFn.build(field).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0,"rescore_vector":{"oversample":1.0}}}"""
+
+    ElasticFieldBuilderFn.construct(
+      field.name,
+      JacksonSupport.mapper.readValue[Map[String, Any]](DenseVectorFieldBuilderFn.build(field).string)
+    ) shouldBe field
   }
 }
