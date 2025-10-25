@@ -453,15 +453,17 @@ case class WordDelimiterTokenFilter(
     stemEnglishPossesive.foreach(source.field("stem_english_possessive", _))
   }
 
-  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter    = copy(generateWordParts = bool.some)
-  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter  = copy(generateNumberParts = bool.some)
-  def catenateWords(bool: Boolean): WordDelimiterTokenFilter        = copy(catenateWords = bool.some)
-  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter      = copy(catenateNumbers = bool.some)
-  def catenateAll(bool: Boolean): WordDelimiterTokenFilter          = copy(catenateAll = bool.some)
-  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter    = copy(splitOnCaseChange = bool.some)
-  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter     = copy(preserveOriginal = bool.some)
-  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter      = copy(splitOnNumerics = bool.some)
-  def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
+  def generateWordParts(bool: Boolean): WordDelimiterTokenFilter     = copy(generateWordParts = bool.some)
+  def generateNumberParts(bool: Boolean): WordDelimiterTokenFilter   = copy(generateNumberParts = bool.some)
+  def catenateWords(bool: Boolean): WordDelimiterTokenFilter         = copy(catenateWords = bool.some)
+  def catenateNumbers(bool: Boolean): WordDelimiterTokenFilter       = copy(catenateNumbers = bool.some)
+  def catenateAll(bool: Boolean): WordDelimiterTokenFilter           = copy(catenateAll = bool.some)
+  def splitOnCaseChange(bool: Boolean): WordDelimiterTokenFilter     = copy(splitOnCaseChange = bool.some)
+  def preserveOriginal(bool: Boolean): WordDelimiterTokenFilter      = copy(preserveOriginal = bool.some)
+  def splitOnNumerics(bool: Boolean): WordDelimiterTokenFilter       = copy(splitOnNumerics = bool.some)
+  @deprecated("Use stemEnglishPossessive instead", "9.1.1")
+  def stemEnglishPossesive(bool: Boolean): WordDelimiterTokenFilter  = stemEnglishPossessive(bool)
+  def stemEnglishPossessive(bool: Boolean): WordDelimiterTokenFilter = copy(stemEnglishPossesive = bool.some)
 }
 
 @deprecated("use new analysis package", "7.7.0")
