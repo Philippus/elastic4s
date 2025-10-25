@@ -1,6 +1,15 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields.DenseVectorField.{BbqFlat, BbqHnsw, Hnsw, Int4Flat, Int4Hnsw, Int8Flat, Int8Hnsw}
+import com.sksamuel.elastic4s.fields.DenseVectorField.{
+  BbqDisk,
+  BbqFlat,
+  BbqHnsw,
+  Hnsw,
+  Int4Flat,
+  Int4Hnsw,
+  Int8Flat,
+  Int8Hnsw
+}
 import com.sksamuel.elastic4s.fields.{
   Cosine,
   DenseVectorField,
@@ -94,6 +103,18 @@ object DenseVectorFieldBuilderFn {
             Any
           ]]).map(getDenseVectorIndexOptionsRescoreVector)
         )
+      case DenseVectorField.BbqDisk.name  => DenseVectorIndexOptions(
+          DenseVectorField.BbqDisk,
+          None,
+          None,
+          None,
+          values.get("rescore_vector").map(_.asInstanceOf[Map[
+            String,
+            Any
+          ]]).map(getDenseVectorIndexOptionsRescoreVector),
+          values.get("cluster_size").map(_.asInstanceOf[Int]),
+          values.get("default_visit_percentage").map(_.asInstanceOf[Int])
+        )
     }
 
   def toField(name: String, values: Map[String, Any]): DenseVectorField = DenseVectorField(
@@ -121,12 +142,17 @@ object DenseVectorFieldBuilderFn {
           options.efConstruction.foreach(builder.field("ef_construction", _))
         if (Seq(Int8Hnsw, Int4Hnsw, Int8Flat, Int4Flat).contains(options.`type`))
           options.confidenceInterval.foreach(builder.field("confidence_interval", _))
-        if (Seq(Int8Hnsw, Int4Hnsw, Int8Flat, Int4Flat, BbqHnsw, BbqFlat).contains(options.`type`))
+        if (options.`type` == BbqDisk) {
+          options.clusterSize.foreach(builder.field("cluster_size", _))
+          options.defaultVisitPercentage.foreach(builder.field("default_visit_percentage", _))
+        }
+        if (Seq(Int8Hnsw, Int4Hnsw, Int8Flat, Int4Flat, BbqHnsw, BbqFlat, BbqDisk).contains(options.`type`)) {
           options.rescoreVector.foreach { rescoreVector =>
             builder.startObject("rescore_vector")
             builder.field("oversample", rescoreVector.oversample)
             builder.endObject()
           }
+        }
         builder.endObject()
       }
     }

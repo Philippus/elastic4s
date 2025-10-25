@@ -14,6 +14,7 @@ object DenseVectorField {
   case object Int8Flat extends KnnType { val name = "int8_flat" }
   case object Int4Flat extends KnnType { val name = "int4_flat" }
   case object BbqFlat  extends KnnType { val name = "bbq_flat"  }
+  case object BbqDisk  extends KnnType { val name = "bbq_disk"  }
 }
 
 sealed trait Similarity {
@@ -34,7 +35,9 @@ case class DenseVectorIndexOptions(
     m: Option[Int] = None,
     efConstruction: Option[Int] = None,
     confidenceInterval: Option[Float] = None,
-    rescoreVector: Option[DenseVectorIndexOptionsRescoreVector] = None
+    rescoreVector: Option[DenseVectorIndexOptionsRescoreVector] = None,
+    clusterSize: Option[Int] = None,
+    defaultVisitPercentage: Option[Int] = None
 )
 
 case class DenseVectorField(
