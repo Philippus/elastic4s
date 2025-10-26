@@ -88,6 +88,8 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int4_flat","confidence_interval":1.0}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = BbqFlat))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_flat"}}"""
+    DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = BbqDisk))).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_disk"}}"""
   }
 
   it should "support rescoreVector" in {
@@ -101,6 +103,30 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
     )
     DenseVectorFieldBuilderFn.build(field).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0,"rescore_vector":{"oversample":1.0}}}"""
+
+    ElasticFieldBuilderFn.construct(
+      field.name,
+      JacksonSupport.mapper.readValue[Map[String, Any]](DenseVectorFieldBuilderFn.build(field).string)
+    ) shouldBe field
+  }
+
+  it should "support bbq_disk options" in {
+    val field = DenseVectorField(
+      name = "myfield",
+      dims = Some(3),
+      index = Some(true),
+      indexOptions = Some(denseVectorIndexOptions.copy(
+        `type` = BbqDisk,
+        m = None,
+        efConstruction = None,
+        confidenceInterval = None,
+        rescoreVector = Some(DenseVectorIndexOptionsRescoreVector(oversample = 1.0F)),
+        clusterSize = Some(64),
+        defaultVisitPercentage = Some(2)
+      ))
+    )
+    DenseVectorFieldBuilderFn.build(field).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_disk","cluster_size":64,"default_visit_percentage":2,"rescore_vector":{"oversample":1.0}}}"""
 
     ElasticFieldBuilderFn.construct(
       field.name,
