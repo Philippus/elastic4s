@@ -27,6 +27,7 @@ import com.sksamuel.elastic4s.fields.{
   NestedField,
   NumberField,
   ObjectField,
+  PatternTextField,
   PercolatorField,
   RangeField,
   RankFeatureField,
@@ -71,6 +72,7 @@ object ElasticFieldBuilderFn {
       case f: NestedField              => NestedFieldBuilderFn.build(f)
       case f: NumberField[_]           => NumberFieldBuilderFn.build(f)
       case f: ObjectField              => ObjectFieldBuilderFn.build(f)
+      case f: PatternTextField         => PatternTextFieldBuilderFn.build(f)
       case f: PercolatorField          => PercolatorFieldBuilderFn.build(f)
       case f: RangeField               => RangeFieldBuilderFn.build(f)
       case f: RankFeatureField         => RankFeatureFieldBuilderFn.build(f)
@@ -110,6 +112,7 @@ object ElasticFieldBuilderFn {
       case Murmur3Field.`type`                                                            => Murmur3FieldBuilderFn.toField(name, values)
       case NestedField.`type`                                                             => NestedFieldBuilderFn.toField(name, values)
       case ObjectField.`type`                                                             => ObjectFieldBuilderFn.toField(name, values)
+      case PatternTextField.`type`                                                        => PatternTextFieldBuilderFn.toField(name, values)
       case PercolatorField.`type`                                                         => PercolatorFieldBuilderFn.toField(name, values)
       case RankFeatureField.`type`                                                        => RankFeatureFieldBuilderFn.toField(name, values)
       case RankFeaturesField.`type`                                                       => RankFeaturesFieldBuilderFn.toField(name, values)

@@ -64,3 +64,16 @@ object MatchOnlyTextField {
 case class MatchOnlyTextField(name: String, fields: List[ElasticField] = Nil) extends ElasticField {
   override def `type`: String = MatchOnlyTextField.`type`
 }
+
+object PatternTextField {
+  val `type`: String = "pattern_text"
+}
+
+case class PatternTextField(
+    override val name: String,
+    analyzer: Option[String] = None,
+    indexOptions: Option[String] = None,
+    meta: Map[String, String] = Map.empty
+) extends ElasticField {
+  override def `type`: String = PatternTextField.`type`
+}
