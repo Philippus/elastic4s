@@ -12,7 +12,7 @@ object Dependencies {
   val ElasticsearchVersion           = "7.17.29"
   val ExtsVersion                    = "1.61.1"
   val JacksonVersion                 = "2.20.0"
-  val Json4sVersion                  = "4.0.7"
+  val Json4sVersion                  = "4.1.0"
   val Log4jVersion                   = "2.25.2"
   val MockitoVersion                 = "5.20.0"
   val MonixVersion                   = "3.4.1"
@@ -61,7 +61,7 @@ object Dependencies {
   lazy val cats                         = "org.typelevel"           %% "cats-effect"                      % CatsEffectVersion
   lazy val cats2                        = "org.typelevel"           %% "cats-effect"                      % CatsEffect2Version
   lazy val elasticsearchRestClient      = "org.elasticsearch.client" % "elasticsearch-rest-client"        % ElasticsearchVersion
-  lazy val json4s                       = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
+  lazy val json4s                       = Seq("io.github.json4s" %% "json4s-core" % Json4sVersion, "io.github.json4s" %% "json4s-jackson" % Json4sVersion)
   lazy val monix                        = "io.monix"                %% "monix"                            % MonixVersion
   lazy val playJson                     = Seq("org.playframework" %% "play-json" % PlayJsonVersion)
   lazy val sprayJson                    = Seq("io.spray" %% "spray-json" % SprayJsonVersion)
