@@ -12,7 +12,7 @@ object Dependencies {
   val ExtsVersion                    = "1.61.1"
   val Http4sVersion                  = "0.23.32"
   val JacksonVersion                 = "2.20.0"
-  val Json4sVersion                  = "4.0.7"
+  val Json4sVersion                  = "4.1.0"
   val Log4jVersion                   = "2.25.2"
   val MockitoVersion                 = "5.20.0"
   val MonixVersion                   = "3.4.1"
@@ -68,7 +68,8 @@ object Dependencies {
   lazy val elasticsearchRestClient        = "org.elasticsearch.client"       % "elasticsearch-rest-client"         % ElasticsearchVersion
   lazy val http4sClient                   = "org.http4s"                    %% "http4s-client"                     % Http4sVersion
   lazy val http4sEmberClient              = "org.http4s"                    %% "http4s-ember-client"               % Http4sVersion
-  lazy val json4s                         = Seq("org.json4s" %% "json4s-core" % Json4sVersion, "org.json4s" %% "json4s-jackson" % Json4sVersion)
+  lazy val json4s                         =
+    Seq("io.github.json4s" %% "json4s-core" % Json4sVersion, "io.github.json4s" %% "json4s-jackson" % Json4sVersion)
   lazy val monix                          = "io.monix"                      %% "monix"                             % MonixVersion
   lazy val pekkoActor                     = "org.apache.pekko"              %% "pekko-actor"                       % PekkoVersion
   lazy val pekkoHTTP                      = "org.apache.pekko"              %% "pekko-http"                        % PekkoHttpVersion
