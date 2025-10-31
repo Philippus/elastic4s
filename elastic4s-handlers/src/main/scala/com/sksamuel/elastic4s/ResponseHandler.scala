@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.`type`.TypeFactory
-import com.fasterxml.jackson.module.scala.JavaTypeable
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.`type`.TypeFactory
+import tools.jackson.module.scala.JavaTypeable
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import org.slf4j.{Logger, LoggerFactory}
@@ -31,7 +31,7 @@ object ResponseHandler {
 
   def fromNode[U: JavaTypeable](node: JsonNode): U = {
     logger.debug(
-      s"Attempting to unmarshall json node to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}"
+      s"Attempting to unmarshall json node to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.createDefaultInstance()).getRawClass.getName}"
     )
     JacksonSupport.mapper.readValue[U](JacksonSupport.mapper.writeValueAsBytes(node))
   }
@@ -41,7 +41,7 @@ object ResponseHandler {
 
   def fromEntity[U: JavaTypeable](entity: HttpEntity.StringEntity): U = {
     logger.debug(
-      s"Attempting to unmarshall response to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.defaultInstance).getRawClass.getName}"
+      s"Attempting to unmarshall response to ${implicitly[JavaTypeable[U]].asJavaType(TypeFactory.createDefaultInstance()).getRawClass.getName}"
     )
     logger.debug(entity.content)
     JacksonSupport.mapper.readValue[U](entity.content)

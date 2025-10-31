@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.module.scala.{ClassTagExtensions, JavaTypeable}
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.module.scala.{ClassTagExtensions, JavaTypeable}
 import com.sksamuel.elastic4s._
 import org.slf4j.{Logger, LoggerFactory}
 

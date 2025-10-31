@@ -1,14 +1,18 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
+import com.fasterxml.jackson.annotation.JsonInclude
+import tools.jackson.databind.{DeserializationFeature, ObjectMapper}
+import tools.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
+import tools.jackson.core.json.{JsonFactory, JsonReadFeature}
+import tools.jackson.databind.json.JsonMapper
 
 trait JsonSugar extends Matchers {
-
-  private val mapper = new ObjectMapper with ClassTagExtensions
-  mapper.registerModule(DefaultScalaModule)
+  private val mapper: ObjectMapper with ClassTagExtensions =
+    JsonMapper.builder(JsonFactory.builder().build())
+      .addModule(DefaultScalaModule)
+      .build() :: ClassTagExtensions
 
   def matchJsonResource(resourceName: String) = new JsonResourceMatcher(resourceName)
 
@@ -38,7 +42,7 @@ trait JsonSugar extends Matchers {
         jsonResource should not be null
       }
 
-      val expectedJson = mapper.readTree(jsonResource)
+      val expectedJson = mapper.readTree(jsonResource.openStream())
       val actualJson   = mapper.readTree(left)
 
       MatchResult(

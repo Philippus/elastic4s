@@ -21,7 +21,7 @@ trait IndexAliasHandlers {
         case 200 =>
           val root = ResponseHandler.json(response.entity.get)
           val map  = root.properties.asScala.toVector.map { entry =>
-            Index(entry.getKey) -> entry.getValue.get("aliases").fieldNames.asScala.toList.map(Alias.apply)
+            Index(entry.getKey) -> entry.getValue.get("aliases").propertyNames.asScala.toList.map(Alias.apply)
           }.toMap
           Right(IndexAliases(map))
         case 404 => Right(IndexAliases(Map.empty))

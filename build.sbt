@@ -176,9 +176,9 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
     libraryDependencies ++= Seq(
       elasticsearchRestClient,
       log4jApi,
-      "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion,
-      "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude (
+      fasterXmlJacksonCore,
+      fasterXmlJacksonDatabind,
+      fasterXmlJacksonModuleScala exclude (
         "org.scala-lang",
         "scala-library"
       )
@@ -262,11 +262,13 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
   .settings(name := "elastic4s-json-jackson")
   .settings(scala3Settings)
   .settings(
-    libraryDependencies += "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion,
-    libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion exclude (
-      "org.scala-lang",
-      "scala-library"
+    libraryDependencies ++= Seq(
+      fasterXmlJacksonCore,
+      fasterXmlJacksonDatabind,
+      fasterXmlJacksonModuleScala exclude (
+        "org.scala-lang",
+        "scala-library"
+      )
     )
   )
 
@@ -341,15 +343,15 @@ lazy val tests = (project in file("elastic4s-tests"))
     libraryDependencies ++= Seq(
       commonsIo,
       mockitoCore,
-      "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion % Test,
-      "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion % Test,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion % Test exclude (
+      fasterXmlJacksonCore        % Test,
+      fasterXmlJacksonDatabind    % Test,
+      fasterXmlJacksonModuleScala % Test exclude (
         "org.scala-lang",
         "scala-library"
       ),
-      "org.apache.logging.log4j"      % "log4j-api"            % "2.25.3"       % Test,
-      "org.apache.logging.log4j"      % "log4j-slf4j-impl"     % "2.25.3"       % Test,
-      "org.apache.logging.log4j"      % "log4j-core"           % "2.25.3"       % Test
+      "org.apache.logging.log4j"  % "log4j-api"        % "2.25.3" % Test,
+      "org.apache.logging.log4j"  % "log4j-slf4j-impl" % "2.25.3" % Test,
+      "org.apache.logging.log4j"  % "log4j-core"       % "2.25.3" % Test
     ),
     Test / fork               := false,
     Test / parallelExecution  := false,

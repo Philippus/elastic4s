@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.module.scala.JavaTypeable
+import tools.jackson.module.scala.JavaTypeable
 import org.slf4j.{Logger, LoggerFactory}
 
 /** A [[Handler]] is a typeclass used to create [[ElasticRequest]] instances from elastic4s models, which are the sent

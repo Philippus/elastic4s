@@ -1,15 +1,17 @@
 package com.sksamuel.elastic4s.jackson
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.{DeserializationContext, JsonDeserializer, JsonMappingException, ObjectMapper}
-import com.fasterxml.jackson.module.scala.ClassTagExtensions
+import tools.jackson.core.JsonParser
+import tools.jackson.databind.module.SimpleModule
+import tools.jackson.databind.{DatabindException, DeserializationContext, ObjectMapper, ValueDeserializer}
+import tools.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-
 import scala.util.Success
+
+import tools.jackson.core.json.JsonFactory
+import tools.jackson.databind.json.JsonMapper
 
 class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerTests {
 
@@ -45,24 +47,24 @@ class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerT
         List(Success(CharacterWithIdAndIndex("2", "jacksontest", "hank", "breaking bad")))
     }
     "support custom mapper" in {
-
-      implicit val custom: ObjectMapper with ClassTagExtensions = new ObjectMapper with ClassTagExtensions
-
       val module = new SimpleModule
       module.addDeserializer(
         classOf[String],
-        new JsonDeserializer[String] {
-          override def deserialize(p: JsonParser, ctxt: DeserializationContext): String = sys.error("boom")
-        }
+        (p: JsonParser, ctxt: DeserializationContext) => sys.error("boom")
       )
-      custom.registerModule(module)
+
+      implicit val custom: ObjectMapper with ClassTagExtensions =
+        JsonMapper.builder(JsonFactory.builder().build())
+          .addModule(DefaultScalaModule)
+          .addModule(module)
+          .build() :: ClassTagExtensions
 
       val resp = client.execute {
         search("jacksontest").query("breaking")
       }.await.result
 
       // if our custom mapper has been picked up, then it should throw an exception when deserializing
-      intercept[JsonMappingException] {
+      intercept[DatabindException] {
         resp.to[Character].toList
       }
     }
