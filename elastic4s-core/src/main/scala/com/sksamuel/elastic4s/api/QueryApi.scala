@@ -287,6 +287,10 @@ trait QueryApi {
   def not(queries: Query*): BoolQuery          = BoolQuery().not(queries: _*)
   def not(queries: Iterable[Query]): BoolQuery = BoolQuery().not(queries)
 
+  // short cut for a boolean query with filters
+  def filter(first: Query, rest: Query*): BoolQuery = filter(first +: rest)
+  def filter(queries: Iterable[Query]): BoolQuery   = BoolQuery().filter(queries)
+
   def sparseVectorQuery(field: String, inferenceId: String, query: String): SparseVectorQuery =
     SparseVectorQuery(field, inferenceId = Some(inferenceId), query = Some(query))
 
