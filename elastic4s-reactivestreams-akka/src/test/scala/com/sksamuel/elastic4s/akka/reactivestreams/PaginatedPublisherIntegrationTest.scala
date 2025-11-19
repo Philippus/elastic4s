@@ -12,7 +12,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.Try
 
-class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with Matchers {
+class PaginatedPublisherIntegrationTest extends AnyWordSpec with DockerTests with Matchers {
 
   import ReactiveElastic._
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
@@ -60,9 +60,29 @@ class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with M
   }.await
 
   "elastic-streams" should {
-    "publish all data from the index" in {
+    "publish all data from the index using Scroll Mode" in {
 
       val publisher = client.publisher(search(indexName) query "*:*" scroll "1m")
+
+      val completionLatch = new CountDownLatch(1)
+      val documentLatch   = new CountDownLatch(emperors.length)
+
+      publisher.subscribe(new Subscriber[SearchHit] {
+        override def onComplete(): Unit                 = completionLatch.countDown()
+        override def onError(t: Throwable): Unit        = fail(t)
+        override def onSubscribe(s: Subscription): Unit = s.request(1000)
+        override def onNext(t: SearchHit): Unit         = documentLatch.countDown()
+      })
+
+      completionLatch.await(10, TimeUnit.SECONDS) shouldBe true
+      documentLatch.await(10, TimeUnit.SECONDS) shouldBe true
+    }
+
+    "publish all data from the index using SearchAfter mode" in {
+      val publisher = client.publisher(
+        search(indexName) query "*:*" sortBy fieldSort("_doc"),
+        SearchAfter
+      )
 
       val completionLatch = new CountDownLatch(1)
       val documentLatch   = new CountDownLatch(emperors.length)

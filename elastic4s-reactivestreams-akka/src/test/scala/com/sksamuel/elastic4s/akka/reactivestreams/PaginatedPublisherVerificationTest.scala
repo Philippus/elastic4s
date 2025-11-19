@@ -10,7 +10,7 @@ import org.scalatestplus.testng.TestNGSuiteLike
 
 import scala.util.Try
 
-class ScrollPublisherVerificationTest
+class PaginatedPublisherVerificationTest
     extends PublisherVerification[SearchHit](
       new TestEnvironment(DEFAULT_TIMEOUT_MILLIS),
       PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
@@ -57,7 +57,7 @@ class ScrollPublisherVerificationTest
   override def createFailedPublisher(): Publisher[SearchHit] = null
 
   override def createPublisher(elements: Long): Publisher[SearchHit] = {
-    new ScrollPublisher(client, query, elements)
+    new PaginatedPublisher(client, query, elements)
   }
 }
 
