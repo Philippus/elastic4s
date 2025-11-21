@@ -2,7 +2,7 @@ import sbt.Keys.libraryDependencies
 import sbt._
 
 object Dependencies {
-  val AkkaHttpVersion                = "10.2.10"
+  val AkkaHttpVersion                = "10.4.0"
   val AkkaVersion                    = "2.7.0"
   val CatsVersion                    = "2.13.0"
   val CatsEffectVersion              = "3.6.1"
