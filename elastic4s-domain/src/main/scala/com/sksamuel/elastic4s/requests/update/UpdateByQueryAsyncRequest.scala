@@ -26,7 +26,8 @@ case class UpdateByQueryAsyncRequest(
     timeout: Option[FiniteDuration] = None,
     shouldStoreResult: Option[Boolean] = None,
     size: Option[Int] = None,
-    indicesOptions: Option[IndicesOptionsRequest] = None
+    indicesOptions: Option[IndicesOptionsRequest] = None,
+    routing: Option[String] = None
 ) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryAsyncRequest =
@@ -38,6 +39,8 @@ case class UpdateByQueryAsyncRequest(
     copy(refresh = refresh.some)
   }
   def refreshImmediately: UpdateByQueryAsyncRequest              = refresh(RefreshPolicy.IMMEDIATE)
+
+  def routing(routing: String): UpdateByQueryAsyncRequest = copy(routing = routing.some)
 
   def scroll(scroll: String): UpdateByQueryAsyncRequest           = copy(scroll = scroll.some)
   def scroll(duration: FiniteDuration): UpdateByQueryAsyncRequest = copy(scroll = s"${duration.toSeconds}s".some)
