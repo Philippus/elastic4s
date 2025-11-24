@@ -47,6 +47,8 @@ trait BaseUpdateByQueryRequest {
   val waitForCompletion: Option[Boolean]
 
   val indicesOptions: Option[IndicesOptionsRequest]
+
+  val routing: Option[String]
 }
 case class UpdateByQueryRequest(
     indexes: Indexes,
@@ -68,7 +70,8 @@ case class UpdateByQueryRequest(
     timeout: Option[FiniteDuration] = None,
     shouldStoreResult: Option[Boolean] = None,
     size: Option[Int] = None,
-    indicesOptions: Option[IndicesOptionsRequest] = None
+    indicesOptions: Option[IndicesOptionsRequest] = None,
+    routing: Option[String] = None
 ) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
@@ -80,6 +83,8 @@ case class UpdateByQueryRequest(
     copy(refresh = refresh.some)
   }
   def refreshImmediately: UpdateByQueryRequest              = refresh(RefreshPolicy.IMMEDIATE)
+
+  def routing(routing: String): UpdateByQueryRequest = copy(routing = routing.some)
 
   def scroll(scroll: String): UpdateByQueryRequest           = copy(scroll = scroll.some)
   def scroll(duration: FiniteDuration): UpdateByQueryRequest = copy(scroll = s"${duration.toSeconds}s".some)
