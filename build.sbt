@@ -11,7 +11,7 @@ def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion := "2.12.20",
-  crossScalaVersions := Seq("2.12.20", "2.13.17")
+  crossScalaVersions := Seq("2.12.20", "2.13.18")
 )
 
 lazy val warnUnusedImport = Seq(
