@@ -28,20 +28,23 @@ object CompositeAggregationBuilder {
       s.order.foreach(builder.field("order", _))
       if (s.missingBucket) builder.field("missing_bucket", true)
       s match {
-        case HistogramValueSource(_, interval, _, _, _, _)                                           => builder.field("interval", interval)
-        case DateHistogramValueSource(_, calendarInterval, None, None, _, _, _, timeZone, format, _) =>
+        case HistogramValueSource(_, interval, _, _, _, _)                                                   => builder.field("interval", interval)
+        case DateHistogramValueSource(_, calendarInterval, None, None, _, _, _, timeZone, format, _, offset) =>
           builder.field("calendar_interval", calendarInterval.get)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-        case DateHistogramValueSource(_, None, fixedInterval, None, _, _, _, timeZone, format, _)    =>
+          offset.foreach(builder.field("offset", _))
+        case DateHistogramValueSource(_, None, fixedInterval, None, _, _, _, timeZone, format, _, offset)    =>
           builder.field("fixed_interval", fixedInterval.get)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-        case DateHistogramValueSource(_, None, None, interval, _, _, _, timeZone, format, _)         =>
+          offset.foreach(builder.field("offset", _))
+        case DateHistogramValueSource(_, None, None, interval, _, _, _, timeZone, format, _, offset)         =>
           builder.field("interval", interval.get)
           timeZone.foreach(builder.field("time_zone", _))
           format.foreach(builder.field("format", _))
-        case GeoTileGridValueSource(_, precision, bounds, _, _, _, _)                                =>
+          offset.foreach(builder.field("offset", _))
+        case GeoTileGridValueSource(_, precision, bounds, _, _, _, _)                                        =>
           precision.foreach(builder.field("precision", _))
           bounds.foreach(bound => {
             builder.startObject("bounds")
@@ -58,7 +61,7 @@ object CompositeAggregationBuilder {
 
             builder.endObject()
           })
-        case _                                                                                       =>
+        case _                                                                                               =>
       }
       builder.endObject()
       builder.endObject()

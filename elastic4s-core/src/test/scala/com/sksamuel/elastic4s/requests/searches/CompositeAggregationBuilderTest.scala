@@ -98,4 +98,41 @@ class CompositeAggregationBuilderTest extends AnyFunSuite with Matchers {
     SearchBodyBuilderFn(search).string shouldBe
       """{"aggs":{"comp":{"composite":{"sources":[{"s1":{"terms":{"field":"f1"}}}],"after":{"myafter1":1,"myafter2":"2"}}}}}"""
   }
+
+  test("CompositeAggregationBuilder should build date histogram with offset") {
+    val search = SearchRequest("myindex").aggs(
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          DateHistogramValueSource(
+            "date",
+            calendarInterval = Some("1w"),
+            field = Some("timestamp"),
+            offset = Some("-60h")
+          )
+        )
+      )
+    )
+    SearchBodyBuilderFn(search).string shouldBe
+      """{"aggs":{"comp":{"composite":{"sources":[{"date":{"date_histogram":{"field":"timestamp","calendar_interval":"1w","offset":"-60h"}}}]}}}}"""
+  }
+
+  test("CompositeAggregationBuilder should build date histogram with offset and timezone") {
+    val search = SearchRequest("myindex").aggs(
+      CompositeAggregation(
+        "comp",
+        sources = Seq(
+          DateHistogramValueSource(
+            "date",
+            calendarInterval = Some("1w"),
+            field = Some("timestamp"),
+            timeZone = Some("UTC"),
+            offset = Some("-60h")
+          )
+        )
+      )
+    )
+    SearchBodyBuilderFn(search).string shouldBe
+      """{"aggs":{"comp":{"composite":{"sources":[{"date":{"date_histogram":{"field":"timestamp","calendar_interval":"1w","time_zone":"UTC","offset":"-60h"}}}]}}}}"""
+  }
 }
