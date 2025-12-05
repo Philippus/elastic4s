@@ -37,7 +37,8 @@ case class DateHistogramValueSource(
     override val order: Option[String] = None,
     timeZone: Option[String] = None,
     format: Option[String] = None,
-    override val missingBucket: Boolean = false
+    override val missingBucket: Boolean = false,
+    offset: Option[String] = None
 ) extends ValueSource("date_histogram", name, field, script, order, missingBucket)
 
 case class GeoTileGridValueSource(
