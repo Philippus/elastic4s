@@ -30,7 +30,7 @@ jobs:
 
       - name: run tests
         timeout-minutes: 30
-        run: sbt ++2.12.20 test
+        run: sbt ++2.12.21 test
 
   scala-2_13:
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
 
       - name: run tests
         timeout-minutes: 30
-        run: sbt ++2.13.17 test
+        run: sbt ++2.13.18 test
 
   scala-3:
     runs-on: ubuntu-latest
