@@ -32,7 +32,7 @@ jobs:
         uses: ./.github/actions/launch-elasticsearch
 
       - name: run tests
-        run: sbt ++2.13.17 test
+        run: sbt ++2.13.18 test
 
   scala-3_0:
     runs-on: ubuntu-latest
