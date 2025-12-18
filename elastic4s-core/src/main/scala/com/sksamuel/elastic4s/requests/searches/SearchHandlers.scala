@@ -29,7 +29,7 @@ trait SearchHandlers {
             val json  = JacksonSupport.mapper.readTree(response.entity.get.content)
             val items = Option(json.get("responses")) match {
               case Some(node) =>
-                node.elements
+                node.values
                   .asScala
                   .zipWithIndex
                   .map {

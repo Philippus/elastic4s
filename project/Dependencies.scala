@@ -11,7 +11,7 @@ object Dependencies {
   val ElasticsearchVersion           = "9.2.2"
   val ExtsVersion                    = "1.61.1"
   val Http4sVersion                  = "0.23.33"
-  val JacksonVersion                 = "2.20.1"
+  val JacksonVersion                 = "3.0.3"
   val Json4sVersion                  = "4.1.0"
   val Log4jVersion                   = "2.25.3"
   val MockitoVersion                 = "5.21.0"
@@ -42,11 +42,11 @@ object Dependencies {
     )
   )
 
-  lazy val fasterXmlJacksonScala = Seq(
-    "com.fasterxml.jackson.core"    % "jackson-core"         % JacksonVersion,
-    "com.fasterxml.jackson.core"    % "jackson-databind"     % JacksonVersion,
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % JacksonVersion
-  )
+  lazy val fasterXmlJacksonCore        = "tools.jackson.core"    % "jackson-core"         % JacksonVersion
+  lazy val fasterXmlJacksonDatabind    = "tools.jackson.core"    % "jackson-databind"     % JacksonVersion
+  lazy val fasterXmlJacksonModuleScala = "tools.jackson.module" %% "jackson-module-scala" % JacksonVersion
+
+  lazy val fasterXmlJacksonScala = Seq(fasterXmlJacksonCore, fasterXmlJacksonDatabind, fasterXmlJacksonModuleScala)
 
   lazy val zio1 = "dev.zio" %% "zio" % ZIO1Version
   lazy val zio  = "dev.zio" %% "zio" % ZIOVersion
