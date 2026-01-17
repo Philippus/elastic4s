@@ -17,7 +17,8 @@ class UpdateIndexLevelSettingsBuilderTest extends AnyFunSuite with Matchers {
       translog = None
     )
 
-    UpdateIndexLevelSettingsBuilder(definition).string shouldBe """{"settings":{"index.number_of_replicas":0,"index.auto_expand_replicas":"0-all","index.refresh_interval":"30s","index.max_result_window":100}}"""
+    UpdateIndexLevelSettingsBuilder(definition).string shouldBe
+      """{"settings":{"index.number_of_replicas":0,"index.auto_expand_replicas":"0-all","index.refresh_interval":"30s","index.max_result_window":100}}"""
   }
 
   test("build UpdateIndexLevelSettingsRequest with translong") {
@@ -33,7 +34,8 @@ class UpdateIndexLevelSettingsBuilderTest extends AnyFunSuite with Matchers {
         flushThresholdSize = Some("512mb")
       ))
     )
-    UpdateIndexLevelSettingsBuilder(definition).string shouldBe """{"settings":{"index.number_of_replicas":0,"index.auto_expand_replicas":"0-all","index.refresh_interval":"30s","index.max_result_window":100,"index.translog.durability":"request","index.translog.sync_interval":"5s","index.translog.flush_threshold_size":"512mb"}}"""
+    UpdateIndexLevelSettingsBuilder(definition).string shouldBe
+      """{"settings":{"index.number_of_replicas":0,"index.auto_expand_replicas":"0-all","index.refresh_interval":"30s","index.max_result_window":100,"index.translog.durability":"request","index.translog.sync_interval":"5s","index.translog.flush_threshold_size":"512mb"}}"""
   }
 
   test("build UpdateIndexLevelSettingsRequest with settings") {

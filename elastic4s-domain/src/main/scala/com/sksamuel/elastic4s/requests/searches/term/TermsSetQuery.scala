@@ -14,8 +14,9 @@ case class TermsSetQuery(
   require(terms.nonEmpty, "The list of terms cannot be empty")
   // ElasticSearch needs one of the two 'minimumShouldMatch' parameters to be specified
   require(
-    (minimumShouldMatchField.isDefined && minimumShouldMatchScript.isEmpty) || (minimumShouldMatchScript
-      .isDefined && minimumShouldMatchField.isEmpty),
+    (minimumShouldMatchField.isDefined && minimumShouldMatchScript.isEmpty) ||
+      (minimumShouldMatchScript
+        .isDefined && minimumShouldMatchField.isEmpty),
     "Either only minimumShouldMatchField or only minimumShouldMatchScript must be specified"
   )
   def queryName(name: String): TermsSetQuery                  = copy(queryName = Some(name))
