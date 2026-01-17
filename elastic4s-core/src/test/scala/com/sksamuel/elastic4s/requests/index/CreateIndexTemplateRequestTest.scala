@@ -18,7 +18,8 @@ class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Ma
 
     val req = CreateIndexTemplateHandler.build(templateDef)
     req.endpoint shouldBe "/_index_template/test_template"
-    req.entity.get.get shouldBe """{"index_patterns":["index_pattern"],"template":{"settings":{"analysis":{"normalizer":{"lowercase":{"type":"custom","filter":["lowercase"]}}}}}}"""
+    req.entity.get.get shouldBe
+      """{"index_patterns":["index_pattern"],"template":{"settings":{"analysis":{"normalizer":{"lowercase":{"type":"custom","filter":["lowercase"]}}}}}}"""
   }
 
   test("testing if entity created by createIndexTemplate without analysis") {
@@ -31,6 +32,7 @@ class CreateIndexTemplateRequestTest extends AnyFunSuite with ElasticDsl with Ma
 
     val req = CreateIndexTemplateHandler.build(templateDef)
     req.endpoint shouldBe "/_index_template/test_template_without_analysis"
-    req.entity.get.get shouldBe """{"index_patterns":["index_pattern"],"template":{"settings":{"number_of_shards":1}}}"""
+    req.entity.get.get shouldBe
+      """{"index_patterns":["index_pattern"],"template":{"settings":{"number_of_shards":1}}}"""
   }
 }

@@ -46,6 +46,7 @@ class CreateIndexContentBuilderTest extends AnyFunSuite with Matchers {
     )
 
     val create = CreateIndexRequest("myindex").analysis(analysis)
-    CreateIndexContentBuilder(create).string shouldBe """{"settings":{"analysis":{"normalizer":{"my_normalizer":{"type":"custom","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}}}"""
+    CreateIndexContentBuilder(create).string shouldBe
+      """{"settings":{"analysis":{"normalizer":{"my_normalizer":{"type":"custom","filter":["my_unique_filter","my_truncate_filter"],"char_filter":["my_pattern_replace"]}},"char_filter":{"my_pattern_replace":{"type":"pattern_replace","pattern":"qwe","replacement":"ert"}},"filter":{"my_truncate_filter":{"type":"truncate","length":123},"my_unique_filter":{"type":"unique","only_on_same_position":true}}}}}"""
   }
 }

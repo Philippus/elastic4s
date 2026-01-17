@@ -76,9 +76,10 @@ trait SearchHandlers {
         else if (request.indexes.values.isEmpty)
           "/_all/_search"
         else
-          "/" + request.indexes.values
-            .map(ElasticUrlEncoder.encodeUrlFragment)
-            .mkString(",") + "/_search"
+          "/" +
+            request.indexes.values
+              .map(ElasticUrlEncoder.encodeUrlFragment)
+              .mkString(",") + "/_search"
       }
 
       val params = scala.collection.mutable.Map.empty[String, String]

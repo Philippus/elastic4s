@@ -120,13 +120,14 @@ trait ElasticSugar extends ElasticDsl {
 
   def blockUntilExactCount(expected: Long, index: String): Unit =
     blockUntil(s"Expected count of $expected") { () =>
-      expected == client
-        .execute {
-          search(index).size(0)
-        }
-        .await
-        .result
-        .totalHits
+      expected ==
+        client
+          .execute {
+            search(index).size(0)
+          }
+          .await
+          .result
+          .totalHits
     }
 
   def blockUntilEmpty(index: String): Unit =
