@@ -28,7 +28,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     indexInto("intros")
       .fields(
         "name" -> "star trek",
-        "text" -> "Space, the final frontier. These are the voyages of the starship Enterprise. Its continuing mission: to explore strange new worlds, to seek out new life and new civilisations, to boldly go where no one has gone before."
+        "text" ->
+          "Space, the final frontier. These are the voyages of the starship Enterprise. Its continuing mission: to explore strange new worlds, to seek out new life and new civilisations, to boldly go where no one has gone before."
       ).refresh(RefreshPolicy.Immediate)
   }.await
 

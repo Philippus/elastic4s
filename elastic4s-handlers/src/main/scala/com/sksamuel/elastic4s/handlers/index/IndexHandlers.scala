@@ -27,7 +27,8 @@ trait IndexHandlers {
 
       val (method, endpoint) = request.id match {
         case Some(id) =>
-          "PUT" -> s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc/${ElasticUrlEncoder.encodeUrlFragment(id.toString)}"
+          "PUT" ->
+            s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc/${ElasticUrlEncoder.encodeUrlFragment(id.toString)}"
         case None     =>
           "POST" -> s"/${ElasticUrlEncoder.encodeUrlFragment(request.index.name)}/_doc"
       }

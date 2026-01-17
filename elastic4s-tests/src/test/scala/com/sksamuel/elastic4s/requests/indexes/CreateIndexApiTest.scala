@@ -176,12 +176,13 @@ class CreateIndexApiTest extends AnyFlatSpec with MockitoSugar with JsonSugar wi
   }
 
   it should "generate json to set index settings" in {
-    val req = (createIndex("users")
-      shards 3
-      replicas 4
-      refreshInterval "5s"
-      indexSetting ("compound_on_flush", false)
-      indexSetting ("compound_format", 0.5))
+    val req =
+      (createIndex("users")
+        shards 3
+        replicas 4
+        refreshInterval "5s"
+        indexSetting ("compound_on_flush", false)
+        indexSetting ("compound_format", 0.5))
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_settings2.json")
   }
 

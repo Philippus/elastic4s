@@ -24,7 +24,8 @@ class SparseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
 
     val field      = SparseVectorField("test.tokens", store = true, indexOptions = Some(sparseVectorIndexOptions))
     val jsonString = SparseVectorFieldBuilderFn.build(field).string
-    jsonString shouldBe """{"type":"sparse_vector","store":true,"index_options":{"prune":true,"pruning_config":{"tokens_freq_ratio_threshold":5,"tokens_weight_threshold":1.0}}}"""
+    jsonString shouldBe
+      """{"type":"sparse_vector","store":true,"index_options":{"prune":true,"pruning_config":{"tokens_freq_ratio_threshold":5,"tokens_weight_threshold":1.0}}}"""
     ElasticFieldBuilderFn.construct(
       field.name,
       JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
