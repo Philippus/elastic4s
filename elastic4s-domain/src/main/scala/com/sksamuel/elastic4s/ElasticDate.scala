@@ -68,12 +68,13 @@ object ElasticDate {
       (t.base match {
         case "now" => "now"
         case date  => s"$date||"
-      }) + t.adjustments
-        .map { adj =>
-          val plus = if (adj.value < 0) "" else "+"
-          s"$plus${adj.value}${adj.unit.symbol}"
-        }
-        .mkString("") + t.rounding.fold("")(unit => s"/${unit.symbol}")
+      }) +
+        t.adjustments
+          .map { adj =>
+            val plus = if (adj.value < 0) "" else "+"
+            s"$plus${adj.value}${adj.unit.symbol}"
+          }
+          .mkString("") + t.rounding.fold("")(unit => s"/${unit.symbol}")
   }
 
   implicit def fromTimestamp(timestamp: Long): TimestampElasticDate = TimestampElasticDate(timestamp)

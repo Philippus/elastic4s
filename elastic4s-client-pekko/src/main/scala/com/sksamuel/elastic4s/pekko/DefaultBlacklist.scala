@@ -33,9 +33,10 @@ private[pekko] class DefaultBlacklist(min: FiniteDuration, max: FiniteDuration, 
     if (now >= record.untilTime) {
       val retries = record.retries + 1
 
-      val untilTime = now + Math
-        .min(min.toNanos * Math.pow(2, retries * 0.5), max.toNanos)
-        .toLong
+      val untilTime = now +
+        Math
+          .min(min.toNanos * Math.pow(2, retries * 0.5), max.toNanos)
+          .toLong
 
       val updatedRecord =
         record.copy(
