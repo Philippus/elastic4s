@@ -92,6 +92,12 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_disk"}}"""
   }
 
+  it should "support onDiskRescore property" in {
+    val field = DenseVectorField(name = "myfield").onDiskRescore(true)
+    DenseVectorFieldBuilderFn.build(field).string shouldBe
+      """{"type":"dense_vector","on_disk_rescore":true}"""
+  }
+
   it should "support rescoreVector" in {
     val field = DenseVectorField(
       name = "myfield",
