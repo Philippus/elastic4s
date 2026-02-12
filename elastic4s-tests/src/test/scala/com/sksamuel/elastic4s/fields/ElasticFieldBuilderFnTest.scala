@@ -316,5 +316,14 @@ class ElasticFieldBuilderFnTest extends AnyWordSpec with Matchers {
         JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
       ) shouldBe field
     }
+    "support ExponentialHistogramField" in {
+      val field      = ExponentialHistogramField("exponential_histogram_field")
+      val jsonString = """{"type":"exponential_histogram"}"""
+      ElasticFieldBuilderFn(field).string shouldBe jsonString
+      ElasticFieldBuilderFn.construct(
+        field.name,
+        JacksonSupport.mapper.readValue[Map[String, Any]](jsonString)
+      ) shouldBe field
+    }
   }
 }
