@@ -46,7 +46,8 @@ case class DenseVectorField(
     dims: Option[Int] = None,
     index: Option[Boolean] = None,
     similarity: Option[Similarity] = None,
-    indexOptions: Option[DenseVectorIndexOptions] = None
+    indexOptions: Option[DenseVectorIndexOptions] = None,
+    onDiskRescore: Option[Boolean] = None
 ) extends ElasticField {
   override def `type`: String = DenseVectorField.`type`
 
@@ -55,4 +56,5 @@ case class DenseVectorField(
   def index(index: Boolean): DenseVectorField                               = copy(index = Some(index))
   def similarity(similarity: Similarity): DenseVectorField                  = copy(similarity = Some(similarity))
   def indexOptions(indexOptions: DenseVectorIndexOptions): DenseVectorField = copy(indexOptions = Some(indexOptions))
+  def onDiskRescore(onDiskRescore: Boolean): DenseVectorField               = copy(onDiskRescore = Some(onDiskRescore))
 }

@@ -156,6 +156,7 @@ object DenseVectorFieldBuilderFn {
         builder.endObject()
       }
     }
+    field.onDiskRescore.foreach(builder.field("on_disk_rescore", _))
     builder.endObject()
   }
 }
