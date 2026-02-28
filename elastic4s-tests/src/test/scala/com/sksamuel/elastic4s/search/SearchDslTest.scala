@@ -25,9 +25,8 @@ import com.sksamuel.elastic4s.requests.searches.sort.{SortMode, SortOrder}
 import com.sksamuel.elastic4s.requests.searches.suggestion.{Fuzziness, SuggestMode}
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatestplus.mockito.MockitoSugar
 
-class SearchDslTest extends AnyFlatSpec with MockitoSugar with JsonSugar with OneInstancePerTest {
+class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
 
   import ElasticDsl._
 
