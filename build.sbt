@@ -219,7 +219,7 @@ lazy val testkit = (project in file("elastic4s-testkit"))
   .dependsOn(core, clientesjava)
   .settings(name := "elastic4s-testkit")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain, Dependencies.scalaTestPlusMockito))
+  .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain))
 
 lazy val reactivestreamsakka = (project in file("elastic4s-reactivestreams-akka"))
   .dependsOn(core, testkit % "test", jackson % "test")
@@ -320,13 +320,13 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
   .settings(
     scala2Settings
   ) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
-  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream))
+  .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, mockitoCore, scalaTestPlusMockito))
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-pekko")
   .settings(scala3Settings)
-  .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream))
+  .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, mockitoCore, scalaTestPlusMockito))
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
   .dependsOn(core, testkit % "test")
@@ -342,7 +342,6 @@ lazy val tests = (project in file("elastic4s-tests"))
   .settings(
     libraryDependencies ++= Seq(
       commonsIo,
-      mockitoCore,
       fasterXmlJacksonCore        % Test,
       fasterXmlJacksonDatabind    % Test,
       fasterXmlJacksonModuleScala % Test exclude (
