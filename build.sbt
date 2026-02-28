@@ -321,12 +321,22 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
     scala2Settings
   ) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, mockitoCore, scalaTestPlusMockito))
+  .settings(
+    Test / javaOptions +=
+      s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${Dependencies.MockitoVersion}/mockito-core-${Dependencies.MockitoVersion}.jar",
+    Test / fork := true
+  )
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, mockitoCore, scalaTestPlusMockito))
+  .settings(
+    Test / javaOptions +=
+      s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${Dependencies.MockitoVersion}/mockito-core-${Dependencies.MockitoVersion}.jar",
+    Test / fork := true
+  )
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
   .dependsOn(core, testkit % "test")
