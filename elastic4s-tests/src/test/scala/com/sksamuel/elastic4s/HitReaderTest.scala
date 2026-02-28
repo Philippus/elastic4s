@@ -8,11 +8,10 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.{Success, Try}
 
-class HitReaderTest extends AnyFlatSpec with MockitoSugar with DockerTests with Matchers {
+class HitReaderTest extends AnyFlatSpec with DockerTests with Matchers {
 
   private val IndexName = "football"
 

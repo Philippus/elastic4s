@@ -6,13 +6,11 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.concurrent.Eventually
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.Try
 
 class IndexTemplateHttpTest
     extends AnyWordSpec
-    with MockitoSugar
     with Matchers
     with Eventually
     with DockerTests {

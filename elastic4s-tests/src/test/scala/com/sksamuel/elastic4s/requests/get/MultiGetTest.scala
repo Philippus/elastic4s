@@ -5,11 +5,10 @@ import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers._
-import org.scalatestplus.mockito.MockitoSugar
 
 import scala.util.Try
 
-class MultiGetTest extends AnyFlatSpec with MockitoSugar with DockerTests {
+class MultiGetTest extends AnyFlatSpec with DockerTests {
 
   Try {
     client.execute {
