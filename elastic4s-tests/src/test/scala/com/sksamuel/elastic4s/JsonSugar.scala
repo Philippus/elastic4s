@@ -1,11 +1,10 @@
 package com.sksamuel.elastic4s
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import tools.jackson.databind.{DeserializationFeature, ObjectMapper}
+import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.{MatchResult, Matcher}
-import tools.jackson.core.json.{JsonFactory, JsonReadFeature}
+import tools.jackson.core.json.JsonFactory
 import tools.jackson.databind.json.JsonMapper
 
 trait JsonSugar extends Matchers {
