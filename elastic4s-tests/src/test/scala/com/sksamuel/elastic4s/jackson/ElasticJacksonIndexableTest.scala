@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.jackson
 
 import tools.jackson.core.JsonParser
 import tools.jackson.databind.module.SimpleModule
-import tools.jackson.databind.{DatabindException, DeserializationContext, ObjectMapper, ValueDeserializer}
+import tools.jackson.databind.{DatabindException, DeserializationContext, ObjectMapper}
 import tools.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
