@@ -112,6 +112,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   sprayjson,
   ziojson,
   clientsttp,
+  `client-zio-http`,
   akkastreams,
   pekkostreams,
   reactivestreamsakka,
@@ -343,6 +344,12 @@ lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
   .settings(name := "elastic4s-client-http4s")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(http4sClient, http4sEmberClient % Test))
+
+lazy val `client-zio-http` = (project in file("elastic4s-client-zio-http"))
+  .dependsOn(core, zio, testkit % "test")
+  .settings(name := "elastic4s-client-zio-http")
+  .settings(scala3Settings)
+  .settings(libraryDependencies ++= Seq(Dependencies.zioHttp, Dependencies.zio))
 
 lazy val tests = (project in file("elastic4s-tests"))
   .settings(name := "elastic4s-tests")

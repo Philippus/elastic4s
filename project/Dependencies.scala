@@ -31,6 +31,7 @@ object Dependencies {
   val ZIO1Version                    = "1.0.18"
   val ZIOVersion                     = "2.1.24"
   val ZIOJsonVersion                 = "0.9.0"
+  val ZIOHttpVersion                 = "3.8.1"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
@@ -77,6 +78,7 @@ object Dependencies {
   lazy val sttp                           = "com.softwaremill.sttp.client3" %% "core"                              % SttpVersion
   lazy val zioJson1                       = "dev.zio"                       %% "zio-json"                          % ZIOJson1Version
   lazy val zioJson                        = "dev.zio"                       %% "zio-json"                          % ZIOJsonVersion
+  lazy val zioHttp                        = "dev.zio"                       %% "zio-http"                          % ZIOHttpVersion
   lazy val elasticsearchRestClientSniffer = "org.elasticsearch.client"       % "elasticsearch-rest-client-sniffer" %
     ElasticsearchVersion
 
