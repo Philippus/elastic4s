@@ -1,0 +1,18 @@
+updates.ignore = [
+  // jackson 2.x, these will get updated along with jackson-core
+  { groupId = "com.fasterxml.jackson.core", artifactId = "jackson-databind" }
+  { groupId = "com.fasterxml.jackson.module" }
+]
+
+updates.pin = [
+  # elasticsearch should stay on 8.x in this branch
+  { "groupId" = "org.elasticsearch.client", version = "8."}
+  # scala 2.12 should stay on scala 2.12
+  { groupId = "org.scala-lang", artifactId = "scala-library", version = "2.12." }
+  # scala 2.13 should stay on scala 2.13
+  { groupId = "org.scala-lang", artifactId = "scala-library", version = "2.13." }
+  # Scala 3.3 is an LTS
+  { groupId = "org.scala-lang", artifactId = "scala3-library", version = "3.3." }
+  # Scala 3.9 will be an LTS
+  { groupId = "org.scala-lang", artifactId = "scala3-library", version = "3.9." }
+]
