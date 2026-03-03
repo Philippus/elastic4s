@@ -45,7 +45,7 @@ class ZIOHttpClientTest extends AnyFlatSpec with Matchers with ElasticDsl {
     val id = "я-家"
     runZIO(_.execute(
       indexInto("testindex").withId(id).doc("""{ "text":"¡Hola я 家! ¿Qué tal?" }""")
-    )).result.result shouldBe oneOf("created", "updated")
+    )).result.result should (equal("created") or equal("updated"))
     runZIO(_.execute(indexInto("testindex").withId(id))).result.id shouldBe id
   }
 
