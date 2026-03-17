@@ -17,7 +17,7 @@ case class Task(
     cancelled: Option[Boolean],
     @JsonProperty("parent_task_id") private val parent_task_id: Option[String]
 ) {
-  def startTimeInMillis: Long     = start_time_in_millis
-  def runningTime: FiniteDuration = running_time_in_nanos.nanos
-  def parentTaskId: Option[String]   = parent_task_id
+  def startTimeInMillis: Long      = start_time_in_millis
+  def runningTime: FiniteDuration  = running_time_in_nanos.nanos
+  def parentTaskId: Option[String] = parent_task_id
 }
