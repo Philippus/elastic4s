@@ -14,8 +14,10 @@ case class Task(
     @JsonProperty("start_time_in_millis") private val start_time_in_millis: Long,
     @JsonProperty("running_time_in_nanos") private val running_time_in_nanos: Long,
     cancellable: Boolean,
-    cancelled: Option[Boolean]
+    cancelled: Option[Boolean],
+    @JsonProperty("parent_task_id") private val parent_task_id: Option[String]
 ) {
-  def startTimeInMillis: Long     = start_time_in_millis
-  def runningTime: FiniteDuration = running_time_in_nanos.nanos
+  def startTimeInMillis: Long      = start_time_in_millis
+  def runningTime: FiniteDuration  = running_time_in_nanos.nanos
+  def parentTaskId: Option[String] = parent_task_id
 }
