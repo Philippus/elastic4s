@@ -346,7 +346,7 @@ lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
   .settings(libraryDependencies ++= Seq(http4sClient, http4sEmberClient % Test))
 
 lazy val clientziohttp = (project in file("elastic4s-client-zio-http"))
-  .dependsOn(core, zio, testkit % "test")
+  .dependsOn(core, zio, testkit % Test)
   .settings(name := "elastic4s-client-zio-http")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(Dependencies.zioHttp, Dependencies.zio))
