@@ -24,9 +24,9 @@ lazy val commonScalaVersionSettings = Seq(
 )
 
 lazy val warnUnusedImport = Seq(
-  scalacOptions += "-Ywarn-unused:imports",
+  scalacOptions += "-Wunused:imports",
   Compile / console / scalacOptions ~= {
-    _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports"))
+    _.filterNot(Set("-Wunused:imports"))
   },
   Test / console / scalacOptions := (Compile / console / scalacOptions).value
 )
