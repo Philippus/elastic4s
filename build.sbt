@@ -193,13 +193,13 @@ lazy val clientsSniffed = (project in file("elastic4s-client-sniffed"))
   .settings(libraryDependencies += elasticsearchRestClientSniffer)
 
 lazy val zio_1 = (project in file("elastic4s-effect-zio-1"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-effect-zio-1")
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.zio1)
 
 lazy val zio = (project in file("elastic4s-effect-zio"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-effect-zio")
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.zio)
@@ -223,7 +223,7 @@ lazy val testkit = (project in file("elastic4s-testkit"))
   .settings(libraryDependencies ++= Seq(Dependencies.scalaTestMain))
 
 lazy val reactivestreamsakka = (project in file("elastic4s-reactivestreams-akka"))
-  .dependsOn(core, testkit % "test", jackson % "test")
+  .dependsOn(core, testkit % Test, jackson % Test)
   .settings(name := "elastic4s-reactivestreams-akka")
   .settings(scala3Settings)
   .settings(libraryDependencies ++=
@@ -235,7 +235,7 @@ lazy val reactivestreamsakka = (project in file("elastic4s-reactivestreams-akka"
     ))
 
 lazy val reactivestreamspekko = (project in file("elastic4s-reactivestreams-pekko"))
-  .dependsOn(core, testkit % "test", jackson % "test")
+  .dependsOn(core, testkit % Test, jackson % Test)
   .settings(name := "elastic4s-reactivestreams-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies ++=
@@ -247,13 +247,13 @@ lazy val reactivestreamspekko = (project in file("elastic4s-reactivestreams-pekk
     ))
 
 lazy val akkastreams = (project in file("elastic4s-streams-akka"))
-  .dependsOn(core, testkit % "test", jackson % "test")
+  .dependsOn(core, testkit % Test, jackson % Test)
   .settings(name := "elastic4s-streams-akka")
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.akkaStream)
 
 lazy val pekkostreams = (project in file("elastic4s-streams-pekko"))
-  .dependsOn(core, testkit % "test", jackson % "test")
+  .dependsOn(core, testkit % Test, jackson % Test)
   .settings(name := "elastic4s-streams-pekko")
   .settings(scala3Settings)
   .settings(libraryDependencies += Dependencies.pekkoStream)
@@ -340,7 +340,7 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   )
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
-  .dependsOn(core, testkit % "test")
+  .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-http4s")
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(http4sClient, http4sEmberClient % Test))
