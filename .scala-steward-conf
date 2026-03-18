@@ -9,12 +9,8 @@ updates.pin = [
   { "groupId" = "org.elasticsearch.client", version = "8."}
   # zio-json should stay on 0.7.x, 0.8.0+ is JDK17+
   { "groupId" = "dev.zio", artifactId = "zio-json", version = "0.7." }
-  # scala 2.12 should stay on scala 2.12
-  { groupId = "org.scala-lang", artifactId = "scala-library", version = "2.12." }
   # scala 2.13 should stay on scala 2.13
   { groupId = "org.scala-lang", artifactId = "scala-library", version = "2.13." }
   # Scala 3.3 is an LTS
   { groupId = "org.scala-lang", artifactId = "scala3-library", version = "3.3." }
-  # Scala 3.9 will be an LTS
-  { groupId = "org.scala-lang", artifactId = "scala3-library", version = "3.9." }
 ]
