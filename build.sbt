@@ -112,7 +112,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   sprayjson,
   ziojson,
   clientsttp,
-  `client-zio-http`,
+  clientziohttp,
   akkastreams,
   pekkostreams,
   reactivestreamsakka,
