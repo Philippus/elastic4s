@@ -38,6 +38,7 @@ trait TaskHandlers {
       if (request.waitForCompletion.getOrElse(false))
         params.put("wait_for_completion", "true")
       request.groupBy.foreach(params.put("group_by", _))
+      request.parentTaskId.foreach(params.put("parent_task_id", _))
 
       ElasticRequest("GET", s"/_tasks", params.toMap)
     }
