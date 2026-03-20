@@ -86,7 +86,7 @@ class ScrollTest extends AnyWordSpec with Matchers with DockerTests {
       val resp = client.execute {
         searchScroll("DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAAAD4WYm9laVYtZndUQlNsdDcwakFMNjU1QQ==").keepAlive("1m")
       }.await
-      resp.error.`type` shouldBe "search_phase_execution_exception"
+      resp.error.`type` shouldBe "search_context_missing_nodes_exception"
     }
   }
 
