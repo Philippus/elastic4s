@@ -27,6 +27,7 @@ object Dependencies {
   val Slf4jVersion                   = "2.0.17"
   val SprayJsonVersion               = "1.3.6"
   val SttpVersion                    = "3.11.0"
+  val Sttp4Version                   = "4.0.19"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
   val ZIOVersion                     = "2.1.24"
@@ -76,6 +77,7 @@ object Dependencies {
   lazy val playJson                       = "org.playframework"             %% "play-json"                         % PlayJsonVersion
   lazy val sprayJson                      = "io.spray"                      %% "spray-json"                        % SprayJsonVersion
   lazy val sttp                           = "com.softwaremill.sttp.client3" %% "core"                              % SttpVersion
+  lazy val sttp4                          = "com.softwaremill.sttp.client4" %% "core"                              % Sttp4Version
   lazy val zioJson1                       = "dev.zio"                       %% "zio-json"                          % ZIOJson1Version
   lazy val zioJson                        = "dev.zio"                       %% "zio-json"                          % ZIOJsonVersion
   lazy val zioHttp                        = "dev.zio"                       %% "zio-http"                          % ZIOHttpVersion

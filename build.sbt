@@ -112,6 +112,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   sprayjson,
   ziojson,
   clientsttp,
+  clientsttp4,
   clientziohttp,
   akkastreams,
   pekkostreams,
@@ -314,6 +315,12 @@ lazy val clientsttp = (project in file("elastic4s-client-sttp"))
   .settings(name := "elastic4s-client-sttp")
   .settings(scala3Settings)
   .settings(libraryDependencies += sttp)
+
+lazy val clientsttp4 = (project in file("elastic4s-client-sttp4"))
+  .dependsOn(core, testkit % Test)
+  .settings(name := "elastic4s-client-sttp4")
+  .settings(scala3Settings)
+  .settings(libraryDependencies += sttp4)
 
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % Test)
