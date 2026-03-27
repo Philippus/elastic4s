@@ -53,6 +53,12 @@ trait BaseUpdateByQueryRequest {
   val indicesOptions: Option[IndicesOptionsRequest]
 
   val shards: Option[ShardsPreferenceRequest]
+
+  def shardsPreferenceRequest(shards: Set[Int]): Option[ShardsPreferenceRequest] = shards.toSeq match {
+    case Nil          => None
+    case head :: Nil  => Some(ShardsPreferenceRequest(head))
+    case head :: tail => Some(ShardsPreferenceRequest(head, Some(tail.toSet)))
+  }
 }
 case class UpdateByQueryRequest(
     indexes: Indexes,
@@ -122,12 +128,6 @@ case class UpdateByQueryRequest(
 
   def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryRequest = copy(indicesOptions = options.some)
 
-  def shards(shards: Set[Int]): UpdateByQueryRequest = copy(shards =
-    shards.toSeq match {
-      case Nil          => None
-      case head :: Nil  => Some(ShardsPreferenceRequest(head))
-      case head :: tail => Some(ShardsPreferenceRequest(head, Some(tail.toSet)))
-    }
-  )
+  def shards(shards: Set[Int]): UpdateByQueryRequest = copy(shards = shardsPreferenceRequest(shards))
   def shards(shard: Int): UpdateByQueryRequest       = copy(shards = Some(ShardsPreferenceRequest(shard)))
 }

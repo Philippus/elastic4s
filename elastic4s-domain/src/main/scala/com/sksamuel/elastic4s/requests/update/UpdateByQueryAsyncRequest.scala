@@ -71,13 +71,7 @@ case class UpdateByQueryAsyncRequest(
 
   def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryAsyncRequest = copy(indicesOptions = options.some)
 
-  def shards(shards: Set[Int]): UpdateByQueryAsyncRequest = copy(shards =
-    shards.toSeq match {
-      case Nil          => None
-      case head :: Nil  => Some(ShardsPreferenceRequest(head))
-      case head :: tail => Some(ShardsPreferenceRequest(head, Some(tail.toSet)))
-    }
-  )
+  def shards(shards: Set[Int]): UpdateByQueryAsyncRequest = copy(shards = shardsPreferenceRequest(shards))
   def shards(shard: Int): UpdateByQueryAsyncRequest       = copy(shards = Some(ShardsPreferenceRequest(shard)))
 
   override val waitForCompletion: Option[Boolean] = Some(false)
