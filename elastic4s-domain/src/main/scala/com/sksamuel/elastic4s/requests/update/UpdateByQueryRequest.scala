@@ -9,6 +9,10 @@ import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 
 import scala.concurrent.duration.FiniteDuration
 
+case class ShardsPreferenceRequest(shard: Int, optionalShards: Option[Set[Int]] = None) {
+  val shards: Set[Int] = Set(shard) ++ optionalShards.getOrElse(Set.empty)
+}
+
 trait BaseUpdateByQueryRequest {
   val indexes: Indexes
 
@@ -47,6 +51,8 @@ trait BaseUpdateByQueryRequest {
   val waitForCompletion: Option[Boolean]
 
   val indicesOptions: Option[IndicesOptionsRequest]
+
+  val shards: Option[ShardsPreferenceRequest]
 }
 case class UpdateByQueryRequest(
     indexes: Indexes,
@@ -68,7 +74,8 @@ case class UpdateByQueryRequest(
     timeout: Option[FiniteDuration] = None,
     shouldStoreResult: Option[Boolean] = None,
     size: Option[Int] = None,
-    indicesOptions: Option[IndicesOptionsRequest] = None
+    indicesOptions: Option[IndicesOptionsRequest] = None,
+    shards: Option[ShardsPreferenceRequest] = None
 ) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
@@ -114,4 +121,13 @@ case class UpdateByQueryRequest(
     copy(shouldStoreResult = shouldStoreResult.some)
 
   def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryRequest = copy(indicesOptions = options.some)
+
+  def shards(shards: Set[Int]): UpdateByQueryRequest = copy(shards =
+    shards.toSeq match {
+      case Nil          => None
+      case head :: Nil  => Some(ShardsPreferenceRequest(head))
+      case head :: tail => Some(ShardsPreferenceRequest(head, Some(tail.toSet)))
+    }
+  )
+  def shards(shard: Int): UpdateByQueryRequest       = copy(shards = Some(ShardsPreferenceRequest(shard)))
 }
