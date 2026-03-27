@@ -54,7 +54,7 @@ trait BaseUpdateByQueryRequest {
 
   val shards: Option[ShardsPreferenceRequest]
 
-  def shardsPreferenceRequest(shards: Set[Int]): Option[ShardsPreferenceRequest] = shards.toSeq match {
+  def shardsPreferenceRequest(shards: Set[Int]): Option[ShardsPreferenceRequest] = shards.toList match {
     case Nil          => None
     case head :: Nil  => Some(ShardsPreferenceRequest(head))
     case head :: tail => Some(ShardsPreferenceRequest(head, Some(tail.toSet)))
