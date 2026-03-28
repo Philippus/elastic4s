@@ -13,7 +13,7 @@ object Dependencies {
   val Http4sVersion                  = "0.23.33"
   val JacksonVersion                 = "3.1.0"
   val Json4sVersion                  = "4.1.0"
-  val Log4jVersion                   = "2.25.3"
+  val Log4jVersion                   = "2.25.4"
   val MockitoVersion                 = "5.23.0"
   val MonixVersion                   = "3.4.1"
   val PekkoHttpVersion               = "1.3.0"
