@@ -3,9 +3,10 @@ package com.sksamuel.elastic4s.requests.update
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, Slicing}
+import com.sksamuel.elastic4s.requests.common.{Preference, RefreshPolicy, Slice, Slicing}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
+
 import scala.concurrent.duration.FiniteDuration
 
 case class UpdateByQueryAsyncRequest(
@@ -28,7 +29,7 @@ case class UpdateByQueryAsyncRequest(
     size: Option[Int] = None,
     indicesOptions: Option[IndicesOptionsRequest] = None,
     routing: Option[String] = None,
-    shards: Option[ShardsPreferenceRequest] = None
+    preference: Option[String] = None
 ) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryAsyncRequest =
@@ -74,8 +75,8 @@ case class UpdateByQueryAsyncRequest(
 
   def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryAsyncRequest = copy(indicesOptions = options.some)
 
-  def shards(shards: Set[Int]): UpdateByQueryAsyncRequest = copy(shards = shardsPreferenceRequest(shards))
-  def shards(shard: Int): UpdateByQueryAsyncRequest       = copy(shards = Some(ShardsPreferenceRequest(shard)))
+  def preference(pref: Preference): UpdateByQueryAsyncRequest = preference(pref.value)
+  def preference(pref: String): UpdateByQueryAsyncRequest     = copy(preference = pref.some)
 
   override val waitForCompletion: Option[Boolean] = Some(false)
 }
