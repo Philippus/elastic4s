@@ -1,17 +1,13 @@
 package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, Slicing}
+import com.sksamuel.elastic4s.requests.common.{Preference, RefreshPolicy, Slice, Slicing}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 
 import scala.concurrent.duration.FiniteDuration
-
-case class ShardsPreferenceRequest(shard: Int, optionalShards: Option[Set[Int]] = None) {
-  val shards: Set[Int] = Set(shard) ++ optionalShards.getOrElse(Set.empty)
-}
 
 trait BaseUpdateByQueryRequest {
   val indexes: Indexes
@@ -52,13 +48,7 @@ trait BaseUpdateByQueryRequest {
 
   val indicesOptions: Option[IndicesOptionsRequest]
 
-  val shards: Option[ShardsPreferenceRequest]
-
-  def shardsPreferenceRequest(shards: Set[Int]): Option[ShardsPreferenceRequest] = shards.toList match {
-    case Nil          => None
-    case head :: Nil  => Some(ShardsPreferenceRequest(head))
-    case head :: tail => Some(ShardsPreferenceRequest(head, Some(tail.toSet)))
-  }
+  val preference: Option[String]
 }
 case class UpdateByQueryRequest(
     indexes: Indexes,
@@ -81,7 +71,7 @@ case class UpdateByQueryRequest(
     shouldStoreResult: Option[Boolean] = None,
     size: Option[Int] = None,
     indicesOptions: Option[IndicesOptionsRequest] = None,
-    shards: Option[ShardsPreferenceRequest] = None
+    preference: Option[String] = None
 ) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
@@ -128,6 +118,6 @@ case class UpdateByQueryRequest(
 
   def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryRequest = copy(indicesOptions = options.some)
 
-  def shards(shards: Set[Int]): UpdateByQueryRequest = copy(shards = shardsPreferenceRequest(shards))
-  def shards(shard: Int): UpdateByQueryRequest       = copy(shards = Some(ShardsPreferenceRequest(shard)))
+  def preference(pref: Preference): UpdateByQueryRequest = preference(pref.value)
+  def preference(pref: String): UpdateByQueryRequest     = copy(preference = pref.some)
 }
