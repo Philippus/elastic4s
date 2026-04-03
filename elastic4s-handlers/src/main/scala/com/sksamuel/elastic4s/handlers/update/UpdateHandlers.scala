@@ -109,6 +109,7 @@ trait UpdateHandlers {
       request.slices.foreach(s =>
         if (s == Slicing.AutoSlices) params.put("slices", Slicing.AutoSlicesValue) else params.put("slices", s)
       )
+      request.preference.foreach(params.put("preference", _))
 
       request.indicesOptions.foreach { opts =>
         IndicesOptionsParams(opts).foreach { case (key, value) => params.put(key, value) }
