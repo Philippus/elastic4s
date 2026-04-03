@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.requests.common.{RefreshPolicy, Slice, Slicing}
+import com.sksamuel.elastic4s.requests.common.{Preference, RefreshPolicy, Slice, Slicing}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.ext.OptionImplicits._
@@ -47,6 +47,8 @@ trait BaseUpdateByQueryRequest {
   val waitForCompletion: Option[Boolean]
 
   val indicesOptions: Option[IndicesOptionsRequest]
+
+  val preference: Option[String]
 }
 case class UpdateByQueryRequest(
     indexes: Indexes,
@@ -68,7 +70,8 @@ case class UpdateByQueryRequest(
     timeout: Option[FiniteDuration] = None,
     shouldStoreResult: Option[Boolean] = None,
     size: Option[Int] = None,
-    indicesOptions: Option[IndicesOptionsRequest] = None
+    indicesOptions: Option[IndicesOptionsRequest] = None,
+    preference: Option[String] = None
 ) extends BaseUpdateByQueryRequest {
 
   def proceedOnConflicts(proceedOnConflicts: Boolean): UpdateByQueryRequest =
@@ -114,4 +117,7 @@ case class UpdateByQueryRequest(
     copy(shouldStoreResult = shouldStoreResult.some)
 
   def indicesOptions(options: IndicesOptionsRequest): UpdateByQueryRequest = copy(indicesOptions = options.some)
+
+  def preference(pref: Preference): UpdateByQueryRequest = preference(pref.value)
+  def preference(pref: String): UpdateByQueryRequest     = copy(preference = pref.some)
 }
