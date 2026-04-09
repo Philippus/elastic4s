@@ -20,8 +20,8 @@ object Dependencies {
   val PekkoVersion                   = "1.5.0"
   val PlayJsonVersion                = "3.0.6"
   val ReactiveStreamsVersion         = "1.0.4"
-  val ScalatestPlusMockitoArtifactId = "mockito-5-12"
-  val ScalatestPlusVersion           = "3.2.19.0"
+  val ScalatestPlusMockitoArtifactId = "mockito-5-23"
+  val ScalatestPlusVersion           = "3.2.20.0"
   val ScalazVersion                  = "7.2.36"
   val ScalatestVersion               = "3.2.20"
   val Slf4jVersion                   = "2.0.17"
@@ -91,6 +91,6 @@ object Dependencies {
   lazy val scalaTestMain        = "org.scalatest"           %% "scalatest"                    % ScalatestVersion
   lazy val scalaTest            = scalaTestMain              % Test
   lazy val scalaTestPlusMockito = "org.scalatestplus"       %% ScalatestPlusMockitoArtifactId % ScalatestPlusVersion
-  lazy val scalaTestPlusTestng  = "org.scalatestplus"       %% "testng-7-10"                  % ScalatestPlusVersion   % Test
+  lazy val scalaTestPlusTestng  = "org.scalatestplus"       %% "testng-7-12"                  % ScalatestPlusVersion   % Test
 
 }
