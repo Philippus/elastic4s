@@ -77,6 +77,7 @@ trait DeleteHandlers {
         if (s == Slicing.AutoSlices) params.put("slices", Slicing.AutoSlicesValue) else params.put("slices", s.toString)
       )
       request.ignoreUnavailable.map(_.toString).foreach(params.put("ignore_unavailable", _))
+      request.preference.foreach(params.put("preference", _))
 
       val body   = DeleteByQueryBodyFn(request)
       logger.debug(s"Delete by query ${body.string}")
