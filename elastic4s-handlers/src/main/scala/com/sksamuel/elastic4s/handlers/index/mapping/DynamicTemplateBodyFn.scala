@@ -11,12 +11,37 @@ object DynamicTemplateBodyFn {
     val builder = XContentFactory.obj()
     builder.startObject(dyn.name)
 
-    dyn.`match`.foreach(builder.field("match", _))
-    dyn.unmatch.foreach(builder.field("unmatch", _))
-    dyn.pathMatch.foreach(builder.field("path_match", _))
-    dyn.pathUnmatch.foreach(builder.field("path_unmatch", _))
-    dyn.MatchPattern.foreach(builder.field("match_pattern", _))
-    dyn.matchMappingType.foreach(builder.field("match_mapping_type", _))
+    dyn.`match` match {
+      case Nil      =>
+      case Seq(str) => builder.field("match", str)
+      case s        => builder.array("match", s.toArray)
+    }
+    dyn.unmatch match {
+      case Nil      =>
+      case Seq(str) => builder.field("unmatch", str)
+      case s        => builder.array("unmatch", s.toArray)
+    }
+    dyn.pathMatch match {
+      case Nil      =>
+      case Seq(str) => builder.field("path_match", str)
+      case s        => builder.array("path_match", s.toArray)
+    }
+    dyn.pathUnmatch match {
+      case Nil      =>
+      case Seq(str) => builder.field("path_unmatch", str)
+      case s        => builder.array("path_unmatch", s.toArray)
+    }
+    dyn.matchMappingType match {
+      case Nil      =>
+      case Seq(str) => builder.field("match_mapping_type", str)
+      case s        => builder.array("match_mapping_type", s.toArray)
+    }
+    dyn.unmatchMappingType match {
+      case Nil      =>
+      case Seq(str) => builder.field("unmatch_mapping_type", str)
+      case s        => builder.array("unmatch_mapping_type", s.toArray)
+    }
+    dyn.matchPattern.foreach(builder.field("match_pattern", _))
 
     builder.rawField("mapping", ElasticFieldBuilderFn(dyn.mapping))
 
