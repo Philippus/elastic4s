@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.requests.admin
 
+import com.sksamuel.elastic4s.fields.TextField
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.indexes.CreateIndexTemplateRequest
+import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicTemplateRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.concurrent.Eventually
 import org.scalatest.matchers.should.Matchers
@@ -29,6 +31,13 @@ class IndexTemplateHttpTest
     Thread.sleep(2000)
   }
 
+  Try {
+    client.execute {
+      deleteIndexTemplate("dyntemplate_template")
+    }.await
+    Thread.sleep(2000)
+  }
+
   "create template" should {
     "create template" in {
 
@@ -48,6 +57,33 @@ class IndexTemplateHttpTest
         }.await
         resp.result.indexTemplates.find(_.name == "brewery_template").get.template.indexPatterns shouldBe Seq("brew*")
         resp.result.indexTemplates.find(_.name == "brewery_template").get.template.order shouldBe 0
+      }
+    }
+    "deserialize dynamic_templates from get template response" in {
+
+      val dynTemplate = DynamicTemplateRequest("es_fields", TextField("").analyzer("spanish"))
+        .matchMappingType("string")
+        .matching("*_es")
+
+      client.execute {
+        CreateIndexTemplateRequest("dyntemplate_template", Seq("dyntemplate*")).mappings(
+          properties(keywordField("id")).dynamicTemplates(dynTemplate)
+        )
+      }.await.result.acknowledged shouldBe true
+
+      eventually {
+        val resp = client.execute {
+          getIndexTemplate("dyntemplate_template")
+        }.await
+
+        val mappings = resp.result.indexTemplates.find(_.name == "dyntemplate_template").get.template.mappings
+        mappings.dynamicTemplates should have size 1
+
+        val tmpl = mappings.dynamicTemplates.head
+        tmpl.name shouldBe "es_fields"
+        tmpl.`match` shouldBe Some("*_es")
+        tmpl.matchMappingType shouldBe Some("string")
+        tmpl.mapping shouldBe a[TextField]
       }
     }
     "apply template to new indexes that match the pattern" in {
