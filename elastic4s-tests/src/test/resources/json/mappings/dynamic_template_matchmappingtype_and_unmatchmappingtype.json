@@ -1,0 +1,9 @@
+{
+    "numeric_counts": {
+        "match_mapping_type": "long",
+        "unmatch_mapping_type": "string",
+        "mapping": {
+            "type": "double"
+        }
+    }
+}
