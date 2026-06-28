@@ -180,7 +180,7 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
       log4jApi,
       fasterXmlJacksonCore,
       fasterXmlJacksonDatabind,
-      fasterXmlJacksonModuleScala exclude (
+      fasterXmlJacksonModuleScala.exclude(
         "org.scala-lang",
         "scala-library"
       )
@@ -267,7 +267,7 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
     libraryDependencies ++= Seq(
       fasterXmlJacksonCore,
       fasterXmlJacksonDatabind,
-      fasterXmlJacksonModuleScala exclude (
+      fasterXmlJacksonModuleScala.exclude(
         "org.scala-lang",
         "scala-library"
       )
@@ -375,14 +375,14 @@ lazy val tests = (project in file("elastic4s-tests"))
       commonsIo,
       fasterXmlJacksonCore        % Test,
       fasterXmlJacksonDatabind    % Test,
-      fasterXmlJacksonModuleScala % Test exclude (
-        "org.scala-lang",
-        "scala-library"
-      ),
+      fasterXmlJacksonModuleScala % Test,
       "org.apache.logging.log4j"  % "log4j-api"        % "2.26.0" % Test,
       "org.apache.logging.log4j"  % "log4j-slf4j-impl" % "2.26.0" % Test,
       "org.apache.logging.log4j"  % "log4j-core"       % "2.26.0" % Test
-    ),
+    ).map(_.exclude(
+      "org.scala-lang",
+      "scala-library"
+    )),
     Test / fork               := false,
     Test / parallelExecution  := false,
     Test / testForkedParallel := false
