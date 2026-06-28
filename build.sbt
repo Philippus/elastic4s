@@ -120,7 +120,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   reactivestreamspekko
 )
 lazy val scala3_root                           = Project("elastic4s-scala3", file("scala3"))
-  .settings(name := "elastic4s")
+  .settings(name := "elastic4s-scala3")
   .settings(allSettings)
   .settings(
     noPublishSettings
