@@ -330,9 +330,15 @@ lazy val clientakka = (project in file("elastic4s-client-akka"))
   ) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, mockitoCore, scalaTestPlusMockito))
   .settings(
-    Test / javaOptions +=
-      s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${Dependencies.MockitoVersion}/mockito-core-${Dependencies.MockitoVersion}.jar",
-    Test / fork := true
+    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Raw,
+    Test / javaOptions += {
+      val mockitoCoreJar = (Test / update).value
+        .matching(moduleFilter(organization = "org.mockito", name = "mockito-core", revision = mockitoCore.revision))
+        .headOption
+        .getOrElse(sys.error(s"Unable to resolve mockito-core ${mockitoCore.revision} for Test scope"))
+      s"-javaagent:${mockitoCoreJar.getAbsolutePath}"
+    },
+    Test / fork                        := true
   )
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
@@ -341,9 +347,10 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, mockitoCore, scalaTestPlusMockito))
   .settings(
+    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Raw,
     Test / javaOptions +=
       s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${Dependencies.MockitoVersion}/mockito-core-${Dependencies.MockitoVersion}.jar",
-    Test / fork := true
+    Test / fork                        := true
   )
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
