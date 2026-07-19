@@ -8,6 +8,9 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 
 object ReactiveElastic {
+  sealed trait Impl
+  case object Scroll      extends Impl
+  case object SearchAfter extends Impl
 
   implicit class ReactiveElastic(client: ElasticClient[Future]) {
 
@@ -47,15 +50,21 @@ object ReactiveElastic {
       subscriber(config)
     }
 
-    def publisher(indexes: Indexes, elements: Long, keepAlive: String)(
+    def publisher(indexes: Indexes, elements: Long, keepAlive: String, mode: Impl)(
         implicit actorRefFactory: ActorRefFactory
-    ): ScrollPublisher =
-      publisher(search(indexes).query("*:*").scroll(keepAlive), elements)
+    ): PaginatedPublisher =
+      publisher(search(indexes).query("*:*").scroll(keepAlive), elements, mode)
 
-    def publisher(q: SearchRequest)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
-      publisher(q, Long.MaxValue)
+    def publisher(q: SearchRequest)(implicit actorRefFactory: ActorRefFactory): PaginatedPublisher =
+      publisher(q, Long.MaxValue, Scroll)
 
-    def publisher(q: SearchRequest, elements: Long)(implicit actorRefFactory: ActorRefFactory): ScrollPublisher =
-      new ScrollPublisher(client, q, elements)
+    def publisher(q: SearchRequest, mode: Impl)(implicit actorRefFactory: ActorRefFactory): PaginatedPublisher =
+      publisher(q, Long.MaxValue, mode)
+
+    def publisher(q: SearchRequest, elements: Long, mode: Impl = Scroll)(implicit
+        actorRefFactory: ActorRefFactory
+    ): PaginatedPublisher = {
+      new PaginatedPublisher(client, q, elements, mode)
+    }
   }
 }
