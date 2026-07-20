@@ -99,7 +99,10 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
   }
 
   private def send(k: Long): Unit = {
-    require(queue.size >= k)
+    if (queue.size < k) {
+      s.onError(new IllegalStateException(s"Requested $k items but only ${queue.size} available"))
+      context.stop(self)
+    }
     for (_ <- 0L until k)
       if (max == 0 || processed < max) {
         s.onNext(queue.dequeue())
@@ -143,8 +146,10 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
     // so any requests must be stashed until a fresh batch arrives
     case PublishActor.Request(n)                                                 =>
       logger.debug(s"Request for $n items but we're already waiting on a response; stashing request")
-      require(queue.isEmpty) // must be empty or why did we not send it before switching to this mode?
-      stash()
+      if (queue.nonEmpty) {
+        s.onError(new IllegalStateException("Queue unexpectedly non-empty while fetching"))
+        context.stop(self)
+      } else stash()
     // if the request to elastic failed we will terminate the subscription
     case Failure(t)                                                              =>
       logger.warn("Elasticsearch returned a failure; will terminate the subscription", t)
