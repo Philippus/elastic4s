@@ -181,6 +181,6 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
 
   override def postStop(): Unit = {
     super.postStop()
-    client.execute(clearScroll(scrollId))
+    if (scrollId != null) client.execute(clearScroll(scrollId))
   }
 }
