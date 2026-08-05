@@ -46,5 +46,6 @@ object DynamicTemplateBodyFn {
     builder.rawField("mapping", ElasticFieldBuilderFn(dyn.mapping))
 
     builder.endObject()
+    builder.endObject()
   }
 }
