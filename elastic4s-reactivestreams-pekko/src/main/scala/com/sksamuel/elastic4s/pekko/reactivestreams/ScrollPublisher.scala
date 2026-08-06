@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
-import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.pekko.reactivestreams.PublishActor.Ready
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
@@ -26,7 +26,9 @@ import scala.util.{Failure, Success}
   *   an Actor reference factory required by the publisher
   */
 class ScrollPublisher private[reactivestreams] (client: ElasticClient[Future], search: SearchRequest, maxItems: Long)(
-    implicit actorRefFactory: ActorRefFactory
+    implicit
+    actorRefFactory: ActorRefFactory,
+    options: CommonRequestOptions
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
 
@@ -43,7 +45,9 @@ class ScrollPublisher private[reactivestreams] (client: ElasticClient[Future], s
 }
 
 class ScrollSubscription(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
-    implicit actorRefFactory: ActorRefFactory
+    implicit
+    actorRefFactory: ActorRefFactory,
+    options: CommonRequestOptions
 ) extends Subscription {
 
   private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
@@ -70,7 +74,12 @@ object PublishActor {
   case class Request(n: Long)
 }
 
-class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
+class PublishActor(
+    client: ElasticClient[Future],
+    query: SearchRequest,
+    s: Subscriber[_ >: SearchHit],
+    max: Long
+)(implicit options: CommonRequestOptions)
     extends Actor
     with Stash {
 
