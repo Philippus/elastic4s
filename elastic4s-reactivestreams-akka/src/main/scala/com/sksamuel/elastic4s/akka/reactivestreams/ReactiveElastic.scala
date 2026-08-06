@@ -15,7 +15,8 @@ object ReactiveElastic {
 
     def subscriber[T](config: SubscriberConfig[T])(implicit
         builder: RequestBuilder[T],
-        actorRefFactory: ActorRefFactory
+        actorRefFactory: ActorRefFactory,
+        commonRequestOptions: CommonRequestOptions
     ): BulkIndexingSubscriber[T] =
       new BulkIndexingSubscriber[T](client, builder, config)
 
@@ -31,7 +32,11 @@ object ReactiveElastic {
         flushAfter: Option[FiniteDuration] = None,
         failureWait: FiniteDuration = 2.seconds,
         maxAttempts: Int = 5
-    )(implicit builder: RequestBuilder[T], actorRefFactory: ActorRefFactory): BulkIndexingSubscriber[T] = {
+    )(implicit
+        builder: RequestBuilder[T],
+        actorRefFactory: ActorRefFactory,
+        commonRequestOptions: CommonRequestOptions
+    ): BulkIndexingSubscriber[T] = {
       val config = SubscriberConfig(
         batchSize = batchSize,
         concurrentRequests = concurrentRequests,
