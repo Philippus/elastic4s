@@ -25,6 +25,7 @@ trait CountHandlers {
       request.lenient.map(_.toString).foreach(params.put("lenient", _))
       request.terminateAfter.map(_.toString).foreach(params.put("terminate_after", _))
       request.minScore.map(_.toString).foreach(params.put("min_score", _))
+      if (request.stats.nonEmpty) params.put("stats", request.stats.mkString(","))
 
       ElasticRequest("GET", endpoint, params.toMap, HttpEntity(body, "application/json"))
     }
