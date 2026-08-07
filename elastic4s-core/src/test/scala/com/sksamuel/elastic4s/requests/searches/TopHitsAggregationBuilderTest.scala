@@ -1,5 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
+import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.aggs.TopHitsAggregation
 import com.sksamuel.elastic4s.requests.searches.aggs.builders.TopHitsAggregationBuilder
 import com.sksamuel.elastic4s.requests.searches.sort.{FieldSort, SortMode}
@@ -25,5 +26,13 @@ class TopHitsAggregationBuilderTest extends AnyFunSuite with Matchers {
       .highlighting(HighlightField("name"))
     TopHitsAggregationBuilder(q).string shouldBe
       """{"top_hits":{"highlight":{"fields":{"name":{}}}}}"""
+  }
+
+  test("top hits aggregation builder should support script fields") {
+    val q = TopHitsAggregation("top_items")
+      .script("computed", Script("doc['price'].value * 2"))
+
+    TopHitsAggregationBuilder(q).string shouldBe
+      """{"top_hits":{"script_fields":{"computed":{"script":{"source":"doc['price'].value * 2"}}}}}"""
   }
 }
