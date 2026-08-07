@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.pekko
 
+import org.apache.pekko.NotUsed
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
+import org.apache.pekko.stream.scaladsl.Flow
 import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
 import org.mockito.ArgumentMatchers._
 import org.scalatest.BeforeAndAfterAll
@@ -32,6 +34,16 @@ class PekkoHttpClientMockTest
     val sendRequest = mock[Function[HttpRequest, Try[HttpResponse]]]
     val poolFactory = new TestHttpPoolFactory(sendRequest)
     (sendRequest, poolFactory)
+  }
+
+  private class ClosedPoolFactory extends HttpPoolFactory {
+    override def create[T](): Flow[(HttpRequest, T), (HttpRequest, Try[HttpResponse], T), NotUsed] =
+      Flow[(HttpRequest, T)]
+        .take(0)
+        .map { case (r, s) => (r, Success(HttpResponse()), s) }
+
+    override def shutdown(): scala.concurrent.Future[Unit] =
+      scala.concurrent.Future.successful(())
   }
 
   "PekkoHttpClient" should {
@@ -216,6 +228,23 @@ class PekkoHttpClientMockTest
         Some(ElasticEntity.StringEntity("host2", None)),
         Map.empty
       )
+    }
+
+    "not hang when queue offer fails before host is resolved" in {
+      val blacklist = mock[Blacklist]
+
+      val client = new PekkoHttpClient(
+        PekkoHttpClientSettings(List("host1")).copy(maxRetryTimeout = 0.seconds),
+        blacklist,
+        new ClosedPoolFactory
+      )
+
+      val err = client
+        .send(ElasticRequest("GET", "/test"))
+        .failed
+        .futureValue
+      err.getMessage should include("Request retries exceeded max retry timeout")
+      verify(blacklist, never()).add(any[String])
     }
 
   }

@@ -152,23 +152,29 @@ class AkkaHttpClient private[akka] (
     }
 
     def markDead(): Future[Unit] = {
-      state.host.future
-        .map { host =>
-          if (blacklist.add(host)) {
-            logger.debug(s"added [$host] to blacklist")
-          } else {
-            logger.trace(s"updated [$host] in a blacklist")
+      state.host.future.value match {
+        case Some(Success(host)) =>
+          Future.successful {
+            if (blacklist.add(host)) {
+              logger.debug(s"added [$host] to blacklist")
+            } else {
+              logger.trace(s"updated [$host] in a blacklist")
+            }
           }
-        }
+        case _                   => Future.successful(()) // host is not resolved, nothing to do
+      }
     }
 
     def markAlive(): Future[Unit] = {
-      state.host.future
-        .map { host =>
-          if (blacklist.remove(host)) {
-            logger.debug(s"removed [$host] from blacklist")
-          }
-        }
+      state.host.future.value match {
+        case Some(Success(host)) =>
+          Future.successful(
+            if (blacklist.remove(host)) {
+              logger.debug(s"removed [$host] from blacklist")
+            }
+          )
+        case _                   => Future.successful(()) // host is not resolved, nothing to do
+      }
     }
 
     queueRequest(request, state)
