@@ -4,6 +4,7 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.model.Uri.Query
 import org.apache.pekko.http.scaladsl.model._
 import org.apache.pekko.http.scaladsl.model.headers.{BasicHttpCredentials, RawHeader}
+import org.apache.pekko.pattern.after
 import org.apache.pekko.stream.scaladsl.{FileIO, Keep, Sink, Source, StreamConverters}
 import org.apache.pekko.stream.{Materializer, OverflowStrategy, QueueOfferResult}
 import org.apache.pekko.util.ByteString
@@ -16,6 +17,7 @@ import com.sksamuel.elastic4s.{
 }
 
 import scala.concurrent.{Future, Promise}
+import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
 class PekkoHttpClient private[pekko] (
@@ -129,13 +131,24 @@ class PekkoHttpClient private[pekko] (
 
     val state = RequestState()
 
+    val allHostsBlacklistedRetryDelay = 100.millis
+
     def retryIfPossible(
         notPossible: => Either[Throwable, ElasticHttpResponse]
     ): Future[ElasticHttpResponse] = {
-      val timePassed = System.nanoTime - startTimeNanos
+      val timePassed        = System.nanoTime - startTimeNanos
+      val hasAvailableHosts = settings.hosts.exists(host => !blacklist.contains(host))
+
       if (timePassed < settings.maxRetryTimeout.toNanos) {
-        logger.trace(s"Retrying a request: ${request.endpoint}")
-        queueRequestWithRetry(request, startTimeNanos)
+        if (hasAvailableHosts) {
+          logger.trace(s"Retrying a request immediately: ${request.endpoint}")
+          queueRequestWithRetry(request, startTimeNanos)
+        } else {
+          logger.trace(s"All hosts blacklisted, retrying with delay: ${request.endpoint}")
+          after(allHostsBlacklistedRetryDelay, system.scheduler) {
+            queueRequestWithRetry(request, startTimeNanos)
+          }
+        }
       } else {
         notPossible match {
           case Left(exc)   =>
