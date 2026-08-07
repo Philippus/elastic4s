@@ -80,5 +80,35 @@ class DefaultBlacklistTest extends AnyWordSpec with Matchers {
       now = minDuration.toNanos
       blacklist.contains(host) shouldBe false
     }
+
+    "count only currently blacklisted hosts in size" in {
+      var now: Long = 0
+      val host2     = "elastic2.test"
+      val blacklist = new DefaultBlacklist(minDuration, maxDuration, now)
+
+      blacklist.add(host)
+      blacklist.size shouldBe 1
+
+      now = minDuration.toNanos
+      blacklist.add(host2)
+
+      blacklist.size shouldBe 1
+      blacklist.contains(host) shouldBe false
+      blacklist.contains(host2) shouldBe true
+    }
+
+    "list only currently blacklisted hosts" in {
+      var now: Long = 0
+      val host2     = "elastic2.test"
+      val blacklist = new DefaultBlacklist(minDuration, maxDuration, now)
+
+      blacklist.add(host)
+      blacklist.list should contain theSameElementsAs List(host)
+
+      now += minDuration.toNanos
+      blacklist.add(host2)
+
+      blacklist.list should contain theSameElementsAs List(host2)
+    }
   }
 }
