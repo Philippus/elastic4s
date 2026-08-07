@@ -124,6 +124,47 @@ class PekkoHttpClientMockTest
       )
     }
 
+    "retry with delay when all hosts are blacklisted" in {
+
+      val hosts                   = List("host1")
+      val blacklist               = mock[Blacklist]
+      val (sendRequest, httpPool) = mockHttpPool()
+
+      val client =
+        new PekkoHttpClient(
+          PekkoHttpClientSettings(hosts).copy(maxRetryTimeout = 2.seconds),
+          blacklist,
+          httpPool
+        )
+
+      when(blacklist.contains("host1")).thenReturn(false, true, false)
+      when(blacklist.add("host1")).thenReturn(true)
+      when(blacklist.remove("host1")).thenReturn(false)
+
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r.uri == Uri("http://host1/test")
+        }))
+        .thenReturn(
+          Success(HttpResponse(StatusCodes.BadGateway)),
+          Success(HttpResponse().withEntity("ok"))
+        )
+
+      val startedAt = System.nanoTime()
+
+      client
+        .send(ElasticRequest("GET", "/test"))
+        .futureValue shouldBe ElasticResponse(
+        200,
+        Some(ElasticEntity.StringEntity("ok", None)),
+        Map.empty
+      )
+
+      val elapsed = (System.nanoTime() - startedAt).nanos
+      elapsed should be >= 80.millis
+      verify(sendRequest, times(2)).apply(any[HttpRequest])
+    }
+
     "blacklist on 502" in {
 
       val hosts = List(

@@ -4,18 +4,17 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.model.Uri.Query
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.{BasicHttpCredentials, RawHeader}
+import akka.pattern.after
 import akka.stream.scaladsl.{FileIO, Keep, Sink, Source, StreamConverters}
 import akka.stream.{Materializer, OverflowStrategy, QueueOfferResult}
 import akka.util.ByteString
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.{
-  ElasticRequest,
-  HttpClient => ElasticHttpClient,
-  HttpEntity => ElasticHttpEntity,
-  HttpResponse => ElasticHttpResponse
+  ElasticRequest, HttpClient => ElasticHttpClient, HttpEntity => ElasticHttpEntity, HttpResponse => ElasticHttpResponse
 }
 
 import scala.concurrent.{Future, Promise}
+import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
 class AkkaHttpClient private[akka] (
@@ -129,13 +128,24 @@ class AkkaHttpClient private[akka] (
 
     val state = RequestState()
 
+    val allHostsBlacklistedRetryDelay = 100.millis
+
     def retryIfPossible(
         notPossible: => Either[Throwable, ElasticHttpResponse]
     ): Future[ElasticHttpResponse] = {
-      val timePassed = System.nanoTime - startTimeNanos
+      val timePassed        = System.nanoTime - startTimeNanos
+      val hasAvailableHosts = settings.hosts.exists(host => !blacklist.contains(host))
+
       if (timePassed < settings.maxRetryTimeout.toNanos) {
-        logger.trace(s"Retrying a request: ${request.endpoint}")
-        queueRequestWithRetry(request, startTimeNanos)
+        if (hasAvailableHosts) {
+          logger.trace(s"Retrying a request immediately: ${request.endpoint}")
+          queueRequestWithRetry(request, startTimeNanos)
+        } else {
+          logger.trace(s"All hosts blacklisted, retrying with delay: ${request.endpoint}")
+          after(allHostsBlacklistedRetryDelay, system.scheduler) {
+            queueRequestWithRetry(request, startTimeNanos)
+          }
+        }
       } else {
         notPossible match {
           case Left(exc)   =>
