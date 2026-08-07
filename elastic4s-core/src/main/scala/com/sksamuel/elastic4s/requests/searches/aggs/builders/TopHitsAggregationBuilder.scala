@@ -1,6 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.builders
 
 import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
+import com.sksamuel.elastic4s.handlers.script.ScriptBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.HighlightBuilderFn
 import com.sksamuel.elastic4s.handlers.searches.queries.sort.SortBuilderFn
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
@@ -38,6 +39,16 @@ object TopHitsAggregationBuilder {
     }
 
     agg.version.foreach(builder.field("version", _))
+
+    if (agg.scripts.nonEmpty) {
+      builder.startObject("script_fields")
+      agg.scripts.foreach { case (name, script) =>
+        builder.startObject(name)
+        builder.rawField("script", ScriptBuilderFn(script))
+        builder.endObject()
+      }
+      builder.endObject()
+    }
 
     builder.endObject().endObject()
   }
