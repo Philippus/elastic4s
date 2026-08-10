@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
 
       - name: set up sbt
         uses: sbt/setup-sbt@v1
@@ -29,7 +29,7 @@ jobs:
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:7.17.29
 
       - name: run tests
-        run: sbt ++2.12.21 test
+        run: sbt "++2.12.21; test"
 
   scala-2_13:
     runs-on: ubuntu-latest
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 17
 
       - name: set up sbt
         uses: sbt/setup-sbt@v1
@@ -52,4 +52,4 @@ jobs:
         run: docker run -d -it -p 39227:9200 -p 39337:9300 -e "discovery.type=single-node" -v /home/runner/work/elastic4s/elastic4s/elastic4s-tests/src/test/resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml docker.elastic.co/elasticsearch/elasticsearch:7.17.29
 
       - name: run tests
-        run: sbt ++2.13.18 test
+        run: sbt "++2.13.18; test"
