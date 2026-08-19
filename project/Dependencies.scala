@@ -32,7 +32,7 @@ object Dependencies {
   val ZIO1Version                    = "1.0.18"
   val ZIOVersion                     = "2.1.26"
   val ZIOJsonVersion                 = "0.10.0"
-  val ZIOHttpVersion                 = "3.11.3"
+  val ZIOHttpVersion                 = "3.11.4"
 
   lazy val commonDeps = Seq(
     libraryDependencies ++= Seq(
