@@ -1,0 +1,31 @@
+{
+    "my_policy": {
+        "version": 1,
+        "modified_date": 82392349,
+        "policy": {
+            "phases": {
+                "warm": {
+                    "min_age": "10d",
+                    "actions": {
+                        "forcemerge": {
+                            "max_num_segments": 1
+                        }
+                    }
+                },
+                "delete": {
+                    "min_age": "30d",
+                    "actions": {
+                        "delete": {
+                            "delete_searchable_snapshot": true
+                        }
+                    }
+                }
+            }
+        },
+        "in_use_by" : {
+            "indices" : [],
+            "data_streams" : [],
+            "composable_templates" : []
+        }
+    }
+}
