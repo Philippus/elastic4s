@@ -1,0 +1,54 @@
+{
+  "index_templates": [
+    {
+      "name": "my_template",
+      "index_template": {
+        "index_patterns": ["my_*", "bar_*"],
+        "template": {
+          "settings": {
+            "number_of_shards": 1
+          },
+          "mappings": {
+            "dynamic_templates": [
+              {
+                "es": {
+                  "match": "*_es",
+                  "match_pattern": "regex",
+                  "match_mapping_type": "string",
+                  "mapping": {
+                    "type": "text",
+                    "analyzer": "spanish"
+                  }
+                }
+              },
+              {
+                "en": {
+                  "match": "*",
+                  "match_mapping_type": "string",
+                  "mapping": {
+                    "type": "text",
+                    "analyzer": "english"
+                  }
+                }
+              }
+            ],
+            "properties": {
+              "title": {
+                "type": "keyword"
+              },
+              "created_at": {
+                "type": "date"
+              }
+            }
+          },
+          "aliases": {
+            "my_alias": {}
+          }
+        },
+        "priority": 500,
+        "version": 3,
+        "composed_of": []
+      }
+    }
+  ]
+}
