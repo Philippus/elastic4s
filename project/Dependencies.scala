@@ -8,7 +8,7 @@ object Dependencies {
   val CatsEffectVersion              = "3.7.1"
   val CirceVersion                   = "0.14.16"
   val CommonsIoVersion               = "2.22.0"
-  val ElasticsearchVersion           = "8.19.20"
+  val ElasticsearchVersion           = "8.19.21"
   val ExtsVersion                    = "1.61.1"
   val Http4sVersion                  = "0.23.36"
   val JacksonVersion                 = "2.22.2"
