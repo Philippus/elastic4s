@@ -40,13 +40,11 @@ trait IndexTemplateHandlers {
   implicit object CreateIndexTemplateHandler extends Handler[CreateIndexTemplateRequest, CreateIndexTemplateResponse] {
 
     override def responseHandler: ResponseHandler[CreateIndexTemplateResponse] =
-      new ResponseHandler[CreateIndexTemplateResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, CreateIndexTemplateResponse] =
-          response.statusCode match {
-            case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
-            case _   => Left(ElasticErrorParser.parse(response))
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 => Right(ResponseHandler.fromResponse[CreateIndexTemplateResponse](response))
+          case _   => Left(ElasticErrorParser.parse(response))
+        }
 
     override def build(request: CreateIndexTemplateRequest): ElasticRequest = {
       val endpoint = "/_index_template/" + request.name
@@ -66,15 +64,13 @@ trait IndexTemplateHandlers {
   implicit object GetIndexTemplateHandler extends Handler[GetIndexTemplateRequest, GetIndexTemplatesResponse] {
 
     override def responseHandler: ResponseHandler[GetIndexTemplatesResponse] =
-      new ResponseHandler[GetIndexTemplatesResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplatesResponse] =
-          response.statusCode match {
-            case 200 =>
-              val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
-              Right(templates)
-            case _   => Left(ElasticErrorParser.parse(response))
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 =>
+            val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
+            Right(templates)
+          case _   => Left(ElasticErrorParser.parse(response))
+        }
 
     override def build(request: GetIndexTemplateRequest): ElasticRequest = {
       val endpoint = s"/_index_template/" + request.indexes.string(true)

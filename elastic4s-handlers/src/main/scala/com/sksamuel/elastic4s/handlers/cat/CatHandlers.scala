@@ -98,10 +98,8 @@ trait CatHandlers {
 
   implicit object CatHealthHandler extends Handler[CatHealth, CatHealthResponse] {
 
-    override def responseHandler: ResponseHandler[CatHealthResponse] = new ResponseHandler[CatHealthResponse] {
-      override def handle(response: HttpResponse) =
-        Right(ResponseHandler.fromResponse[Seq[CatHealthResponse]](response).head)
-    }
+    override def responseHandler: ResponseHandler[CatHealthResponse] =
+      (response: HttpResponse) => Right(ResponseHandler.fromResponse[Seq[CatHealthResponse]](response).head)
 
     override def build(request: CatHealth): ElasticRequest =
       ElasticRequest("GET", "/_cat/health", Map("v" -> "", "format" -> "json"))
@@ -109,10 +107,8 @@ trait CatHandlers {
 
   implicit object CatCountHandler extends Handler[CatCount, CatCountResponse] {
 
-    override def responseHandler: ResponseHandler[CatCountResponse] = new ResponseHandler[CatCountResponse] {
-      override def handle(response: HttpResponse) =
-        Right(ResponseHandler.fromResponse[Seq[CatCountResponse]](response).head)
-    }
+    override def responseHandler: ResponseHandler[CatCountResponse] =
+      (response: HttpResponse) => Right(ResponseHandler.fromResponse[Seq[CatCountResponse]](response).head)
 
     override def build(request: CatCount): ElasticRequest = {
       val endpoint = request.indices match {
@@ -125,10 +121,8 @@ trait CatHandlers {
 
   implicit object CatMasterHandler extends Handler[CatMaster, CatMasterResponse] {
 
-    override def responseHandler: ResponseHandler[CatMasterResponse] = new ResponseHandler[CatMasterResponse] {
-      override def handle(response: HttpResponse) =
-        Right(ResponseHandler.fromResponse[Seq[CatMasterResponse]](response).head)
-    }
+    override def responseHandler: ResponseHandler[CatMasterResponse] =
+      (response: HttpResponse) => Right(ResponseHandler.fromResponse[Seq[CatMasterResponse]](response).head)
 
     override def build(request: CatMaster): ElasticRequest =
       ElasticRequest("GET", "/_cat/master", Map("v" -> "", "format" -> "json"))

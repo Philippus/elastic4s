@@ -26,16 +26,14 @@ object NodeHotThreadsHandler extends Handler[NodeHotThreadsRequest, String] {
     ElasticRequest("GET", endpoint, params.toMap)
   }
 
-  override def responseHandler: ResponseHandler[String] = new ResponseHandler[String] {
-
-    override def handle(response: HttpResponse): Either[ElasticError, String] = response.statusCode match {
+  override def responseHandler: ResponseHandler[String] = (response: HttpResponse) =>
+    response.statusCode match {
       case 200 | 201 | 202 | 203 | 204 =>
         val entity = response.entity.getOrError("No entity defined")
         Right(entity.content)
       case _                           =>
         Left(ElasticErrorParser.parse(response))
     }
-  }
 }
 
 case class NodeHotThreadsRequest(

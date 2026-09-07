@@ -52,14 +52,13 @@ trait UpdateHandlers {
 
   implicit object UpdateHandler extends Handler[UpdateRequest, UpdateResponse] {
 
-    override def responseHandler: ResponseHandler[UpdateResponse] = new ResponseHandler[UpdateResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, UpdateResponse] = response.statusCode match {
+    override def responseHandler: ResponseHandler[UpdateResponse] = (response: HttpResponse) =>
+      response.statusCode match {
         case 200 | 201 =>
           val json = response.entity.getOrError("Update responses must include a body")
           Right(ResponseHandler.fromEntity[UpdateResponse](json))
         case _         => Left(ElasticErrorParser.parse(response))
       }
-    }
 
     override def build(request: UpdateRequest): ElasticRequest = {
 

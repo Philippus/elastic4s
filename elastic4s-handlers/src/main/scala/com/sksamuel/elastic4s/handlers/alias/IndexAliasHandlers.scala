@@ -16,8 +16,8 @@ trait IndexAliasHandlers {
 
   implicit object GetAliasHandler extends Handler[GetAliasesRequest, IndexAliases] {
 
-    override def responseHandler: ResponseHandler[IndexAliases] = new ResponseHandler[IndexAliases] {
-      override def handle(response: HttpResponse): Either[ElasticError, IndexAliases] = response.statusCode match {
+    override def responseHandler: ResponseHandler[IndexAliases] = (response: HttpResponse) =>
+      response.statusCode match {
         case 200 =>
           val root = ResponseHandler.json(response.entity.get)
           val map  = root.properties.asScala.toVector.map { entry =>
@@ -27,7 +27,6 @@ trait IndexAliasHandlers {
         case 404 => Right(IndexAliases(Map.empty))
         case _   => Left(ElasticErrorParser.parse(response))
       }
-    }
 
     override def build(request: GetAliasesRequest): ElasticRequest = {
       val endpoint = s"/${request.indices.string(true)}/_alias/${request.aliases.mkString(",")}"

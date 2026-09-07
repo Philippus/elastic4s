@@ -46,8 +46,8 @@ trait TaskHandlers {
 
   abstract class AbstractCancelTaskHandler[U] extends Handler[U, Boolean] {
 
-    override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
-      override def handle(response: HttpResponse): Either[ElasticError, Boolean] = response.statusCode match {
+    override def responseHandler: ResponseHandler[Boolean] = (response: HttpResponse) =>
+      response.statusCode match {
         case 200 | 201 | 202 | 203 | 204 => {
           val entity = response.entity.getOrError("No entity defined")
           // It can fail on a 200 by returning a response containing node_failures
@@ -66,7 +66,6 @@ trait TaskHandlers {
         case _                           =>
           Left[ElasticError, Boolean](ElasticErrorParser.parse(response))
       }
-    }
 
   }
 

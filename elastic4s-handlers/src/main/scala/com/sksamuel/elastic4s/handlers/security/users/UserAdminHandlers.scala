@@ -28,14 +28,12 @@ trait UserAdminHandlers {
   private val USER_BASE_PATH = "/_security/user/"
 
   implicit object CreateOrUpdateUserHandler extends Handler[CreateOrUpdateUserRequest, CreateUserResponse] {
-    override def responseHandler: ResponseHandler[CreateUserResponse] = new ResponseHandler[CreateUserResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, CreateUserResponse] =
-        response.statusCode match {
-          case 200 | 201 => Right(ResponseHandler.fromResponse[CreateUserResponse](response))
-          case 400 | 500 => Left(ElasticErrorParser.parse(response))
-          case _         => sys.error(response.toString)
-        }
-    }
+    override def responseHandler: ResponseHandler[CreateUserResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 200 | 201 => Right(ResponseHandler.fromResponse[CreateUserResponse](response))
+        case 400 | 500 => Left(ElasticErrorParser.parse(response))
+        case _         => sys.error(response.toString)
+      }
 
     override def build(request: CreateOrUpdateUserRequest): ElasticRequest = {
       val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
@@ -64,14 +62,12 @@ trait UserAdminHandlers {
   }
 
   implicit object DeleteUserHandler extends Handler[DeleteUserRequest, DeleteUserResponse] {
-    override def responseHandler: ResponseHandler[DeleteUserResponse] = new ResponseHandler[DeleteUserResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, DeleteUserResponse] =
-        response.statusCode match {
-          case 200 | 201 | 404 => Right(ResponseHandler.fromResponse[DeleteUserResponse](response))
-          case 400 | 500       => Left(ElasticErrorParser.parse(response))
-          case _               => sys.error(response.toString)
-        }
-    }
+    override def responseHandler: ResponseHandler[DeleteUserResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 200 | 201 | 404 => Right(ResponseHandler.fromResponse[DeleteUserResponse](response))
+        case 400 | 500       => Left(ElasticErrorParser.parse(response))
+        case _               => sys.error(response.toString)
+      }
 
     override def build(request: DeleteUserRequest): ElasticRequest = {
       val endpoint = USER_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)

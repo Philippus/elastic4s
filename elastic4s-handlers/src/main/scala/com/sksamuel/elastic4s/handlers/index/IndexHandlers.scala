@@ -15,13 +15,12 @@ trait IndexHandlers {
 
   implicit object IndexHandler extends Handler[IndexRequest, IndexResponse] {
 
-    override def responseHandler: ResponseHandler[IndexResponse] = new ResponseHandler[IndexResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, IndexResponse] = response.statusCode match {
+    override def responseHandler: ResponseHandler[IndexResponse] = (response: HttpResponse) =>
+      response.statusCode match {
         case 201 | 200                   => Right(ResponseHandler.fromResponse[IndexResponse](response))
         case 400 | 401 | 403 | 409 | 500 => Left(ElasticErrorParser.parse(response))
         case _                           => sys.error(response.toString)
       }
-    }
 
     override def build(request: IndexRequest): ElasticRequest = {
 

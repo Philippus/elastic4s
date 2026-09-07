@@ -44,18 +44,16 @@ trait ReindexHandlers {
   implicit object ReindexHandler extends Handler[ReindexRequest, Either[ReindexResponse, CreateTaskResponse]] {
 
     override def responseHandler: ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] =
-      new ResponseHandler[Either[ReindexResponse, CreateTaskResponse]] {
-        override def handle(response: HttpResponse): Either[ElasticError, Either[ReindexResponse, CreateTaskResponse]] =
-          response.statusCode match {
-            case 200 =>
-              val entity = response.entity.getOrError("No entity defined but was expected")
-              entity.get match {
-                case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
-                case _                         => Right(Left(ResponseHandler.fromResponse[ReindexResponse](response)))
-              }
-            case _   => Left(ElasticErrorParser.parse(response))
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 =>
+            val entity = response.entity.getOrError("No entity defined but was expected")
+            entity.get match {
+              case TaskRegex(nodeId, taskId) => Right(Right(CreateTaskResponse(nodeId, taskId)))
+              case _                         => Right(Left(ResponseHandler.fromResponse[ReindexResponse](response)))
+            }
+          case _   => Left(ElasticErrorParser.parse(response))
+        }
 
     override def build(request: ReindexRequest): ElasticRequest = {
 

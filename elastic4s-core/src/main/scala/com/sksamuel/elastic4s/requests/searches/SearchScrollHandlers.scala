@@ -12,15 +12,13 @@ trait SearchScrollHandlers {
 
   implicit object ClearScrollHandler extends Handler[ClearScrollRequest, ClearScrollResponse] {
 
-    override def responseHandler: ResponseHandler[ClearScrollResponse] = new ResponseHandler[ClearScrollResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, ClearScrollResponse] =
-        response.statusCode match {
-          case 200 =>
-            Right(ResponseHandler.fromResponse[ClearScrollResponse](response))
-          case _   =>
-            Left(ElasticErrorParser.parse(response))
-        }
-    }
+    override def responseHandler: ResponseHandler[ClearScrollResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 200 =>
+          Right(ResponseHandler.fromResponse[ClearScrollResponse](response))
+        case _   =>
+          Left(ElasticErrorParser.parse(response))
+      }
 
     override def build(request: ClearScrollRequest): ElasticRequest = {
 
@@ -36,12 +34,11 @@ trait SearchScrollHandlers {
 
   implicit object SearchScrollHandler extends Handler[SearchScrollRequest, SearchResponse] {
 
-    override def responseHandler: ResponseHandler[SearchResponse] = new ResponseHandler[SearchResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, SearchResponse] = response.statusCode match {
+    override def responseHandler: ResponseHandler[SearchResponse] = (response: HttpResponse) =>
+      response.statusCode match {
         case 200 => Right(ResponseHandler.fromResponse[SearchResponse](response))
         case _   => Left(ElasticErrorParser.parse(response))
       }
-    }
 
     override def build(req: SearchScrollRequest): ElasticRequest = {
 

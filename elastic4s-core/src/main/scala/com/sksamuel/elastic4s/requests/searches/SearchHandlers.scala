@@ -22,33 +22,31 @@ trait SearchHandlers {
 
     import scala.jdk.CollectionConverters._
 
-    override def responseHandler: ResponseHandler[MultiSearchResponse] = new ResponseHandler[MultiSearchResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, MultiSearchResponse] =
-        response.statusCode match {
-          case status if status >= 200 && status < 300 =>
-            val json  = JacksonSupport.mapper.readTree(response.entity.get.content)
-            val items = Option(json.get("responses")) match {
-              case Some(node) =>
-                node.values
-                  .asScala
-                  .zipWithIndex
-                  .map {
-                    case (element, index) =>
-                      val status = element.get("status").intValue()
-                      val either =
-                        if (element.has("error"))
-                          Left(JacksonSupport.mapper.treeToValue[ElasticError](element.get("error")))
-                        else
-                          Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
-                      MultisearchResponseItem(index, status, either)
-                  }.toSeq
-              case None       => Nil
-            }
-            Right(MultiSearchResponse(items))
-          case _                                       =>
-            Left(ElasticErrorParser.parse(response))
-        }
-    }
+    override def responseHandler: ResponseHandler[MultiSearchResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case status if status >= 200 && status < 300 =>
+          val json  = JacksonSupport.mapper.readTree(response.entity.get.content)
+          val items = Option(json.get("responses")) match {
+            case Some(node) =>
+              node.values
+                .asScala
+                .zipWithIndex
+                .map {
+                  case (element, index) =>
+                    val status = element.get("status").intValue()
+                    val either =
+                      if (element.has("error"))
+                        Left(JacksonSupport.mapper.treeToValue[ElasticError](element.get("error")))
+                      else
+                        Right(JacksonSupport.mapper.treeToValue[SearchResponse](element))
+                    MultisearchResponseItem(index, status, either)
+                }.toSeq
+            case None       => Nil
+          }
+          Right(MultiSearchResponse(items))
+        case _                                       =>
+          Left(ElasticErrorParser.parse(response))
+      }
 
     override def build(request: MultiSearchRequest): ElasticRequest = {
 
