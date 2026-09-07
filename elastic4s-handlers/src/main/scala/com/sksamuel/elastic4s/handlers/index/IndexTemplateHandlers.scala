@@ -26,10 +26,37 @@ case class IndexTemplate(
     order: Int,
     @JsonProperty("index_patterns") indexPatterns: Seq[String],
     settings: Map[String, Any],
-    mappings: Map[String, Any],
+    mappings: TemplateMappings,
     aliases: Map[String, Any],
     version: Option[Int]
 )
+
+// Raw Jackson-deserialized intermediate types — not part of the public API.
+// Composable index templates nest settings/mappings/aliases under a "template" sub-object.
+private[index] case class RawGetIndexTemplatesResponse(
+    @JsonProperty("index_templates") indexTemplates: List[RawTemplateEntry]
+)
+private[index] case class RawTemplateEntry(name: String, @JsonProperty("index_template") template: RawIndexTemplate)
+private[index] case class RawTemplateBody(
+    settings: Option[Map[String, Any]],
+    mappings: Option[Map[String, Any]],
+    aliases: Option[Map[String, Any]]
+)
+private[index] case class RawIndexTemplate(
+    order: Int,
+    @JsonProperty("index_patterns") indexPatterns: Seq[String],
+    template: Option[RawTemplateBody],
+    version: Option[Int]
+) {
+  def toIndexTemplate: IndexTemplate = IndexTemplate(
+    order         = order,
+    indexPatterns = indexPatterns,
+    settings      = template.flatMap(_.settings).getOrElse(Map.empty),
+    mappings      = template.flatMap(_.mappings).fold(TemplateMappings())(DynamicTemplateBuilderFn.fromMappingsMap),
+    aliases       = template.flatMap(_.aliases).getOrElse(Map.empty),
+    version       = version
+  )
+}
 
 trait IndexTemplateHandlers {
 
@@ -70,8 +97,11 @@ trait IndexTemplateHandlers {
         override def handle(response: HttpResponse): Either[ElasticError, GetIndexTemplatesResponse] =
           response.statusCode match {
             case 200 =>
-              val templates = ResponseHandler.fromResponse[GetIndexTemplatesResponse](response)
-              Right(templates)
+              val raw = ResponseHandler.fromResponse[RawGetIndexTemplatesResponse](response)
+              val typed = GetIndexTemplatesResponse(
+                raw.indexTemplates.map(t => Templates(t.name, t.template.toIndexTemplate))
+              )
+              Right(typed)
             case _   => Left(ElasticErrorParser.parse(response))
           }
       }
