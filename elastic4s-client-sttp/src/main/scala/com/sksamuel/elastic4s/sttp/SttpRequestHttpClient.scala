@@ -3,14 +3,9 @@ package com.sksamuel.elastic4s.sttp
 import java.io._
 import java.nio.file.Files
 import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
-import com.sksamuel.elastic4s.{
-  ElasticNodeEndpoint,
-  ElasticRequest,
-  HttpClient,
-  HttpEntity,
-  HttpResponse
-}
+import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticRequest, HttpClient, HttpEntity, HttpResponse}
 import com.sksamuel.elastic4s.ext.OptionImplicits._
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import sttp.client3._
@@ -18,6 +13,8 @@ import sttp.model.Uri
 import sttp.model.Uri.{PathSegments, QuerySegment}
 import sttp.monad.{FutureMonad, MonadError}
 import sttp.monad.syntax.MonadErrorOps
+
+import scala.util.Using
 
 class SttpRequestHttpClient[F[_]: MonadError](
     nodeEndpoint: ElasticNodeEndpoint
@@ -80,7 +77,7 @@ class SttpRequestHttpClient[F[_]: MonadError](
       case StringEntity(content: String, _)      => r2.body(content)
       case ByteArrayEntity(content, _)           => r2.body(content)
       case InputStreamEntity(in: InputStream, _) =>
-        r2.body(Source.fromInputStream(in, "UTF8").getLines().mkString("\n"))
+        r2.body(Using.resource(Source.fromInputStream(in, "UTF8"))(_.getLines().mkString("\n")))
       case FileEntity(file: File, _)             => r2.body(Files.readAllBytes(file.toPath))
     }
   }
