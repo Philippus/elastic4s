@@ -194,6 +194,10 @@ object ArtistIndex extends App {
 
 ```
 
+### AI Agent Skill
+A skill description for AI agent is available in the folder agent-skill. You can download the file elastic4s-skill.zip and unzip it in your AI agent skill folders. It covers most of the common usages of elastic4s.
+
+This skill can be updated by following the instruction in the UPDATING.md file. 
 
 ## Executors
 
