@@ -16,7 +16,7 @@ def isRelease              = releaseVersion != ""
 def githubRunNumber = sys.env.getOrElse("GITHUB_RUN_NUMBER", "local")
 
 val scala2Versions   = Seq("2.13.18")
-val scalaAllVersions = scala2Versions :+ "3.3.7"
+val scalaAllVersions = scala2Versions :+ "3.3.8"
 
 lazy val commonScalaVersionSettings = Seq(
   scalaVersion       := "2.13.18",
@@ -98,6 +98,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   clientcore,
   clientesjava,
   clientsSniffed,
+  clientakka,
   clientpekko,
   clienthttp4s,
   zio_1,
@@ -120,7 +121,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   reactivestreamspekko
 )
 lazy val scala3_root                           = Project("elastic4s-scala3", file("scala3"))
-  .settings(name := "elastic4s")
+  .settings(name := "elastic4s-scala3")
   .settings(allSettings)
   .settings(
     noPublishSettings
@@ -180,7 +181,7 @@ lazy val clientesjava = (project in file("elastic4s-client-esjava"))
       log4jApi,
       fasterXmlJacksonCore,
       fasterXmlJacksonDatabind,
-      fasterXmlJacksonModuleScala exclude (
+      fasterXmlJacksonModuleScala.exclude(
         "org.scala-lang",
         "scala-library"
       )
@@ -267,7 +268,7 @@ lazy val jackson = (project in file("elastic4s-json-jackson"))
     libraryDependencies ++= Seq(
       fasterXmlJacksonCore,
       fasterXmlJacksonDatabind,
-      fasterXmlJacksonModuleScala exclude (
+      fasterXmlJacksonModuleScala.exclude(
         "org.scala-lang",
         "scala-library"
       )
@@ -325,14 +326,18 @@ lazy val clientsttp4 = (project in file("elastic4s-client-sttp4"))
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-akka")
-  .settings(
-    scala2Settings
-  ) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, mockitoCore, scalaTestPlusMockito))
   .settings(
-    Test / javaOptions +=
-      s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${Dependencies.MockitoVersion}/mockito-core-${Dependencies.MockitoVersion}.jar",
-    Test / fork := true
+    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Raw,
+    Test / javaOptions += {
+      val mockitoCoreJar = (Test / update).value
+        .matching(moduleFilter(organization = "org.mockito", name = "mockito-core", revision = mockitoCore.revision))
+        .headOption
+        .getOrElse(sys.error(s"Unable to resolve mockito-core ${mockitoCore.revision} for Test scope"))
+      s"-javaagent:${mockitoCoreJar.getAbsolutePath}"
+    },
+    Test / fork                        := true
   )
 
 lazy val clientpekko = (project in file("elastic4s-client-pekko"))
@@ -341,9 +346,10 @@ lazy val clientpekko = (project in file("elastic4s-client-pekko"))
   .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(pekkoHTTP, pekkoStream, mockitoCore, scalaTestPlusMockito))
   .settings(
+    Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Raw,
     Test / javaOptions +=
       s"-javaagent:${csrCacheDirectory.value.getAbsolutePath}/https/repo1.maven.org/maven2/org/mockito/mockito-core/${Dependencies.MockitoVersion}/mockito-core-${Dependencies.MockitoVersion}.jar",
-    Test / fork := true
+    Test / fork                        := true
   )
 
 lazy val clienthttp4s = (project in file("elastic4s-client-http4s"))
@@ -368,14 +374,14 @@ lazy val tests = (project in file("elastic4s-tests"))
       commonsIo,
       fasterXmlJacksonCore        % Test,
       fasterXmlJacksonDatabind    % Test,
-      fasterXmlJacksonModuleScala % Test exclude (
-        "org.scala-lang",
-        "scala-library"
-      ),
-      "org.apache.logging.log4j"  % "log4j-api"        % "2.26.0" % Test,
-      "org.apache.logging.log4j"  % "log4j-slf4j-impl" % "2.26.0" % Test,
-      "org.apache.logging.log4j"  % "log4j-core"       % "2.26.0" % Test
-    ),
+      fasterXmlJacksonModuleScala % Test,
+      "org.apache.logging.log4j"  % "log4j-api"        % "2.26.1" % Test,
+      "org.apache.logging.log4j"  % "log4j-slf4j-impl" % "2.26.1" % Test,
+      "org.apache.logging.log4j"  % "log4j-core"       % "2.26.1" % Test
+    ).map(_.exclude(
+      "org.scala-lang",
+      "scala-library"
+    )),
     Test / fork               := false,
     Test / parallelExecution  := false,
     Test / testForkedParallel := false

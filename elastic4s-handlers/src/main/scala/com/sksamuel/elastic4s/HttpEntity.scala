@@ -3,6 +3,7 @@ package com.sksamuel.elastic4s
 import java.io.{File, InputStream}
 import java.nio.file.Files
 import scala.io.Source
+import scala.util.Using
 
 object HttpEntity {
 
@@ -14,7 +15,7 @@ object HttpEntity {
   }
 
   case class InputStreamEntity(content: InputStream, contentCharset: Option[String]) extends HttpEntity {
-    def get: String = Source.fromInputStream(content).getLines().mkString("\n")
+    def get: String = Using.resource(Source.fromInputStream(content))(_.getLines().mkString("\n"))
   }
 
   case class FileEntity(content: File, contentCharset: Option[String]) extends HttpEntity {

@@ -53,22 +53,36 @@ private[pekko] class DefaultBlacklist(min: FiniteDuration, max: FiniteDuration, 
     hosts.remove(host) != null
   }
 
+  private def isActive(host: String, record: BlacklistRecord, now: Long): Boolean = {
+    if (!record.enabled)
+      false
+    else if (now - record.untilTime >= 0) {
+      hosts.put(host, record.copy(enabled = false))
+      false
+    } else
+      true
+  }
+
   override def contains(host: String): Boolean = {
+    val now = nanoTime
     hosts.get(host) match {
       case null => false
-      case r    =>
-        if (r.enabled) {
-          if (nanoTime - r.untilTime >= 0) {
-            hosts.put(host, r.copy(enabled = false))
-            false
-          } else true
-        } else false
+      case r    => isActive(host, r, now)
     }
   }
 
-  override def size: Int = hosts.size()
+  override def size: Int = {
+    val now = nanoTime
+    hosts.entrySet().asScala.count(entry => isActive(entry.getKey, entry.getValue, now))
+  }
 
-  override def list: List[String] = hosts.keys().asScala.toList
+  override def list: List[String] = {
+    val now = nanoTime
+    hosts.entrySet().asScala.toList.collect {
+      case entry if isActive(entry.getKey, entry.getValue, now) =>
+        entry.getKey
+    }
+  }
 }
 
 object DefaultBlacklist {

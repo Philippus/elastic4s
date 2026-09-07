@@ -1,6 +1,9 @@
 package com.sksamuel.elastic4s.fields
 
-// https://www.elastic.co/guide/en/elasticsearch/plugins/master/analysis-icu-collation-keyword-field.html
+object IcuCollationKeywordField {
+  val `type`: String = "icu_collation_keyword"
+}
+
 case class IcuCollationKeywordField(
     name: String,
     language: Option[String] = None,

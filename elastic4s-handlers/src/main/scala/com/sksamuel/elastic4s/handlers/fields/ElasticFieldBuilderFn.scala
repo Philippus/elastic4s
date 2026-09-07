@@ -73,6 +73,7 @@ object ElasticFieldBuilderFn {
       case GeoPointField.`type`                                                           => GeoPointFieldBuilderFn.toField(name, values)
       case GeoShapeField.`type`                                                           => GeoShapeFieldBuilderFn.toField(name, values)
       case HistogramField.`type`                                                          => HistogramFieldBuilderFn.toField(name, values)
+      case IcuCollationKeywordField.`type`                                                => IcuCollationKeywordFieldBuilderFn.toField(name, values)
       case IpField.`type`                                                                 => IpFieldBuilderFn.toField(name, values)
       case IpRangeField.`type`                                                            => IpRangeFieldBuilderFn.toField(name, values)
       case JoinField.`type`                                                               => JoinFieldBuilderFn.toField(name, values)

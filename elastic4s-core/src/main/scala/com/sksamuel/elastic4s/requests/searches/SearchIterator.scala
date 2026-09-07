@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.{ElasticClient, HitReader, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, HitReader, RequestFailure, RequestSuccess}
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
@@ -15,7 +15,10 @@ object SearchIterator {
 
   /** Creates a new Iterator for instances of SearchHit by wrapping the given HTTP client.
     */
-  def hits(client: ElasticClient[Future], searchreq: SearchRequest)(implicit timeout: Duration): Iterator[SearchHit] =
+  def hits(client: ElasticClient[Future], searchreq: SearchRequest)(implicit
+      timeout: Duration,
+      options: CommonRequestOptions
+  ): Iterator[SearchHit] =
     new Iterator[SearchHit] {
       require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
@@ -48,7 +51,11 @@ object SearchIterator {
         }
 
         scrollId = response.scrollId
-        response.hits.hits.iterator
+        val hits = response.hits.hits.iterator
+
+        // scroll is exhausted: proactively release the server-side scroll context
+        if (hits.isEmpty) scrollId.foreach(id => client.execute(clearScroll(id)))
+        hits
       }
     }
 
@@ -57,7 +64,8 @@ object SearchIterator {
     */
   def iterate[T](client: ElasticClient[Future], searchreq: SearchRequest)(implicit
       reader: HitReader[T],
-      timeout: Duration
+      timeout: Duration,
+      options: CommonRequestOptions
   ): Iterator[T] =
     hits(client, searchreq).map(_.to[T])
 }

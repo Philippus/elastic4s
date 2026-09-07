@@ -1,7 +1,9 @@
 package com.sksamuel.elastic4s.akka
 
+import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
+import akka.stream.scaladsl.Flow
 import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
 import org.mockito.ArgumentMatchers._
 import org.scalatest.BeforeAndAfterAll
@@ -32,6 +34,16 @@ class AkkaHttpClientMockTest
     val sendRequest = mock[Function[HttpRequest, Try[HttpResponse]]]
     val poolFactory = new TestHttpPoolFactory(sendRequest)
     (sendRequest, poolFactory)
+  }
+
+  private class ClosedPoolFactory extends HttpPoolFactory {
+    override def create[T](): Flow[(HttpRequest, T), (HttpRequest, Try[HttpResponse], T), NotUsed] =
+      Flow[(HttpRequest, T)]
+        .take(0)
+        .map { case (r, s) => (r, Success(HttpResponse()), s) }
+
+    override def shutdown(): scala.concurrent.Future[Unit] =
+      scala.concurrent.Future.successful(())
   }
 
   "AkkaHttpClient" should {
@@ -110,6 +122,47 @@ class AkkaHttpClientMockTest
         Some(ElasticEntity.StringEntity("", None)),
         Map.empty
       )
+    }
+
+    "retry with delay when all hosts are blacklisted" in {
+
+      val hosts                   = List("host1")
+      val blacklist               = mock[Blacklist]
+      val (sendRequest, httpPool) = mockHttpPool()
+
+      val client =
+        new AkkaHttpClient(
+          AkkaHttpClientSettings(hosts).copy(maxRetryTimeout = 2.seconds),
+          blacklist,
+          httpPool
+        )
+
+      when(blacklist.contains("host1")).thenReturn(false, true, false)
+      when(blacklist.add("host1")).thenReturn(true)
+      when(blacklist.remove("host1")).thenReturn(false)
+
+      when(sendRequest
+        .apply(argThat { (r: HttpRequest) =>
+          r.uri == Uri("http://host1/test")
+        }))
+        .thenReturn(
+          Success(HttpResponse(StatusCodes.BadGateway)),
+          Success(HttpResponse().withEntity("ok"))
+        )
+
+      val startedAt = System.nanoTime()
+
+      client
+        .send(ElasticRequest("GET", "/test"))
+        .futureValue shouldBe ElasticResponse(
+        200,
+        Some(ElasticEntity.StringEntity("ok", None)),
+        Map.empty
+      )
+
+      val elapsed = (System.nanoTime() - startedAt).nanos
+      elapsed should be >= 80.millis
+      verify(sendRequest, times(2)).apply(any[HttpRequest])
     }
 
     "blacklist on 502" in {
@@ -218,5 +271,21 @@ class AkkaHttpClientMockTest
       )
     }
 
+    "not hang when queue offer fails before host is resolved" in {
+      val blacklist = mock[Blacklist]
+
+      val client = new AkkaHttpClient(
+        AkkaHttpClientSettings(List("host1")).copy(maxRetryTimeout = 0.seconds),
+        blacklist,
+        new ClosedPoolFactory
+      )
+
+      val err = client
+        .send(ElasticRequest("GET", "/test"))
+        .failed
+        .futureValue
+      err.getMessage should include("Request retries exceeded max retry timeout")
+      verify(blacklist, never()).add(any[String])
+    }
   }
 }

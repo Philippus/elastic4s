@@ -5,6 +5,33 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object IcuCollationKeywordFieldBuilderFn {
 
+  def toField(name: String, values: Map[String, Any]): IcuCollationKeywordField =
+    IcuCollationKeywordField(
+      name = name,
+      language = values.get("language").map(_.asInstanceOf[String]),
+      country = values.get("country").map(_.asInstanceOf[String]),
+      variant = values.get("variant").map(_.asInstanceOf[String]),
+      strength = values.get("strength").map(_.asInstanceOf[String]),
+      decomposition = values.get("decomposition").map(_.asInstanceOf[String]),
+      alternate = values.get("alternate").map(_.asInstanceOf[String]),
+      caseLevel = values.get("case_level").map(_.asInstanceOf[Boolean]),
+      caseFirst = values.get("case_first").map(_.asInstanceOf[String]),
+      numeric = values.get("numeric").map(_.asInstanceOf[Boolean]),
+      variableTop = values.get("variable_top").map(_.asInstanceOf[String]),
+      hiraganaQuaternaryMode = values.get("hiragana_quaternary_mode").map(_.asInstanceOf[Boolean]),
+      fields = values
+        .get("fields")
+        .map(_.asInstanceOf[Map[String, Map[String, Any]]].map { case (k, v) =>
+          ElasticFieldBuilderFn.construct(k, v)
+        }.toList)
+        .getOrElse(List.empty),
+      index = values.get("index").map(_.asInstanceOf[Boolean]),
+      docValues = values.get("doc_values").map(_.asInstanceOf[Boolean]),
+      ignoreAbove = values.get("ignore_above").map(_.asInstanceOf[Int]),
+      nullValue = values.get("null_value").map(_.asInstanceOf[String]),
+      store = values.get("store").map(_.asInstanceOf[Boolean])
+    )
+
   def build(field: IcuCollationKeywordField): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()

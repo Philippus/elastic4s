@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.akka.reactivestreams
 import akka.actor._
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, RequestFailure, RequestSuccess}
 import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
@@ -29,7 +29,7 @@ class BulkIndexingSubscriber[T] private[reactivestreams] (
     client: ElasticClient[Future],
     builder: RequestBuilder[T],
     config: SubscriberConfig[T]
-)(implicit actorRefFactory: ActorRefFactory)
+)(implicit actorRefFactory: ActorRefFactory, commonRequestOptions: CommonRequestOptions)
     extends Subscriber[T] {
 
   private var actor: ActorRef = _
@@ -39,7 +39,7 @@ class BulkIndexingSubscriber[T] private[reactivestreams] (
     // when the provided Subscriber is null in which case it MUST throw a java.lang.NullPointerException to the caller
     if (sub == null) throw new NullPointerException()
     if (actor == null)
-      actor = actorRefFactory.actorOf(Props(new BulkActor(client, sub, builder, config)))
+      actor = actorRefFactory.actorOf(Props(new BulkActor(client, sub, builder, config)(commonRequestOptions)))
     else
       // rule 2.5, must cancel subscription if onSubscribe has been invoked twice
       // https://github.com/reactive-streams/reactive-streams-jvm#2.5
@@ -85,7 +85,7 @@ class BulkActor[T](
     subscription: Subscription,
     builder: RequestBuilder[T],
     config: SubscriberConfig[T]
-) extends Actor {
+)(implicit commonRequestOptions: CommonRequestOptions) extends Actor {
 
   import com.sksamuel.elastic4s.ElasticDsl._
   import context.{dispatcher, system}

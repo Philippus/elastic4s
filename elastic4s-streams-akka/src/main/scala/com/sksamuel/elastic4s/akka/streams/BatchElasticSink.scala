@@ -5,7 +5,7 @@ import akka.stream.{Attributes, Inlet, SinkShape}
 import com.sksamuel.elastic4s.handlers.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponse}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess, Response}
+import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, RequestFailure, RequestSuccess, Response}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}
@@ -14,7 +14,8 @@ case class SinkSettings(refreshAfterOp: Boolean = false)
 
 class BatchElasticSink[T](client: ElasticClient[Future], settings: SinkSettings)(implicit
     ec: ExecutionContext,
-    builder: RequestBuilder[T]
+    builder: RequestBuilder[T],
+    commonRequestOptions: CommonRequestOptions
 ) extends GraphStage[SinkShape[Seq[T]]] {
 
   private val in: Inlet[Seq[T]]         = Inlet.create("ElasticSink.out")

@@ -462,7 +462,7 @@ search("music").query("kate bush").highlighting (
 ```
 
 All very straightforward. There are many options you can use to tweak the results. In the example above I have
-simply set the snippets to be taken from the field called "body" and to have max length 20. You can set the number of fragments to return, seperate queries to generate them and other things. See the elasticsearch page on [highlighting](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-highlighting.html) for more info.
+simply set the snippets to be taken from the field called "body" and to have max length 20. You can set the number of fragments to return, separate queries to generate them and other things. See the elasticsearch page on [highlighting](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/search-request-highlighting.html) for more info.
 
 
 

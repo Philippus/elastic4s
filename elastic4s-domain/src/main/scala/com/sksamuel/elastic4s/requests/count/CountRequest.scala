@@ -15,7 +15,8 @@ case class CountRequest(
     lenient: Option[Boolean] = None,
     routing: Option[String] = None,
     terminateAfter: Option[Int] = None,
-    minScore: Option[Double] = None
+    minScore: Option[Double] = None,
+    stats: Seq[String] = Nil
 ) {
   def query(query: Query): CountRequest                      = copy(query = query.some)
   def lenient(lenient: Boolean): CountRequest                = copy(lenient = lenient.some)
@@ -27,4 +28,5 @@ case class CountRequest(
   def routing(routing: String): CountRequest                 = copy(routing = routing.some)
   def terminateAfter(terminate_after: Int): CountRequest     = copy(terminateAfter = terminate_after.some)
   def minScore(minScore: Double): CountRequest               = copy(minScore = minScore.some)
+  def stats(stats: String*): CountRequest                    = copy(stats = stats)
 }

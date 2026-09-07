@@ -14,7 +14,8 @@ case class SinkSettings(refreshAfterOp: Boolean = false)
 
 class BatchElasticSink[T](client: ElasticClient[Future], settings: SinkSettings)(implicit
     ec: ExecutionContext,
-    builder: RequestBuilder[T]
+    builder: RequestBuilder[T],
+    commonRequestOptions: CommonRequestOptions
 ) extends GraphStage[SinkShape[Seq[T]]] {
 
   private val in: Inlet[Seq[T]]         = Inlet.create("ElasticSink.out")

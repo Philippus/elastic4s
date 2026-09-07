@@ -113,7 +113,10 @@ object DenseVectorFieldBuilderFn {
             Any
           ]]).map(getDenseVectorIndexOptionsRescoreVector),
           values.get("cluster_size").map(_.asInstanceOf[Int]),
-          values.get("default_visit_percentage").map(_.asInstanceOf[Int])
+          values.get("default_visit_percentage").map(_.asInstanceOf[Int]),
+          values.get("precondition").map(_.asInstanceOf[Boolean]),
+          values.get("bits").map(_.asInstanceOf[Int]),
+          values.get("on_disk_rescore").map(_.asInstanceOf[Boolean])
         )
     }
 
@@ -123,7 +126,8 @@ object DenseVectorFieldBuilderFn {
     values.get("dims").map(_.asInstanceOf[Int]),
     values.get("index").map(_.asInstanceOf[Boolean]),
     values.get("similarity").map(s => similarityFromString(s.asInstanceOf[String])),
-    indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions)
+    indexOptions = values.get("index_options").map(_.asInstanceOf[Map[String, Any]]).map(getIndexOptions),
+    flatIndexThreshold = values.get("flat_index_threshold").map(_.asInstanceOf[Int])
   )
 
   def build(field: DenseVectorField): XContentBuilder = {
@@ -145,6 +149,9 @@ object DenseVectorFieldBuilderFn {
         if (options.`type` == BbqDisk) {
           options.clusterSize.foreach(builder.field("cluster_size", _))
           options.defaultVisitPercentage.foreach(builder.field("default_visit_percentage", _))
+          options.precondition.foreach(builder.field("precondition", _))
+          options.bits.foreach(builder.field("bits", _))
+          options.onDiskRescore.foreach(builder.field("on_disk_rescore", _))
         }
         if (Seq(Int8Hnsw, Int4Hnsw, Int8Flat, Int4Flat, BbqHnsw, BbqFlat, BbqDisk).contains(options.`type`)) {
           options.rescoreVector.foreach { rescoreVector =>
@@ -156,7 +163,7 @@ object DenseVectorFieldBuilderFn {
         builder.endObject()
       }
     }
-    field.onDiskRescore.foreach(builder.field("on_disk_rescore", _))
+    field.flatIndexThreshold.foreach(builder.field("flat_index_threshold", _))
     builder.endObject()
   }
 }

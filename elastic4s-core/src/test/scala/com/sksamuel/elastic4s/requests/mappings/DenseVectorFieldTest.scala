@@ -64,6 +64,23 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0}}"""
   }
 
+  it should "support flatIndexThreshold property" in {
+    val field = DenseVectorField(
+      name = "myfield",
+      dims = Some(3),
+      index = Some(true),
+      indexOptions = Some(denseVectorIndexOptions),
+      flatIndexThreshold = Some(1000)
+    )
+    DenseVectorFieldBuilderFn.build(field).string shouldBe
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"int8_hnsw","m":10,"ef_construction":100,"confidence_interval":1.0},"flat_index_threshold":1000}"""
+
+    ElasticFieldBuilderFn.construct(
+      field.name,
+      JacksonSupport.mapper.readValue[Map[String, Any]](DenseVectorFieldBuilderFn.build(field).string)
+    ) shouldBe field
+  }
+
   it should "support all index options types and only set m, efConstruction and confidenceInterval when applicable" in {
     val field = DenseVectorField(
       name = "myfield",
@@ -90,12 +107,6 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_flat"}}"""
     DenseVectorFieldBuilderFn.build(field.indexOptions(denseVectorIndexOptions.copy(`type` = BbqDisk))).string shouldBe
       """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_disk"}}"""
-  }
-
-  it should "support onDiskRescore property" in {
-    val field = DenseVectorField(name = "myfield").onDiskRescore(true)
-    DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","on_disk_rescore":true}"""
   }
 
   it should "support rescoreVector" in {
@@ -128,11 +139,14 @@ class DenseVectorFieldTest extends AnyFlatSpec with Matchers with ElasticApi {
         confidenceInterval = None,
         rescoreVector = Some(DenseVectorIndexOptionsRescoreVector(oversample = 1.0F)),
         clusterSize = Some(64),
-        defaultVisitPercentage = Some(2)
+        defaultVisitPercentage = Some(2),
+        precondition = Some(true),
+        bits = Some(7),
+        onDiskRescore = Some(true)
       ))
     )
     DenseVectorFieldBuilderFn.build(field).string shouldBe
-      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_disk","cluster_size":64,"default_visit_percentage":2,"rescore_vector":{"oversample":1.0}}}"""
+      """{"type":"dense_vector","dims":3,"index":true,"index_options":{"type":"bbq_disk","cluster_size":64,"default_visit_percentage":2,"precondition":true,"bits":7,"on_disk_rescore":true,"rescore_vector":{"oversample":1.0}}}"""
 
     ElasticFieldBuilderFn.construct(
       field.name,

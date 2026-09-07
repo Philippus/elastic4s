@@ -19,8 +19,10 @@ import scala.util.{Failure, Success, Try}
   * @param settings
   *   settings for how documents are queried
   */
-class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(implicit ec: ExecutionContext)
-    extends GraphStage[SourceShape[SearchHit]] {
+class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(implicit
+    ec: ExecutionContext,
+    commonRequestOptions: CommonRequestOptions
+) extends GraphStage[SourceShape[SearchHit]] {
   require(settings.search.keepAlive.isDefined, "The SearchRequest must have a scroll defined (a keep alive time)")
 
   private val out: Outlet[SearchHit]         = Outlet.create("ElasticSource.out")
@@ -35,15 +37,13 @@ class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(imp
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic =
     new GraphStageLogic(shape) with OutHandler {
 
-      private val buffer           = scala.collection.mutable.Queue.empty[SearchHit]
-      private var scrollId: String = _
-      private var fetching         = false
+      private val buffer            = scala.collection.mutable.Queue.empty[SearchHit]
+      private var scrollId: String  = _
+      private var fetching          = false
+      private var upstreamExhausted = false
 
       // Parse the keep alive setting out of the original query.
       private val keepAlive = settings.search.keepAlive.map(_.toString).getOrElse("1m")
-
-      if (settings.warm)
-        fetch()
 
       private val populateHandler = getAsyncCallback[Try[Response[SearchResponse]]] {
         case Failure(e)        => fail(out, e)
@@ -55,28 +55,36 @@ class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(imp
                 case Some(id) =>
                   scrollId = id
                   fetching = false
-                  buffer ++= searchr.hits.hits
+                  val hits = searchr.hits.hits
+                  if (hits.isEmpty) upstreamExhausted = true
+                  else buffer ++= hits
                   if (buffer.nonEmpty && isAvailable(out)) {
                     push(out, buffer.dequeue())
-                    maybeFetch()
                   }
-                  // complete when no more elements to emit
-                  if (searchr.hits.hits.length == 0) {
-                    complete(out)
-                  }
+                  maybeFetch()
+                  maybeComplete()
               }
           }
       }
 
+      override def preStart(): Unit = {
+        if (settings.warm) fetch()
+      }
+
+      private def maybeComplete(): Unit = {
+        if (upstreamExhausted && buffer.isEmpty && !fetching)
+          complete(out)
+      }
+
       // check if the buffer has dropped below threshold (or is empty) and if so, trigger a fetch
       private def maybeFetch(): Unit = {
-        if (buffer.isEmpty || buffer.size <= settings.fetchThreshold)
+        if (!upstreamExhausted && (buffer.isEmpty || buffer.size <= settings.fetchThreshold))
           fetch()
       }
 
       // if no fetch is in progress then fire one
       private def fetch(): Unit = {
-        if (!fetching) {
+        if (!fetching && !upstreamExhausted) {
           Option(scrollId) match {
             case None     => client.execute(settings.search).onComplete(populateHandler.invoke)
             case Some(id) => client.execute(searchScroll(id).keepAlive(keepAlive)).onComplete(populateHandler.invoke)
@@ -89,6 +97,7 @@ class ElasticSource(client: ElasticClient[Future], settings: SourceSettings)(imp
         if (buffer.nonEmpty)
           push(out, buffer.dequeue())
         maybeFetch()
+        maybeComplete()
       }
 
       override def postStop(): Unit = {

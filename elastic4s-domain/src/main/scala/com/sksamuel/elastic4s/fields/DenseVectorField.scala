@@ -37,7 +37,10 @@ case class DenseVectorIndexOptions(
     confidenceInterval: Option[Float] = None,
     rescoreVector: Option[DenseVectorIndexOptionsRescoreVector] = None,
     clusterSize: Option[Int] = None,
-    defaultVisitPercentage: Option[Int] = None
+    defaultVisitPercentage: Option[Int] = None,
+    precondition: Option[Boolean] = None,
+    bits: Option[Int] = None,
+    onDiskRescore: Option[Boolean] = None
 )
 
 case class DenseVectorField(
@@ -47,7 +50,7 @@ case class DenseVectorField(
     index: Option[Boolean] = None,
     similarity: Option[Similarity] = None,
     indexOptions: Option[DenseVectorIndexOptions] = None,
-    onDiskRescore: Option[Boolean] = None
+    flatIndexThreshold: Option[Int] = None
 ) extends ElasticField {
   override def `type`: String = DenseVectorField.`type`
 
@@ -56,5 +59,6 @@ case class DenseVectorField(
   def index(index: Boolean): DenseVectorField                               = copy(index = Some(index))
   def similarity(similarity: Similarity): DenseVectorField                  = copy(similarity = Some(similarity))
   def indexOptions(indexOptions: DenseVectorIndexOptions): DenseVectorField = copy(indexOptions = Some(indexOptions))
-  def onDiskRescore(onDiskRescore: Boolean): DenseVectorField               = copy(onDiskRescore = Some(onDiskRescore))
+  def flatIndexThreshold(flatIndexThreshold: Int): DenseVectorField         =
+    copy(flatIndexThreshold = Some(flatIndexThreshold))
 }

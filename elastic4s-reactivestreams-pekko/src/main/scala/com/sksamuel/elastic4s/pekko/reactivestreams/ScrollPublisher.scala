@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.pekko.reactivestreams
 
 import org.apache.pekko.actor.{Actor, ActorRefFactory, PoisonPill, Props, Stash}
 import com.sksamuel.elastic4s.requests.searches.{SearchHit, SearchRequest, SearchResponse}
-import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, RequestFailure, RequestSuccess}
 import com.sksamuel.elastic4s.ext.OptionImplicits.RichOption
 import com.sksamuel.elastic4s.pekko.reactivestreams.PublishActor.Ready
 import org.reactivestreams.{Publisher, Subscriber, Subscription}
@@ -26,7 +26,9 @@ import scala.util.{Failure, Success}
   *   an Actor reference factory required by the publisher
   */
 class ScrollPublisher private[reactivestreams] (client: ElasticClient[Future], search: SearchRequest, maxItems: Long)(
-    implicit actorRefFactory: ActorRefFactory
+    implicit
+    actorRefFactory: ActorRefFactory,
+    options: CommonRequestOptions
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
 
@@ -43,7 +45,9 @@ class ScrollPublisher private[reactivestreams] (client: ElasticClient[Future], s
 }
 
 class ScrollSubscription(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
-    implicit actorRefFactory: ActorRefFactory
+    implicit
+    actorRefFactory: ActorRefFactory,
+    options: CommonRequestOptions
 ) extends Subscription {
 
   private val actor = actorRefFactory.actorOf(Props(new PublishActor(client, query, s, max)))
@@ -70,7 +74,12 @@ object PublishActor {
   case class Request(n: Long)
 }
 
-class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)
+class PublishActor(
+    client: ElasticClient[Future],
+    query: SearchRequest,
+    s: Subscriber[_ >: SearchHit],
+    max: Long
+)(implicit options: CommonRequestOptions)
     extends Actor
     with Stash {
 
@@ -99,7 +108,10 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
   }
 
   private def send(k: Long): Unit = {
-    require(queue.size >= k)
+    if (queue.size < k) {
+      s.onError(new IllegalStateException(s"Requested $k items but only ${queue.size} available"))
+      context.stop(self)
+    }
     for (_ <- 0L until k)
       if (max == 0 || processed < max) {
         s.onNext(queue.dequeue())
@@ -143,8 +155,10 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
     // so any requests must be stashed until a fresh batch arrives
     case PublishActor.Request(n)                                                 =>
       logger.debug(s"Request for $n items but we're already waiting on a response; stashing request")
-      require(queue.isEmpty) // must be empty or why did we not send it before switching to this mode?
-      stash()
+      if (queue.nonEmpty) {
+        s.onError(new IllegalStateException("Queue unexpectedly non-empty while fetching"))
+        context.stop(self)
+      } else stash()
     // if the request to elastic failed we will terminate the subscription
     case Failure(t)                                                              =>
       logger.warn("Elasticsearch returned a failure; will terminate the subscription", t)
@@ -176,6 +190,6 @@ class PublishActor(client: ElasticClient[Future], query: SearchRequest, s: Subsc
 
   override def postStop(): Unit = {
     super.postStop()
-    client.execute(clearScroll(scrollId))
+    if (scrollId != null) client.execute(clearScroll(scrollId))
   }
 }

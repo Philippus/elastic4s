@@ -11,11 +11,3 @@ import com.sksamuel.elastic4s.requests.count.CountRequest
 trait BodyBuilder[R] {
   def toJson(req: R): JsonValue
 }
-
-object CountBodyBuilder {
-  def toJson(req: CountRequest): JsonValue = {
-    val builder = XContentFactory.jsonBuilder()
-    // req.query.map(QueryBuilderFn.apply).foreach(builder.rawField("query", _))
-    builder.value
-  }
-}

@@ -1,0 +1,10 @@
+{
+  "full_name": {
+    "path_match": ["name.*", "user.name.*"],
+    "path_unmatch": ["*.middle", "*.midinitial"],
+    "mapping": {
+      "type": "text",
+      "copy_to": ["full_name"]
+    }
+  }
+}

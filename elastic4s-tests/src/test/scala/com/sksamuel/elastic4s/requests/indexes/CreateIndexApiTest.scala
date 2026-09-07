@@ -13,6 +13,7 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.duration._
 import scala.io.Source
+import scala.util.Using
 
 class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with OneInstancePerTest {
 
@@ -290,9 +291,9 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
 //  }
 
   it should "accept pre-built mapping JSON" in {
-    val source = Source
-      .fromInputStream(getClass.getResourceAsStream("/json/createindex/createindex_mappings.json"))
-      .mkString
+    val source = Using.resource(
+      Source.fromInputStream(getClass.getResourceAsStream("/json/createindex/createindex_mappings.json"))
+    )(_.mkString)
     val req    = createIndex("tweets").source(source)
     index.CreateIndexContentBuilder(req)
   }
