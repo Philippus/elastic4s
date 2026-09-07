@@ -51,7 +51,11 @@ object SearchIterator {
         }
 
         scrollId = response.scrollId
-        response.hits.hits.iterator
+        val hits = response.hits.hits.iterator
+
+        // scroll is exhausted: proactively release the server-side scroll context
+        if (hits.isEmpty) scrollId.foreach(id => client.execute(clearScroll(id)))
+        hits
       }
     }
 
