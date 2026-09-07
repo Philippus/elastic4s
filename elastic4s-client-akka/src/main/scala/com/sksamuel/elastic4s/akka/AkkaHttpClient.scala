@@ -224,7 +224,8 @@ class AkkaHttpClient private[akka] (
   }
 
   override def close(): Future[Unit] = {
-    httpPoolFactory.shutdown()
+    queue.complete()
+    queue.watchCompletion().flatMap(_ => httpPoolFactory.shutdown())
   }
 
   private def toRequest(request: ElasticRequest, host: String): Try[HttpRequest] = Try {
