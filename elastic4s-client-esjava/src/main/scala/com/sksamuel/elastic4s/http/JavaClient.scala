@@ -4,23 +4,12 @@ import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 import com.sksamuel.elastic4s.{
-  ElasticNodeEndpoint,
-  ElasticProperties,
-  ElasticRequest,
-  HttpClient,
-  HttpEntity,
-  HttpResponse,
-  Show
+  ElasticNodeEndpoint, ElasticProperties, ElasticRequest, HttpClient, HttpEntity, HttpResponse, Show
 }
 import org.apache.http.HttpHost
 import org.apache.http.client.config.RequestConfig
 import org.apache.http.entity.{
-  AbstractHttpEntity,
-  ByteArrayEntity,
-  ContentType,
-  FileEntity,
-  InputStreamEntity,
-  StringEntity
+  AbstractHttpEntity, ByteArrayEntity, ContentType, FileEntity, InputStreamEntity, StringEntity
 }
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.client.RestClientBuilder.{HttpClientConfigCallback, RequestConfigCallback}
@@ -29,6 +18,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.io.{Codec, Source}
+import scala.util.Using
 
 case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
 
@@ -57,12 +47,11 @@ class JavaClient(client: RestClient)(implicit ec: ExecutionContext) extends Http
       ).getOrElse(StandardCharsets.UTF_8)
       implicit val codec: Codec = Codec(contentCharset)
 
-      val contentStream: InputStream = {
-        if (isEntityGziped(entity)) new GZIPInputStream(entity.getContent)
-        else entity.getContent
-      }
+      val body = Using.resource {
+        val raw: InputStream = entity.getContent
+        if (isEntityGziped(entity)) new GZIPInputStream(raw) else raw
+      }(stream => Source.fromInputStream(stream).mkString)
 
-      val body = Source.fromInputStream(contentStream).mkString
       HttpEntity.StringEntity(body, Some(contentCharset.name()))
     }
     val headers = r.getHeaders.map { header =>

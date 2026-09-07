@@ -6,6 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 import scala.io.Source
+import scala.util.Using
 
 class ElasticErrorTest extends AnyFlatSpec with Matchers with ElasticDsl {
 
@@ -23,7 +24,9 @@ class ElasticErrorTest extends AnyFlatSpec with Matchers with ElasticDsl {
     val error = ElasticErrorParser.parse(HttpResponse(
       123,
       Some(StringEntity(
-        Source.fromInputStream(getClass.getResourceAsStream("/error_response_with_failed_shards.json")).mkString,
+        Using.resource(
+          Source.fromInputStream(getClass.getResourceAsStream("/error_response_with_failed_shards.json"))
+        )(_.mkString),
         None
       )),
       Map()

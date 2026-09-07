@@ -5,6 +5,7 @@ import com.sksamuel.elastic4s.HttpResponse
 import com.sksamuel.elastic4s.requests.indexes.analyze._
 
 import scala.io.Source
+import scala.util.Using
 
 package object analyze {
 
@@ -14,10 +15,10 @@ package object analyze {
 
   def toHexBytes(str: String): String = str.map(_.toInt.toHexString).mkString("[", " ", "]")
 
-  def readResource(name: String): String = {
-    Source.fromInputStream(getClass.getResourceAsStream(name), "UTF-8")
-      .getLines().mkString("\r\n")
-  }
+  def readResource(name: String): String =
+    Using.resource(Source.fromInputStream(getClass.getResourceAsStream(name), "UTF-8")) {
+      _.getLines().mkString("\r\n")
+    }
 
   def noExplainResponseJson: String = readResource("/analyze_request/helloworld_response.json")
 
