@@ -8,6 +8,7 @@ import com.sksamuel.elastic4s.ext.OptionImplicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
+import scala.util.Using
 import sttp.client4._
 import sttp.model.Uri
 import sttp.model.Uri.{PathSegments, QuerySegment}
@@ -75,7 +76,7 @@ class SttpRequestHttpClient[F[_]: MonadError](
       case StringEntity(content: String, _)      => r2.body(content)
       case ByteArrayEntity(content, _)           => r2.body(content)
       case InputStreamEntity(in: InputStream, _) =>
-        r2.body(Source.fromInputStream(in, "UTF8").getLines().mkString("\n"))
+        r2.body(Using.resource(Source.fromInputStream(in, "UTF8"))(_.getLines().mkString("\n")))
       case FileEntity(file: File, _)             => r2.body(Files.readAllBytes(file.toPath))
     }
   }
