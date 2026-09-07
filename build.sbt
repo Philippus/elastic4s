@@ -98,6 +98,7 @@ lazy val scala3Projects: Seq[ProjectReference] = Seq(
   clientcore,
   clientesjava,
   clientsSniffed,
+  clientakka,
   clientpekko,
   clienthttp4s,
   zio_1,
@@ -325,9 +326,7 @@ lazy val clientsttp4 = (project in file("elastic4s-client-sttp4"))
 lazy val clientakka = (project in file("elastic4s-client-akka"))
   .dependsOn(core, testkit % Test)
   .settings(name := "elastic4s-client-akka")
-  .settings(
-    scala2Settings
-  ) //  We need akka-http to be cross-published, which depends on an akka bump with restrictive licensing changes
+  .settings(scala3Settings)
   .settings(libraryDependencies ++= Seq(akkaHTTP, akkaStream, mockitoCore, scalaTestPlusMockito))
   .settings(
     Test / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Raw,
