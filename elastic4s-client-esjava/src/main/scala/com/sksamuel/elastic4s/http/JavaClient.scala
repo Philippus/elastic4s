@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.http
 
-import java.io.InputStream
+import java.io.{Closeable, InputStream}
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 import com.sksamuel.elastic4s.{
@@ -24,7 +24,8 @@ case class JavaClientExceptionWrapper(t: Throwable) extends RuntimeException(t)
 
 /** An implementation of HttpClient that wraps the Elasticsearch Java Rest Client
   */
-class JavaClient(client: RestClient)(implicit ec: ExecutionContext) extends HttpClient[Future] {
+class JavaClient(client: RestClient, onClose: Option[Closeable] = None)(implicit ec: ExecutionContext)
+    extends HttpClient[Future] {
 
   def apacheEntity(entity: HttpEntity): AbstractHttpEntity = entity match {
     case e: HttpEntity.StringEntity      =>
@@ -87,7 +88,10 @@ class JavaClient(client: RestClient)(implicit ec: ExecutionContext) extends Http
     promise.future
   }
 
-  override def close(): Future[Unit] = Future(client.close())
+  override def close(): Future[Unit] = Future {
+    onClose.foreach(_.close()) // close sniffer first, it references the client
+    client.close()
+  }
 
   private def isEntityGziped(entity: org.apache.http.HttpEntity): Boolean = {
     Option(entity.getContentEncoding).flatMap(x => Option(x.getValue)).contains("gzip")
@@ -105,7 +109,8 @@ object JavaClient {
     * @return
     *   newly created Scala client
     */
-  def fromRestClient(client: RestClient)(implicit ec: ExecutionContext): JavaClient = new JavaClient(client)
+  def fromRestClient(client: RestClient, onClose: Option[Closeable] = None)(implicit ec: ExecutionContext): JavaClient =
+    new JavaClient(client, onClose)
 
   /** Creates a new [[ElasticClient]] using the elasticsearch Java API rest client as the underlying client. Optional
     * callbacks can be passed in to configure the client.

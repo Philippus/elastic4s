@@ -82,6 +82,6 @@ object JavaClientSniffed {
 
     if (sniffAfterFailureInterval.isDefined) failureSniffer.setSniffer(sniffer)
 
-    fromRestClient(client)
+    fromRestClient(client, Some(sniffer)) // Sniffer implements java.io.Closeable
   }
 }
