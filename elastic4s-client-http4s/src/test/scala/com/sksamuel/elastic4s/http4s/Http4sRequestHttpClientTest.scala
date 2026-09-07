@@ -6,11 +6,19 @@ import com.sksamuel.elastic4s.testkit.DockerTests
 import com.sksamuel.elastic4s.testkit.DockerTests.{elasticHost, elasticPort}
 import com.sksamuel.elastic4s.{Authentication, CommonRequestOptions, ElasticClient}
 import org.http4s.ember.client.EmberClientBuilder
+import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class Http4sRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerTests {
-  private val emberClient  = EmberClientBuilder.default[IO].build.allocated.unsafeRunSync()._1
+class Http4sRequestHttpClientTest extends AnyFlatSpec with Matchers with DockerTests with BeforeAndAfterAll {
+  private val (emberClient, releaseEmberClient) =
+    EmberClientBuilder.default[IO].build.allocated.unsafeRunSync()
+
+  override def afterAll(): Unit = {
+    releaseEmberClient.unsafeRunSync()
+    super.afterAll()
+  }
+
   private val http4sClient = new Http4sClient(
     emberClient,
     org.http4s.Uri.unsafeFromString(s"http://$elasticHost:$elasticPort")
