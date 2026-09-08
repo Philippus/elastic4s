@@ -48,18 +48,12 @@ trait SearchTemplateHandlers {
       extends Handler[GetSearchTemplateRequest, Option[GetSearchTemplateResponse]] {
 
     override def responseHandler: ResponseHandler[Option[GetSearchTemplateResponse]] =
-      new ResponseHandler[Option[GetSearchTemplateResponse]] {
-
-        /** Accepts a HttpResponse and returns an Either of an ElasticError or a type specific to the request as
-          * determined by the instance of this handler.
-          */
-        override def handle(response: HttpResponse) =
-          response.statusCode match {
-            case 200 => Right(ResponseHandler.fromResponse[GetSearchTemplateResponse](response).some)
-            case 404 => Right(None)
-            case _   => sys.error(response.entity.map(_.content).getOrElse(""))
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 => Right(ResponseHandler.fromResponse[GetSearchTemplateResponse](response).some)
+          case 404 => Right(None)
+          case _   => sys.error(response.entity.map(_.content).getOrElse(""))
+        }
 
     override def build(req: GetSearchTemplateRequest): ElasticRequest = {
       val endpoint = "/_scripts/" + req.name

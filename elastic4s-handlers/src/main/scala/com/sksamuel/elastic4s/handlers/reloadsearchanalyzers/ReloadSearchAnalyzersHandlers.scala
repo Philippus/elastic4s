@@ -8,13 +8,11 @@ trait ReloadSearchAnalyzersHandlers {
       extends Handler[ReloadSearchAnalyzersRequest, ReloadSearchAnalyzersResponse] {
 
     override def responseHandler: ResponseHandler[ReloadSearchAnalyzersResponse] =
-      new ResponseHandler[ReloadSearchAnalyzersResponse] {
-        override def handle(response: HttpResponse): Right[Nothing, ReloadSearchAnalyzersResponse] =
-          response.statusCode match {
-            case 404 | 200 => Right(ResponseHandler.fromResponse[ReloadSearchAnalyzersResponse](response))
-            case _         => sys.error("Invalid response")
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 404 | 200 => Right(ResponseHandler.fromResponse[ReloadSearchAnalyzersResponse](response))
+          case _         => sys.error("Invalid response")
+        }
 
     override def build(request: ReloadSearchAnalyzersRequest): ElasticRequest = {
       val endpoint = s"/${request.indexes.string(true)}/_reload_search_analyzers"

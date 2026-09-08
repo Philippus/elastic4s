@@ -23,13 +23,11 @@ trait SynonymsHandlers {
       extends Handler[CreateOrUpdateSynonymsSetRequest, UpdateSynonymsSetResponse] {
 
     override def responseHandler: ResponseHandler[UpdateSynonymsSetResponse] =
-      new ResponseHandler[UpdateSynonymsSetResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, UpdateSynonymsSetResponse] = {
-          response.statusCode match {
-            case 200 | 201 => Right(ResponseHandler.fromResponse[UpdateSynonymsSetResponse](response))
-            case 400       => Left(ElasticErrorParser.parse(response))
-            case _         => sys.error("Invalid response")
-          }
+      (response: HttpResponse) => {
+        response.statusCode match {
+          case 200 | 201 => Right(ResponseHandler.fromResponse[UpdateSynonymsSetResponse](response))
+          case 400       => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error("Invalid response")
         }
       }
 
@@ -48,14 +46,12 @@ trait SynonymsHandlers {
 
   implicit object GetSynonymsSetHandler extends Handler[GetSynonymsSetRequest, GetSynonymsSetResponse] {
     override def responseHandler: ResponseHandler[GetSynonymsSetResponse] =
-      new ResponseHandler[GetSynonymsSetResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, GetSynonymsSetResponse] =
-          response.statusCode match {
-            case 200       => Right(ResponseHandler.fromResponse[GetSynonymsSetResponse](response))
-            case 400 | 404 => Left(ElasticErrorParser.parse(response))
-            case _         => sys.error("Invalid response")
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200       => Right(ResponseHandler.fromResponse[GetSynonymsSetResponse](response))
+          case 400 | 404 => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error("Invalid response")
+        }
 
     override def build(request: GetSynonymsSetRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}"
@@ -69,13 +65,11 @@ trait SynonymsHandlers {
 
   implicit object ListSynonymsSetHandler extends Handler[ListSynonymsSetRequest, ListSynonymsSetResponse] {
     override def responseHandler: ResponseHandler[ListSynonymsSetResponse] =
-      new ResponseHandler[ListSynonymsSetResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, ListSynonymsSetResponse] =
-          response.statusCode match {
-            case 200 => Right(ResponseHandler.fromResponse[ListSynonymsSetResponse](response))
-            case _   => sys.error("Invalid response")
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 => Right(ResponseHandler.fromResponse[ListSynonymsSetResponse](response))
+          case _   => sys.error("Invalid response")
+        }
 
     override def build(request: ListSynonymsSetRequest): ElasticRequest = {
       val endpoint = "/_synonyms"
@@ -87,14 +81,12 @@ trait SynonymsHandlers {
   }
 
   implicit object DeleteSynonymsSetHandler extends Handler[DeleteSynonymsSetRequest, Unit] {
-    override def responseHandler: ResponseHandler[Unit] = new ResponseHandler[Unit] {
-      override def handle(response: HttpResponse): Either[ElasticError, Unit] =
-        response.statusCode match {
-          case 200       => Right(())
-          case 400 | 404 => Left(ElasticErrorParser.parse(response))
-          case _         => sys.error("Invalid response")
-        }
-    }
+    override def responseHandler: ResponseHandler[Unit] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 200       => Right(())
+        case 400 | 404 => Left(ElasticErrorParser.parse(response))
+        case _         => sys.error("Invalid response")
+      }
 
     override def build(request: DeleteSynonymsSetRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}"
@@ -105,14 +97,12 @@ trait SynonymsHandlers {
   implicit object UpdateSynonymRuleHandler
       extends Handler[CreateOrUpdateSynonymRuleRequest, UpdateSynonymRuleResponse] {
     override def responseHandler: ResponseHandler[UpdateSynonymRuleResponse] =
-      new ResponseHandler[UpdateSynonymRuleResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, UpdateSynonymRuleResponse] =
-          response.statusCode match {
-            case 200 | 201 => Right(ResponseHandler.fromResponse[UpdateSynonymRuleResponse](response))
-            case 400 | 404 => Left(ElasticErrorParser.parse(response))
-            case _         => sys.error("Invalid response")
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 | 201 => Right(ResponseHandler.fromResponse[UpdateSynonymRuleResponse](response))
+          case 400 | 404 => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error("Invalid response")
+        }
 
     override def build(request: CreateOrUpdateSynonymRuleRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
@@ -126,14 +116,12 @@ trait SynonymsHandlers {
 
   implicit object GetSynonymRuleHandler extends Handler[GetSynonymRuleRequest, GetSynonymRuleResponse] {
     override def responseHandler: ResponseHandler[GetSynonymRuleResponse] =
-      new ResponseHandler[GetSynonymRuleResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, GetSynonymRuleResponse] =
-          response.statusCode match {
-            case 200 => Right(ResponseHandler.fromResponse[GetSynonymRuleResponse](response))
-            case 404 => Left(ElasticErrorParser.parse(response))
-            case _   => sys.error("Invalid response")
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 => Right(ResponseHandler.fromResponse[GetSynonymRuleResponse](response))
+          case 404 => Left(ElasticErrorParser.parse(response))
+          case _   => sys.error("Invalid response")
+        }
 
     override def build(request: GetSynonymRuleRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
@@ -143,14 +131,12 @@ trait SynonymsHandlers {
 
   implicit object DeleteSynonymRuleHandler extends Handler[DeleteSynonymRuleRequest, DeleteSynonymRuleResponse] {
     override def responseHandler: ResponseHandler[DeleteSynonymRuleResponse] =
-      new ResponseHandler[DeleteSynonymRuleResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, DeleteSynonymRuleResponse] =
-          response.statusCode match {
-            case 200 => Right(ResponseHandler.fromResponse[DeleteSynonymRuleResponse](response))
-            case 404 => Left(ElasticErrorParser.parse(response))
-            case _   => sys.error("Invalid response")
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 => Right(ResponseHandler.fromResponse[DeleteSynonymRuleResponse](response))
+          case 404 => Left(ElasticErrorParser.parse(response))
+          case _   => sys.error("Invalid response")
+        }
 
     override def build(request: DeleteSynonymRuleRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"

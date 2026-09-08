@@ -9,9 +9,8 @@ trait LocksHandlers {
 
     val endpoint = "/fs/lock/global/_create"
 
-    override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
-      override def handle(response: HttpResponse) = Right(response.statusCode == 201)
-    }
+    override def responseHandler: ResponseHandler[Boolean] =
+      (response: HttpResponse) => Right(response.statusCode == 201)
 
     override def build(request: AcquireGlobalLock): ElasticRequest =
       ElasticRequest("PUT", endpoint)
@@ -19,9 +18,8 @@ trait LocksHandlers {
 
   implicit object ReleaseGlobalLockHandler extends Handler[ReleaseGlobalLock, Boolean] {
 
-    override def responseHandler: ResponseHandler[Boolean] = new ResponseHandler[Boolean] {
-      override def handle(response: HttpResponse) = Right(response.statusCode == 200)
-    }
+    override def responseHandler: ResponseHandler[Boolean] =
+      (response: HttpResponse) => Right(response.statusCode == 200)
 
     override def build(request: ReleaseGlobalLock): ElasticRequest =
       ElasticRequest("DELETE", "/fs/lock/global")

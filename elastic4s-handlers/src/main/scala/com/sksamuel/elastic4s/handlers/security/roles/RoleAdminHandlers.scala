@@ -27,14 +27,12 @@ trait RoleAdminHandlers {
   private val ROLE_BASE_PATH = "/_security/role/"
 
   implicit object CreateOrUpdateRoleHandler extends Handler[CreateOrUpdateRoleRequest, CreateRoleResponse] {
-    override def responseHandler: ResponseHandler[CreateRoleResponse] = new ResponseHandler[CreateRoleResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, CreateRoleResponse] =
-        response.statusCode match {
-          case 200 | 201 => Right(ResponseHandler.fromResponse[CreateRoleResponse](response))
-          case 400 | 500 => Left(ElasticErrorParser.parse(response))
-          case _         => sys.error(response.toString)
-        }
-    }
+    override def responseHandler: ResponseHandler[CreateRoleResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 200 | 201 => Right(ResponseHandler.fromResponse[CreateRoleResponse](response))
+        case 400 | 500 => Left(ElasticErrorParser.parse(response))
+        case _         => sys.error(response.toString)
+      }
 
     override def build(request: CreateOrUpdateRoleRequest): ElasticRequest = {
       val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
@@ -51,14 +49,12 @@ trait RoleAdminHandlers {
   }
 
   implicit object DeleteRoleHandler extends Handler[DeleteRoleRequest, DeleteRoleResponse] {
-    override def responseHandler: ResponseHandler[DeleteRoleResponse] = new ResponseHandler[DeleteRoleResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, DeleteRoleResponse] =
-        response.statusCode match {
-          case 200 | 201 | 404 => Right(ResponseHandler.fromResponse[DeleteRoleResponse](response))
-          case 400 | 500       => Left(ElasticErrorParser.parse(response))
-          case _               => sys.error(response.toString)
-        }
-    }
+    override def responseHandler: ResponseHandler[DeleteRoleResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 200 | 201 | 404 => Right(ResponseHandler.fromResponse[DeleteRoleResponse](response))
+        case 400 | 500       => Left(ElasticErrorParser.parse(response))
+        case _               => sys.error(response.toString)
+      }
 
     override def build(request: DeleteRoleRequest): ElasticRequest = {
       val endpoint = ROLE_BASE_PATH + ElasticUrlEncoder.encodeUrlFragment(request.name)
@@ -73,13 +69,11 @@ trait RoleAdminHandlers {
     }
 
     override def responseHandler: ResponseHandler[ClearRolesCacheResponse] =
-      new ResponseHandler[ClearRolesCacheResponse] {
-        override def handle(response: HttpResponse): Either[ElasticError, ClearRolesCacheResponse] =
-          response.statusCode match {
-            case 200 | 201 => Right(ResponseHandler.fromResponse[ClearRolesCacheResponse](response))
-            case 400 | 500 => Left(ElasticErrorParser.parse(response))
-            case _         => sys.error(response.toString)
-          }
-      }
+      (response: HttpResponse) =>
+        response.statusCode match {
+          case 200 | 201 => Right(ResponseHandler.fromResponse[ClearRolesCacheResponse](response))
+          case 400 | 500 => Left(ElasticErrorParser.parse(response))
+          case _         => sys.error(response.toString)
+        }
   }
 }

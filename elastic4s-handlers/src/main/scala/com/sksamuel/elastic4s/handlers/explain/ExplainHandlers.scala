@@ -7,13 +7,11 @@ trait ExplainHandlers {
 
   implicit object ExplainHandler extends Handler[ExplainRequest, ExplainResponse] {
 
-    override def responseHandler: ResponseHandler[ExplainResponse] = new ResponseHandler[ExplainResponse] {
-      override def handle(response: HttpResponse): Right[Nothing, ExplainResponse] =
-        response.statusCode match {
-          case 404 | 200 => Right(ResponseHandler.fromResponse[ExplainResponse](response))
-          case _         => sys.error("Invalid response")
-        }
-    }
+    override def responseHandler: ResponseHandler[ExplainResponse] = (response: HttpResponse) =>
+      response.statusCode match {
+        case 404 | 200 => Right(ResponseHandler.fromResponse[ExplainResponse](response))
+        case _         => sys.error("Invalid response")
+      }
 
     override def build(request: ExplainRequest): ElasticRequest = {
 

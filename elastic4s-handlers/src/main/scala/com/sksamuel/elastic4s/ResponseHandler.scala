@@ -15,9 +15,7 @@ trait ResponseHandler[U] {
     */
   def handle(response: HttpResponse): Either[ElasticError, U]
 
-  def map[V](fn: U => V): ResponseHandler[V] = new ResponseHandler[V] {
-    override def handle(response: HttpResponse): Either[ElasticError, V] = self.handle(response).map(fn)
-  }
+  def map[V](fn: U => V): ResponseHandler[V] = (response: HttpResponse) => self.handle(response).map(fn)
 }
 
 // a ResponseHandler that marshalls the body into the required type using Jackson

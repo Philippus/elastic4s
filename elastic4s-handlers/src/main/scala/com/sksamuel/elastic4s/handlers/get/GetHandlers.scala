@@ -18,13 +18,12 @@ trait GetHandlers {
 
   implicit object MultiGetHandler extends Handler[MultiGetRequest, MultiGetResponse] {
 
-    override def responseHandler: ResponseHandler[MultiGetResponse] = new ResponseHandler[MultiGetResponse] {
-      override def handle(response: HttpResponse): Either[ElasticError, MultiGetResponse] = response.statusCode match {
+    override def responseHandler: ResponseHandler[MultiGetResponse] = (response: HttpResponse) =>
+      response.statusCode match {
         case 404 | 500 => sys.error(response.toString)
         case 401       => Left(ElasticErrorParser.parse(response))
         case _         => Right(ResponseHandler.fromResponse[MultiGetResponse](response))
       }
-    }
 
     override def build(request: MultiGetRequest): ElasticRequest = {
       val body   = MultiGetBodyBuilder(request).string
@@ -41,28 +40,25 @@ trait GetHandlers {
 
   implicit object GetHandler extends Handler[GetRequest, GetResponse] {
 
-    override def responseHandler: ResponseHandler[GetResponse] = new ResponseHandler[GetResponse] {
+    override def responseHandler: ResponseHandler[GetResponse] = (response: HttpResponse) => {
 
-      override def handle(response: HttpResponse): Either[ElasticError, GetResponse] = {
+      def bad(status: Int): Left[ElasticError, GetResponse] = {
+        val node = ResponseHandler.fromResponse[JsonNode](response)
+        if (node.has("error") && node.get("error").isObject)
+          Left(ElasticErrorParser.parse(response))
+        else
+          Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil, None))
+      }
 
-        def bad(status: Int): Left[ElasticError, GetResponse] = {
+      def good = Right(ResponseHandler.fromResponse[GetResponse](response))
+
+      response.statusCode match {
+        case 200   => good
+        // 404s are odd, can be different document types
+        case 404   =>
           val node = ResponseHandler.fromResponse[JsonNode](response)
-          if (node.has("error") && node.get("error").isObject)
-            Left(ElasticErrorParser.parse(response))
-          else
-            Left(ElasticError(response.entity.get.content, response.entity.get.content, None, None, None, Nil, None))
-        }
-
-        def good = Right(ResponseHandler.fromResponse[GetResponse](response))
-
-        response.statusCode match {
-          case 200   => good
-          // 404s are odd, can be different document types
-          case 404   =>
-            val node = ResponseHandler.fromResponse[JsonNode](response)
-            if (node.has("error")) bad(404) else good
-          case other => bad(other)
-        }
+          if (node.has("error")) bad(404) else good
+        case other => bad(other)
       }
     }
 
