@@ -35,11 +35,14 @@ trait SynonymsHandlers {
 
     override def build(request: CreateOrUpdateSynonymsSetRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}"
+      val params   = scala.collection.mutable.Map.empty[String, String]
+      request.refresh.foreach(refresh => params.put("refresh", refresh.toString))
+      request.append.foreach(append => params.put("append", append.toString))
 
       val body   = UpdateSynonymsBodyFn(request).string
       val entity = HttpEntity(body, "application/json")
 
-      ElasticRequest("PUT", endpoint, entity)
+      ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
   }
 
@@ -59,6 +62,7 @@ trait SynonymsHandlers {
       val params   = scala.collection.mutable.Map.empty[String, String]
       request.from.foreach(from => params.put("from", from.toString))
       request.size.foreach(size => params.put("size", size.toString))
+      request.searchAfter.foreach(searchAfter => params.put("search_after", searchAfter))
       ElasticRequest("GET", endpoint, params.toMap)
     }
   }
@@ -112,9 +116,11 @@ trait SynonymsHandlers {
 
     override def build(request: CreateOrUpdateSynonymRuleRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
+      val params   = scala.collection.mutable.Map.empty[String, String]
+      request.refresh.foreach(refresh => params.put("refresh", refresh.toString))
       val body     = UpdateSynonymRuleBodyFn(request).string
       val entity   = HttpEntity(body, "application/json")
-      ElasticRequest("PUT", endpoint, entity)
+      ElasticRequest("PUT", endpoint, params.toMap, entity)
     }
   }
 
@@ -148,7 +154,9 @@ trait SynonymsHandlers {
 
     override def build(request: DeleteSynonymRuleRequest): ElasticRequest = {
       val endpoint = s"/_synonyms/${request.synonymsSet}/${request.synonymRule}"
-      ElasticRequest("DELETE", endpoint)
+      val params   = scala.collection.mutable.Map.empty[String, String]
+      request.refresh.foreach(refresh => params.put("refresh", refresh.toString))
+      ElasticRequest("DELETE", endpoint, params.toMap)
     }
   }
 }
