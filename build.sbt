@@ -55,20 +55,20 @@ lazy val commonJvmSettings = Seq(
 
 lazy val pomSettings = Seq(
   startYear  := Some(2013),
-  homepage   := Some(url("https://github.com/philippus/elastic4s")),
+  homepage   := Some(uri("https://github.com/philippus/elastic4s")),
   licenses += License.Apache2,
   developers := List(
     Developer(
       id = "Philippus",
       name = "Philippus Baalman",
       email = "",
-      url = url("https://github.com/philippus")
+      url = uri("https://github.com/philippus")
     ),
     Developer(
       id = "sksamuel",
       name = "Samuel",
       email = "",
-      url = url("https://github.com/sksamuel")
+      url = uri("https://github.com/sksamuel")
     )
   )
 )
