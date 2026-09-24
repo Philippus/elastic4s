@@ -14,7 +14,7 @@ object Dependencies {
   val JacksonVersion                 = "2.22.3"
   val Json4sVersion                  = "4.1.1"
   val Log4jVersion                   = "2.26.1"
-  val MockitoVersion                 = "5.23.0"
+  val MockitoVersion                 = "5.24.0"
   val MonixVersion                   = "3.4.1"
   val PlayJsonVersion                = "3.0.6"
   val ReactiveStreamsVersion         = "1.0.4"
