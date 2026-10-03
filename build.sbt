@@ -127,7 +127,7 @@ lazy val scala3_root                           = Project("elastic4s-scala3", fil
     noPublishSettings
   )
   .aggregate(
-    scala3Projects: _*
+    scala3Projects *
   )
 lazy val root                                  = Project("elastic4s", file("."))
   .settings(name := "elastic4s")
@@ -136,7 +136,7 @@ lazy val root                                  = Project("elastic4s", file("."))
     noPublishSettings
   )
   .aggregate(
-    Seq[ProjectReference](scalaz, ziojson_1, clientakka, clientpekko) ++ scala3Projects: _*
+    Seq[ProjectReference](scalaz, ziojson_1, clientakka, clientpekko) ++ scala3Projects *
   )
 
 lazy val domain = (project in file("elastic4s-domain"))
