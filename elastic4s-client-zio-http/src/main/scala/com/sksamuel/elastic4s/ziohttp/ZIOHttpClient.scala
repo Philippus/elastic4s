@@ -50,7 +50,7 @@ class ZIOHttpClient(client: Client, baseUrl: URL) extends elastic4s.HttpClient[T
     for {
       body  <- esRequest.entity.map(entity => makeBody(entity)).getOrElse(ZIO.succeed(Body.empty))
       req    = makeRequest(esRequest, body)
-      resp  <- client.batched.request(req)
+      resp  <- client.batched(req)
       bytes <- resp.body.asChunk
     } yield elastic4s.HttpResponse(
       resp.status.code,
