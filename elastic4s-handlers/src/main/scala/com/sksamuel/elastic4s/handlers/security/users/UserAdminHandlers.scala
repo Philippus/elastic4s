@@ -15,7 +15,6 @@ import com.sksamuel.elastic4s.requests.security.users.{
   UpdateUser
 }
 import com.sksamuel.elastic4s.{
-  ElasticError,
   ElasticRequest,
   ElasticUrlEncoder,
   Handler,

@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.indexes.{FieldMapping, IndexFieldMapping, IndexMappings, PutMappingResponse}
 import com.sksamuel.elastic4s.requests.mappings.{GetFieldMappingRequest, GetMappingRequest, PutMappingRequest}
 import com.sksamuel.elastic4s.{
-  ElasticError,
   ElasticRequest,
   Handler,
   HttpEntity,

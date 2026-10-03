@@ -8,7 +8,6 @@ import com.sksamuel.elastic4s.requests.reindex.ReindexRequest
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
 import com.sksamuel.elastic4s.{
   BulkIndexByScrollFailure,
-  ElasticError,
   ElasticRequest,
   Handler,
   HttpEntity,

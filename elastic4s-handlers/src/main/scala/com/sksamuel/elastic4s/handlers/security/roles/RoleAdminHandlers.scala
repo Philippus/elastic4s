@@ -14,7 +14,6 @@ import com.sksamuel.elastic4s.requests.security.roles.{
   UpdateRole
 }
 import com.sksamuel.elastic4s.{
-  ElasticError,
   ElasticRequest,
   ElasticUrlEncoder,
   Handler,

@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s
 
-import com.sksamuel.elastic4s.json.{JsonValue, XContentFactory}
-import com.sksamuel.elastic4s.requests.count.CountRequest
+import com.sksamuel.elastic4s.json.JsonValue
 
 /** A typeclass that is used to build the json bodies for requests.
   *

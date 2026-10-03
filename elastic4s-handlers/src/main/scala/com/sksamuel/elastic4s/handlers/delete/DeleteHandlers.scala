@@ -13,7 +13,6 @@ import com.sksamuel.elastic4s.requests.delete.{
 }
 import com.sksamuel.elastic4s.requests.task.CreateTaskResponse
 import com.sksamuel.elastic4s.{
-  ElasticError,
   ElasticRequest,
   ElasticUrlEncoder,
   Handler,

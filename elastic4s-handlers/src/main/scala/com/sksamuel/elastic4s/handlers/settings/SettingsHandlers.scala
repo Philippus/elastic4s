@@ -4,7 +4,6 @@ import com.sksamuel.elastic4s.ext.Maps
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 import com.sksamuel.elastic4s.requests.settings.{GetSettingsRequest, IndexSettingsResponse, UpdateSettingsRequest}
 import com.sksamuel.elastic4s.{
-  ElasticError,
   ElasticRequest,
   Handler,
   HttpEntity,

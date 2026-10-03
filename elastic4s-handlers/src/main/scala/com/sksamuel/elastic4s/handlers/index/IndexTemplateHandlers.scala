@@ -12,7 +12,7 @@ import com.sksamuel.elastic4s.requests.indexes.{
   GetIndexTemplateRequest,
   IndexTemplateExistsRequest
 }
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 case class CreateIndexTemplateResponse(acknowledged: Boolean)
 case class DeleteIndexTemplateResponse()
