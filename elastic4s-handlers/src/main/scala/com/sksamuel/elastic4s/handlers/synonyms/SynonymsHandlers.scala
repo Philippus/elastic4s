@@ -16,7 +16,7 @@ import com.sksamuel.elastic4s.requests.synonyms.{
   CreateOrUpdateSynonymsSetRequest,
   UpdateSynonymsSetResponse
 }
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, ResponseHandler}
 
 trait SynonymsHandlers {
   implicit object UpdateSynonymsSetHandler

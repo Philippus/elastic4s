@@ -20,7 +20,6 @@ import com.sksamuel.elastic4s.requests.update.{
 }
 import com.sksamuel.elastic4s.{
   BulkIndexByScrollFailure,
-  ElasticError,
   ElasticRequest,
   ElasticUrlEncoder,
   Handler,

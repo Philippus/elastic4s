@@ -12,7 +12,6 @@ object FieldsMapper {
       case (name: String, nest: Map[_, _])   => name -> mapper(nest.asInstanceOf[Map[String, Any]]).asJava
       case (name: String, iter: Iterable[_]) => name -> iter.map(mapper).toArray
       case (name: String, a: AnyRef)         => name -> a
-      case (name: String, a: Any)            => name -> a.toString
     }
 
   def mapper(a: Any): AnyRef =
@@ -21,7 +20,6 @@ object FieldsMapper {
       case iter: Iterable[_] => iter.map(mapper).toArray
       case null              => null
       case a: AnyRef         => a
-      case a: Any            => a.toString
     }
 
   def mapFields(fields: Map[String, Any]): Seq[FieldValue] = {

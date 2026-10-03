@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.handlers.exists
 
 import com.sksamuel.elastic4s.requests.exists.ExistsRequest
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpResponse, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait ExistsHandlers {
 

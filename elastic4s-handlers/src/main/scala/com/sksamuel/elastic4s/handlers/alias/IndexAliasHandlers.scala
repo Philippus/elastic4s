@@ -8,7 +8,7 @@ import com.sksamuel.elastic4s.requests.alias.{
   RemoveAliasAction
 }
 import com.sksamuel.elastic4s.requests.indexes.admin.AliasActionResponse
-import com.sksamuel.elastic4s.{ElasticError, ElasticRequest, Handler, HttpEntity, HttpResponse, Index, ResponseHandler}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, Index, ResponseHandler}
 
 import scala.jdk.CollectionConverters._
 
