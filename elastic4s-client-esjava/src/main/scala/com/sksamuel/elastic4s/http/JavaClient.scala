@@ -141,6 +141,15 @@ object JavaClient {
       props: ElasticProperties,
       requestConfigCallback: RequestConfigCallback,
       httpClientConfigCallback: HttpClientConfigCallback
+  )(implicit ec: ExecutionContext): JavaClient =
+    apply(props, requestConfigCallback, httpClientConfigCallback, compressionEnabled = false)
+
+  /** As above, but optionally gzips request bodies (e.g. bulk requests) and sends `Accept-Encoding: gzip`. */
+  def apply(
+      props: ElasticProperties,
+      requestConfigCallback: RequestConfigCallback,
+      httpClientConfigCallback: HttpClientConfigCallback,
+      compressionEnabled: Boolean
   )(implicit ec: ExecutionContext): JavaClient = {
     val hosts = props.endpoints.map {
       case ElasticNodeEndpoint(protocol, host, port, _) => new HttpHost(host, port, protocol)
@@ -151,6 +160,7 @@ object JavaClient {
       .builder(hosts: _*)
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
+      .setCompressionEnabled(compressionEnabled)
       .build()
 
     fromRestClient(client)
