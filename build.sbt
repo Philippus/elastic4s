@@ -1,5 +1,8 @@
 import Dependencies._
 
+resolvers +=
+  Resolver.ApacheMavenStagingRepo
+
 // Required due to dependency conflict in SBT
 // See https://github.com/sbt/sbt/issues/6997
 ThisBuild / libraryDependencySchemes ++= Seq(
