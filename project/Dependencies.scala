@@ -16,7 +16,7 @@ object Dependencies {
   val Log4jVersion                   = "2.26.1"
   val MockitoVersion                 = "5.24.0"
   val MonixVersion                   = "3.5.0"
-  val PekkoHttpVersion               = "1.4.0"
+  val PekkoHttpVersion               = "1.4.1"
   val PekkoVersion                   = "1.7.1"
   val PlayJsonVersion                = "3.0.6"
   val ReactiveStreamsVersion         = "1.0.4"
