@@ -10,4 +10,15 @@ class CustomAnalyzerBuilderTest extends AnyFunSuite with Matchers {
     CustomAnalyzerBuilder.build(a).string shouldBe """{"type":"custom","tokenizer":"uaxurl"}"""
   }
 
+  test("custom analyzer builder with position increment gap") {
+    val a = CustomAnalyzer("my_custom_analyzer", "standard", positionIncrementGap = 50)
+    CustomAnalyzerBuilder.build(a).string shouldBe
+      """{"type":"custom","tokenizer":"standard","position_increment_gap":50}"""
+  }
+
+  test("custom analyzer builder omits the default position increment gap") {
+    val a = CustomAnalyzer("my_custom_analyzer", "standard", positionIncrementGap = 100)
+    CustomAnalyzerBuilder.build(a).string shouldBe """{"type":"custom","tokenizer":"standard"}"""
+  }
+
 }

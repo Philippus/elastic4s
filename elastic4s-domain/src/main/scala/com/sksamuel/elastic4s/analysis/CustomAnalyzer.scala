@@ -28,6 +28,8 @@ object CustomAnalyzerBuilder extends Builder[CustomAnalyzer] {
       b.array("filter", a.tokenFilters.toArray)
     if (a.charFilters.nonEmpty)
       b.array("char_filter", a.charFilters.toArray)
+    if (a.positionIncrementGap != 100)
+      b.field("position_increment_gap", a.positionIncrementGap)
     b.endObject()
   }
 }
