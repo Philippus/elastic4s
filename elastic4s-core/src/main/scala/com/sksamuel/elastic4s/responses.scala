@@ -55,8 +55,8 @@ case class RequestSuccess[U](
     override val headers: Map[String, String], // any http headers included in the response
     override val result: U
 ) extends Response[U] {
-  override def isError = false
-  override def error   = throw new NoSuchElementException(s"Request success $result")
+  override def isError             = false
+  override def error: ElasticError = throw new NoSuchElementException(s"Request success $result")
 
   final def map[V](f: U => V): Response[V]               = RequestSuccess(status, body, headers, f(result))
   final def flatMap[V](f: U => Response[V]): Response[V] = f(result)

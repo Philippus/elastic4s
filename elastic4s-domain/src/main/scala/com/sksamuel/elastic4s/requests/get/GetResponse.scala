@@ -27,8 +27,8 @@ case class GetResponse(
   def storedFieldOpt(fieldName: String): Option[HitField] = fields.get(fieldName).map { v =>
     new HitField {
       override def values: Seq[AnyRef]      = v match {
-        case values: Seq[AnyRef] => values
-        case value: AnyRef       => Seq(value)
+        case values: Seq[AnyRef @unchecked] => values
+        case value: AnyRef                  => Seq(value)
       }
       override def value: AnyRef            = values.head
       override def name: String             = fieldName

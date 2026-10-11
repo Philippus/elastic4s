@@ -237,7 +237,7 @@ class AkkaHttpClient private[akka] (
         .withQuery(Query(request.params))
         .withAuthority(Uri.Authority.parse(host))
         .withScheme(scheme),
-      headers = request.headers.map((RawHeader.apply _).tupled).toList,
+      headers = request.headers.map((RawHeader.apply(_, _)).tupled).toList,
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
 

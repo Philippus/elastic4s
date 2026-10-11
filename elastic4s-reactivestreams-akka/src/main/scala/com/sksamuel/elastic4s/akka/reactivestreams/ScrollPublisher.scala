@@ -100,7 +100,7 @@ class PublishActor(
   // this ready method signals to the actor that its ok to start sending data. In the meantime we just stash requests.
   override def receive: PartialFunction[Any, Unit] = {
     case Ready =>
-      context become ready
+      context.become(ready)
       logger.info("Scroll publisher has become 'Ready'")
       unstashAll()
     case _     =>
@@ -134,11 +134,11 @@ class PublishActor(
       )
       Option(scrollId) match {
         case None     => client.execute(query).onComplete(result => self ! result)
-        case Some(id) => client.execute(searchScroll(id) keepAlive keepAlive).onComplete(result => self ! result)
+        case Some(id) => client.execute(searchScroll(id).keepAlive(keepAlive)).onComplete(result => self ! result)
       }
       // we switch state while we're waiting on elasticsearch, so we know not to send another request to ES
       // because we are using a scroll and can only have one active request at at time.
-      context become fetching
+      context.become(fetching)
       logger.info("Scroll publisher has become 'Fetching'")
       // queue up a new request to handle the remaining ones required when the ES response comes in
       self ! PublishActor.Request(toRequest)
@@ -153,38 +153,38 @@ class PublishActor(
   private def fetching: Actor.Receive = {
     // if we're in fetching mode, its because we ran out of results to send
     // so any requests must be stashed until a fresh batch arrives
-    case PublishActor.Request(n)                                                 =>
+    case PublishActor.Request(n)                                                            =>
       logger.debug(s"Request for $n items but we're already waiting on a response; stashing request")
       if (queue.nonEmpty) {
         s.onError(new IllegalStateException("Queue unexpectedly non-empty while fetching"))
         context.stop(self)
       } else stash()
     // if the request to elastic failed we will terminate the subscription
-    case Failure(t)                                                              =>
+    case Failure(t)                                                                         =>
       logger.warn("Elasticsearch returned a failure; will terminate the subscription", t)
       s.onError(t)
       context.stop(self)
-    case Success(resp: RequestFailure)                                           =>
+    case Success(resp: RequestFailure)                                                      =>
       logger.warn("Request errored; will terminate the subscription; {}", resp.error.toString)
       s.onError(new RuntimeException(resp.error.toString))
       context.stop(self)
     // handle when the es request times out
-    case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isTimedOut =>
+    case Success(resp: RequestSuccess[SearchResponse @unchecked]) if resp.result.isTimedOut =>
       logger.warn("Elasticsearch request timed out; will terminate the subscription")
       s.onError(new RuntimeException("Request terminated early or timed out"))
       context.stop(self)
     // if we had no results from ES then we have nothing left to publish and our work here is done
-    case Success(resp: RequestSuccess[SearchResponse]) if resp.result.isEmpty    =>
+    case Success(resp: RequestSuccess[SearchResponse @unchecked]) if resp.result.isEmpty    =>
       logger.debug("Response from ES came back empty; this means no more items upstream so will complete subscription")
       scrollId = resp.result.scrollId.getOrElse(scrollId)
       s.onComplete()
       logger.debug("Stopping publisher actor")
       context.stop(self)
     // more results and we can unleash the beast (stashed requests) and switch back to ready mode
-    case Success(resp: RequestSuccess[SearchResponse])                           =>
+    case Success(resp: RequestSuccess[SearchResponse @unchecked])                           =>
       scrollId = resp.result.scrollId.getOrError("Response did not include a scroll id")
       queue ++= resp.result.hits.hits
-      context become ready
+      context.become(ready)
       unstashAll()
   }
 

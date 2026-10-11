@@ -147,13 +147,13 @@ class BulkActor[T](
       subscription.request(n)
       requested = requested + n
 
-    case msg: BulkActor.Send[T] => send(msg.req, msg.originals, msg.attempts)
+    case msg: BulkActor.Send[T @unchecked] => send(msg.req, msg.originals, msg.attempts)
 
     case BulkActor.ForceIndexing =>
       if (buffer.nonEmpty)
         index()
 
-    case msg: BulkActor.Result[T] =>
+    case msg: BulkActor.Result[T @unchecked] =>
       confirmed = confirmed + msg.items.size
       msg.items
         .zip(msg.originals)
@@ -163,7 +163,7 @@ class BulkActor[T](
         }
       checkCompleteOrRequestNext(msg.items.size, msg.requestNext)
 
-    case msg: BulkActor.FailedResult[T] =>
+    case msg: BulkActor.FailedResult[T @unchecked] =>
       failed = failed + msg.items.size
       msg.items
         .zip(msg.originals)
@@ -173,7 +173,7 @@ class BulkActor[T](
         }
       checkCompleteOrRequestNext(msg.items.size, msg.requestNext)
 
-    case t: T =>
+    case t: T @unchecked =>
       buffer.append(t)
       if (buffer.size == config.batchSize)
         index()

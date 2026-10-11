@@ -81,7 +81,7 @@ class JavaClient(client: RestClient, onClose: Option[Closeable] = None)(implicit
     req.params.foreach { case (key, value) => request.addParameter(key, value) }
     req.entity.map(apacheEntity).foreach(request.setEntity)
     val optBuilder = request.getOptions.toBuilder
-    req.headers.foreach((optBuilder.addHeader _).tupled)
+    req.headers.foreach((optBuilder.addHeader(_, _)).tupled)
     request.setOptions(optBuilder)
     client.performRequestAsync(request, l)
 

@@ -81,7 +81,7 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
         ReverseTokenFilter,
         LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
         edgeNGramTokenFilter("myEdgeNGramTokenFilter").minGram(3).maxGram(50).side("front"),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Seq("rule1", "rule2")),
         HtmlStripCharFilter,
         MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
         PatternReplaceCharFilter(
@@ -125,7 +125,7 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
         ReverseTokenFilter,
         LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
         edgeNGramTokenFilter("myEdgeNGramTokenFilter").minGram(3).maxGram(50).side("front"),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Array("rule1", "rule2")),
+        StemmerOverrideTokenFilter("stemmerTokenFilter", Seq("rule1", "rule2")),
         HtmlStripCharFilter,
         MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
         PatternReplaceCharFilter(

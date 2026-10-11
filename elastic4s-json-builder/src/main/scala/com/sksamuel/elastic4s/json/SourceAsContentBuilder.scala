@@ -4,7 +4,7 @@ object SourceAsContentBuilder {
 
   def apply(source: Map[String, Any]): XContentBuilder = {
     val builder = XContentFactory.jsonBuilder()
-    source.foreach((builder.autofield _).tupled)
+    source.foreach((builder.autofield(_, _)).tupled)
     builder
   }
 }

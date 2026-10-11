@@ -109,7 +109,7 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
 
   "analyze request custom charFilters" should "work well" in {
     val result = client.execute {
-      AnalyzeRequest(Array("<p>I&apos;m so <b>happy</b>!</p>"))
+      AnalyzeRequest(Seq("<p>I&apos;m so <b>happy</b>!</p>"))
         .charFilters("html_strip")
     }.await.result
 
