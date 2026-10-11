@@ -16,7 +16,7 @@ class MultiSearchCircuitBreakerTest
   override def beforeAll(): Unit =
     Try {
       client.execute {
-        clusterTransientSettings(Map("indices.breaker.total.limit" -> "1b"))
+        clusterTransientSettings(Map("indices.breaker.total.limit" -> "0.0001%"))
       }.await
     }
 
