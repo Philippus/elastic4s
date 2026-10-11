@@ -4,6 +4,9 @@ import com.sksamuel.elastic4s.api.TokenizerApi
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.annotation.nowarn
+
+@nowarn("cat=deprecation")
 class NGramTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers {
 
   "NGramTokenizer builder" should {

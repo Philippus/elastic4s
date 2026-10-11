@@ -4,6 +4,9 @@ import com.sksamuel.elastic4s.api.{AnalyzerApi, TokenFilterApi}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.annotation.nowarn
+
+@nowarn("cat=deprecation")
 class UniqueTokenFilterTest extends AnyWordSpec with AnalyzerApi with Matchers with TokenFilterApi {
 
   "UniqueTokenFilter builder" should {

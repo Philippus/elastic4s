@@ -5,6 +5,9 @@ import com.sksamuel.elastic4s.api.TokenizerApi
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.annotation.nowarn
+
+@nowarn("cat=deprecation")
 class KeywordTokenizerTest extends AnyWordSpec with TokenizerApi with Matchers with ElasticDsl {
 
   "KeywordTokenizer builder" should {

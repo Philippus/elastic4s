@@ -3,6 +3,9 @@ package com.sksamuel.elastic4s.requests.analyzers
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import scala.annotation.nowarn
+
+@nowarn("cat=deprecation")
 class CustomAnalyzerTest extends AnyFlatSpec with Matchers {
 
   "CustomAnalyzer" should "support predefined tokenizers and filters" in {
