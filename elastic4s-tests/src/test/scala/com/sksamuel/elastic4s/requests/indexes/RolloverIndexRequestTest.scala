@@ -86,8 +86,8 @@ class RolloverIndexRequestTest extends AnyWordSpec with Matchers with DockerTest
     }
     "return conditions in response" in {
       client.execute {
-        rolloverIndex("roll_write").maxDocs(10).maxSize("5g")
-      }.await.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_size: 5gb]" -> false)
+        rolloverIndex("roll_write").maxDocs(10).maxPrimaryShardSize("5g")
+      }.await.result.conditions shouldBe Map("[max_docs: 10]" -> false, "[max_primary_shard_size: 5gb]" -> false)
     }
     "support max docs" in {
       client.execute {

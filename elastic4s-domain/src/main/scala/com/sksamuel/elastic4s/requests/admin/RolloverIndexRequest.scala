@@ -9,13 +9,15 @@ case class RolloverIndexRequest(
     sourceAlias: String,
     maxAge: Option[String] = None,
     maxDocs: Option[Long] = None,
+    @deprecated("Use maxPrimaryShardSize instead", "9.5.1")
     maxSize: Option[String] = None,
     dryRun: Option[Boolean] = None,
     mappings: Seq[MappingDefinition] = Nil,
     newIndexName: Option[String] = None,
     settings: Map[String, Any] = Map.empty,
     waitForActiveShards: Option[Int] = None,
-    masterNodeTimeout: Option[FiniteDuration] = None
+    masterNodeTimeout: Option[FiniteDuration] = None,
+    maxPrimaryShardSize: Option[String] = None
 ) {
 
   def waitForActiveShards(waitForActiveShards: Int): RolloverIndexRequest =
@@ -26,6 +28,7 @@ case class RolloverIndexRequest(
 
   def newIndexName(newIndexName: String): RolloverIndexRequest = copy(newIndexName = newIndexName.some)
 
+  @deprecated("Use maxPrimaryShardSize instead", "9.5.1")
   def maxSize(maxSize: String): RolloverIndexRequest = copy(maxSize = maxSize.some)
 
   def maxDocs(maxDocs: Long): RolloverIndexRequest = copy(maxDocs = maxDocs.some)
@@ -35,6 +38,9 @@ case class RolloverIndexRequest(
   def dryRun(dryRun: Boolean): RolloverIndexRequest = copy(dryRun = dryRun.some)
 
   def mappings(mappings: Iterable[MappingDefinition]): RolloverIndexRequest = copy(mappings = mappings.toSeq)
+
+  def maxPrimaryShardSize(maxPrimaryShardSize: String): RolloverIndexRequest =
+    copy(maxPrimaryShardSize = maxPrimaryShardSize.some)
 
   def settings(settings: Map[String, Any]): RolloverIndexRequest = copy(settings = settings)
 }
