@@ -14,7 +14,7 @@ import com.sksamuel.elastic4s.{
   HttpResponse,
   ResponseHandler
 }
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 case class Retries(bulk: Long, search: Long)
 

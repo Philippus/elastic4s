@@ -17,19 +17,19 @@ class ScriptScoreQueryTest extends AnyWordSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("person") fields (
+      indexInto("person").fields(
         "name" -> "reese",
         "age"  -> 1.0
       ),
-      indexInto("person") fields (
+      indexInto("person").fields(
         "name" -> "finch",
         "age"  -> 1.0
       ),
-      indexInto("person") fields (
+      indexInto("person").fields(
         "name" -> "finch",
         "age"  -> 2.0
       ),
-      indexInto("person") fields (
+      indexInto("person").fields(
         "name" -> "finch",
         "age"  -> 3.0
       )

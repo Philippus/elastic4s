@@ -26,17 +26,17 @@ class ValidateTest extends AnyWordSpec with Matchers with DockerTests {
   }.await
 
   client.execute {
-    indexInto("food") fields (
+    indexInto("food").fields(
       "name"       -> "maccaroni",
       "color"      -> "yellow",
       "sellbydate" -> "2005-01-01"
-    ) refresh RefreshPolicy.WaitFor
+    ).refresh(RefreshPolicy.WaitFor)
   }.await
 
   "a validate query" should {
     "return valid when the query is valid for a string query" in {
       val resp = client.execute {
-        validateIn("food") query "maccaroni"
+        validateIn("food").query("maccaroni")
       }.await.result
       resp.valid shouldBe true
     }

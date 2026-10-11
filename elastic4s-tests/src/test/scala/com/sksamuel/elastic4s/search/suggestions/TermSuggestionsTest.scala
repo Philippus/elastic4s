@@ -30,20 +30,20 @@ class TermSuggestionsTest extends AnyWordSpec with Matchers with DockerTests {
 
   client.execute(
     bulk(
-      indexInto(index) doc Song("style", "taylor swift"),
-      indexInto(index) doc Song("shake it off", "Taylor Swift"),
-      indexInto(index) doc Song("a new england", "kirsty maccoll"),
-      indexInto(index) doc Song("blank page", "taylor swift"),
-      indexInto(index) doc Song("I want it all", "queen"),
-      indexInto(index) doc Song("I to break free", "queen"),
-      indexInto(index) doc Song("radio gaga", "queen"),
-      indexInto(index) doc Song("we are the champions", "quoon"),
-      indexInto(index) doc Song("Down with the trumpets", "rizzle kicks"),
-      indexInto(index) doc Song("Down with the trombones", "razzle kacks"),
-      indexInto(index) doc Song("lover of the light", "Mumford and sons"),
-      indexInto(index) doc Song("Monster", "Mumford and sons"),
-      indexInto(index) doc Song("Goodbye the yellow brick road", "Elton John"),
-      indexInto(index) doc Song("Your song", "Elton John")
+      indexInto(index).doc(Song("style", "taylor swift")),
+      indexInto(index).doc(Song("shake it off", "Taylor Swift")),
+      indexInto(index).doc(Song("a new england", "kirsty maccoll")),
+      indexInto(index).doc(Song("blank page", "taylor swift")),
+      indexInto(index).doc(Song("I want it all", "queen")),
+      indexInto(index).doc(Song("I to break free", "queen")),
+      indexInto(index).doc(Song("radio gaga", "queen")),
+      indexInto(index).doc(Song("we are the champions", "quoon")),
+      indexInto(index).doc(Song("Down with the trumpets", "rizzle kicks")),
+      indexInto(index).doc(Song("Down with the trombones", "razzle kacks")),
+      indexInto(index).doc(Song("lover of the light", "Mumford and sons")),
+      indexInto(index).doc(Song("Monster", "Mumford and sons")),
+      indexInto(index).doc(Song("Goodbye the yellow brick road", "Elton John")),
+      indexInto(index).doc(Song("Your song", "Elton John"))
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -73,7 +73,7 @@ class TermSuggestionsTest extends AnyWordSpec with Matchers with DockerTests {
 
       val resp = client.execute {
         search(index).suggestions {
-          termSuggestion("a", "artist", "quoon") mode SuggestMode.ALWAYS
+          termSuggestion("a", "artist", "quoon").mode(SuggestMode.ALWAYS)
         }
       }.await.result
       resp.termSuggestion("a")("quoon").optionsText shouldBe Seq("queen")
@@ -91,7 +91,7 @@ class TermSuggestionsTest extends AnyWordSpec with Matchers with DockerTests {
     "allow us to set min word length to be suggested for" in {
       val resp = client.execute {
         search(index).suggestions {
-          termSuggestion("a", "artist", "joan") minWordLength 5
+          termSuggestion("a", "artist", "joan").minWordLength(5)
         }
       }.await.result
       // we set min word to 5 so the only possible suggestion of John should not be included

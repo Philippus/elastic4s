@@ -157,7 +157,7 @@ object JavaClient {
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
 
     val client = RestClient
-      .builder(hosts: _*)
+      .builder(hosts*)
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
       .setCompressionEnabled(compressionEnabled)

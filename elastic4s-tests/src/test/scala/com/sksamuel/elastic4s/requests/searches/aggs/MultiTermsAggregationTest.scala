@@ -28,10 +28,10 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("multitermsagg") fields ("name" -> "Jalfrezi", "strength"      -> "mild", "origin" -> "india"),
-      indexInto("multitermsagg") fields ("name" -> "Madras", "strength"        -> "hot", "origin"  -> "india"),
-      indexInto("multitermsagg") fields ("name" -> "Chilli Masala", "strength" -> "hot", "origin"  -> "india"),
-      indexInto("multitermsagg") fields ("name" -> "Tikka Masala", "strength"  -> "medium")
+      indexInto("multitermsagg").fields("name" -> "Jalfrezi", "strength"      -> "mild", "origin" -> "india"),
+      indexInto("multitermsagg").fields("name" -> "Madras", "strength"        -> "hot", "origin"  -> "india"),
+      indexInto("multitermsagg").fields("name" -> "Chilli Masala", "strength" -> "hot", "origin"  -> "india"),
+      indexInto("multitermsagg").fields("name" -> "Tikka Masala", "strength"  -> "medium")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -102,7 +102,7 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
             "agg1",
             MultiTermsAggregation.Term().field("strength"),
             MultiTermsAggregation.Term().field("origin")
-          ) minDocCount 2
+          ).minDocCount(2)
         }
       }.await.result
       resp.totalHits shouldBe 4
@@ -119,7 +119,7 @@ class MultiTermsAggregationTest extends AnyFreeSpec with DockerTests with Matche
             "agg1",
             MultiTermsAggregation.Term().field("strength"),
             MultiTermsAggregation.Term().field("origin")
-          ) size 1
+          ).size(1)
         }
       }.await.result
       resp.totalHits shouldBe 4

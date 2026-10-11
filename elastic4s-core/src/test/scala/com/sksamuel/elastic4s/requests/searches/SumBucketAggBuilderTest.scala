@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 class SumBucketAggBuilderTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   test("sum bucket agg should match the spec") {
     val search = SearchRequest("myindex").aggs(

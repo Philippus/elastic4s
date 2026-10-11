@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.suggestion
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 sealed trait SortBy
 object SortBy {

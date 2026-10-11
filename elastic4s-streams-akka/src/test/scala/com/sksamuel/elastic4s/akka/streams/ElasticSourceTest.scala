@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Sink, Source}
 import com.sksamuel.elastic4s.ElasticDsl.search
 import com.sksamuel.elastic4s.requests.common.Shards
-import com.sksamuel.elastic4s.requests.searches._
+import com.sksamuel.elastic4s.requests.searches.*
 import com.sksamuel.elastic4s.{
   CommonRequestOptions,
   ElasticClient,
@@ -22,9 +22,9 @@ import org.scalatest.wordspec.AnyWordSpec
 
 import java.util.concurrent.atomic.{AtomicInteger, AtomicReference}
 import java.util.concurrent.{ConcurrentLinkedQueue, CountDownLatch, TimeUnit}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 
 class ElasticSourceTest extends AnyWordSpec with Matchers with BeforeAndAfterAll {
 

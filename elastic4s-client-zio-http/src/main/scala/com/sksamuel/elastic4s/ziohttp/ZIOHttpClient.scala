@@ -76,7 +76,7 @@ class ZIOHttpClient(client: Client, baseUrl: URL) extends elastic4s.HttpClient[T
       method = zio.http.Method.fromString(request.method),
       headers = if (request.headers.nonEmpty) {
         val seq = request.headers.toSeq
-        Headers(seq.head, seq.tail: _*) ++ contentType
+        Headers(seq.head, seq.tail*) ++ contentType
       } else {
         contentType
       },
@@ -86,7 +86,7 @@ class ZIOHttpClient(client: Client, baseUrl: URL) extends elastic4s.HttpClient[T
           QueryParams.empty
         } else {
           val paramsSeq = request.params.toSeq
-          QueryParams(paramsSeq.head, paramsSeq.tail: _*)
+          QueryParams(paramsSeq.head, paramsSeq.tail*)
         }
       ),
       body = body

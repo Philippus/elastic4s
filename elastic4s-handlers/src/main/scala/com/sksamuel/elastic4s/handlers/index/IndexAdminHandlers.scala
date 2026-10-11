@@ -17,7 +17,7 @@ import com.sksamuel.elastic4s.requests.admin.{
   UpdateIndexLevelSettingsRequest
 }
 import com.sksamuel.elastic4s.requests.common.IndicesOptionsParams
-import com.sksamuel.elastic4s.requests.indexes._
+import com.sksamuel.elastic4s.requests.indexes.*
 import com.sksamuel.elastic4s.requests.indexes.admin.IndexShardStoreResponse.StoreStatusResponse
 import com.sksamuel.elastic4s.requests.indexes.admin.recovery.IndexRecoveryRequest
 import com.sksamuel.elastic4s.requests.indexes.admin.{

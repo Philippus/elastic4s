@@ -32,7 +32,7 @@ class ScrollPublisher private[reactivestreams] (client: ElasticClient[Future], s
 ) extends Publisher[SearchHit] {
   require(search.keepAlive.isDefined, "Search Definition must have a scroll to be used as Publisher")
 
-  override def subscribe(s: Subscriber[_ >: SearchHit]): Unit = {
+  override def subscribe(s: Subscriber[? >: SearchHit]): Unit = {
     // Rule 1.9 subscriber cannot be null
     if (s == null) throw new NullPointerException("Rule 1.9: Subscriber cannot be null")
     val subscription = new ScrollSubscription(client, search, s, maxItems)
@@ -44,7 +44,7 @@ class ScrollPublisher private[reactivestreams] (client: ElasticClient[Future], s
   }
 }
 
-class ScrollSubscription(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[_ >: SearchHit], max: Long)(
+class ScrollSubscription(client: ElasticClient[Future], query: SearchRequest, s: Subscriber[? >: SearchHit], max: Long)(
     implicit
     actorRefFactory: ActorRefFactory,
     options: CommonRequestOptions
@@ -77,13 +77,13 @@ object PublishActor {
 class PublishActor(
     client: ElasticClient[Future],
     query: SearchRequest,
-    s: Subscriber[_ >: SearchHit],
+    s: Subscriber[? >: SearchHit],
     max: Long
 )(implicit options: CommonRequestOptions)
     extends Actor
     with Stash {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
   import context.dispatcher
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass.getName)

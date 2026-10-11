@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 object WildcardField     {
   val `type`: String = "wildcard"

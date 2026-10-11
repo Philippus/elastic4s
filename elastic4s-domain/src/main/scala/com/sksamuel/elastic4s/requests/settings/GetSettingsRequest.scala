@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.settings
 
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class GetSettingsRequest(
     indexes: Indexes,

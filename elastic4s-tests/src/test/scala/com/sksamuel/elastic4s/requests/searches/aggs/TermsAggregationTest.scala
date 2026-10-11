@@ -27,10 +27,10 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("termsagg") fields ("name" -> "Jalfrezi", "strength"      -> "mild", "origin" -> "india"),
-      indexInto("termsagg") fields ("name" -> "Madras", "strength"        -> "hot", "origin"  -> "india"),
-      indexInto("termsagg") fields ("name" -> "Chilli Masala", "strength" -> "hot", "origin"  -> "india"),
-      indexInto("termsagg") fields ("name" -> "Tikka Masala", "strength"  -> "medium")
+      indexInto("termsagg").fields("name" -> "Jalfrezi", "strength"      -> "mild", "origin" -> "india"),
+      indexInto("termsagg").fields("name" -> "Madras", "strength"        -> "hot", "origin"  -> "india"),
+      indexInto("termsagg").fields("name" -> "Chilli Masala", "strength" -> "hot", "origin"  -> "india"),
+      indexInto("termsagg").fields("name" -> "Tikka Masala", "strength"  -> "medium")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -72,7 +72,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
       val resp = client.execute {
         search("termsagg").aggregations {
-          termsAgg("agg1", "origin") missing "unknown"
+          termsAgg("agg1", "origin").missing("unknown")
         }
       }.await.result
       resp.totalHits shouldBe 4
@@ -88,7 +88,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
       val resp = client.execute {
         search("termsagg").aggregations {
-          termsAgg("agg1", "strength") minDocCount 2
+          termsAgg("agg1", "strength").minDocCount(2)
         }
       }.await.result
       resp.totalHits shouldBe 4
@@ -101,7 +101,7 @@ class TermsAggregationTest extends AnyFreeSpec with DockerTests with Matchers {
 
       val resp = client.execute {
         search("termsagg").aggregations {
-          termsAgg("agg1", "strength") size 1
+          termsAgg("agg1", "strength").size(1)
         }
       }.await.result
       resp.totalHits shouldBe 4

@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.index
 
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.HttpResponse
-import com.sksamuel.elastic4s.requests.indexes.analyze._
+import com.sksamuel.elastic4s.requests.indexes.analyze.*
 
 import scala.io.Source
 import scala.util.Using

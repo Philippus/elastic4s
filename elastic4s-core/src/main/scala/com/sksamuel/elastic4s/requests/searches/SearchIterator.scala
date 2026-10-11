@@ -22,7 +22,7 @@ object SearchIterator {
     new Iterator[SearchHit] {
       require(searchreq.keepAlive.isDefined, "Search request must define keep alive value")
 
-      import com.sksamuel.elastic4s.ElasticDsl._
+      import com.sksamuel.elastic4s.ElasticDsl.*
 
       private var internalIterator: Iterator[SearchHit] = Iterator.empty
       private var scrollId: Option[String]              = None

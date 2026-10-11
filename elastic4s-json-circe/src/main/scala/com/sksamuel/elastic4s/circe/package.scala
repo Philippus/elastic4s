@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
-import io.circe._
-import io.circe.jawn._
+import io.circe.*
+import io.circe.jawn.*
 
 import scala.annotation.implicitNotFound
 import scala.util.{Failure, Success}

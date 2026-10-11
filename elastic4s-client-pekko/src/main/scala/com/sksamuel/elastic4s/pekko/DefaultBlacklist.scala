@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.pekko
 
 import java.util.concurrent.ConcurrentHashMap
 
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.concurrent.duration.FiniteDuration
 
 /** Thread-safe host blacklist. Blacklist duration starts with `min` and exponentially increased up to `max` on
@@ -19,7 +19,7 @@ import scala.concurrent.duration.FiniteDuration
 private[pekko] class DefaultBlacklist(min: FiniteDuration, max: FiniteDuration, nanoTime: => Long = System.nanoTime)
     extends Blacklist {
 
-  import DefaultBlacklist._
+  import DefaultBlacklist.*
 
   private val hosts = new ConcurrentHashMap[String, BlacklistRecord]()
 

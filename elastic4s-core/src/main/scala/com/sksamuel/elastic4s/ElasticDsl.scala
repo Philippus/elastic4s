@@ -82,9 +82,9 @@ trait ElasticDslWithoutSearch extends ElasticApi
     with PitHandlers {
 
   implicit class RichRequest[T](t: T) {
-    def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
+    def request(implicit handler: Handler[T, ?]): ElasticRequest = handler.build(t)
 
-    def show(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
+    def show(implicit handler: Handler[T, ?]): String = Show[ElasticRequest].show(handler.build(t))
   }
 }
 

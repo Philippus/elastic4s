@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 object SearchAsYouTypeField {
   val `type`: String = "search_as_you_type"

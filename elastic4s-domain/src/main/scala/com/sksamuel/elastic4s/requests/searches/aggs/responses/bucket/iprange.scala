@@ -16,13 +16,13 @@ object IpRangeAggResult {
   def apply(name: String, data: Map[String, Any]): IpRangeAggResult = IpRangeAggResult(
     name,
     data("buckets") match {
-      case buckets: Seq[_] =>
+      case buckets: Seq[?] =>
         buckets.asInstanceOf[Seq[Map[String, Any]]].map { map =>
           mkBucket(map.get("key").map(_.toString), map)
         }
 
       // keyed results
-      case buckets: Map[_, _] =>
+      case buckets: Map[?, ?] =>
         buckets
           .asInstanceOf[Map[String, Any]]
           .map {

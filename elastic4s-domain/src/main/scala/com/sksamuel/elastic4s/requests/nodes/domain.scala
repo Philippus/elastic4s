@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.sksamuel.elastic4s.ext.Maps
 import com.typesafe.config.{Config, ConfigFactory}
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 case class SwapStats(
     @JsonProperty("total_in_bytes") totalInBytes: Long,

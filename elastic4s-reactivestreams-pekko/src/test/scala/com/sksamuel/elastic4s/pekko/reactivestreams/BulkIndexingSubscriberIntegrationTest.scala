@@ -34,17 +34,17 @@ object Ship {
 
 class ShipRequestBuilder(indexName: String = "bulkindexsubint") extends RequestBuilder[Ship] {
 
-  import ElasticDsl._
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+  import ElasticDsl.*
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
 
   override def request(ship: Ship): BulkCompatibleRequest = {
-    indexInto(s"$indexName/ships") source ship
+    indexInto(s"$indexName/ships").source(ship)
   }
 }
 
 object ShipPublisher extends Publisher[Ship] {
 
-  override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
+  override def subscribe(s: Subscriber[? >: Ship]): Unit = {
     var remaining = Ship.ships
     s.onSubscribe(new Subscription {
       override def cancel(): Unit         = ()
@@ -60,7 +60,7 @@ object ShipPublisher extends Publisher[Ship] {
 
 object ShipEndlessPublisher extends Publisher[Ship] {
 
-  override def subscribe(s: Subscriber[_ >: Ship]): Unit = {
+  override def subscribe(s: Subscriber[? >: Ship]): Unit = {
     var remaining = Ship.ships
     s.onSubscribe(new Subscription {
       override def cancel(): Unit         = ()

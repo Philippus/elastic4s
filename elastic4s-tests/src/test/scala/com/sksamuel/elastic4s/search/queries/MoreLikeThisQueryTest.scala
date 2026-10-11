@@ -21,18 +21,18 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createIndex("mltq").mapping(
       properties(
-        textField("text") store true analyzer StandardAnalyzer.name
+        textField("text").store(true).analyzer(StandardAnalyzer.name)
       )
-    ) shards 3
+    ).shards(3)
   }.await
 
   client.execute {
     bulk(
-      indexInto("mltq") fields ("text" -> "coors light is a coors beer by molson") id "4" routing "1",
-      indexInto("mltq") fields ("text" -> "Anheuser-Busch brews a cider called Strongbow") id "6" routing "1",
-      indexInto("mltq") fields ("text" -> "Gordons popular gin UK") id "7" routing "1",
-      indexInto("mltq") fields ("text" -> "coors regular is another coors beer by molson") id "8" routing "1",
-      indexInto("mltq") fields ("text" -> "Hendricks upmarket gin UK") id "9" routing "1"
+      indexInto("mltq").fields("text" -> "coors light is a coors beer by molson").id("4").routing("1"),
+      indexInto("mltq").fields("text" -> "Anheuser-Busch brews a cider called Strongbow").id("6").routing("1"),
+      indexInto("mltq").fields("text" -> "Gordons popular gin UK").id("7").routing("1"),
+      indexInto("mltq").fields("text" -> "coors regular is another coors beer by molson").id("8").routing("1"),
+      indexInto("mltq").fields("text" -> "Hendricks upmarket gin UK").id("9").routing("1")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -42,7 +42,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
       val resp = client.execute {
         search("mltq") query {
           moreLikeThisQuery("text")
-            .likeTexts("coors") minTermFreq 1 minDocFreq 1
+            .likeTexts("coors").minTermFreq(1).minDocFreq(1)
         }
       }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("4", "8")
@@ -53,7 +53,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
       val resp2 = client.execute {
         search("mltq").query {
           moreLikeThisQuery("text")
-            .likeItems(MoreLikeThisItem(ref, Some("1"))) minTermFreq 1 minDocFreq 1
+            .likeItems(MoreLikeThisItem(ref, Some("1"))).minTermFreq(1).minDocFreq(1)
         }
       }.await.result
       resp2.hits.hits.map(_.id).toSet shouldBe Set("8")
@@ -66,7 +66,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
       val resp1 = client.execute {
         search("mltq").query {
           moreLikeThisQuery("text")
-            .likeItems(MoreLikeThisItem(ref, Some("2"))) minTermFreq 1 minDocFreq 1
+            .likeItems(MoreLikeThisItem(ref, Some("2"))).minTermFreq(1).minDocFreq(1)
         }
       }.await.result
       resp1.hits.hits.map(_.id).toSet shouldBe Set()
@@ -78,7 +78,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
           moreLikeThisQuery("text")
             .artificialDocs(
               ArtificialDocument("drinks", """{ "text" : "upmarket gin" }""")
-            ) minTermFreq 1 minDocFreq 1
+            ).minTermFreq(1).minDocFreq(1)
         }
       }.await.result
       resp.hits.hits.map(_.id).toSet shouldBe Set("7", "9")

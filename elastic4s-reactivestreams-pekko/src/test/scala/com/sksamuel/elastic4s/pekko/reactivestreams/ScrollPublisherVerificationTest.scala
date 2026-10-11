@@ -16,7 +16,7 @@ class ScrollPublisherVerificationTest
       PUBLISHER_REFERENCE_CLEANUP_TIMEOUT_MILLIS
     ) with TestNGSuiteLike with DockerTests {
 
-  import ElasticJackson.Implicits._
+  import ElasticJackson.Implicits.*
 
   implicit val system: ActorSystem = ActorSystem()
 
@@ -34,19 +34,19 @@ class ScrollPublisherVerificationTest
 
   client.execute {
     bulk(
-      indexInto("scrollpubver") source Empire("Parthian", "Persia", "Ctesiphon"),
-      indexInto("scrollpubver") source Empire("Ptolemaic", "Egypt", "Alexandria"),
-      indexInto("scrollpubver") source Empire("British", "Worldwide", "London"),
-      indexInto("scrollpubver") source Empire("Achaemenid", "Persia", "Babylon"),
-      indexInto("scrollpubver") source Empire("Sasanian", "Persia", "Ctesiphon"),
-      indexInto("scrollpubver") source Empire("Mongol", "East Asia", "Avarga"),
-      indexInto("scrollpubver") source Empire("Roman", "Mediterranean", "Rome"),
-      indexInto("scrollpubver") source Empire("Sumerian", "Mesopotamia", "Uruk"),
-      indexInto("scrollpubver") source Empire("Klingon", "Space", "Kronos"),
-      indexInto("scrollpubver") source Empire("Romulan", "Space", "Romulus"),
-      indexInto("scrollpubver") source Empire("Cardassian", "Space", "Cardassia Prime"),
-      indexInto("scrollpubver") source Empire("Egyptian", "Egypt", "Memphis"),
-      indexInto("scrollpubver") source Empire("Babylonian", "Levant", "Babylon")
+      indexInto("scrollpubver").source(Empire("Parthian", "Persia", "Ctesiphon")),
+      indexInto("scrollpubver").source(Empire("Ptolemaic", "Egypt", "Alexandria")),
+      indexInto("scrollpubver").source(Empire("British", "Worldwide", "London")),
+      indexInto("scrollpubver").source(Empire("Achaemenid", "Persia", "Babylon")),
+      indexInto("scrollpubver").source(Empire("Sasanian", "Persia", "Ctesiphon")),
+      indexInto("scrollpubver").source(Empire("Mongol", "East Asia", "Avarga")),
+      indexInto("scrollpubver").source(Empire("Roman", "Mediterranean", "Rome")),
+      indexInto("scrollpubver").source(Empire("Sumerian", "Mesopotamia", "Uruk")),
+      indexInto("scrollpubver").source(Empire("Klingon", "Space", "Kronos")),
+      indexInto("scrollpubver").source(Empire("Romulan", "Space", "Romulus")),
+      indexInto("scrollpubver").source(Empire("Cardassian", "Space", "Cardassia Prime")),
+      indexInto("scrollpubver").source(Empire("Egyptian", "Egypt", "Memphis")),
+      indexInto("scrollpubver").source(Empire("Babylonian", "Levant", "Babylon"))
     ).refreshImmediately
   }.await
 

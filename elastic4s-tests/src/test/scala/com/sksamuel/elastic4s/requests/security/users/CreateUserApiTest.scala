@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.security.users
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl.*
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.handlers.security.users
 import com.sksamuel.elastic4s.handlers.security.users.CreateOrUpdateUserContentBuilder

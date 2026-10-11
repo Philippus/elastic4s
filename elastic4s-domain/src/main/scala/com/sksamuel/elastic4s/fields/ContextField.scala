@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.fields
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class ContextField(name: String, `type`: String, path: Option[String] = None, precision: Option[Int] = None) {
 

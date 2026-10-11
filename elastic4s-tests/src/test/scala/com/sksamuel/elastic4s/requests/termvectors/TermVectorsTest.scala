@@ -26,8 +26,8 @@ class TermVectorsTest extends AnyFlatSpec with Matchers with DockerTests {
 
   client.execute(
     bulk(
-      indexInto("termvecs").fields("name" -> "interstellar", "rating" -> 10) id "1",
-      indexInto("termvecs").fields("name" -> "lion king", "rating" -> 8) id "2"
+      indexInto("termvecs").fields("name" -> "interstellar", "rating" -> 10).id("1"),
+      indexInto("termvecs").fields("name" -> "lion king", "rating" -> 8).id("2")
     ).refreshImmediately
   ).await
 

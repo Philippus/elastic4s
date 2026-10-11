@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.handlers.get.GetHandlers
 import com.sksamuel.elastic4s.{ElasticError, HttpResponse}
 import org.scalatest.EitherValues
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 
 class GetHandlerTest extends AnyFlatSpec with GetHandlers with EitherValues {
 

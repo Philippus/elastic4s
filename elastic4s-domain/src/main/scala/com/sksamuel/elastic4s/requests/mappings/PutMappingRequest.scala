@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.mappings
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 import com.sksamuel.elastic4s.fields.ElasticField
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.{DynamicMapping, DynamicTemplateRequest}
 import com.sksamuel.elastic4s.requests.searches.RuntimeMapping
@@ -55,7 +55,7 @@ case class PutMappingRequest(
   def numericDetection(numericDetection: Boolean): PutMappingRequest = copy(numericDetection = numericDetection.some)
 
   def properties(fields: Iterable[ElasticField]): PutMappingRequest = as(fields)
-  def properties(fields: ElasticField*): PutMappingRequest          = as(fields: _*)
+  def properties(fields: ElasticField*): PutMappingRequest          = as(fields*)
 
   def as(fields: ElasticField*): PutMappingRequest            = as(fields.toSeq)
   def as(iterable: Iterable[ElasticField]): PutMappingRequest = copy(properties = properties ++ iterable)

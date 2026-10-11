@@ -24,7 +24,7 @@ class MatchQueryTest
 
   client.execute {
     bulk(
-      indexInto("units") fields (
+      indexInto("units").fields(
         "name"              -> "candela",
         "scientist.name"    -> "Jules Violle",
         "scientist.country" -> "France"
@@ -35,7 +35,7 @@ class MatchQueryTest
   "a match query" should "support selecting nested properties" in {
 
     val resp = client.execute {
-      search("units") query matchQuery("name", "candela") sourceInclude "scientist.name"
+      search("units").query(matchQuery("name", "candela")).sourceInclude("scientist.name")
     }.await.result
 
     resp.hits.hits.head.sourceAsMap shouldBe Map("scientist.name" -> "Jules Violle")
@@ -44,7 +44,7 @@ class MatchQueryTest
   "a match query" should "support excluding nested properties" in {
 
     val resp = client.execute {
-      search("units") query matchQuery("name", "candela") sourceExclude "scientist.name"
+      search("units").query(matchQuery("name", "candela")).sourceExclude("scientist.name")
     }.await.result
 
     resp.hits.hits.head.sourceAsMap shouldBe Map("name" -> "candela", "scientist.country" -> "France")
@@ -53,7 +53,7 @@ class MatchQueryTest
   "a match query" should "support including and excluding nested properties" in {
 
     val resp = client.execute {
-      search("units") query matchQuery("name", "candela") sourceInclude "*name" sourceExclude "scientist.*"
+      search("units").query(matchQuery("name", "candela")).sourceInclude("*name").sourceExclude("scientist.*")
     }.await.result
 
     resp.hits.hits.head.sourceAsMap shouldBe Map("name" -> "candela")

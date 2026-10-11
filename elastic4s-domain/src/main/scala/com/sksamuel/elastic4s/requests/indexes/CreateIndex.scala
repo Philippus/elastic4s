@@ -3,9 +3,9 @@ package com.sksamuel.elastic4s.requests.indexes
 import com.sksamuel.elastic4s.requests.analyzers.{AnalyzerDefinition, NormalizerDefinition}
 import com.sksamuel.elastic4s.requests.mappings.MappingDefinition
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 case class IndexAliasRequest(name: String, filter: Option[Query] = None, routing: Option[String] = None)
 

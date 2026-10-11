@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.searches.DateHistogramInterval
-import com.sksamuel.elastic4s.requests.searches.aggs.CompositeAggregation._
+import com.sksamuel.elastic4s.requests.searches.aggs.CompositeAggregation.*
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -24,12 +24,12 @@ class CompositeDateAggregationHttpTest extends AnyFreeSpec with DockerTests with
   }.await
   client.execute(
     bulk(
-      indexInto("compositedatehistaggs") fields ("name" -> "Breaking Bad", "premiere_date"        -> "20/01/2008"),
-      indexInto("compositedatehistaggs") fields ("name" -> "Better Call Saul", "premiere_date"    -> "15/01/2008"),
-      indexInto("compositedatehistaggs") fields ("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2008"),
-      indexInto("compositedatehistaggs") fields ("name" -> "Game of Thrones", "premiere_date"     -> "01/06/2008"),
-      indexInto("compositedatehistaggs") fields ("name" -> "Designated Survivor", "premiere_date" -> "12/03/2008"),
-      indexInto("compositedatehistaggs") fields ("name" -> "Walking Dead", "premiere_date"        -> "19/01/2008")
+      indexInto("compositedatehistaggs").fields("name" -> "Breaking Bad", "premiere_date"        -> "20/01/2008"),
+      indexInto("compositedatehistaggs").fields("name" -> "Better Call Saul", "premiere_date"    -> "15/01/2008"),
+      indexInto("compositedatehistaggs").fields("name" -> "Star Trek Discovery", "premiere_date" -> "27/06/2008"),
+      indexInto("compositedatehistaggs").fields("name" -> "Game of Thrones", "premiere_date"     -> "01/06/2008"),
+      indexInto("compositedatehistaggs").fields("name" -> "Designated Survivor", "premiere_date" -> "12/03/2008"),
+      indexInto("compositedatehistaggs").fields("name" -> "Walking Dead", "premiere_date"        -> "19/01/2008")
     ).refresh(RefreshPolicy.Immediate)
   ).await
   "date histogram agg" - {

@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.cluster
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 import scala.concurrent.duration.Duration
 

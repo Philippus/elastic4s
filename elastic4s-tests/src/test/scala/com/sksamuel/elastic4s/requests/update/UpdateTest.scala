@@ -23,7 +23,7 @@ class UpdateTest
     )
   )
 
-  private val simpleIndex = indexInto("hans") fields "name" -> "intersteller" id "5" refresh RefreshPolicy.Immediate
+  private val simpleIndex = indexInto("hans").fields("name" -> "intersteller").id("5").refresh(RefreshPolicy.Immediate)
   private val nestedIndex = indexInto("hans").fields(
     "recording_location" ->
       Map(
@@ -31,7 +31,7 @@ class UpdateTest
         "country"  -> "United Kingdom",
         "position" -> List(-0.127413, 51.506907)
       )
-  ) id "5" refresh RefreshPolicy.Immediate
+  ).id("5").refresh(RefreshPolicy.Immediate)
 
   private val idxRequests = for {
     _ <- client.execute(ElasticApi.deleteIndex("hans"))

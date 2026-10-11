@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.requests.analyzers._
+import com.sksamuel.elastic4s.requests.analyzers.*
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
@@ -28,11 +28,11 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
 
     client.execute {
       createIndex("index").mapping(
-        (properties() as Seq(
-          textField("a") stored true analyzer WhitespaceAnalyzer.name,
-          keywordField("b") normalizer "my_normalizer",
-          joinField("c") relation ("parent", Seq("bar", "foo"))
-        )).meta(Map(
+        (properties().as(Seq(
+          textField("a").stored(true).analyzer(WhitespaceAnalyzer.name),
+          keywordField("b").normalizer("my_normalizer"),
+          joinField("c").relation("parent", Seq("bar", "foo"))
+        ))).meta(Map(
           "meta_key" -> "meta_value"
         ))
       ) analysis {

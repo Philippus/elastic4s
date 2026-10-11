@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.term
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class TermQuery(
     field: String,

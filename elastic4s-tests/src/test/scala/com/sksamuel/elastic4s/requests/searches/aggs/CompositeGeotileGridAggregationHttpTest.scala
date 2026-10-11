@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.aggs
 
 import com.sksamuel.elastic4s.fields.GeoPointField
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
-import com.sksamuel.elastic4s.requests.searches.aggs.CompositeAggregation._
+import com.sksamuel.elastic4s.requests.searches.aggs.CompositeAggregation.*
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -25,12 +25,12 @@ class CompositeGeotileGridAggregationHttpTest extends AnyFreeSpec with DockerTes
   }.await
   client.execute(
     bulk(
-      indexInto("compositegeotilegridaggs") fields ("name" -> "MacRonalds", "location"   -> "2, 3"),
-      indexInto("compositegeotilegridaggs") fields ("name" -> "Henny's", "location"      -> "40, 5"),
-      indexInto("compositegeotilegridaggs") fields ("name" -> "Taco Shell", "location"   -> "40, 10"),
-      indexInto("compositegeotilegridaggs") fields ("name" -> "Burger Sling", "location" -> "2 , 3.1"),
-      indexInto("compositegeotilegridaggs") fields ("name" -> "U-bahn", "location"       -> "29, 1"),
-      indexInto("compositegeotilegridaggs") fields ("name" -> "John's hut", "location"   -> "29, 1.2")
+      indexInto("compositegeotilegridaggs").fields("name" -> "MacRonalds", "location"   -> "2, 3"),
+      indexInto("compositegeotilegridaggs").fields("name" -> "Henny's", "location"      -> "40, 5"),
+      indexInto("compositegeotilegridaggs").fields("name" -> "Taco Shell", "location"   -> "40, 10"),
+      indexInto("compositegeotilegridaggs").fields("name" -> "Burger Sling", "location" -> "2 , 3.1"),
+      indexInto("compositegeotilegridaggs").fields("name" -> "U-bahn", "location"       -> "29, 1"),
+      indexInto("compositegeotilegridaggs").fields("name" -> "John's hut", "location"   -> "29, 1.2")
     ).refresh(RefreshPolicy.Immediate)
   ).await
   "Composite geotile grid agg" - {

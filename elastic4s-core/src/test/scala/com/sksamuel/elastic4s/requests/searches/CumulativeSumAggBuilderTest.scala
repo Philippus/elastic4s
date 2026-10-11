@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 class CumulativeSumAggBuilderTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   test("cumulative sum agg should match the basic spec") {
     val search = SearchRequest("myIndex").aggs(

@@ -5,7 +5,7 @@ import java.util.UUID
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.testkit.DockerTests
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
@@ -188,7 +188,7 @@ class HitReaderTest extends AnyFlatSpec with DockerTests with Matchers {
       }.await
     }
 
-    import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+    import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
 
     client.execute {
       indexInto("galaxies").doc(milkyway).refresh(RefreshPolicy.IMMEDIATE)

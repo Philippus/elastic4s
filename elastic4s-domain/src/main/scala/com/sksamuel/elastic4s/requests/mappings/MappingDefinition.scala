@@ -25,7 +25,7 @@ case class MappingDefinition(
     runtimes: Seq[RuntimeMapping] = Nil
 ) extends MappingDefinitionLike {
 
-  import com.sksamuel.elastic4s.ext.OptionImplicits._
+  import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
   def all(all: Boolean): MappingDefinition                                = copy(all = all.some)
   def source(source: Boolean): MappingDefinition                          = copy(source = source.some)

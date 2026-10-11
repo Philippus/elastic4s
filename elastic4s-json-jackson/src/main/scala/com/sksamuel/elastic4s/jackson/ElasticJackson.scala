@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.jackson
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.node.ObjectNode
 import tools.jackson.module.scala.{ClassTagExtensions, JavaTypeable}
-import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.*
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.Try
@@ -23,7 +23,7 @@ object ElasticJackson {
       (t: T) => mapper.writeValueAsString(t)
 
     implicit def JacksonJsonHitReader[T](implicit
-        mapper: ObjectMapper with ClassTagExtensions = JacksonSupport.mapper,
+        mapper: ObjectMapper & ClassTagExtensions = JacksonSupport.mapper,
         javaTypeable: JavaTypeable[T]
     ): HitReader[T] = (hit: Hit) =>
       Try {

@@ -4,11 +4,11 @@ import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.GapPolicy
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 class DerivativeAggBuilderTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   test("derivative agg should match the basic spec") {
     val search = SearchRequest("myIndex").aggs(

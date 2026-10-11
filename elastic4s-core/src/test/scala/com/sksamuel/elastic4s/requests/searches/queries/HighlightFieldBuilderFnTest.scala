@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl.*
 import com.sksamuel.elastic4s.handlers.searches
 import com.sksamuel.elastic4s.handlers.searches.HighlightFieldBuilderFn
 import com.sksamuel.elastic4s.requests.searches.HighlightField

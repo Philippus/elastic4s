@@ -24,10 +24,10 @@ class ScriptTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("script") fields ("name" -> "south kensington", "line" -> "district"),
-      indexInto("script") fields ("name" -> "earls court", "line"      -> "district", "zone" -> 2),
-      indexInto("script") fields ("name" -> "cockfosters", "line"      -> "picadilly"),
-      indexInto("script") fields ("name" -> "bank", "line"             -> "northern")
+      indexInto("script").fields("name" -> "south kensington", "line" -> "district"),
+      indexInto("script").fields("name" -> "earls court", "line"      -> "district", "zone" -> 2),
+      indexInto("script").fields("name" -> "cockfosters", "line"      -> "picadilly"),
+      indexInto("script").fields("name" -> "bank", "line"             -> "northern")
     ).refreshImmediately
   }.await
 
@@ -42,8 +42,8 @@ class ScriptTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
     }
     "can use params" in {
       val result = client.execute {
-        search("script") query "earls" scriptfields (
-          scriptField("a", Script("doc['zone'].value * params.fare") params Map("fare" -> 4.50))
+        search("script").query("earls").scriptfields(
+          scriptField("a", Script("doc['zone'].value * params.fare").params(Map("fare" -> 4.50)))
         )
       }.await.result
       result.hits.hits.head.storedField("a").value.asInstanceOf[Double] shouldBe 9.0

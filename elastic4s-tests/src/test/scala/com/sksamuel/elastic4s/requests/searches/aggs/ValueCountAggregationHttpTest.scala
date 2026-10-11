@@ -42,9 +42,9 @@ class ValueCountAggregationHttpTest extends AnyFreeSpec with Matchers with Docke
 
   client.execute(
     bulk(
-      indexInto("valuecount") fields ("name" -> "Willis Tower", "height"    -> 1244),
-      indexInto("valuecount") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
-      indexInto("valuecount") fields ("name" -> "Tower of London", "height" -> 169)
+      indexInto("valuecount").fields("name" -> "Willis Tower", "height"    -> 1244),
+      indexInto("valuecount").fields("name" -> "Burj Kalifa", "height"     -> 2456),
+      indexInto("valuecount").fields("name" -> "Tower of London", "height" -> 169)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

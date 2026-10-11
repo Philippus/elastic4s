@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.pekko
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.language.postfixOps
 
 class DefaultBlacklistTest extends AnyWordSpec with Matchers {

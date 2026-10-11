@@ -7,7 +7,7 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class UpdateByQueryBodyFnTest extends AnyWordSpec with JsonSugar {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   "update by query" should {
     "generate correct body" when {

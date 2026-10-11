@@ -8,7 +8,7 @@ import tools.jackson.core.json.JsonFactory
 import tools.jackson.databind.json.JsonMapper
 
 trait JsonSugar extends Matchers {
-  private val mapper: ObjectMapper with ClassTagExtensions =
+  private val mapper: ObjectMapper & ClassTagExtensions =
     JsonMapper.builder(JsonFactory.builder().build())
       .addModule(DefaultScalaModule)
       .build() :: ClassTagExtensions

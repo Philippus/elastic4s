@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.cluster
 
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.PartialFunctionValues._
+import org.scalatest.PartialFunctionValues.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 

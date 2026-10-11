@@ -61,7 +61,7 @@ import com.sksamuel.elastic4s.api.{
   UserApi,
   ValidateApi
 }
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.concurrent.{Await, Future}
 
 // contains all the syntactic definitions

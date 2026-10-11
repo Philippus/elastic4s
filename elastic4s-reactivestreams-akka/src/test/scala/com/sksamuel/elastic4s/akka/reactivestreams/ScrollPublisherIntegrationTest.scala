@@ -14,8 +14,8 @@ import scala.util.Try
 
 class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with Matchers {
 
-  import ReactiveElastic._
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+  import ReactiveElastic.*
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
 
   private val indexName = getClass.getSimpleName.toLowerCase
 
@@ -62,7 +62,7 @@ class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with M
   "elastic-streams" should {
     "publish all data from the index" in {
 
-      val publisher = client.publisher(search(indexName) query "*:*" scroll "1m")
+      val publisher = client.publisher(search(indexName).query("*:*").scroll("1m"))
 
       val completionLatch = new CountDownLatch(1)
       val documentLatch   = new CountDownLatch(emperors.length)

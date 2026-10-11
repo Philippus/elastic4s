@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.analysis
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 trait TokenFilter {
   def name: String

@@ -6,7 +6,7 @@ import com.sksamuel.elastic4s.requests.searches.SearchIterator
 import com.sksamuel.elastic4s.testkit.{DockerTests, ElasticMatchers}
 import org.scalatest.wordspec.AnyWordSpec
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.Try
 
 class SearchIteratorTest

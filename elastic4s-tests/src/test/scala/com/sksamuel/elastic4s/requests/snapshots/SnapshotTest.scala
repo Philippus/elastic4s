@@ -74,7 +74,7 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
   it should "deserialize when waitForCompletion = true" in {
     client.execute {
-      createSnapshot(snapshotName, repoName) waitForCompletion true
+      createSnapshot(snapshotName, repoName).waitForCompletion(true)
     }.await.result.succeeded shouldBe true
   }
 
@@ -107,28 +107,28 @@ class SnapshotTest extends AnyFlatSpec with Matchers with DockerTests {
 
   "restore snapshot" should "error when an index clashes" in {
     client.execute {
-      restoreSnapshot(snapshotName, repoName) waitForCompletion true
+      restoreSnapshot(snapshotName, repoName).waitForCompletion(true)
     }.await.error.`type` shouldBe "snapshot_restore_exception"
   }
 
   it should "succeed when request is correct" in {
     client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName) index Index("tmpidx")
+      restoreSnapshot(snapshotName, repoName).index(Index("tmpidx"))
     }.await.result.succeeded shouldEqual true
   }
 
   it should "succeeded if waitForCompletion = false" in {
     client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName) index Index("tmpidx") waitForCompletion false
+      restoreSnapshot(snapshotName, repoName).index(Index("tmpidx")).waitForCompletion(false)
     }.await.result.succeeded shouldEqual true
   }
 
   it should "succeeded if waitForCompletion = true" in {
     client.execute(deleteIndex("tmpidx")).await.isSuccess shouldBe true
     client.execute {
-      restoreSnapshot(snapshotName, repoName) index Index("tmpidx") waitForCompletion true
+      restoreSnapshot(snapshotName, repoName).index(Index("tmpidx")).waitForCompletion(true)
     }.await.result.succeeded shouldEqual true
   }
 

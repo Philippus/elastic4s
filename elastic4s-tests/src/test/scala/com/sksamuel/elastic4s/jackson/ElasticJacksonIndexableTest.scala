@@ -15,7 +15,7 @@ import tools.jackson.databind.json.JsonMapper
 
 class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerTests {
 
-  import ElasticJackson.Implicits._
+  import ElasticJackson.Implicits.*
 
   "ElasticJackson implicits" should {
     "index a case class" in {
@@ -53,7 +53,7 @@ class ElasticJacksonIndexableTest extends AnyWordSpec with Matchers with DockerT
         (p: JsonParser, ctxt: DeserializationContext) => sys.error("boom")
       )
 
-      implicit val custom: ObjectMapper with ClassTagExtensions =
+      implicit val custom: ObjectMapper & ClassTagExtensions =
         JsonMapper.builder(JsonFactory.builder().build())
           .addModule(DefaultScalaModule)
           .addModule(module)

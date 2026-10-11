@@ -9,7 +9,7 @@ import tools.jackson.databind.{DeserializationFeature, ObjectMapper}
 import tools.jackson.module.scala.{ClassTagExtensions, DefaultScalaModule}
 
 object JacksonSupport {
-  val mapper: ObjectMapper with ClassTagExtensions = {
+  val mapper: ObjectMapper & ClassTagExtensions = {
     val jf = JsonFactory.builder()
       .enable(JsonReadFeature.ALLOW_UNQUOTED_PROPERTY_NAMES)
       .enable(JsonReadFeature.ALLOW_SINGLE_QUOTES)

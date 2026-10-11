@@ -23,7 +23,7 @@ class PutMappingApiTest extends AnyFlatSpec with Matchers with DockerTests {
     client.execute {
       putMapping("index").as(
         geopointField("name"),
-        dateField("content") nullValue "no content"
+        dateField("content").nullValue("no content")
       )
     }.await
   }
@@ -31,22 +31,22 @@ class PutMappingApiTest extends AnyFlatSpec with Matchers with DockerTests {
   it should "accept same fields as mapping api" in {
     client.execute {
       putMapping("index").as(
-        dateField("content") nullValue "no content"
-      ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2
+        dateField("content").nullValue("no content")
+      ).dynamic(DynamicMapping.False).numericDetection(true).boostNullValue(12.2)
     }.await
   }
 
   it should "accept same several new fields with different types as mapping api and return the right mapping in get" in {
     client.execute {
       putMapping("index").as(
-        dateField("content") nullValue "no content",
-        textField("description") boost 1.5,
+        dateField("content").nullValue("no content"),
+        textField("description").boost(1.5),
         doubleField("price"),
-        nestedField("children") fields (
+        nestedField("children").fields(
           textField("name"),
-          dateField("date") nullValue "no date"
+          dateField("date").nullValue("no date")
         )
-      ) dynamic DynamicMapping.False numericDetection true boostNullValue 12.2
+      ).dynamic(DynamicMapping.False).numericDetection(true).boostNullValue(12.2)
     }.await
 
     //    // Using only TCP client to get mapping as the Http client doesn't have this method yet

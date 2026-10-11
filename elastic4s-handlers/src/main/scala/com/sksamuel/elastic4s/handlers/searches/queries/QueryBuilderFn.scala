@@ -177,7 +177,7 @@ object QueryBuilderFn {
     case s: SpanWithinQuery        => SpanWithinQueryBodyFn(s)
     case s: SparseVectorQuery      => SparseVectorQueryBuilderFn(s)
     case t: TermQuery              => TermQueryBodyFn(t)
-    case t: TermsQuery[_]          => TermsQueryBodyFn(t)
+    case t: TermsQuery[?]          => TermsQueryBodyFn(t)
     case t: TermsLookupQuery       => TermsLookupQueryBodyFn(t)
     case t: TermsSetQuery          => TermsSetQueryBodyFn(t)
     case q: WildcardQuery          => WildcardQueryBodyFn(q)

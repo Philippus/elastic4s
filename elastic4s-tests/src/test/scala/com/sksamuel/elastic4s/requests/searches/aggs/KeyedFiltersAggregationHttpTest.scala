@@ -26,10 +26,10 @@ class KeyedFiltersAggregationHttpTest extends AnyFreeSpec with DockerTests with 
 
   client.execute(
     bulk(
-      indexInto("keyedfiltersagg") fields ("name" -> "Willis Tower", "height"    -> 1244),
-      indexInto("keyedfiltersagg") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
-      indexInto("keyedfiltersagg") fields ("name" -> "Tower of London", "height" -> 169),
-      indexInto("keyedfiltersagg") fields ("name" -> "London Bridge", "height"   -> 63)
+      indexInto("keyedfiltersagg").fields("name" -> "Willis Tower", "height"    -> 1244),
+      indexInto("keyedfiltersagg").fields("name" -> "Burj Kalifa", "height"     -> 2456),
+      indexInto("keyedfiltersagg").fields("name" -> "Tower of London", "height" -> 169),
+      indexInto("keyedfiltersagg").fields("name" -> "London Bridge", "height"   -> 63)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

@@ -26,14 +26,14 @@ class PercentilesAggregationTest extends AnyFreeSpec with DockerTests with Match
 
   client.execute(
     bulk(
-      indexInto("percentilesagg") fields ("name" -> "Willis Tower", "height"              -> 1450),
-      indexInto("percentilesagg") fields ("name" -> "Burj Kalifa", "height"               -> 2717),
-      indexInto("percentilesagg") fields ("name" -> "The Shard", "height"                 -> 1017),
-      indexInto("percentilesagg") fields ("name" -> "One Canada Square", "height"         -> 771),
-      indexInto("percentilesagg") fields ("name" -> "Tower of London", "height"           -> 169),
-      indexInto("percentilesagg") fields ("name" -> "Shanghai Tower", "height"            -> 2073),
-      indexInto("percentilesagg") fields ("name" -> "Ping An Finance Centre", "height"    -> 1965),
-      indexInto("percentilesagg") fields ("name" -> "Abraj Al-Bait Clock Tower", "height" -> 1971)
+      indexInto("percentilesagg").fields("name" -> "Willis Tower", "height"              -> 1450),
+      indexInto("percentilesagg").fields("name" -> "Burj Kalifa", "height"               -> 2717),
+      indexInto("percentilesagg").fields("name" -> "The Shard", "height"                 -> 1017),
+      indexInto("percentilesagg").fields("name" -> "One Canada Square", "height"         -> 771),
+      indexInto("percentilesagg").fields("name" -> "Tower of London", "height"           -> 169),
+      indexInto("percentilesagg").fields("name" -> "Shanghai Tower", "height"            -> 2073),
+      indexInto("percentilesagg").fields("name" -> "Ping An Finance Centre", "height"    -> 1965),
+      indexInto("percentilesagg").fields("name" -> "Abraj Al-Bait Clock Tower", "height" -> 1971)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

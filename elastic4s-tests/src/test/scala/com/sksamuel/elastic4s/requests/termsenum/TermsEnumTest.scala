@@ -25,9 +25,9 @@ class TermsEnumTest extends AnyWordSpec with Matchers with DockerTests {
   }.await
 
   client.execute {
-    indexInto("test") fields (
+    indexInto("test").fields(
       "tags" -> "kibana"
-    ) refresh RefreshPolicy.WaitFor
+    ).refresh(RefreshPolicy.WaitFor)
   }.await
 
   "a minimal terms enum query" should {

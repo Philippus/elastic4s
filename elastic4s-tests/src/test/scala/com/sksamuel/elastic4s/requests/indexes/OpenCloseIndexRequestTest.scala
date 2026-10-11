@@ -8,7 +8,7 @@ import org.scalatest.time.{Seconds, Span}
 import org.scalatest.wordspec.AnyWordSpec
 
 import scala.concurrent.Await
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.Try
 
 class OpenCloseIndexRequestTest extends AnyWordSpec with Matchers with DockerTests with TimeLimits {

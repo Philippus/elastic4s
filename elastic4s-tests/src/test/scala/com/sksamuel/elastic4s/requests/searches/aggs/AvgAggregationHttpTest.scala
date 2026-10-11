@@ -26,9 +26,9 @@ class AvgAggregationHttpTest extends AnyFreeSpec with DockerTests with Matchers 
 
   client.execute(
     bulk(
-      indexInto("avgagg") fields ("name" -> "Willis Tower", "height"    -> 1244),
-      indexInto("avgagg") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
-      indexInto("avgagg") fields ("name" -> "Tower of London", "height" -> 169)
+      indexInto("avgagg").fields("name" -> "Willis Tower", "height"    -> 1244),
+      indexInto("avgagg").fields("name" -> "Burj Kalifa", "height"     -> 2456),
+      indexInto("avgagg").fields("name" -> "Tower of London", "height" -> 169)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.handlers.searches.queries.geo.GeoShapeQueryBodyFn
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.Shapes.{Circle, Polygon}
-import com.sksamuel.elastic4s.requests.searches.queries.geo._
+import com.sksamuel.elastic4s.requests.searches.queries.geo.*
 import org.scalatest.GivenWhenThen
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers

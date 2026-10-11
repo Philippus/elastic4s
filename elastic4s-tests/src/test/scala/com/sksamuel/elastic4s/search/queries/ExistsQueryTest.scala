@@ -16,11 +16,11 @@ class ExistsQueryTest extends AnyWordSpec with DockerTests with Matchers {
 
   client.execute(
     bulk(
-      indexInto("person") fields (
+      indexInto("person").fields(
         "name"   -> "reese",
         "weapon" -> "revolver"
       ),
-      indexInto("person") fields (
+      indexInto("person").fields(
         "name"   -> "finch",
         "weapon" -> "computer"
       )

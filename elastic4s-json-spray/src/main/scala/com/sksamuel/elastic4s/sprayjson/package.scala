@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import spray.json._
+import spray.json.*
 
 import scala.annotation.implicitNotFound
 import scala.util.Try

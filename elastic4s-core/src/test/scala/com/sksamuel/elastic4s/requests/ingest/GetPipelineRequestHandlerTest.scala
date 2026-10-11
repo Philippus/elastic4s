@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class GetPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with Matchers {
 
-  import GetPipelineRequestHandler._
+  import GetPipelineRequestHandler.*
 
   it should "build a get pipeline request" in {
     val req = GetPipelineRequest("test-pipeline")

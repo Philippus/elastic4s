@@ -175,7 +175,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def autovalue(_value: Any): XContentBuilder = {
-    import scala.jdk.CollectionConverters._
+    import scala.jdk.CollectionConverters.*
     requireArray()
     _value match {
       case v: String                       => value(v)
@@ -191,20 +191,20 @@ class XContentBuilder(root: JsonValue) {
       case v: BigInt                       => value(v)
       case v: java.math.BigInteger         => value(v)
       case null                            => array.addNull()
-      case values: Seq[_]                  =>
+      case values: Seq[?]                  =>
         startArray()
         values.foreach(autovalue)
         endArray()
-      case values: Array[_]                => autovalue(values.toSeq)
-      case values: Iterator[_]             => autovalue(values.toSeq)
-      case values: java.util.Collection[_] => autovalue(values.asScala)
-      case values: java.util.Iterator[_]   => autovalue(values.asScala.toSeq)
+      case values: Array[?]                => autovalue(values.toSeq)
+      case values: Iterator[?]             => autovalue(values.toSeq)
+      case values: java.util.Collection[?] => autovalue(values.asScala)
+      case values: java.util.Iterator[?]   => autovalue(values.asScala.toSeq)
       case p: Product                      => autovalue(p.productIterator.toList)
-      case map: Map[_, _]                  =>
+      case map: Map[?, ?]                  =>
         startObject()
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[_, _]        => autovalue(map.asScala.toMap)
+      case map: java.util.Map[?, ?]        => autovalue(map.asScala.toMap)
       case other                           => value(other.toString)
     }
     this
@@ -218,7 +218,7 @@ class XContentBuilder(root: JsonValue) {
   }
 
   def autofield(name: String, value: Any): XContentBuilder = {
-    import scala.jdk.CollectionConverters._
+    import scala.jdk.CollectionConverters.*
 
     value match {
       case v: String                       => field(name, v)
@@ -238,18 +238,18 @@ class XContentBuilder(root: JsonValue) {
       case v: BigInt                       => field(name, v)
       case v: java.math.BigInteger         => field(name, v)
       case None                            => obj.putNull(name)
-      case values: Array[_]                => autoarray(name, values.toIndexedSeq)
-      case values: Seq[_]                  => autoarray(name, values)
-      case values: Iterator[_]             => autoarray(name, values.toSeq)
-      case values: java.util.Collection[_] => autoarray(name, values.asScala.toSeq)
-      case values: java.util.Iterator[_]   => autoarray(name, values.asScala.toSeq)
+      case values: Array[?]                => autoarray(name, values.toIndexedSeq)
+      case values: Seq[?]                  => autoarray(name, values)
+      case values: Iterator[?]             => autoarray(name, values.toSeq)
+      case values: java.util.Collection[?] => autoarray(name, values.asScala.toSeq)
+      case values: java.util.Iterator[?]   => autoarray(name, values.asScala.toSeq)
       case values: Product                 => autoarray(name, values.productIterator.toList)
-      case map: Map[_, _]                  =>
+      case map: Map[?, ?]                  =>
         startObject(name)
         map.foreach { case (k, v) => autofield(k.toString, v) }
         endObject()
-      case map: java.util.Map[_, _]        => autofield(name, map.asScala.toMap)
-      case values: Iterable[_]             => autoarray(name, values.toSeq)
+      case map: java.util.Map[?, ?]        => autofield(name, map.asScala.toMap)
+      case values: Iterable[?]             => autoarray(name, values.toSeq)
       case null                            => obj.putNull(name)
       case other                           => field(name, other.toString)
     }

@@ -44,7 +44,7 @@ import com.sksamuel.elastic4s.requests.searches.aggs.builders.{
   VariableWidthAggregationBuilder,
   WeightedAvgAggregationBuilder
 }
-import com.sksamuel.elastic4s.requests.searches.aggs.pipeline._
+import com.sksamuel.elastic4s.requests.searches.aggs.pipeline.*
 
 object AggregationBuilderFn {
   def apply(

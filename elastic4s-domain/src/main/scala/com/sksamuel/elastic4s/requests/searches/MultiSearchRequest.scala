@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class MultiSearchRequest(
     searches: Iterable[SearchRequest],

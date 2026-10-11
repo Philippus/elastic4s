@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.json4s
 
 import com.sksamuel.elastic4s.{AggReader, Hit, HitReader, Indexable, ParamSerializer}
-import org.json4s._
-import org.json4s.JsonDSL._
+import org.json4s.*
+import org.json4s.JsonDSL.*
 import org.json4s.jackson.JsonMethods.{compact, render}
 import scala.util.Try
 

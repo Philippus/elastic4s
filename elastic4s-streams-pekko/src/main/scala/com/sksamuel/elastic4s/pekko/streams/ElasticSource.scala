@@ -2,8 +2,8 @@ package com.sksamuel.elastic4s.pekko.streams
 
 import com.sksamuel.elastic4s.ElasticApi.clearScroll
 import com.sksamuel.elastic4s.ElasticDsl.searchScroll
-import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.requests.searches._
+import com.sksamuel.elastic4s.*
+import com.sksamuel.elastic4s.requests.searches.*
 import org.apache.pekko.stream.stage.{GraphStage, GraphStageLogic, OutHandler}
 import org.apache.pekko.stream.{Attributes, Outlet, SourceShape}
 

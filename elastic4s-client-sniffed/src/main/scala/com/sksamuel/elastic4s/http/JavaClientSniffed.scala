@@ -9,7 +9,7 @@ import org.elasticsearch.client.sniff.{NodesSniffer, SniffOnFailureListener, Sni
 import org.slf4j.{Logger, LoggerFactory}
 
 import scala.concurrent.ExecutionContext
-import scala.concurrent.duration.{FiniteDuration, _}
+import scala.concurrent.duration.{FiniteDuration, *}
 
 /** @param sniffIntervals
   *   Sets the interval between consecutive ordinary sniff executions in milliseconds. Will be honoured when
@@ -57,12 +57,12 @@ object JavaClientSniffed {
     }
     logger.info(s"Creating HTTP client on ${hosts.mkString(",")}")
 
-    import sniffingConfiguration._
+    import sniffingConfiguration.*
 
     lazy val failureSniffer = new SniffOnFailureListener()
 
     val clientBuilder = RestClient
-      .builder(hosts: _*)
+      .builder(hosts*)
       .setRequestConfigCallback(requestConfigCallback)
       .setHttpClientConfigCallback(httpClientConfigCallback)
 

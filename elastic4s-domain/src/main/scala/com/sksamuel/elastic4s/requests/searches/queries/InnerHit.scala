@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 import com.sksamuel.elastic4s.requests.searches.sort.Sort
 import com.sksamuel.elastic4s.requests.searches.{Highlight, HighlightField, HighlightOptions}

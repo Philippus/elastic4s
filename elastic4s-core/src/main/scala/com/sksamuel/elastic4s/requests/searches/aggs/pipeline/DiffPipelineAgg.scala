@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.aggs.pipeline
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class DiffPipelineAgg(
     name: String,

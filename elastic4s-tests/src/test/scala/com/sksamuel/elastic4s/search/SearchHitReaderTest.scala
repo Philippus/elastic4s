@@ -9,7 +9,7 @@ import scala.util.Success
 
 class SearchHitReaderTest extends AnyFlatSpec with Matchers with DockerTests {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
 
   "SearchHit" should "support HitReader[T] for complex types" in {
 

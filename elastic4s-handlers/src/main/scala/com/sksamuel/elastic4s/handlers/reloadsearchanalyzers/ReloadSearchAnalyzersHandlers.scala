@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.reloadsearchanalyzers
 
-import com.sksamuel.elastic4s.requests.reloadsearchanalyzers._
+import com.sksamuel.elastic4s.requests.reloadsearchanalyzers.*
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait ReloadSearchAnalyzersHandlers {

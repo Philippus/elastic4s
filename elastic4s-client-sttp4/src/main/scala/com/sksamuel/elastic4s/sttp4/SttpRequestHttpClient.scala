@@ -1,15 +1,15 @@
 package com.sksamuel.elastic4s.sttp4
 
-import java.io._
+import java.io.*
 import java.nio.file.Files
 import com.sksamuel.elastic4s.HttpEntity.{ByteArrayEntity, FileEntity, InputStreamEntity, StringEntity}
 import com.sksamuel.elastic4s.{ElasticNodeEndpoint, ElasticRequest, HttpClient, HttpEntity, HttpResponse}
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 import scala.util.Using
-import sttp.client4._
+import sttp.client4.*
 import sttp.model.Uri
 import sttp.model.Uri.{PathSegments, QuerySegment}
 import sttp.monad.{FutureMonad, MonadError}
@@ -32,10 +32,10 @@ class SttpRequestHttpClient[F[_]: MonadError](
       authority = None,
       pathSegments =
         PathSegments.absoluteOrEmptyS(
-          collection.immutable.Seq(endpoint.stripPrefix("/").split('/').toIndexedSeq: _*).toIndexedSeq
+          collection.immutable.Seq(endpoint.stripPrefix("/").split('/').toIndexedSeq*).toIndexedSeq
         ),
       querySegments =
-        collection.immutable.Seq(params.map { case (k, v) => QuerySegment.KeyValue(k, v.toString) }.toSeq: _*),
+        collection.immutable.Seq(params.map { case (k, v) => QuerySegment.KeyValue(k, v.toString) }.toSeq*),
       fragmentSegment = None
     ).host(nodeEndpoint.host).port(nodeEndpoint.port)
     val req = method.toUpperCase match {

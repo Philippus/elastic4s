@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries.nested
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl.*
 import com.sksamuel.elastic4s.handlers.searches.queries.nested
 import com.sksamuel.elastic4s.handlers.searches.queries.nested.NestedQueryBodyFn
 import org.scalatest.funsuite.AnyFunSuite

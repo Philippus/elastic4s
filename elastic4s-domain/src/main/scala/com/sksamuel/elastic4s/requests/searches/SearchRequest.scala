@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.requests.common.{FetchSourceContext, Preference}
 import com.sksamuel.elastic4s.requests.script.ScriptField
@@ -251,7 +251,7 @@ case class SearchRequest(
 
   def docValues(_fields: Seq[String]): SearchRequest = copy(docValues = _fields)
 
-  def indexBoost(map: Map[String, Double]): SearchRequest = indexBoost(map.toList: _*)
+  def indexBoost(map: Map[String, Double]): SearchRequest = indexBoost(map.toList*)
 
   def indexBoost(tuples: (String, Double)*): SearchRequest = copy(indexBoosts = tuples)
 

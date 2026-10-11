@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.json4s
 
 import com.sksamuel.elastic4s.{Hit, HitReader}
 import com.sksamuel.elastic4s.requests.script.Script
-import org.json4s._
+import org.json4s.*
 import org.json4s.jackson.Serialization
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -17,7 +17,7 @@ class Json4sParamSerializerTest extends AnyWordSpec with Matchers {
 
     "be implicitly found and used for parameter serialization" in {
 
-      import ElasticJson4s.Implicits._
+      import ElasticJson4s.Implicits.*
       implicit val formats: Formats             = Serialization.formats(NoTypeHints)
       implicit val serialization: Serialization = Serialization
 
@@ -30,7 +30,7 @@ class Json4sParamSerializerTest extends AnyWordSpec with Matchers {
   "A derived HitReader instance" should {
 
     "read _id from hit metadata when missing in source" in {
-      import ElasticJson4s.Implicits._
+      import ElasticJson4s.Implicits.*
       implicit val formats: Formats             = Serialization.formats(NoTypeHints)
       implicit val serialization: Serialization = Serialization
 

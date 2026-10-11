@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.matches
 
 import com.sksamuel.elastic4s.requests.common.Operator
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class MultiMatchQuery(
     text: String,

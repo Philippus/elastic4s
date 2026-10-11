@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.akka.reactivestreams
 
-import akka.actor._
+import akka.actor.*
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, RequestFailure, RequestSuccess}
@@ -8,7 +8,7 @@ import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success}
 
 /** An implementation of the reactive API Subscriber. This subscriber will bulk index received elements. The bulk nature
@@ -87,7 +87,7 @@ class BulkActor[T](
     config: SubscriberConfig[T]
 )(implicit commonRequestOptions: CommonRequestOptions) extends Actor {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
   import context.{dispatcher, system}
 
   private val buffer = new ArrayBuffer[T]()

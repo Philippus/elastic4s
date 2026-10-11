@@ -4,6 +4,6 @@ import com.sksamuel.elastic4s.requests.indexes.analyze.AnalyzeRequest
 
 trait AnalyzeApi {
 
-  def analyze(text: String, other: String*): AnalyzeRequest = AnalyzeRequest.text(text, other: _*)
+  def analyze(text: String, other: String*): AnalyzeRequest = AnalyzeRequest.text(text, other*)
 
 }

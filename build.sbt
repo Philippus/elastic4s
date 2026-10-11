@@ -36,7 +36,13 @@ lazy val commonSettings = Seq(
   resolvers += Resolver.mavenLocal,
   Test / parallelExecution      := false,
   Compile / doc / scalacOptions := (Compile / doc / scalacOptions).value.filter(_ != "-Xfatal-warnings"),
-  scalacOptions ++= Seq("-release:17", "-unchecked", "-deprecation", "-encoding", "utf8")
+  scalacOptions ++= Seq("-release:17", "-unchecked", "-deprecation", "-encoding", "utf8"),
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, _)) => Seq("-Xsource:3")
+      case _            => Nil
+    }
+  }
 )
 
 lazy val publishSettings = Seq(

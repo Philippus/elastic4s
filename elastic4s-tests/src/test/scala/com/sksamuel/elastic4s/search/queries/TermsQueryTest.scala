@@ -28,18 +28,18 @@ class TermsQueryTest
 
   client.execute {
     bulk(
-      indexInto("lords") fields ("name"               -> "nelson"),
-      indexInto("lords") fields ("name"               -> "edmure"),
-      indexInto("lords") fields ("name"               -> "umber"),
-      indexInto("lords") fields ("name"               -> "byron"),
-      indexInto("lordsfanclub") fields ("lordswelike" -> List("nelson", "edmure")) id "lordsAppreciationFanClub"
+      indexInto("lords").fields("name" -> "nelson"),
+      indexInto("lords").fields("name" -> "edmure"),
+      indexInto("lords").fields("name" -> "umber"),
+      indexInto("lords").fields("name" -> "byron"),
+      indexInto("lordsfanclub").fields("lordswelike" -> List("nelson", "edmure")).id("lordsAppreciationFanClub")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
   "a terms query" should "find multiple terms using 'or'" in {
 
     val resp = client.execute {
-      search("lords") query termsQuery("name", "nelson", "byron")
+      search("lords").query(termsQuery("name", "nelson", "byron"))
     }.await.result
 
     resp.hits.hits.map(_.sourceAsMap).map(_.apply("name")).toSet shouldBe Set("nelson", "byron")
@@ -47,9 +47,11 @@ class TermsQueryTest
 
   it should "lookup terms to search from a document in another index" in {
     val resp = client.execute {
-      search("lords") query termsQuery("name", List.empty[String])
-        .ref("lordsfanclub", "lordsAppreciationFanClub")
-        .path("lordswelike")
+      search("lords").query(
+        termsQuery("name", List.empty[String])
+          .ref("lordsfanclub", "lordsAppreciationFanClub")
+          .path("lordswelike")
+      )
     }.await.result
 
     resp.hits.hits.map(_.sourceAsMap).map(_.apply("name")).toSet shouldBe Set("nelson", "edmure")
@@ -57,7 +59,7 @@ class TermsQueryTest
 
   it should "return no results when an empty array is passed" in {
     val resp = client.execute {
-      search("lords") query termsQuery("name", Seq.empty[String])
+      search("lords").query(termsQuery("name", Seq.empty[String]))
     }.await.result
 
     resp.hits.hits.map(_.sourceAsString).toSet shouldBe Set.empty[String]

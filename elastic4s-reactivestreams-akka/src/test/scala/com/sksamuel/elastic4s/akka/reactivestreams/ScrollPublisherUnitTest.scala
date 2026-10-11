@@ -7,14 +7,14 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class ScrollPublisherUnitTest extends AnyWordSpec with Matchers with DockerTests {
 
-  import ReactiveElastic._
+  import ReactiveElastic.*
 
   implicit val system: ActorSystem = ActorSystem()
 
   "elastic-streams" should {
     "throw exception if search definition has no scroll" in {
       an[IllegalArgumentException] should be thrownBy
-        client.publisher(search("scrollpubint") query "*:*")
+        client.publisher(search("scrollpubint").query("*:*"))
     }
   }
 }

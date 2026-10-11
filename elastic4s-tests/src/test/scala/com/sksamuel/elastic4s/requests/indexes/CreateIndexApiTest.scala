@@ -1,17 +1,17 @@
 package com.sksamuel.elastic4s.requests.indexes
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl.*
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.handlers.index
 import com.sksamuel.elastic4s.handlers.index.CreateIndexContentBuilder
-import com.sksamuel.elastic4s.requests.analyzers._
+import com.sksamuel.elastic4s.requests.analyzers.*
 import com.sksamuel.elastic4s.requests.mappings.PrefixTree
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import org.scalatest.OneInstancePerTest
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.io.Source
 import scala.util.Using
 
@@ -20,12 +20,12 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   "the index dsl" should "generate json to include mapping properties" in {
     val req = createIndex("users").mapping(
       properties(
-        ipField("name") boost 1.0,
-        intField("location") nullValue 0,
+        ipField("name").boost(1.0),
+        intField("location").nullValue(0),
         binaryField("email"),
         floatField("age"),
-        geoshapeField("area") tree PrefixTree.Quadtree precision "1m"
-      ) all true analyzer "somefield" dateDetection true dynamicDateFormats ("mm/yyyy", "dd-MM-yyyy")
+        geoshapeField("area").tree(PrefixTree.Quadtree).precision("1m")
+      ).all(true).analyzer("somefield").dateDetection(true).dynamicDateFormats("mm/yyyy", "dd-MM-yyyy")
     )
     CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_mappings.json")
   }
@@ -156,8 +156,8 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   it should "supported nested fields" in {
     val req = createIndex("users").mapping(
       properties(
-        textField("_id") analyzer KeywordAnalyzer.name,
-        textField("name") analyzer KeywordAnalyzer.name,
+        textField("_id").analyzer(KeywordAnalyzer.name),
+        textField("name").analyzer(KeywordAnalyzer.name),
         geopointField("locations").docValues(true),
         dateField("date"),
         longField("size"),
@@ -170,7 +170,7 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
             dateField("lastLogin")
           )
         )
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
+      ).size(true).numericDetection(true).boostNullValue(1.2).boostName("myboost")
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/mapping_nested.json")
   }
@@ -178,11 +178,11 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   it should "generate json to set index settings" in {
     val req =
       (createIndex("users")
-        shards 3
-        replicas 4
-        refreshInterval "5s"
-        indexSetting ("compound_on_flush", false)
-        indexSetting ("compound_format", 0.5))
+        `shards` 3
+        `replicas` 4
+        `refreshInterval` "5s"
+        `indexSetting` ("compound_on_flush", false)
+        `indexSetting` ("compound_format", 0.5))
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_settings2.json")
   }
 
@@ -234,10 +234,10 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   it should "support copy to a single field" in {
     val req = createIndex("tweets").mapping(
       properties(
-        textField("first_name") copyTo "full_name",
-        textField("last_name") copyTo "full_name",
+        textField("first_name").copyTo("full_name"),
+        textField("last_name").copyTo("full_name"),
         textField("full_name")
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Dynamic
+      ).size(true).numericDetection(true).boostNullValue(1.2).boostName("myboost").dynamic(DynamicMapping.Dynamic)
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource(
       "/json/createindex/mapping_copy_to_single_field.json"
@@ -247,10 +247,10 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   it should "support copy to multiple fields" in {
     val req = createIndex("tweets").mapping(
       properties(
-        textField("title") copyTo ("meta_data", "article_info"),
+        textField("title").copyTo("meta_data", "article_info"),
         textField("meta_data"),
         textField("article_info")
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost" dynamic DynamicMapping.Strict
+      ).size(true).numericDetection(true).boostNullValue(1.2).boostName("myboost").dynamic(DynamicMapping.Strict)
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource(
       "/json/createindex/mapping_copy_to_multiple_fields.json"
@@ -260,10 +260,10 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   it should "support multi fields" in {
     val req = createIndex("tweets").mapping(
       properties(
-        textField("title") fields textField("raw"),
+        textField("title").fields(textField("raw")),
         textField("meta_data"),
         textField("article_info")
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
+      ).size(true).numericDetection(true).boostNullValue(1.2).boostName("myboost")
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/mapping_multi_fields.json")
   }
@@ -272,9 +272,9 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
     val req = createIndex("tweets").mapping(
       properties(
         textField("name"),
-        completionField("ac") analyzer "simple" searchAnalyzer "simple"
-          preserveSeparators false preservePositionIncrements false maxInputLength 10
-      ) size true numericDetection true boostNullValue 1.2 boostName "myboost"
+        completionField("ac").analyzer("simple").searchAnalyzer("simple")
+          .preserveSeparators(false).preservePositionIncrements(false).maxInputLength(10)
+      ).size(true).numericDetection(true).boostNullValue(1.2).boostName("myboost")
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource(
       "/json/createindex/mapping_completion_type.json"
