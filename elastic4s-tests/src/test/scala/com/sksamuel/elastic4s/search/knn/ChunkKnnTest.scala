@@ -54,7 +54,7 @@ class ChunkKnnTest extends AnyFlatSpec with Matchers with DockerTests with Befor
 
     client.execute {
       bulk(
-        indexInto(INDEX) id "1" fields (
+        indexInto(INDEX).id("1").fields(
           FULL_TEXT_FIELD     -> "first paragraph another paragraph",
           CREATION_TIME_FIELD -> "2019-05-04",
           PARAGRAPH_FIELD     -> Seq(
@@ -62,7 +62,7 @@ class ChunkKnnTest extends AnyFlatSpec with Matchers with DockerTests with Befor
             Map(TEXT_FIELD -> "another paragraph", VECTOR_FIELD -> Seq(0.8, 0.6), PARAGRAPH_ID_FIELD -> "2")
           )
         ),
-        indexInto(INDEX) id "2" fields (
+        indexInto(INDEX).id("2").fields(
           FULL_TEXT_FIELD     -> "number one paragraph number two paragraph",
           CREATION_TIME_FIELD -> "2020-05-04",
           PARAGRAPH_FIELD     -> Seq(

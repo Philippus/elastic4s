@@ -195,7 +195,7 @@ trait HasAggregations extends AggResult with Transformable {
   def dataAsMap: Map[String, Any] = if (data != null) data else Map.empty
 
   def getAgg(name: String): Option[Aggregations] = dataAsMap.get(name) match {
-    case Some(agg: Map[_, _]) => Some(Aggregations(agg.asInstanceOf[Map[String, Any]]))
+    case Some(agg: Map[?, ?]) => Some(Aggregations(agg.asInstanceOf[Map[String, Any]]))
     case _                    => None
   }
 
@@ -287,8 +287,8 @@ trait HasAggregations extends AggResult with Transformable {
     // can be keyed, so values can be either map or list
     val values = agg(name)("values")
     val map    = values match {
-      case _: Map[_, _] => values.asInstanceOf[Map[String, Double]]
-      case _: List[_]   => values.asInstanceOf[List[Map[String, Double]]].map { innermap =>
+      case _: Map[?, ?] => values.asInstanceOf[Map[String, Double]]
+      case _: List[?]   => values.asInstanceOf[List[Map[String, Double]]].map { innermap =>
           innermap("key").toString -> innermap("value")
         }.toMap
     }

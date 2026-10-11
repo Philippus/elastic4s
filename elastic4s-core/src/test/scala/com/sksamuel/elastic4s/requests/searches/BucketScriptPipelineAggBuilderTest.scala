@@ -6,7 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 class BucketScriptPipelineAggBuilderTest extends AnyFlatSpec with JsonSugar {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   /** Took example query from www.elastic.co
     * https://www.elastic.co/guide/en/elasticsearch/reference/6.1/search-aggregations-pipeline-bucket-script-aggregation.html

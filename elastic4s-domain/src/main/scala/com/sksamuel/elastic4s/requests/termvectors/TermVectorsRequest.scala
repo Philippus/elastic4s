@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.termvectors
 
 import com.sksamuel.elastic4s.Index
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class TermVectorsRequest(
     index: Index,

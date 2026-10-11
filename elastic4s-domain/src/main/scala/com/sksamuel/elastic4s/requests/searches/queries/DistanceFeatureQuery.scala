@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.queries
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class DistanceFeatureQuery(field: String, origin: String, pivot: String, boost: Option[Double] = None)
     extends Query {

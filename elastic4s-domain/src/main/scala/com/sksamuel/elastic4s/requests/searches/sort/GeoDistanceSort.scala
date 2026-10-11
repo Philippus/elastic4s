@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.requests.searches.sort
 import com.sksamuel.elastic4s.requests.common.DistanceUnit
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.geo.{GeoDistance, GeoValidationMethod}
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class GeoDistanceSort(
     field: String,

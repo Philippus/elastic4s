@@ -16,7 +16,7 @@ import com.sksamuel.elastic4s.requests.cat.{
   CatThreadPool
 }
 import com.sksamuel.elastic4s.requests.common.HealthStatus
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 trait CatsApi {
 

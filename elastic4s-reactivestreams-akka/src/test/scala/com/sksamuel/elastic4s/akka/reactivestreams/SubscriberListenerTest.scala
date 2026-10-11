@@ -12,7 +12,7 @@ import scala.util.Try
 
 class SubscriberListenerTest extends AnyWordSpec with Matchers with DockerTests {
 
-  import ReactiveElastic._
+  import ReactiveElastic.*
 
   implicit val system: ActorSystem         = ActorSystem()
   implicit val builder: ShipRequestBuilder = new ShipRequestBuilder()

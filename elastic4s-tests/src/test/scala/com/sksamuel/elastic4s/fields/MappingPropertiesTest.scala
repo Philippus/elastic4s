@@ -44,8 +44,8 @@ class MappingPropertiesTest extends AnyFunSuite with DockerTests
 
     client.execute {
       bulk(
-        indexInto("pcat").fields("name" -> "gascon malbec", "upc" -> "i89--iwe krwr") id "1",
-        indexInto("pcat").fields("name" -> "alamoas malbec", "upc" -> "TTT6 weWER3") id "2"
+        indexInto("pcat").fields("name" -> "gascon malbec", "upc" -> "i89--iwe krwr").id("1"),
+        indexInto("pcat").fields("name" -> "alamoas malbec", "upc" -> "TTT6 weWER3").id("2")
       ).refresh(RefreshPolicy.WAIT_FOR)
     }.await
 

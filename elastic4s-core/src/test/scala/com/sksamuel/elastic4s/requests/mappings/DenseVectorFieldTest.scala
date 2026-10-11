@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.fields.DenseVectorField._
+import com.sksamuel.elastic4s.fields.DenseVectorField.*
 import com.sksamuel.elastic4s.{ElasticApi, JacksonSupport}
 import com.sksamuel.elastic4s.fields.{
   Cosine,

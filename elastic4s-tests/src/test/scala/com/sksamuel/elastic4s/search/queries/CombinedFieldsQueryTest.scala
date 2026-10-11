@@ -28,11 +28,11 @@ class CombinedFieldsQueryTest extends AnyWordSpec with Matchers with DockerTests
 
   client.execute {
     bulk(
-      indexInto("boardgames") source Game("Imperial Settlers"),
-      indexInto("boardgames") source Game("Imperial Settlers - Empires of the North"),
-      indexInto("boardgames") source Game("Catan", "Settlers of Catan"),
-      indexInto("boardgames") source Game("Imperial"),
-      indexInto("boardgames") source Game("Star Wars: Imperial Assault")
+      indexInto("boardgames").source(Game("Imperial Settlers")),
+      indexInto("boardgames").source(Game("Imperial Settlers - Empires of the North")),
+      indexInto("boardgames").source(Game("Catan", "Settlers of Catan")),
+      indexInto("boardgames").source(Game("Imperial")),
+      indexInto("boardgames").source(Game("Star Wars: Imperial Assault"))
     ).refreshImmediately
   }.await
 

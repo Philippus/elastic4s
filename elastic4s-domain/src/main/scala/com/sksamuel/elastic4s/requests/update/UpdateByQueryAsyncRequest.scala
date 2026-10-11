@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.update
 
 import com.sksamuel.elastic4s.Indexes
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 import com.sksamuel.elastic4s.requests.admin.IndicesOptionsRequest
 import com.sksamuel.elastic4s.requests.common.{Preference, RefreshPolicy, Slice, Slicing}
 import com.sksamuel.elastic4s.requests.script.Script

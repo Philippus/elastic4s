@@ -1,8 +1,8 @@
 package com.sksamuel.elastic4s.handlers.indexlifecyclemanagement
 
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
-import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.requests.indexlifecyclemanagement._
+import com.sksamuel.elastic4s.*
+import com.sksamuel.elastic4s.requests.indexlifecyclemanagement.*
 
 trait IndexLifecycleManagementHandlers {
   implicit object IndexLifecycleStatusHandler extends Handler[GetIlmStatusRequest, GetIlmStatusResponse] {

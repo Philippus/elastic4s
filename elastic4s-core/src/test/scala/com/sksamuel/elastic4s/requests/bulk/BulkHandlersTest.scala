@@ -5,11 +5,11 @@ import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.handlers.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 
 class BulkHandlersTest extends AnyFlatSpec with BulkHandlers {
 
-  import com.sksamuel.elastic4s.testutils.StringExtensions._
+  import com.sksamuel.elastic4s.testutils.StringExtensions.*
 
   it should "build bulk definition http body" in {
     val request: BulkRequest = BulkRequest(Seq(

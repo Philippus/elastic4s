@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.main
 
-import com.sksamuel.elastic4s.requests.main._
+import com.sksamuel.elastic4s.requests.main.*
 import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpResponse, ResponseHandler}
 
 trait MainHandlers {

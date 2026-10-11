@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.analysis.StopAnalyzer
-import com.sksamuel.elastic4s.requests.indexes.analyze._
+import com.sksamuel.elastic4s.requests.indexes.analyze.*
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -109,7 +109,7 @@ class AnalyzeRequestTests extends AnyFlatSpec with Matchers with DockerTests {
 
   "analyze request custom charFilters" should "work well" in {
     val result = client.execute {
-      AnalyzeRequest(Array("<p>I&apos;m so <b>happy</b>!</p>"))
+      AnalyzeRequest(Seq("<p>I&apos;m so <b>happy</b>!</p>"))
         .charFilters("html_strip")
     }.await.result
 

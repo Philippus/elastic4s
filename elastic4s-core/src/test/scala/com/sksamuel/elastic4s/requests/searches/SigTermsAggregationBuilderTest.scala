@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 
 class SigTermsAggregationBuilderTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   test("sig terms aggregation with 'field' and 'background_filter' should generate expected json") {
     val agg = sigTermsAggregation("name")

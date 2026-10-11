@@ -8,6 +8,6 @@ object IndexMappersToFields {
 
   def mappingToFields(indexMapping: IndexMappings): Seq[ElasticField] =
     indexMapping.mappings.map {
-      case (name, value: Map[String, Any]) => ElasticFieldBuilderFn.construct(name, value)
+      case (name, value: Map[String @unchecked, Any @unchecked]) => ElasticFieldBuilderFn.construct(name, value)
     }.toSeq
 }

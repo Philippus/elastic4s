@@ -27,9 +27,9 @@ class ExtendedStatsAggregationHttpTest extends AnyFreeSpec with DockerTests with
   // based on the example from extended stats agg documentation
   client.execute(
     bulk(
-      indexInto("extendedstatsagg") fields ("month" -> "2017-01-01", "sales" -> 550.0),
-      indexInto("extendedstatsagg") fields ("month" -> "2017-02-01", "sales" -> 60.0),
-      indexInto("extendedstatsagg") fields ("month" -> "2017-03-01", "sales" -> 375.0)
+      indexInto("extendedstatsagg").fields("month" -> "2017-01-01", "sales" -> 550.0),
+      indexInto("extendedstatsagg").fields("month" -> "2017-02-01", "sales" -> 60.0),
+      indexInto("extendedstatsagg").fields("month" -> "2017-03-01", "sales" -> 375.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

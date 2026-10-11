@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.ElasticError
 import com.sksamuel.elastic4s.requests.common.Shards
 
 import scala.collection.mutable
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 case class CreateRepositoryResponse(acknowledged: Boolean)
 @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)

@@ -21,6 +21,8 @@ class AnalyzeRequestHandlerTest extends AnyFunSuite with Matchers with IndexHand
         new String(content, "UTF8") mustBe
           AnalyseRequestContentBuilder(analyzeRequest)
         contentCharset mustBe Some("application/json")
+      case other                                               =>
+        fail(s"Unexpected entity type: $other")
     }
   }
 

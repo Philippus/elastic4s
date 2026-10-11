@@ -15,7 +15,7 @@ import com.sksamuel.elastic4s.{
 
 trait SettingsHandlers {
 
-  import scala.jdk.CollectionConverters._
+  import scala.jdk.CollectionConverters.*
 
   implicit object GetSettingsHandler extends Handler[GetSettingsRequest, IndexSettingsResponse] {
 

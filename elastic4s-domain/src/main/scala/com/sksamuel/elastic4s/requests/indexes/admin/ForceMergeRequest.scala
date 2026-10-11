@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes.admin
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class ForceMergeRequest(
     indexes: Seq[String],

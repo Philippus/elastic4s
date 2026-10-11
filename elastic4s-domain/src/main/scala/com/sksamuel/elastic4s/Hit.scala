@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s
 
 import com.sksamuel.elastic4s.requests.common.DocumentRef
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 import java.nio.ByteBuffer
 import scala.collection.mutable
@@ -45,7 +45,7 @@ trait Hit {
   def sourceAsString: String
   def sourceAsMap: Map[String, AnyRef]
 
-  final def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq: _*)
+  final def sourceAsMutableMap: mutable.Map[String, AnyRef] = mutable.Map.apply(sourceAsMap.toSeq*)
   final def sourceAsByteBuffer: ByteBuffer                  = ByteBuffer.wrap(sourceAsBytes)
   final def isSourceEmpty: Boolean                          = sourceAsMap.isEmpty
 

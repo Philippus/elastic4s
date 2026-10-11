@@ -27,7 +27,7 @@ class ShardStoreHttpTest extends AnyWordSpec with Matchers with DockerTests {
     "get green shards" in {
 
       val indexInfo = client.execute {
-        indexShardStores("shardstoretest") status "green"
+        indexShardStores("shardstoretest").status("green")
       }.await.result.indices.getOrElse("shardstoretest", IndexStoreStatus(Map.empty))
 
       val shardInfo: ShardStoreStatus = indexInfo.shards.getOrElse("0", ShardStoreStatus(Seq.empty))

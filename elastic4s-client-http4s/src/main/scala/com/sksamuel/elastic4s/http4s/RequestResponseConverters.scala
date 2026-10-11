@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.http4s
 
 import cats.effect.Sync
-import cats.syntax.all._
+import cats.syntax.all.*
 import com.sksamuel.elastic4s
 import fs2.io.file.Files
 import org.http4s
@@ -16,7 +16,7 @@ trait RequestResponseConverters extends Elastic4sEntityEncoders {
       endpoint.copy(
         path =
           http4s.Uri.Path(request.endpoint.stripPrefix("/").split('/').map(http4s.Uri.Path.Segment.encoded).toVector),
-        query = http4s.Query.fromPairs(request.params.toList: _*)
+        query = http4s.Query.fromPairs(request.params.toList*)
       )
 
     http4s.Request[F]()

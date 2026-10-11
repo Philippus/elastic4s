@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.pekko.reactivestreams
 
-import org.apache.pekko.actor._
+import org.apache.pekko.actor.*
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponseItem}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, RequestFailure, RequestSuccess}
@@ -8,7 +8,7 @@ import org.reactivestreams.{Subscriber, Subscription}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success}
 
 /** An implementation of the reactive API Subscriber. This subscriber will bulk index received elements. The bulk nature
@@ -87,7 +87,7 @@ class BulkActor[T](
     config: SubscriberConfig[T]
 )(implicit commonRequestOptions: CommonRequestOptions) extends Actor {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
   import context.{dispatcher, system}
 
   private val buffer = new ArrayBuffer[T]()
@@ -147,13 +147,13 @@ class BulkActor[T](
       subscription.request(n)
       requested = requested + n
 
-    case msg: BulkActor.Send[T] => send(msg.req, msg.originals, msg.attempts)
+    case msg: BulkActor.Send[T @unchecked] => send(msg.req, msg.originals, msg.attempts)
 
     case BulkActor.ForceIndexing =>
       if (buffer.nonEmpty)
         index()
 
-    case msg: BulkActor.Result[T] =>
+    case msg: BulkActor.Result[T @unchecked] =>
       confirmed = confirmed + msg.items.size
       msg.items
         .zip(msg.originals)
@@ -163,7 +163,7 @@ class BulkActor[T](
         }
       checkCompleteOrRequestNext(msg.items.size, msg.requestNext)
 
-    case msg: BulkActor.FailedResult[T] =>
+    case msg: BulkActor.FailedResult[T @unchecked] =>
       failed = failed + msg.items.size
       msg.items
         .zip(msg.originals)
@@ -173,7 +173,7 @@ class BulkActor[T](
         }
       checkCompleteOrRequestNext(msg.items.size, msg.requestNext)
 
-    case t: T =>
+    case t: T @unchecked =>
       buffer.append(t)
       if (buffer.size == config.batchSize)
         index()

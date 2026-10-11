@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.requests.script.{
   PutStoredScriptResponse
 }
 import com.sksamuel.elastic4s.json.XContentFactory
-import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.*
 
 trait StoredScriptHandlers {
 

@@ -27,9 +27,9 @@ class AggregationAsStringTest extends AnyFunSuite with DockerTests with Matchers
   client
     .execute(
       bulk(
-        indexInto("aggstring") fields ("name" -> "Willis Tower", "height"    -> 1244),
-        indexInto("aggstring") fields ("name" -> "Burj Kalifa", "height"     -> 2456),
-        indexInto("aggstring") fields ("name" -> "Tower of London", "height" -> 169)
+        indexInto("aggstring").fields("name" -> "Willis Tower", "height"    -> 1244),
+        indexInto("aggstring").fields("name" -> "Burj Kalifa", "height"     -> 2456),
+        indexInto("aggstring").fields("name" -> "Tower of London", "height" -> 169)
       ).refresh(RefreshPolicy.Immediate)
     )
     .await

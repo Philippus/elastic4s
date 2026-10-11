@@ -9,7 +9,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 
 class ScoreFunctionBuilderFnTest extends AnyFlatSpec with JsonSugar {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   "a score dsl" should "generate correct json for a linear decay function scorer" in {
     val req     =

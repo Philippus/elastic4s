@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.requests.script.Script
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-import spray.json._
+import spray.json.*
 
 class SprayJsonParamSerializerTest extends AnyWordSpec with Matchers {
 
@@ -18,7 +18,7 @@ class SprayJsonParamSerializerTest extends AnyWordSpec with Matchers {
         implicit val fooJsonFormat: RootJsonFormat[Foo] = jsonFormat1(Foo.apply)
       }
 
-      import FooJsonProtocol._
+      import FooJsonProtocol.*
 
       Script("some script")
         .paramObject("some param", Foo(77))

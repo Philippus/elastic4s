@@ -58,15 +58,15 @@ class IndexTemplateHttpTest
       }.await
 
       client.execute {
-        indexInto("brewers") fields (
+        indexInto("brewers").fields(
           "name"         -> "fullers",
           "year_founded" -> 1829
-        ) refresh RefreshPolicy.Immediate
+        ).refresh(RefreshPolicy.Immediate)
       }.await
 
       // check that the document was indexed
       client.execute {
-        search("brewers") query termQuery("year_founded", 1829)
+        search("brewers").query(termQuery("year_founded", 1829))
       }.await.result.totalHits shouldBe 1
 
       // the mapping for this index should match the template

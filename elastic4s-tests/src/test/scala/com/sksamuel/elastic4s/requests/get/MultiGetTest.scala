@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.{Authentication, CommonRequestOptions}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.should.Matchers._
+import org.scalatest.matchers.should.Matchers.*
 
 import scala.util.Try
 
@@ -27,10 +27,10 @@ class MultiGetTest extends AnyFlatSpec with DockerTests {
 
   client.execute(
     bulk(
-      indexInto("coldplay") id "1" fields ("name" -> "parachutes", "year"    -> 2000),
-      indexInto("coldplay") id "3" fields ("name" -> "x&y", "year"           -> 2005),
-      indexInto("coldplay") id "5" fields ("name" -> "mylo xyloto", "year"   -> 2011),
-      indexInto("coldplay") id "7" fields ("name" -> "ghost stories", "year" -> 2015)
+      indexInto("coldplay").id("1").fields("name" -> "parachutes", "year"    -> 2000),
+      indexInto("coldplay").id("3").fields("name" -> "x&y", "year"           -> 2005),
+      indexInto("coldplay").id("5").fields("name" -> "mylo xyloto", "year"   -> 2011),
+      indexInto("coldplay").id("7").fields("name" -> "ghost stories", "year" -> 2015)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 
@@ -74,8 +74,8 @@ class MultiGetTest extends AnyFlatSpec with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("coldplay", "3") storedFields ("name", "year"),
-        get("coldplay", "5") storedFields "name"
+        get("coldplay", "3").storedFields("name", "year"),
+        get("coldplay", "5").storedFields("name")
       )
     ).await.result
 
@@ -88,8 +88,8 @@ class MultiGetTest extends AnyFlatSpec with DockerTests {
 
     val resp = client.execute(
       multiget(
-        get("coldplay", "3") fetchSourceContext Seq("name", "year"),
-        get("coldplay", "5") fetchSourceContext Seq("name")
+        get("coldplay", "3").fetchSourceContext(Seq("name", "year")),
+        get("coldplay", "5").fetchSourceContext(Seq("name"))
       )
     ).await.result
     resp.size shouldBe 2
@@ -99,7 +99,7 @@ class MultiGetTest extends AnyFlatSpec with DockerTests {
   it should "retrieve documents by id with routing spec" in {
 
     val resp = client.execute(
-      multiget(get("coldplay", "3") routing "3")
+      multiget(get("coldplay", "3").routing("3"))
     ).await.result
 
     resp.size shouldBe 1
@@ -114,7 +114,7 @@ class MultiGetTest extends AnyFlatSpec with DockerTests {
     )
 
     client.execute(
-      multiget(get("coldplay", "3") routing "3")
+      multiget(get("coldplay", "3").routing("3"))
     ).await.error.`type` shouldBe "security_exception"
   }
 }

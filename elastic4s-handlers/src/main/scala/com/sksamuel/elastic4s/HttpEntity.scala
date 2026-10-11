@@ -20,7 +20,7 @@ object HttpEntity {
 
   case class FileEntity(content: File, contentCharset: Option[String]) extends HttpEntity {
 
-    import scala.jdk.CollectionConverters._
+    import scala.jdk.CollectionConverters.*
 
     def get: String = Files.readAllLines(content.toPath).asScala.mkString("\n")
   }

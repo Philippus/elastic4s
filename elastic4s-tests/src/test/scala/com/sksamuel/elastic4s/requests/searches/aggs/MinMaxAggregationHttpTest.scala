@@ -51,10 +51,10 @@ class MinMaxAggregationHttpTest extends AnyFreeSpec with DockerTests with Matche
 
   client.execute(
     bulk(
-      indexInto("minmaxagg") fields ("name"  -> "Willis Tower", "height"    -> 1244, "opened" -> "1973-09-01"),
-      indexInto("minmaxagg") fields ("name"  -> "Burj Kalifa", "height"     -> 2456, "opened" -> "2010-01-04"),
-      indexInto("minmaxagg") fields ("name"  -> "Tower of London", "height" -> 169, "opened"  -> "1285-01-01"),
-      indexInto("minmaxagg2") fields ("name" -> "building of unknown height")
+      indexInto("minmaxagg").fields("name"  -> "Willis Tower", "height"    -> 1244, "opened" -> "1973-09-01"),
+      indexInto("minmaxagg").fields("name"  -> "Burj Kalifa", "height"     -> 2456, "opened" -> "2010-01-04"),
+      indexInto("minmaxagg").fields("name"  -> "Tower of London", "height" -> 169, "opened"  -> "1285-01-01"),
+      indexInto("minmaxagg2").fields("name" -> "building of unknown height")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

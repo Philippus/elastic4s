@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.handlers.fields
 
-import com.sksamuel.elastic4s.fields._
+import com.sksamuel.elastic4s.fields.*
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 
 object NumberFieldBuilderFn {
@@ -16,7 +16,7 @@ object NumberFieldBuilderFn {
     UnsignedLongField.`type`
   )
 
-  def toField(numberType: String, name: String, values: Map[String, Any]): NumberField[_] = numberType match {
+  def toField(numberType: String, name: String, values: Map[String, Any]): NumberField[?] = numberType match {
     case ByteField.`type`         => ByteField(
         name,
         values.get("boost").map(_.asInstanceOf[Double]),
@@ -170,7 +170,7 @@ object NumberFieldBuilderFn {
       )
   }
 
-  def build(field: NumberField[_]): XContentBuilder = {
+  def build(field: NumberField[?]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder()
     builder.field("type", field.`type`)

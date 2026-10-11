@@ -25,8 +25,8 @@ class MultiSearchHttpTest
 
   client.execute {
     bulk(
-      indexInto("jtull") fields ("name" -> "aqualung") id "14",
-      indexInto("jtull") fields ("name" -> "passion play") id "51"
+      indexInto("jtull").fields("name" -> "aqualung").id("14"),
+      indexInto("jtull").fields("name" -> "passion play").id("51")
     ).refresh(RefreshPolicy.Immediate)
   }.await
 
@@ -34,9 +34,9 @@ class MultiSearchHttpTest
 
     val resp = client.execute {
       multi(
-        search("jtull") query matchQuery("name", "aqualung"),
-        search("jtull") query "passion",
-        search("jtull") query matchAllQuery()
+        search("jtull").query(matchQuery("name", "aqualung")),
+        search("jtull").query("passion"),
+        search("jtull").query(matchAllQuery())
       )
     }.await.result
 
@@ -55,8 +55,8 @@ class MultiSearchHttpTest
 
     val resp = client.execute {
       multi(
-        search("jtull") query matchQuery("name", "aqualung"),
-        search("unknown") query matchAllQuery()
+        search("jtull").query(matchQuery("name", "aqualung")),
+        search("unknown").query(matchAllQuery())
       )
     }.await.result
 
@@ -75,8 +75,8 @@ class MultiSearchHttpTest
 
     val resp = client.execute {
       multi(
-        search("jtull") query matchQuery("name", "aqualung"),
-        search("jtull") query matchAllQuery() aggregations rangeAgg("invalid", "name")
+        search("jtull").query(matchQuery("name", "aqualung")),
+        search("jtull").query(matchAllQuery()).aggregations(rangeAgg("invalid", "name"))
       )
     }.await.result
 
@@ -102,8 +102,8 @@ class MultiSearchHttpTest
 
     val request = MultiSearchHandler.build(
       multi(
-        search("jtull") query matchQuery("name", "aqualung") preference "first_preference",
-        search("unknown") query matchAllQuery() preference "second_preference"
+        search("jtull").query(matchQuery("name", "aqualung")).preference("first_preference"),
+        search("unknown").query(matchAllQuery()).preference("second_preference")
       )
     )
 
@@ -121,8 +121,8 @@ class MultiSearchHttpTest
 
     val request = MultiSearchHandler.build(
       multi(
-        search("jtull") query matchQuery("name", "aqualung") searchType SearchType.DFS_QUERY_THEN_FETCH,
-        search("unknown") query matchAllQuery()
+        search("jtull").query(matchQuery("name", "aqualung")).searchType(SearchType.DFS_QUERY_THEN_FETCH),
+        search("unknown").query(matchAllQuery())
       )
     )
 

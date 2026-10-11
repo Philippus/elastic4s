@@ -6,7 +6,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class DeleteApiTest extends AnyFlatSpec with Matchers with TypeCheckedTripleEquals {
-  import com.sksamuel.elastic4s.ElasticApi._
+  import com.sksamuel.elastic4s.ElasticApi.*
 
   "a delete by id request" should "parse" in {
     deleteById("index", "141212")
@@ -17,10 +17,10 @@ class DeleteApiTest extends AnyFlatSpec with Matchers with TypeCheckedTripleEqua
   }
 
   it should "accept version and version type" in {
-    deleteById("places", "141212") version 53423L versionType VersionType.External
+    deleteById("places", "141212").version(53423L).versionType(VersionType.External)
   }
 
   it should "accept refresh" in {
-    deleteById("places", "141212") refresh RefreshPolicy.Immediate
+    deleteById("places", "141212").refresh(RefreshPolicy.Immediate)
   }
 }

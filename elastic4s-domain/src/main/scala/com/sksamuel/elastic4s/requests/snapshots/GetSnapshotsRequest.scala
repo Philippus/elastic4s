@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.snapshots
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class GetSnapshotsRequest(
     snapshotNames: Seq[String],

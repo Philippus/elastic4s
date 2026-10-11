@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s
 
-import zio.json._
+import zio.json.*
 
 import scala.annotation.implicitNotFound
 

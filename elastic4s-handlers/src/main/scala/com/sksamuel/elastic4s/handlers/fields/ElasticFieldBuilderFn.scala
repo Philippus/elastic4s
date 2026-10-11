@@ -38,7 +38,7 @@ object ElasticFieldBuilderFn {
       case f: MatchOnlyTextField        => MatchOnlyTextFieldBuilderFn.build(f)
       case f: Murmur3Field              => Murmur3FieldBuilderFn.build(f)
       case f: NestedField               => NestedFieldBuilderFn.build(f)
-      case f: NumberField[_]            => NumberFieldBuilderFn.build(f)
+      case f: NumberField[?]            => NumberFieldBuilderFn.build(f)
       case f: ObjectField               => ObjectFieldBuilderFn.build(f)
       case f: PatternTextField          => PatternTextFieldBuilderFn.build(f)
       case f: PercolatorField           => PercolatorFieldBuilderFn.build(f)

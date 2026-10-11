@@ -82,9 +82,9 @@ trait ElasticDslWithoutSearch extends ElasticApi
     with PitHandlers {
 
   implicit class RichRequest[T](t: T) {
-    def request(implicit handler: Handler[T, _]): ElasticRequest = handler.build(t)
+    def request(implicit handler: Handler[T, ?]): ElasticRequest = handler.build(t)
 
-    def show(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
+    def show(implicit handler: Handler[T, ?]): String = Show[ElasticRequest].show(handler.build(t))
   }
 }
 
@@ -93,12 +93,18 @@ trait ElasticDsl
     with SearchHandlers
 
 object ElasticDsl extends ElasticDsl {
-  def withCustomAggregationHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]) =
-    new ElasticDslWithoutSearch {
-      implicit val customBaseSearchHandler: BaseSearchHandler =
-        new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+  class ElasticDslWithCustomAggregationHandler(
+      customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]
+  ) extends ElasticDslWithoutSearch {
+    implicit val customBaseSearchHandler: BaseSearchHandler =
+      new BaseSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
 
-      implicit val customBaseMultiSearchHandler: BaseMultiSearchHandler =
-        new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
-    }
+    implicit val customBaseMultiSearchHandler: BaseMultiSearchHandler =
+      new BaseMultiSearchHandler(customAggregationHandler.orElse(defaultCustomAggregationHandler))
+  }
+
+  def withCustomAggregationHandler(
+      customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder]
+  ): ElasticDslWithCustomAggregationHandler =
+    new ElasticDslWithCustomAggregationHandler(customAggregationHandler)
 }

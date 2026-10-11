@@ -26,19 +26,19 @@ class ScriptSortTest extends AnyFreeSpec with ElasticMatchers with DockerTests {
 
   client.execute {
     bulk(
-      indexInto("scriptsort") fields ("name" -> "south kensington", "line" -> "district"),
-      indexInto("scriptsort") fields ("name" -> "earls court", "line"      -> "district"),
-      indexInto("scriptsort") fields ("name" -> "bank", "line"             -> "northern")
+      indexInto("scriptsort").fields("name" -> "south kensington", "line" -> "district"),
+      indexInto("scriptsort").fields("name" -> "earls court", "line"      -> "district"),
+      indexInto("scriptsort").fields("name" -> "bank", "line"             -> "northern")
     ).refreshImmediately
   }.await
 
   "script sort" - {
     "sort by name length" in {
       val sorted = client.execute {
-        search("scriptsort") query matchAllQuery() sortBy {
+        search("scriptsort").query(matchAllQuery()) sortBy {
           scriptSort(
             Script(""" doc['name'].value.length() """)
-          ) typed ScriptSortType.NUMBER
+          ).typed(ScriptSortType.NUMBER)
         }
       }.await.result
       sorted.hits.hits(0).sourceAsMap("name") shouldBe "bank"

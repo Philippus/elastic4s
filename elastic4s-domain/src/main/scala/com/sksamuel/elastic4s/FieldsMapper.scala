@@ -4,20 +4,20 @@ package com.sksamuel.elastic4s
   */
 object FieldsMapper {
 
-  import scala.jdk.CollectionConverters._
+  import scala.jdk.CollectionConverters.*
 
   def mapper(m: Map[String, Any]): Map[String, AnyRef] =
     m map {
       case null                              => null
-      case (name: String, nest: Map[_, _])   => name -> mapper(nest.asInstanceOf[Map[String, Any]]).asJava
-      case (name: String, iter: Iterable[_]) => name -> iter.map(mapper).toArray
+      case (name: String, nest: Map[?, ?])   => name -> mapper(nest.asInstanceOf[Map[String, Any]]).asJava
+      case (name: String, iter: Iterable[?]) => name -> iter.map(mapper).toArray
       case (name: String, a: AnyRef)         => name -> a
     }
 
   def mapper(a: Any): AnyRef =
     a match {
-      case map: Map[_, _]    => map.map { case (key, value) => key -> mapper(value) }.asJava
-      case iter: Iterable[_] => iter.map(mapper).toArray
+      case map: Map[?, ?]    => map.map { case (key, value) => key -> mapper(value) }.asJava
+      case iter: Iterable[?] => iter.map(mapper).toArray
       case null              => null
       case a: AnyRef         => a
     }
@@ -31,11 +31,11 @@ object FieldsMapper {
       //      case (name: String, Child(childType, parentId)) =>
       //        NestedFieldValue(name, Seq(SimpleFieldValue("name", childType), SimpleFieldValue("parent", parentId)))
 
-      case (name: String, nest: Map[_, _]) =>
+      case (name: String, nest: Map[?, ?]) =>
         val nestedFields = mapFields(nest.asInstanceOf[Map[String, Any]])
         NestedFieldValue(Some(name), nestedFields)
 
-      case (name: String, nest: Array[Map[_, _]]) =>
+      case (name: String, nest: Array[Map[?, ?]]) =>
         val nested = nest.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
         ArrayFieldValue(name, nested.toIndexedSeq)
 
@@ -46,9 +46,9 @@ object FieldsMapper {
       case (name: String, a: FieldValue) =>
         NestedFieldValue(name, Seq(a))
 
-      case (name: String, s: Iterable[_]) =>
+      case (name: String, s: Iterable[?]) =>
         s.headOption match {
-          case Some(m: Map[_, _]) =>
+          case Some(m: Map[?, ?]) =>
             val nested = s.map(n => new NestedFieldValue(None, mapFields(n.asInstanceOf[Map[String, Any]])))
             ArrayFieldValue(name, nested.toSeq)
 

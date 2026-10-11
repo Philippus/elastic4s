@@ -4,8 +4,8 @@ import akka.stream.stage.{GraphStage, GraphStageLogic, OutHandler}
 import akka.stream.{Attributes, Outlet, SourceShape}
 import com.sksamuel.elastic4s.ElasticApi.clearScroll
 import com.sksamuel.elastic4s.ElasticDsl.searchScroll
-import com.sksamuel.elastic4s._
-import com.sksamuel.elastic4s.requests.searches._
+import com.sksamuel.elastic4s.*
+import com.sksamuel.elastic4s.requests.searches.*
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success, Try}

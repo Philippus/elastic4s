@@ -4,16 +4,16 @@ import org.apache.pekko.NotUsed
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.model.{HttpRequest, HttpResponse, StatusCodes, Uri}
 import org.apache.pekko.stream.scaladsl.Flow
-import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity => ElasticEntity, HttpResponse => ElasticResponse}
-import org.mockito.ArgumentMatchers._
+import com.sksamuel.elastic4s.{ElasticRequest, HttpEntity as ElasticEntity, HttpResponse as ElasticResponse}
+import org.mockito.ArgumentMatchers.*
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.concurrent._
+import org.scalatest.concurrent.*
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.mockito.MockitoSugar
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success, Try}
 
 class PekkoHttpClientMockTest

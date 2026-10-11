@@ -280,11 +280,11 @@ trait QueryApi {
   def must(queries: Iterable[Query]): BoolQuery   = BoolQuery().must(queries)
 
   // short cut for a boolean query with shoulds
-  def should(queries: Query*): BoolQuery          = BoolQuery().should(queries: _*)
+  def should(queries: Query*): BoolQuery          = BoolQuery().should(queries*)
   def should(queries: Iterable[Query]): BoolQuery = BoolQuery().should(queries)
 
   // short cut for a boolean query with nots
-  def not(queries: Query*): BoolQuery          = BoolQuery().not(queries: _*)
+  def not(queries: Query*): BoolQuery          = BoolQuery().not(queries*)
   def not(queries: Iterable[Query]): BoolQuery = BoolQuery().not(queries)
 
   // short cut for a boolean query with filters

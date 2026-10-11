@@ -30,11 +30,11 @@ class TopHitsAggregationTest extends AnyFreeSpec with DockerTests with Matchers 
 
   client.execute(
     bulk(
-      indexInto("tophits") fields ("name" -> "tower of london", "location"      -> "london"),
-      indexInto("tophits") fields ("name" -> "buckingham palace", "location"    -> "london"),
-      indexInto("tophits") fields ("name" -> "hampton court palace", "location" -> "london"),
-      indexInto("tophits") fields ("name" -> "york minster", "location"         -> "yorkshire"),
-      indexInto("tophits") fields ("name" -> "stonehenge", "location"           -> "wiltshire")
+      indexInto("tophits").fields("name" -> "tower of london", "location"      -> "london"),
+      indexInto("tophits").fields("name" -> "buckingham palace", "location"    -> "london"),
+      indexInto("tophits").fields("name" -> "hampton court palace", "location" -> "london"),
+      indexInto("tophits").fields("name" -> "york minster", "location"         -> "yorkshire"),
+      indexInto("tophits").fields("name" -> "stonehenge", "location"           -> "wiltshire")
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

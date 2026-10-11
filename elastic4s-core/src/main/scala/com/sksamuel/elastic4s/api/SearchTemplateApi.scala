@@ -3,7 +3,7 @@ package com.sksamuel.elastic4s.api
 import com.sksamuel.elastic4s.Indexes
 import com.sksamuel.elastic4s.requests.searches.queries.Query
 import com.sksamuel.elastic4s.requests.searches.{PutSearchTemplateRequest, TemplateSearchRequest}
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 trait SearchTemplateApi {
   def putSearchTemplate(name: String): PutSearchTemplateExpectsQueryOrBody =

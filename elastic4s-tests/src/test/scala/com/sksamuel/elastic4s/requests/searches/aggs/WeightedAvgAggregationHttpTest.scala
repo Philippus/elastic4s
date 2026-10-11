@@ -25,9 +25,9 @@ class WeightedAvgAggregationHttpTest extends AnyFreeSpec with DockerTests with M
 
   client.execute(
     bulk(
-      indexInto("weightedavgagg") fields ("grade" -> 90.0, "weight" -> 3.0),
-      indexInto("weightedavgagg") fields ("grade" -> 72.0, "weight" -> 7.0),
-      indexInto("weightedavgagg") fields ("grade" -> 19.0, "weight" -> 12.0)
+      indexInto("weightedavgagg").fields("grade" -> 90.0, "weight" -> 3.0),
+      indexInto("weightedavgagg").fields("grade" -> 72.0, "weight" -> 7.0),
+      indexInto("weightedavgagg").fields("grade" -> 19.0, "weight" -> 12.0)
     ).refresh(RefreshPolicy.Immediate)
   ).await
 

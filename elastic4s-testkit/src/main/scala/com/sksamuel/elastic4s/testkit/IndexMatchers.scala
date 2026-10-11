@@ -8,9 +8,9 @@ import scala.concurrent.Future
 
 trait IndexMatchers extends Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
-  import scala.concurrent.duration._
+  import scala.concurrent.duration.*
 
   def haveCount(expectedCount: Int)(implicit
       client: ElasticClient[Future],

@@ -27,6 +27,7 @@ import com.sksamuel.elastic4s.{
   HttpResponse,
   ResponseHandler
 }
+import tools.jackson.module.scala.JavaTypeable
 
 object UpdateByQueryBodyFn {
   def apply(request: BaseUpdateByQueryRequest): XContentBuilder = {
@@ -85,7 +86,7 @@ trait UpdateHandlers {
     }
   }
 
-  abstract class UpdateByQueryHandler[Q <: BaseUpdateByQueryRequest, R: Manifest] extends Handler[Q, R] {
+  abstract class UpdateByQueryHandler[Q <: BaseUpdateByQueryRequest, R: JavaTypeable] extends Handler[Q, R] {
 
     override def responseHandler: ResponseHandler[R] = ResponseHandler.default[R]
 

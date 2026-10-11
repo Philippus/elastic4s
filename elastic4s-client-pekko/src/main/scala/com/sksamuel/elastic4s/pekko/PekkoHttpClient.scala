@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.pekko
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.model.Uri.Query
-import org.apache.pekko.http.scaladsl.model._
+import org.apache.pekko.http.scaladsl.model.*
 import org.apache.pekko.http.scaladsl.model.headers.{BasicHttpCredentials, RawHeader}
 import org.apache.pekko.pattern.after
 import org.apache.pekko.stream.scaladsl.{FileIO, Keep, Sink, Source, StreamConverters}
@@ -11,13 +11,13 @@ import org.apache.pekko.util.ByteString
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.{
   ElasticRequest,
-  HttpClient => ElasticHttpClient,
-  HttpEntity => ElasticHttpEntity,
-  HttpResponse => ElasticHttpResponse
+  HttpClient as ElasticHttpClient,
+  HttpEntity as ElasticHttpEntity,
+  HttpResponse as ElasticHttpResponse
 }
 
 import scala.concurrent.{Future, Promise}
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 import scala.util.{Failure, Success, Try}
 
 class PekkoHttpClient private[pekko] (
@@ -27,7 +27,7 @@ class PekkoHttpClient private[pekko] (
 )(implicit system: ActorSystem)
     extends ElasticHttpClient[Future] {
 
-  import PekkoHttpClient._
+  import PekkoHttpClient.*
   import system.dispatcher
 
   private implicit val materializer: Materializer = Materializer(system)
@@ -240,7 +240,7 @@ class PekkoHttpClient private[pekko] (
         .withQuery(Query(request.params))
         .withAuthority(Uri.Authority.parse(host))
         .withScheme(scheme),
-      headers = request.headers.map((RawHeader.apply _).tupled).toList,
+      headers = request.headers.map((RawHeader.apply(_, _)).tupled).toList,
       entity = request.entity.map(toEntity).getOrElse(HttpEntity.Empty)
     )
 

@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 class CumulativeCardinalityPipelineAggBuilderTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   test("cumulative cardinality agg should match the basic spec") {
     val search = SearchRequest("myIndex").aggs(

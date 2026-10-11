@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.searches.collapse
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 import com.sksamuel.elastic4s.requests.searches.queries.InnerHit
 
 case class CollapseRequest(

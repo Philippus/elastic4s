@@ -56,8 +56,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "use fragment size" in {
       val resp      = client.execute {
-        search("intros") query "new" highlighting (
-          highlight("text").requireFieldMatch(false) fragmentSize 15
+        search("intros").query("new").highlighting(
+          highlight("text").requireFieldMatch(false).fragmentSize(15)
         )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
@@ -68,8 +68,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "use number of fragments size" in {
       val resp      = client.execute {
-        search("intros") query "text:new" highlighting (
-          highlight("text") fragmentSize 5 numberOfFragments 2
+        search("intros").query("text:new").highlighting(
+          highlight("text").fragmentSize(5).numberOfFragments(2)
         )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
@@ -77,8 +77,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "use no match size" in {
       val resp      = client.execute {
-        search("intros") query "trek" highlighting (
-          highlight("text") noMatchSize 50
+        search("intros").query("trek").highlighting(
+          highlight("text").noMatchSize(50)
         )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
@@ -87,8 +87,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "use pre tags" in {
       val resp      = client.execute {
-        search("intros") query matchQuery("text", "frontier") highlighting (
-          highlight("text") fragmentSize 20 preTag "<picard>"
+        search("intros").query(matchQuery("text", "frontier")).highlighting(
+          highlight("text").fragmentSize(20).preTag("<picard>")
         )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
@@ -97,8 +97,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "use post tags" in {
       val resp      = client.execute {
-        search("intros") query matchQuery("text", "frontier") highlighting (
-          highlight("text") fragmentSize 20 postTag "<riker>"
+        search("intros").query(matchQuery("text", "frontier")).highlighting(
+          highlight("text").fragmentSize(20).postTag("<riker>")
         )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")
@@ -107,8 +107,8 @@ class HighlightTest extends AnyWordSpec with Matchers with DockerTests {
     }
     "use highlight query" in {
       val resp      = client.execute {
-        search("intros") query matchQuery("text", "frontier") highlighting (
-          highlight("text") fragmentSize 20 query matchQuery("text", "life")
+        search("intros").query(matchQuery("text", "frontier")).highlighting(
+          highlight("text").fragmentSize(20).query(matchQuery("text", "life"))
         )
       }.await.result
       val fragments = resp.hits.hits.head.highlightFragments("text")

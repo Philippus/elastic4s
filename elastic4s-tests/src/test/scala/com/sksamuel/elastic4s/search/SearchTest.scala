@@ -13,7 +13,7 @@ import scala.util.Try
 
 class SearchTest extends AnyWordSpec with DockerTests with Matchers {
 
-  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits._
+  import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
 
   Try {
     client.execute {
@@ -69,22 +69,22 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
   "a search query" should {
     "find an indexed document that matches a term query" in {
       client.execute {
-        search("chess") query termQuery("name", "pawn")
+        search("chess").query(termQuery("name", "pawn"))
       }.await.result.totalHits shouldBe 1
     }
     "find an indexed document in the given type only" in {
       client.execute {
-        search("chess") query matchQuery("name", "queen")
+        search("chess").query(matchQuery("name", "queen"))
       }.await.result.totalHits shouldBe 1
     }
     "support match all query" in {
       client.execute {
-        search("chess") query matchAllQuery()
+        search("chess").query(matchAllQuery())
       }.await.result.totalHits shouldBe 6
     }
     "support sorting in a single type" in {
       client.execute {
-        search("chess") query matchAllQuery() sortBy fieldSort("name")
+        search("chess").query(matchAllQuery()).sortBy(fieldSort("name"))
       }.await.result.hits.hits.map(_.sourceField("name")) shouldBe Array(
         "bishop",
         "king",
@@ -107,12 +107,12 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
     "support unmarshalling through a HitReader" in {
       implicit val reader: HitReader[Piece] = ElasticJackson.Implicits.JacksonJsonHitReader[Piece]
       client.execute {
-        search("chess") query matchAllQuery() sortBy fieldSort("name") size 3
+        search("chess").query(matchAllQuery()).sortBy(fieldSort("name")).size(3)
       }.await.result.to[Piece] shouldBe Vector(Piece("bishop", 3, 2), Piece("king", 0, 1), Piece("knight", 3, 2))
     }
     "support source includes" in {
       client.execute {
-        search("chess") query matchAllQuery() sourceInclude "count"
+        search("chess").query(matchAllQuery()).sourceInclude("count")
       }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
         "{\"count\":1}",
         "{\"count\":2}",
@@ -121,7 +121,7 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
     }
     "support source excludes" in {
       client.execute {
-        search("chess") query matchAllQuery() sourceExclude "count"
+        search("chess").query(matchAllQuery()).sourceExclude("count")
       }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
         "{\"name\":\"pawn\",\"value\":1}",
         "{\"aka\":\"horse\",\"name\":\"knight\",\"value\":3}",
@@ -133,7 +133,7 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
     }
     "support a mix of source includes and excludes" in {
       client.execute {
-        search("chess") query matchAllQuery() sourceInclude "value" sourceExclude "name"
+        search("chess").query(matchAllQuery()).sourceInclude("value").sourceExclude("name")
       }.await.result.hits.hits.map(_.sourceAsString).toSet shouldBe Set(
         "{\"value\":0}",
         "{\"value\":1}",
@@ -166,7 +166,7 @@ class SearchTest extends AnyWordSpec with DockerTests with Matchers {
           search("chess") query {
             constantScoreQuery {
               termQuery("name", "pawn")
-            } boost 14.5 queryName "namey"
+            }.boost(14.5).queryName("namey")
           }
         }.await.result
         resp.totalHits shouldBe 1

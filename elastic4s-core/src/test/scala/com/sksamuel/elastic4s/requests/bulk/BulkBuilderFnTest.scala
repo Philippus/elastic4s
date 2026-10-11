@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 class BulkBuilderFnTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticApi._
+  import com.sksamuel.elastic4s.ElasticApi.*
 
   test("bulk content builder should support mixed requests") {
     val req = bulk(

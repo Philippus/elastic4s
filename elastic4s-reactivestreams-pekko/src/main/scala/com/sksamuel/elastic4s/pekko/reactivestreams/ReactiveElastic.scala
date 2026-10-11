@@ -5,13 +5,13 @@ import com.sksamuel.elastic4s.requests.searches.SearchRequest
 import com.sksamuel.elastic4s.{CommonRequestOptions, ElasticClient, Indexes}
 
 import scala.concurrent.Future
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 object ReactiveElastic {
 
   implicit class ReactiveElastic(client: ElasticClient[Future]) {
 
-    import com.sksamuel.elastic4s.ElasticDsl._
+    import com.sksamuel.elastic4s.ElasticDsl.*
 
     def subscriber[T](config: SubscriberConfig[T])(implicit
         builder: RequestBuilder[T],

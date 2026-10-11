@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class PutPipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with Matchers {
 
-  import PutPipelineRequestHandler._
+  import PutPipelineRequestHandler.*
 
   // Docs: https://www.elastic.co/guide/en/elasticsearch/reference/master/geoip-processor.html#geoip-processor
   it should "build a pipeline request with a version and no processors" in {

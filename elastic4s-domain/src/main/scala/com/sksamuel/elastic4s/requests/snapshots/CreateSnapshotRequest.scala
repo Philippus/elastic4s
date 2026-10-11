@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.snapshots
 
 import com.sksamuel.elastic4s.{Index, Indexes}
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class CreateSnapshotRequest(
     snapshotName: String,

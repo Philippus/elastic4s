@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.index
 
 import com.sksamuel.elastic4s.HttpEntity.StringEntity
 import com.sksamuel.elastic4s.HttpResponse
-import com.sksamuel.elastic4s.requests.indexes.analyze._
+import com.sksamuel.elastic4s.requests.indexes.analyze.*
 
 import scala.io.Source
 import scala.util.Using
@@ -16,7 +16,7 @@ package object analyze {
   def toHexBytes(str: String): String = str.map(_.toInt.toHexString).mkString("[", " ", "]")
 
   def readResource(name: String): String =
-    Using.resource(Source.fromInputStream(getClass.getResourceAsStream(name), "UTF-8")) {
+    Using.resource(Source.fromInputStream(this.getClass.getResourceAsStream(name), "UTF-8")) {
       _.getLines().mkString("\r\n")
     }
 

@@ -25,7 +25,7 @@ class BulkIndexingSubscriberWhiteboxTest
 
   object ItemRequestBuilder extends RequestBuilder[Item] {
 
-    import ElasticJackson.Implicits._
+    import ElasticJackson.Implicits.*
 
     override def request(t: Item): BulkCompatibleRequest = indexInto("bulkindexwhitebox").doc(t)
   }

@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
 import com.sksamuel.elastic4s.requests.searches.term.TermsQuery
 
 object TermsQueryBodyFn {
-  def apply(t: TermsQuery[_]): XContentBuilder = {
+  def apply(t: TermsQuery[?]): XContentBuilder = {
 
     val builder = XContentFactory.jsonBuilder().startObject("terms")
 

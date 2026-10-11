@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.indexes.admin.recovery
 
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class IndexRecoveryRequest(
     indices: Seq[String],

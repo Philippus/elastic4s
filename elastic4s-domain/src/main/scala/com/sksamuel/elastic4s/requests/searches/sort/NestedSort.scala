@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.sort
 
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class NestedSort(
     path: Option[String] = None,

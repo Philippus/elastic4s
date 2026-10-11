@@ -24,7 +24,7 @@ class RawQueryTest extends AnyWordSpec with Matchers with DockerTests {
   "raw query" should {
     "work!" ignore {
       client.execute {
-        search("*") limit 5 rawQuery {
+        search("*").limit(5) rawQuery {
           """{ "prefix": { "landmark": { "prefix": "montm" } } }"""
         }
       }.await.result.totalHits shouldBe 1

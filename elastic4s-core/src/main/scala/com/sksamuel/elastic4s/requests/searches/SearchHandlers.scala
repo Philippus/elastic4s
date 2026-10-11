@@ -20,7 +20,7 @@ trait SearchHandlers {
   class BaseMultiSearchHandler(customAggregationHandler: PartialFunction[AbstractAggregation, XContentBuilder])
       extends Handler[MultiSearchRequest, MultiSearchResponse] {
 
-    import scala.jdk.CollectionConverters._
+    import scala.jdk.CollectionConverters.*
 
     override def responseHandler: ResponseHandler[MultiSearchResponse] = (response: HttpResponse) =>
       response.statusCode match {

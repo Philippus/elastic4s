@@ -2,7 +2,7 @@ package com.sksamuel.elastic4s.requests.searches.queries.geo
 
 import com.sksamuel.elastic4s.requests.searches.GeoPoint
 import com.sksamuel.elastic4s.requests.searches.queries.Query
-import com.sksamuel.elastic4s.ext.OptionImplicits._
+import com.sksamuel.elastic4s.ext.OptionImplicits.*
 
 case class GeoPolygonQuery(
     field: String,

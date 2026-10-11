@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.requests.ingest
 
 import com.sksamuel.elastic4s.json.{XContentBuilder, XContentFactory}
-import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.*
 import com.sksamuel.elastic4s.handlers.ElasticErrorParser
 
 trait IngestHandlers {

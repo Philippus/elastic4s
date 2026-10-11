@@ -1,7 +1,7 @@
 package com.sksamuel.elastic4s.zio
 
 import cats.Functor
-import com.sksamuel.elastic4s.zio.instances._
+import com.sksamuel.elastic4s.zio.instances.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import zio.{Task, Unsafe, ZIO}

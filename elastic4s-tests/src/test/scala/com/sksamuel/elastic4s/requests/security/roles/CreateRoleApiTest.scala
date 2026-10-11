@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.security.roles
 
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticDsl.*
 import com.sksamuel.elastic4s.JsonSugar
 import com.sksamuel.elastic4s.handlers.security.roles.CreateOrUpdateRoleContentBuilder
 import org.scalatest.OneInstancePerTest

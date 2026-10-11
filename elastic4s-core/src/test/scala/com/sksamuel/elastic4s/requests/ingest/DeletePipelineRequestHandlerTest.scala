@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 
 class DeletePipelineRequestHandlerTest extends AnyFlatSpec with IngestHandlers with Matchers {
 
-  import DeletePipelineRequestHandler._
+  import DeletePipelineRequestHandler.*
 
   it should "build a delete pipeline request" in {
     val req = DeletePipelineRequest("test-pipeline")

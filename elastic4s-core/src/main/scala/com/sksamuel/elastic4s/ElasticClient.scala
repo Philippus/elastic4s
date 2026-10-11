@@ -1,11 +1,11 @@
 package com.sksamuel.elastic4s
 
 import cats.Functor
-import cats.syntax.functor._
+import cats.syntax.functor.*
 import org.slf4j.{Logger, LoggerFactory}
 
 import java.util.Base64
-import scala.concurrent.duration._
+import scala.concurrent.duration.*
 
 /** An [[ElasticClient]] is used to execute HTTP requests against an ElasticSearch cluster. This class delegates the
   * actual HTTP calls to an instance of [[HttpClient]].
@@ -23,7 +23,7 @@ case class ElasticClient[F[_]: Functor](client: HttpClient[F]) {
   /** Returns a String containing the request details. The string will have the HTTP method, endpoint, params and if
     * applicable the request body.
     */
-  def show[T](t: T)(implicit handler: Handler[T, _]): String = Show[ElasticRequest].show(handler.build(t))
+  def show[T](t: T)(implicit handler: Handler[T, ?]): String = Show[ElasticRequest].show(handler.build(t))
 
   // Executes the given request type T, and returns an effect of Response[U]
   // where U is particular to the request type.

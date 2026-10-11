@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers
 
 class AdjacencyMatrixAggBuilderTest extends AnyFunSuite with Matchers {
 
-  import com.sksamuel.elastic4s.ElasticDsl._
+  import com.sksamuel.elastic4s.ElasticDsl.*
 
   test("AdjacencyMatrixBuilder apply should return appropriate XContentBuilder") {
     val searchQuery = search("test")

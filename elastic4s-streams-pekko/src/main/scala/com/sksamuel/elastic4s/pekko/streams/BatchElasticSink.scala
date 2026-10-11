@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.pekko.streams
 
-import com.sksamuel.elastic4s._
+import com.sksamuel.elastic4s.*
 import com.sksamuel.elastic4s.handlers.bulk.BulkHandlers
 import com.sksamuel.elastic4s.requests.bulk.{BulkCompatibleRequest, BulkRequest, BulkResponse}
 import com.sksamuel.elastic4s.requests.common.RefreshPolicy
