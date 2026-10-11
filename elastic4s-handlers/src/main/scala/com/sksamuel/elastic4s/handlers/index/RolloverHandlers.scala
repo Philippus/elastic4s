@@ -32,6 +32,7 @@ trait RolloverHandlers {
       request.maxAge.foreach(builder.field("max_age", _))
       request.maxDocs.foreach(builder.field("max_docs", _))
       request.maxSize.foreach(builder.field("max_size", _))
+      request.maxPrimaryShardSize.foreach(builder.field("max_primary_shard_size", _))
       builder.endObject()
 
       val entity = HttpEntity(builder.string, "application/json")
