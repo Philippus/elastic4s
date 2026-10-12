@@ -22,12 +22,12 @@
           "pattern": "[a-z]"
         },
         "mysnowball": {
-          "type": "snowball",
-          "language": "english",
-          "stopwords": [
-            "stop1",
-            "stop2",
-            "stop3"
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "mysnowballStop",
+            "mysnowballStemmer"
           ]
         },
         "myAnalyzer2": {
@@ -73,7 +73,7 @@
           "max_token_length": 900
         },
         "myTokenizer4": {
-          "type": "edgeNGram",
+          "type": "edge_ngram",
           "min_gram": 3,
           "max_gram": 17,
           "token_chars": [
@@ -82,7 +82,7 @@
           ]
         },
         "myTokenizer5": {
-          "type": "nGram",
+          "type": "ngram",
           "min_gram": 4,
           "max_gram": 18,
           "token_chars": [
@@ -92,6 +92,18 @@
         }
       },
       "filter": {
+        "mysnowballStop": {
+          "type": "stop",
+          "stopwords": [
+            "stop1",
+            "stop2",
+            "stop3"
+          ]
+        },
+        "mysnowballStemmer": {
+          "type": "snowball",
+          "language": "English"
+        },
         "myTokenFilter2": {
           "type": "length",
           "min": 0,
@@ -124,12 +136,10 @@
         "myTokenFilter0": {
           "type": "stop",
           "stopwords_path": "stoplist.txt",
-          "enable_position_increments": true,
           "ignore_case": true
         },
         "myTokenFilter1": {
           "type": "stop",
-          "enable_position_increments": true,
           "ignore_case": true
         },
         "myTokenFilter5": {
@@ -138,10 +148,9 @@
           "consume_all_tokens": false
         },
         "myEdgeNGramTokenFilter": {
-          "type": "edgeNGram",
+          "type": "edge_ngram",
           "min_gram": 3,
-          "max_gram": 50,
-          "side": "front"
+          "max_gram": 50
         },
         "stemmerTokenFilter": {
           "type": "stemmer_override",

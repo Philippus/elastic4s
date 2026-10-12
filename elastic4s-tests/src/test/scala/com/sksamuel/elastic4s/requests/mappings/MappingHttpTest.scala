@@ -1,6 +1,6 @@
 package com.sksamuel.elastic4s.requests.mappings
 
-import com.sksamuel.elastic4s.requests.analyzers.*
+import com.sksamuel.elastic4s.analysis.{Analysis, CustomAnalyzer, CustomNormalizer}
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import com.sksamuel.elastic4s.testkit.DockerTests
 import org.scalatest.BeforeAndAfterAll
@@ -29,17 +29,18 @@ class MappingHttpTest extends AnyWordSpec with DockerTests with Matchers with Be
     client.execute {
       createIndex("index").mapping(
         (properties().as(Seq(
-          textField("a").stored(true).analyzer(WhitespaceAnalyzer.name),
+          textField("a").stored(true).analyzer("whitespace"),
           keywordField("b").normalizer("my_normalizer"),
           joinField("c").relation("parent", Seq("bar", "foo"))
         ))).meta(Map(
           "meta_key" -> "meta_value"
         ))
-      ) analysis {
-        CustomAnalyzerDefinition("my_analyzer", WhitespaceTokenizer, LowercaseTokenFilter)
-      } normalizers {
-        CustomNormalizerDefinition("my_normalizer", LowercaseTokenFilter)
-      }
+      ).analysis(
+        Analysis(
+          analyzers = List(CustomAnalyzer("my_analyzer", tokenizer = "whitespace", tokenFilters = List("lowercase"))),
+          normalizers = List(CustomNormalizer("my_normalizer", charFilters = Nil, tokenFilters = List("lowercase")))
+        )
+      )
     }.await
 
     client.execute {

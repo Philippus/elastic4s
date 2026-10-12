@@ -1,7 +1,6 @@
 package com.sksamuel.elastic4s.search.queries
 
 import com.sksamuel.elastic4s.ElasticDsl
-import com.sksamuel.elastic4s.requests.analyzers.StandardAnalyzer
 import com.sksamuel.elastic4s.requests.common.{DocumentRef, RefreshPolicy}
 import com.sksamuel.elastic4s.requests.searches.queries.{ArtificialDocument, MoreLikeThisItem}
 import com.sksamuel.elastic4s.testkit.DockerTests
@@ -21,7 +20,7 @@ class MoreLikeThisQueryTest extends AnyWordSpec with Matchers with DockerTests {
   client.execute {
     createIndex("mltq").mapping(
       properties(
-        textField("text").store(true).analyzer(StandardAnalyzer.name)
+        textField("text").store(true).analyzer("standard")
       )
     ).shards(3)
   }.await

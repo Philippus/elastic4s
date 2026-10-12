@@ -2,9 +2,30 @@ package com.sksamuel.elastic4s.requests.indexes
 
 import com.sksamuel.elastic4s.ElasticDsl.*
 import com.sksamuel.elastic4s.JsonSugar
+import com.sksamuel.elastic4s.analysis.{
+  Analysis,
+  CustomAnalyzer,
+  CustomNormalizer,
+  EdgeNGramTokenFilter,
+  EdgeNGramTokenizer,
+  LengthTokenFilter,
+  LimitTokenCountTokenFilter,
+  MappingCharFilter,
+  NGramTokenizer,
+  PatternAnalyzer,
+  PatternReplaceCharFilter,
+  PatternReplaceTokenFilter,
+  SnowballTokenFilter,
+  StandardAnalyzer,
+  StandardTokenizer,
+  StemmerOverrideTokenFilter,
+  StemmerTokenFilter,
+  StopTokenFilter,
+  UniqueTokenFilter,
+  WordDelimiterTokenFilter
+}
 import com.sksamuel.elastic4s.handlers.index
 import com.sksamuel.elastic4s.handlers.index.CreateIndexContentBuilder
-import com.sksamuel.elastic4s.requests.analyzers.*
 import com.sksamuel.elastic4s.requests.mappings.PrefixTree
 import com.sksamuel.elastic4s.requests.mappings.dynamictemplate.DynamicMapping
 import org.scalatest.OneInstancePerTest
@@ -41,8 +62,12 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
 
   it should "support override built in analyzers" in {
     val req = createIndex("users").analysis(
-      StandardAnalyzerDefinition("standard", stopwords = Seq("stop1", "stop2")),
-      StandardAnalyzerDefinition("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400)
+      Analysis(
+        analyzers = List(
+          StandardAnalyzer("standard", stopwords = Seq("stop1", "stop2")),
+          StandardAnalyzer("myAnalyzer1", stopwords = Seq("the", "and"), maxTokenLength = 400)
+        )
+      )
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_analyis.json")
   }
@@ -53,50 +78,78 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
 
   it should "support the stopwords_path filter" in {
     val req = createIndex("users").analysis(
-      PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
-      SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
-      CustomAnalyzerDefinition(
-        "myAnalyzer2",
-        StandardTokenizer("myTokenizer1", 900),
-        lengthTokenFilter("myTokenFilter2").min(0).max(10),
-        uniqueTokenFilter("myTokenFilter3").onlyOnSamePosition(true),
-        stemmerTokenFilter("myFrenchStemmerTokenFilter", "french"),
-        PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
-        WordDelimiterTokenFilter("myWordDelimiterTokenFilter")
-          .generateWordParts(true)
-          .generateNumberParts(true)
-          .catenateAll(true)
-          .catenateNumbers(false)
-          .catenateAll(false)
-          .splitOnCaseChange(true)
-          .preserveOriginal(false)
-          .splitOnNumerics(true)
-          .stemEnglishPossesive(true)
-      ),
-      CustomAnalyzerDefinition(
-        "myAnalyzer3",
-        LowercaseTokenizer,
-        stopTokenFilter("myTokenFilter0").stopwordsPath("stoplist.txt").enablePositionIncrements(true).ignoreCase(true),
-        stopTokenFilter("myTokenFilter1").enablePositionIncrements(true).ignoreCase(true),
-        ReverseTokenFilter,
-        LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
-        edgeNGramTokenFilter("myEdgeNGramTokenFilter").minGram(3).maxGram(50).side("front"),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Seq("rule1", "rule2")),
-        HtmlStripCharFilter,
-        MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
-        PatternReplaceCharFilter(
-          "pattern_replace_charfilter",
-          pattern = "sample(.*)",
-          replacement = "replacedSample $1"
+      Analysis(
+        analyzers = List(
+          PatternAnalyzer("patternAnalyzer", regex = "[a-z]"),
+          CustomAnalyzer(
+            "mysnowball",
+            tokenizer = "standard",
+            tokenFilters = List("lowercase", "mysnowballStop", "mysnowballStemmer")
+          ),
+          CustomAnalyzer(
+            "myAnalyzer2",
+            tokenizer = "myTokenizer1",
+            tokenFilters = List(
+              "myTokenFilter2",
+              "myTokenFilter3",
+              "myFrenchStemmerTokenFilter",
+              "prTokenFilter",
+              "myWordDelimiterTokenFilter"
+            )
+          ),
+          CustomAnalyzer(
+            "myAnalyzer3",
+            tokenizer = "lowercase",
+            charFilters = List("html_strip", "mapping_charfilter", "pattern_replace_charfilter"),
+            tokenFilters = List(
+              "myTokenFilter0",
+              "myTokenFilter1",
+              "reverse",
+              "myTokenFilter5",
+              "myEdgeNGramTokenFilter",
+              "stemmerTokenFilter"
+            )
+          ),
+          CustomAnalyzer("myAnalyzer4", tokenizer = "myTokenizer4"),
+          CustomAnalyzer("myAnalyzer5", tokenizer = "myTokenizer5")
+        ),
+        tokenizers = List(
+          StandardTokenizer("myTokenizer1", maxTokenLength = 900),
+          EdgeNGramTokenizer("myTokenizer4", minGram = 3, maxGram = 17, tokenChars = Seq("digit", "letter")),
+          NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
+        ),
+        tokenFilters = List(
+          StopTokenFilter("mysnowballStop", stopwords = Seq("stop1", "stop2", "stop3")),
+          SnowballTokenFilter("mysnowballStemmer", language = "English"),
+          LengthTokenFilter("myTokenFilter2", min = Some(0), max = Some(10)),
+          UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+          StemmerTokenFilter("myFrenchStemmerTokenFilter", lang = "french"),
+          PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
+          WordDelimiterTokenFilter(
+            "myWordDelimiterTokenFilter",
+            generateWordParts = Some(true),
+            generateNumberParts = Some(true),
+            catenateNumbers = Some(false),
+            catenateAll = Some(false),
+            splitOnCaseChange = Some(true),
+            preserveOriginal = Some(false),
+            splitOnNumerics = Some(true),
+            stemEnglishPossesive = Some(true)
+          ),
+          StopTokenFilter("myTokenFilter0", stopwordsPath = Some("stoplist.txt"), ignoreCase = Some(true)),
+          StopTokenFilter("myTokenFilter1", ignoreCase = Some(true)),
+          LimitTokenCountTokenFilter("myTokenFilter5", maxTokenCount = Some(5), consumeAllTokens = Some(false)),
+          EdgeNGramTokenFilter("myEdgeNGramTokenFilter", minGram = 3, maxGram = 50),
+          StemmerOverrideTokenFilter("stemmerTokenFilter", Seq("rule1", "rule2"))
+        ),
+        charFilters = List(
+          MappingCharFilter("mapping_charfilter", Map("ph" -> "f", "qu" -> "q")),
+          PatternReplaceCharFilter(
+            "pattern_replace_charfilter",
+            pattern = "sample(.*)",
+            replacement = "replacedSample $1"
+          )
         )
-      ),
-      CustomAnalyzerDefinition(
-        "myAnalyzer4",
-        EdgeNGramTokenizer("myTokenizer4", minGram = 3, maxGram = 17, tokenChars = Seq("digit", "letter"))
-      ),
-      CustomAnalyzerDefinition(
-        "myAnalyzer5",
-        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
       )
     )
     index.CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_stop_path.json")
@@ -104,50 +157,76 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
 
   it should "support custom analyzers, normalizers, tokenizers and filters" in {
     val req = createIndex("users").analysis(
-      PatternAnalyzerDefinition("patternAnalyzer", regex = "[a-z]"),
-      SnowballAnalyzerDefinition("mysnowball", lang = "english", stopwords = Seq("stop1", "stop2", "stop3")),
-      CustomAnalyzerDefinition(
-        "myAnalyzer2",
-        StandardTokenizer("myTokenizer1", 900),
-        lengthTokenFilter("myTokenFilter2").min(0).max(10),
-        uniqueTokenFilter("myTokenFilter3").onlyOnSamePosition(true),
-        StemmerTokenFilter("myFrenchStemmerTokenFilter", lang = "french"),
-        PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
-        WordDelimiterTokenFilter("myWordDelimiterTokenFilter")
-          .generateWordParts(true)
-          .generateNumberParts(true)
-          .catenateAll(true)
-      ),
-      CustomAnalyzerDefinition(
-        "myAnalyzer3",
-        LowercaseTokenizer,
-        StopTokenFilter("myTokenFilter1").enablePositionIncrements(true).ignoreCase(true),
-        ReverseTokenFilter,
-        LimitTokenCountTokenFilter("myTokenFilter5").maxTokenCount(5).consumeAllTokens(false),
-        edgeNGramTokenFilter("myEdgeNGramTokenFilter").minGram(3).maxGram(50).side("front"),
-        StemmerOverrideTokenFilter("stemmerTokenFilter", Seq("rule1", "rule2")),
-        HtmlStripCharFilter,
-        MappingCharFilter("mapping_charfilter", "ph" -> "f", "qu" -> "q"),
-        PatternReplaceCharFilter(
-          "pattern_replace_charfilter",
-          pattern = "sample(.*)",
-          replacement = "replacedSample $1"
+      Analysis(
+        analyzers = List(
+          PatternAnalyzer("patternAnalyzer", regex = "[a-z]"),
+          CustomAnalyzer(
+            "mysnowball",
+            tokenizer = "standard",
+            tokenFilters = List("lowercase", "mysnowballStop", "mysnowballStemmer")
+          ),
+          CustomAnalyzer(
+            "myAnalyzer2",
+            tokenizer = "myTokenizer1",
+            tokenFilters = List(
+              "myTokenFilter2",
+              "myTokenFilter3",
+              "myFrenchStemmerTokenFilter",
+              "prTokenFilter",
+              "myWordDelimiterTokenFilter"
+            )
+          ),
+          CustomAnalyzer(
+            "myAnalyzer3",
+            tokenizer = "lowercase",
+            charFilters = List("html_strip", "mapping_charfilter", "pattern_replace_charfilter"),
+            tokenFilters = List(
+              "myTokenFilter1",
+              "reverse",
+              "myTokenFilter5",
+              "myEdgeNGramTokenFilter",
+              "stemmerTokenFilter"
+            )
+          ),
+          CustomAnalyzer("myAnalyzer4", tokenizer = "myTokenizer4"),
+          CustomAnalyzer("myAnalyzer5", tokenizer = "myTokenizer5")
+        ),
+        tokenizers = List(
+          StandardTokenizer("myTokenizer1", maxTokenLength = 900),
+          EdgeNGramTokenizer("myTokenizer4", minGram = 3, maxGram = 17, tokenChars = Seq("digit", "letter")),
+          NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
+        ),
+        tokenFilters = List(
+          StopTokenFilter("mysnowballStop", stopwords = Seq("stop1", "stop2", "stop3")),
+          SnowballTokenFilter("mysnowballStemmer", language = "English"),
+          LengthTokenFilter("myTokenFilter2", min = Some(0), max = Some(10)),
+          UniqueTokenFilter("myTokenFilter3", onlyOnSamePosition = true),
+          StemmerTokenFilter("myFrenchStemmerTokenFilter", lang = "french"),
+          PatternReplaceTokenFilter("prTokenFilter", "pattern", "rep"),
+          WordDelimiterTokenFilter(
+            "myWordDelimiterTokenFilter",
+            generateWordParts = Some(true),
+            generateNumberParts = Some(true),
+            catenateAll = Some(true)
+          ),
+          StopTokenFilter("myTokenFilter1", ignoreCase = Some(true)),
+          LimitTokenCountTokenFilter("myTokenFilter5", maxTokenCount = Some(5), consumeAllTokens = Some(false)),
+          EdgeNGramTokenFilter("myEdgeNGramTokenFilter", minGram = 3, maxGram = 50),
+          StemmerOverrideTokenFilter("stemmerTokenFilter", Seq("rule1", "rule2"))
+        ),
+        charFilters = List(
+          MappingCharFilter("mapping_charfilter", Map("ph" -> "f", "qu" -> "q")),
+          MappingCharFilter("mapping_charfilter2", Map("x" -> "y")),
+          PatternReplaceCharFilter(
+            "pattern_replace_charfilter",
+            pattern = "sample(.*)",
+            replacement = "replacedSample $1"
+          )
+        ),
+        normalizers = List(
+          CustomNormalizer("myNormalizer1", charFilters = Nil, tokenFilters = List("lowercase")),
+          CustomNormalizer("myNormalizer2", charFilters = List("mapping_charfilter2"), tokenFilters = List("uppercase"))
         )
-      ),
-      CustomAnalyzerDefinition(
-        "myAnalyzer4",
-        EdgeNGramTokenizer("myTokenizer4", minGram = 3, maxGram = 17, tokenChars = Seq("digit", "letter"))
-      ),
-      CustomAnalyzerDefinition(
-        "myAnalyzer5",
-        NGramTokenizer("myTokenizer5", minGram = 4, maxGram = 18, tokenChars = Seq("letter", "punctuation"))
-      )
-    ).normalizers(
-      CustomNormalizerDefinition("myNormalizer1", LowercaseTokenFilter),
-      CustomNormalizerDefinition(
-        "myNormalizer2",
-        UppercaseTokenFilter,
-        MappingCharFilter("mapping_charfilter2", "x" -> "y")
       )
     )
     CreateIndexContentBuilder(req).string should matchJsonResource("/json/createindex/createindex_analyis2.json")
@@ -156,8 +235,8 @@ class CreateIndexApiTest extends AnyFlatSpec with JsonSugar with Matchers with O
   it should "supported nested fields" in {
     val req = createIndex("users").mapping(
       properties(
-        textField("_id").analyzer(KeywordAnalyzer.name),
-        textField("name").analyzer(KeywordAnalyzer.name),
+        textField("_id").analyzer("keyword"),
+        textField("name").analyzer("keyword"),
         geopointField("locations").docValues(true),
         dateField("date"),
         longField("size"),

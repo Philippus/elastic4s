@@ -10,8 +10,10 @@
           ]
         },
         "mapping_charfilter2": {
-            "mappings": [ "x=>y" ],
-            "type": "mapping"
+          "mappings": [
+            "x=>y"
+          ],
+          "type": "mapping"
         },
         "pattern_replace_charfilter": {
           "type": "pattern_replace",
@@ -26,12 +28,12 @@
           "pattern": "[a-z]"
         },
         "mysnowball": {
-          "type": "snowball",
-          "language": "english",
-          "stopwords": [
-            "stop1",
-            "stop2",
-            "stop3"
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase",
+            "mysnowballStop",
+            "mysnowballStemmer"
           ]
         },
         "myAnalyzer2": {
@@ -71,21 +73,21 @@
         }
       },
       "normalizer": {
-          "myNormalizer1": {
-              "filter": [
-                  "lowercase"
-              ],
-              "type": "custom"
-          },
-          "myNormalizer2": {
-              "char_filter": [
-                  "mapping_charfilter2"
-              ],
-              "filter": [
-                  "uppercase"
-              ],
-              "type": "custom"
-          }
+        "myNormalizer1": {
+          "filter": [
+            "lowercase"
+          ],
+          "type": "custom"
+        },
+        "myNormalizer2": {
+          "char_filter": [
+            "mapping_charfilter2"
+          ],
+          "filter": [
+            "uppercase"
+          ],
+          "type": "custom"
+        }
       },
       "tokenizer": {
         "myTokenizer1": {
@@ -93,7 +95,7 @@
           "max_token_length": 900
         },
         "myTokenizer4": {
-          "type": "edgeNGram",
+          "type": "edge_ngram",
           "min_gram": 3,
           "max_gram": 17,
           "token_chars": [
@@ -102,7 +104,7 @@
           ]
         },
         "myTokenizer5": {
-          "type": "nGram",
+          "type": "ngram",
           "min_gram": 4,
           "max_gram": 18,
           "token_chars": [
@@ -112,6 +114,18 @@
         }
       },
       "filter": {
+        "mysnowballStop": {
+          "type": "stop",
+          "stopwords": [
+            "stop1",
+            "stop2",
+            "stop3"
+          ]
+        },
+        "mysnowballStemmer": {
+          "type": "snowball",
+          "language": "English"
+        },
         "myTokenFilter2": {
           "type": "length",
           "min": 0,
@@ -138,7 +152,6 @@
         },
         "myTokenFilter1": {
           "type": "stop",
-          "enable_position_increments": true,
           "ignore_case": true
         },
         "myTokenFilter5": {
@@ -147,10 +160,9 @@
           "consume_all_tokens": false
         },
         "myEdgeNGramTokenFilter": {
-          "type": "edgeNGram",
+          "type": "edge_ngram",
           "min_gram": 3,
-          "max_gram": 50,
-          "side": "front"
+          "max_gram": 50
         },
         "stemmerTokenFilter": {
           "type": "stemmer_override",

@@ -3,8 +3,8 @@ package com.sksamuel.elastic4s.search
 import java.util.TimeZone
 
 import com.sksamuel.elastic4s.*
+import com.sksamuel.elastic4s.analysis.LanguageAnalyzers
 import com.sksamuel.elastic4s.handlers.searches.suggestion.DirectGenerator
-import com.sksamuel.elastic4s.requests.analyzers.{FrenchLanguageAnalyzer, SnowballAnalyzer, WhitespaceAnalyzer}
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, FetchSourceContext, ValueType}
 import com.sksamuel.elastic4s.requests.script.Script
 import com.sksamuel.elastic4s.requests.searches.*
@@ -140,8 +140,8 @@ class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
         "coldplay"
       ).allowLeadingWildcard(true)
         .analyzeWildcard(true)
-        .analyzer(WhitespaceAnalyzer.name)
-        .quoteAnalyzer(WhitespaceAnalyzer.name)
+        .analyzer("whitespace")
+        .quoteAnalyzer("whitespace")
         .autoGeneratePhraseQueries(true)
         .defaultField("name")
         .boost(6.5)
@@ -201,7 +201,7 @@ class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
         .minimumShouldMatch("75%")
         .fuzziness("2")
         .prefixLength(4)
-        .analyzer(FrenchLanguageAnalyzer.name)
+        .analyzer(LanguageAnalyzers.french)
         .autoGenerateSynonymsPhraseQuery(false)
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match.json")
@@ -286,7 +286,7 @@ class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
       matchPhraseQuery("name", "coldplay")
         .slop(3)
         .boost(15)
-        .analyzer(SnowballAnalyzer.name)
+        .analyzer("snowball")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_phrase.json")
   }
@@ -296,7 +296,7 @@ class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
       matchPhrasePrefixQuery("name", "coldplay")
         .maxExpansions(3)
         .slop(3)
-        .analyzer(SnowballAnalyzer.name)
+        .analyzer("snowball")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_phrase_prefix.json")
   }
@@ -306,7 +306,7 @@ class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
       matchBoolPrefixQuery("name", "coldplay")
         .maxExpansions(3)
         .fuzziness("0<1")
-        .analyzer(SnowballAnalyzer.name)
+        .analyzer("snowball")
     }
     req.request.entity.get.get should matchJsonResource("/json/search/search_match_bool_prefix.json")
   }
@@ -579,7 +579,7 @@ class SearchDslTest extends AnyFlatSpec with JsonSugar with OneInstancePerTest {
     val req = search("music") query {
       multiMatchQuery("this is my query")
         .fields("name", "location", "genre")
-        .analyzer(WhitespaceAnalyzer.name)
+        .analyzer("whitespace")
         .boost(3.4)
         .cutoffFrequency(1.7)
         .fuzziness("something")
