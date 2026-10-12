@@ -4,6 +4,8 @@ import com.sksamuel.elastic4s.JsonSugar
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.annotation.nowarn
+
 class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
   "ElisionTokenFilter" should {
     "build json" in {
@@ -185,7 +187,8 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
       ).build.string should matchJsonResource("/json/analysis/tokenfilter/stoptokenfilter_raw.json")
     }
     "build json with deprecated constructor" in {
-      StopTokenFilter(
+      @nowarn("cat=deprecation")
+      val filter = StopTokenFilter(
         name = "my_stop",
         language = None,
         stopwords = List("a", "an"),
@@ -193,7 +196,8 @@ class TokenFilterTest extends AnyWordSpec with Matchers with JsonSugar {
         enablePositionIncrements = Some(false),
         removeTrailing = Some(true),
         ignoreCase = Some(false)
-      ).build.string should matchJsonResource("/json/analysis/tokenfilter/stoptokenfilter_raw.json")
+      )
+      filter.build.string should matchJsonResource("/json/analysis/tokenfilter/stoptokenfilter_raw.json")
     }
   }
 }
