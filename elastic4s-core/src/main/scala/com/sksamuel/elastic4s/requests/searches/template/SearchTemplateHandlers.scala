@@ -1,15 +1,7 @@
 package com.sksamuel.elastic4s.requests.searches.template
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.sksamuel.elastic4s.requests.searches.{
-  GetSearchTemplateRequest,
-  PutSearchTemplateRequest,
-  RemoveSearchTemplateRequest,
-  SearchResponse,
-  TemplateSearchRequest
-}
-import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, HttpResponse, Indexes, ResponseHandler}
-import com.sksamuel.elastic4s.ext.OptionImplicits.*
+import com.sksamuel.elastic4s.requests.searches.{SearchResponse, TemplateSearchRequest}
+import com.sksamuel.elastic4s.{ElasticRequest, Handler, HttpEntity, Indexes}
 
 trait SearchTemplateHandlers {
 
@@ -24,46 +16,4 @@ trait SearchTemplateHandlers {
       ElasticRequest("POST", endpoint, HttpEntity(body, "application/json"))
     }
   }
-
-  implicit object RemoveSearchTemplateHandler
-      extends Handler[RemoveSearchTemplateRequest, RemoveSearchTemplateResponse] {
-
-    override def build(req: RemoveSearchTemplateRequest): ElasticRequest = {
-      val endpoint = "/_scripts/" + req.name
-      ElasticRequest("DELETE", endpoint)
-    }
-  }
-
-  implicit object PutSearchTemplateHandler extends Handler[PutSearchTemplateRequest, PutSearchTemplateResponse] {
-
-    override def build(req: PutSearchTemplateRequest): ElasticRequest = {
-      val endpoint = "/_scripts/" + req.name
-      val body     = PutSearchTemplateBuilderFn(req).string
-      val entity   = HttpEntity(body, "application/json")
-      ElasticRequest("POST", endpoint, entity)
-    }
-  }
-
-  implicit object GetSearchTemplateHandler
-      extends Handler[GetSearchTemplateRequest, Option[GetSearchTemplateResponse]] {
-
-    override def responseHandler: ResponseHandler[Option[GetSearchTemplateResponse]] =
-      (response: HttpResponse) =>
-        response.statusCode match {
-          case 200 => Right(ResponseHandler.fromResponse[GetSearchTemplateResponse](response).some)
-          case 404 => Right(None)
-          case _   => sys.error(response.entity.map(_.content).getOrElse(""))
-        }
-
-    override def build(req: GetSearchTemplateRequest): ElasticRequest = {
-      val endpoint = "/_scripts/" + req.name
-      ElasticRequest("GET", endpoint)
-    }
-  }
 }
-
-case class PutSearchTemplateResponse(acknowledged: Boolean)
-
-case class GetSearchTemplateResponse(@JsonProperty("_id") id: String, lang: String, found: Boolean, template: String)
-
-case class RemoveSearchTemplateResponse(acknowledged: Boolean)
