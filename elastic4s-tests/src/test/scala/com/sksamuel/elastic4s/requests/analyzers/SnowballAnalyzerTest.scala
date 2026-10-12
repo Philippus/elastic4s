@@ -4,6 +4,9 @@ import com.sksamuel.elastic4s.api.AnalyzerApi
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.annotation.nowarn
+
+@nowarn("cat=deprecation")
 class SnowballAnalyzerTest extends AnyWordSpec with AnalyzerApi with Matchers {
 
   "SnowballAnalyzer builder" should {

@@ -4,6 +4,9 @@ import com.sksamuel.elastic4s.api.TokenFilterApi
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+import scala.annotation.nowarn
+
+@nowarn("cat=deprecation")
 class ElisionTokenFilterTest extends AnyWordSpec with TokenFilterApi with Matchers {
 
   "ElisionTokenFilter builder" should {
