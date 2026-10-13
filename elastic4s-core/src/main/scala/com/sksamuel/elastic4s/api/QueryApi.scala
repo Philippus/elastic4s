@@ -1,5 +1,7 @@
 package com.sksamuel.elastic4s.api
 
+import scala.language.implicitConversions
+
 import com.sksamuel.elastic4s.Indexable
 import com.sksamuel.elastic4s.requests.common.{DistanceUnit, DocumentRef}
 import com.sksamuel.elastic4s.requests.script.Script
