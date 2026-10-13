@@ -390,5 +390,6 @@ lazy val tests = (project in file("elastic4s-tests"))
     )),
     Test / fork               := false,
     Test / parallelExecution  := false,
-    Test / testForkedParallel := false
+    Test / testForkedParallel := false,
+    Test / javacOptions += "-proc:none"
   )
