@@ -30,7 +30,7 @@ object Dependencies {
   val Sttp4Version                   = "4.0.27"
   val ZIOJson1Version                = "0.1.5"
   val ZIO1Version                    = "1.0.18"
-  val ZIOVersion                     = "2.1.26"
+  val ZIOVersion                     = "2.1.27"
   val ZIOJsonVersion                 = "1.0.0"
   val ZIOHttpVersion                 = "3.11.6"
 
