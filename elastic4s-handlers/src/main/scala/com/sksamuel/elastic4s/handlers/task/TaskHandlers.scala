@@ -20,7 +20,10 @@ trait TaskHandlers {
 
   implicit object GetTaskHandler extends Handler[GetTask, GetTaskResponse] {
     override def build(request: GetTask): ElasticRequest = {
-      ElasticRequest("GET", s"/_tasks/${request.nodeId}:${request.taskId}")
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.waitForCompletion.foreach(w => params.put("wait_for_completion", w.toString))
+      request.timeout.foreach(t => params.put("timeout", s"${t.toMillis}ms"))
+      ElasticRequest("GET", s"/_tasks/${request.nodeId}:${request.taskId}", params.toMap)
     }
   }
 
