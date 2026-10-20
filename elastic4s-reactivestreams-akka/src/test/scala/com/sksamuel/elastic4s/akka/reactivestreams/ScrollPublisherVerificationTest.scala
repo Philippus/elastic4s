@@ -20,37 +20,39 @@ class ScrollPublisherVerificationTest
 
   implicit val system: ActorSystem = ActorSystem()
 
+  private val indexName = "scrollpubver-akka"
+
   Try {
     client.execute {
-      deleteIndex("scrollpubver")
+      deleteIndex(indexName)
     }.await
   }
 
   Try {
     client.execute {
-      createIndex("scrollpubver")
+      createIndex(indexName)
     }.await
   }
 
   client.execute {
     bulk(
-      indexInto("scrollpubver").source(Empire("Parthian", "Persia", "Ctesiphon")),
-      indexInto("scrollpubver").source(Empire("Ptolemaic", "Egypt", "Alexandria")),
-      indexInto("scrollpubver").source(Empire("British", "Worldwide", "London")),
-      indexInto("scrollpubver").source(Empire("Achaemenid", "Persia", "Babylon")),
-      indexInto("scrollpubver").source(Empire("Sasanian", "Persia", "Ctesiphon")),
-      indexInto("scrollpubver").source(Empire("Mongol", "East Asia", "Avarga")),
-      indexInto("scrollpubver").source(Empire("Roman", "Mediterranean", "Rome")),
-      indexInto("scrollpubver").source(Empire("Sumerian", "Mesopotamia", "Uruk")),
-      indexInto("scrollpubver").source(Empire("Klingon", "Space", "Kronos")),
-      indexInto("scrollpubver").source(Empire("Romulan", "Space", "Romulus")),
-      indexInto("scrollpubver").source(Empire("Cardassian", "Space", "Cardassia Prime")),
-      indexInto("scrollpubver").source(Empire("Egyptian", "Egypt", "Memphis")),
-      indexInto("scrollpubver").source(Empire("Babylonian", "Levant", "Babylon"))
+      indexInto(indexName).source(Empire("Parthian", "Persia", "Ctesiphon")),
+      indexInto(indexName).source(Empire("Ptolemaic", "Egypt", "Alexandria")),
+      indexInto(indexName).source(Empire("British", "Worldwide", "London")),
+      indexInto(indexName).source(Empire("Achaemenid", "Persia", "Babylon")),
+      indexInto(indexName).source(Empire("Sasanian", "Persia", "Ctesiphon")),
+      indexInto(indexName).source(Empire("Mongol", "East Asia", "Avarga")),
+      indexInto(indexName).source(Empire("Roman", "Mediterranean", "Rome")),
+      indexInto(indexName).source(Empire("Sumerian", "Mesopotamia", "Uruk")),
+      indexInto(indexName).source(Empire("Klingon", "Space", "Kronos")),
+      indexInto(indexName).source(Empire("Romulan", "Space", "Romulus")),
+      indexInto(indexName).source(Empire("Cardassian", "Space", "Cardassia Prime")),
+      indexInto(indexName).source(Empire("Egyptian", "Egypt", "Memphis")),
+      indexInto(indexName).source(Empire("Babylonian", "Levant", "Babylon"))
     ).refreshImmediately
   }.await
 
-  private val query = search("scrollpubver").matchAllQuery().scroll("1m").limit(2)
+  private val query = search(indexName).matchAllQuery().scroll("1m").limit(2)
 
   override def boundedDepthOfOnNextAndRequestRecursion: Long = 2L
 

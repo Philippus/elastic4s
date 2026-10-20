@@ -19,7 +19,7 @@ class SubscriberListenerTest extends AnyWordSpec with Matchers with DockerTests 
 
   Try {
     client.execute {
-      createIndex("subscriberlistenertest")
+      createIndex("subscriberlistenertest-akka")
     }.await
   }
 

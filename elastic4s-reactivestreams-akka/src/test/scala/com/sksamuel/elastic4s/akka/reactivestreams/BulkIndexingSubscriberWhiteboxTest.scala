@@ -17,7 +17,7 @@ class BulkIndexingSubscriberWhiteboxTest
 
   try {
     client.execute {
-      createIndex("bulkindexwhitebox")
+      createIndex("bulkindexwhitebox-akka")
     }.await
   } catch {
     case _: Exception =>
@@ -27,7 +27,7 @@ class BulkIndexingSubscriberWhiteboxTest
 
     import ElasticJackson.Implicits.*
 
-    override def request(t: Item): BulkCompatibleRequest = indexInto("bulkindexwhitebox").doc(t)
+    override def request(t: Item): BulkCompatibleRequest = indexInto("bulkindexwhitebox-akka").doc(t)
   }
 
   override def createSubscriber(probe: WhiteboxSubscriberProbe[Item]): Subscriber[Item] = {

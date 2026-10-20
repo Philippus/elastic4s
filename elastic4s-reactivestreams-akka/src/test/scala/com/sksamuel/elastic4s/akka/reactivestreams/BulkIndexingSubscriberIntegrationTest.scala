@@ -32,7 +32,7 @@ object Ship {
 
 }
 
-class ShipRequestBuilder(indexName: String = "bulkindexsubint") extends RequestBuilder[Ship] {
+class ShipRequestBuilder(indexName: String = "bulkindexsubint-akka") extends RequestBuilder[Ship] {
 
   import ElasticDsl.*
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
