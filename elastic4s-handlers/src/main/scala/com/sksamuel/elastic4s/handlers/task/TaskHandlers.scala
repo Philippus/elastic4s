@@ -36,10 +36,10 @@ trait TaskHandlers {
         params.put("nodes", request.nodeIds.mkString(","))
       if (request.actions.nonEmpty)
         params.put("actions", request.actions.mkString(","))
-      if (request.detailed.getOrElse(false))
-        params.put("detailed", "true")
-      if (request.waitForCompletion.getOrElse(false))
-        params.put("wait_for_completion", "true")
+      request.detailed.foreach(d => params.put("detailed", d.toString))
+      request.waitForCompletion.foreach(w => params.put("wait_for_completion", w.toString))
+      request.timeout.foreach(t => params.put("timeout", s"${t.toMillis}ms"))
+      request.masterTimeout.foreach(t => params.put("master_timeout", s"${t.toMillis}ms"))
       request.groupBy.foreach(params.put("group_by", _))
       request.parentTaskId.foreach(params.put("parent_task_id", _))
 
@@ -81,6 +81,9 @@ trait TaskHandlers {
         params.put("nodes", request.nodeIds.mkString(","))
       if (request.actions.nonEmpty)
         params.put("actions", request.actions.mkString(","))
+      request.timeout.foreach(t => params.put("timeout", s"${t.toMillis}ms"))
+      request.parentTaskId.foreach(params.put("parent_task_id", _))
+      request.waitForCompletion.foreach(w => params.put("wait_for_completion", w.toString))
 
       ElasticRequest("POST", "/_tasks/_cancel", params.toMap)
     }
@@ -88,7 +91,10 @@ trait TaskHandlers {
 
   implicit object CancelTaskByIdHandler extends AbstractCancelTaskHandler[CancelTaskByIdRequest] {
 
-    override def build(request: CancelTaskByIdRequest): ElasticRequest =
-      ElasticRequest("POST", s"/_tasks/${request.nodeId}:${request.taskId}/_cancel")
+    override def build(request: CancelTaskByIdRequest): ElasticRequest = {
+      val params = scala.collection.mutable.Map.empty[String, String]
+      request.waitForCompletion.foreach(w => params.put("wait_for_completion", w.toString))
+      ElasticRequest("POST", s"/_tasks/${request.nodeId}:${request.taskId}/_cancel", params.toMap)
+    }
   }
 }
