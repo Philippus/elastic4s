@@ -16,7 +16,7 @@ class ScrollPublisherIntegrationTest extends AnyWordSpec with DockerTests with M
   import ReactiveElastic.*
   import com.sksamuel.elastic4s.jackson.ElasticJackson.Implicits.*
 
-  private val indexName = getClass.getSimpleName.toLowerCase
+  private val indexName = s"${getClass.getSimpleName.toLowerCase}-pekko"
 
   private implicit val system: ActorSystem = ActorSystem()
 

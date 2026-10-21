@@ -14,7 +14,7 @@ class ScrollPublisherUnitTest extends AnyWordSpec with Matchers with DockerTests
   "elastic-streams" should {
     "throw exception if search definition has no scroll" in {
       an[IllegalArgumentException] should be thrownBy
-        client.publisher(search("scrollpubint").query("*:*"))
+        client.publisher(search("scrollpubint-akka").query("*:*"))
     }
   }
 }
