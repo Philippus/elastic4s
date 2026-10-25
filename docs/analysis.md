@@ -28,7 +28,7 @@ By default Elasticsearch registers multiple built-in analyzers. These are
 * [language analyzers](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-lang-analyzer.html)
 * [snowball analyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-snowball-analyzer.html)
 
-You can use these by simply using the name as defined by elasticsearch. You don't have to do anything to explicity enable them as they are always defined.
+You can use these by simply using the name as defined by elasticsearch. You don't have to do anything to explicitly enable them as they are always defined.
 
 
 
@@ -64,7 +64,7 @@ Finally, this example uses separate analyzers for indexing and [searching](https
 ```
 
 
-## Custom Analzyers
+## Custom Analyzers
 
 Elasticsearch allows you to create a [custom analyzer](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/analysis-custom-analyzer.html) which gives you full control over how an analyzer is specified.
 
