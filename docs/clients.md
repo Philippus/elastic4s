@@ -6,7 +6,7 @@ This class is used to execute requests, such as `SearchRequest`, against an Elas
 `ElasticClient` takes care of transforming the requests and responses, and handling success and failure, but the actual HTTP functions are delegated to an instance of `HttpClient.`
 This typeclass wraps an underlying http client, such as akka-http or sttp so that it can be used by the `ElasticClient`.
 
-The most simple example is the `JavaClient` class, provided by the `elastic4s-client-esjava` module. This implementation wraps the http library provided by the offical Java elasticsearch library.
+The most simple example is the `JavaClient` class, provided by the `elastic4s-client-esjava` module. This implementation wraps the http library provided by the official Java elasticsearch library.
 
 So, to connect to an ElasticSearch cluster, pass an instance of `JavaClient` to an `ElasticClient`.
 `JavaClient` is configured using `ElasticProperties` in which you can specify protocol, host, and port in a single string

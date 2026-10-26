@@ -9,7 +9,7 @@
 
 Elastic4s is a concise, idiomatic, reactive, type safe Scala client for Elasticsearch. The official Elasticsearch Java client can of course be used in Scala, but due to Java's syntax it is more verbose and it naturally doesn't support classes in the core Scala core library nor Scala idioms such as typeclass support.
 
-Elastic4s's DSL allows you to construct your requests programatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into an asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying broadly similar to the Java API or Rest API. Each request is an immutable object, so you can create requests and safely reuse them, or further copy them for derived requests. Because each request is strongly typed your IDE or editor can use the type information to show you what operations are available for any request type.
+Elastic4s's DSL allows you to construct your requests programmatically, with syntactic and semantic errors manifested at compile time, and uses standard Scala futures to enable you to easily integrate into an asynchronous workflow. The aim of the DSL is that requests are written in a builder-like way, while staying broadly similar to the Java API or Rest API. Each request is an immutable object, so you can create requests and safely reuse them, or further copy them for derived requests. Because each request is strongly typed your IDE or editor can use the type information to show you what operations are available for any request type.
 
 Elastic4s supports Scala collections so you don't have to do tedious conversions from your Scala domain classes into Java collections. It also allows you to index and read classes directly using typeclasses so you don't have to set fields or json documents manually. These typeclasses are generated using your favourite json library - modules exist for Jackson, Circe, Json4s, PlayJson and Spray Json. The client also uses standard Scala durations to avoid the use of strings or primitives for duration lengths.
 
@@ -109,7 +109,7 @@ The entry point in elastic4s is an instance of `ElasticClient`.
 This class is used to execute requests, such as `SearchRequest`, against an Elasticsearch cluster and returns a response type such as `SearchResponse`.
 
 `ElasticClient` takes care of transforming the requests and responses, and handling success and failure, but the actual HTTP functions are delegated to a HTTP library.
-One such library is `JavaClient` which uses the http client provided by the offical Java elasticsearch library.
+One such library is `JavaClient` which uses the http client provided by the official Java elasticsearch library.
 
 So, to connect to an ElasticSearch cluster, pass an instance of `JavaClient` to an `ElasticClient`.
 `JavaClient` is configured using `ElasticProperties` in which you can specify protocol, host, and port in a single string.
@@ -405,7 +405,7 @@ For full details on creating queries and other search capabilities such source f
 
 ## Multisearch
 
-Multiple search requests can be executed in a single call using the [multisearch](docs/multisearch.md) request type. This is the search equivilent of the bulk request.
+Multiple search requests can be executed in a single call using the [multisearch](docs/multisearch.md) request type. This is the search equivalent of the bulk request.
 
 
 
@@ -563,7 +563,7 @@ val json = client.show {
 println(json)
 ```
 
-Not all requests have a json body. For example _get-by-id_ is modelled purely by http query parameters, there is no json body to output. And some requests aren't supported by the show method - you will get an implicit not found error during compliation if that is the case
+Not all requests have a json body. For example _get-by-id_ is modelled purely by http query parameters, there is no json body to output. And some requests aren't supported by the show method - you will get an implicit not found error during compilation if that is the case
 
 
 
