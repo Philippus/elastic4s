@@ -96,6 +96,24 @@ class MultiGetTest extends AnyFlatSpec with DockerTests {
     resp.items.head.source shouldBe Map("year" -> 2005, "name" -> "x&y")
     resp.items.last.source shouldBe Map("name" -> "mylo xyloto")
   }
+  it should "retrieve the full source when fetchSourceContext is true" in {
+
+    val resp = client.execute(
+      multiget(get("coldplay", "3").fetchSourceContext(true))
+    ).await.result
+    resp.size shouldBe 1
+    resp.items.head.source shouldBe Map("year" -> 2005, "name" -> "x&y")
+  }
+
+  it should "retrieve documents by id with source excludes" in {
+
+    val resp = client.execute(
+      multiget(get("coldplay", "3").fetchSourceExclude("year"))
+    ).await.result
+    resp.size shouldBe 1
+    resp.items.head.source shouldBe Map("name" -> "x&y")
+  }
+
   it should "retrieve documents by id with routing spec" in {
 
     val resp = client.execute(
