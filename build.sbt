@@ -6,6 +6,9 @@ ThisBuild / libraryDependencySchemes ++= Seq(
   "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 )
 
+ThisBuild / resolvers +=
+  Resolver.ApacheMavenStagingRepo
+
 def isGithubActions = sys.env.getOrElse("CI", "false") == "true"
 
 // set by github actions when executing a release build
