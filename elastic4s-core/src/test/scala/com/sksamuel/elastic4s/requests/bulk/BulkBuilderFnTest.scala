@@ -66,25 +66,46 @@ class BulkBuilderFnTest extends AnyFunSuite with Matchers {
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
-  test("bulk content builder should support _source_includes in UpdateRequest") {
+  test("bulk content builder should support _source includes in UpdateRequest") {
     val req = bulk(
       updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
         .fetchSource(includes = Set("atomicweight", "name"), excludes = Set.empty)
     )
 
     handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
-      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_includes":"atomicweight,name"}}
+      """{"update":{"_index":"chemistry","_id":"2","_source":{"includes":["atomicweight","name"]}}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
-  test("bulk content builder should support _source_excludes in UpdateRequest") {
+  test("bulk content builder should support _source excludes in UpdateRequest") {
     val req = bulk(
       updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
         .fetchSource(includes = Set.empty, excludes = Set("atomicweight", "name"))
     )
 
     handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
-      """{"update":{"_index":"chemistry","_id":"2","_source":true,"_source_excludes":"atomicweight,name"}}
+      """{"update":{"_index":"chemistry","_id":"2","_source":{"excludes":["atomicweight","name"]}}}
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
+  }
+
+  test("bulk content builder should support _source includes and excludes in UpdateRequest") {
+    val req = bulk(
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium")
+        .fetchSource(includes = Set("name"), excludes = Set("atomicweight"))
+    )
+
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
+      """{"update":{"_index":"chemistry","_id":"2","_source":{"includes":["name"],"excludes":["atomicweight"]}}}
+        |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
+  }
+
+  test("bulk content builder should support disabling _source in UpdateRequest") {
+    val req = bulk(
+      updateById("chemistry", "2").doc("atomicweight" -> 2, "name" -> "helium").fetchSource(false)
+    )
+
+    handlers.bulk.BulkBuilderFn(req).mkString("\n") shouldBe
+      """{"update":{"_index":"chemistry","_id":"2","_source":false}}
         |{"doc":{"atomicweight":2,"name":"helium"}}""".stripMargin
   }
 
