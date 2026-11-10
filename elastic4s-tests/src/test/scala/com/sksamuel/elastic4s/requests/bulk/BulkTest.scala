@@ -89,6 +89,21 @@ class BulkTest extends AnyFlatSpec with Matchers with DockerTests {
     }.await.result.storedField("name").value shouldBe "oxygen"
   }
 
+  it should "return the filtered source of update operations" in {
+    val result = client.execute {
+      bulk(
+        updateById(Index(indexname), "2").doc("atomicweight" -> 6, "name" -> "carbon")
+          .fetchSource(includes = Set("name"), excludes = Set.empty),
+        updateById(Index(indexname), "4").doc("atomicweight" -> 8, "name" -> "oxygen")
+          .fetchSource(includes = Set.empty, excludes = Set("name"))
+      ).refresh(RefreshPolicy.Immediate)
+    }.await.result
+
+    result.errors shouldBe false
+    result.items.head.asInstanceOf[UpdateBulkResponseItem].source shouldBe Some(Map("name" -> "carbon"))
+    result.items.last.asInstanceOf[UpdateBulkResponseItem].source shouldBe Some(Map("atomicweight" -> 8))
+  }
+
   it should "handle createOnly in IndexRequest" in {
 
     client.execute {

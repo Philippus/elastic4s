@@ -2,11 +2,11 @@ package com.sksamuel.elastic4s.handlers.bulk
 
 import com.sksamuel.elastic4s.handlers
 import com.sksamuel.elastic4s.handlers.VersionTypeHttpString
+import com.sksamuel.elastic4s.handlers.common.FetchSourceContextBuilderFn
 import com.sksamuel.elastic4s.handlers.index.IndexContentBuilder
 import com.sksamuel.elastic4s.handlers.update.UpdateBuilderFn
 import com.sksamuel.elastic4s.json.XContentFactory
 import com.sksamuel.elastic4s.requests.bulk.BulkRequest
-import com.sksamuel.elastic4s.requests.common.FetchSourceContext
 import com.sksamuel.elastic4s.requests.delete.DeleteByIdRequest
 import com.sksamuel.elastic4s.requests.indexes.IndexRequest
 import com.sksamuel.elastic4s.requests.update.UpdateRequest
@@ -63,12 +63,7 @@ object BulkBuilderFn {
         update.ifSeqNo.foreach(builder.field("if_seq_no", _))
         update.versionType.foreach(builder.field("version_type", _))
         update.retryOnConflict.foreach(builder.field("retry_on_conflict", _))
-        update.fetchSource.foreach {
-          case FetchSourceContext(fetchSource, includes, excludes) =>
-            builder.field("_source", fetchSource)
-            if (includes.nonEmpty) builder.field("_source_includes", includes.mkString(","))
-            if (excludes.nonEmpty) builder.field("_source_excludes", excludes.mkString(","))
-        }
+        update.fetchSource.foreach(FetchSourceContextBuilderFn(builder, _))
         builder.endObject()
         builder.endObject()
 
