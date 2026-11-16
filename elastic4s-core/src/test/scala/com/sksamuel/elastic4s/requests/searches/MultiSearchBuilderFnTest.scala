@@ -14,6 +14,10 @@ class MultiSearchBuilderFnTest extends AnyWordSpec with Matchers {
       val searchStr = MultiSearchBuilderFn(multi(searchRequest))
       searchStr.linesIterator.next() shouldBe """{"index":"someIndex"}"""
     }
+    "build multisearch request with routing" in {
+      val req = searchRequest.routing("someRouting")
+      MultiSearchBuilderFn(multi(req)).linesIterator.next() shouldBe """{"index":"someIndex","routing":"someRouting"}"""
+    }
     "build multisearch request with default ignore_unavailable indices option" in {
       val req = searchRequest.indicesOptions(IndicesOptionsRequest())
       MultiSearchBuilderFn(multi(req)).linesIterator.next() shouldBe """{"index":"someIndex"}"""

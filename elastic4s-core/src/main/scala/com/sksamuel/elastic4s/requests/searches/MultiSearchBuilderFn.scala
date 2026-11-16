@@ -15,6 +15,7 @@ object MultiSearchBuilderFn {
       val header = XContentFactory.jsonBuilder()
 
       header.field("index", search.indexes.values.mkString(","))
+      search.routing.foreach(header.field("routing", _))
       search.pref.foreach(header.field("preference", _))
       search.requestCache.map(_.toString).foreach(header.field("request_cache", _))
       search.searchType

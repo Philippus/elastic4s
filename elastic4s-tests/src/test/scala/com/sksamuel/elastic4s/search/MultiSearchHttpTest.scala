@@ -23,6 +23,16 @@ class MultiSearchHttpTest
     createIndex("jtull")
   }.await
 
+  Try {
+    client.execute {
+      deleteIndex("jtull_routed")
+    }.await
+  }
+
+  client.execute {
+    createIndex("jtull_routed").shards(3)
+  }.await
+
   client.execute {
     bulk(
       indexInto("jtull").fields("name" -> "aqualung").id("14"),
@@ -115,6 +125,38 @@ class MultiSearchHttpTest
         |""".stripMargin
 
     request.entity.head.get shouldBe expectedEntity
+  }
+
+  it should "correctly set the routing" in {
+
+    val request = MultiSearchHandler.build(
+      multi(
+        search("jtull").query(matchQuery("name", "aqualung")).routing("first_routing"),
+        search("unknown").query(matchAllQuery())
+      )
+    )
+
+    val expectedEntity =
+      """{"index":"jtull","routing":"first_routing"}
+        |{"query":{"match":{"name":{"query":"aqualung"}}}}
+        |{"index":"unknown"}
+        |{"query":{"match_all":{}}}
+        |""".stripMargin
+
+    request.entity.head.get shouldBe expectedEntity
+  }
+
+  it should "only search the shard selected by the routing" in {
+
+    val resp = client.execute {
+      multi(
+        search("jtull_routed").query(matchAllQuery()).routing("aqualung"),
+        search("jtull_routed").query(matchAllQuery())
+      )
+    }.await.result
+
+    resp.successes.head.shards.total shouldBe 1
+    resp.successes.last.shards.total shouldBe 3
   }
 
   it should "correctly set the search type" in {
